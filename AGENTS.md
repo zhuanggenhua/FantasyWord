@@ -22,6 +22,8 @@
 - 不确定先读哪篇文档、需要查文档导航：读 `docs/ai/文档索引.md`。
 - 需求涉及 Unity 工程目录树、代码落点、Prefab/Scene/Asset 入口：读 `docs/ai/项目目录与入口.md`。
 - 需求涉及 ProjectSettings、Packages、URP、Input System、场景、Prefab、序列化、构建：读 `docs/ai/Unity工程通用规范.md`。
+- 需求涉及 GameCore、输入、世界状态、表现层、联机预留和运行时目录边界：读 `docs/ai/框架与运行时入口.md`。
+- 需求涉及 GAS、技能、状态效果、战斗、角色/输入/战斗合同：读 `docs/ai/Unity架构与GAS规范.md`。
 - 需求涉及迁移方向、旧项目取舍、用户故事重定：读 `docs/ai/项目定位与迁移边界.md`。
 - 用户说“参考”“复用”“直接复制模块”“按旧项目做”“查旧工程”“插件迁移”：先读 `docs/ai/参考源映射.md`。
 - 需求涉及测试、验证、bug 修复、排查：读 `docs/ai/开发与验收规范.md`。
@@ -29,7 +31,9 @@
 - 需求涉及 `Assets/Editor`、菜单工具、验证器、AI 自动化入口：读 `docs/ai/编辑器工具与验证入口.md`。
 - 需求涉及 TDD、EditMode/PlayMode 测试、测试夹具：读 `docs/ai/TDD测试规范.md`。
 - 需求涉及新增、保留或重写项目侧 C#：读 `docs/ai/代码参考矩阵.md`。
+- 需求涉及可复用组件、资源、管理器入口沉淀：读 `docs/ai/组件库索引.md`。
 - 需求涉及像素素材、Sprite、动画、装备表现、导入设置：读 `docs/ai/素材与表现规范.md`。
+- 需求涉及俯视角角色 SpriteSheet、MiniFantasy 角色动画、装备层素材处理：读 `docs/ai/角色素材处理工作流.md`。
 - 需求涉及测试场景、样例场景、恢复场景或 AI 场景验证：读 `docs/ai/测试场景与AI复用入口.md`。
 
 ## 当前项目事实
@@ -57,6 +61,7 @@
 - 当前已迁入的内嵌插件：`Assets/Plugins/GAS`（EX-GAS `com.exhard.exgas` 1.1.8）、`Assets/Plugins/JKFrame`、`Assets/Plugins/NaughtyAttributes`（`com.dbrizov.naughtyattributes` 2.1.5）、`Assets/Plugins/UniTask`（`com.cysharp.unitask` 2.5.10）。
 - `BroAudio` 通过 UPM Git URL 接入：`https://github.com/man572142/Bro_Audio.git?path=/Assets/BroAudio#3.1.3`，包名 `com.ami.broaudio`；不把包管理器负责的 BroAudio 本体硬拷到 `Assets/Plugins`。
 - `Addressables` 通过 Unity 官方包 `com.unity.addressables` 接入，用于满足 JKFrame 和 UniTask Addressables 模块的编译依赖；当前不代表本项目已采用 Addressables 作为正式资源加载方案。
+- MiniFantasy 素材包 demo 场景已归档到 `docs/archive/minifantasy-demo-assets`；素材主体保留在 `Assets/Art`，demo 场景不作为正式场景或验证入口。
 
 ## 目录和文档原则
 

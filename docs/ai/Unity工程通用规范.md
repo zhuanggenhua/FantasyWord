@@ -32,6 +32,7 @@
 - 当前内嵌插件落点：`Assets/Plugins/GAS`、`Assets/Plugins/JKFrame`、`Assets/Plugins/NaughtyAttributes`、`Assets/Plugins/UniTask`。
 - 当前 UPM Git 插件：`com.ami.broaudio`，来源 `https://github.com/man572142/Bro_Audio.git?path=/Assets/BroAudio#3.1.3`。
 - 当前 Unity 官方依赖：`com.unity.addressables`，用于满足 JKFrame 和 UniTask Addressables 模块；是否正式使用 Addressables 加载项目资源需另行评估。
+- `Packages/packages-lock.json` 只能由 Unity Package Manager 重新解析后更新；若它暂时未包含 `manifest.json` 新增包，不手写伪造锁文件，等统一 Unity 导入验证时刷新。
 - 第三方包接入必须记录：包名、来源 URL、版本或 commit、UPM path、依赖、旧入口迁移范围和本项目调用方式。
 - 插件本体与项目玩法代码要分层；玩法代码不要散落直接依赖第三方 API，优先通过项目侧门面或服务接入。
 - 插件迁移前先核实授权、Unity 版本、依赖、命名冲突、`.meta`/GUID 和无关业务耦合。
