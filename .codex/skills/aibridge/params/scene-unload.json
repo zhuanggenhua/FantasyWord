@@ -1,0 +1,22 @@
+{
+  "name": "scene-unload",
+  "title": "Scene / Unload",
+  "description": "Unload scene from the Opened scenes in Unity Editor. Use 'scene-list-opened' tool to get the list of all opened scenes.",
+  "parameters": [
+    {
+      "name": "name",
+      "type": "string",
+      "description": "Name of the opened scene to unload (not the path). Get from scene-list-opened.",
+      "required": "true"
+    }
+  ],
+  "hints": {
+    "commonMistakes": [
+      "Parameter is name (string), NOT sceneRef (object)"
+    ],
+    "notes": [
+      "scene-unload 属于场景受保护命令；若当前打开场景栈可能存在生成场景 dirty，调用时必须显式传 bridgeSceneDirtyPolicy",
+      "若只是切换验证流程并丢弃已知生成场景残留，优先传 bridgeSceneDirtyPolicy=discard-generated"
+    ]
+  }
+}

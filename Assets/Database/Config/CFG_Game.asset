@@ -1,0 +1,472 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7ad721d8f16b264886f01f998791c4e, type: 3}
+  m_Name: CFG_Game
+  m_EditorClassIdentifier: Gyvr.Mythril2D:Gyvr.Mythril2D:GameConfig
+  databaseRegistry: {fileID: 11400000, guid: a8f91d1fb50951643ae0721b3f46eaed, type: 2}
+  gameplayScene: Gameplay
+  mainMenuSceneName: Main Menu
+  uiSceneName: UI
+  interactionLayer: Interaction
+  hitboxLayer: Hitbox
+  maxTeleportDistanceWhenStuckInWall: 5
+  collisionContactFilter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 7752
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  visibilityContactFilter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 3144
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  playtestSaveFile: {fileID: 11400000, guid: 664da96247e26144cbf424a53c46b772, type: 2}
+  cameraShakeSources: 1
+  onTheGoCraftingStation: {fileID: 11400000, guid: 655d6294ee66b2740b36bac6c4a2fb5e, type: 2}
+  toExecuteOnPlayerDeath:
+    rid: 837939242335993975
+  maxEquippableAbilities: 5
+  canCriticalHit: 1
+  canMissHit: 1
+  allowPushOnRegularHit: 1
+  allowPushOnCriticalHit: 1
+  allowPushOnMissedHit: 1
+  allowPushOnSilentHit: 0
+  persistentIdentifierMappings:
+    m_keys: []
+    m_values: []
+  navigationSelectSound: {fileID: 11400000, guid: 72b7cfeba6e9bca41a9120e10a298f8f, type: 2}
+  pointerSelectSound: {fileID: 0}
+  submitSound: {fileID: 11400000, guid: bc79626babe0df74397f1a90caaa1018, type: 2}
+  m_orderedGameTerms: []
+  m_gameTerms:
+    m_keys:
+    - currency
+    - experience
+    - level
+    - health
+    - mana
+    - physical_attack
+    - magical_attack
+    - physical_defense
+    - magical_defense
+    - agility
+    - luck
+    - attribute_points
+    - class
+    - consumable
+    - resource
+    - gear
+    - key
+    - active_ability
+    - passive_ability
+    - physical_damage
+    - magical_damage
+    - none_damage
+    - flat_damage
+    - scaled_damage
+    - add_health
+    - add_mana
+    - add_health_over_time
+    - add_mana_over_time
+    - remove_health
+    - damage_over_time
+    - rooted
+    - silenced
+    - stunned
+    - slowed
+    - accelerated
+    - move_speed
+    - mana_cost
+    - cooldown
+    - health_increase
+    - mana_increase
+    - stat_modification
+    - physical_attack_increase
+    - magical_attack_increase
+    - physical_defense_increase
+    - magical_defense_increase
+    - agility_increase
+    - luck_increase
+    - health_decrease
+    - mana_decrease
+    - physical_attack_decrease
+    - magical_attack_decrease
+    - physical_defense_decrease
+    - magical_defense_decrease
+    - agility_decrease
+    - luck_decrease
+    m_values:
+    - fullName: Gold
+      shortName: G.
+      description: 'Currency of the world of [INSERT_WORLD_NAME]'
+      icon: {fileID: -637868742, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Experience
+      shortName: Exp.
+      description: Points required to level up
+      icon: {fileID: 0}
+    - fullName: Level
+      shortName: Lvl.
+      description: Progression indicator for a character
+      icon: {fileID: 0}
+    - fullName: Health
+      shortName: Health
+      description: 
+      icon: {fileID: 1269947344, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Mana
+      shortName: Mana
+      description: 
+      icon: {fileID: 2059989182, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Strength
+      shortName: Strength
+      description: 
+      icon: {fileID: -491117512, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Intelligence
+      shortName: Intel.
+      description: 
+      icon: {fileID: -827782456, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Armor
+      shortName: Armor
+      description: 
+      icon: {fileID: -117338440, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Magic Resistance
+      shortName: Mag. Res.
+      description: 
+      icon: {fileID: 567610833, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Agility
+      shortName: Agility
+      description: 
+      icon: {fileID: 783625353, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Luck
+      shortName: Luck
+      description: 
+      icon: {fileID: -87856419, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Attribute Points
+      shortName: Attr. Pts.
+      description: Point available to the player to improve their attributes
+      icon: {fileID: 0}
+    - fullName: Class
+      shortName: Class
+      description: Archetype of the character
+      icon: {fileID: 0}
+    - fullName: Consumable
+      shortName: Cons.
+      description: Consumable items
+      icon: {fileID: -1227757721, guid: b2aa333e2a0687c499a8b4ecb8625997, type: 3}
+    - fullName: Resource
+      shortName: Res.
+      description: Collectable items
+      icon: {fileID: -683347236, guid: c94cf32db75ba2e429c4186822410ca0, type: 3}
+    - fullName: Gear
+      shortName: Gear
+      description: Pieces of equipment
+      icon: {fileID: -490976884, guid: 8ace1fb331206454aa908061100d1519, type: 3}
+    - fullName: Key
+      shortName: Key
+      description: Important items
+      icon: {fileID: -1442231693, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Active Ability
+      shortName: Active
+      description: 
+      icon: {fileID: 2059989182, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Passive Ability
+      shortName: Passive
+      description: 
+      icon: {fileID: 567610833, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Physical Damage
+      shortName: Phy.
+      description: 
+      icon: {fileID: -491117512, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Magical Damage
+      shortName: Mag.
+      description: 
+      icon: {fileID: -827782456, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Void Damage
+      shortName: Void Dmg.
+      description: 
+      icon: {fileID: 567610833, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Flat Damage
+      shortName: Flat
+      description: 
+      icon: {fileID: 0}
+    - fullName: Scaled Damage
+      shortName: Scaled
+      description: 
+      icon: {fileID: 0}
+    - fullName: Healing
+      shortName: Heal
+      description: 
+      icon: {fileID: 1269947344, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Mana Recovery
+      shortName: Mana Rec.
+      description: 
+      icon: {fileID: 2059989182, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Health Over Time
+      shortName: Healing
+      description: 
+      icon: {fileID: -1322814260, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Mana Over Time
+      shortName: Meditating
+      description: 
+      icon: {fileID: 62215983, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Damage
+      shortName: Damage
+      description: 
+      icon: {fileID: 0}
+    - fullName: Poisoned
+      shortName: Poisoned
+      description: 
+      icon: {fileID: 1664610114, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Rooted
+      shortName: Rooted
+      description: Cannot move
+      icon: {fileID: -898913702, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Silenced
+      shortName: Silenced
+      description: Cannot cast abilities
+      icon: {fileID: -245891189, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Stunned
+      shortName: Stunned
+      description: Cannot do anything
+      icon: {fileID: 1066749937, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Slowed
+      shortName: Slowed
+      description: 
+      icon: {fileID: 3153996394431638929, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Accelerated
+      shortName: Accelerated
+      description: 
+      icon: {fileID: -696039496, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Move Speed
+      shortName: Speed
+      description: 
+      icon: {fileID: 0}
+    - fullName: Mana Cost
+      shortName: Mana Cost
+      description: 
+      icon: {fileID: 2059989182, guid: fd2aecd1af34986489ae2b6e9c2501b8, type: 3}
+    - fullName: Cooldown
+      shortName: Cooldown
+      description: 
+      icon: {fileID: 0}
+    - fullName: + Health
+      shortName: + Health
+      description: 
+      icon: {fileID: 1051856302, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: + Mana
+      shortName: + Mana
+      description: 
+      icon: {fileID: -218880346, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: Stat Modification
+      shortName: Stat Mod.
+      description: 
+      icon: {fileID: 0}
+    - fullName: + Strength
+      shortName: + Str.
+      description: 
+      icon: {fileID: 1657374070, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: + Intelligence
+      shortName: + Intel.
+      description: 
+      icon: {fileID: 43213949, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: + Armor
+      shortName: + Arm.
+      description: 
+      icon: {fileID: 2091822102, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: + Magic Resistance
+      shortName: + M. Res.
+      description: 
+      icon: {fileID: -90073997, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: + Agility
+      shortName: + Agility
+      description: 
+      icon: {fileID: -1478887999, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: + Luck
+      shortName: + Luck
+      description: 
+      icon: {fileID: -1795072032, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Health'
+      shortName: Health Down
+      description: 
+      icon: {fileID: 1983507272, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Mana'
+      shortName: '- Mana'
+      description: 
+      icon: {fileID: -1710873844, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Strength'
+      shortName: '- Str.'
+      description: 
+      icon: {fileID: 365241871, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Intelligence'
+      shortName: '- Intel.'
+      description: 
+      icon: {fileID: -497555169, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Armor'
+      shortName: '- Armor'
+      description: 
+      icon: {fileID: 274159498, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Magic Resistance'
+      shortName: '- M. Res.'
+      description: 
+      icon: {fileID: -641378801, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Agility'
+      shortName: '- Agility'
+      description: 
+      icon: {fileID: -110294036, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+    - fullName: '- Luck'
+      shortName: '- Luck'
+      description: 
+      icon: {fileID: -320660735, guid: d1c8e0eaf60c6b84bb4a7d47f400c8d1, type: 3}
+  m_statTermsBinding:
+    m_keys: 0000000001000000020000000300000004000000050000000600000007000000
+    m_values:
+    - health
+    - mana
+    - physical_attack
+    - magical_attack
+    - physical_defense
+    - magical_defense
+    - agility
+    - luck
+  m_statIncreaseTermsBinding:
+    m_keys: 0000000001000000020000000300000004000000050000000600000007000000
+    m_values:
+    - health_increase
+    - mana_increase
+    - physical_attack_increase
+    - magical_attack_increase
+    - physical_defense_increase
+    - magical_defense_increase
+    - agility_increase
+    - luck_increase
+  m_statDecreaseTermsBinding:
+    m_keys: 0000000001000000020000000300000004000000050000000600000007000000
+    m_values:
+    - health_decrease
+    - mana_decrease
+    - physical_attack_decrease
+    - magical_attack_decrease
+    - physical_defense_decrease
+    - magical_defense_decrease
+    - agility_decrease
+    - luck_decrease
+  m_itemCategoryTermsBinding:
+    m_keys: 00000000010000000200000003000000
+    m_values:
+    - consumable
+    - resource
+    - gear
+    - key
+  m_damageTypesBinding:
+    m_keys: 000000000100000002000000
+    m_values:
+    - none_damage
+    - physical_damage
+    - magical_damage
+  m_controlTypesBinding:
+    m_keys: 000000000100000002000000
+    m_values:
+    - stunned
+    - silenced
+    - rooted
+  m_abilityTypesBinding:
+    m_keys: 0000000001000000
+    m_values:
+    - passive_ability
+    - active_ability
+  references:
+    version: 2
+    RefIds:
+    - rid: 837939242335993975
+      type: {class: ExecuteCommandList, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_executionMode: 0
+        m_disabledActions: 0
+        m_commands:
+        - rid: 837939242335993976
+        - rid: 837939242335994225
+    - rid: 837939242335993976
+      type: {class: Wait, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_duration: 1
+    - rid: 837939242335994225
+      type: {class: ExecuteCommandIf, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_condition:
+          rid: 837939242335994226
+        m_ifTrue:
+          rid: 837939242335994229
+        m_ifFalse:
+          rid: 837939242335994237
+    - rid: 837939242335994226
+      type: {class: IsItemInInventory, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_item: {fileID: 11400000, guid: c79ae267a7ab2a2428d950b349b5937e, type: 2}
+    - rid: 837939242335994229
+      type: {class: ExecuteCommandList, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_executionMode: 0
+        m_disabledActions: 0
+        m_commands:
+        - rid: 837939242335994230
+        - rid: 837939242335994233
+        - rid: 837939242335994231
+    - rid: 837939242335994230
+      type: {class: PlayDialogueLine, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_speaker: Death
+        m_line: You got hurt pretty badly, luckily enough, you had a spare reviving
+          orb in your pocket!
+    - rid: 837939242335994231
+      type: {class: RespawnPlayer, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data: 
+    - rid: 837939242335994233
+      type: {class: AddOrRemoveItem, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_action: 1
+        m_item: {fileID: 11400000, guid: c79ae267a7ab2a2428d950b349b5937e, type: 2}
+        m_quantity: 1
+    - rid: 837939242335994237
+      type: {class: ExecuteCommandList, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_executionMode: 0
+        m_disabledActions: 0
+        m_commands:
+        - rid: 837939242335994238
+        - rid: 837939242335994239
+    - rid: 837939242335994238
+      type: {class: PlayDialogueLine, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_speaker: Death
+        m_line: You got hurt pretty badly; it looks like your time has come!
+    - rid: 837939242335994239
+      type: {class: OpenMenu, ns: Gyvr.Mythril2D, asm: Gyvr.Mythril2D}
+      data:
+        m_menuToOpen: 7
