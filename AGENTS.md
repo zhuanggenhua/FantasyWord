@@ -26,6 +26,11 @@
 - 用户说“参考”“复用”“直接复制模块”“按旧项目做”“查旧工程”“插件迁移”：先读 `docs/ai/参考源映射.md`。
 - 需求涉及测试、验证、bug 修复、排查：读 `docs/ai/开发与验收规范.md`。
 - 需求涉及 AIBridge、Unity Editor 自动化、测试、截图或 Console：读 `docs/ai/AIBridge常用命令.md`。
+- 需求涉及 `Assets/Editor`、菜单工具、验证器、AI 自动化入口：读 `docs/ai/编辑器工具与验证入口.md`。
+- 需求涉及 TDD、EditMode/PlayMode 测试、测试夹具：读 `docs/ai/TDD测试规范.md`。
+- 需求涉及新增、保留或重写项目侧 C#：读 `docs/ai/代码参考矩阵.md`。
+- 需求涉及像素素材、Sprite、动画、装备表现、导入设置：读 `docs/ai/素材与表现规范.md`。
+- 需求涉及测试场景、样例场景、恢复场景或 AI 场景验证：读 `docs/ai/测试场景与AI复用入口.md`。
 
 ## 当前项目事实
 
@@ -55,3 +60,16 @@
 - 项目长期规范放在 `docs/ai/`。
 - 历史恢复记录、旧任务计划和旧证据默认迁入或保留在 `docs/archive/` 语义下，不得继续作为当前目标入口。
 - 新增项目侧 C# 前，先明确来源参考或当前项目正式设计依据；没有依据的临时探针只能短期存在，任务结束后删除或补齐记录。
+
+## 本地 skills
+
+本项目已放入本地 skill：
+
+- `.codex/skills/aibridge`
+- `.codex/skills/unity-production`
+- `.codex/skills/unity-shader`
+- `.codex/skills/unity-timeline-signal-debug`
+- `.codex/skills/unity-ugui-mobile-adaptation`
+- `.codex/skills/unity-uitoolkit`
+
+使用这些 skill 前仍要先读本文件和对应 `docs/ai/` 分册。

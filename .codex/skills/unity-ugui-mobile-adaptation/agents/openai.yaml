@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity UGUI Mobile Adaptation"
+  short_description: "UGUI mobile layout checks for anchors and safe area"
+  default_prompt: "Use $unity-ugui-mobile-adaptation to review or fix a Unity UGUI mobile layout, including anchors, safe area, and Canvas Scaler."
