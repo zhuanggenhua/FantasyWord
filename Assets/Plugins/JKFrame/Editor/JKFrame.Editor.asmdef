@@ -1,0 +1,22 @@
+﻿{
+    "name": "JKFrameEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:73233468375992a4fb17e0d19b8483e0",
+        "GUID:3d72ece9dcd2294458cfd1dae63a176b",
+        "GUID:7cb2814e6655d904f952bf240b160d11",
+        "NaughtyAttributes.Core",
+        "NaughtyAttributes.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -50,10 +50,13 @@
 
 ## Unity 包接入
 
-- 当前自动化目标是迁移到 `AIBridge` 包：`https://github.com/aiseog3121/unity-ai-bridge.git?path=/Packages/com.aibridge.unity`，包名 `com.aibridge.unity`。
+- 当前自动化目标是迁移到 `AIBridge` 包：`Packages/com.aibridge.unity` 本地 UPM 包，来源 `https://github.com/aiseog3121/unity-ai-bridge.git?path=/Packages/com.aibridge.unity`，包名 `com.aibridge.unity`。
 - 旧 `UnityMCP` / `com.ivanmurzak.unity.mcp` 不再作为正式自动化入口；相关安装器、配置和 OpenUPM scope 清理前先核实引用，再按归档/垃圾分类处理。
 - 本项目自动化默认通过 AIBridge 连接当前唯一正常 Unity Editor；不把 `Unity.exe -batchmode` 当日常验证入口。
 - 插件迁移要先做依赖核验：包名、来源 URL、版本/commit、UPM path、依赖、旧入口迁移范围和本项目调用方式。
+- 当前已迁入的内嵌插件：`Assets/Plugins/GAS`（EX-GAS `com.exhard.exgas` 1.1.8）、`Assets/Plugins/JKFrame`、`Assets/Plugins/NaughtyAttributes`（`com.dbrizov.naughtyattributes` 2.1.5）、`Assets/Plugins/UniTask`（`com.cysharp.unitask` 2.5.10）。
+- `BroAudio` 通过 UPM Git URL 接入：`https://github.com/man572142/Bro_Audio.git?path=/Assets/BroAudio#3.1.3`，包名 `com.ami.broaudio`；不把包管理器负责的 BroAudio 本体硬拷到 `Assets/Plugins`。
+- `Addressables` 通过 Unity 官方包 `com.unity.addressables` 接入，用于满足 JKFrame 和 UniTask Addressables 模块的编译依赖；当前不代表本项目已采用 Addressables 作为正式资源加载方案。
 
 ## 目录和文档原则
 

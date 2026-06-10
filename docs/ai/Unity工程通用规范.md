@@ -22,13 +22,16 @@
 - 渲染：URP 2D
 - 输入：Unity Input System
 - UI：UGUI / TextMesh Pro 资源存在
-- Addressables：当前未检测到正式配置
-- asmdef：旧 UnityMCP 安装器 asmdef 已退出正式入口；项目侧运行时代码尚未形成 asmdef 边界
+- Addressables：已接入官方包用于插件编译依赖，尚未检测到正式资源配置
+- asmdef：插件本体已有 asmdef；项目侧运行时代码尚未形成 asmdef 边界
 
 ## 包与插件边界
 
 - 正式 Unity Editor 自动化统一迁移到 `com.aibridge.unity`。
 - 旧 `com.ivanmurzak.unity.mcp` / UnityMCP 不再作为正式自动化入口。
+- 当前内嵌插件落点：`Assets/Plugins/GAS`、`Assets/Plugins/JKFrame`、`Assets/Plugins/NaughtyAttributes`、`Assets/Plugins/UniTask`。
+- 当前 UPM Git 插件：`com.ami.broaudio`，来源 `https://github.com/man572142/Bro_Audio.git?path=/Assets/BroAudio#3.1.3`。
+- 当前 Unity 官方依赖：`com.unity.addressables`，用于满足 JKFrame 和 UniTask Addressables 模块；是否正式使用 Addressables 加载项目资源需另行评估。
 - 第三方包接入必须记录：包名、来源 URL、版本或 commit、UPM path、依赖、旧入口迁移范围和本项目调用方式。
 - 插件本体与项目玩法代码要分层；玩法代码不要散落直接依赖第三方 API，优先通过项目侧门面或服务接入。
 - 插件迁移前先核实授权、Unity 版本、依赖、命名冲突、`.meta`/GUID 和无关业务耦合。
