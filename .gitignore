@@ -17,6 +17,8 @@
 /.uloop/
 /.dotnet/
 /.unity-env/
+/.learnings/
+/Unity/
 
 # Legacy recovery staging with extremely long asset paths; keep local-only unless re-reviewed.
 /docs/archive/legacy-recovery/MigrationStaging/
