@@ -14,11 +14,14 @@
 # Local runtime / AI automation artifacts
 /.codexbridge/
 /AIBridgeCache/
+/.puerts-unity-mcp/
 /.uloop/
 /.dotnet/
 /.unity-env/
 /.learnings/
 /Unity/
+/[Aa]ssets/puerts-unity-mcp/Runtime/Generated/
+/[Aa]ssets/puerts-unity-mcp/Runtime/Generated/Plugins/puerts_il2cpp/
 
 # Legacy recovery staging with extremely long asset paths; keep local-only unless re-reviewed.
 /docs/archive/legacy-recovery/MigrationStaging/
