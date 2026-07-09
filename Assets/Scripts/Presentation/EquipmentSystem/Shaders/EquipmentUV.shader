@@ -817,18 +817,22 @@ Shader "EquipmentSystem/EquipmentUV"
                 // 2）身体装备轮廓（裤子 / 上衣 / 披风）
                 fixed4 bodyUVSample = tex2D(_BodyUVMap, uvSample);
                 fixed3 equipSample;
+                bool hasBodyMaskSample = bodyUVSample.a > 0.5 || baseColorSample.a > CUTOFF;
 
-                if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
+                if (hasBodyMaskSample)
                 {
-                    alphaSample = max(alphaSample, 1.0);
-                }
-                if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
-                {
-                    alphaSample = max(alphaSample, 1.0);
-                }
-                if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
-                {
-                    alphaSample = max(alphaSample, 1.0);
+                    if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
+                    {
+                        alphaSample = max(alphaSample, 1.0);
+                    }
+                    if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
+                    {
+                        alphaSample = max(alphaSample, 1.0);
+                    }
+                    if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
+                    {
+                        alphaSample = max(alphaSample, 1.0);
+                    }
                 }
 
                 // 3）头部装备轮廓（头盔 / 头发 / 面饰 / 胡子 / 面罩）
@@ -841,19 +845,19 @@ Shader "EquipmentSystem/EquipmentUV"
                 }
                 bool isHeadCoreSample = IsPartID(headUVSample.b, ID_HEAD) && headUVSample.a > 0.5;
 
-                if (_EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
+                if (isHeadCoreSample && _EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (_EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
+                if (isHeadCoreSample && _EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (_EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
+                if (isHeadCoreSample && _EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (_EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
+                if (isHeadCoreSample && _EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
@@ -876,18 +880,22 @@ Shader "EquipmentSystem/EquipmentUV"
                 // 2）身体装备轮廓（裤子 / 上衣 / 披风）
                 fixed4 bodyUVSample = tex2D(_BodyUVMap, uvSample);
                 fixed3 equipSample;
+                bool hasBodyMaskSample = bodyUVSample.a > 0.5 || baseColorSample.a > CUTOFF;
 
-                if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
+                if (hasBodyMaskSample)
                 {
-                    alphaSample = max(alphaSample, 1.0);
-                }
-                if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
-                {
-                    alphaSample = max(alphaSample, 1.0);
-                }
-                if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
-                {
-                    alphaSample = max(alphaSample, 1.0);
+                    if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
+                    {
+                        alphaSample = max(alphaSample, 1.0);
+                    }
+                    if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
+                    {
+                        alphaSample = max(alphaSample, 1.0);
+                    }
+                    if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
+                    {
+                        alphaSample = max(alphaSample, 1.0);
+                    }
                 }
 
                 // 3）头部装备轮廓
@@ -900,19 +908,19 @@ Shader "EquipmentSystem/EquipmentUV"
                 }
                 bool isHeadCoreSample = IsPartID(headUVSample.b, ID_HEAD) && headUVSample.a > 0.5;
 
-                if (_EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
+                if (isHeadCoreSample && _EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (_EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
+                if (isHeadCoreSample && _EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (_EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
+                if (isHeadCoreSample && _EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (_EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
+                if (isHeadCoreSample && _EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
@@ -988,7 +996,10 @@ Shader "EquipmentSystem/EquipmentUV"
             {
                 if (_EnableBag < 0.5) return 0.0;
                 float2 uvSample = lerp(frameMin, frameMax, frameUVSample);
+                fixed4 baseColorSample = tex2D(_MainTex, uvSample);
                 fixed4 bodyUVSample = tex2D(_BodyUVMap, uvSample);
+                bool hasBodyMaskSample = bodyUVSample.a > 0.5 || baseColorSample.a > CUTOFF;
+                if (!hasBodyMaskSample) return 0.0;
                 fixed3 bagSample;
                 if (TrySampleEquip(bodyUVSample.rg, _BagRect, _BagTex, bagSample))
                     return 1.0;
