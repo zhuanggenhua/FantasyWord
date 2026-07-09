@@ -2283,11 +2283,11 @@ public class EquipmentRenderer : MonoBehaviour
         }
         else if (anchor != null)
         {
-            float cx = weaponSprite.rect.width * 0.5f;
-            float cy = weaponSprite.rect.height * 0.5f;
+            float frameCx = frameW * 0.5f;
+            float frameCy = frameH * 0.5f;
             sr.transform.localPosition = new Vector3(
-                (anchor.position.x - cx) / ppu,
-                -(anchor.position.y - cy) / ppu,
+                (anchor.position.x - frameCx) / ppu,
+                (frameCy - anchor.position.y) / ppu,
                 0f);
             sr.transform.localRotation = Quaternion.Euler(0f, 0f, anchor.GetRotationAngle());
         }
