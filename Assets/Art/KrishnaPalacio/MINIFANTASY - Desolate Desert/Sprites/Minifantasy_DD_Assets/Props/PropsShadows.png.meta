@@ -1,0 +1,897 @@
+fileFormatVersion: 2
+guid: e9b37d5d20cc0be4fbb9a6d52000610d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2414001879861401527
+    second: Rock_Small_Shadow_0
+  - first:
+      213: 4826708329755592692
+    second: DryGrass_Shadow_0
+  - first:
+      213: 1326523739551221790
+    second: DryGrass_Shadow_1
+  - first:
+      213: 8020948579508296077
+    second: Cactus_Small_Shadow_0
+  - first:
+      213: 2022372044224418612
+    second: Barrel_Cactus_Shadow
+  - first:
+      213: -4431758196396316223
+    second: Candle_Cactus_Flower_Shadow
+  - first:
+      213: -2536958307697849738
+    second: PricklyPear_Cactus_Flower_Shadow_0
+  - first:
+      213: 2711670746897542236
+    second: PricklyPear_Cactus_Flower_Shadow_1
+  - first:
+      213: 2645056913321643203
+    second: Rock_Small_Shadow_1
+  - first:
+      213: 8609958102171860925
+    second: DryGrass_Shadow_2
+  - first:
+      213: -2503101232662135150
+    second: DryGrass_Shadow_3
+  - first:
+      213: -9092265933037611124
+    second: Cactus_Small_Shadow_1
+  - first:
+      213: 5909981358684136512
+    second: Rock_Small_Shadow_2
+  - first:
+      213: -6717221833353054898
+    second: DryGrass_Shadow_4
+  - first:
+      213: 6388430467483495173
+    second: DryGrass_Shadow_5
+  - first:
+      213: -2749551825454983113
+    second: Cactus_Small_Shadow_2
+  - first:
+      213: -2312250332422408016
+    second: Barrel_Cactus_Flower_Shadow
+  - first:
+      213: 6917984445002648015
+    second: Candle_Cactus_Shadow_0
+  - first:
+      213: 8243123648181081441
+    second: Candle_Cactus_Shadow_1
+  - first:
+      213: -8311037636729475843
+    second: PricklyPear_Cactus_Shadow_0
+  - first:
+      213: -5938204067704756048
+    second: PricklyPear_Cactus_Shadow_1
+  - first:
+      213: 7698657091351831206
+    second: Rock_Large_Shadow_0
+  - first:
+      213: 1142065380837886566
+    second: PalmTree_Shadow_0
+  - first:
+      213: -949146264598688216
+    second: Cactus_Large_Shadow_0
+  - first:
+      213: -8082874717565865465
+    second: Candle_Cactus_Wide_Shadow
+  - first:
+      213: -29512706391898691
+    second: Rock_Large_Shadow_1
+  - first:
+      213: 3612423783295610733
+    second: PalmTree_Shadow_1
+  - first:
+      213: 4739991315742437662
+    second: Cactus_Large_Shadow_1
+  - first:
+      213: -9009132057264772837
+    second: Cactus_Bush_Shadow
+  - first:
+      213: -6291115388627392189
+    second: PalmTree_Shadow_2
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Rock_Small_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 79
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9486cb7841ebf7ed0800000000000000
+      internalID: -2414001879861401527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DryGrass_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f7408527a9ebf240800000000000000
+      internalID: 4826708329755592692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DryGrass_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e18c21a1052c86210800000000000000
+      internalID: 1326523739551221790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cactus_Small_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d89144b7c32205f60800000000000000
+      internalID: 8020948579508296077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_Cactus_Shadow
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 80
+        width: 8
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4335da3c8a8e01c10800000000000000
+      internalID: 2022372044224418612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candle_Cactus_Flower_Shadow
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c92f5d966b3f72c0800000000000000
+      internalID: -4431758196396316223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PricklyPear_Cactus_Flower_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67a81bb4cd9eaccd0800000000000000
+      internalID: -2536958307697849738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PricklyPear_Cactus_Flower_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5c65a06d2ac1a520800000000000000
+      internalID: 2711670746897542236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_Small_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 71
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cc4a31af3125b420800000000000000
+      internalID: 2645056913321643203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DryGrass_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbf33f2c647bc7770800000000000000
+      internalID: 8609958102171860925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DryGrass_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29eb45ed0b2334dd0800000000000000
+      internalID: -2503101232662135150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cactus_Small_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8758e98e48c1d180800000000000000
+      internalID: -9092265933037611124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_Small_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 62
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0446c89bbb8740250800000000000000
+      internalID: 5909981358684136512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DryGrass_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e453e79f452a7c2a0800000000000000
+      internalID: -6717221833353054898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DryGrass_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50be2aea9a348a850800000000000000
+      internalID: 6388430467483495173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cactus_Small_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7389a38be21a7d9d0800000000000000
+      internalID: -2749551825454983113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_Cactus_Flower_Shadow
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b8fe20d29c39efd0800000000000000
+      internalID: -2312250332422408016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candle_Cactus_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc98f0e133e910060800000000000000
+      internalID: 6917984445002648015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candle_Cactus_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1659479b845756270800000000000000
+      internalID: 8243123648181081441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PricklyPear_Cactus_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfc66db9d4349ac80800000000000000
+      internalID: -8311037636729475843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PricklyPear_Cactus_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b8ada4ccd2479da0800000000000000
+      internalID: -5938204067704756048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_Large_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 40
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a26199d5df17da60800000000000000
+      internalID: 7698657091351831206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PalmTree_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 40
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66a0d17b96e69df00800000000000000
+      internalID: 1142065380837886566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cactus_Large_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 40
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82ec4ba4084f3d2f0800000000000000
+      internalID: -949146264598688216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candle_Cactus_Wide_Shadow
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 40
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 702308fe44cd3df80800000000000000
+      internalID: -8082874717565865465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_Large_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 23
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db586239956279ff0800000000000000
+      internalID: -29512706391898691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PalmTree_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 24
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6fe18d9a48e12230800000000000000
+      internalID: 3612423783295610733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cactus_Large_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 24
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e11b345fcf4d7c140800000000000000
+      internalID: 4739991315742437662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cactus_Bush_Shadow
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 24
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b192628502229f280800000000000000
+      internalID: -9009132057264772837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PalmTree_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 7
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 349eed3c2e771b8a0800000000000000
+      internalID: -6291115388627392189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Barrel_Cactus_Flower_Shadow: -2312250332422408016
+      Barrel_Cactus_Shadow: 2022372044224418612
+      Cactus_Bush_Shadow: -9009132057264772837
+      Cactus_Large_Shadow_0: -949146264598688216
+      Cactus_Large_Shadow_1: 4739991315742437662
+      Cactus_Small_Shadow_0: 8020948579508296077
+      Cactus_Small_Shadow_1: -9092265933037611124
+      Cactus_Small_Shadow_2: -2749551825454983113
+      Candle_Cactus_Flower_Shadow: -4431758196396316223
+      Candle_Cactus_Shadow_0: 6917984445002648015
+      Candle_Cactus_Shadow_1: 8243123648181081441
+      Candle_Cactus_Wide_Shadow: -8082874717565865465
+      DryGrass_Shadow_0: 4826708329755592692
+      DryGrass_Shadow_1: 1326523739551221790
+      DryGrass_Shadow_2: 8609958102171860925
+      DryGrass_Shadow_3: -2503101232662135150
+      DryGrass_Shadow_4: -6717221833353054898
+      DryGrass_Shadow_5: 6388430467483495173
+      PalmTree_Shadow_0: 1142065380837886566
+      PalmTree_Shadow_1: 3612423783295610733
+      PalmTree_Shadow_2: -6291115388627392189
+      PricklyPear_Cactus_Flower_Shadow_0: -2536958307697849738
+      PricklyPear_Cactus_Flower_Shadow_1: 2711670746897542236
+      PricklyPear_Cactus_Shadow_0: -8311037636729475843
+      PricklyPear_Cactus_Shadow_1: -5938204067704756048
+      Rock_Large_Shadow_0: 7698657091351831206
+      Rock_Large_Shadow_1: -29512706391898691
+      Rock_Small_Shadow_0: -2414001879861401527
+      Rock_Small_Shadow_1: 2645056913321643203
+      Rock_Small_Shadow_2: 5909981358684136512
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

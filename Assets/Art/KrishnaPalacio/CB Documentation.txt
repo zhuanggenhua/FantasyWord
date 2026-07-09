@@ -1,0 +1,80 @@
+The Minifantasy Complete Bundle
+	The current Minifantasy Complete Bundle contains the following packages:
+		Minifantasy Crafting and Professions I
+		Minifantasy Icy Wilderness
+		Minifantasy Deep Caves
+		Minifantasy Farm
+		Minifantasy Towns I
+		Minifantasy Desolate Desert
+		Minifantasy Creatures 
+		Minifantasy Forgotten Plains
+		Minifantasy Dungeon
+
+Minifantasy Pack Tickers
+	A 2-3 character package ticker is used on certain assets, scripts to distinguish them between packages.
+	You can find the ticker on Prop Variant Scripts, Documentation, Tile Palettes and other assets. 
+	Tickers are also used to avoid naming conflicts between package contents.
+	Package Ticker Index:
+		CP1 = Crafting and Professions I
+		IW 	= Icy Wilderness
+		DC 	= Deep Caves
+		FRM = Farm
+		T1 	= Towns I
+		DD 	= Desolate Desert
+		CTR = Creatures
+		FP 	= Forgotten Plains
+		DUN = Dungeon
+
+Rule Tiles
+	Rule tiles are included as a convenience to speed up the process of level creation. For more information, refer to the Unity 2D Tilemap Extras package documentation.
+
+	In order to show the scene properly and make use of Rule Tiles, you may need to download and import the 2D Tilemap Extras package.
+	If you are using a Unity Version 2020 or older, you will need to enable preview packages in "Package Manager > Advanced Project Settings > Enable Preview Packages."
+	If you are using a Unity Version 2021 or newer, the package should appear in the Unity Registry as a standard package.
+
+	You can find the Rule Tiles in the Tile Palette Tab.
+	Minifantasy Rule Tiles appear red with an X symbol in the Tile Palette. The default sprite is set to this "incomplete" sprite.
+	When using Minifantasy Rule Tiles, an incomplete sprite represents an incomplete grouping of rule tiles. When working properly, you should see no incomplete sprites.
+	
+	You may change these settings by opening the Rule Tile object in the pack directory under: "Tile Palettes > Rule Tiles."
+
+
+Tile Shadows
+	When tiles have corresponding shadow tiles, they are placed in the same tile palette.
+	You can find the corresponding shadow tiles in front of the white background.
+
+	In Tile Palette prefabs that contain shadows, there is sometimes a child object named "Visualization".
+	Activate this child object to see a transparent sprite that shows shadow alignment with greater detail.
+
+Sorting Layer Setup
+	Sorting layers vary between demos. 
+	Open the corresponding Package Documentation to find more information about a given demo's sorting layers.
+
+Placing Objects in the Scene
+	We recommend one of these two options for maintaining crisp pixels while moving objects around the scene:
+		1. Grid Snapping
+			Set Size = 0.125 (1 pixel)
+			You can change this setting in "Edit > Grid and Snap Settings > World Grid > Size."
+		2. Grid and Snap Increment Snap
+			Set Move = 0.125 (1 pixel) or 0.0625 (1/2 pixel)
+			You can change this setting in "Edit > Grid and Snap Settings > Increment Snap > Move."
+			Then hold "ctrl" while moving objects to increment their position based on the move setting.
+
+Tile Palettes
+	Tile Palettes are notated with their respective pack ticker. 
+	This is to avoid conflicts when multiple Minifantasy packs are imported in a single project.
+
+Prop Variants
+	Props that have multiple variations include a script to switch between variants with ease. 
+	To change between prop variants, find the Prop Variant Script component on a prop prefab and use the selection dropdown.
+
+Scripts
+	None of the scripts included in this pack are necessary to use the basic pack contents.
+
+Game Display
+	The demos were created using a 16:9 Aspect Ratio. 
+	If you have issues with the game screen displaying incorrectly, try setting the display to 16:9 Aspect and the Scale to 1x.
+	Also, try toggling the "Run In Edit Mode" button on the Pixel Perfect Camera component located on the Main Camera gameobject for crisp pixels in the game window while editing.
+
+Questions
+	If you have any questions or concerns, contact us at: krishna.palacio@gmail.com

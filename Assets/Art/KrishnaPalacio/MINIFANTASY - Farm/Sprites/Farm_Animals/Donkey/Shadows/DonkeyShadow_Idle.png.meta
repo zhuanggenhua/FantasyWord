@@ -1,0 +1,1365 @@
+fileFormatVersion: 2
+guid: 4d124d136c6d1cb48a72e6c6d6648865
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7909572360617836482
+    second: DonkeyShadow_Idle_0_00
+  - first:
+      213: -366959984362134702
+    second: DonkeyShadow_Idle_1_00
+  - first:
+      213: -4445424137800585656
+    second: DonkeyShadow_Idle_2_00
+  - first:
+      213: 1023302522126517108
+    second: DonkeyShadow_Idle_3_00
+  - first:
+      213: -5677507465697410904
+    second: DonkeyShadow_Idle_0_01
+  - first:
+      213: 4414373219063312061
+    second: DonkeyShadow_Idle_1_01
+  - first:
+      213: -836251278523587677
+    second: DonkeyShadow_Idle_2_01
+  - first:
+      213: -4067128021480746993
+    second: DonkeyShadow_Idle_3_01
+  - first:
+      213: -7176392328520038406
+    second: DonkeyShadow_Idle_0_02
+  - first:
+      213: -7109227361056950244
+    second: DonkeyShadow_Idle_1_02
+  - first:
+      213: -5198624054186422378
+    second: DonkeyShadow_Idle_2_02
+  - first:
+      213: -97599728128297261
+    second: DonkeyShadow_Idle_3_02
+  - first:
+      213: -5945459665465400181
+    second: DonkeyShadow_Idle_0_03
+  - first:
+      213: 2821055041870040721
+    second: DonkeyShadow_Idle_1_03
+  - first:
+      213: -6241598281938225183
+    second: DonkeyShadow_Idle_2_03
+  - first:
+      213: -7238391987873099250
+    second: DonkeyShadow_Idle_3_03
+  - first:
+      213: -7261063215953197110
+    second: DonkeyShadow_Idle_0_04
+  - first:
+      213: -7976366906204513936
+    second: DonkeyShadow_Idle_1_04
+  - first:
+      213: -410515680463225762
+    second: DonkeyShadow_Idle_2_04
+  - first:
+      213: 9078984544486952325
+    second: DonkeyShadow_Idle_3_04
+  - first:
+      213: -6470671070713126463
+    second: DonkeyShadow_Idle_0_05
+  - first:
+      213: 6961908197797728101
+    second: DonkeyShadow_Idle_1_05
+  - first:
+      213: 2463381155539349217
+    second: DonkeyShadow_Idle_2_05
+  - first:
+      213: -6002802147556910887
+    second: DonkeyShadow_Idle_3_05
+  - first:
+      213: -5308687100196074240
+    second: DonkeyShadow_Idle_0_06
+  - first:
+      213: -5868457655591909903
+    second: DonkeyShadow_Idle_1_06
+  - first:
+      213: -24452863969833438
+    second: DonkeyShadow_Idle_2_06
+  - first:
+      213: 1368471236434813632
+    second: DonkeyShadow_Idle_3_06
+  - first:
+      213: -6281476284904490006
+    second: DonkeyShadow_Idle_0_07
+  - first:
+      213: -6923088796517692985
+    second: DonkeyShadow_Idle_1_07
+  - first:
+      213: -3742638996495699366
+    second: DonkeyShadow_Idle_2_07
+  - first:
+      213: -6533198672585201367
+    second: DonkeyShadow_Idle_3_07
+  - first:
+      213: 2493707203067380459
+    second: DonkeyShadow_Idle_0_08
+  - first:
+      213: -2444748741421184808
+    second: DonkeyShadow_Idle_1_08
+  - first:
+      213: -6121340589578523652
+    second: DonkeyShadow_Idle_2_08
+  - first:
+      213: 6532744015846280096
+    second: DonkeyShadow_Idle_3_08
+  - first:
+      213: -8538445079027239692
+    second: DonkeyShadow_Idle_0_09
+  - first:
+      213: 7262680314056786304
+    second: DonkeyShadow_Idle_1_09
+  - first:
+      213: -7837416583760079453
+    second: DonkeyShadow_Idle_2_09
+  - first:
+      213: -39172366261032590
+    second: DonkeyShadow_Idle_3_09
+  - first:
+      213: -5030200003026744268
+    second: DonkeyShadow_Idle_0_10
+  - first:
+      213: 4190898913047198703
+    second: DonkeyShadow_Idle_1_10
+  - first:
+      213: 843732864607138912
+    second: DonkeyShadow_Idle_2_10
+  - first:
+      213: 5941379438746208144
+    second: DonkeyShadow_Idle_3_10
+  - first:
+      213: 4334772159888991387
+    second: DonkeyShadow_Idle_0_11
+  - first:
+      213: 5690930433410041870
+    second: DonkeyShadow_Idle_1_11
+  - first:
+      213: -4789137147222498642
+    second: DonkeyShadow_Idle_2_11
+  - first:
+      213: -6290187987387027348
+    second: DonkeyShadow_Idle_3_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cfbfdfb72274cd60800000000000000
+      internalID: 7909572360617836482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 253ef45a6db48eaf0800000000000000
+      internalID: -366959984362134702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84ee27eac4eae42c0800000000000000
+      internalID: -4445424137800585656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 473cc11e830833e00800000000000000
+      internalID: 1023302522126517108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a04a796a017531b0800000000000000
+      internalID: -5677507465697410904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbe244ced01034d30800000000000000
+      internalID: 4414373219063312061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a3a2a094e90564f0800000000000000
+      internalID: -836251278523587677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f005a9fec98ae87c0800000000000000
+      internalID: -4067128021480746993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af789b90335586c90800000000000000
+      internalID: -7176392328520038406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1876b4a163f65d90800000000000000
+      internalID: -7109227361056950244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69fca6957f6cad7b0800000000000000
+      internalID: -5198624054186422378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d6fcba709145aef0800000000000000
+      internalID: -97599728128297261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b84a5854feb7d7da0800000000000000
+      internalID: -5945459665465400181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19e0d7e2d96662720800000000000000
+      internalID: 2821055041870040721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e732669e636169a0800000000000000
+      internalID: -6241598281938225183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e025ac176d01c8b90800000000000000
+      internalID: -7238391987873099250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac74471d9758b3b90800000000000000
+      internalID: -7261063215953197110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0799f753f804e4190800000000000000
+      internalID: -7976366906204513936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5cf243e92e8d4af0800000000000000
+      internalID: -410515680463225762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58d086737580ffd70800000000000000
+      internalID: 9078984544486952325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c16fbbb1fe8336a0800000000000000
+      internalID: -6470671070713126463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56f0d90ce9aad9060800000000000000
+      internalID: 6961908197797728101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ee60520c10bf2220800000000000000
+      internalID: 2463381155539349217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d81be14043c1bca0800000000000000
+      internalID: -6002802147556910887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00d4d118531c356b0800000000000000
+      internalID: -5308687100196074240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f5c50bcadc0f8ea0800000000000000
+      internalID: -5868457655591909903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22e4651ff3029aff0800000000000000
+      internalID: -24452863969833438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c2690dc659cdf210800000000000000
+      internalID: 1368471236434813632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aeb3a3d7996b3d8a0800000000000000
+      internalID: -6281476284904490006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c9831f6b6f3cef90800000000000000
+      internalID: -6923088796517692985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a52795b79a97f0cc0800000000000000
+      internalID: -3742638996495699366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9296181fb6a6555a0800000000000000
+      internalID: -6533198672585201367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be20aac2d7d6b9220800000000000000
+      internalID: 2493707203067380459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8c186f8f1821ed0800000000000000
+      internalID: -2444748741421184808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfbedf08a21ac0ba0800000000000000
+      internalID: -6121340589578523652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ab83190218f8aa50800000000000000
+      internalID: 6532744015846280096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f436627079518980800000000000000
+      internalID: -8538445079027239692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 081c39c24493ac460800000000000000
+      internalID: 7262680314056786304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a599383427eb3390800000000000000
+      internalID: -7837416583760079453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 279efffb0f4d47ff0800000000000000
+      internalID: -39172366261032590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43c0c669fb3213ab0800000000000000
+      internalID: -5030200003026744268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: febbfb96b50192a30800000000000000
+      internalID: 4190898913047198703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0643b30f19a85bb00800000000000000
+      internalID: 843732864607138912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 097074aee15047250800000000000000
+      internalID: 5941379438746208144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_0_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b94af641054382c30800000000000000
+      internalID: 4334772159888991387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_1_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e088ddcc31f3afe40800000000000000
+      internalID: 5690930433410041870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_2_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea2ec277321998db0800000000000000
+      internalID: -4789137147222498642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DonkeyShadow_Idle_3_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c60fd513a53c4b8a0800000000000000
+      internalID: -6290187987387027348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      DonkeyShadow_Idle_0_00: 7909572360617836482
+      DonkeyShadow_Idle_0_01: -5677507465697410904
+      DonkeyShadow_Idle_0_02: -7176392328520038406
+      DonkeyShadow_Idle_0_03: -5945459665465400181
+      DonkeyShadow_Idle_0_04: -7261063215953197110
+      DonkeyShadow_Idle_0_05: -6470671070713126463
+      DonkeyShadow_Idle_0_06: -5308687100196074240
+      DonkeyShadow_Idle_0_07: -6281476284904490006
+      DonkeyShadow_Idle_0_08: 2493707203067380459
+      DonkeyShadow_Idle_0_09: -8538445079027239692
+      DonkeyShadow_Idle_0_10: -5030200003026744268
+      DonkeyShadow_Idle_0_11: 4334772159888991387
+      DonkeyShadow_Idle_1_00: -366959984362134702
+      DonkeyShadow_Idle_1_01: 4414373219063312061
+      DonkeyShadow_Idle_1_02: -7109227361056950244
+      DonkeyShadow_Idle_1_03: 2821055041870040721
+      DonkeyShadow_Idle_1_04: -7976366906204513936
+      DonkeyShadow_Idle_1_05: 6961908197797728101
+      DonkeyShadow_Idle_1_06: -5868457655591909903
+      DonkeyShadow_Idle_1_07: -6923088796517692985
+      DonkeyShadow_Idle_1_08: -2444748741421184808
+      DonkeyShadow_Idle_1_09: 7262680314056786304
+      DonkeyShadow_Idle_1_10: 4190898913047198703
+      DonkeyShadow_Idle_1_11: 5690930433410041870
+      DonkeyShadow_Idle_2_00: -4445424137800585656
+      DonkeyShadow_Idle_2_01: -836251278523587677
+      DonkeyShadow_Idle_2_02: -5198624054186422378
+      DonkeyShadow_Idle_2_03: -6241598281938225183
+      DonkeyShadow_Idle_2_04: -410515680463225762
+      DonkeyShadow_Idle_2_05: 2463381155539349217
+      DonkeyShadow_Idle_2_06: -24452863969833438
+      DonkeyShadow_Idle_2_07: -3742638996495699366
+      DonkeyShadow_Idle_2_08: -6121340589578523652
+      DonkeyShadow_Idle_2_09: -7837416583760079453
+      DonkeyShadow_Idle_2_10: 843732864607138912
+      DonkeyShadow_Idle_2_11: -4789137147222498642
+      DonkeyShadow_Idle_3_00: 1023302522126517108
+      DonkeyShadow_Idle_3_01: -4067128021480746993
+      DonkeyShadow_Idle_3_02: -97599728128297261
+      DonkeyShadow_Idle_3_03: -7238391987873099250
+      DonkeyShadow_Idle_3_04: 9078984544486952325
+      DonkeyShadow_Idle_3_05: -6002802147556910887
+      DonkeyShadow_Idle_3_06: 1368471236434813632
+      DonkeyShadow_Idle_3_07: -6533198672585201367
+      DonkeyShadow_Idle_3_08: 6532744015846280096
+      DonkeyShadow_Idle_3_09: -39172366261032590
+      DonkeyShadow_Idle_3_10: 5941379438746208144
+      DonkeyShadow_Idle_3_11: -6290187987387027348
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

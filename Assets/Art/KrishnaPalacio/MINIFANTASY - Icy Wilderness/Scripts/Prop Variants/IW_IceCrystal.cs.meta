@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 38f40f358456da043af94e2a875ff18e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - iceCrystal_0: {fileID: -4966470671148839857, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - iceCrystal_1: {fileID: 6916592154788073892, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - iceCrystal_2: {fileID: -5223827888160046963, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - iceCrystal_3: {fileID: 8628471729529752808, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - iceCrystal_4: {fileID: 3751930113184852657, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - iceCrystal_0_Shadow: {fileID: -5618215636999315177, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - iceCrystal_1_Shadow: {fileID: -109161244642271460, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - iceCrystal_2_Shadow: {fileID: -2878494687579173192, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - iceCrystal_3_Shadow: {fileID: 6042026723663451475, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - iceCrystal_4_Shadow: {fileID: 1598544259456346810, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - iceCrystal_0_SnowTransition: {fileID: -863720315579735280, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - iceCrystal_1_SnowTransition: {fileID: 5683720937976749122, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - iceCrystal_2_SnowTransition: {fileID: -4499585562619248877, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - iceCrystal_3_SnowTransition: {fileID: -4507058270037530850, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - iceCrystal_4_SnowTransition: {fileID: 2196100681878348450, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,367 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+namespace FantasyWord.GameCore
+{
+    [DisallowMultipleComponent]
+    [RequireComponent(typeof(CharacterBase))]
+    public sealed class CharacterEquipment : MonoBehaviour
+    {
+        [Header("Equipment Ownership")]
+        [SerializeField] private CharacterBase m_character = null;
+
+        private readonly CharacterEquippedItemLoadout m_equipmentLoadout = new();
+        private readonly Dictionary<CharacterAbilitySourceKey, int> m_alterationEquipmentEffectSuppressions = new();
+
+        public CharacterBase Character => m_character;
+
+        public Stats CreateStatContributionSnapshot()
+        {
+            return BuildEquipmentStatContribution();
+        }
+
+        public CharacterEquipmentSlotData[] CreateSlotDataSnapshot(DatabaseRegistry databaseRegistry)
+        {
+            return m_equipmentLoadout.CreateSlotDataSnapshot(databaseRegistry);
+        }
+
+        public bool RestoreFromSlotData(
+            IEnumerable<CharacterEquipmentSlotData> equipmentSlots,
+            Func<DatabaseEntryReference<Equipment>, Equipment> resolveEquipment)
+        {
+            return m_equipmentLoadout.RestoreFromSlotData(
+                equipmentSlots,
+                resolveEquipment,
+                item => Equip(item, autoUpdateStats: false));
+        }
+
+        public EEquipmentOperationResult TryEquip(Equipment equipment, out Equipment previousEquipment)
+        {
+            previousEquipment = null;
+            if (!equipment)
+            {
+                return EEquipmentOperationResult.InvalidTarget;
+            }
+
+            return TryApplyEquipmentSlotChange(equipment.type, equipment, out previousEquipment);
+        }
+
+        public EEquipmentOperationResult TryUnequip(EEquipmentType type, out Equipment previousEquipment)
+        {
+            return TryApplyEquipmentSlotChange(type, null, out previousEquipment);
+        }
+
+        public bool TryGetEquipment(EEquipmentType type, out Equipment equipment)
+        {
+            return m_equipmentLoadout.TryGet(type, out equipment);
+        }
+
+        public Equipment[] GetEquippedItems()
+        {
+            return m_equipmentLoadout.SnapshotItems();
+        }
+
+        internal Equipment[] ForceUnequipAllEquipmentForLifecycle()
+        {
+            Equipment[] equippedItems = GetEquippedItems();
+            if (equippedItems.Length == 0)
+            {
+                return Array.Empty<Equipment>();
+            }
+
+            List<Equipment> removedEquipment = new(equippedItems.Length);
+            foreach (Equipment equipment in equippedItems)
+            {
+                if (!equipment)
+                {
+                    continue;
+                }
+
+                Equipment previousEquipment = ApplyEquipmentSlotChange(
+                    CreateEquipmentSlotChange(equipment.type, null),
+                    autoUpdateStats: false);
+
+                if (previousEquipment)
+                {
+                    removedEquipment.Add(previousEquipment);
+                }
+            }
+
+            RefreshCharacterStats();
+            return removedEquipment.ToArray();
+        }
+
+        public void ApplyAlterationEquipmentEffectSuppressionRule(CharacterAbilitySourceKey source)
+        {
+            m_alterationEquipmentEffectSuppressions.TryGetValue(source, out int currentStackCount);
+            m_alterationEquipmentEffectSuppressions[source] = currentStackCount + 1;
+            ApplyEquipmentBonusFormalGasAbilitySuppressions(GetEquippedEquipmentBonusFormalGasAbilityCodeSnapshot(), source, 1);
+            RefreshCharacterStats();
+        }
+
+        public void RemoveAlterationEquipmentEffectSuppressionRuleStack(CharacterAbilitySourceKey source)
+        {
+            if (!m_alterationEquipmentEffectSuppressions.TryGetValue(source, out int currentStackCount))
+            {
+                return;
+            }
+
+            RemoveEquipmentBonusFormalGasAbilitySuppressions(GetEquippedEquipmentBonusFormalGasAbilityCodeSnapshot(), source, 1);
+            int nextStackCount = currentStackCount - 1;
+            if (nextStackCount <= 0)
+            {
+                m_alterationEquipmentEffectSuppressions.Remove(source);
+            }
+            else
+            {
+                m_alterationEquipmentEffectSuppressions[source] = nextStackCount;
+            }
+
+            RefreshCharacterStats();
+        }
+
+        public void RemoveAllAlterationEquipmentEffectSuppressionRules(CharacterAbilitySourceKey source)
+        {
+            if (!m_alterationEquipmentEffectSuppressions.TryGetValue(source, out int currentStackCount))
+            {
+                return;
+            }
+
+            RemoveEquipmentBonusFormalGasAbilitySuppressions(GetEquippedEquipmentBonusFormalGasAbilityCodeSnapshot(), source, currentStackCount);
+            m_alterationEquipmentEffectSuppressions.Remove(source);
+            RefreshCharacterStats();
+        }
+
+        internal void ClearAlterationEquipmentEffectSuppressionRules()
+        {
+            if (m_alterationEquipmentEffectSuppressions.Count == 0)
+            {
+                return;
+            }
+
+            int[] currentEquipmentFormalGasAbilityCodes = GetEquippedEquipmentBonusFormalGasAbilityCodeSnapshot();
+            foreach ((CharacterAbilitySourceKey source, int stackCount) in m_alterationEquipmentEffectSuppressions)
+            {
+                RemoveEquipmentBonusFormalGasAbilitySuppressions(currentEquipmentFormalGasAbilityCodes, source, stackCount);
+            }
+
+            m_alterationEquipmentEffectSuppressions.Clear();
+            RefreshCharacterStats();
+        }
+
+        private Equipment Equip(Equipment equipment, bool autoUpdateStats = true)
+        {
+            return ApplyEquipmentSlotChange(CreateEquipmentSlotChange(equipment.type, equipment), autoUpdateStats);
+        }
+
+        private Stats BuildEquipmentStatContribution()
+        {
+            if (HasAlterationEquipmentEffectSuppression())
+            {
+                return new Stats();
+            }
+
+            return m_equipmentLoadout.BuildStatContribution();
+        }
+
+        private EEquipmentOperationResult TryApplyEquipmentSlotChange(
+            EEquipmentType type,
+            Equipment nextEquipment,
+            out Equipment previousEquipment)
+        {
+            previousEquipment = null;
+            if (!m_character)
+            {
+                return EEquipmentOperationResult.InvalidTarget;
+            }
+
+            if (!m_character.Can(EActionFlags.ChangeEquipment))
+            {
+                return EEquipmentOperationResult.ActionLocked;
+            }
+
+            CharacterEquipmentSlotChange change = CreateEquipmentSlotChange(type, nextEquipment);
+            Stats effectiveStatDelta = HasAlterationEquipmentEffectSuppression() ? new Stats() : change.StatDelta;
+            EEquipmentOperationResult result = MapEquipmentValidationResult(
+                m_character.ValidateCurrentResourceDelta(effectiveStatDelta, minimumHealth: 1));
+
+            if (result == EEquipmentOperationResult.Valid)
+            {
+                previousEquipment = ApplyEquipmentSlotChange(change, autoUpdateStats: true);
+            }
+
+            return result;
+        }
+
+        private CharacterEquipmentSlotChange CreateEquipmentSlotChange(EEquipmentType type, Equipment nextEquipment)
+        {
+            m_equipmentLoadout.TryGet(type, out Equipment currentEquipment);
+            Stats statDelta = new();
+
+            if (currentEquipment)
+            {
+                statDelta -= currentEquipment.CreateBonusStatsSnapshot();
+            }
+
+            if (nextEquipment)
+            {
+                statDelta += nextEquipment.CreateBonusStatsSnapshot();
+            }
+
+            return new CharacterEquipmentSlotChange(
+                type,
+                currentEquipment,
+                nextEquipment,
+                statDelta,
+                GetEquipmentBonusFormalGasAbilityCodesSnapshot(currentEquipment),
+                GetEquipmentBonusFormalGasAbilityCodesSnapshot(nextEquipment));
+        }
+
+        private Equipment ApplyEquipmentSlotChange(CharacterEquipmentSlotChange change, bool autoUpdateStats)
+        {
+            RemoveEquipmentBonusFormalGasAbilitySuppressions(change.RemovedFormalGasAbilityCodes);
+            ApplyEquipmentBonusFormalGasAbilityCodes(
+                change.RemovedFormalGasAbilityCodes,
+                code => m_character.RemoveBonusFormalGasAbility(
+                    code,
+                    CreateEquipmentAbilitySource(change.PreviousEquipment)));
+            m_equipmentLoadout.Set(change.SlotType, change.NextEquipment);
+            ApplyEquipmentBonusFormalGasAbilityCodes(
+                change.AddedFormalGasAbilityCodes,
+                code => m_character.AddBonusFormalGasAbility(
+                    code,
+                    CreateEquipmentAbilitySource(change.NextEquipment)));
+            ApplyEquipmentBonusFormalGasAbilitySuppressions(change.AddedFormalGasAbilityCodes);
+
+            if (autoUpdateStats)
+            {
+                RefreshCharacterStats();
+            }
+
+            return change.PreviousEquipment;
+        }
+
+        private static CharacterAbilitySourceKey CreateEquipmentAbilitySource(Equipment equipment)
+        {
+            string sourceId = equipment
+                ? GameManager.Database.CreateReference(equipment).guid
+                : "unknown-equipment";
+
+            return new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.Equipment, sourceId);
+        }
+
+        private static int[] GetEquipmentBonusFormalGasAbilityCodesSnapshot(Equipment equipment)
+        {
+            return equipment ? equipment.GetBonusFormalGasAbilityCodes() : Array.Empty<int>();
+        }
+
+        private int[] GetEquippedEquipmentBonusFormalGasAbilityCodeSnapshot()
+        {
+            return GetEquippedItems()
+                .SelectMany(GetEquipmentBonusFormalGasAbilityCodesSnapshot)
+                .Where(code => code > 0)
+                .Distinct()
+                .ToArray();
+        }
+
+        private bool HasAlterationEquipmentEffectSuppression()
+        {
+            foreach (int stackCount in m_alterationEquipmentEffectSuppressions.Values)
+            {
+                if (stackCount > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ApplyEquipmentBonusFormalGasAbilitySuppressions(IEnumerable<int> formalGasAbilityCodes)
+        {
+            foreach ((CharacterAbilitySourceKey source, int stackCount) in m_alterationEquipmentEffectSuppressions)
+            {
+                ApplyEquipmentBonusFormalGasAbilitySuppressions(formalGasAbilityCodes, source, stackCount);
+            }
+        }
+
+        private void ApplyEquipmentBonusFormalGasAbilitySuppressions(
+            IEnumerable<int> formalGasAbilityCodes,
+            CharacterAbilitySourceKey source,
+            int count)
+        {
+            ApplyEquipmentBonusFormalGasAbilityCodes(
+                formalGasAbilityCodes,
+                code => m_character.AddSourcedFormalGasAbilitySuppression(code, source, count));
+        }
+
+        private void RemoveEquipmentBonusFormalGasAbilitySuppressions(IEnumerable<int> formalGasAbilityCodes)
+        {
+            foreach ((CharacterAbilitySourceKey source, int stackCount) in m_alterationEquipmentEffectSuppressions)
+            {
+                RemoveEquipmentBonusFormalGasAbilitySuppressions(formalGasAbilityCodes, source, stackCount);
+            }
+        }
+
+        private void RemoveEquipmentBonusFormalGasAbilitySuppressions(
+            IEnumerable<int> formalGasAbilityCodes,
+            CharacterAbilitySourceKey source,
+            int count)
+        {
+            ApplyEquipmentBonusFormalGasAbilityCodes(
+                formalGasAbilityCodes,
+                code => m_character.RemoveSourcedFormalGasAbilitySuppression(code, source, count));
+        }
+
+        private static void ApplyEquipmentBonusFormalGasAbilityCodes(IEnumerable<int> formalGasAbilityCodes, Action<int> applyAbility)
+        {
+            foreach (int formalGasAbilityCode in formalGasAbilityCodes)
+            {
+                if (formalGasAbilityCode > 0)
+                {
+                    applyAbility(formalGasAbilityCode);
+                }
+            }
+        }
+
+        private static EEquipmentOperationResult MapEquipmentValidationResult(EResourceValidationResult validationResult)
+        {
+            return validationResult switch
+            {
+                EResourceValidationResult.HealthBelowMinimum => EEquipmentOperationResult.NotEnoughHealth,
+                EResourceValidationResult.ManaBelowMinimum => EEquipmentOperationResult.NotEnoughMana,
+                _ => EEquipmentOperationResult.Valid
+            };
+        }
+
+        private void RefreshCharacterStats()
+        {
+            m_character?.RefreshResolvedStatsForEquipmentRuntime();
+        }
+
+        private void Awake()
+        {
+            EnsureCharacterReference();
+        }
+
+        private void Reset()
+        {
+            EnsureCharacterReference();
+        }
+
+        private void OnValidate()
+        {
+            EnsureCharacterReference();
+        }
+
+        private void EnsureCharacterReference()
+        {
+            if (m_character == null)
+            {
+                TryGetComponent(out m_character);
+            }
+        }
+    }
+}

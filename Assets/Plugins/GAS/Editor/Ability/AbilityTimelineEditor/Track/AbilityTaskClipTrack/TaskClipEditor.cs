@@ -1,125 +1,105 @@
+using System.Collections;
+using System.Linq;
+using GAS.Runtime;
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
+using UnityEditor;
+using UnityEngine;
 
 #if UNITY_EDITOR
 namespace GAS.Editor
 {
-    using UnityEditor;
-    using UnityEngine;
-    using NaughtyAttributes;
-    using System.Linq;
-    using System.Collections;
-    using GAS.General;
-    using System;
-    using System.Collections.Generic;
-    using GAS.Runtime;
-
-    public class TaskClipEditor:NaughtyEditorWindow
+    public class TaskClipEditor : OdinEditorWindow
     {
-        private static IEnumerable OngoingTaskSonTypes = OngoingTaskData.OngoingTaskSonTypeChoices;
-        
-        private static Type[] _ongoingTaskInspectorTypes;
+        private const string GRP_BOX = "AbilityTask";
+        private const string GRP_BOX_TASK = "AbilityTask/Task";
 
-        public static Type[] OngoingTaskInspectorTypes =>
-            _ongoingTaskInspectorTypes ??= TypeUtil.GetAllSonTypesOf(typeof(OngoingTaskInspector));
-        
-        private static Dictionary<Type, Type> _ongoingTaskInspectorMap;
-        private static Dictionary<Type, Type> OngoingTaskInspectorMap
-        {
-            get
-            {
-                if (_ongoingTaskInspectorMap != null) return _ongoingTaskInspectorMap;
-                _ongoingTaskInspectorMap = new Dictionary<Type, Type>();
-                foreach (var inspectorType in OngoingTaskInspectorTypes)
-                {
-                    var taskType = inspectorType.BaseType.GetGenericArguments()[0];
-                    _ongoingTaskInspectorMap.Add(taskType, inspectorType);
-                }
+        private static IEnumerable _abilityTaskTypes =
+            EditorAbilityHelper.GetCachedAbilityTaskTypes().Select(t => t.Name).ToArray();
 
-                return _ongoingTaskInspectorMap;
-            }
-        }
-        
-        private const string GRP_BOX = "GRP_BOX";
-        private const string GRP_BOX_TASK = "GRP_BOX/Task";
-        private TimelineAbilityAssetBase AbilityAsset => AbilityTimelineEditorWindow.Instance.AbilityAsset;
+
+        [BoxGroup(GRP_BOX)] [Delayed] [LabelText("任务名[展示用]")] [OnValueChanged(nameof(OnNameChange))]
+        public string Name;
+
+        [Delayed] [BoxGroup(GRP_BOX)] [LabelText("起始帧(f)")] [OnValueChanged(nameof(OnClipStartFrameChanged))]
+        public int StartTime;
+
+        [Delayed] [BoxGroup(GRP_BOX)] [LabelText("结束帧(f)")] [OnValueChanged(nameof(OnClipEndFrameChanged))]
+        public int EndTime;
+
+        [Delayed]
+        [BoxGroup(GRP_BOX_TASK)]
+        [LabelText("Task类型")]
+        [ValueDropdown(nameof(_abilityTaskTypes))]
+        [OnValueChanged(nameof(OnTaskTypeChanged))]
+        public string TaskType;
+
+        [BoxGroup(GRP_BOX_TASK)] [HideLabel] [ShowInInspector] [HideReferenceObjectPicker]
+        public XParam Parameter;
+
+        private XParamTimeline AbilityConfig => AbilityTimelineEditorWindow.Instance.AbilityConfig;
+
         private TaskClip _clip;
         
         public static TaskClipEditor Create(TaskClip clip)
         {
-            var window = new TaskClipEditor();
+            var window = CreateInstance<TaskClipEditor>();
             window._clip = clip;
             window.Refresh();
             return window;
         }
-                        public string RunInfo;
 
-        [Delayed]
-        [OnValueChanged("OnDurationFrameChanged")]
-        public int Duration;
-        
-        [Delayed]
-        [OnValueChanged("OnTaskTypeChanged")]
-        public string OngoingTaskType;
-                [HideIf("OngoingTaskIsNull")]
-        public OngoingTaskInspector OngoingTask;
-        [Button]
-                void Delete()
+        [BoxGroup(GRP_BOX)]
+        [Button("删除")]
+        [GUIColor(0.9f, 0.2f, 0.2f)]
+        private void Delete()
         {
             _clip.Delete();
         }
-        
-        void Refresh()
-        {
-            RunInfo = $"<b>Run(f):{_clip.TaskClipData.startFrame} -> {_clip.TaskClipData.EndFrame}</b>";
-            Duration = _clip.TaskClipData.durationFrame;
-            OngoingTaskType = _clip.TaskClipData.ongoingTask.TaskData.Type;
 
-            RefreshTaskInspector();
+
+        private void Refresh()
+        {
+            Name = _clip.TaskClipData.Name;
+            StartTime = _clip.TaskClipData.StartTime;
+            EndTime = _clip.TaskClipData.EndTime;
+            TaskType = _clip.TaskClipData.TaskType;
+            Parameter = _clip.TaskClipData.Parameter;
         }
 
-        void RefreshTaskInspector()
-        {
-            // 根据选择的OngoingAbilityTask子类，显示对应的属性
-            var ongoingAbilityTask = _clip.TaskClipData.Load();
-            if (OngoingTaskInspectorMap.TryGetValue(ongoingAbilityTask.GetType(), out var inspectorType))
-            {
-                var taskInspector = (OngoingTaskInspector)Activator.CreateInstance(inspectorType);
-                taskInspector.Init(ongoingAbilityTask);
-                OngoingTask = taskInspector;
-            }
-            else
-            {
-                OngoingTask = null;
-            }
-        }
-
-        private void OnDurationFrameChanged()
+        private void OnClipStartFrameChanged()
         {
             // 钳制
-            var max = AbilityAsset.FrameCount - _clip.ClipDataForSave.startFrame;
-            Duration = Mathf.Clamp(Duration, 1, max);
-            _clip.UpdateClipDataDurationFrame(Duration);
+            StartTime = Mathf.Clamp(StartTime, 0, EndTime);
+            _clip.UpdateClipDataStartFrame(StartTime);
             _clip.RefreshShow(_clip.FrameUnitWidth);
-            Refresh();
         }
         
-        private void OnTaskTypeChanged()
+        private void OnClipEndFrameChanged()
         {
-            _clip.ClipDataForSave.ongoingTask.TaskData.Type = OngoingTaskType;
-            _clip.ClipDataForSave.ongoingTask.TaskData.Data = null;
-            AbilityTimelineEditorWindow.Instance.Save();
-            AbilityTimelineEditorWindow.Instance.TimelineInspector.RefreshInspector();
-            
-            RefreshTaskInspector();
+            // 钳制
+            EndTime = Mathf.Clamp(EndTime, StartTime, AbilityConfig.LifeTime);
+            _clip.UpdateClipDataEndFrame(EndTime);
+            _clip.RefreshShow(_clip.FrameUnitWidth);
         }
 
-        bool OngoingTaskIsNull()
+        private void OnTaskTypeChanged()
         {
-            return OngoingTask == null;
+            _clip.TaskClipData.TaskType = TaskType;
+            Parameter = EditorAbilityHelper.CreateAbilityTaskParameter(TaskType);
+            _clip.TaskClipData.Parameter = Parameter;
+            _clip.ClearPreviewTaskCache();
+        }
+
+        private void OnNameChange()
+        {
+            _clip.TaskClipData.Name = Name;
+            _clip.RefreshShow(_clip.FrameUnitWidth);
         }
     }
-    
+
     [CustomEditor(typeof(TaskClipEditor))]
-    public class TaskClipInspector:NaughtyEditorWithoutHeader
+    public class TaskClipInspector : OdinEditorWithoutHeader
     {
     }
 }

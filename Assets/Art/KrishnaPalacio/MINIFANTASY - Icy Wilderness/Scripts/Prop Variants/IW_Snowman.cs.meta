@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 9807cafe7598d334fbea79fb90450486
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - snowman: {fileID: -1505438265601992434, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_arms: {fileID: -7945865441404643146, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_arms_hat: {fileID: -3734424984759619832, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_arms_nose: {fileID: -1652395247932523250, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_arms_nose_hat: {fileID: -3639735709608660288, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_hat: {fileID: -6380669064500406738, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_nose: {fileID: -6156973334518912048, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_nose_hat: {fileID: 8231085802549963402, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowman_Shadow: {fileID: 1499182669241071216, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_arms_Shadow: {fileID: -1928620560430925749, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_arms_hat_Shadow: {fileID: 4946950354364142536, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_arms_nose_Shadow: {fileID: -4496180996426736554, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_arms_nose_hat_Shadow: {fileID: 40721073058347088, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_hat_Shadow: {fileID: -6939231171035326758, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_nose_Shadow: {fileID: -522874175001582040, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_nose_hat_Shadow: {fileID: -803709084731615879, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowman_SnowTransition: {fileID: 4316664922451843865, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - snowman_hat_SnowTransition: {fileID: 7172103065927424261, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - snowman_hat_arms_SnowTransition: {fileID: 4139500818120452979, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

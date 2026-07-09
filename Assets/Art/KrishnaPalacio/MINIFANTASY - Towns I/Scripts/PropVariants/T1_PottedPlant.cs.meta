@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 862a2487a4964d147a66ee2231b69ab3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pottedPlant1: {fileID: 7481488362606449352, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - pottedPlant2: {fileID: 7632836075553106725, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - pottedPlant3: {fileID: 5694307619157401217, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowPottedPlant1: {fileID: -435902480134561646, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowPottedPlant2: {fileID: 2667979996344511294, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowPottedPlant3: {fileID: 1085020250950095695, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

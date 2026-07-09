@@ -5,10 +5,10 @@ namespace GAS.Editor
 
     public class AbilityTimelineEditorConfig
     {
-        public int FrameUnitWidth = 10;
-        public const int StandardFrameUnitWidth = 1;
-        public const int MaxFrameUnitLevel= 20;
-        public const float MinTimerShaftFrameDrawStep = 5;
+        public float FrameUnitWidth = 10;
+        public const float StandardFrameUnitWidth = 0.4f;
+        public const int MaxFrameUnitLevel= 100;
+        public const float MinTimerShaftFrameDrawStep = 10;
         public int DefaultFrameRate => GASTimer.FrameRate;
     }
 }

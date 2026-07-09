@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 3293ce59c523851429c0c640a404d446
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - widePlainTable: {fileID: 7813908690006627524, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - longPlainTable: {fileID: 179322424394467755, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - wideDesk: {fileID: 3985253829144601360, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - longDesk: {fileID: -4942627721913773221, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - wideButcherTable: {fileID: 5646253133918497986, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - longButcherTable: {fileID: 3946610344063585506, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - wideAlchemyTable: {fileID: -2019049120015645736, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - longAlchemyTable: {fileID: -2007735251305914664, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - wideTableShadow: {fileID: 2524192782110729413, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - longTableShadow: {fileID: -282465402479509830, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - wideAlchemyTableShadow: {fileID: 1814978843040841920, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - longAlchemyTableShadow: {fileID: -8924999357055221593, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

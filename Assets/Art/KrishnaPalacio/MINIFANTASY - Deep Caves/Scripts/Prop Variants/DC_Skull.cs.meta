@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 05407d942df965f48bf4e923f683aea4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - skullLeft: {fileID: 1136741936236386817, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - skullRight: {fileID: 2523170632633379195, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - skullLeftShadow: {fileID: 1594842652600662717, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - skullRightShadow: {fileID: 5722276284520613721, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

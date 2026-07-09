@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f4d1b70e480141e4eac67cfbcf3de5e3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pinkFlower: {fileID: -5319324980431877433, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - redFlower: {fileID: -4113245347865499130, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - pinkFlowerSnowTransition: {fileID: -3411446300266275699, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - redFlowerSnowTransition: {fileID: -5401741085608296730, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

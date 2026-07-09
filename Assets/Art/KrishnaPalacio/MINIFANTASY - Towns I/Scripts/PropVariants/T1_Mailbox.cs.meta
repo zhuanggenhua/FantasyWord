@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f92f4d094d472fc4993017b4ac30a41b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mailbox1: {fileID: 1669189058842976862, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - mailbox2: {fileID: 7832878757009303614, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowMailbox1: {fileID: -5659585010512519466, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowMailbox2: {fileID: 788250099593819014, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

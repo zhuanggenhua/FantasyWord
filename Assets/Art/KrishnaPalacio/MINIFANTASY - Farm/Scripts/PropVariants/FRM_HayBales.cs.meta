@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 78a823790f527c8469effe2a47d4d582
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - singleBale: {fileID: 6831715243278567750, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - rowOfBales: {fileID: 1131045112597940843, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - columnOfBales: {fileID: 35332333598468616, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - towerOfBales: {fileID: -2632943321424041305, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - singleBaleShadow: {fileID: 4735127642330765128, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - rowOfBalesShadow: {fileID: 5209312026314314100, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - columnOfBalesShadow: {fileID: -3768744560296465793, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - towerOfBalesShadow: {fileID: 7103769442439403339, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

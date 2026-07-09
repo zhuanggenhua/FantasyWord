@@ -1,0 +1,1999 @@
+fileFormatVersion: 2
+guid: 9272c4a8091efe6409e5afe74ea53fd5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2698123739852932596
+    second: Minifantasy_IcyWildernessPenguinIdle_0_00
+  - first:
+      213: 7991918826598183408
+    second: Minifantasy_IcyWildernessPenguinIdle_1_00
+  - first:
+      213: -125705606061791975
+    second: Minifantasy_IcyWildernessPenguinIdle_2_00
+  - first:
+      213: -2781991878653657309
+    second: Minifantasy_IcyWildernessPenguinIdle_3_00
+  - first:
+      213: -4127732919185166118
+    second: Minifantasy_IcyWildernessPenguinIdle_0_01
+  - first:
+      213: -5285773407523234731
+    second: Minifantasy_IcyWildernessPenguinIdle_1_01
+  - first:
+      213: -4830809666903321969
+    second: Minifantasy_IcyWildernessPenguinIdle_2_01
+  - first:
+      213: -3846819465707978216
+    second: Minifantasy_IcyWildernessPenguinIdle_3_01
+  - first:
+      213: 2217345867091578417
+    second: Minifantasy_IcyWildernessPenguinIdle_0_02
+  - first:
+      213: -4059287697989789881
+    second: Minifantasy_IcyWildernessPenguinIdle_1_02
+  - first:
+      213: -499725133353731674
+    second: Minifantasy_IcyWildernessPenguinIdle_2_02
+  - first:
+      213: -6201319329614984275
+    second: Minifantasy_IcyWildernessPenguinIdle_3_02
+  - first:
+      213: 2699475968789859440
+    second: Minifantasy_IcyWildernessPenguinIdle_0_03
+  - first:
+      213: 2947409269277839151
+    second: Minifantasy_IcyWildernessPenguinIdle_1_03
+  - first:
+      213: 3801623057559552467
+    second: Minifantasy_IcyWildernessPenguinIdle_2_03
+  - first:
+      213: 3869389407541808767
+    second: Minifantasy_IcyWildernessPenguinIdle_3_03
+  - first:
+      213: 7178105342195621503
+    second: Minifantasy_IcyWildernessPenguinIdle_0_04
+  - first:
+      213: 3246132622599772742
+    second: Minifantasy_IcyWildernessPenguinIdle_1_04
+  - first:
+      213: 477363684095140504
+    second: Minifantasy_IcyWildernessPenguinIdle_2_04
+  - first:
+      213: 5891981740325495217
+    second: Minifantasy_IcyWildernessPenguinIdle_3_04
+  - first:
+      213: -7132727578506756195
+    second: Minifantasy_IcyWildernessPenguinIdle_0_05
+  - first:
+      213: -1195344228830433246
+    second: Minifantasy_IcyWildernessPenguinIdle_1_05
+  - first:
+      213: 8645812801836110564
+    second: Minifantasy_IcyWildernessPenguinIdle_2_05
+  - first:
+      213: -4100381676162187697
+    second: Minifantasy_IcyWildernessPenguinIdle_3_05
+  - first:
+      213: -5853573809749034560
+    second: Minifantasy_IcyWildernessPenguinIdle_0_06
+  - first:
+      213: -5331141347551832392
+    second: Minifantasy_IcyWildernessPenguinIdle_1_06
+  - first:
+      213: 8440536695378028351
+    second: Minifantasy_IcyWildernessPenguinIdle_2_06
+  - first:
+      213: -5781191703395190144
+    second: Minifantasy_IcyWildernessPenguinIdle_3_06
+  - first:
+      213: 2509536321081427508
+    second: Minifantasy_IcyWildernessPenguinIdle_0_07
+  - first:
+      213: -8570896523211965245
+    second: Minifantasy_IcyWildernessPenguinIdle_1_07
+  - first:
+      213: -8459571920773766502
+    second: Minifantasy_IcyWildernessPenguinIdle_2_07
+  - first:
+      213: 7490611166025955102
+    second: Minifantasy_IcyWildernessPenguinIdle_3_07
+  - first:
+      213: -3423485048464648482
+    second: Minifantasy_IcyWildernessPenguinIdle_0_08
+  - first:
+      213: -7782800054037148477
+    second: Minifantasy_IcyWildernessPenguinIdle_1_08
+  - first:
+      213: -5721168401806246632
+    second: Minifantasy_IcyWildernessPenguinIdle_2_08
+  - first:
+      213: -3233223894757667101
+    second: Minifantasy_IcyWildernessPenguinIdle_3_08
+  - first:
+      213: 8737257597145493658
+    second: Minifantasy_IcyWildernessPenguinIdle_0_09
+  - first:
+      213: -2446167497410700864
+    second: Minifantasy_IcyWildernessPenguinIdle_1_09
+  - first:
+      213: -2428064207643413594
+    second: Minifantasy_IcyWildernessPenguinIdle_2_09
+  - first:
+      213: -2146039848656720076
+    second: Minifantasy_IcyWildernessPenguinIdle_3_09
+  - first:
+      213: -1068319011179458118
+    second: Minifantasy_IcyWildernessPenguinIdle_0_10
+  - first:
+      213: 8494080631281568385
+    second: Minifantasy_IcyWildernessPenguinIdle_1_10
+  - first:
+      213: -4450319643567943799
+    second: Minifantasy_IcyWildernessPenguinIdle_2_10
+  - first:
+      213: -2530877912948097614
+    second: Minifantasy_IcyWildernessPenguinIdle_3_10
+  - first:
+      213: 4313689298019180194
+    second: Minifantasy_IcyWildernessPenguinIdle_0_11
+  - first:
+      213: -9010995588221835137
+    second: Minifantasy_IcyWildernessPenguinIdle_1_11
+  - first:
+      213: 6642256021885947255
+    second: Minifantasy_IcyWildernessPenguinIdle_2_11
+  - first:
+      213: 3083707658911565231
+    second: Minifantasy_IcyWildernessPenguinIdle_3_11
+  - first:
+      213: -8396410829826203395
+    second: Minifantasy_IcyWildernessPenguinIdle_0_12
+  - first:
+      213: 3533408480135576132
+    second: Minifantasy_IcyWildernessPenguinIdle_1_12
+  - first:
+      213: 2922620956647908326
+    second: Minifantasy_IcyWildernessPenguinIdle_2_12
+  - first:
+      213: 8377096149769620490
+    second: Minifantasy_IcyWildernessPenguinIdle_3_12
+  - first:
+      213: 2580200412662512619
+    second: Minifantasy_IcyWildernessPenguinIdle_0_13
+  - first:
+      213: -6869015507828897767
+    second: Minifantasy_IcyWildernessPenguinIdle_1_13
+  - first:
+      213: 886868066667952767
+    second: Minifantasy_IcyWildernessPenguinIdle_2_13
+  - first:
+      213: 2176698392656218124
+    second: Minifantasy_IcyWildernessPenguinIdle_3_13
+  - first:
+      213: 7381013053733807215
+    second: Minifantasy_IcyWildernessPenguinIdle_0_14
+  - first:
+      213: 8115595805915567762
+    second: Minifantasy_IcyWildernessPenguinIdle_1_14
+  - first:
+      213: 7786399291714598416
+    second: Minifantasy_IcyWildernessPenguinIdle_2_14
+  - first:
+      213: -1527204522638673965
+    second: Minifantasy_IcyWildernessPenguinIdle_3_14
+  - first:
+      213: -7013081899449199320
+    second: Minifantasy_IcyWildernessPenguinIdle_0_15
+  - first:
+      213: -395836523138313409
+    second: Minifantasy_IcyWildernessPenguinIdle_1_15
+  - first:
+      213: 8822822564891972537
+    second: Minifantasy_IcyWildernessPenguinIdle_2_15
+  - first:
+      213: 5400384164586783178
+    second: Minifantasy_IcyWildernessPenguinIdle_3_15
+  - first:
+      213: -79167242359898444
+    second: Penguin_Idle_0_00
+  - first:
+      213: -630003957603248058
+    second: Penguin_Idle_1_00
+  - first:
+      213: -5222726747379813547
+    second: Penguin_Idle_2_00
+  - first:
+      213: 2071020019304844105
+    second: Penguin_Idle_3_00
+  - first:
+      213: -3522846746787861489
+    second: Penguin_Idle_0_01
+  - first:
+      213: -6815153634788316689
+    second: Penguin_Idle_1_01
+  - first:
+      213: -985742271071602128
+    second: Penguin_Idle_2_01
+  - first:
+      213: 8554133733662814866
+    second: Penguin_Idle_3_01
+  - first:
+      213: 3201039074623662952
+    second: Penguin_Idle_0_02
+  - first:
+      213: 3501463654852614085
+    second: Penguin_Idle_1_02
+  - first:
+      213: -5348437392326839911
+    second: Penguin_Idle_2_02
+  - first:
+      213: -6211758686405287390
+    second: Penguin_Idle_3_02
+  - first:
+      213: 1355878314756276913
+    second: Penguin_Idle_0_03
+  - first:
+      213: 1325130022269343070
+    second: Penguin_Idle_1_03
+  - first:
+      213: 7584082631778616484
+    second: Penguin_Idle_2_03
+  - first:
+      213: -6398233614391847868
+    second: Penguin_Idle_3_03
+  - first:
+      213: -157635682172970883
+    second: Penguin_Idle_0_04
+  - first:
+      213: -6108723569439012850
+    second: Penguin_Idle_1_04
+  - first:
+      213: -4157639743588039050
+    second: Penguin_Idle_2_04
+  - first:
+      213: -6631637527038707772
+    second: Penguin_Idle_3_04
+  - first:
+      213: -9030686089447354326
+    second: Penguin_Idle_0_05
+  - first:
+      213: 3978681244502713352
+    second: Penguin_Idle_1_05
+  - first:
+      213: -4109475751034289086
+    second: Penguin_Idle_2_05
+  - first:
+      213: 443181086225697000
+    second: Penguin_Idle_3_05
+  - first:
+      213: 9015005678193030325
+    second: Penguin_Idle_0_06
+  - first:
+      213: -3856492064102604574
+    second: Penguin_Idle_1_06
+  - first:
+      213: 1812282314850665757
+    second: Penguin_Idle_2_06
+  - first:
+      213: -3738728683432456992
+    second: Penguin_Idle_3_06
+  - first:
+      213: -4626694113853987785
+    second: Penguin_Idle_0_07
+  - first:
+      213: -3738239381284944423
+    second: Penguin_Idle_1_07
+  - first:
+      213: -8043466121878483591
+    second: Penguin_Idle_2_07
+  - first:
+      213: 3211816942018671451
+    second: Penguin_Idle_3_07
+  - first:
+      213: -7089863846993468039
+    second: Penguin_Idle_0_08
+  - first:
+      213: 8720896244881724347
+    second: Penguin_Idle_1_08
+  - first:
+      213: -3764751899678506881
+    second: Penguin_Idle_2_08
+  - first:
+      213: 3938295663996416762
+    second: Penguin_Idle_3_08
+  - first:
+      213: -1041634988692060805
+    second: Penguin_Idle_0_09
+  - first:
+      213: -4742702915625261330
+    second: Penguin_Idle_1_09
+  - first:
+      213: -7572049980751219416
+    second: Penguin_Idle_2_09
+  - first:
+      213: -5530519446892951552
+    second: Penguin_Idle_3_09
+  - first:
+      213: -2837808775412688184
+    second: Penguin_Idle_0_10
+  - first:
+      213: 4867806230319121588
+    second: Penguin_Idle_1_10
+  - first:
+      213: -7886174500804767439
+    second: Penguin_Idle_2_10
+  - first:
+      213: 7344844694720820262
+    second: Penguin_Idle_3_10
+  - first:
+      213: 5196299321532637146
+    second: Penguin_Idle_0_11
+  - first:
+      213: 2288223867036250124
+    second: Penguin_Idle_1_11
+  - first:
+      213: 5389409349622759106
+    second: Penguin_Idle_2_11
+  - first:
+      213: -7717013691136483148
+    second: Penguin_Idle_3_11
+  - first:
+      213: 6658716027415092810
+    second: Penguin_Idle_0_12
+  - first:
+      213: -7590974898664943161
+    second: Penguin_Idle_1_12
+  - first:
+      213: -2371275328407795715
+    second: Penguin_Idle_2_12
+  - first:
+      213: -1420808270890875105
+    second: Penguin_Idle_3_12
+  - first:
+      213: 8787712535632352682
+    second: Penguin_Idle_0_13
+  - first:
+      213: 1575144816184815717
+    second: Penguin_Idle_1_13
+  - first:
+      213: 348611382084312720
+    second: Penguin_Idle_2_13
+  - first:
+      213: -6603481930090031134
+    second: Penguin_Idle_3_13
+  - first:
+      213: 4047750927607509030
+    second: Penguin_Idle_0_14
+  - first:
+      213: -7183519542703099510
+    second: Penguin_Idle_1_14
+  - first:
+      213: 8384924498082958565
+    second: Penguin_Idle_2_14
+  - first:
+      213: -1464670824276099139
+    second: Penguin_Idle_3_14
+  - first:
+      213: -2461774496650473263
+    second: Penguin_Idle_0_15
+  - first:
+      213: 9222615857715695029
+    second: Penguin_Idle_1_15
+  - first:
+      213: 7828628410378244073
+    second: Penguin_Idle_2_15
+  - first:
+      213: -3323460776415243875
+    second: Penguin_Idle_3_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Penguin_Idle_0_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4be7a4100ddb6eef0800000000000000
+      internalID: -79167242359898444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 648d7fb0db6c147f0800000000000000
+      internalID: -630003957603248058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 553be77c1b52587b0800000000000000
+      internalID: -5222726747379813547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94b436d1cbdbdbc10800000000000000
+      internalID: 2071020019304844105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0ca1937c855c1fc0800000000000000
+      internalID: -3522846746787861489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe9eabc90e5bb61a0800000000000000
+      internalID: -6815153634788316689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03ab0bc80a0f152f0800000000000000
+      internalID: -985742271071602128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_01
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 292782c1f4366b670800000000000000
+      internalID: 8554133733662814866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86ba61b14106c6c20800000000000000
+      internalID: 3201039074623662952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c75e6d74a2b79030800000000000000
+      internalID: 3501463654852614085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99131f6678886c5b0800000000000000
+      internalID: -5348437392326839911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_02
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 222ad52d2666bc9a0800000000000000
+      internalID: -6211758686405287390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b204bdb42c01d210800000000000000
+      internalID: 1355878314756276913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e55d1920cbec36210800000000000000
+      internalID: 1325130022269343070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a4cf5ea8f2104960800000000000000
+      internalID: 7584082631778616484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_03
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 444d5305d68e437a0800000000000000
+      internalID: -6398233614391847868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d785728ae27ffcdf0800000000000000
+      internalID: -157635682172970883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e08088c6744793ba0800000000000000
+      internalID: -6108723569439012850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 676836b6ea81d46c0800000000000000
+      internalID: -4157639743588039050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_04
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c735b91ec0b7f3a0800000000000000
+      internalID: -6631637527038707772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a20dd6829de8ca280800000000000000
+      internalID: -9030686089447354326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 804e71d038d173730800000000000000
+      internalID: 3978681244502713352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 244058ec39538f6c0800000000000000
+      internalID: -4109475751034289086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_05
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e887af89de762600800000000000000
+      internalID: 443181086225697000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b433d896ebbb1d70800000000000000
+      internalID: 9015005678193030325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e02d0876ecfa7ac0800000000000000
+      internalID: -3856492064102604574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d158569d925862910800000000000000
+      internalID: 1812282314850665757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_06
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ecc170321e5d1cc0800000000000000
+      internalID: -3738728683432456992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 734a75b773eaacfb0800000000000000
+      internalID: -4626694113853987785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d58229b61b1f1cc0800000000000000
+      internalID: -3738239381284944423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97d4b82ad2edf5090800000000000000
+      internalID: -8043466121878483591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_07
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b53ba98ed7aa29c20800000000000000
+      internalID: 3211816942018671451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 975e116156ebb9d90800000000000000
+      internalID: -7089863846993468039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb3963fede8d60970800000000000000
+      internalID: 8720896244881724347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f708f20081ae0cbc0800000000000000
+      internalID: -3764751899678506881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_08
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af2b7f85a03a7a630800000000000000
+      internalID: 3938295663996416762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7544612f7e5b81f0800000000000000
+      internalID: -1041634988692060805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee662fe73d88e2eb0800000000000000
+      internalID: -4742702915625261330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 825f1d339acaae690800000000000000
+      internalID: -7572049980751219416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_09
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0084e807dd5af33b0800000000000000
+      internalID: -5530519446892951552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ca5a0144f31e98d0800000000000000
+      internalID: -2837808775412688184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b4ca99c9fbed8340800000000000000
+      internalID: 4867806230319121588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 131d9c2031eae8290800000000000000
+      internalID: -7886174500804767439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6243f3fc5512ee560800000000000000
+      internalID: 7344844694720820262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adf5e86a3b6fc1840800000000000000
+      internalID: 5196299321532637146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c003449cb7761cf10800000000000000
+      internalID: 2288223867036250124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cefe69cf370bca40800000000000000
+      internalID: 5389409349622759106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b0ebf43fe8a7e490800000000000000
+      internalID: -7717013691136483148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4ed64292f2886c50800000000000000
+      internalID: 6658716027415092810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c15b226c8077a690800000000000000
+      internalID: -7590974898664943161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df70b9107a9871fd0800000000000000
+      internalID: -2371275328407795715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f17cc97c766484ce0800000000000000
+      internalID: -1420808270890875105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa51d9aedf934f970800000000000000
+      internalID: 8787712535632352682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5607e766dd90cd510800000000000000
+      internalID: 1575144816184815717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09e1bc9743486d400800000000000000
+      internalID: 348611382084312720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e7d54cdb28bb54a0800000000000000
+      internalID: -6603481930090031134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 620bd43d5008c2830800000000000000
+      internalID: 4047750927607509030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a81fa1c29030f4c90800000000000000
+      internalID: -7183519542703099510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ec84b0e76c3d5470800000000000000
+      internalID: 8384924498082958565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbff42e35a17cabe0800000000000000
+      internalID: -1464670824276099139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_0_15
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 96
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d0580a632506ddd0800000000000000
+      internalID: -2461774496650473263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_1_15
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 64
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bd470352405dff70800000000000000
+      internalID: 9222615857715695029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_2_15
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 32
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ef4027bf00e4ac60800000000000000
+      internalID: 7828628410378244073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Penguin_Idle_3_15
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 0
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9153d44802b0e1d0800000000000000
+      internalID: -3323460776415243875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Penguin_Idle_0_00: -79167242359898444
+      Penguin_Idle_0_01: -3522846746787861489
+      Penguin_Idle_0_02: 3201039074623662952
+      Penguin_Idle_0_03: 1355878314756276913
+      Penguin_Idle_0_04: -157635682172970883
+      Penguin_Idle_0_05: -9030686089447354326
+      Penguin_Idle_0_06: 9015005678193030325
+      Penguin_Idle_0_07: -4626694113853987785
+      Penguin_Idle_0_08: -7089863846993468039
+      Penguin_Idle_0_09: -1041634988692060805
+      Penguin_Idle_0_10: -2837808775412688184
+      Penguin_Idle_0_11: 5196299321532637146
+      Penguin_Idle_0_12: 6658716027415092810
+      Penguin_Idle_0_13: 8787712535632352682
+      Penguin_Idle_0_14: 4047750927607509030
+      Penguin_Idle_0_15: -2461774496650473263
+      Penguin_Idle_1_00: -630003957603248058
+      Penguin_Idle_1_01: -6815153634788316689
+      Penguin_Idle_1_02: 3501463654852614085
+      Penguin_Idle_1_03: 1325130022269343070
+      Penguin_Idle_1_04: -6108723569439012850
+      Penguin_Idle_1_05: 3978681244502713352
+      Penguin_Idle_1_06: -3856492064102604574
+      Penguin_Idle_1_07: -3738239381284944423
+      Penguin_Idle_1_08: 8720896244881724347
+      Penguin_Idle_1_09: -4742702915625261330
+      Penguin_Idle_1_10: 4867806230319121588
+      Penguin_Idle_1_11: 2288223867036250124
+      Penguin_Idle_1_12: -7590974898664943161
+      Penguin_Idle_1_13: 1575144816184815717
+      Penguin_Idle_1_14: -7183519542703099510
+      Penguin_Idle_1_15: 9222615857715695029
+      Penguin_Idle_2_00: -5222726747379813547
+      Penguin_Idle_2_01: -985742271071602128
+      Penguin_Idle_2_02: -5348437392326839911
+      Penguin_Idle_2_03: 7584082631778616484
+      Penguin_Idle_2_04: -4157639743588039050
+      Penguin_Idle_2_05: -4109475751034289086
+      Penguin_Idle_2_06: 1812282314850665757
+      Penguin_Idle_2_07: -8043466121878483591
+      Penguin_Idle_2_08: -3764751899678506881
+      Penguin_Idle_2_09: -7572049980751219416
+      Penguin_Idle_2_10: -7886174500804767439
+      Penguin_Idle_2_11: 5389409349622759106
+      Penguin_Idle_2_12: -2371275328407795715
+      Penguin_Idle_2_13: 348611382084312720
+      Penguin_Idle_2_14: 8384924498082958565
+      Penguin_Idle_2_15: 7828628410378244073
+      Penguin_Idle_3_00: 2071020019304844105
+      Penguin_Idle_3_01: 8554133733662814866
+      Penguin_Idle_3_02: -6211758686405287390
+      Penguin_Idle_3_03: -6398233614391847868
+      Penguin_Idle_3_04: -6631637527038707772
+      Penguin_Idle_3_05: 443181086225697000
+      Penguin_Idle_3_06: -3738728683432456992
+      Penguin_Idle_3_07: 3211816942018671451
+      Penguin_Idle_3_08: 3938295663996416762
+      Penguin_Idle_3_09: -5530519446892951552
+      Penguin_Idle_3_10: 7344844694720820262
+      Penguin_Idle_3_11: -7717013691136483148
+      Penguin_Idle_3_12: -1420808270890875105
+      Penguin_Idle_3_13: -6603481930090031134
+      Penguin_Idle_3_14: -1464670824276099139
+      Penguin_Idle_3_15: -3323460776415243875
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b41662bd561138b4ab2078cc7143c682
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - brownSmallStalagmite0: {fileID: 7874163859406204200, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - brownSmallStalagmite1: {fileID: -5092841670301015303, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowSmallStalagmite0: {fileID: 4701872138271819124, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowSmallStalagmite1: {fileID: -3714875710356237400, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - stalagmiteSmall0Shadow: {fileID: 4651826651574767324, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - stalagmiteSmall1Shadow: {fileID: 3517455291241244143, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

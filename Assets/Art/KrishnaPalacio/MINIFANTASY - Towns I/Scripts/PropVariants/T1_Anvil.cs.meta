@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 01043c57f137e2b48be6c8ca01fd8e7c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - anvilVertical: {fileID: -1289213619920477125, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - anvilHorizontal: {fileID: 8329976786671494348, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowAnvilVertical: {fileID: 5883492301440756230, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowAnvilHorizontal: {fileID: 2684424588587393830, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

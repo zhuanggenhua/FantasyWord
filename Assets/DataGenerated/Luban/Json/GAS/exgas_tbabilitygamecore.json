@@ -1,0 +1,47 @@
+[
+  {
+    "ID": 20001,
+    "PrefabGuid": "24d29f17c2627fc4c89e281895e4aa89",
+    "PrefabPath": "Assets/Prefabs/Abilities/Melee/测试-基础攻击.prefab",
+    "IconGuid": "1c9b84d978891c24288defb67855d5f3",
+    "IconPath": "Assets/Art/KrishnaPalacio/MINIFANTASY - Dungeon/Sprites/Animations/Human/HumanBaseAttack.png",
+    "AbilityRootMode": 1,
+    "InputTriggerMode": 0,
+    "BufferInput": true,
+    "NewInputExtendsBuffer": true,
+    "MaximumBufferDuration": 0.25,
+    "DelayBeforeUseReleaseInterruption": true,
+    "TimeBetweenUsesReleaseInterruption": true,
+    "UpdateLookAtDirectionOnFire": true
+  },
+  {
+    "ID": 20002,
+    "PrefabGuid": "24d29f17c2627fc4c89e281895e4aa89",
+    "PrefabPath": "Assets/Prefabs/Abilities/Melee/测试-基础攻击.prefab",
+    "IconGuid": "",
+    "IconPath": "",
+    "AbilityRootMode": 1,
+    "InputTriggerMode": 0,
+    "BufferInput": true,
+    "NewInputExtendsBuffer": true,
+    "MaximumBufferDuration": 0.25,
+    "DelayBeforeUseReleaseInterruption": true,
+    "TimeBetweenUsesReleaseInterruption": true,
+    "UpdateLookAtDirectionOnFire": true
+  },
+  {
+    "ID": 20004,
+    "PrefabGuid": "24d29f17c2627fc4c89e281895e4aa89",
+    "PrefabPath": "Assets/Prefabs/Abilities/Melee/测试-基础攻击.prefab",
+    "IconGuid": "0b5262a6696fdd4479d0e186f7021230",
+    "IconPath": "Assets/Art/KrishnaPalacio/MINIFANTASY - Dungeon/Sprites/Animations/Human/HumanBaseChargedAttack.png",
+    "AbilityRootMode": 1,
+    "InputTriggerMode": 2,
+    "BufferInput": true,
+    "NewInputExtendsBuffer": true,
+    "MaximumBufferDuration": 0.25,
+    "DelayBeforeUseReleaseInterruption": true,
+    "TimeBetweenUsesReleaseInterruption": true,
+    "UpdateLookAtDirectionOnFire": true
+  }
+]

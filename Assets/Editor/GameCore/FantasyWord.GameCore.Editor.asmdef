@@ -1,0 +1,32 @@
+{
+  "name": "FantasyWord.GameCore.Editor",
+  "rootNamespace": "FantasyWord.GameCore",
+  "references": [
+    "FantasyWord.GameCore",
+    "com.exhard.exgas.general",
+    "com.exhard.exgas.runtime",
+    "com.exhard.exgas.editor",
+    "YokiFrame.UIKit",
+    "Unity.2D.Animation.Runtime",
+    "Unity.InputSystem",
+    "Unity.InputSystem.ForUI",
+    "UnityEngine.UI",
+    "BroAudio",
+    "AiBridge.Unity.Editor",
+    "Unity.Addressables.Editor",
+    "MackySoft.SerializeReferenceExtensions",
+    "azixMcAze.SerializableDictionary",
+    "Unity.Mathematics"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

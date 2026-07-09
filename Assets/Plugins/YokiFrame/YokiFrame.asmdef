@@ -1,0 +1,22 @@
+{
+    "name": "YokiFrame",
+    "rootNamespace": "YokiFrame",
+    "references": [
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "2.0.0",
+            "define": "YOKIFRAME_UNITASK_SUPPORT"
+        }
+    ],
+    "noEngineReferences": false
+}

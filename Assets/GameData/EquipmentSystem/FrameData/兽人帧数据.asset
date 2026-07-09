@@ -1,0 +1,4133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 992a1667bac02fc4f903843a8453ef1f, type: 3}
+  m_Name: "\u517D\u4EBA\u5E27\u6570\u636E"
+  m_EditorClassIdentifier: ::CharacterFrameData
+  animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
+  paletteRefSprite: {fileID: 0}
+  paletteSize: {x: 32, y: 32}
+  headUVRegion:
+    x: 0
+    y: 0
+    width: 4
+    height: 3
+  torsoUVRegion:
+    x: 0
+    y: 3
+    width: 3
+    height: 2
+  headDetectSize: {x: 4, y: 3}
+  torsoDetectSize: {x: 3, y: 2}
+  headExpandUp: 10
+  headExpandSide: 10
+  headExpandDown: 3
+  bodyExpandUp: 20
+  bodyExpandUpStartStep: 1
+  bodyExpandSide: 10
+  bodyExpandDown: 2
+  bodyExpandDownStartStep: 1
+  regionExpandPose: 0
+  groundPixelY: 8
+  hasReferenceFrame: 0
+  referenceHeadCenter: {x: 0, y: 0}
+  detectConfig:
+    leftHandColor:
+      serializedVersion: 2
+      rgba: 4287608797
+    rightHandColor:
+      serializedVersion: 2
+      rgba: 4289121274
+    leftFootColor:
+      serializedVersion: 2
+      rgba: 4286950605
+    rightFootColor:
+      serializedVersion: 2
+      rgba: 4288332782
+    outlineThreshold: 80
+    limbColorThreshold: 30
+    closedEyeColor:
+      serializedVersion: 2
+      rgba: 0
+    closedEyeColorThreshold: 30
+  animations:
+  - animationType: {fileID: 11400000, guid: 6d2303e04f09f154e90adf62eea799ee, type: 2}
+    spritesheet: {fileID: 2800000, guid: 3fd90b70b88787d48ad073ceba0d49c3, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 6
+    rowCount: 1
+    bodyUVMap: {fileID: 2800000, guid: f95467f55586b1b4f9d66f4e79a0dc2d, type: 3}
+    headUVMap: {fileID: 2800000, guid: 9e768bd65f9e0e9498f061d113fc1cdb, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 381921f99eee5f44584b409fe08a6788, type: 2}
+    spritesheet: {fileID: 2800000, guid: a64807c86f875684c9530d1ededcfc4b, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 4
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 1884facdb65f271469827eb334606577, type: 3}
+    headUVMap: {fileID: 2800000, guid: a371cd2ca37de384689a083d3f786500, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 0ec505bb4227dc841bb51c6def1e489d, type: 2}
+    spritesheet: {fileID: 2800000, guid: 7323ac5798f709c48a34828b13db02ff, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 6
+    rowCount: 3
+    bodyUVMap: {fileID: 2800000, guid: 52f64b1342a0d8248a97925d9d9430d8, type: 3}
+    headUVMap: {fileID: 2800000, guid: f70ba0c65f90675469cc70a19154d978, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: bb42ee930031cab44a7fb6719fa1ccfe, type: 2}
+    spritesheet: {fileID: 2800000, guid: f75049353393aa540be9fac35998c0dc, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 6
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 6b9244f2a85b65043a096167b57c74a0, type: 3}
+    headUVMap: {fileID: 2800000, guid: b1da40451eafd8a42ba35131fcdc7922, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 1791d6d33475b4f4d84b46e415f87228, type: 2}
+    spritesheet: {fileID: 2800000, guid: 42c07e1102c28344bbf84091490914d6, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 12
+    rowCount: 1
+    bodyUVMap: {fileID: 2800000, guid: 5250c89af944ada4d92f11852a513366, type: 3}
+    headUVMap: {fileID: 2800000, guid: ef17e34381007634892bf9f8e0f75ba6, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 11
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 971c6e9b2539ab34b8cff58ef2d98f45, type: 2}
+    spritesheet: {fileID: 2800000, guid: eee3640bc2d3e494d8d199fd551742c2, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 4
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: cad07cb96ff366643a0b1f870ac0964c, type: 3}
+    headUVMap: {fileID: 2800000, guid: b5093d5baa0c28a4a9c835272d0a6ef5, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 1913d5abc02c37e4a9e1e42d86c87a94, type: 2}
+    spritesheet: {fileID: 2800000, guid: 5183c54d67dee6d48abf59609e7ace78, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 6
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 54b727a0be914df40b917b5ab070393f, type: 3}
+    headUVMap: {fileID: 2800000, guid: bf305d4b0241d3741bf0983e186ad3b7, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 132078309f98cef429ede1a50bd78d09, type: 2}
+    spritesheet: {fileID: 2800000, guid: b7508baca52e0ee40992503666208fc8, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 16
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 867d7040f3c030f49832b1d17b25ccc2, type: 3}
+    headUVMap: {fileID: 2800000, guid: 4c4109d4d31de544eb31f864ef70d08c, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 11
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 12
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 13
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 14
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 15
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 11
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 12
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 13
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 14
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 15
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 11
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 12
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 13
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 14
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 15
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 11
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 12
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 13
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 14
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 15
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 13e05851ae08ebc42a54bcdc2f5f91c0, type: 2}
+    spritesheet: {fileID: 2800000, guid: d6d293d67e1db4341830b3e9d4814455, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 11
+    rowCount: 1
+    bodyUVMap: {fileID: 2800000, guid: 9f4ec512539f90b4aa6f2b9aea809c19, type: 3}
+    headUVMap: {fileID: 2800000, guid: 1bd1dff7ba585c94baa9acd838dfa04a, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: a36fd81b88a869f4a9d9c8d0d3807a23, type: 2}
+    spritesheet: {fileID: 2800000, guid: 1edbd1354837cf541bfb6af62f8bce78, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 4
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 626c8d1ea7b92874185138559a1e2c2e, type: 3}
+    headUVMap: {fileID: 2800000, guid: 19dfe6c9a6b7d5842af731a0ac42fa13, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 931d362af80c15d428310e76ae04d279, type: 2}
+    spritesheet: {fileID: 2800000, guid: e9585dbc03361b4448d9d2343a691f20, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 11
+    rowCount: 1
+    bodyUVMap: {fileID: 2800000, guid: abaa1b499335b744e856abbcbdeb7291, type: 3}
+    headUVMap: {fileID: 2800000, guid: 1d212bccbd1c60c4da53414b890be5cf, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 6
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 7
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 8
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 9
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 10
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: d06da7a25ad289f4dbdb28aa3dda318a, type: 2}
+    spritesheet: {fileID: 2800000, guid: e3261655e0a743644ac41dacee36be9b, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 6
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 5117d2fd73bfa5644b9e3b5c4025d7b5, type: 3}
+    headUVMap: {fileID: 2800000, guid: 1ad04e3182e6e0f41af92c80853af49b, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 7527b24ffa851a1409351d5674af152d, type: 2}
+    spritesheet: {fileID: 2800000, guid: 0899f33c10df0904f92b0418e04aa79d, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 4
+    rowCount: 4
+    bodyUVMap: {fileID: 2800000, guid: 63e24da99ee79594f8cb2e59923f5dd6, type: 3}
+    headUVMap: {fileID: 2800000, guid: fbb2f72957c3ecf4db8c6361405d1ed1, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 1
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 2
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 0
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 3
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+  - animationType: {fileID: 11400000, guid: 72770e87d43d3654fb30b9089cbeb4f5, type: 2}
+    spritesheet: {fileID: 2800000, guid: 4b170e000a648a1408dbf2a31168f28c, type: 3}
+    frameSize: {x: 32, y: 32}
+    framesPerRow: 6
+    rowCount: 1
+    bodyUVMap: {fileID: 2800000, guid: f1aac7a0c0439f04c8b49118ee5a8b6c, type: 3}
+    headUVMap: {fileID: 2800000, guid: 07096f4a292e6d04693efd95797891e1, type: 3}
+    frames:
+    - frameIndex: 0
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 1
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 2
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 3
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 4
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}
+    - frameIndex: 5
+      rowIndex: 0
+      anchors: []
+      bodyRegions: []
+      limbMask:
+        leftHand: []
+        rightHand: []
+        leftFoot: []
+        rightFoot: []
+        leftEye: []
+        rightEye: []
+      leftEyeClosed: 0
+      rightEyeClosed: 0
+      hitOutlineFrame: 0
+      sequenceOffset: {x: 0, y: 0}

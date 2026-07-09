@@ -6,7 +6,7 @@
 
 这些文件不是框架本体，也不等于“临时系统”。当前框架候选仍在：
 
-- `Assets/Scripts/Items/EquipmentSystem`
+- `Assets/Scripts/test/EquipmentSystem`
 - `Assets/GameData/EquipmentSystem`
 - `Assets/ThirdParty/MiniFantasyUV`
 
@@ -21,4 +21,4 @@
 
 - 需要追溯 MiniFantasy UV 资源来源、GUID 对齐或历史缺失项时读取。
 - 不把这些文件当成当前任务入口。
-- 不因它们位于归档目录就否定 `Assets/Scripts/Items/EquipmentSystem` 的当前价值；框架是否进入正式链路要另行审查代码、资源引用和新游戏定位。
+- 不因它们位于归档目录就否定 `Assets/Scripts/test/EquipmentSystem` 的当前价值；框架是否进入正式链路要另行审查代码、资源引用和新游戏定位。

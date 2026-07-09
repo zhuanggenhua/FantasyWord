@@ -1,0 +1,2157 @@
+fileFormatVersion: 2
+guid: 93f220899878cfa49a1ec914c7f547fb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -656593660623746087
+    second: exclude_0
+  - first:
+      213: 7313488937332596522
+    second: exclude_1
+  - first:
+      213: 7271770154858996595
+    second: exclude_2
+  - first:
+      213: -5745657109184001894
+    second: Wall_Shadow_0
+  - first:
+      213: -3494191162129402047
+    second: walls
+  - first:
+      213: -3683273050311430332
+    second: walls1
+  - first:
+      213: -7029101909218354317
+    second: walls2
+  - first:
+      213: -8552714594467020038
+    second: Cave_Cliff_Shadow_0
+  - first:
+      213: 4039614822038937664
+    second: Cave_Cliff_Shadow_1
+  - first:
+      213: 4085407433750570376
+    second: Cave_Cliff_Shadow_2
+  - first:
+      213: -4088986558909243270
+    second: Cave_Cliff_Shadow_3
+  - first:
+      213: -6628486428293542621
+    second: Cave_Cliff_Shadow_4
+  - first:
+      213: 7877247462654268222
+    second: Cave_Cliff_Shadow_5
+  - first:
+      213: -1530599780733672105
+    second: Cave_Cliff_Shadow_6
+  - first:
+      213: -969226267089178175
+    second: Cave_Cliff_Shadow_7
+  - first:
+      213: -4333821716647862247
+    second: Cave_Cliff_Shadow_8
+  - first:
+      213: -2528349039596883877
+    second: Cave_Cliff_Shadow_9
+  - first:
+      213: 3257790834868537501
+    second: Cave_Cliff_Shadow_10
+  - first:
+      213: -5501873777665893270
+    second: Cave_Cliff_Shadow_11
+  - first:
+      213: -5199552630382613454
+    second: Cave_Cliff_Shadow_12
+  - first:
+      213: 7918041649904999153
+    second: Cave_Cliff_Shadow_13
+  - first:
+      213: -8390348313883468678
+    second: Cave_Cliff_Shadow_14
+  - first:
+      213: 651054714304271318
+    second: Cave_Cliff_Shadow_15
+  - first:
+      213: 227891026636337953
+    second: Cave_Cliff_Shadow_16
+  - first:
+      213: 3875387417432619149
+    second: Cave_Cliff_Shadow_17
+  - first:
+      213: 3460574868575527304
+    second: Cave_Cliff_Shadow_18
+  - first:
+      213: -7527865309674921167
+    second: Cave_Cliff_Shadow_19
+  - first:
+      213: -778392618884731616
+    second: Cave_Cliff_Shadow_20
+  - first:
+      213: 6711936345548610112
+    second: Cave_Cliff_Shadow_21
+  - first:
+      213: 6280231671214332594
+    second: Cave_Cliff_Shadow_22
+  - first:
+      213: 9078554005892137308
+    second: Cave_Cliff_Shadow_23
+  - first:
+      213: -3407073127733111350
+    second: Cave_Cliff_Shadow_24
+  - first:
+      213: 2630399964260869374
+    second: Cave_Cliff_Shadow_25
+  - first:
+      213: 942236320200528367
+    second: Cave_Cliff_Shadow_26
+  - first:
+      213: 4826580123030297194
+    second: Cave_Cliff_Shadow_27
+  - first:
+      213: 3712202160161942101
+    second: Cave_Cliff_Shadow_28
+  - first:
+      213: 1175003601826278916
+    second: Cave_Cliff_Shadow_29
+  - first:
+      213: 4997587420078821925
+    second: Cave_Cliff_Shadow_30
+  - first:
+      213: 2277535322624581403
+    second: Cave_Cliff_Shadow_31
+  - first:
+      213: 2831760809513935735
+    second: Cave_Cliff_Shadow_32
+  - first:
+      213: -5742672662475307576
+    second: Cave_Cliff_Shadow_33
+  - first:
+      213: 1028928826471833571
+    second: Cave_Cliff_Shadow_34
+  - first:
+      213: -8449266998160204610
+    second: Cave_Cliff_Shadow_35
+  - first:
+      213: -5978083059176625177
+    second: Cave_Cliff_Shadow_36
+  - first:
+      213: 9140999720014961222
+    second: Cave_Cliff_Shadow_37
+  - first:
+      213: 1639080112953314372
+    second: Cave_Cliff_Shadow_38
+  - first:
+      213: -8145344048482002396
+    second: Cave_Cliff_Shadow_39
+  - first:
+      213: -5266173537150726083
+    second: Cave_Cliff_Shadow_40
+  - first:
+      213: -9191547515742711304
+    second: Cave_Cliff_Shadow_41
+  - first:
+      213: 8424176027381300988
+    second: Cave_Cliff_Shadow_42
+  - first:
+      213: -3570578698640974822
+    second: Cave_Cliff_Shadow_43
+  - first:
+      213: -1806140639739180886
+    second: Cave_Cliff_Shadow_44
+  - first:
+      213: 3090523730935123592
+    second: Cave_Cliff_Shadow_45
+  - first:
+      213: 3858556989556899282
+    second: Cave_Walls_Shadow_0
+  - first:
+      213: -3254193664778417556
+    second: Cave_Walls_Shadow_1
+  - first:
+      213: 4175915301534959324
+    second: Cave_Walls_Shadow_2
+  - first:
+      213: -2832969848653160682
+    second: Cave_Walls_Shadow_3
+  - first:
+      213: 2099760672800090320
+    second: Cave_Walls_Shadow_4
+  - first:
+      213: 5504755002401690411
+    second: Cave_Walls_Shadow_5
+  - first:
+      213: 3467189014781819475
+    second: Cave_Walls_Shadow_6
+  - first:
+      213: -7005999262205664045
+    second: Cave_Walls_Shadow_7
+  - first:
+      213: -1980698869535804484
+    second: Cave_Walls_Shadow_8
+  - first:
+      213: 7511834133128282379
+    second: Cave_Walls_Shadow_9
+  - first:
+      213: 7385018871439387433
+    second: Cave_Walls_Shadow_10
+  - first:
+      213: 7554973980498850954
+    second: Cave_Walls_Shadow_11
+  - first:
+      213: -6292935563739946540
+    second: Cave_Walls_Shadow_12
+  - first:
+      213: -7426782160378597904
+    second: Cave_Walls_Shadow_13
+  - first:
+      213: 8114813936560480168
+    second: Cave_Walls_Shadow_14
+  - first:
+      213: -1504123827104955225
+    second: Cave_Walls_Shadow_15
+  - first:
+      213: 587115285219401933
+    second: Cave_Passageway_Shadow_0
+  - first:
+      213: 916698023067662549
+    second: Cave_Passageway_Shadow_1
+  - first:
+      213: -5989163429229707773
+    second: Cave_Passageway_Shadow_2
+  - first:
+      213: -6445139519509978827
+    second: Cave_Passageway_Shadow_3
+  - first:
+      213: 8142546261410705642
+    second: Cave_Passageway_Shadow_4
+  - first:
+      213: 7060106919671143967
+    second: Cave_Passageway_Shadow_5
+  - first:
+      213: -5414174389053259795
+    second: Cave_Passageway_Shadow_6
+  - first:
+      213: 7013732687727855239
+    second: Cave_Passageway_Shadow_7
+  - first:
+      213: 4341255917264406414
+    second: Cave_Passageway_Shadow_8
+  - first:
+      213: -5942331554382457720
+    second: Cave_Passageway_Shadow_9
+  - first:
+      213: 3805333202234717903
+    second: Cave_Passageway_Shadow_10
+  - first:
+      213: -7042972845159443164
+    second: Cave_Passageway_Shadow_11
+  - first:
+      213: -4529337111938324715
+    second: Cave_Passageway_Shadow_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: exclude_0
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 54
+        width: 31
+        height: 139
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9db8fb06b8f43e6f0800000000000000
+      internalID: -656593660623746087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exclude_1
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 0
+        width: 100
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2f5572a07bbe7560800000000000000
+      internalID: 7313488937332596522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: exclude_2
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 136
+        width: 35
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37368a8ad648ae460800000000000000
+      internalID: 7271770154858996595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 240
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af28e7bf367ae4980800000000000000
+      internalID: -8552714594467020038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 240
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 040a80127489f0830800000000000000
+      internalID: 4039614822038937664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88561736a6842b830800000000000000
+      internalID: 4085407433750570376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a702ed893600147c0800000000000000
+      internalID: -4088986558909243270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32dc01376b2e204a0800000000000000
+      internalID: -6628486428293542621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e33da53f4da915d60800000000000000
+      internalID: 7877247462654268222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7552410eb9732cae0800000000000000
+      internalID: -1530599780733672105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c1fb2368dd9c82f0800000000000000
+      internalID: -969226267089178175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 910a45b3c1c2bd3c0800000000000000
+      internalID: -4333821716647862247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b50b0aab1ff79ecd0800000000000000
+      internalID: -2528349039596883877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d98ccd8f08ff53d20800000000000000
+      internalID: 3257790834868537501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6c103b03fa65a3b0800000000000000
+      internalID: -5501873777665893270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23ca81b5e6a77d7b0800000000000000
+      internalID: -5199552630382613454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1fad553dde882ed60800000000000000
+      internalID: 7918041649904999153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7c9d2999ae7f8b80800000000000000
+      internalID: -8390348313883468678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d3137f20d2090900800000000000000
+      internalID: 651054714304271318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_16
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 123782a6ea1a92300800000000000000
+      internalID: 227891026636337953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_17
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d88f61fc25428c530800000000000000
+      internalID: 3875387417432619149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_18
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 881a610128e660030800000000000000
+      internalID: 3460574868575527304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_19
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13327db9266a78790800000000000000
+      internalID: -7527865309674921167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_20
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02de69789089235f0800000000000000
+      internalID: -778392618884731616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_21
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04a557f7b86952d50800000000000000
+      internalID: 6711936345548610112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_22
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ba53ed4e6dd72750800000000000000
+      internalID: 6280231671214332594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_23
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c518663a4c08dfd70800000000000000
+      internalID: 9078554005892137308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_24
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac550b1ba05a7b0d0800000000000000
+      internalID: -3407073127733111350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_25
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef428feb4de018420800000000000000
+      internalID: 2630399964260869374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_26
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe11608e0fe731d00800000000000000
+      internalID: 942236320200528367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_27
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6a9e21bc057bf240800000000000000
+      internalID: 4826580123030297194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_28
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55ae3e25234648330800000000000000
+      internalID: 3712202160161942101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_29
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40ee8a8ec837e4010800000000000000
+      internalID: 1175003601826278916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_30
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52252cbb74ffa5540800000000000000
+      internalID: 4997587420078821925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_31
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1f517c1f4e6b9f10800000000000000
+      internalID: 2277535322624581403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_32
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77363f3f37f6c4720800000000000000
+      internalID: 2831760809513935735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_33
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c500d3b3aded40b0800000000000000
+      internalID: -5742672662475307576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_34
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ef5301f05d774e00800000000000000
+      internalID: 1028928826471833571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_35
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebcda3a6e6c2eba80800000000000000
+      internalID: -8449266998160204610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_36
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7eb2ff38125990da0800000000000000
+      internalID: -5978083059176625177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_37
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64adf6370da5bde70800000000000000
+      internalID: 9140999720014961222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_38
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44c4df2bdae2fb610800000000000000
+      internalID: 1639080112953314372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_39
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42a53e86ebce5fe80800000000000000
+      internalID: -8145344048482002396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_40
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d309190c11bcae6b0800000000000000
+      internalID: -5266173537150726083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_41
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f1180cbb30117080800000000000000
+      internalID: -9191547515742711304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_42
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfe7c65b67fa8e470800000000000000
+      internalID: 8424176027381300988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_43
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1c9de06791c27ec0800000000000000
+      internalID: -3570578698640974822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_44
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa803f158ac4fe6e0800000000000000
+      internalID: -1806140639739180886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Cliff_Shadow_45
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88e8d4085feb3ea20800000000000000
+      internalID: 3090523730935123592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ddb32473295c8530800000000000000
+      internalID: 3858556989556899282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6a4e847a18c6d2d0800000000000000
+      internalID: -3254193664778417556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd60c1087d4d3f930800000000000000
+      internalID: 4175915301534959324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61fd2afaee44fa8d0800000000000000
+      internalID: -2832969848653160682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 232
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d8a597f439d32d10800000000000000
+      internalID: 2099760672800090320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2315bd5281d46c40800000000000000
+      internalID: 5504755002401690411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35af43bf90eed1030800000000000000
+      internalID: 3467189014781819475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d425975ac0b5ce90800000000000000
+      internalID: -7005999262205664045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb3fc425fd42384e0800000000000000
+      internalID: -1980698869535804484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0104cc38556f3860800000000000000
+      internalID: 7511834133128282379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92b63bb398bdc7660800000000000000
+      internalID: 7385018871439387433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a84f3faaec8a8d860800000000000000
+      internalID: 7554973980498850954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d1abd832700ba8a0800000000000000
+      internalID: -6292935563739946540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fdec6259f4cee890800000000000000
+      internalID: -7426782160378597904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8af931bf74c9d9070800000000000000
+      internalID: 8114813936560480168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Walls_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a445333957402be0800000000000000
+      internalID: -1504123827104955225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc064b1cd3ad52800800000000000000
+      internalID: 587115285219401933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d8304fbef3c8bc00800000000000000
+      internalID: 916698023067662549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30eb003d79732eca0800000000000000
+      internalID: -5989163429229707773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 531a6cb31c34e86a0800000000000000
+      internalID: -6445139519509978827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae0f1960fa2200170800000000000000
+      internalID: 8142546261410705642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1e964f56d98af160800000000000000
+      internalID: 7060106919671143967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: def7674241dfcd4b0800000000000000
+      internalID: -5414174389053259795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 786809918b8c55160800000000000000
+      internalID: 7013732687727855239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e878b9b714d3f3c30800000000000000
+      internalID: 4341255917264406414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88450736fe8988da0800000000000000
+      internalID: -5942331554382457720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc6333bc2624fc430800000000000000
+      internalID: 3805333202234717903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4259c893385524e90800000000000000
+      internalID: -7042972845159443164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Passageway_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5172ce6e4ef8421c0800000000000000
+      internalID: -4529337111938324715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cave_Cliff_Shadow_0: -8552714594467020038
+      Cave_Cliff_Shadow_1: 4039614822038937664
+      Cave_Cliff_Shadow_10: 3257790834868537501
+      Cave_Cliff_Shadow_11: -5501873777665893270
+      Cave_Cliff_Shadow_12: -5199552630382613454
+      Cave_Cliff_Shadow_13: 7918041649904999153
+      Cave_Cliff_Shadow_14: -8390348313883468678
+      Cave_Cliff_Shadow_15: 651054714304271318
+      Cave_Cliff_Shadow_16: 227891026636337953
+      Cave_Cliff_Shadow_17: 3875387417432619149
+      Cave_Cliff_Shadow_18: 3460574868575527304
+      Cave_Cliff_Shadow_19: -7527865309674921167
+      Cave_Cliff_Shadow_2: 4085407433750570376
+      Cave_Cliff_Shadow_20: -778392618884731616
+      Cave_Cliff_Shadow_21: 6711936345548610112
+      Cave_Cliff_Shadow_22: 6280231671214332594
+      Cave_Cliff_Shadow_23: 9078554005892137308
+      Cave_Cliff_Shadow_24: -3407073127733111350
+      Cave_Cliff_Shadow_25: 2630399964260869374
+      Cave_Cliff_Shadow_26: 942236320200528367
+      Cave_Cliff_Shadow_27: 4826580123030297194
+      Cave_Cliff_Shadow_28: 3712202160161942101
+      Cave_Cliff_Shadow_29: 1175003601826278916
+      Cave_Cliff_Shadow_3: -4088986558909243270
+      Cave_Cliff_Shadow_30: 4997587420078821925
+      Cave_Cliff_Shadow_31: 2277535322624581403
+      Cave_Cliff_Shadow_32: 2831760809513935735
+      Cave_Cliff_Shadow_33: -5742672662475307576
+      Cave_Cliff_Shadow_34: 1028928826471833571
+      Cave_Cliff_Shadow_35: -8449266998160204610
+      Cave_Cliff_Shadow_36: -5978083059176625177
+      Cave_Cliff_Shadow_37: 9140999720014961222
+      Cave_Cliff_Shadow_38: 1639080112953314372
+      Cave_Cliff_Shadow_39: -8145344048482002396
+      Cave_Cliff_Shadow_4: -6628486428293542621
+      Cave_Cliff_Shadow_40: -5266173537150726083
+      Cave_Cliff_Shadow_41: -9191547515742711304
+      Cave_Cliff_Shadow_42: 8424176027381300988
+      Cave_Cliff_Shadow_43: -3570578698640974822
+      Cave_Cliff_Shadow_44: -1806140639739180886
+      Cave_Cliff_Shadow_45: 3090523730935123592
+      Cave_Cliff_Shadow_5: 7877247462654268222
+      Cave_Cliff_Shadow_6: -1530599780733672105
+      Cave_Cliff_Shadow_7: -969226267089178175
+      Cave_Cliff_Shadow_8: -4333821716647862247
+      Cave_Cliff_Shadow_9: -2528349039596883877
+      Cave_Passageway_Shadow_0: 587115285219401933
+      Cave_Passageway_Shadow_1: 916698023067662549
+      Cave_Passageway_Shadow_10: 3805333202234717903
+      Cave_Passageway_Shadow_11: -7042972845159443164
+      Cave_Passageway_Shadow_12: -4529337111938324715
+      Cave_Passageway_Shadow_2: -5989163429229707773
+      Cave_Passageway_Shadow_3: -6445139519509978827
+      Cave_Passageway_Shadow_4: 8142546261410705642
+      Cave_Passageway_Shadow_5: 7060106919671143967
+      Cave_Passageway_Shadow_6: -5414174389053259795
+      Cave_Passageway_Shadow_7: 7013732687727855239
+      Cave_Passageway_Shadow_8: 4341255917264406414
+      Cave_Passageway_Shadow_9: -5942331554382457720
+      Cave_Walls_Shadow_0: 3858556989556899282
+      Cave_Walls_Shadow_1: -3254193664778417556
+      Cave_Walls_Shadow_10: 7385018871439387433
+      Cave_Walls_Shadow_11: 7554973980498850954
+      Cave_Walls_Shadow_12: -6292935563739946540
+      Cave_Walls_Shadow_13: -7426782160378597904
+      Cave_Walls_Shadow_14: 8114813936560480168
+      Cave_Walls_Shadow_15: -1504123827104955225
+      Cave_Walls_Shadow_2: 4175915301534959324
+      Cave_Walls_Shadow_3: -2832969848653160682
+      Cave_Walls_Shadow_4: 2099760672800090320
+      Cave_Walls_Shadow_5: 5504755002401690411
+      Cave_Walls_Shadow_6: 3467189014781819475
+      Cave_Walls_Shadow_7: -7005999262205664045
+      Cave_Walls_Shadow_8: -1980698869535804484
+      Cave_Walls_Shadow_9: 7511834133128282379
+      exclude_0: -656593660623746087
+      exclude_1: 7313488937332596522
+      exclude_2: 7271770154858996595
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,562 @@
+using System;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace FantasyWord.GameCore
+{
+    public enum EAbilityFireCheckResult
+    {
+        Valid,
+        OnCooldown,
+        NotEnoughMana,
+        Incapacitated,
+        Unknown
+    }
+
+    public interface ITriggerableAbility
+    {
+        public void Fire(GameCommandContext commandContext, UnityAction onAbilityEnded);
+        public void StopFire();
+        public bool Reload();
+        public EAbilityFireCheckResult CanFire();
+        public bool abilityPermitted { get; }
+        public void PermitAbility(bool abilityPermitted);
+    }
+
+    public abstract class ActiveAbilityBase : AbilityBase, ITriggerableAbility
+    {
+        private UnityAction m_onAbilityEndedCallback = null;
+        private FormalAbilityInputGateRuntime m_inputGate = null;
+        private Animator m_characterAnimator = null;
+        private CharacterHandleWeapon m_characterHandleWeapon = null;
+        private CharacterAbilitySet m_characterAbilitySet = null;
+        private bool m_casting = false;
+        private bool m_effectCostPaidForCurrentUse = false;
+        private bool m_abilityPermitted = true;
+        private GameCommandContext m_fireCommandContext = GameCommandContext.Script();
+
+        public float remainingCooldown
+        {
+            get
+            {
+                GetCooldownState(out float remainingCooldownValue, out _);
+                return remainingCooldownValue;
+            }
+        }
+
+        public float cooldown
+        {
+            get
+            {
+                GetCooldownState(out _, out float cooldownDuration);
+                return cooldownDuration;
+            }
+        }
+
+        public bool abilityPermitted => m_abilityPermitted;
+        public EFormalAbilityInputGateState inputGateState => m_inputGate?.state ?? EFormalAbilityInputGateState.Idle;
+
+        protected float m_remainingCooldownTimer = 0.0f;
+        protected GameCommandContext activeCommandContext => m_fireCommandContext;
+        protected abstract void ExecuteAbilityUse();
+
+        protected override void InitRuntime(CharacterBase character)
+        {
+            base.InitRuntime(character);
+            m_characterAbilitySet = ResolveOwnedAbilitySet();
+            m_fireCommandContext = GameCommandContext.ResolveForActor(character);
+            InitializeFormalAbilityInputGate();
+        }
+
+        public void Fire(GameCommandContext commandContext, UnityAction onAbilityEnded)
+        {
+            m_onAbilityEndedCallback = onAbilityEnded;
+            m_fireCommandContext = commandContext.HasActor
+                ? commandContext
+                : GameCommandContext.Recreate(commandContext.IssuerKind, m_character, commandContext.IssuerId);
+            m_inputGate.RequestUse();
+        }
+
+        public void StopFire()
+        {
+            m_inputGate?.ReleaseUse();
+        }
+
+        public void PermitAbility(bool abilityPermitted)
+        {
+            m_abilityPermitted = abilityPermitted;
+        }
+
+        public bool Reload()
+        {
+            return m_inputGate != null && m_inputGate.RequestReload();
+        }
+
+        internal void GetCooldownState(out float remainingCooldownValue, out float cooldownDuration)
+        {
+            if (TryGetFormalCooldownState(out remainingCooldownValue, out cooldownDuration))
+            {
+                return;
+            }
+
+            if (usesFormalGasAbility)
+            {
+                remainingCooldownValue = 0.0f;
+                cooldownDuration = 0.0f;
+                return;
+            }
+
+            remainingCooldownValue = m_remainingCooldownTimer;
+            cooldownDuration = 0.0f;
+        }
+
+        private void InitializeFormalAbilityInputGate()
+        {
+            m_inputGate = new FormalAbilityInputGateRuntime(ResolveFormalAbilityInputGateSettings(), CanStartFormalAbilityInputGateSequence);
+            m_inputGate.sequenceStarted += OnInputGateSequenceStarted;
+            m_inputGate.usePerformed += OnInputGateUsePerformed;
+            m_inputGate.sequenceStopped += OnInputGateSequenceStopped;
+            m_inputGate.reloadNeeded += OnInputGateReloadNeeded;
+            m_inputGate.reloadStarted += OnInputGateReloadStarted;
+            m_inputGate.reloadCompleted += OnInputGateReloadCompleted;
+            m_inputGate.interrupted += OnInputGateInterrupted;
+            m_inputGate.SetTimeScale(ResolveFormalAbilityInputGateSpeedMultiplier());
+        }
+
+        private void OnInputGateSequenceStarted()
+        {
+            OnInputGateSequenceStartedInternal();
+            m_casting = true;
+            m_effectCostPaidForCurrentUse = false;
+
+            if (!usesFormalGasAbility)
+            {
+                Debug.LogError($"{GetAbilityDebugName()} 尚未绑定 EX-GAS Ability；主动能力无法启动。", this);
+                m_inputGate?.Interrupt();
+            }
+        }
+
+        private void OnInputGateUsePerformed()
+        {
+            if (usesFormalGasAbility)
+            {
+                if (!TryValidateAbilityUseAtFirePoint(out _))
+                {
+                    m_inputGate?.Interrupt();
+                    return;
+                }
+
+                if (m_characterAbilitySet == null)
+                {
+                    m_inputGate?.Interrupt();
+                    return;
+                }
+
+                if (!m_characterAbilitySet.BeginFormalGasAbilityRuleLifecycle(formalGasAbilityCode))
+                {
+                    m_characterAbilitySet.CancelFormalGasAbilityRuleLifecycle(formalGasAbilityCode);
+                    m_inputGate?.Interrupt();
+                    return;
+                }
+
+                if (!TryCommitAbilityUse(out _))
+                {
+                    m_characterAbilitySet.CancelFormalGasAbilityRuleLifecycle(formalGasAbilityCode);
+                    m_inputGate?.Interrupt();
+                    return;
+                }
+            }
+            else if (!TryCommitAbilityUse(out _))
+            {
+                m_inputGate?.Interrupt();
+                return;
+            }
+
+            OnInputGateUsePerformedInternal();
+            ExecuteAbilityUse();
+        }
+
+        private void OnInputGateSequenceStopped()
+        {
+            OnInputGateSequenceStoppedInternal();
+            if (usesFormalGasAbility)
+            {
+                m_characterAbilitySet?.EndFormalGasAbilityRuleLifecycle(formalGasAbilityCode);
+            }
+            TerminateCasting();
+        }
+
+        private void OnInputGateReloadNeeded()
+        {
+            OnInputGateReloadNeededInternal();
+            if (!usesFormalGasAbility)
+            {
+                ResolveGameplayFeedbacks().PlayReloadNeeded(m_character.transform.position);
+            }
+        }
+
+        private void OnInputGateReloadStarted()
+        {
+            OnInputGateReloadStartedInternal();
+            if (!usesFormalGasAbility)
+            {
+                ResolveGameplayFeedbacks().PlayReloadStart(m_character.transform.position);
+            }
+        }
+
+        private void OnInputGateReloadCompleted()
+        {
+            OnInputGateReloadCompletedInternal();
+            if (!usesFormalGasAbility)
+            {
+                ResolveGameplayFeedbacks().PlayReloadComplete(m_character.transform.position);
+            }
+        }
+
+        private void OnInputGateInterrupted()
+        {
+            OnInputGateInterruptedInternal();
+            if (usesFormalGasAbility)
+            {
+                m_characterAbilitySet?.CancelFormalGasAbilityRuleLifecycle(formalGasAbilityCode);
+            }
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            if (m_character == null || !usesFormalGasAbility)
+            {
+                m_remainingCooldownTimer = 0.0f;
+                m_casting = false;
+                m_effectCostPaidForCurrentUse = false;
+                m_onAbilityEndedCallback = null;
+                return;
+            }
+
+            m_characterAbilitySet = ResolveOwnedAbilitySet();
+            if (usesFormalGasAbility)
+            {
+                m_characterAbilitySet?.CancelFormalGasAbilityRuleLifecycle(formalGasAbilityCode);
+                m_characterAbilitySet?.ClearFormalGasAbilityRuleCooldown(formalGasAbilityCode);
+            }
+            m_remainingCooldownTimer = 0.0f;
+            m_fireCommandContext = GameCommandContext.ResolveForActor(m_character);
+            InitializeFormalAbilityInputGate();
+            m_casting = false;
+            m_effectCostPaidForCurrentUse = false;
+        }
+
+        public override void Interrupt()
+        {
+            base.Interrupt();
+            m_inputGate?.Interrupt();
+        }
+
+        public override void UpdateCooldowns(float deltaTime)
+        {
+            base.UpdateCooldowns(deltaTime);
+            m_inputGate?.SetTimeScale(ResolveFormalAbilityInputGateSpeedMultiplier());
+
+            if (TryGetFormalCooldownState(out _, out _))
+            {
+                m_remainingCooldownTimer = 0.0f;
+            }
+            else
+            {
+                m_remainingCooldownTimer = math.max(0.0f, m_remainingCooldownTimer - Mathf.Max(0.0f, deltaTime));
+            }
+
+            m_inputGate?.Tick(deltaTime);
+        }
+
+        public virtual EAbilityFireCheckResult CanFire()
+        {
+            if (m_inputGate != null && m_inputGate.isBusy)
+            {
+                return EAbilityFireCheckResult.Valid;
+            }
+
+            return EvaluateAbilityStartRules();
+        }
+
+        private bool CanStartFormalAbilityInputGateSequence()
+        {
+            return EvaluateAbilityStartRules() == EAbilityFireCheckResult.Valid;
+        }
+
+        private EAbilityFireCheckResult EvaluateAbilityStartRules()
+        {
+            if (usesFormalGasAbility)
+            {
+                if (m_characterAbilitySet != null &&
+                    m_characterAbilitySet.TryEvaluateFormalGasAbilityRuleActivation(
+                        formalGasAbilityCode,
+                        out EAbilityFireCheckResult formalGasResult,
+                        out _))
+                {
+                    return formalGasResult;
+                }
+
+                Debug.LogError($"{GetAbilityDebugName()} 已绑定 EX-GAS Ability，但没有可用的正式规则绑定。", this);
+                return EAbilityFireCheckResult.Unknown;
+            }
+
+            Debug.LogError($"{GetAbilityDebugName()} 尚未绑定 EX-GAS Ability；主动能力缺少启动规则。", this);
+            return EAbilityFireCheckResult.Unknown;
+        }
+
+        private bool TryCommitAbilityUse(out EAbilityFireCheckResult result)
+        {
+            result = EAbilityFireCheckResult.Valid;
+            if (m_effectCostPaidForCurrentUse)
+            {
+                return true;
+            }
+
+            if (usesFormalGasAbility)
+            {
+                if (m_characterAbilitySet != null &&
+                    m_characterAbilitySet.TryCommitFormalGasAbilityRuleUse(formalGasAbilityCode, out result))
+                {
+                    if (result != EAbilityFireCheckResult.Valid)
+                    {
+                        return false;
+                    }
+
+                    m_remainingCooldownTimer = 0.0f;
+                    m_effectCostPaidForCurrentUse = true;
+                    return true;
+                }
+
+                result = EAbilityFireCheckResult.Unknown;
+                Debug.LogError($"{GetAbilityDebugName()} 已绑定 EX-GAS Ability，但出手提交时没有可用的正式规则绑定。", this);
+                return false;
+            }
+
+            result = EAbilityFireCheckResult.Unknown;
+            Debug.LogError($"{GetAbilityDebugName()} 尚未绑定 EX-GAS Ability；主动能力无法提交消耗或冷却。", this);
+            return false;
+        }
+
+        private bool TryValidateAbilityUseAtFirePoint(out EAbilityFireCheckResult result)
+        {
+            result = EAbilityFireCheckResult.Valid;
+            if (m_effectCostPaidForCurrentUse)
+            {
+                return true;
+            }
+
+            if (usesFormalGasAbility)
+            {
+                if (m_characterAbilitySet != null &&
+                    m_characterAbilitySet.TryValidateFormalGasAbilityRuleUseAtFirePoint(formalGasAbilityCode, out result))
+                {
+                    return result == EAbilityFireCheckResult.Valid;
+                }
+
+                result = EAbilityFireCheckResult.Unknown;
+                Debug.LogError($"{GetAbilityDebugName()} 已绑定 EX-GAS Ability，但命中帧校验时没有可用的正式规则绑定。", this);
+                return false;
+            }
+
+            result = EAbilityFireCheckResult.Unknown;
+            Debug.LogError($"{GetAbilityDebugName()} 尚未绑定 EX-GAS Ability；主动能力无法执行命中帧校验。", this);
+            return false;
+        }
+
+        protected void TerminateCasting()
+        {
+            if (!m_casting)
+            {
+                return;
+            }
+
+            m_casting = false;
+            if (!usesFormalGasAbility)
+            {
+                Debug.LogError($"{GetAbilityDebugName()} 尚未绑定 EX-GAS Ability；主动能力无法执行施法结束动作恢复。", this);
+            }
+            m_onAbilityEndedCallback?.Invoke();
+            m_onAbilityEndedCallback = null;
+        }
+
+        protected override void WriteFormalRuntimeState(CharacterAbilityRuntimeStateData runtimeState)
+        {
+            if (runtimeState == null)
+            {
+                return;
+            }
+
+            GetCooldownState(out float remainingCooldownValue, out _);
+            runtimeState.remainingCooldownTimer = remainingCooldownValue;
+            runtimeState.inputGate = m_inputGate?.CreatePersistentData() ?? default;
+        }
+
+        protected override void ReadFormalRuntimeState(CharacterAbilityRuntimeStateData runtimeState)
+        {
+            if (runtimeState == null)
+            {
+                return;
+            }
+
+            float savedRemainingCooldown = runtimeState.remainingCooldownTimer;
+            if (savedRemainingCooldown > 0.0f &&
+                m_characterAbilitySet != null &&
+                usesFormalGasAbility &&
+                m_characterAbilitySet.TryApplyFormalGasAbilityRuleCooldown(formalGasAbilityCode, savedRemainingCooldown))
+            {
+                m_remainingCooldownTimer = 0.0f;
+            }
+            else
+            {
+                if (usesFormalGasAbility)
+                {
+                    m_characterAbilitySet?.ClearFormalGasAbilityRuleCooldown(formalGasAbilityCode);
+                }
+                m_remainingCooldownTimer = savedRemainingCooldown;
+            }
+
+            m_inputGate?.LoadPersistentData(runtimeState.inputGate);
+            m_casting = false;
+            m_effectCostPaidForCurrentUse = false;
+            m_onAbilityEndedCallback = null;
+        }
+
+        protected virtual void OnInputGateSequenceStartedInternal()
+        {
+        }
+
+        protected virtual void OnInputGateUsePerformedInternal()
+        {
+        }
+
+        protected virtual void OnInputGateSequenceStoppedInternal()
+        {
+        }
+
+        protected virtual void OnInputGateReloadNeededInternal()
+        {
+        }
+
+        protected virtual void OnInputGateReloadStartedInternal()
+        {
+        }
+
+        protected virtual void OnInputGateReloadCompletedInternal()
+        {
+        }
+
+        protected virtual void OnInputGateInterruptedInternal()
+        {
+        }
+
+        protected virtual float ResolveFormalAbilityInputGateSpeedMultiplier()
+        {
+            return 1.0f;
+        }
+
+        protected abstract FormalAbilityInputGateSettings ResolveFormalAbilityInputGateSettings();
+
+        protected abstract GameplayFeedbackSet ResolveGameplayFeedbacks();
+
+        internal bool ShouldUpdateLookAtDirectionOnFireForRuntime()
+        {
+            if (usesFormalGasAbility)
+            {
+                return TryGetFormalGasRuntimeConfig(out FormalGasAbilityRuntimeConfig config) &&
+                    config.InputGate.updateLookAtDirectionOnFire;
+            }
+
+            return false;
+        }
+
+        protected Animator ResolveCharacterAnimator()
+        {
+            Animator animator = m_characterAnimator;
+            if (animator == null)
+            {
+                animator = m_character != null ? m_character.GetComponentInChildren<Animator>(true) : null;
+                m_characterAnimator = animator;
+            }
+
+            Debug.Assert(animator, ErrorMessages.InspectorMissingComponentReference<Animator>());
+            return animator;
+        }
+
+        protected CharacterHandleWeapon ResolveCharacterHandleWeapon()
+        {
+            CharacterHandleWeapon handleWeapon = m_characterHandleWeapon;
+            if (handleWeapon == null)
+            {
+                if (m_character != null)
+                {
+                    m_character.TryGetComponent(out handleWeapon);
+                }
+
+                m_characterHandleWeapon = handleWeapon;
+            }
+
+            return handleWeapon;
+        }
+
+        protected void TrySetCharacterAnimatorTrigger(string animatorContextLabel, string triggerName)
+        {
+            TrySetAnimatorTrigger(ResolveCharacterAnimator(), triggerName);
+        }
+
+        protected static void TrySetAnimatorTrigger(Animator animator, string triggerName)
+        {
+            if (animator == null || animator.runtimeAnimatorController == null || string.IsNullOrWhiteSpace(triggerName))
+            {
+                return;
+            }
+
+            foreach (AnimatorControllerParameter parameter in animator.parameters)
+            {
+                if (parameter.type == AnimatorControllerParameterType.Trigger &&
+                    parameter.name == triggerName)
+                {
+                    animator.SetTrigger(triggerName);
+                    return;
+                }
+            }
+        }
+
+        private bool TryGetFormalCooldownState(out float remainingCooldownValue, out float cooldownDuration)
+        {
+            remainingCooldownValue = 0.0f;
+            cooldownDuration = 0.0f;
+            return m_characterAbilitySet != null &&
+                usesFormalGasAbility &&
+                m_characterAbilitySet.TryGetFormalGasAbilityRuleCooldownState(
+                    formalGasAbilityCode,
+                    out remainingCooldownValue,
+                    out cooldownDuration);
+        }
+
+        private CharacterAbilitySet ResolveOwnedAbilitySet()
+        {
+            if (m_character == null)
+            {
+                return null;
+            }
+
+            if (!m_character.TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
+            {
+                return null;
+            }
+
+            return abilitySet;
+        }
+
+        private string GetAbilityDebugName()
+        {
+            return usesFormalGasAbility
+                ? $"EX-GAS Ability {formalGasAbilityCode}"
+                : name;
+        }
+    }
+}
+

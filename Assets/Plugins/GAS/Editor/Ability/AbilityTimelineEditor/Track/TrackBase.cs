@@ -1,19 +1,17 @@
+using System.Collections.Generic;
+using GAS.Runtime;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 namespace GAS.Editor
 {
-    using System;
-    using System.Collections.Generic;
-    using Runtime;
-    using UnityEditor;
-    using UnityEngine;
-    using UnityEngine.UIElements;
-    
     public abstract class TrackBase
     {
         protected float _frameWidth;
-        protected TrackDataBase _trackData;
-        protected List<TrackItemBase> _trackItems = new();
+        protected Track _trackInfo;
+        protected List<TaskClip> _trackItems = new();
         protected VisualElement BoundingBox;
         protected VisualElement Lock;
         protected VisualElement MenuBox;
@@ -22,31 +20,23 @@ namespace GAS.Editor
         public Label MenuText;
         protected VisualElement TrackParent;
         public VisualElement TrackRoot;
-        public List<TrackItemBase> TrackItems => _trackItems;
         public VisualElement Track { get; protected set; }
 
         protected virtual string TrackAssetGuid => "67e1b3c42dcc09a4dbb9e9b107500dfd";
         protected virtual string MenuAssetGuid => "afb618c74510baa41a7d3928c0e57641";
         protected static AbilityTimelineEditorWindow EditorInst => AbilityTimelineEditorWindow.Instance;
-        public abstract Type TrackDataType { get; }
         protected abstract Color TrackColor { get; }
         protected abstract Color MenuColor { get; }
 
-        public virtual bool IsFixedTrack()
-        {
-            return false;
-        }
+        public virtual Object DataInspector => null;
 
         public abstract void TickView(int frameIndex, params object[] param);
-        // public abstract VisualElement Inspector();
-
-        public virtual UnityEngine.Object DataInspector => null;
 
 
         public virtual void Init(VisualElement trackParent, VisualElement menuParent, float frameWidth,
-            TrackDataBase trackData)
+            Track tasks)
         {
-            _trackData = trackData;
+            _trackInfo = tasks;
             TrackParent = trackParent;
             MenuParent = menuParent;
             var trackAssetPath = AssetDatabase.GUIDToAssetPath(TrackAssetGuid);
@@ -72,9 +62,6 @@ namespace GAS.Editor
             TrackRoot.RegisterCallback<PointerOutEvent>(OnPointerOut);
             TrackRoot.AddManipulator(new ContextualMenuManipulator(OnContextMenu));
 
-            // Track.style.backgroundColor = new Color(0, 0, 0, 0); //TrackColor;
-            // BoundingBox.style.backgroundColor = MenuColor;
-
             MenuBox.style.right = 0;
             MenuBox.style.left = new StyleLength(StyleKeyword.Auto);
         }
@@ -87,7 +74,7 @@ namespace GAS.Editor
         private void OnPointerOut(PointerOutEvent evt)
         {
             foreach (var trackItemBase in _trackItems)
-                if (trackItemBase is TrackClipBase clipViewPair)
+                if (trackItemBase is TaskClip clipViewPair)
                     clipViewPair.ClipVe.OnHover(false);
         }
 
@@ -95,7 +82,7 @@ namespace GAS.Editor
         {
             var mousePos = evt.position;
             foreach (var trackItemBase in _trackItems)
-                if (trackItemBase is TrackClipBase clipViewPair)
+                if (trackItemBase is TaskClip clipViewPair)
                 {
                     clipViewPair.ClipVe.OnHover(false);
                     if (!clipViewPair.ClipVe.InClipRect(mousePos)) continue;
@@ -115,7 +102,7 @@ namespace GAS.Editor
             RefreshShow(_frameWidth);
         }
 
-        public void RemoveTrackItem(TrackItemBase item)
+        public void RemoveTrackItem(TaskClip item)
         {
             Track.Remove(item.Ve);
             _trackItems.Remove(item);
@@ -125,7 +112,7 @@ namespace GAS.Editor
         {
             var x = mouseLocalPositionX - EditorInst.TimerShaftView.TimerShaft.worldBound.x +
                     EditorInst.CurrentFramePos;
-            return Mathf.RoundToInt(x) / EditorInst.Config.FrameUnitWidth;
+            return Mathf.RoundToInt(x / EditorInst.Config.FrameUnitWidth);
         }
 
         #region Select
@@ -154,13 +141,13 @@ namespace GAS.Editor
 
         private void OnMenuContextMenu(ContextualMenuPopulateEvent evt)
         {
-            evt.menu.AppendAction("Delete", OnRemoveTrack, DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("删除轨道", OnRemoveTrack, DropdownMenuAction.AlwaysEnabled);
         }
 
         private void OnContextMenu(ContextualMenuPopulateEvent evt)
         {
-            evt.menu.AppendAction("Add Item", OnAddTrackItem, DropdownMenuAction.AlwaysEnabled);
-            evt.menu.AppendAction("Delete Track", OnRemoveTrack, DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("添加任务", OnAddTrackItem, DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("删除轨道", OnRemoveTrack, DropdownMenuAction.AlwaysEnabled);
         }
 
         protected abstract void OnAddTrackItem(DropdownMenuAction action);

@@ -1,236 +1,520 @@
-using System;
+﻿using System;  
+using Unity.Collections;  
+using Unity.Entities;  
+  
+namespace GAS.Runtime  
+{  
+    /// <summary>  
+    /// AbilitySpec 是 Ability Entity 的 OOP 包装层。  
+    /// 所有 public/protected 成员的形参和返回值不出现 ECS/Entities 类型。  
+    /// 内部实现自由使用 ECS API。  
+    /// </summary>  
+    public class AbilitySpec  
+    {  
+        // ======== 内部字段（黑箱）========  
+        private Entity _abilityEntity;  
+        private static EntityManager _em => GASManager.EntityManager;  
+  
+        // ======== internal 访问（框架内部用）========  
+        internal Entity Entity => _abilityEntity;  
+  
 
-namespace GAS.Runtime
-{
-    public abstract class AbilitySpec
-    {
-        protected object[] _abilityArguments = Array.Empty<object>();
+        public AbilitySpec(Entity abilityEntity)  
+        {  
+            _abilityEntity = abilityEntity;  
+        }  
+  
+        /// <summary>Ability Entity 是否仍然有效</summary>  
+        public bool IsValid => _abilityEntity != Entity.Null && _em.Exists(_abilityEntity);  
+  
 
-        /// <summary>
-        /// 获取激活能力时传递给能力的参数。
-        /// </summary>
-        /// <remarks>
-        /// <para>该属性返回一个对象数组，表示激活能力时传入的参数。</para>
-        /// <para>即使没有参数传递，该数组也绝不会是 <c>null</c>，在这种情况下，它将是一个空数组。</para>
-        /// </remarks>
-        public object[] AbilityArguments => _abilityArguments;
+        #region BaseInfo  
+  
+        /// <summary>能力 Code（配置 ID）</summary>  
+        public int Code  
+        {  
+            get  
+            {  
+                if (!IsValid) return 0;  
+                return _em.GetComponentData<CAbilityBaseInfo>(_abilityEntity).Code;  
+            }  
+        }  
+  
+        /// <summary>能力等级</summary>  
+        public int Level  
+        {  
+            get  
+            {  
+                if (!IsValid) return 0;  
+                return _em.GetComponentData<CAbilityBaseInfo>(_abilityEntity).Level;  
+            }  
+        }  
+  
+        /// <summary>设置能力等级</summary>  
+        public void SetLevel(int level)  
+        {  
+            if (!IsValid) return;  
+            var info = _em.GetComponentData<CAbilityBaseInfo>(_abilityEntity);  
+            info.Level = level;  
+            _em.SetComponentData(_abilityEntity, info);  
+        }  
+  
+        /// <summary>获取 Owner ASC（动态读取，不缓存）</summary>  
+        public AbilitySystemCell Owner  
+        {  
+            get  
+            {  
+                if (!IsValid) return null;  
+                var ownerEntity = _em.GetComponentData<CAbilityBaseInfo>(_abilityEntity).Owner;  
+                if (ownerEntity == Entity.Null) return null;  
+                return GASManager.GetAscFromEntity(ownerEntity);  
+            }  
+        }  
+  
+        #endregion  
+  
 
-        /// <summary>
-        /// 获取或设置与能力关联的自定义数据。
-        /// </summary>
-        /// <remarks>
-        /// <para>此属性用于存储能力的自定义信息，以便在能力的不同任务之间共享数据。</para>
-        /// <para>例如，可以在一个技能的任务(AbilityTask)中设置此数据，然后在同一个技能的另一个任务(AbilityTask)中检索和使用该数据。</para>
-        /// </remarks>
-        public object UserData { get; set; }
+        #region RuntimeState  
+  
+        /// <summary>是否正在激活</summary>  
+        public bool IsActive => IsValid && _em.HasComponent<CAbilityActive>(_abilityEntity);  
+  
+        /// <summary>综合检查是否可以激活（Tag、Cost、CD 全部通过）</summary>  
+        public bool CanActivate => IsValid && AbilityUtil.CanActivateAbility(_abilityEntity) == AbilityActivationResult.Success;  
+  
+        /// <summary>详细的激活检查，返回具体失败原因</summary>  
+        public AbilityActivationResult CheckActivation()  
+        {  
+            if (!IsValid) return AbilityActivationResult.FailOtherReason;  
+            return AbilityUtil.CanActivateAbility(_abilityEntity);  
+        }  
+  
+        /// <summary>Tag 条件是否满足激活</summary>  
+        public bool IsTagRequirementMet => IsValid && AbilityUtil.CheckGameplayTagsValidTpActivate(_abilityEntity);  
+  
+        /// <summary>Cost 是否足够</summary>  
+        public bool CanAffordCost => IsValid && AbilityUtil.CheckCost(_abilityEntity);  
+  
+        /// <summary>冷却是否就绪</summary>  
+        public bool IsCooldownReady => IsValid && AbilityUtil.CheckCooldownReady(_abilityEntity);  
+  
+        #endregion  
+  
 
+        #region Operations  
+  
+        /// <summary>尝试激活（添加 CAbilityInTryActivate 标记，下一帧由 System 处理）</summary>  
+        public void TryActivate()  
+        {  
+            if (!IsValid) return;  
+            EntityHelper.AddComponent<CAbilityInTryActivate>(_abilityEntity);  
+        }  
+  
+        /// <summary>尝试结束（添加 CAbilityInTryEnd 标记，下一帧由 System 处理）</summary>  
+        public void TryEnd()  
+        {  
+            if (!IsValid) return;  
+            EntityHelper.AddComponent<CAbilityInTryEnd>(_abilityEntity);  
+        }  
+  
+        /// <summary>尝试取消（添加 CAbilityInTryCancel 标记，下一帧由 System 处理）</summary>  
+        public void TryCancel()  
+        {  
+            if (!IsValid) return;  
+            EntityHelper.AddComponent<CAbilityInTryCancel>(_abilityEntity);  
+        }  
+  
+        /// <summary>手动触发 CD</summary>  
+        public void DoCooldown()  
+        {  
+            if (!IsValid) return;  
+            AbilityUtil.DoCooldown(_abilityEntity);  
+        }  
+  
+        /// <summary>手动触发 Cost</summary>  
+        public void DoCost()  
+        {  
+            if (!IsValid) return;  
+            AbilityUtil.DoCost(_abilityEntity);  
+        }  
+  
+        #endregion  
+  
+        // =====================================================================================  
+        //  AbilityLogic 组件 (MCAbilityLogic) — 必定存在  
+        // =====================================================================================  
+  
+        #region AbilityLogic  
+  
+        /// <summary>获取 AbilityLogicBase 实例</summary>  
+        public AbilityLogicBase GetLogic()  
+        {  
+            if (!IsValid) return null;  
+            return _em.GetComponentData<MCAbilityLogic>(_abilityEntity)?.Logic;  
+        }  
+  
+        /// <summary>获取强类型的 AbilityLogicBase 实例</summary>  
+        public T GetLogic<T>() where T : AbilityLogicBase  
+        {  
+            return GetLogic() as T;  
+        }  
+  
+        /// <summary>设置 Ability 参数（传递给 AbilityLogicBase）</summary>  
+        public void SetParam(XParam param)  
+        {  
+            if (!IsValid) return;  
+            var logic = _em.GetComponentData<MCAbilityLogic>(_abilityEntity);  
+            logic?.Logic?.SetParam(param);  
+        }  
+  
+        /// <summary>获取 Ability 的原始参数</summary>  
+        public XParam GetParamRaw()  
+        {  
+            var logic = GetLogic();  
+            if (logic == null) return null;  
+            // AbilityLogicBase._paramRaw is protected,   
+            // 需要通过 Logic 暴露或通过反射获取  
+            // 这里建议在 AbilityLogicBase 上新增 public XParam ParamRaw => _paramRaw;  
+            return null; // 需要 AbilityLogicBase 配合暴露  
+        }  
+  
+        #endregion  
+        
+        private bool CheckTagComponentExist<T>() where T : unmanaged, IComponentData  
+            => IsValid && _em.HasComponent<T>(_abilityEntity);  
+  
+        private int[] GetTagsInternal<T>(Func<T, NativeArray<int>> getter) where T : unmanaged, IComponentData  
+        {  
+            if (!CheckTagComponentExist<T>()) return Array.Empty<int>();  
+            var com = _em.GetComponentData<T>(_abilityEntity);  
+            var nativeArray = getter(com);  
+            return nativeArray.IsCreated ? nativeArray.ToArray() : Array.Empty<int>();  
+        }  
 
-        public AbilitySpec(AbstractAbility ability, AbilitySystemComponent owner)
+        private (int[] all, int[] any, int[] none) GetTagRequirementInternal<T>(Func<T, TagRequirementData> getter)
+            where T : unmanaged, IComponentData
         {
-            Ability = ability;
-            Owner = owner;
+            if (!CheckTagComponentExist<T>()) return (Array.Empty<int>(), Array.Empty<int>(), Array.Empty<int>());
+            var requirement = getter(_em.GetComponentData<T>(_abilityEntity));
+            return (
+                requirement.all.IsCreated ? requirement.all.ToArray() : Array.Empty<int>(),
+                requirement.any.IsCreated ? requirement.any.ToArray() : Array.Empty<int>(),
+                requirement.none.IsCreated ? requirement.none.ToArray() : Array.Empty<int>()
+            );
         }
+  
+        private void SetTagsInternal<T>(int[] tags, Func<T, NativeArray<int>> getter, Func<NativeArray<int>, T> factory)  
+            where T : unmanaged, IComponentData  
+        {  
+            if (!CheckTagComponentExist<T>()) return;  
+            var com = _em.GetComponentData<T>(_abilityEntity);  
+            var old = getter(com);  
+            if (old.IsCreated) old.Dispose();  
+            _em.SetComponentData(_abilityEntity, factory(new NativeArray<int>(tags, Allocator.Persistent)));  
+        }  
 
-        public virtual void Dispose()
+        private void SetTagRequirementInternal<T>(int[] all, int[] any, int[] none,
+            Func<T, TagRequirementData> getter, Func<TagRequirementData, T> factory)
+            where T : unmanaged, IComponentData
         {
-            _onActivateResult = null;
-            _onEndAbility = null;
-            _onCancelAbility = null;
-        }
-
-        public AbstractAbility Ability { get; }
-
-        public AbilitySystemComponent Owner { get; protected set; }
-
-        public int Level { get; protected set; }
-
-        public bool IsActive { get; private set; }
-
-        public int ActiveCount { get; private set; }
-        protected event Action<AbilityActivateResult> _onActivateResult;
-        protected event Action _onEndAbility;
-        protected event Action _onCancelAbility;
-
-        public void RegisterActivateResult(Action<AbilityActivateResult> onActivateResult)
-        {
-            _onActivateResult += onActivateResult;
-        }
-
-        public void UnregisterActivateResult(Action<AbilityActivateResult> onActivateResult)
-        {
-            _onActivateResult -= onActivateResult;
-        }
-
-        public void RegisterEndAbility(Action onEndAbility)
-        {
-            _onEndAbility += onEndAbility;
-        }
-
-        public void UnregisterEndAbility(Action onEndAbility)
-        {
-            _onEndAbility -= onEndAbility;
-        }
-
-        public void RegisterCancelAbility(Action onCancelAbility)
-        {
-            _onCancelAbility += onCancelAbility;
-        }
-
-        public void UnregisterCancelAbility(Action onCancelAbility)
-        {
-            _onCancelAbility -= onCancelAbility;
-        }
-
-        public virtual void SetLevel(int level)
-        {
-            Level = level;
-        }
-
-        public virtual AbilityActivateResult CanActivate()
-        {
-            if (IsActive) return AbilityActivateResult.FailHasActivated;
-            if (!CheckGameplayTagsValidTpActivate()) return AbilityActivateResult.FailTagRequirement;
-            if (!CheckCost()) return AbilityActivateResult.FailCost;
-            if (CheckCooldown().TimeRemaining > 0) return AbilityActivateResult.FailCooldown;
-
-            return AbilityActivateResult.Success;
-        }
-
-        private bool CheckGameplayTagsValidTpActivate()
-        {
-            var hasAllTags = Owner.HasAllTags(Ability.Tag.ActivationRequiredTags);
-            var notHasAnyTags = !Owner.HasAnyTags(Ability.Tag.ActivationBlockedTags);
-            var notBlockedByOtherAbility = true;
-
-            foreach (var kv in Owner.AbilityContainer.AbilitySpecs())
+            if (!CheckTagComponentExist<T>()) return;
+            var old = getter(_em.GetComponentData<T>(_abilityEntity));
+            if (old.all.IsCreated) old.all.Dispose();
+            if (old.any.IsCreated) old.any.Dispose();
+            if (old.none.IsCreated) old.none.Dispose();
+            _em.SetComponentData(_abilityEntity, factory(new TagRequirementData
             {
-                var abilitySpec = kv.Value;
-                if (abilitySpec.IsActive)
-                    if (Ability.Tag.AssetTag.HasAnyTags(abilitySpec.Ability.Tag.BlockAbilitiesWithTags))
-                    {
-                        notBlockedByOtherAbility = false;
-                        break;
-                    }
-            }
-
-            return hasAllTags && notHasAnyTags && notBlockedByOtherAbility;
+                all = new NativeArray<int>(all ?? Array.Empty<int>(), Allocator.Persistent),
+                any = new NativeArray<int>(any ?? Array.Empty<int>(), Allocator.Persistent),
+                none = new NativeArray<int>(none ?? Array.Empty<int>(), Allocator.Persistent)
+            }));
         }
+  
+        private void AddTagComponentInternal<T>(int[] tags, Func<NativeArray<int>, T> factory)  
+            where T : unmanaged, IComponentData  
+        {  
+            if (!IsValid || CheckTagComponentExist<T>()) return;  
+            EntityHelper.AddComponent<T>(_abilityEntity);  
+            EntityHelper.SetComponent(_abilityEntity, factory(new NativeArray<int>(tags, Allocator.Persistent)));  
+        }  
 
-        protected virtual bool CheckCost()
+        private void AddTagRequirementComponentInternal<T>(int[] all, int[] any, int[] none, Func<TagRequirementData, T> factory)
+            where T : unmanaged, IComponentData
         {
-            if (Ability.Cost == null) return true;
-            var costSpec = Ability.Cost.CreateSpec(Owner, Owner, Level);
-            if (costSpec == null) return false;
-
-            if (Ability.Cost.DurationPolicy != EffectsDurationPolicy.Instant) return true;
-
-            foreach (var modifier in Ability.Cost.Modifiers)
+            if (!IsValid || CheckTagComponentExist<T>()) return;
+            EntityHelper.AddComponent<T>(_abilityEntity);
+            EntityHelper.SetComponent(_abilityEntity, factory(new TagRequirementData
             {
-                // 常规来说消耗是减法, 但是加一个负数也应该被视为减法
-                if (modifier.Operation != GEOperation.Add && modifier.Operation != GEOperation.Minus) continue;
-
-                var costValue = modifier.CalculateMagnitude(costSpec, modifier.ModiferMagnitude);
-                var attributeCurrentValue =
-                    Owner.GetAttributeCurrentValue(modifier.AttributeSetName, modifier.AttributeShortName);
-                
-                if(modifier.Operation == GEOperation.Add)
-                    if (attributeCurrentValue + costValue < 0) return false;
-                
-                if(modifier.Operation == GEOperation.Minus)
-                    if (attributeCurrentValue - costValue < 0) return false;
-            }
-
-            return true;
+                all = new NativeArray<int>(all ?? Array.Empty<int>(), Allocator.Persistent),
+                any = new NativeArray<int>(any ?? Array.Empty<int>(), Allocator.Persistent),
+                none = new NativeArray<int>(none ?? Array.Empty<int>(), Allocator.Persistent)
+            }));
         }
+  
+        private void RemoveTagComponentInternal<T>(Func<T, NativeArray<int>> getter)  
+            where T : unmanaged, IComponentData  
+        {  
+            if (!CheckTagComponentExist<T>()) return;  
+            var com = _em.GetComponentData<T>(_abilityEntity);  
+            var arr = getter(com);  
+            if (arr.IsCreated) arr.Dispose();  
+            _em.RemoveComponent<T>(_abilityEntity);  
+        }  
 
-        protected virtual CooldownTimer CheckCooldown()
+        private void RemoveTagRequirementComponentInternal<T>(Func<T, TagRequirementData> getter)
+            where T : unmanaged, IComponentData
         {
-            return Ability.Cooldown == null
-                ? new CooldownTimer { TimeRemaining = 0, Duration = Ability.CooldownTime }
-                : Owner.CheckCooldownFromTags(Ability.Cooldown.TagContainer.GrantedTags);
+            if (!CheckTagComponentExist<T>()) return;
+            var old = getter(_em.GetComponentData<T>(_abilityEntity));
+            if (old.all.IsCreated) old.all.Dispose();
+            if (old.any.IsCreated) old.any.Dispose();
+            if (old.none.IsCreated) old.none.Dispose();
+            _em.RemoveComponent<T>(_abilityEntity);
         }
+  
+        
+        #region AssetTags  
+  
+        public bool CheckAssetTagsExist() => CheckTagComponentExist<CAbilityAssetTags>();  
+  
+        public int[] GetAssetTags() => GetTagsInternal<CAbilityAssetTags>(c => c.tags);  
+  
+        public void SetAssetTags(int[] tags) => SetTagsInternal<CAbilityAssetTags>(tags,  
+            c => c.tags, arr => new CAbilityAssetTags { tags = arr });  
+  
+        public void AddAssetTags(int[] tags) => AddTagComponentInternal<CAbilityAssetTags>(tags,  
+            arr => new CAbilityAssetTags { tags = arr });  
+  
+        public void RemoveAssetTags() => RemoveTagComponentInternal<CAbilityAssetTags>(c => c.tags);  
+  
+        #endregion  
+  
+         
+        #region ActivationOwnedTags  
+  
+        public bool CheckActivationOwnedTagsExist() => CheckTagComponentExist<CAbilityActivationOwnedTags>();  
+  
+        public int[] GetActivationOwnedTags() => GetTagsInternal<CAbilityActivationOwnedTags>(c => c.tags);  
+  
+        public void SetActivationOwnedTags(int[] tags) => SetTagsInternal<CAbilityActivationOwnedTags>(tags,  
+            c => c.tags, arr => new CAbilityActivationOwnedTags { tags = arr });  
+  
+        public void AddActivationOwnedTags(int[] tags) => AddTagComponentInternal<CAbilityActivationOwnedTags>(tags,  
+            arr => new CAbilityActivationOwnedTags { tags = arr });  
+  
+        public void RemoveActivationOwnedTags() => RemoveTagComponentInternal<CAbilityActivationOwnedTags>(c => c.tags);  
+  
+        #endregion  
+  
+          
+        #region ActivationRequiredTags  
+  
+        public bool CheckActivationRequiredTagsExist() => CheckTagComponentExist<CAbilityActivationRequiredTags>();  
+  
+        public int[] GetActivationRequiredTags() => GetTagRequirementInternal<CAbilityActivationRequiredTags>(c => c.requirement).all;  
+  
+        public void SetActivationRequiredTags(int[] tags) => SetTagRequirementInternal<CAbilityActivationRequiredTags>(tags, Array.Empty<int>(), Array.Empty<int>(),  
+            c => c.requirement, req => new CAbilityActivationRequiredTags { requirement = req });  
+  
+        public void AddActivationRequiredTags(int[] tags) => AddTagRequirementComponentInternal<CAbilityActivationRequiredTags>(tags, Array.Empty<int>(), Array.Empty<int>(),  
+            req => new CAbilityActivationRequiredTags { requirement = req });  
+  
+        public void RemoveActivationRequiredTags() => RemoveTagRequirementComponentInternal<CAbilityActivationRequiredTags>(c => c.requirement);  
 
-        /// <summary>
-        ///     Some skills include wind-up and follow-through, where the wind-up may be interrupted, causing the skill not to be
-        ///     successfully released.
-        ///     Therefore, the actual timing and logic of skill release (triggering costs and initiating cooldown) should be
-        ///     determined by developers within the AbilitySpec,
-        ///     rather than being systematically standardized.
-        /// </summary>
-        public virtual void DoCost(float customCooldownTime = 0)
-        {
-            if (Ability.Cost != null) Owner.ApplyGameplayEffectToSelf(Ability.Cost);
+        public (int[] all, int[] any, int[] none) GetActivationRequiredTagRequirement() =>
+            GetTagRequirementInternal<CAbilityActivationRequiredTags>(c => c.requirement);
 
-            if (Ability.Cooldown != null)
-            {
-                var cdSpec = Owner.ApplyGameplayEffectToSelf(Ability.Cooldown);
-                cdSpec.SetDuration(customCooldownTime == 0? Ability.CooldownTime : customCooldownTime);
-            }
-        }
+        public void SetActivationRequiredTagRequirement(int[] all, int[] any, int[] none) =>
+            SetTagRequirementInternal<CAbilityActivationRequiredTags>(all, any, none,
+                c => c.requirement, req => new CAbilityActivationRequiredTags { requirement = req });
+  
+        #endregion  
+  
+          
+        #region ActivationBlockedTags  
+  
+        public bool CheckActivationBlockedTagsExist() => CheckTagComponentExist<CAbilityActivationBlockedTags>();  
+  
+        public int[] GetActivationBlockedTags() => GetTagRequirementInternal<CAbilityActivationBlockedTags>(c => c.requirement).none;  
+  
+        public void SetActivationBlockedTags(int[] tags) => SetTagRequirementInternal<CAbilityActivationBlockedTags>(Array.Empty<int>(), Array.Empty<int>(), tags,  
+            c => c.requirement, req => new CAbilityActivationBlockedTags { requirement = req });  
+  
+        public void AddActivationBlockedTags(int[] tags) => AddTagRequirementComponentInternal<CAbilityActivationBlockedTags>(Array.Empty<int>(), Array.Empty<int>(), tags,  
+            req => new CAbilityActivationBlockedTags { requirement = req });  
+  
+        public void RemoveActivationBlockedTags() => RemoveTagRequirementComponentInternal<CAbilityActivationBlockedTags>(c => c.requirement);  
 
-        public virtual bool TryActivateAbility(params object[] args)
-        {
-            _abilityArguments = args;
-            var result = CanActivate();
-            var success = result == AbilityActivateResult.Success;
-            if (success)
-            {
-                IsActive = true;
-                ActiveCount++;
-                Owner.GameplayTagAggregator.ApplyGameplayAbilityDynamicTag(this);
+        public (int[] all, int[] any, int[] none) GetActivationBlockedTagRequirement() =>
+            GetTagRequirementInternal<CAbilityActivationBlockedTags>(c => c.requirement);
 
-                ActivateAbility(_abilityArguments);
-            }
+        public void SetActivationBlockedTagRequirement(int[] all, int[] any, int[] none) =>
+            SetTagRequirementInternal<CAbilityActivationBlockedTags>(all, any, none,
+                c => c.requirement, req => new CAbilityActivationBlockedTags { requirement = req });
+  
+        #endregion  
+  
+        
+        #region CancelAbilityTags  
+  
+        public bool CheckCancelAbilityTagsExist() => CheckTagComponentExist<CCancelAbilityWithTags>();  
+  
+        public int[] GetCancelAbilityTags() => GetTagsInternal<CCancelAbilityWithTags>(c => c.tags);  
+  
+        public void SetCancelAbilityTags(int[] tags) => SetTagsInternal<CCancelAbilityWithTags>(tags,  
+            c => c.tags, arr => new CCancelAbilityWithTags { tags = arr });  
+  
+        public void AddCancelAbilityTags(int[] tags) => AddTagComponentInternal<CCancelAbilityWithTags>(tags,  
+            arr => new CCancelAbilityWithTags { tags = arr });  
+  
+        public void RemoveCancelAbilityTags() => RemoveTagComponentInternal<CCancelAbilityWithTags>(c => c.tags);  
+  
+        #endregion  
 
-            _onActivateResult?.Invoke(result);
-            return success;
-        }
+        #region BlockAbilityTags  
+  
+        public bool CheckBlockAbilityTagsExist() => CheckTagComponentExist<CBlockAbilityWithTags>();  
+  
+        public int[] GetBlockAbilityTags() => GetTagsInternal<CBlockAbilityWithTags>(c => c.tags);  
+  
+        public void SetBlockAbilityTags(int[] tags) => SetTagsInternal<CBlockAbilityWithTags>(tags,  
+            c => c.tags, arr => new CBlockAbilityWithTags { tags = arr });  
+  
+        public void AddBlockAbilityTags(int[] tags) => AddTagComponentInternal<CBlockAbilityWithTags>(tags,  
+            arr => new CBlockAbilityWithTags { tags = arr });  
+  
+        public void RemoveBlockAbilityTags() => RemoveTagComponentInternal<CBlockAbilityWithTags>(c => c.tags);  
+  
+        #endregion  
+  
 
-        public virtual void TryEndAbility()
-        {
-            if (!IsActive) return;
-            IsActive = false;
-            Owner.GameplayTagAggregator.RestoreGameplayAbilityDynamicTags(this);
-            EndAbility();
-            _onEndAbility?.Invoke();
-        }
+        #region Cooldown  
+  
+        public bool CheckCooldownExist() => IsValid && _em.HasComponent<CAbilityCooldown>(_abilityEntity);  
+  
+        /// <summary>获取冷却时长（帧）</summary>  
+        public int GetCooldown()  
+        {  
+            if (!CheckCooldownExist()) return 0;  
+            return _em.GetComponentData<CAbilityCooldown>(_abilityEntity).Cooldown;  
+        }  
+  
+        /// <summary>设置冷却时长（帧），会覆写原型GE的Duration</summary>  
+        public void SetCooldown(int cooldown)  
+        {  
+            if (!CheckCooldownExist()) return;  
+            var com = _em.GetComponentData<CAbilityCooldown>(_abilityEntity);  
+            com.Cooldown = cooldown;  
+            _em.SetComponentData(_abilityEntity, com);  
+        }  
+  
+        /// <summary>获取冷却Tag列表（从原型GE的GrantedTags拷贝而来）</summary>  
+        public int[] GetCooldownTags()  
+        {  
+            if (!CheckCooldownExist()) return Array.Empty<int>();  
+            var com = _em.GetComponentData<CAbilityCooldown>(_abilityEntity);  
+            if (!com.CooldownTags.IsCreated || com.CooldownTags.Length == 0)   
+                return Array.Empty<int>();  
+            return com.CooldownTags.ToArray();  
+        }  
+  
+        /// <summary>获取冷却原型GE的Spec包装（可进一步修改原型GE属性）</summary>  
+        public GameplayEffectSpec GetCooldownProtoGE()  
+        {  
+            if (!CheckCooldownExist()) return null;  
+            var com = _em.GetComponentData<CAbilityCooldown>(_abilityEntity);  
+            return new GameplayEffectSpec(com.ProtoGameplayEffectCooldown);  
+        }  
+  
+        #endregion
+        
+        
+        #region Cost  
+  
+        public bool CheckCostExist() => IsValid && _em.HasComponent<CAbilityCost>(_abilityEntity);  
+  
+        /// <summary>获取消耗 GE 原型的 Spec 包装（可进一步读取/修改消耗 GE 的 Modifier）</summary>  
+        public GameplayEffectSpec GetCostEffectProto()  
+        {  
+            if (!CheckCostExist()) return null;  
+            var com = _em.GetComponentData<CAbilityCost>(_abilityEntity);  
+            if (com.ProtoGameplayEffectCost == Entity.Null) return null;  
+            return new GameplayEffectSpec(com.ProtoGameplayEffectCost);  
+        }  
+  
+        /// <summary>  
+        /// 添加 Cost 组件。  
+        /// <para>[Warning] 建议仅在 Ability 首次 Activate 之前调用。</para>  
+        /// </summary>  
+        /// <param name="costEffectConfigID">消耗 GE 的配置 ID</param>  
+        public void AddCost(int costEffectConfigID)  
+        {  
+            if (!IsValid || CheckCostExist()) return;  
+            var effectCfg = GameplayEffectHelper.GetConfigByID(costEffectConfigID);  
+            EntityHelper.AddComponent<CAbilityCost>(_abilityEntity);  
+            EntityHelper.SetComponent(_abilityEntity, new CAbilityCost  
+            {  
+                ProtoGameplayEffectCost = GameplayEffectHelper.CreateGameplayEffectEntity(effectCfg.ComponentConfigs),  
+            });  
+        }  
+  
+        /// <summary>移除 Cost 组件</summary>  
+        public void RemoveCost()  
+        {  
+            if (!CheckCostExist()) return;  
+            var com = _em.GetComponentData<CAbilityCost>(_abilityEntity);  
+            if (com.ProtoGameplayEffectCost != Entity.Null && _em.Exists(com.ProtoGameplayEffectCost))  
+                _em.DestroyEntity(com.ProtoGameplayEffectCost);  
+            _em.RemoveComponent<CAbilityCost>(_abilityEntity);  
+        }  
+  
+        #endregion  
+  
 
-        public virtual void TryCancelAbility()
-        {
-            if (!IsActive) return;
-            IsActive = false;
-
-            Owner.GameplayTagAggregator.RestoreGameplayAbilityDynamicTags(this);
-            CancelAbility();
-            _onCancelAbility?.Invoke();
-        }
-
-        public void Tick()
-        {
-            if (IsActive)
-            {
-                AbilityTick();
-            }
-        }
-
-        protected virtual void AbilityTick()
-        {
-        }
-
-        public abstract void ActivateAbility(params object[] args);
-
-        public abstract void CancelAbility();
-
-        public abstract void EndAbility();
-    }
-
-    public abstract class AbilitySpec<T> : AbilitySpec where T : AbstractAbility
-    {
-        public T Data { get; private set; }
-
-        protected AbilitySpec(T ability, AbilitySystemComponent owner) : base(ability, owner)
-        {
-            Data = ability;
-        }
-    }
+        #region Events  
+  
+        /// <summary>注册激活结果回调</summary>  
+        public void RegisterOnActivateResult(Action<AbilityActivationResult> action)  
+        {  
+            if (!IsValid) return;  
+            GASEventCenter.RegisterOnActivateResult(_abilityEntity, action);  
+        }  
+  
+        /// <summary>注销激活结果回调</summary>  
+        public void UnRegisterOnActivateResult(Action<AbilityActivationResult> action)  
+        {  
+            if (!IsValid) return;  
+            GASEventCenter.UnRegisterOnActivateResult(_abilityEntity, action);  
+        }  
+  
+        /// <summary>注册结束回调</summary>  
+        public void RegisterOnEndAbility(Action action)  
+        {  
+            if (!IsValid) return;  
+            GASEventCenter.RegisterOnEndAbility(_abilityEntity, action);  
+        }  
+  
+        /// <summary>注销结束回调</summary>  
+        public void UnRegisterOnEndAbility(Action action)  
+        {  
+            if (!IsValid) return;  
+            GASEventCenter.UnRegisterOnEndAbility(_abilityEntity, action);  
+        }  
+  
+        /// <summary>注册取消回调</summary>  
+        public void RegisterOnCancelAbility(Action action)  
+        {  
+            if (!IsValid) return;  
+            GASEventCenter.RegisterOnCancelAbility(_abilityEntity, action);  
+        }  
+  
+        /// <summary>注销取消回调</summary>  
+        public void UnRegisterOnCancelAbility(Action action)  
+        {  
+            if (!IsValid) return;  
+            GASEventCenter.UnRegisterOnCancelAbility(_abilityEntity, action);  
+        }  
+  
+        #endregion  
+    }  
 }

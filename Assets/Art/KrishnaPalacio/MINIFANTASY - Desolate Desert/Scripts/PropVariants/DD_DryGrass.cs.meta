@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: d49711709012b274592ae500f89ce61e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - dryGrass1: {fileID: 110608125485589012, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - dryGrass2: {fileID: 6827729256308841402, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - dryGrass3: {fileID: 7745721850182663203, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - dryGrass4: {fileID: 808234202710911019, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - dryGrass5: {fileID: 2816145909697251037, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - dryGrass6: {fileID: -5558850969589308394, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - dryGrass1Shadow: {fileID: 4826708329755592692, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - dryGrass2Shadow: {fileID: 1326523739551221790, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - dryGrass3Shadow: {fileID: 8609958102171860925, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - dryGrass4Shadow: {fileID: -2503101232662135150, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - dryGrass5Shadow: {fileID: -6717221833353054898, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - dryGrass6Shadow: {fileID: 6388430467483495173, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: f59eb07ee10b2d84b871016312707dd0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - knives: {fileID: -8580291753654525444, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - swords: {fileID: 1319229080958859157, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - axe: {fileID: 3125356113658385934, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - swordsAndShield: {fileID: 5052388943423448741, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - knivesShadow: {fileID: -6218919169148180599, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - swordsShadow: {fileID: 2861359412912640602, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - axeShadow: {fileID: -5712739911375022902, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - swordsAndShieldShadow: {fileID: 6005147436492298718, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

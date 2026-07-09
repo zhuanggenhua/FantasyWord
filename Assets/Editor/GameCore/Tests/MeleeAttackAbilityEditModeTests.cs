@@ -1,0 +1,2174 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using GAS.Runtime;
+using NUnit.Framework;
+using MoreMountains.Feedbacks;
+using Unity.Collections;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.TestTools;
+using DotEntity = global::Unity.Entities.Entity;
+using DotEntityManager = global::Unity.Entities.EntityManager;
+using DotEntityQuery = global::Unity.Entities.EntityQuery;
+using DotComponentType = global::Unity.Entities.ComponentType;
+
+namespace FantasyWord.GameCore.Tests
+{
+    public sealed class MeleeAttackAbilityEditModeTests
+    {
+        private const string GameConfigAssetPath = "Assets/GameData/GameCore/GameConfig.asset";
+        private const int BasicAttackAbilityCode = 20001;
+        private const int TransformReplaceAbilityCode = 20002;
+        private const int ChargedAttackReleaseAbilityCode = 20004;
+        private const float EditModeTickDeltaTime = 1.0f / 30.0f;
+
+        [Serializable]
+        private sealed class NullAnimationStrategy : IAnimationStrategy
+        {
+            public void AddDeathAnimationStartedListener(UnityEngine.Events.UnityAction listener) { }
+            public void RemoveDeathAnimationStartedListener(UnityEngine.Events.UnityAction listener) { }
+            public void AddDeathAnimationEndedListener(UnityEngine.Events.UnityAction listener) { }
+            public void RemoveDeathAnimationEndedListener(UnityEngine.Events.UnityAction listener) { }
+            public void Initialize() { }
+            public void Pause() { }
+            public void Resume() { }
+            public void OnInvincibleAnimationStart() { }
+            public void OnInvincibleAnimationStop() { }
+            public void OnDeathAnimationStart() { }
+            public void OnDeathAnimationStop() { }
+            public void SetLookAtDirection(Vector2 direction) { }
+            public void SetTargetDirection(Vector2 direction) { }
+            public void SetMovement(Vector2 speed) { }
+            public bool PlayHitAnimation() => false;
+            public bool PlayDeathAnimation() => false;
+            public bool PlayInvincibleAnimation() => false;
+            public bool IsInvincibleAnimationPlaying() => false;
+        }
+
+        [Serializable]
+        private sealed class TestMeleeFeedbackProbe : MonoBehaviour
+        {
+            public int playCount;
+
+            public void HandlePlay()
+            {
+                playCount++;
+            }
+        }
+
+        private readonly System.Collections.Generic.List<UnityEngine.Object> m_createdObjects = new();
+
+        [SetUp]
+        public void SetUp()
+        {
+            GasEditModeTestHelper.ResetWorld();
+            CreateGameManagerWithMinimalConfig();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            SetStaticField(typeof(GameManager), "_instance", null);
+
+            for (int i = m_createdObjects.Count - 1; i >= 0; i--)
+            {
+                if (m_createdObjects[i] != null)
+                {
+                    UnityEngine.Object.DestroyImmediate(m_createdObjects[i]);
+                }
+            }
+
+            m_createdObjects.Clear();
+            GasEditModeTestHelper.ShutdownWorld();
+
+        }
+
+        [Test]
+        public void FormalGasAttackDescription_UsesGasTableWithoutRuntimeGameManager()
+        {
+            SetStaticField(typeof(GameManager), "_instance", null);
+            RegisterFormalGasAbilityDescriptionGeneratedRuntime();
+            List<AbilityDescriptionLine> lines = new();
+
+            Assert.DoesNotThrow(
+                () => FormalGasAbilityDescriptionResolver.TryAppendFormalDamageLines(BasicAttackAbilityCode, lines),
+                "基础攻击 GAS 描述应能在编辑器资产检查时生成，不能依赖运行中的 GameManager。");
+
+            string joinedLines = string.Join(" | ", lines.ConvertAll(line => $"{line.header}:{line.content}"));
+            Assert.That(joinedLines, Does.Contain("造成伤害:4 固定伤害+1 属性缩放伤害 物理"), "基础攻击描述应读取 EX-GAS GameplayEffect 里的正式基础伤害。");
+            Assert.That(joinedLines, Does.Contain("造成伤害:3 固定伤害 物理"), "基础攻击描述应读取 EX-GAS GameplayEffect 里的正式背刺附加伤害。");
+            Assert.That(joinedLines, Does.Not.Contain("[INVALID_SHORTNAME]"), "策划可见描述不能显示内部术语占位符。");
+        }
+
+
+        [Test]
+        public void FormalGasQuickSlotSave_WritesGasCodeWithoutLegacyAbilityReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+
+            Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "测试前应能只凭 EX-GAS Ability Code 把基础攻击装入快捷槽。");
+
+            CharacterAbilitySlotData[] slots = owner.CreateEquippedAbilitySlotDataSnapshot(GameManager.Database);
+
+            Assert.IsNotEmpty(slots, "快捷槽保存快照不能为空。");
+            Assert.AreEqual(0, slots[0].slotIndex, "第一个快捷槽索引不符合预期。");
+            Assert.AreEqual(BasicAttackAbilityCode, slots[0].formalGasAbilityCode, "已迁移基础攻击快捷槽保存必须写 EX-GAS Ability Code。");
+            Assert.IsNull(
+                typeof(CharacterAbilitySlotData).GetField("ability"),
+                "已迁移基础攻击快捷槽保存不应再保留旧 旧主动能力表 引用字段，否则读档仍有第二套身份真相。");
+        }
+
+        [Test]
+        public void FormalGasQuickSlotEquip_UsesGasCodeAsSlotTruth()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+
+            Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "已迁移基础攻击应能直接按 EX-GAS Ability Code 装入快捷槽。");
+
+            CharacterEquippedAbilitySlotView[] slots = owner.GetEquippedAbilitySlotViewSnapshots();
+
+            Assert.IsNotEmpty(slots, "快捷槽展示快照不能为空。");
+            Assert.AreEqual(BasicAttackAbilityCode, slots[0].FormalGasAbilityCode, "已迁移基础攻击快捷槽展示真相必须是 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(CharacterEquippedAbilitySlotView).GetProperty("LegacySheet"), "按 EX-GAS Ability Code 装槽时不应把旧 旧主动能力表 继续塞进槽位展示真相。");
+            Assert.AreEqual("Attack", slots[0].DisplayName, "按 EX-GAS Ability Code 装槽后仍应从 EX-GAS Ability 表读取显示名。");
+        }
+
+
+        [Test]
+        public void FormalGasQuickSlotCooldownSnapshot_UsesGasCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+
+            Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "测试前应能只凭 EX-GAS Ability Code 把基础攻击装入快捷槽。");
+            CharacterEquippedAbilitySlotView[] slots = owner.GetEquippedAbilitySlotViewSnapshots();
+
+            Assert.IsNotEmpty(slots, "快捷槽展示快照不能为空。");
+            Assert.IsTrue(
+                owner.TryGetActiveAbilityCooldownSnapshot(slots[0], out CharacterAbilityCooldownSnapshot snapshot),
+                "已迁移基础攻击的冷却展示应能直接按 EX-GAS Ability Code 查询。");
+            Assert.AreEqual(BasicAttackAbilityCode, snapshot.FormalGasAbilityCode, "已迁移基础攻击的冷却展示身份必须是 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(CharacterAbilityCooldownSnapshot).GetProperty("LegacySheet"), "已迁移基础攻击的冷却展示快照不应继续夹带旧 旧主动能力表。");
+            Assert.IsTrue(snapshot.HasFormalGasAbility, "冷却展示快照应明确标记为正式 GAS 能力。");
+            Assert.IsNull(typeof(CharacterAbilityCooldownSnapshot).GetProperty("HasLegacySheet"), "冷却展示快照不能同时标记为旧 旧能力表。");
+        }
+
+        [Test]
+        public void FormalGasActiveAbilitySnapshot_DoesNotExposeLegacySheetForMigratedAbility()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+
+            Assert.IsNull(
+                typeof(CharacterBase).GetMethod("CreateOwnedLegacy旧能力表Snapshot", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic),
+                "彻底迁到 EX-GAS 后，不应继续保留旧 旧能力表 快照入口。");
+            Assert.IsTrue(
+                Array.Exists(owner.GetActiveAbilityMenuEntrySnapshots(), entry => entry.FormalGasAbilityCode == BasicAttackAbilityCode),
+                "已迁移基础攻击仍应通过 GAS 菜单投影暴露，且菜单条目不能夹带旧 旧能力表。");
+        }
+
+        [Test]
+        public void CharacterSheet_LegacyAbilityMap_IsRemovedFromFormalAbilityFlow()
+        {
+            Assert.IsNull(
+                typeof(CharacterSheet).GetField("m_legacyAbilitiesPerLevel", BindingFlags.Instance | BindingFlags.NonPublic),
+                "角色出生能力正式真相应只剩 EX-GAS code 表，不应继续保留旧 旧能力表 解锁表。");
+            Assert.IsNull(
+                typeof(CharacterSheet).GetMethod("GetAvailableLegacyAbilitiesAtLevel", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic),
+                "角色出生能力不应继续暴露旧 旧能力表 查询入口。");
+            Assert.IsNull(
+                typeof(CharacterSheet).GetMethod("GetLegacyAbilitiesUnlockedAtLevel", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic),
+                "角色升级解锁不应继续暴露旧 旧能力表 查询入口。");
+        }
+
+        [Test]
+        public void LegacyBonusAbilityApi_IsRemovedFromCharacterRuntime()
+        {
+            Assert.IsFalse(
+                Array.Exists(typeof(CharacterBase).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic), method =>
+                    (method.Name is "AddBonusAbility" or "RemoveBonusAbility" or "HasAbility" or "IsAbilitySuppressed") &&
+                    Array.Exists(method.GetParameters(), HasLegacyAbilitySheetParameter)),
+                "角色运行时不应继续暴露以 旧能力表 为参数的授予、移除、查询或压制入口。");
+            Assert.IsNull(typeof(CharacterAbilityMenuEntry).GetProperty("LegacySheet"), "菜单投影不应再暴露旧 旧能力表。");
+        }
+
+        [Test]
+        public void CharacterAlterationRule_LegacyAbilityFields_AreRemoved()
+        {
+            Assert.IsNull(
+                typeof(CharacterAlterationRule).GetField("m_legacyGrantedAbilities", BindingFlags.Instance | BindingFlags.NonPublic),
+                "变形/感染规则授予能力应只保存 EX-GAS code，不应继续保留旧 旧能力表 授予字段。");
+            Assert.IsNull(
+                typeof(CharacterAlterationRule).GetField("m_legacySuppressedAbilities", BindingFlags.Instance | BindingFlags.NonPublic),
+                "变形/感染规则压制能力应只保存 EX-GAS code，不应继续保留旧 旧能力表 压制字段。");
+        }
+
+
+        [Test]
+        public void PlayerAbilityFireFailedEvent_OnlyExposesFormalGasCode()
+        {
+            PlayerAbilityFireFailedEvent evt = new(BasicAttackAbilityCode, EAbilityFireCheckResult.OnCooldown);
+
+            Assert.AreEqual(BasicAttackAbilityCode, evt.FormalGasAbilityCode, "失败事件只应暴露正式 EX-GAS Ability Code。");
+            Assert.IsTrue(evt.HasFormalGasAbility, "失败事件应明确标记正式 EX-GAS 能力。");
+            Assert.IsNull(typeof(PlayerAbilityFireFailedEvent).GetProperty("Ability"), "失败事件不应继续携带旧 旧能力表。");
+            Assert.AreEqual(EAbilityFireCheckResult.OnCooldown, evt.Reason);
+        }
+
+        [Test]
+        public void CharacterAbilityInventoryEvents_OnlyExposeFormalGasCode()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+
+            CharacterAbilityAddedEvent addedEvent = new(owner, BasicAttackAbilityCode);
+            CharacterAbilityRemovedEvent removedEvent = new(owner, BasicAttackAbilityCode);
+
+            Assert.AreEqual(BasicAttackAbilityCode, addedEvent.FormalGasAbilityCode, "角色获得能力事件必须暴露正式 EX-GAS Ability Code。");
+            Assert.AreEqual(BasicAttackAbilityCode, removedEvent.FormalGasAbilityCode, "角色失去能力事件必须暴露正式 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(CharacterAbilityAddedEvent).GetProperty("Ability"), "角色获得能力事件不应继续携带旧 旧能力表。");
+            Assert.IsNull(typeof(CharacterAbilityRemovedEvent).GetProperty("Ability"), "角色失去能力事件不应继续携带旧 旧能力表。");
+        }
+
+        [Test]
+        public void AddOrRemoveAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            AddOrRemoveAbility command = new();
+            SetInstanceField(command, "m_formalGasAbilityCode", BasicAttackAbilityCode);
+            Assert.IsNull(FindInstanceField(typeof(AddOrRemoveAbility), "m_abilitySheet"), "脚本授予能力命令不应再保留旧能力表字段。");
+
+            command.Execute(GameCommandContext.Script(owner, "formal-gas-test")).GetAwaiter().GetResult();
+
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "脚本授予能力入口应能只凭 EX-GAS Ability Code 授予基础攻击，不应要求旧 旧主动能力表 字段。");
+            Assert.IsTrue(
+                Array.Exists(owner.GetActiveAbilityMenuEntrySnapshots(), entry =>
+                    entry.FormalGasAbilityCode == BasicAttackAbilityCode &&
+                    entry.HasFormalGasAbility),
+                "脚本授予后的已迁移能力必须通过 GAS code 菜单投影暴露，不能夹带旧 旧能力表。");
+
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilitySources, source =>
+                    source != null &&
+                    source.formalGasAbilityCode == BasicAttackAbilityCode),
+                "脚本授予后的已迁移能力来源保存必须只写 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(CharacterAbilitySourceData).GetField("ability"), "能力来源保存模型不应继续保留旧 旧能力表 引用字段。");
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilityRuntimeStates, state =>
+                    state != null &&
+                    state.formalGasAbilityCode == BasicAttackAbilityCode),
+                "脚本授予后的已迁移能力运行实例保存必须只写 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(CharacterAbilityRuntimeStateData).GetField("sheet"), "能力运行状态保存模型不应继续保留旧 旧能力表 引用字段。");
+        }
+
+
+        [Test]
+        public void FormalGasAbilitySourceAndRuntimeState_SaveGasCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+
+            Assert.IsTrue(
+                owner.AddBonusFormalGasAbility(BasicAttackAbilityCode, CharacterAbilitySourceKey.Script),
+                "正式能力来源应能只凭 EX-GAS Ability Code 授予基础攻击。");
+
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+
+            Assert.IsNotNull(runtimeState.abilitySources, "角色运行时状态必须保存能力来源。");
+            Assert.IsNotEmpty(runtimeState.abilitySources, "GAS code 授予的能力来源不应丢失。");
+            Assert.AreEqual(BasicAttackAbilityCode, runtimeState.abilitySources[0].formalGasAbilityCode, "新能力来源保存必须写 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(CharacterAbilitySourceData).GetField("ability"), "新能力来源保存不应再同时写旧 旧能力表 引用。");
+            Assert.IsNotNull(runtimeState.abilityRuntimeStates, "角色运行时状态必须保存能力实例状态。");
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilityRuntimeStates, state =>
+                    state != null &&
+                    state.formalGasAbilityCode == BasicAttackAbilityCode),
+                "已迁移能力的运行时状态必须按 EX-GAS Ability Code 保存，旧 旧能力表 引用只能服务旧数据兜底。");
+            Assert.IsNull(typeof(CharacterAbilityRuntimeStateData).GetField("sheet"), "能力运行状态保存模型不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void ItemAddAbilityEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            ItemAddAbilityEffect effect = new();
+            SetInstanceField(effect, "m_formalGasAbilityCode", BasicAttackAbilityCode);
+            Assert.IsNull(FindInstanceField(typeof(ItemAddAbilityEffect), "m_ability"), "道具授予能力效果不应再保留旧能力表字段。");
+
+            ItemUsageResult result = InvokeItemAddAbilityEffect(effect, null, owner, owner, EItemLocation.Bag);
+
+            Assert.IsTrue(result.success, "道具授予能力入口应能只凭 EX-GAS Ability Code 授予基础攻击。");
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "道具授予后角色应持有对应 EX-GAS Ability。");
+        }
+
+
+        [Test]
+        public void EquipmentBonusAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterEquipment characterEquipment = owner.gameObject.AddComponent<CharacterEquipment>();
+            SetInstanceField(characterEquipment, "m_character", owner);
+            InvokeLifecycle(characterEquipment, "Awake");
+
+            Equipment equipment = ScriptableObject.CreateInstance<Equipment>();
+            equipment.name = "formal-gas-equipment";
+            m_createdObjects.Add(equipment);
+            SetInstanceField(equipment, "m_type", EEquipmentType.Weapon);
+            SetInstanceField(equipment, "m_formalGasAbilityCodes", new[] { BasicAttackAbilityCode });
+            Assert.IsNull(FindInstanceField(typeof(Equipment), "m_legacyBonusAbilities"), "装备不应再保留旧能力表授予字段。");
+            RegisterRuntimeDatabaseEntry(equipment, "test-equipment-formal-gas");
+
+            EEquipmentOperationResult result = characterEquipment.TryEquip(equipment, out Equipment previousEquipment);
+
+            Assert.AreEqual(EEquipmentOperationResult.Valid, result, "装备授予能力入口应接受只配置 EX-GAS Ability Code 的装备。");
+            Assert.IsNull(previousEquipment, "第一次装备武器不应替换掉旧装备。");
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "装备授予后角色应持有对应 EX-GAS Ability。");
+
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilitySources, source =>
+                    source != null &&
+                    source.formalGasAbilityCode == BasicAttackAbilityCode),
+                "装备授予的已迁移能力保存时必须写 EX-GAS Ability Code，不能再同时写旧 旧能力表 引用。");
+            Assert.IsNull(typeof(CharacterAbilitySourceData).GetField("ability"), "装备授予能力来源保存模型不应继续保留旧 旧能力表 引用字段。");
+        }
+
+
+        [Test]
+        public void CharacterSheetInitialAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero(
+                "owner",
+                Vector2.zero,
+                CreateStats(health: 30),
+                initializeAbilities: false);
+            SetCharacterFormalGasAbilityUnlock(owner.characterSheet, BasicAttackAbilityCode, level: 1);
+
+            InvokeStaticLifecycle(owner, "InitializeAbilities");
+
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "角色出生能力入口应能只凭 EX-GAS Ability Code 授予基础攻击。");
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilityRuntimeStates, state =>
+                    state != null &&
+                    state.formalGasAbilityCode == BasicAttackAbilityCode),
+                "出生授予的已迁移能力运行时状态必须按 EX-GAS Ability Code 保存，不能再写旧 旧能力表 引用。");
+            Assert.IsNull(typeof(CharacterAbilityRuntimeStateData).GetField("sheet"), "出生授予能力运行状态保存模型不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void CharacterAbilitySetAdditionalAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero(
+                "owner",
+                Vector2.zero,
+                CreateStats(health: 30),
+                initializeAbilities: false);
+            CharacterAbilitySet abilitySet = owner.GetComponent<CharacterAbilitySet>();
+            SetInstanceField(abilitySet, "m_additionalFormalGasAbilityCodes", new[] { BasicAttackAbilityCode });
+
+            InvokeStaticLifecycle(owner, "InitializeAbilities");
+
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "角色组件附加能力入口应能只凭 EX-GAS Ability Code 授予基础攻击。");
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilityRuntimeStates, state =>
+                    state != null &&
+                    state.formalGasAbilityCode == BasicAttackAbilityCode),
+                "角色组件附加能力的已迁移能力运行时状态必须按 EX-GAS Ability Code 保存，不能再写旧 旧能力表 引用。");
+            Assert.IsNull(typeof(CharacterAbilityRuntimeStateData).GetField("sheet"), "角色组件附加能力运行状态保存模型不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void TemporalAbilityGrantEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            TemporalAbilityGrantEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilityGrantData",
+                CreateTemporalAbilityGrantData(new[] { BasicAttackAbilityCode }));
+
+            effect.Init(owner);
+            Assert.IsTrue(effect.Apply(owner), "状态效果授予能力应能只凭 EX-GAS Ability Code 应用。");
+
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "状态效果授予后角色应持有对应 EX-GAS Ability。");
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                Array.Exists(runtimeState.abilitySources, source =>
+                    source != null &&
+                    source.formalGasAbilityCode == BasicAttackAbilityCode),
+                "状态效果授予的已迁移能力保存时必须写 EX-GAS Ability Code，不能再同时写旧 旧能力表 引用。");
+            Assert.IsNull(typeof(CharacterAbilitySourceData).GetField("ability"), "状态效果能力来源保存模型不应继续保留旧 旧能力表 引用字段。");
+            TemporalAbilityGrantEffectPersistedState grantState =
+                AssertCapturedPersistedState<TemporalAbilityGrantEffectPersistedState>(effect);
+            Assert.Contains(BasicAttackAbilityCode, grantState.formalGasAbilityCodes, "状态效果授予保存状态必须记录 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(TemporalAbilityGrantEffectPersistedState).GetField("abilities"), "状态效果授予保存状态不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void TemporalAbilityGrantEffect_LegacyAbilityField_IsRemoved()
+        {
+            Type dataType = GetRequiredNestedType(typeof(TemporalAbilityGrantEffect), "AbilityGrantData");
+            Assert.IsNull(dataType.GetField("abilities", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic), "状态效果授予数据不应继续保留旧 旧能力表 字段。");
+            Assert.IsNull(typeof(TemporalAbilityGrantEffectPersistedState).GetField("abilities"), "状态效果授予保存状态不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void TemporalAbilitySuppressionEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+            TemporalAbilitySuppressionEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilitySuppressionData",
+                CreateTemporalAbilitySuppressionData(new[] { BasicAttackAbilityCode }));
+
+            effect.Init(owner);
+            Assert.IsTrue(effect.Apply(owner), "状态效果压制能力应能只凭 EX-GAS Ability Code 应用。");
+
+            Assert.IsTrue(owner.IsFormalGasAbilitySuppressed(BasicAttackAbilityCode), "状态效果压制后对应 EX-GAS Ability Code 应被压制，不应通过旧 旧能力表 查询压制状态。");
+            TemporalAbilitySuppressionEffectPersistedState suppressionState =
+                AssertCapturedPersistedState<TemporalAbilitySuppressionEffectPersistedState>(effect);
+            Assert.Contains(BasicAttackAbilityCode, suppressionState.formalGasAbilityCodes, "状态效果压制保存状态必须记录 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(TemporalAbilitySuppressionEffectPersistedState).GetField("abilities"), "状态效果压制保存状态不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void TemporalAbilitySuppressionEffect_LegacyAbilityField_IsRemoved()
+        {
+            Type dataType = GetRequiredNestedType(typeof(TemporalAbilitySuppressionEffect), "AbilitySuppressionData");
+            Assert.IsNull(dataType.GetField("abilities", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic), "状态效果压制数据不应继续保留旧 旧能力表 字段。");
+            Assert.IsNull(typeof(TemporalAbilitySuppressionEffectPersistedState).GetField("abilities"), "状态效果压制保存状态不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void TemporalAbilityReplacementEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
+        {
+            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            TemporalAbilityReplacementEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilityReplacementData",
+                CreateTemporalAbilityReplacementData(
+                    new[] { BasicAttackAbilityCode },
+                    Array.Empty<int>()));
+
+            effect.Init(owner);
+            Assert.IsTrue(effect.Apply(owner), "状态效果替换授予能力应能只凭 EX-GAS Ability Code 应用。");
+
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "状态效果替换授予后角色应持有对应 EX-GAS Ability。");
+            TemporalAbilityReplacementEffectPersistedState replacementState =
+                AssertCapturedPersistedState<TemporalAbilityReplacementEffectPersistedState>(effect);
+            Assert.Contains(BasicAttackAbilityCode, replacementState.grantedFormalGasAbilityCodes, "状态效果替换保存状态必须记录授予的 EX-GAS Ability Code。");
+            Assert.IsNull(typeof(TemporalAbilityReplacementEffectPersistedState).GetField("legacyGrantedAbilities"), "状态效果替换保存状态不应继续保留旧授予 旧能力表 引用字段。");
+            Assert.IsNull(typeof(TemporalAbilityReplacementEffectPersistedState).GetField("legacySuppressedAbilities"), "状态效果替换保存状态不应继续保留旧压制 旧能力表 引用字段。");
+        }
+
+
+        [Test]
+        public void FormalGasAttackDescription_DoesNotUseLegacy旧能力表CostOrCooldown()
+        {
+            SetStaticField(typeof(GameManager), "_instance", null);
+            RegisterFormalGasAbilityDescriptionGeneratedRuntime();
+            List<AbilityDescriptionLine> lines = new();
+
+            Assert.IsTrue(
+                FormalGasAbilityDescriptionResolver.TryAppendFormalDamageLines(BasicAttackAbilityCode, lines),
+                "基础攻击正式描述必须直接读取 EX-GAS GameplayEffect 表。");
+
+            string joinedLines = string.Join(" | ", lines.ConvertAll(line => $"{line.header}:{line.content}"));
+            Assert.That(joinedLines, Does.Contain("造成伤害:4 固定伤害+1 属性缩放伤害 物理"), "基础攻击描述仍应读取 EX-GAS GameplayEffect 里的正式基础伤害。");
+            Assert.IsFalse(lines.Exists(line => line.content == "5"), "已绑定 EX-GAS 的基础攻击不应再把 项目侧旧能力表 manaCost 显示成正式消耗描述。");
+            Assert.IsFalse(lines.Exists(line => line.content == "9s"), "已绑定 EX-GAS 的基础攻击不应再把 项目侧旧能力表 cooldown 显示成正式冷却描述。");
+        }
+
+        [Test]
+        public void FormalGasAttackCueValidation_DoesNotRequireIndependentPrefabCue()
+        {
+            const string timelineJson = "[{\"ID\":101,\"Tracks\":[]}]";
+            const string gameplayCueJson = "[]";
+
+            string extractedCueJson = ExtractFormalAbilityCueJsonForTest(timelineJson, gameplayCueJson, BasicAttackAbilityCode);
+
+            Assert.IsFalse(ContainsResolvableGameCoreAudioCueForTest(extractedCueJson), "基础攻击缺少正式音效 Cue 时必须留在 EX-GAS Cue 路径补齐，不能回到旧 旧能力表.fireAudio。");
+            Assert.IsFalse(ContainsResolvableMountPrefabCueForTest(extractedCueJson), "基础攻击当前不要求独立特效 Prefab Cue；角色动作和武器层分离，武器攻击与武器特效由装备/武器动作一起承载。");
+        }
+
+        [Test]
+        public void FormalGasAttackValidation_AcceptsGameCoreAudioCueAsFormalSoundCue()
+        {
+            string timelineJson =
+                "[{\"ID\":101,\"Tracks\":[{\"TaskClips\":[{\"Task\":{\"$type\":\"TaskPlayCue\",\"Param\":{\"CueLogic\":{\"$type\":\"CuePlayGameCoreAudio\",\"Param\":{\"AudioResolverGuid\":\"test-guid\"}}}}}]}]}]";
+            string gameplayCueJson = "[]";
+
+            string extractedCueJson = ExtractFormalAbilityCueJsonForTest(timelineJson, gameplayCueJson, BasicAttackAbilityCode);
+
+            Assert.That(extractedCueJson, Does.Contain("\"$type\":\"CuePlayGameCoreAudio\""), "校验器必须把项目正式 GameCore 音频 Cue 识别为正式音效入口。");
+            Assert.That(extractedCueJson, Does.Not.Contain("\"$type\":\"CuePlaySound\""), "该测试只覆盖项目正式音频桥，不能靠 EX-GAS 自带 CuePlaySound 误判通过。");
+        }
+
+        [Test]
+        public void FormalGasAttackValidation_RequiresResolvableMountPrefabPath()
+        {
+            const string validPrefabPath = "Assets/Prefabs/Abilities/Melee/测试-基础攻击.prefab";
+            string validCueJson =
+                $"{{\"$type\":\"CueMountPrefab\",\"Param\":{{\"PrefabPath\":\"{validPrefabPath}\"}}}}";
+            string missingCueJson =
+                "{\"$type\":\"CueMountPrefab\",\"Param\":{\"PrefabPath\":\"Assets/Prefabs/Missing/NoSuchPrefab.prefab\"}}";
+            string emptyCueJson =
+                "{\"$type\":\"CueMountPrefab\",\"Param\":{\"PrefabPath\":\"\"}}";
+
+            Assert.IsTrue(ContainsResolvableMountPrefabCueForTest(validCueJson), "校验器应只在 PrefabPath 能加载到真实 Prefab 时认可 CueMountPrefab。");
+            Assert.IsFalse(ContainsResolvableMountPrefabCueForTest(missingCueJson), "校验器不能把失效 PrefabPath 误判为正式特效入口已完成。");
+            Assert.IsFalse(ContainsResolvableMountPrefabCueForTest(emptyCueJson), "校验器不能把空 PrefabPath 误判为正式特效入口已完成。");
+        }
+
+
+        [Test]
+        public void FormalGasAttackEditor_DoesNotProvideProjectSide旧能力表Authoring()
+        {
+            Type editorType = Type.GetType("FantasyWord.GameCore.旧能力表Editor, FantasyWord.GameCore.Editor");
+
+            Assert.IsNull(
+                editorType,
+                "项目侧不应再注册 旧能力表 自定义作者面。技能身份、图标、输入、消耗、冷却、命中和表现应回到 EX-GAS Ability / exgas.abilityGameCore / Timeline / Cue。");
+        }
+
+        [Test]
+        public void LegacyAbilityExecutionAssetEditors_DoNotExistAsProjectSideAuthoring()
+        {
+            string[] legacyEditorTypeNames =
+            {
+                "FantasyWord.GameCore.MeleeAbilityExecutionAssetEditor, FantasyWord.GameCore.Editor",
+                "FantasyWord.GameCore.DashAbilityExecutionAssetEditor, FantasyWord.GameCore.Editor",
+                "FantasyWord.GameCore.ProjectileAbilityExecutionAssetEditor, FantasyWord.GameCore.Editor",
+                "FantasyWord.GameCore.SummoningAbilityExecutionAssetEditor, FantasyWord.GameCore.Editor"
+            };
+
+            foreach (string editorTypeName in legacyEditorTypeNames)
+            {
+                Type editorType = Type.GetType(editorTypeName);
+                Assert.IsNull(
+                    editorType,
+                    $"{editorTypeName} 不应作为项目侧技能作者面存在。能力身份、执行、规则和表现必须回到 EX-GAS Ability / Timeline / GameplayEffect / Cue；旧执行资产只允许作为未迁移兼容结构。");
+            }
+        }
+
+        [Test]
+        public void CuePlayGameCoreAudio_RequestsGameCoreAudioPlayback()
+        {
+            const string audioResolverGuid = "formal-gas-audio-cue-test-guid";
+            AudioClipResolver audioClipResolver = ScriptableObject.CreateInstance<AudioClipResolver>();
+            audioClipResolver.name = "formal-gas-audio-cue-probe";
+            m_createdObjects.Add(audioClipResolver);
+            RegisterRuntimeDatabaseEntry(audioClipResolver, audioResolverGuid);
+
+            int audioRequestCount = 0;
+            AudioClipResolver requestedResolver = null;
+            void HandleAudioRequest(AudioPlaybackRequestedEvent audioPlaybackRequestedEvent)
+            {
+                audioRequestCount++;
+                requestedResolver = audioPlaybackRequestedEvent.AudioClipResolver;
+            }
+
+            XParamGameCoreAudio audioParam = new();
+            audioParam.SetAudioResolverGuid(audioResolverGuid);
+            CuePlayGameCoreAudio cue = new();
+            cue.InitParameters(audioParam);
+
+            RegisterRuntimeEvent<AudioPlaybackRequestedEvent>(HandleAudioRequest);
+            try
+            {
+                cue.OnActivate(0.0f);
+            }
+            finally
+            {
+                UnregisterRuntimeEvent<AudioPlaybackRequestedEvent>(HandleAudioRequest);
+            }
+
+            Assert.AreEqual(1, audioRequestCount, "EX-GAS GameCore 音频 Cue 应通过 GameCore 音频事件请求播放，而不是回到技能旧执行资产或 EX-GAS 资源路径。");
+            Assert.AreSame(audioClipResolver, requestedResolver, "EX-GAS GameCore 音频 Cue 应按数据库 GUID 解析并转发 AudioClipResolver。");
+        }
+
+        [Test]
+        public void CuePlayGameCoreAudio_WarnsWhenAudioResolverGuidIsMissing()
+        {
+            XParamGameCoreAudio audioParam = new();
+            audioParam.SetAudioResolverGuid(string.Empty);
+            CuePlayGameCoreAudio cue = new();
+            cue.InitParameters(audioParam);
+
+            LogAssert.Expect(
+                LogType.Warning,
+                "EX-GAS Cue 已触发 GameCore 音频事件，但 CuePlayGameCoreAudio 未配置 AudioClipResolver GUID。");
+
+            cue.OnActivate(0.0f);
+        }
+
+        [Test]
+        public void CuePlayGameCoreAudio_WarnsWhenAudioResolverGuidCannotResolve()
+        {
+            const string missingAudioResolverGuid = "missing-formal-gas-audio-cue-guid";
+            XParamGameCoreAudio audioParam = new();
+            audioParam.SetAudioResolverGuid(missingAudioResolverGuid);
+            CuePlayGameCoreAudio cue = new();
+            cue.InitParameters(audioParam);
+
+            LogAssert.Expect(
+                LogType.Warning,
+                $"EX-GAS Cue 已触发 GameCore 音频事件，但找不到 AudioClipResolver GUID：{missingAudioResolverGuid}。");
+
+            cue.OnActivate(0.0f);
+        }
+
+        [Test]
+        public void Fire_HitsTargetInsideHitbox_AndUpdatesFormalHealth()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(attacker);
+AssertFormalAttackAbilityReady(attacker);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            defender.SetLookAtDirection(Vector2.left);
+            defender.SetTargetDirection(Vector2.left);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int previousMaxHealth = defender.GetMaxHealth();
+            int expectedDamage = CalculateExpectedResolvedDamage(attacker, defender, CreateBasicAttackBaseDamagePayload());
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => defender.GetCurrentHealth() == previousHealth - expectedDamage,
+                CalculateExpectedGasTimelineHitTicks());
+            Assert.AreEqual(previousHealth - expectedDamage, defender.GetCurrentHealth());
+            Assert.AreEqual(previousMaxHealth, defender.GetMaxHealth());
+            Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc));
+            Assert.AreEqual(
+                previousHealth - expectedDamage,
+                Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+            Assert.AreEqual(
+                previousMaxHealth,
+                Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+        }
+
+        [Test]
+        public void Fire_WhenTargetBackFacesAttacker_AppliesFormalGasBackstabBonus()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(attacker);
+AssertFormalAttackAbilityReady(attacker);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            defender.SetLookAtDirection(Vector2.right);
+            defender.SetTargetDirection(Vector2.right);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int expectedBaseDamage = CalculateExpectedResolvedDamage(attacker, defender, CreateBasicAttackBaseDamagePayload());
+            int expectedBackstabDamage = CalculateExpectedResolvedDamage(
+                attacker,
+                defender,
+                CreateBackstabBonusDamagePayload());
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => defender.GetCurrentHealth() == previousHealth - expectedBaseDamage - expectedBackstabDamage,
+                CalculateExpectedGasTimelineHitTicks());
+            Assert.AreEqual(previousHealth - expectedBaseDamage - expectedBackstabDamage, defender.GetCurrentHealth());
+        }
+
+        [Test]
+        public void Fire_WhenTargetFacesAttacker_DoesNotApplyFormalGasBackstabBonus()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(attacker);
+AssertFormalAttackAbilityReady(attacker);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            defender.SetLookAtDirection(Vector2.left);
+            defender.SetTargetDirection(Vector2.left);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int expectedBaseDamage = CalculateExpectedResolvedDamage(attacker, defender, CreateBasicAttackBaseDamagePayload());
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => defender.GetCurrentHealth() == previousHealth - expectedBaseDamage,
+                CalculateExpectedGasTimelineHitTicks());
+            Assert.AreEqual(previousHealth - expectedBaseDamage, defender.GetCurrentHealth());
+        }
+
+        [Test]
+        public void Fire_DoesNotHitTargetOutsideHitbox()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(2.5f, 0.0f), CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(attacker);
+AssertFormalAttackAbilityReady(attacker);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int previousMaxHealth = defender.GetMaxHealth();
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            Assert.AreEqual(previousHealth, defender.GetCurrentHealth());
+            Assert.AreEqual(previousMaxHealth, defender.GetMaxHealth());
+            Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc));
+            Assert.AreEqual(
+                previousHealth,
+                Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+            Assert.AreEqual(
+                previousMaxHealth,
+                Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+        }
+
+        [Test]
+        public void CatchAreaBox2D_CatchesChildHitboxAbilitySystemComponent_AndFiltersOwner()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
+            Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc), "目标缺少正式 GAS ASC。");
+
+            int hitboxLayer = LayerMask.NameToLayer("Hitbox");
+            Assert.GreaterOrEqual(hitboxLayer, 0, "测试项目必须存在 Hitbox 层。");
+
+            XParamCatchAreaBox2D parameter = new();
+            parameter.SetIsWorldSpace(false);
+            parameter.SetOffset(new Vector2(0.65f, 0.15f));
+            parameter.SetSize(new Vector2(0.95f, 0.8f));
+            parameter.SetRotation(0.0f);
+            parameter.SetLayer(1 << hitboxLayer);
+
+            CatchAreaBox2D catcher = new();
+            catcher.Init(attackerAsc.Cell);
+            catcher.InitParameters(parameter);
+
+            List<AbilitySystemCell> results = new();
+            catcher.CatchTargetsNonAllocSafe(attackerAsc.Cell, ref results);
+
+            Assert.Contains(defenderAsc.Cell, results, "CatchAreaBox2D 应能通过子物体 Hitbox Collider 找到父物体上的 ASC。");
+            Assert.IsFalse(results.Contains(attackerAsc.Cell), "CatchAreaBox2D 默认不应把施放者自己的 Hitbox 返回为目标。");
+            Assert.AreEqual(1, results.Count, "同一目标多个 Collider 命中时不应重复返回同一个 ASC。");
+        }
+
+        [Test]
+        public void CatchAreaBox2D_UsesCharacterFacingDirectionWithoutTransformRotation()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defenderAbove = CreateHero("defender-above", new Vector2(-0.15f, 0.65f), CreateStats(health: 40, physicalDefense: 2));
+            Hero defenderRight = CreateHero("defender-right", new Vector2(0.65f, -0.6f), CreateStats(health: 40, physicalDefense: 2));
+            Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
+            Assert.IsTrue(defenderAbove.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAboveAsc), "上方目标缺少正式 GAS ASC。");
+            Assert.IsTrue(defenderRight.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderRightAsc), "右侧目标缺少正式 GAS ASC。");
+
+            attacker.transform.rotation = Quaternion.identity;
+            attacker.SetLookAtDirection(Vector2.up);
+            attacker.SetTargetDirection(Vector2.up);
+
+            int hitboxLayer = LayerMask.NameToLayer("Hitbox");
+            Assert.GreaterOrEqual(hitboxLayer, 0, "测试项目必须存在 Hitbox 层。");
+
+            XParamCatchAreaBox2D parameter = new();
+            parameter.SetIsWorldSpace(false);
+            parameter.SetOffset(new Vector2(0.65f, 0.15f));
+            parameter.SetSize(new Vector2(0.95f, 0.8f));
+            parameter.SetRotation(0.0f);
+            parameter.SetLayer(1 << hitboxLayer);
+
+            CatchAreaBox2D catcher = new();
+            catcher.Init(attackerAsc.Cell);
+            catcher.InitParameters(parameter);
+
+            List<AbilitySystemCell> results = new();
+            catcher.CatchTargetsNonAllocSafe(attackerAsc.Cell, ref results);
+
+            Assert.Contains(defenderAboveAsc.Cell, results, "CatchAreaBox2D 应按角色 2D 目标方向旋转命中盒，而不是只看 Transform Z 旋转。");
+            Assert.IsFalse(results.Contains(defenderRightAsc.Cell), "角色朝上时，原本朝右的未旋转偏移不应继续命中右侧目标。");
+        }
+
+        [Test]
+        public void CatchAreaPolygon2D_CatchesOnlyTargetsInsideAuthoredPolygon()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defenderInside = CreateHero("defender-inside", new Vector2(0.65f, 0.05f), CreateStats(health: 40, physicalDefense: 2));
+            Hero defenderOutside = CreateHero("defender-outside", new Vector2(0.95f, 0.35f), CreateStats(health: 40, physicalDefense: 2));
+            Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
+            Assert.IsTrue(defenderInside.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderInsideAsc), "多边形内目标缺少正式 GAS ASC。");
+            Assert.IsTrue(defenderOutside.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderOutsideAsc), "多边形外目标缺少正式 GAS ASC。");
+
+            BoxCollider2D outsideHitbox = GetDamageHitbox(defenderOutside);
+            outsideHitbox.size = new Vector2(0.06f, 0.06f);
+
+            int hitboxLayer = LayerMask.NameToLayer("Hitbox");
+            Assert.GreaterOrEqual(hitboxLayer, 0, "测试项目必须存在 Hitbox 层。");
+
+            XParamCatchAreaPolygon2D parameter = new();
+            parameter.SetIsWorldSpace(false);
+            parameter.SetPoints("0.2,-0.25;1.0,-0.2;0.85,0.35;0.25,0.4");
+            parameter.SetLayer(1 << hitboxLayer);
+
+            CatchAreaPolygon2D catcher = new();
+            catcher.Init(attackerAsc.Cell);
+            catcher.InitParameters(parameter);
+
+            List<AbilitySystemCell> results = new();
+            catcher.CatchTargetsNonAllocSafe(attackerAsc.Cell, ref results);
+
+            Assert.Contains(defenderInsideAsc.Cell, results, "CatchAreaPolygon2D 应按编辑出的多边形真实命中范围返回目标。");
+            Assert.IsFalse(results.Contains(defenderOutsideAsc.Cell), "多边形外目标不应被外接盒粗筛误判为命中。");
+            Assert.IsFalse(results.Contains(attackerAsc.Cell), "CatchAreaPolygon2D 默认不应把施放者自己的 Hitbox 返回为目标。");
+        }
+
+        [Test]
+        public void FormalGasChargedAttackRelease_UsesIndependentGasAbilityCodeAndTimeline()
+        {
+            RegisterFormalGasAbilityDescriptionGeneratedRuntime();
+
+            Assert.AreEqual(
+                ChargedAttackReleaseAbilityCode,
+                FormalGasAbilityCodes.ChargedAttackRelease,
+                "蓄力释放必须有独立项目侧 GAS Ability Code 常量，不能覆盖基础攻击或变形替换 smoke。");
+            Assert.IsTrue(
+                FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(
+                    ChargedAttackReleaseAbilityCode,
+                    out FormalGasAbilityRuntimeConfig config),
+                "蓄力释放占位能力必须从 exgas.abilityGameCore 解析运行配置。");
+            Assert.IsTrue(config.TryLoadPrefab(out GameObject prefab), "蓄力释放占位能力必须能加载正式 Ability Prefab。");
+            Assert.IsNotNull(prefab.GetComponent<AbilityBase>(), "蓄力释放占位能力 Prefab 根节点必须包含 AbilityBase。");
+            Assert.IsTrue(config.TryLoadIcon(out Sprite icon), "蓄力释放占位能力必须能从 exgas.abilityGameCore 加载蓄力图标。");
+            Assert.IsNotNull(icon, "蓄力释放占位能力图标不能为空。");
+            Assert.AreEqual(
+                EFormalAbilityInputTriggerMode.HoldRelease,
+                config.InputGate.triggerMode,
+                "蓄力释放必须由 exgas.abilityGameCore.InputTriggerMode=2 表达为按住蓄力、松手释放，不能继续按下即释放。");
+
+            string abilityJson = File.ReadAllText("Assets/DataGenerated/Luban/Json/GAS/exgas_tbability.json");
+            string abilityGameCoreJson = File.ReadAllText("Assets/DataGenerated/Luban/Json/GAS/exgas_tbabilitygamecore.json");
+            string timelineJson = File.ReadAllText("Assets/DataGenerated/Luban/Json/GAS/exgas_tbtimelineability.json");
+            string gameplayEffectJson = File.ReadAllText("Assets/DataGenerated/Luban/Json/GAS/exgas_tbgameplayeffect.json");
+            string gameplayCueJson = File.ReadAllText("Assets/DataGenerated/Luban/Json/GAS/exgas_tbgameplaycue.json");
+
+            StringAssert.Contains("\"ID\": 20004", abilityJson, "EX-GAS Ability 表必须包含蓄力释放占位能力 20004。");
+            StringAssert.Contains("\"Name\": \"ChargedAttackRelease\"", abilityJson, "蓄力释放占位能力不能复用基础攻击身份。");
+            StringAssert.Contains("\"InputTriggerMode\": 2", abilityGameCoreJson, "蓄力释放必须在 exgas.abilityGameCore 配置为 HoldRelease 输入触发模式。");
+            StringAssert.Contains("\"ID\": 20004", timelineJson, "蓄力释放占位能力必须有独立 Timeline 20004。");
+            StringAssert.Contains("\"$type\": \"CuePlayGameCoreAnimator\"", timelineJson, "攻击动画必须显式配置项目侧 CuePlayGameCoreAnimator，不能通过重注册覆盖 EX-GAS 内置 CuePlayAnimator。");
+            StringAssert.Contains("\"AnimationName\": \"ChargedAttack\"", timelineJson, "蓄力释放 Timeline 必须触发装备系统蓄力攻击动作键。");
+            Assert.That(timelineJson, Does.Not.Contain("\"$type\": \"CuePlayAnimator\""), "GAS Timeline 不应再把内置 CuePlayAnimator 当项目侧装备动画桥使用。");
+            Assert.That(timelineJson, Does.Not.Contain("\"AnimationName\": \"Skill_Attack\""), "GAS Timeline 不应再填写旧角色动画状态名；普攻表现应触发装备系统 Attack 动作键。");
+            Assert.That(timelineJson, Does.Not.Contain("\"AnimationName\": \"Skill_ChargedAttack\""), "GAS Timeline 不应再填写旧角色动画状态名；蓄力表现应触发装备系统 ChargedAttack 动作键。");
+            StringAssert.Contains("\"ID\": 2004", gameplayEffectJson, "蓄力释放必须有独立 GameplayEffect 2004。");
+            Assert.That(gameplayEffectJson, Does.Not.Contain("      20003"), "基础攻击当前不应把临时独立特效 Cue 当作完成条件；武器攻击和特效由武器动作承载。");
+            Assert.That(gameplayEffectJson, Does.Not.Contain("      20004"), "蓄力释放当前不应把临时独立特效 Cue 当作完成条件；武器攻击和特效由武器动作承载。");
+        }
+
+        [Test]
+        public void FormalGasAttackEquipmentAnimationCue_RequiresEquipmentSystemForWeaponActions()
+        {
+            string cueSource = File.ReadAllText("Assets/Scripts/GameCore/Runtime/Presentation/CuePlayGameCoreAnimator.cs");
+
+            Assert.That(cueSource, Does.Not.Contain("NormalizeAnimationKey"), "项目侧动画 Cue 不应再把旧角色动画名静默转成装备动作键。");
+            Assert.That(cueSource, Does.Not.Contain("Skill_Attack"), "普攻正式配置必须直接使用装备系统 Attack 动作键，不能保留旧 Skill_Attack 兼容口。");
+            Assert.That(cueSource, Does.Not.Contain("Skill_ChargedAttack"), "蓄力释放正式配置必须直接使用装备系统 ChargedAttack 动作键，不能保留旧 Skill_ChargedAttack 兼容口。");
+            StringAssert.Contains("RequiresEquipmentAnimation(animationKey)", cueSource, "项目侧动画 Cue 必须区分装备动作，避免普攻/蓄力绕开装备层。");
+            StringAssert.Contains("\"Attack\" => true", cueSource, "普攻动作必须声明为装备系统动作，失败时不得退回普通角色 Animator。");
+            StringAssert.Contains("\"ChargedAttack\" => true", cueSource, "蓄力释放动作必须声明为装备系统动作，失败时不得退回普通角色 Animator。");
+            StringAssert.Contains("已拒绝回退普通 Animator", cueSource, "装备动作失败时必须显式拒绝普通 Animator 回退，避免角色动作和武器攻击/特效脱节。");
+        }
+
+        [Test]
+        public void FormalGasAttackEquipmentMaterialChain_UsesWeaponAttackSequenceForBuiltInVfx()
+        {
+            const string attackAnimationTypeGuid = "381921f99eee5f44584b409fe08a6788";
+            const string spearVisualGuid = "c071eb6b046290f4f8aaa90e9fd0215c";
+
+            string spearAsset = File.ReadAllText("Assets/GameData/EquipmentSystem/Equip/Visual/长矛.asset");
+            string equipmentDemoScene = File.ReadAllText("Assets/Scenes/EquipmentSystemDemo.unity");
+
+            StringAssert.Contains(
+                "animSequences:",
+                spearAsset,
+                "正式普攻验收武器必须配置武器攻击序列帧，不能只依赖静态武器贴图。");
+            StringAssert.Contains(
+                attackAnimationTypeGuid,
+                spearAsset,
+                "长矛必须把 Attack 动作键接到武器攻击序列帧；武器自带特效随这组序列帧播放。");
+            StringAssert.Contains(
+                spearVisualGuid,
+                equipmentDemoScene,
+                "EquipmentSystemDemo 默认装备必须包含带 Attack 序列帧的武器，避免验收场景只播放角色动作。");
+        }
+
+        [Test]
+        public void Fire_ChargedAttackRelease_HoldsUntilInputReleaseThenHitsThroughGasTimeline()
+        {
+            Hero attacker = CreateHero("charged-attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("charged-defender", new Vector2(0.75f, 0.2f), CreateStats(health: 50, physicalDefense: 2));
+            GrantFormalGasAbility(attacker, ChargedAttackReleaseAbilityCode);
+            AssertFormalAbilityReady(attacker, expectFormalCost: false, EAbilityFireCheckResult.Valid, ChargedAttackReleaseAbilityCode);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            defender.SetLookAtDirection(Vector2.left);
+            defender.SetTargetDirection(Vector2.left);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int expectedDamage = CalculateExpectedResolvedDamage(attacker, defender, CreateChargedAttackReleaseDamagePayload());
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(
+                ChargedAttackReleaseAbilityCode,
+                GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            AssertFormalAbilityInputGateState(attacker, ChargedAttackReleaseAbilityCode, EFormalAbilityInputGateState.Charging);
+            GasEditModeTestHelper.AdvanceWorld(CalculateExpectedGasTimelineHitTicks(12));
+            Assert.AreEqual(
+                previousHealth,
+                defender.GetCurrentHealth(),
+                "蓄力释放在按住阶段不能提前启动 EX-GAS Timeline 命中；必须等松手释放。");
+
+            Assert.IsTrue(
+                attacker.StopFireFormalGasAbility(ChargedAttackReleaseAbilityCode),
+                "松开输入应通过正式 StopFireFormalGasAbility 触发蓄力释放。");
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => defender.GetCurrentHealth() == previousHealth - expectedDamage,
+                CalculateExpectedGasTimelineHitTicks(12));
+            Assert.AreEqual(
+                previousHealth - expectedDamage,
+                defender.GetCurrentHealth(),
+                "蓄力释放应在松手后通过 EX-GAS Timeline 20004 的 TaskApplyEffects 和 GameplayEffect 2004 命中目标。");
+        }
+
+        [Test]
+        public void TaskApplyEffects_OnEditorPreviewWithoutCatcher_IsUpstreamPatchCandidate()
+        {
+            TaskApplyEffects task = new(null);
+
+            Assert.Throws<NullReferenceException>(
+                () => task.OnEditorPreview(null, 0, 0, 0),
+                "EX-GAS 上游 TaskApplyEffects 在未初始化 TargetCatcher 时仍会空引用；项目侧不直接修改插件源码，此项只记录为可选上游补丁候选。");
+        }
+
+        [Test]
+        public void FormalGasAttack_UsesGasTimelineExecutionGate_NotExecutionAssetTiming()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            SerializedObject prefabAbilitySerializedObject = new SerializedObject(LoadBasicAttackAbilityPrefabComponent());
+            Assert.IsNull(prefabAbilitySerializedObject.FindProperty("m_inputGate"), "近战技能资产不应再保留 legacy m_inputGate。");
+
+
+            GrantBasicAttack(attacker);
+            AssertFormalAttackAbilityReady(attacker);
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            Assert.IsNotNull(abilitySet, "角色缺少正式 CharacterAbilitySet。");
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到正式近战能力实例。");
+            Assert.IsInstanceOf<MeleeAttackAbility>(abilityBase, "技能未实例化成正式近战能力组件。");
+
+            EFormalAbilityInputGateState inputGateState = (EFormalAbilityInputGateState)GetInstanceFieldValue(abilityBase, "m_inputGate", typeof(FormalAbilityInputGateRuntime), "m_state");
+            Assert.AreEqual(EFormalAbilityInputGateState.DelayBeforeUse, inputGateState, "正式 GAS 基础攻击应按 EX-GAS Timeline 的首个玩法帧进入本地输入门控，不能再被旧执行资产的 0 前摇改成直接出手。");
+        }
+
+
+        [Test]
+        public void FormalGasAttackRuntimeInstance_UsesGasContextNotMigrationSheetFlag()
+        {
+            RegisterFormalGasAbilityDescriptionGeneratedRuntime();
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Assert.IsTrue(
+                FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(BasicAttackAbilityCode, out FormalGasAbilityRuntimeConfig config),
+                "测试前应能从 exgas.abilityGameCore 解析基础攻击运行配置。");
+            Assert.IsTrue(config.TryLoadPrefab(out GameObject prefab), "测试前应能从 exgas.abilityGameCore 加载基础攻击 Prefab。");
+
+            GameObject instance = UnityEngine.Object.Instantiate(prefab, attacker.transform);
+            instance.name = "FormalGasAttackRuntimeInstance";
+            m_createdObjects.Add(instance);
+            AbilityBase abilityBase = instance.GetComponent<AbilityBase>();
+            Assert.IsNotNull(abilityBase, "基础攻击 Prefab 缺少 AbilityBase 组件。");
+
+            abilityBase.InitFormalGasAbility(attacker, BasicAttackAbilityCode);
+
+            Assert.AreEqual(
+                BasicAttackAbilityCode,
+                (int)GetInstanceFieldValue(abilityBase, "m_formalGasAbilityCode"),
+                "已迁移能力实例的正式身份必须来自 InitFormalGasAbility 传入的 GAS Ability Code，不应再依赖迁移壳 旧能力表 的 m_formalGasAbilityCode。");
+            object runtimeSettings = GetInstanceFieldValue(abilityBase, "m_inputGate", typeof(FormalAbilityInputGateRuntime), "m_settings");
+            Assert.AreEqual(EFormalAbilityInputTriggerMode.SemiAuto, ((FormalAbilityInputGateSettings)runtimeSettings).triggerMode, "迁移壳不再带 GAS 标记时，正式能力实例仍应按 GAS context 使用 exgas.abilityGameCore 输入门控。");
+            Assert.IsTrue(((FormalAbilityInputGateSettings)runtimeSettings).bufferInput, "正式能力实例的输入缓冲应来自 GAS 运行配置，而不是旧执行资产。");
+        }
+
+        [Test]
+        public void FormalGasAttackRuntimeInstance_DoesNotInheritLegacy旧主动能力表RuntimeShell()
+        {
+            RegisterFormalGasAbilityDescriptionGeneratedRuntime();
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Assert.IsTrue(
+                FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(BasicAttackAbilityCode, out FormalGasAbilityRuntimeConfig config),
+                "测试前应能从 exgas.abilityGameCore 解析基础攻击运行配置。");
+            Assert.IsTrue(config.TryLoadPrefab(out GameObject prefab), "测试前应能从 exgas.abilityGameCore 加载基础攻击 Prefab。");
+
+            GameObject instance = UnityEngine.Object.Instantiate(prefab, attacker.transform);
+            instance.name = "FormalGasAttackRuntimeShellProbe";
+            m_createdObjects.Add(instance);
+            AbilityBase abilityBase = instance.GetComponent<AbilityBase>();
+            Assert.IsNotNull(abilityBase, "基础攻击 Prefab 缺少 AbilityBase 组件。");
+
+            abilityBase.InitFormalGasAbility(attacker, BasicAttackAbilityCode);
+
+            Assert.IsInstanceOf<MeleeAttackAbility>(abilityBase, "基础攻击正式 Prefab 应挂载项目侧 EX-GAS 近战适配组件。");
+            Assert.IsNull(
+                typeof(AbilityBase).GetProperty("legacy旧能力表", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic),
+                "正式能力实例不应再暴露旧 旧能力表 身份属性；运行身份必须来自 EX-GAS Ability Code。");
+            Assert.IsFalse(
+                typeof(ActiveAbilityBase).IsGenericType,
+                "主动能力运行基类不应再是 ActiveAbility<TSheet> 旧表泛型壳。");
+        }
+
+        [Test]
+        public void FormalGasAttack_DoesNotRequireLegacyExecutionAssetForRuntime()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(attacker);
+            AssertFormalAttackAbilityReady(attacker);
+
+            int previousHealth = defender.GetCurrentHealth();
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+
+            GasEditModeTestHelper.AdvanceWorld(CalculateExpectedGasTimelineHitTicks());
+            Assert.Less(defender.GetCurrentHealth(), previousHealth, "正式 GAS 基础攻击应只依赖 Ability/Timeline/GameplayEffect 数据运行，不应要求旧执行资产存在。");
+        }
+
+        [Test]
+        public void FormalGasAttack_DoesNotUseLegacyExecutionFeedbacks()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            GrantBasicAttack(attacker);
+            AssertFormalAttackAbilityReady(attacker);
+
+            SerializedObject prefabAbilitySerializedObject = new SerializedObject(LoadBasicAttackAbilityPrefabComponent());
+            Assert.IsNull(prefabAbilitySerializedObject.FindProperty("m_feedbacks"), "近战技能资产不应再保留 legacy m_feedbacks。");
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+
+            GasEditModeTestHelper.AdvanceWorld(CalculateExpectedGasTimelineHitTicks());
+        }
+
+        [Test]
+        public void FormalGasAttack_DoesNotDeclareLegacyHitWindowRuntime()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+GrantBasicAttack(attacker);
+            AssertFormalAttackAbilityReady(attacker);
+
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到基础攻击能力实例。");
+            Assert.IsInstanceOf<MeleeAttackAbility>(abilityBase, "基础攻击未实例化成近战能力。");
+
+            FieldInfo legacyHitWindowRuntimeField = FindInstanceField(typeof(MeleeAttackAbility), "m_hitWindowRuntime");
+            Assert.IsNull(legacyHitWindowRuntimeField, "MeleeAttackAbility 不应再声明项目侧旧命中窗口运行态字段；命中窗口应只由 EX-GAS Timeline/TaskApplyEffects 承担。");
+        }
+
+        [Test]
+        public void FormalGasAttack_DoesNotUseLegacyExecutionInterruptOrReloadFeedbacks()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+GrantBasicAttack(attacker);
+            AssertFormalAttackAbilityReady(attacker);
+
+
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到基础攻击能力实例。");
+            ITriggerableAbility triggerableAbility = abilityBase as ITriggerableAbility;
+            Assert.IsNotNull(triggerableAbility, "未找到基础攻击触发实例。");
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            abilityBase.Interrupt();
+            triggerableAbility.Reload();
+            GasEditModeTestHelper.AdvanceWorld(4);
+
+        }
+
+        [Test]
+        public void FormalGasAttack_TriggersTargetHitFeedbackThroughGameplayCue()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+GrantBasicAttack(attacker);
+            AssertFormalAttackAbilityReady(attacker);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            defender.SetLookAtDirection(Vector2.left);
+            defender.SetTargetDirection(Vector2.left);
+
+            MMFeedbacks targetCueFeedback = CreateProbeFeedback("target-gas-cue-hit-feedback");
+            TestMeleeFeedbackProbe targetCueProbe = targetCueFeedback.GetComponent<TestMeleeFeedbackProbe>();
+            SetInstanceField(defender.characterSheet.feedbacks, "m_hitDamageableFeedbacks", targetCueFeedback);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int expectedDamage = CalculateExpectedResolvedDamage(attacker, defender, CreateBasicAttackBaseDamagePayload());
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => targetCueProbe.playCount > 0 && defender.GetCurrentHealth() == previousHealth - expectedDamage,
+                CalculateExpectedGasTimelineHitTicks() + 12,
+                () => CreateGasCueDiagnostic(defender, targetCueProbe, previousHealth, expectedDamage));
+            Assert.AreEqual(previousHealth - expectedDamage, defender.GetCurrentHealth());
+            Assert.GreaterOrEqual(targetCueProbe.playCount, 1, "基础攻击命中反馈必须通过 EX-GAS CueOnApply 触发目标角色的 GameplayFeedbackSet。");
+        }
+
+
+        [Test]
+        public void FormalGasAttack_UsesActivationOwnedAttackingTag_NotLegacyDisabledActions()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 12, physicalAttack: 10));
+            GrantBasicAttack(attacker);
+
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            AssertFormalAttackAbilityReady(attacker);
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, BasicAttackAbilityCode, out AbilitySpec abilitySpec), "技能 EX-GAS Ability 20001 未注册正式 GAS AbilitySpec。");
+            Assert.Contains(FormalGameplayTagCatalog.AttackingEvent.TagCode, abilitySpec.GetActivationOwnedTags(), "基础攻击 EX-GAS Ability 必须通过 ActivationOwnedTags 持有正在攻击标签。");
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => abilitySpec.IsActive,
+                CalculateExpectedFormalGasInputGateUseTicks());
+            Assert.IsTrue(abilitySpec.IsActive, "测试必须进入正式 GAS Active 生命周期，才能验证攻击标签动作锁。");
+            Assert.IsFalse(attacker.Can(EActionFlags.Move), "正式 GAS 基础攻击活动期应由 Event.Attacking 标签阻止移动，而不是旧 disabledActionsWhileCasting。");
+            Assert.IsFalse(attacker.Can(EActionFlags.UseAbility), "正式 GAS 基础攻击活动期应由 Event.Attacking 标签阻止再次出手，而不是旧 disabledActionsWhileCasting。");
+            Assert.IsFalse(attacker.Can(EActionFlags.UpdateTargetDirection), "正式 GAS 基础攻击活动期应由 Event.Attacking 标签阻止更新瞄准方向，而不是旧 disabledActionsWhileCasting。");
+        }
+
+        [Test]
+        public void FormalGasAttack_DoesNotUseLegacyCanInterruptAsActionInterruptGate()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 12, physicalAttack: 10));
+            GrantBasicAttack(attacker);
+
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            AssertFormalAttackAbilityReady(attacker);
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到正式近战能力实例。");
+            Assert.IsInstanceOf<IActionInterruptReceiver>(abilityBase, "正式近战能力实例必须能接收动作打断。");
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, BasicAttackAbilityCode, out AbilitySpec abilitySpec), "技能 EX-GAS Ability 20001 未注册正式 GAS AbilitySpec。");
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => abilitySpec.IsActive,
+                CalculateExpectedFormalGasInputGateUseTicks());
+            Assert.IsTrue(abilitySpec.IsActive, "测试必须先进入正式 GAS Active 生命周期。");
+
+            ((IActionInterruptReceiver)abilityBase).OnActionInterrupted();
+
+            Assert.IsTrue(HasPendingFormalAbilityCancel(abilitySpec), "已绑定 EX-GAS 的基础攻击接收动作打断时应向 EX-GAS 提交取消请求，不应由旧 旧主动能力表.canInterupt=false 阻断。");
+        }
+
+
+        [Test]
+        public void Fire_WithWindup_ActivatesFormalGasAbilityDuringWeaponSequenceAndEndsAfterStop()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+GrantBasicAttack(attacker);
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            AssertFormalAttackAbilityReady(attacker);
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, BasicAttackAbilityCode, out AbilitySpec abilitySpec), "技能 EX-GAS Ability 20001 未注册正式 GAS AbilitySpec。");
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到正式近战能力实例。");
+            ActiveAbilityBase activeAbility = abilityBase as ActiveAbilityBase;
+            Assert.IsNotNull(activeAbility, "近战能力实例不是主动能力。");
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => abilitySpec.IsActive,
+                CalculateExpectedFormalGasInputGateUseTicks());
+            Assert.IsTrue(abilitySpec.IsActive, "近战基础攻击前摇期间应已经进入 GAS Active 生命周期。");
+
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => activeAbility.inputGateState == EFormalAbilityInputGateState.Idle && !abilitySpec.IsActive,
+                40);
+            Assert.IsFalse(abilitySpec.IsActive, "武器序列结束后应结束 GAS Active 生命周期。");
+        }
+
+        [Test]
+        public void Fire_WhenBlockedTagAppearsDuringWindup_DoesNotApplyHitOrCooldown()
+        {
+            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 10, physicalAttack: 10));
+            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+GrantBasicAttack(attacker);
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            AssertFormalAttackAbilityReady(attacker);
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, BasicAttackAbilityCode, out AbilitySpec abilitySpec), "技能 EX-GAS Ability 20001 未注册正式 GAS AbilitySpec。");
+            Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者未绑定正式 GAS AbilitySystemComponent。");
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到正式近战能力实例。");
+            ActiveAbilityBase activeAbility = abilityBase as ActiveAbilityBase;
+            Assert.IsNotNull(activeAbility, "近战能力实例不是主动能力。");
+
+            int blockedTag = GetFirstConfiguredActivationBlockedTag(abilitySpec);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            int previousHealth = defender.GetCurrentHealth();
+            int previousMana = attacker.GetCurrentMana();
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            Assert.IsTrue(attackerAsc.Cell.AddFixedTag(blockedTag), "测试应能在前摇期间添加 GAS 阻断标签。");
+            AssertFormalAbilityStartResult(
+                abilitySet,
+                BasicAttackAbilityCode,
+                "EX-GAS Ability 20001",
+                EAbilityFireCheckResult.Incapacitated,
+                $"前摇期间添加 GAS 阻断标签后，项目侧正式入口应拒绝真正出手。{CreateFormalGateDiagnostic(abilitySet, BasicAttackAbilityCode, attackerAsc.Cell, blockedTag)}");
+
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => activeAbility.inputGateState == EFormalAbilityInputGateState.Idle && !abilitySpec.IsActive,
+                40);
+
+            Assert.AreEqual(previousHealth, defender.GetCurrentHealth(), "GAS 阻断标签在真正出手前出现时，不应结算基础攻击命中。");
+            Assert.AreEqual(previousMana, attacker.GetCurrentMana(), "GAS 阻断标签在真正出手前出现时，不应扣蓝。");
+            Assert.IsTrue(abilitySpec.IsCooldownReady, "GAS 阻断标签提交失败时不应启动冷却。");
+        }
+
+
+        [Test]
+        public void LegacyExecutionAssetTypes_DoNotExistAsAbilityAuthoringModel()
+        {
+            Assert.IsNull(
+                Type.GetType("FantasyWord.GameCore.AbilityExecutionAsset, FantasyWord.GameCore"),
+                "旧 AbilityExecutionAsset 类型不应继续存在；能力执行、规则和表现必须由 EX-GAS Ability / Timeline / GameplayEffect / Cue 表达。");
+            Assert.IsNull(
+                Type.GetType("FantasyWord.GameCore.MeleeAbilityExecutionAsset, FantasyWord.GameCore"),
+                "旧 MeleeAbilityExecutionAsset 类型不应继续存在；普攻命中、伤害、反馈和时间轴不能再有项目侧第二套执行资产。");
+        }
+
+        private void CreateGameManagerWithMinimalConfig()
+        {
+            GameObject gameManagerObject = new("EditModeGameManager");
+            GameManager gameManager = gameManagerObject.AddComponent<GameManager>();
+            GameConfig sourceConfig = AssetDatabase.LoadAssetAtPath<GameConfig>(GameConfigAssetPath);
+            Assert.IsNotNull(sourceConfig, $"找不到正式游戏配置资产：{GameConfigAssetPath}");
+            GameConfig config = UnityEngine.Object.Instantiate(sourceConfig);
+
+            m_createdObjects.Add(config);
+            m_createdObjects.Add(gameManagerObject);
+            CloneDatabaseRegistryForTest(config);
+
+            SetInstanceField(config, "m_canCriticalHit", false);
+            SetInstanceField(config, "m_canMissHit", false);
+            SetInstanceField(gameManager, "m_config", config);
+            SetInstanceField(
+                gameManager,
+                "m_systems",
+                Activator.CreateInstance(GetRequiredFieldType(typeof(GameManager), "m_systems")));
+            SetStaticField(typeof(GameManager), "_instance", gameManager);
+        }
+
+        private static void RegisterPlayerSystemForConditionTests(Hero player)
+        {
+            Assert.IsTrue(GameManager.Exists(), "注册测试 PlayerSystem 前必须已有 GameManager。");
+            GameObject playerSystemObject = new("EditModePlayerSystem");
+            PlayerSystem playerSystem = playerSystemObject.AddComponent<PlayerSystem>();
+            SetInstanceField(playerSystem, "m_playerInstance", player);
+
+            IDictionary systems = GetInstanceFieldValue(GameManager.Instance, "m_systems") as IDictionary;
+            Assert.IsNotNull(systems, "测试 GameManager.m_systems 未初始化或类型不兼容。");
+            systems[typeof(PlayerSystem)] = playerSystem;
+        }
+
+        private Hero CreateHero(string name, Vector2 position, Stats baseStats, bool initializeAbilities = true)
+        {
+            GameObject heroObject = new(name)
+            {
+                layer = 0
+            };
+            heroObject.transform.position = position;
+            m_createdObjects.Add(heroObject);
+
+            Rigidbody2D rigidbody2D = heroObject.AddComponent<Rigidbody2D>();
+            rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+            BoxCollider2D bodyCollider = heroObject.AddComponent<BoxCollider2D>();
+            CreateDamageHitbox(heroObject.transform, bodyCollider);
+            heroObject.AddComponent<Animator>();
+
+            Hero hero = heroObject.AddComponent<Hero>();
+            AbilitySystemComponent abilitySystemComponent = heroObject.GetComponent<AbilitySystemComponent>();
+            CharacterAbilitySet abilitySet = heroObject.GetComponent<CharacterAbilitySet>();
+
+            HeroSheet sheet = ScriptableObject.CreateInstance<HeroSheet>();
+            m_createdObjects.Add(sheet);
+            SetInstanceField(sheet, "m_baseStats", baseStats.Clone());
+            SetInstanceField(
+                sheet,
+                "m_formalGasAbilitiesPerLevel",
+                Activator.CreateInstance(GetRequiredFieldType(typeof(CharacterSheet), "m_formalGasAbilitiesPerLevel")));
+            SetInstanceField(hero, "m_sheet", sheet);
+            SetInstanceField(hero, "m_rigidbody", rigidbody2D);
+            SetInstanceField(hero, "m_animationStrategy", new NullAnimationStrategy());
+
+            ConfigureAbilityRoots(heroObject.transform, abilitySet);
+
+            InvokeLifecycle(abilitySystemComponent, "Awake");
+            SetInstanceField(abilitySet, "m_character", hero);
+            InvokeLifecycle(abilitySet, "Awake");
+            InvokeLifecycle(hero, "Awake");
+            InvokeLifecycle(abilitySystemComponent, "OnEnable");
+            InvokeLifecycle(abilitySet, "OnEnable");
+            InvokeLifecycle(hero, "OnEnable");
+            if (initializeAbilities)
+            {
+                InvokeStaticLifecycle(hero, "InitializeAbilities");
+            }
+
+            hero.SetLookAtDirection(Vector2.right);
+            hero.SetTargetDirection(Vector2.right);
+
+            return hero;
+        }
+
+        private static void CreateDamageHitbox(Transform owner, BoxCollider2D bodyCollider)
+        {
+            GameObject hitboxObject = new("Hitbox");
+            int hitboxLayer = LayerMask.NameToLayer("Hitbox");
+            hitboxObject.layer = hitboxLayer >= 0 ? hitboxLayer : owner.gameObject.layer;
+            hitboxObject.transform.SetParent(owner, false);
+
+            BoxCollider2D hitboxCollider = hitboxObject.AddComponent<BoxCollider2D>();
+            hitboxCollider.isTrigger = true;
+            if (bodyCollider != null)
+            {
+                hitboxCollider.offset = bodyCollider.offset;
+                hitboxCollider.size = bodyCollider.size;
+            }
+        }
+
+        private static BoxCollider2D GetDamageHitbox(Hero owner)
+        {
+            int hitboxLayer = LayerMask.NameToLayer("Hitbox");
+            foreach (BoxCollider2D collider in owner.GetComponentsInChildren<BoxCollider2D>())
+            {
+                if (collider.isTrigger && (hitboxLayer < 0 || collider.gameObject.layer == hitboxLayer))
+                {
+                    return collider;
+                }
+            }
+
+            Assert.Fail("测试角色缺少用于受击检测的 Hitbox 子碰撞体。");
+            return null;
+        }
+
+        private MMFeedbacks CreateProbeFeedback(string name)
+        {
+            GameObject feedbackObject = new(name);
+            m_createdObjects.Add(feedbackObject);
+
+            MMFeedbacks feedbacks = feedbackObject.AddComponent<MMFeedbacks>();
+            TestMeleeFeedbackProbe probe = feedbackObject.AddComponent<TestMeleeFeedbackProbe>();
+            MMFeedbacksEvents feedbackEvents = new MMFeedbacksEvents
+            {
+                TriggerUnityEvents = true,
+                OnPlay = new UnityEngine.Events.UnityEvent()
+            };
+            feedbackEvents.OnPlay.AddListener(probe.HandlePlay);
+            feedbackEvents.Initialization();
+            feedbacks.Events = feedbackEvents;
+            feedbacks.Initialization(feedbackObject);
+            return feedbacks;
+        }
+
+
+        private void CloneDatabaseRegistryForTest(GameConfig config)
+        {
+            DatabaseRegistry sourceRegistry = GetInstanceFieldValue(config, "m_databaseRegistry") as DatabaseRegistry;
+            if (sourceRegistry == null)
+            {
+                return;
+            }
+
+            DatabaseRegistry registryClone = UnityEngine.Object.Instantiate(sourceRegistry);
+            registryClone.name = $"{sourceRegistry.name}-RuntimeClone";
+            m_createdObjects.Add(registryClone);
+            SetInstanceField(config, "m_databaseRegistry", registryClone);
+        }
+
+        private static void RegisterRuntimeDatabaseEntry(DatabaseEntry entry, string key)
+        {
+            Assert.IsNotNull(entry, "测试数据库注册对象不能为空。");
+            Assert.IsTrue(GameManager.Exists(), "测试数据库注册必须在 GameManager 初始化后执行。");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(key), "测试数据库注册 key 不能为空。");
+
+            DatabaseRegistry database = GameManager.Database;
+            Assert.IsNotNull(database, "测试 GameConfig 缺少 DatabaseRegistry。");
+            database.GetEntries();
+
+            IDictionary entries = GetInstanceFieldValue(database, "m_entries") as IDictionary;
+            Assert.IsNotNull(entries, "DatabaseRegistry.m_entries 未初始化或类型不兼容。");
+            entries[key] = entry;
+        }
+
+        private static void SetCharacterFormalGasAbilityUnlock(CharacterSheet sheet, int formalGasAbilityCode, int level)
+        {
+            Assert.IsNotNull(sheet, "角色表不能为空。");
+            IDictionary unlocks = GetInstanceFieldValue(sheet, "m_formalGasAbilitiesPerLevel") as IDictionary;
+            Assert.IsNotNull(unlocks, "CharacterSheet.m_formalGasAbilitiesPerLevel 未初始化或类型不兼容。");
+            unlocks[formalGasAbilityCode] = level;
+        }
+
+        private static string ExtractFormalAbilityCueJsonForTest(string timelineJson, string gameplayCueJson, int abilityCode)
+        {
+            MethodInfo method = typeof(FormalAbilityAssetValidation).GetMethod(
+                "ExtractAbilityCueJson",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.IsNotNull(method, "FormalAbilityAssetValidation 缺少 EX-GAS Cue 证据提取入口。");
+
+            return method.Invoke(null, new object[] { timelineJson, gameplayCueJson, "[]", abilityCode }) as string
+                ?? string.Empty;
+        }
+
+        private static bool ContainsResolvableMountPrefabCueForTest(string abilityCueJson)
+        {
+            MethodInfo method = typeof(FormalAbilityAssetValidation).GetMethod(
+                "ContainsResolvableMountPrefabCue",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.IsNotNull(method, "FormalAbilityAssetValidation 缺少 CueMountPrefab 可解析校验入口。");
+
+            return method.Invoke(null, new object[] { abilityCueJson }) is bool value && value;
+        }
+
+        private static bool ContainsResolvableGameCoreAudioCueForTest(string abilityCueJson)
+        {
+            MethodInfo method = typeof(FormalAbilityAssetValidation).GetMethod(
+                "ContainsResolvableGameCoreAudioCue",
+                BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.IsNotNull(method, "FormalAbilityAssetValidation 缺少 CuePlayGameCoreAudio 可解析校验入口。");
+
+            return method.Invoke(null, new object[] { abilityCueJson }) is bool value && value;
+        }
+
+        private static void GrantBasicAttack(Hero owner)
+        {
+            GrantFormalGasAbility(owner, BasicAttackAbilityCode);
+        }
+
+        private static void GrantFormalGasAbility(Hero owner, int formalGasAbilityCode)
+        {
+            owner.AddBonusFormalGasAbility(formalGasAbilityCode, CharacterAbilitySourceKey.Script);
+            Assert.IsTrue(owner.HasFormalGasAbility(formalGasAbilityCode), $"角色未正式持有 EX-GAS Ability：{formalGasAbilityCode}");
+        }
+
+        private static bool HasLegacyAbilitySheetParameter(ParameterInfo parameter)
+        {
+            string parameterTypeName = parameter.ParameterType.FullName ?? parameter.ParameterType.Name;
+            return parameterTypeName.Contains("旧能力表", StringComparison.Ordinal) ||
+                parameterTypeName.Contains("LegacyAbility", StringComparison.Ordinal);
+        }
+
+        private static AbilityBase LoadBasicAttackAbilityPrefabComponent()
+        {
+            RegisterFormalGasAbilityDescriptionGeneratedRuntime();
+            Assert.IsTrue(
+                FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(
+                    BasicAttackAbilityCode,
+                    out FormalGasAbilityRuntimeConfig config),
+                "测试前应能从 exgas.abilityGameCore 解析基础攻击运行配置。");
+            Assert.IsTrue(config.TryLoadPrefab(out GameObject prefab), "测试前应能从 exgas.abilityGameCore 加载基础攻击 Prefab。");
+            AbilityBase abilityBase = prefab.GetComponent<AbilityBase>();
+            Assert.IsNotNull(abilityBase, "基础攻击 Prefab 缺少 AbilityBase 组件。");
+            return abilityBase;
+        }
+
+        private static void AssertFormalAttackAbilityReady(
+            Hero owner,
+            bool expectFormalCost = false)
+        {
+            AssertFormalAbilityReady(owner, expectFormalCost, EAbilityFireCheckResult.Valid, BasicAttackAbilityCode);
+        }
+        private static void AssertFormalAbilityReady(
+            Hero owner,
+            bool expectFormalCost,
+            EAbilityFireCheckResult expectedResult,
+            int formalGasAbilityCode = BasicAttackAbilityCode)
+        {
+            string abilityName = $"EX-GAS Ability {formalGasAbilityCode}";
+            CharacterAbilitySet abilitySet = owner.GetComponent<CharacterAbilitySet>();
+            Assert.IsNotNull(abilitySet, "角色缺少正式 CharacterAbilitySet。");
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, formalGasAbilityCode, out AbilityBase abilityBase), $"角色没有为 {abilityName} 创建正式能力实例。");
+            Assert.IsInstanceOf<MeleeAttackAbility>(abilityBase, $"技能 {abilityName} 没有实例化成正式近战能力组件。");
+
+            bool usesFormalCost;
+            EAbilityFireCheckResult formalResult;
+            bool registered = TryEvaluateFormalGasAbilityRuleActivation(abilitySet, formalGasAbilityCode, out formalResult, out usesFormalCost);
+            Assert.IsTrue(registered, $"技能 {abilityName} 没有注册正式 GAS 能力规则。");
+            Assert.AreEqual(expectedResult, formalResult, $"技能 {abilityName} 的正式 GAS 规则结果不符合预期。");
+            Assert.AreEqual(expectFormalCost, usesFormalCost, $"技能 {abilityName} 的正式 GAS 消耗标记不符合预期。");
+        }
+
+        private static void AssertFormalAbilityInputGateState(
+            Hero owner,
+            int formalGasAbilityCode,
+            EFormalAbilityInputGateState expectedState)
+        {
+            CharacterAbilitySet abilitySet = owner.GetComponent<CharacterAbilitySet>();
+            Assert.IsNotNull(abilitySet, "角色缺少正式 CharacterAbilitySet。");
+            Assert.IsTrue(
+                TryGetFormalGasAbilityInstance(abilitySet, formalGasAbilityCode, out AbilityBase abilityBase),
+                $"角色没有为 EX-GAS Ability {formalGasAbilityCode} 创建正式能力实例。");
+            EFormalAbilityInputGateState inputGateState = (EFormalAbilityInputGateState)GetInstanceFieldValue(
+                abilityBase,
+                "m_inputGate",
+                typeof(FormalAbilityInputGateRuntime),
+                "m_state");
+            Assert.AreEqual(expectedState, inputGateState, $"EX-GAS Ability {formalGasAbilityCode} 的本地输入门控状态不符合预期。");
+        }
+
+        private static bool TryGetFormalGasAbilityInstance(CharacterAbilitySet abilitySet, int formalGasAbilityCode, out AbilityBase abilityBase)
+        {
+            abilityBase = null;
+            object runtime = GetInstanceFieldValue(abilitySet, "m_runtime");
+            Assert.IsNotNull(runtime, "CharacterAbilitySet 运行时能力容器缺失。");
+
+            MethodInfo method = runtime.GetType().GetMethod(
+                "TryGetFormalGasAbilityInstance",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new[] { typeof(int), typeof(AbilityBase).MakeByRefType() },
+                null);
+            Assert.IsNotNull(method, "找不到 CharacterAbilitySetRuntime.TryGetFormalGasAbilityInstance。");
+
+            object[] args = { formalGasAbilityCode, null };
+            bool resolved = method.Invoke(runtime, args) is bool value && value;
+            if (resolved)
+            {
+                abilityBase = args[1] as AbilityBase;
+            }
+
+            return resolved;
+        }
+
+        private static bool TryEvaluateFormalGasAbilityRuleActivation(
+            CharacterAbilitySet abilitySet,
+            int formalGasAbilityCode,
+            out EAbilityFireCheckResult result,
+            out bool usesFormalCost)
+        {
+            MethodInfo method = FindInstanceMethod(
+                typeof(CharacterAbilitySet),
+                "TryEvaluateFormalGasAbilityRuleActivation",
+                typeof(int),
+                typeof(EAbilityFireCheckResult).MakeByRefType(),
+                typeof(bool).MakeByRefType());
+            Assert.IsNotNull(method, "找不到 CharacterAbilitySet.TryEvaluateFormalGasAbilityRuleActivation。");
+
+            object[] args = { formalGasAbilityCode, EAbilityFireCheckResult.Unknown, false };
+            bool registered = method.Invoke(abilitySet, args) is bool value && value;
+            result = args[1] is EAbilityFireCheckResult fireCheckResult
+                ? fireCheckResult
+                : EAbilityFireCheckResult.Unknown;
+            usesFormalCost = args[2] is bool boolValue && boolValue;
+            return registered;
+        }
+
+        private static void AssertFormalAbilityCostNotConfigured(CharacterAbilitySet abilitySet, int formalGasAbilityCode, string abilityName)
+        {
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, formalGasAbilityCode, out AbilitySpec abilitySpec), $"技能 {abilityName} 未注册正式 GAS AbilitySpec。");
+            Assert.IsFalse(abilitySpec.CheckCostExist(), $"技能 {abilityName} 当前 GAS 表未配置 Cost，不应由 项目侧旧能力表 manaCost 合成 CAbilityCost。");
+            Assert.AreNotEqual(AbilityActivationResult.FailCost, abilitySpec.CheckActivation(), $"技能 {abilityName} 不应被旧 项目侧旧能力表 manaCost 判成 GAS 消耗不足。");
+        }
+
+        private static void AssertFormalAbilityCooldownNotConfigured(CharacterAbilitySet abilitySet, int formalGasAbilityCode, string abilityName)
+        {
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, formalGasAbilityCode, out AbilitySpec abilitySpec), $"技能 {abilityName} 未注册正式 GAS AbilitySpec。");
+            Assert.IsFalse(abilitySpec.CheckCooldownExist(), $"技能 {abilityName} 当前 GAS 表未配置 Cooldown，不应由 项目侧旧能力表 cooldown 合成 CAbilityCooldown。");
+            Assert.IsTrue(abilitySpec.IsCooldownReady, $"技能 {abilityName} 未配置 GAS Cooldown 时应保持冷却可用。");
+        }
+
+        private static void AssertFormalAbilityStartResult(
+            CharacterAbilitySet abilitySet,
+            int formalGasAbilityCode,
+            string abilityName,
+            EAbilityFireCheckResult expectedResult,
+            string message)
+        {
+            MethodInfo method = FindInstanceMethod(
+                typeof(CharacterAbilitySet),
+                "TryEvaluateFormalAbilityActivation",
+                typeof(int),
+                typeof(EAbilityFireCheckResult).MakeByRefType(),
+                typeof(bool).MakeByRefType());
+            Assert.IsNotNull(method, "找不到 CharacterAbilitySet.TryEvaluateFormalAbilityActivation。");
+
+            object[] args = { formalGasAbilityCode, null, null };
+            bool evaluated = method.Invoke(abilitySet, args) is bool value && value;
+            Assert.IsTrue(evaluated, $"技能 {abilityName} 未能通过项目侧正式规则入口完成激活检查。");
+            Assert.AreEqual(expectedResult, (EAbilityFireCheckResult)args[1], message);
+        }
+
+        private static string CreateFormalGateDiagnostic(
+            CharacterAbilitySet abilitySet,
+            int formalGasAbilityCode,
+            AbilitySystemCell abilitySystemCell,
+            int expectedTag)
+        {
+            bool hasSpec = TryGetFormalAbilitySpec(abilitySet, formalGasAbilityCode, out AbilitySpec abilitySpec);
+            string fixedTags = string.Join(",", abilitySystemCell.FixedTags());
+            string blockedTags = hasSpec ? string.Join(",", abilitySpec.GetActivationBlockedTags()) : "<no-spec>";
+            string activation = hasSpec ? abilitySpec.CheckActivation().ToString() : "<no-spec>";
+            bool hasExact = HasExactFixedTag(abilitySystemCell, new[] { expectedTag });
+            return $" fixedTags=[{fixedTags}] blockedTags=[{blockedTags}] expectedTag={expectedTag} hasExact={hasExact} rawActivation={activation}";
+        }
+
+        private static int GetFirstConfiguredActivationBlockedTag(AbilitySpec abilitySpec)
+        {
+            Assert.IsNotNull(abilitySpec, "技能未注册正式 GAS AbilitySpec。");
+            int[] blockedTags = abilitySpec.GetActivationBlockedTags();
+            Assert.IsNotEmpty(blockedTags, "正式 GAS AbilitySpec 缺少 ActivationBlockedTags 配置。");
+
+            foreach (int blockedTag in blockedTags)
+            {
+                if (blockedTag != 0)
+                {
+                    return blockedTag;
+                }
+            }
+
+            Assert.Fail("正式 GAS AbilitySpec 的 ActivationBlockedTags 只有占位 0，没有可用于阻断的正式标签。");
+            return 0;
+        }
+
+        private static bool HasExactFixedTag(AbilitySystemCell abilitySystemCell, IEnumerable<int> expectedTags)
+        {
+            Assert.IsNotNull(abilitySystemCell, "角色未绑定正式 GAS AbilitySystemCell。");
+            foreach (int fixedTag in abilitySystemCell.FixedTags())
+            {
+                foreach (int expectedTag in expectedTags)
+                {
+                    if (fixedTag == expectedTag)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool TryGetFormalAbilitySpec(CharacterAbilitySet abilitySet, int formalGasAbilityCode, out AbilitySpec abilitySpec)
+        {
+            abilitySpec = null;
+            MethodInfo method = FindInstanceMethod(
+                typeof(CharacterAbilitySet),
+                "TryGetFormalAbilitySpec",
+                typeof(int),
+                typeof(AbilitySpec).MakeByRefType(),
+                typeof(object).MakeByRefType());
+            method ??= FindInstanceMethodByParameterPrefix(
+                typeof(CharacterAbilitySet),
+                "TryGetFormalAbilitySpec",
+                typeof(int),
+                typeof(AbilitySpec).MakeByRefType());
+            Assert.IsNotNull(method, "找不到 CharacterAbilitySet.TryGetFormalAbilitySpec。");
+
+            object[] args = { formalGasAbilityCode, null, null };
+            bool resolved = method.Invoke(abilitySet, args) is bool value && value;
+            if (resolved)
+            {
+                abilitySpec = args[1] as AbilitySpec;
+            }
+
+            return resolved;
+        }
+
+        private static bool HasPendingFormalAbilityCancel(AbilitySpec abilitySpec)
+        {
+            Assert.IsNotNull(abilitySpec, "技能未注册正式 GAS AbilitySpec。");
+            DotEntity abilityEntity = GetFormalAbilityEntity(abilitySpec);
+            Assert.AreNotEqual(DotEntity.Null, abilityEntity, "正式 GAS AbilitySpec 缺少有效 ECS Entity。");
+            return GASManager.EntityManager.HasComponent<CAbilityInTryCancel>(abilityEntity);
+        }
+
+        private static DotEntity GetFormalAbilityEntity(AbilitySpec abilitySpec)
+        {
+            PropertyInfo entityProperty = typeof(AbilitySpec).GetProperty(
+                "Entity",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(entityProperty, "找不到 AbilitySpec.Entity 内部属性。");
+            object value = entityProperty.GetValue(abilitySpec);
+            return value is DotEntity entity ? entity : DotEntity.Null;
+        }
+
+        private static void ConfigureAbilityRoots(Transform heroTransform, CharacterAbilitySet abilitySet)
+        {
+            GameObject staticRoot = new("StaticAbilityRoot");
+            GameObject polydirectionalRoot = new("PolydirectionalAbilityRoot");
+            GameObject horizontalRoot = new("HorizontalAbilityRoot");
+
+            staticRoot.transform.SetParent(heroTransform, false);
+            polydirectionalRoot.transform.SetParent(heroTransform, false);
+            horizontalRoot.transform.SetParent(heroTransform, false);
+
+            SetInstanceField(abilitySet, "m_staticAbilityRoot", staticRoot.transform);
+            SetInstanceField(abilitySet, "m_polydirectionalAbilityRoot", polydirectionalRoot.transform);
+            SetInstanceField(abilitySet, "m_horizontalAbilityRoot", horizontalRoot.transform);
+        }
+
+        private static Stats CreateStats(
+            int health = 0,
+            int mana = 0,
+            int physicalAttack = 0,
+            int magicalAttack = 0,
+            int physicalDefense = 0,
+            int magicalDefense = 0,
+            int agility = 0,
+            int luck = 0,
+            int attackSpeed = 0)
+        {
+            Stats stats = new();
+            stats[EStat.Health] = health;
+            stats[EStat.Mana] = mana;
+            stats[EStat.PhysicalAttack] = physicalAttack;
+            stats[EStat.MagicalAttack] = magicalAttack;
+            stats[EStat.PhysicalDefense] = physicalDefense;
+            stats[EStat.MagicalDefense] = magicalDefense;
+            stats[EStat.Agility] = agility;
+            stats[EStat.Luck] = luck;
+            stats[EStat.AttackSpeed] = attackSpeed;
+            return stats;
+        }
+
+        private static int CalculateExpectedResolvedDamage(CharacterBase attacker, CharacterBase defender, FormalDamageEffectPayload damageRule)
+        {
+            DamageDescriptor descriptor = damageRule.damageDescriptor;
+            CombatStatSnapshot attackerStats = attacker.CreateCombatStatSnapshot();
+            CombatStatSnapshot defenderStats = defender.CreateCombatStatSnapshot();
+            int outgoingDamage = DamageSolver.CalculateDamageOut(
+                descriptor.flatDamages,
+                descriptor.scalingFactor,
+                attackerStats.GetOffensiveStat(descriptor.damageType));
+            int incomingDamage = DamageSolver.CalculateDamageIn(
+                outgoingDamage,
+                descriptor.ignoreDefense ? 0 : defenderStats.GetDefensiveStat(descriptor.damageType));
+            return incomingDamage;
+        }
+
+        private static FormalDamageEffectPayload CreateBasicAttackBaseDamagePayload()
+        {
+            return new FormalDamageEffectPayload(
+                new DamageDescriptor
+                {
+                    damageType = EDamageType.Physical,
+                    flatDamages = 4,
+                    scalingFactor = 1.0f,
+                    ignoreDefense = false
+                },
+                EEffectVisualFlags.None,
+                default,
+                EEffectImpactDataType.Velocity,
+                Vector2.zero);
+        }
+
+        private static FormalDamageEffectPayload CreateBackstabBonusDamagePayload()
+        {
+            return new FormalDamageEffectPayload(
+                new DamageDescriptor
+                {
+                    damageType = EDamageType.Physical,
+                    flatDamages = 3,
+                    scalingFactor = 0.0f,
+                    ignoreDefense = false
+                },
+                EEffectVisualFlags.None,
+                default,
+                EEffectImpactDataType.Velocity,
+                Vector2.zero);
+        }
+
+        private static FormalDamageEffectPayload CreateChargedAttackReleaseDamagePayload()
+        {
+            return new FormalDamageEffectPayload(
+                new DamageDescriptor
+                {
+                    damageType = EDamageType.Physical,
+                    flatDamages = 7,
+                    scalingFactor = 1.5f,
+                    ignoreDefense = false
+                },
+                EEffectVisualFlags.None,
+                default,
+                EEffectImpactDataType.Velocity,
+                Vector2.zero);
+        }
+
+        private static int CalculateExpectedFormalGasInputGateUseTicks()
+        {
+            const int firstFormalGameplayFrame = 1;
+            float totalTime = firstFormalGameplayFrame / 30.0f + EditModeTickDeltaTime;
+            return Mathf.Max(4, Mathf.CeilToInt(totalTime / EditModeTickDeltaTime) + 1);
+        }
+
+        private static int CalculateExpectedGasTimelineHitTicks()
+        {
+            return CalculateExpectedGasTimelineHitTicks(8);
+        }
+
+        private static int CalculateExpectedGasTimelineHitTicks(int timelineHitFrame)
+        {
+            return CalculateExpectedFormalGasInputGateUseTicks() + timelineHitFrame + 4;
+        }
+
+        private static string CreateGasCueDiagnostic(
+            CharacterBase defender,
+            TestMeleeFeedbackProbe targetCueProbe,
+            int previousHealth,
+            int expectedDamage)
+        {
+            int cueCount = 0;
+            int gameCoreCueCount = 0;
+            int playableCueCount = 0;
+            int playingCueCount = 0;
+
+            if (GASManager.ExWorld != null && GASManager.ExWorld.IsCreated)
+            {
+                DotEntityManager entityManager = GASManager.EntityManager;
+                using DotEntityQuery query = entityManager.CreateEntityQuery(DotComponentType.ReadOnly<MCCue>());
+                using NativeArray<DotEntity> cueEntities = query.ToEntityArray(Unity.Collections.Allocator.Temp);
+                foreach (DotEntity cueEntity in cueEntities)
+                {
+                    cueCount++;
+                    MCCue cue = EntityHelper.GetManagedComponentData<MCCue>(cueEntity);
+                    if (cue?.cue != null && cue.cue.GetType() == typeof(CuePlayGameCoreFeedback))
+                    {
+                        gameCoreCueCount++;
+                    }
+
+                    if (entityManager.HasComponent<ECCuePlayable>(cueEntity) && entityManager.IsComponentEnabled<ECCuePlayable>(cueEntity))
+                    {
+                        playableCueCount++;
+                    }
+
+                    if (entityManager.HasComponent<ECCuePlaying>(cueEntity) && entityManager.IsComponentEnabled<ECCuePlaying>(cueEntity))
+                    {
+                        playingCueCount++;
+                    }
+                }
+            }
+
+            return $"defenderHealth={defender.GetCurrentHealth()}, expectedHealth={previousHealth - expectedDamage}, " +
+                   $"targetCuePlayCount={targetCueProbe.playCount}, cueCount={cueCount}, gameCoreCueCount={gameCoreCueCount}, " +
+                   $"playableCueCount={playableCueCount}, playingCueCount={playingCueCount}";
+        }
+
+        private static void InvokeLifecycle(Component component, string methodName)
+        {
+            MethodInfo method = FindInstanceMethod(component.GetType(), methodName);
+            Assert.IsNotNull(method, $"找不到生命周期方法 {component.GetType().Name}.{methodName}");
+            method.Invoke(component, null);
+        }
+
+        private static void InvokeStaticLifecycle(object target, string methodName)
+        {
+            MethodInfo method = FindInstanceMethod(target.GetType(), methodName);
+            Assert.IsNotNull(method, $"找不到生命周期方法 {target.GetType().Name}.{methodName}");
+            method.Invoke(target, null);
+        }
+
+        private static void SetInstanceField(object target, string fieldName, object value)
+        {
+            Assert.IsNotNull(target, $"目标对象为空，无法写入字段 {fieldName}");
+            FieldInfo field = FindInstanceField(target.GetType(), fieldName);
+            Assert.IsNotNull(field, $"找不到字段 {target.GetType().Name}.{fieldName}");
+            field.SetValue(target, value);
+        }
+
+        private static void SetStaticField(Type type, string fieldName, object value)
+        {
+            FieldInfo field = type.GetField(fieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.IsNotNull(field, $"找不到静态字段 {type.Name}.{fieldName}");
+            field.SetValue(null, value);
+        }
+
+        private static void InvokeStaticMethod(Type type, string methodName)
+        {
+            Assert.IsNotNull(type, $"找不到类型 {methodName} 的宿主。");
+            MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+            Assert.IsNotNull(method, $"找不到静态方法 {type.Name}.{methodName}");
+            method.Invoke(null, null);
+        }
+
+        private static void RegisterFormalGasAbilityDescriptionGeneratedRuntime()
+        {
+            Type type = Type.GetType("GAS.Runtime.FormalGasAbilityDescriptionGeneratedRuntime, FantasyWord.GAS.GeneratedRuntime");
+            Assert.IsNotNull(type, "找不到 GAS 生成运行时的基础攻击描述注册入口。");
+            InvokeStaticMethod(type, "Register");
+        }
+
+        private static Type GetRequiredFieldType(Type type, string fieldName)
+        {
+            FieldInfo field = FindInstanceField(type, fieldName);
+            Assert.IsNotNull(field, $"找不到字段 {type.Name}.{fieldName}");
+            return field.FieldType;
+        }
+
+        private static object GetInstanceFieldValue(object target, string fieldName)
+        {
+            Assert.IsNotNull(target, $"目标对象为空，无法读取字段 {fieldName}");
+            FieldInfo field = FindInstanceField(target.GetType(), fieldName);
+            Assert.IsNotNull(field, $"找不到字段 {target.GetType().Name}.{fieldName}");
+            return field.GetValue(target);
+        }
+
+        private static TState AssertCapturedPersistedState<TState>(object effect)
+            where TState : TemporalEffectPersistedState
+        {
+            Assert.IsInstanceOf<ITemporalEffectRuntimeStateCarrier>(effect, "测试效果必须支持运行时状态保存。");
+            ITemporalEffectRuntimeStateCarrier carrier = (ITemporalEffectRuntimeStateCarrier)effect;
+            Assert.IsTrue(carrier.TryCapturePersistedState(out TemporalEffectPersistedState persistedState), "状态效果应能保存运行时状态。");
+            Assert.IsInstanceOf<TState>(persistedState);
+            return (TState)persistedState;
+        }
+
+        private static object CreateTemporalAbilityGrantData(int[] formalGasAbilityCodes)
+        {
+            Type dataType = GetRequiredNestedType(typeof(TemporalAbilityGrantEffect), "AbilityGrantData");
+            object data = Activator.CreateInstance(dataType);
+            SetInstanceField(data, "formalGasAbilityCodes", formalGasAbilityCodes);
+            return data;
+        }
+
+        private static object CreateTemporalAbilitySuppressionData(int[] formalGasAbilityCodes)
+        {
+            Type dataType = GetRequiredNestedType(typeof(TemporalAbilitySuppressionEffect), "AbilitySuppressionData");
+            object data = Activator.CreateInstance(dataType);
+            SetInstanceField(data, "formalGasAbilityCodes", formalGasAbilityCodes);
+            return data;
+        }
+
+        private static object CreateTemporalAbilityReplacementData(
+            int[] grantedFormalGasAbilityCodes,
+            int[] suppressedFormalGasAbilityCodes)
+        {
+            Type dataType = GetRequiredNestedType(typeof(TemporalAbilityReplacementEffect), "AbilityReplacementData");
+            object data = Activator.CreateInstance(dataType);
+            SetInstanceField(data, "grantedFormalGasAbilityCodes", grantedFormalGasAbilityCodes);
+            SetInstanceField(data, "suppressedFormalGasAbilityCodes", suppressedFormalGasAbilityCodes);
+            return data;
+        }
+
+        private static Type GetRequiredNestedType(Type ownerType, string nestedTypeName)
+        {
+            Type nestedType = ownerType.GetNestedType(nestedTypeName, BindingFlags.NonPublic);
+            Assert.IsNotNull(nestedType, $"找不到嵌套类型 {ownerType.Name}.{nestedTypeName}");
+            return nestedType;
+        }
+
+        private static ItemUsageResult InvokeItemAddAbilityEffect(
+            ItemAddAbilityEffect effect,
+            Item item,
+            CharacterBase sourceOwner,
+            CharacterBase target,
+            EItemLocation location)
+        {
+            MethodInfo method = FindInstanceMethod(typeof(ItemAddAbilityEffect), "OnUse");
+            Assert.IsNotNull(method, "找不到 ItemAddAbilityEffect.OnUse。");
+            object result = method.Invoke(effect, new object[] { item, sourceOwner, target, location });
+            Assert.IsInstanceOf<ItemUsageResult>(result, "ItemAddAbilityEffect.OnUse 必须返回 ItemUsageResult。");
+            return (ItemUsageResult)result;
+        }
+
+        private static object GetInstanceFieldValue(object owner, string ownerFieldName, Type nestedType, string nestedFieldName)
+        {
+            object nestedObject = GetInstanceFieldValue(owner, ownerFieldName);
+            Assert.IsNotNull(nestedObject, $"字段 {ownerFieldName} 为空，无法读取内部字段 {nestedFieldName}");
+            FieldInfo nestedField = FindInstanceField(nestedType, nestedFieldName);
+            Assert.IsNotNull(nestedField, $"找不到字段 {nestedType.Name}.{nestedFieldName}");
+            return nestedField.GetValue(nestedObject);
+        }
+
+        private static FieldInfo FindInstanceField(Type type, string fieldName)
+        {
+            while (type != null)
+            {
+                FieldInfo field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                if (field != null)
+                {
+                    return field;
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
+        }
+
+        private static MethodInfo FindInstanceMethod(Type type, string methodName)
+        {
+            return FindInstanceMethod(type, methodName, Array.Empty<Type>());
+        }
+
+        private static MethodInfo FindInstanceMethod(Type type, string methodName, params Type[] parameterTypes)
+        {
+            while (type != null)
+            {
+                MethodInfo method = parameterTypes == null || parameterTypes.Length == 0
+                    ? FindFirstInstanceMethod(type, methodName)
+                    : type.GetMethod(
+                        methodName,
+                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
+                        null,
+                        parameterTypes,
+                        null);
+                if (method != null)
+                {
+                    return method;
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
+        }
+
+        private static MethodInfo FindInstanceMethodByParameterPrefix(Type type, string methodName, params Type[] parameterPrefixTypes)
+        {
+            while (type != null)
+            {
+                foreach (MethodInfo method in type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
+                {
+                    if (method.Name != methodName)
+                    {
+                        continue;
+                    }
+
+                    ParameterInfo[] parameters = method.GetParameters();
+                    if (parameters.Length < parameterPrefixTypes.Length)
+                    {
+                        continue;
+                    }
+
+                    bool matches = true;
+                    for (int i = 0; i < parameterPrefixTypes.Length; i++)
+                    {
+                        if (parameters[i].ParameterType != parameterPrefixTypes[i])
+                        {
+                            matches = false;
+                            break;
+                        }
+                    }
+
+                    if (matches)
+                    {
+                        return method;
+                    }
+                }
+
+                type = type.BaseType;
+            }
+
+            return null;
+        }
+
+        private static MethodInfo FindFirstInstanceMethod(Type type, string methodName)
+        {
+            foreach (MethodInfo method in type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                if (method.Name == methodName)
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        private static void RegisterRuntimeEvent<TEvent>(Action<TEvent> handler)
+        {
+            InvokeRuntimeEventMethod(nameof(RegisterRuntimeEvent), "Register", handler);
+        }
+
+        private static void UnregisterRuntimeEvent<TEvent>(Action<TEvent> handler)
+        {
+            InvokeRuntimeEventMethod(nameof(UnregisterRuntimeEvent), "UnRegister", handler);
+        }
+
+        private static void InvokeRuntimeEventMethod<TEvent>(string caller, string methodName, Action<TEvent> handler)
+        {
+            Type eventKitType = Type.GetType("YokiFrame.EventKit, YokiFrame");
+            Assert.IsNotNull(eventKitType, $"{caller} 找不到 YokiFrame.EventKit。");
+
+            FieldInfo typeField = eventKitType.GetField("Type", BindingFlags.Public | BindingFlags.Static);
+            Assert.IsNotNull(typeField, $"{caller} 找不到 EventKit.Type。");
+
+            object typeEvent = typeField.GetValue(null);
+            Assert.IsNotNull(typeEvent, $"{caller} 读取到的 EventKit.Type 为空。");
+
+            MethodInfo method = typeEvent.GetType()
+                .GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public)?
+                .MakeGenericMethod(typeof(TEvent));
+            Assert.IsNotNull(method, $"{caller} 找不到 EventKit.Type.{methodName}<{typeof(TEvent).Name}>。");
+            method.Invoke(typeEvent, new object[] { handler });
+        }
+
+        private static void SetFloat(SerializedProperty root, string relativePath, float value)
+        {
+            SerializedProperty property = root.FindPropertyRelative(relativePath);
+            Assert.IsNotNull(property, $"找不到序列化字段 {relativePath}");
+            property.floatValue = value;
+        }
+
+        private static void SetBool(SerializedProperty root, string relativePath, bool value)
+        {
+            SerializedProperty property = root.FindPropertyRelative(relativePath);
+            Assert.IsNotNull(property, $"找不到序列化字段 {relativePath}");
+            property.boolValue = value;
+        }
+
+        private static void SetEnum<TEnum>(SerializedProperty root, string relativePath, TEnum value) where TEnum : Enum
+        {
+            SerializedProperty property = root.FindPropertyRelative(relativePath);
+            Assert.IsNotNull(property, $"找不到序列化字段 {relativePath}");
+            property.enumValueIndex = Convert.ToInt32(value);
+        }
+
+        private static void SetObjectReference(SerializedProperty root, string relativePath, UnityEngine.Object value)
+        {
+            SerializedProperty property = root.FindPropertyRelative(relativePath);
+            Assert.IsNotNull(property, $"找不到序列化字段 {relativePath}");
+            property.objectReferenceValue = value;
+        }
+
+        private static void UnloadAssetAtPath<T>(string assetPath) where T : UnityEngine.Object
+        {
+            T asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
+            if (asset != null)
+            {
+                Resources.UnloadAsset(asset);
+            }
+        }
+    }
+}
+

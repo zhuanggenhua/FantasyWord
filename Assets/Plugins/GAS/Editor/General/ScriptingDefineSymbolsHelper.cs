@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using GAS.General.Validation;
 using UnityEditor;
 using UnityEngine;

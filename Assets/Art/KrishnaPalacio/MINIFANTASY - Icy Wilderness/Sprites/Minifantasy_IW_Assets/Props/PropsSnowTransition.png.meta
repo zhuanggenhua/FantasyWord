@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: 7c75cd468823ecc42a231903d648a787
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4997603312731449741
+    second: Snow_Transition_Rock_0
+  - first:
+      213: -713793570962135898
+    second: Snow_Transition_Rock_1
+  - first:
+      213: -6515886688359338506
+    second: Snow_Transition_Rock_2
+  - first:
+      213: -2086128893938613177
+    second: Snow_Transition_Rock_3
+  - first:
+      213: -6503560550927126935
+    second: Snow_Transition_Rock_4
+  - first:
+      213: 2196100681878348450
+    second: Snow_Transition_IceCrystal_4
+  - first:
+      213: -4507058270037530850
+    second: Snow_Transition_IceCrystal_3
+  - first:
+      213: -4499585562619248877
+    second: Snow_Transition_IceCrystal_2
+  - first:
+      213: 5683720937976749122
+    second: Snow_Transition_IceCrystal_1
+  - first:
+      213: -863720315579735280
+    second: Snow_Transition_IceCrystal_0
+  - first:
+      213: 4316664922451843865
+    second: Snow_Transition_Snowman
+  - first:
+      213: -3411446300266275699
+    second: Snow_Transition_Pink_Flower
+  - first:
+      213: 8703088863071113382
+    second: Snow_Transition_Tree_Branch_0
+  - first:
+      213: -6390025514265684724
+    second: Snow_Transition_Tree_Branch_1
+  - first:
+      213: -631203942864744155
+    second: Snow_Transition_Snowy_Sign
+  - first:
+      213: -7575630601759212307
+    second: Snow_Transition_Bush
+  - first:
+      213: -405900715967120555
+    second: Snow_Transition_Dead_Bush
+  - first:
+      213: -5401741085608296730
+    second: Snow_Transition_Red_Flower
+  - first:
+      213: 7172103065927424261
+    second: Snow_Transition_Snowman_Hat
+  - first:
+      213: 4139500818120452979
+    second: Snow_Transition_Snowman_Hat_Arms
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Snow_Transition_Rock_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3769358f342f4aab0800000000000000
+      internalID: -4997603312731449741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Rock_1
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 40
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a428df67881816f0800000000000000
+      internalID: -713793570962135898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Rock_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 40
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fd25af549be295a0800000000000000
+      internalID: -6515886688359338506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Rock_3
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 40
+        width: 20
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7444c11e2d49c03e0800000000000000
+      internalID: -2086128893938613177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Rock_4
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 40
+        width: 22
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96eaeb2e226beb5a0800000000000000
+      internalID: -6503560550927126935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_IceCrystal_4
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 40
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a22a5a4fed1a7e10800000000000000
+      internalID: 2196100681878348450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_IceCrystal_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 24
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e172d600266b371c0800000000000000
+      internalID: -4507058270037530850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_IceCrystal_2
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 16
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31f7a9745c24e81c0800000000000000
+      internalID: -4499585562619248877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_IceCrystal_1
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24cdd865412a0ee40800000000000000
+      internalID: 5683720937976749122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_IceCrystal_0
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 013e49cf2f27304f0800000000000000
+      internalID: -863720315579735280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Snowman
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 1
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91b912550efd7eb30800000000000000
+      internalID: 4316664922451843865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Pink_Flower
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 48
+        width: 3
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8cde4e1aab18a0d0800000000000000
+      internalID: -3411446300266275699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Tree_Branch_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 41
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a01304c53597c870800000000000000
+      internalID: 8703088863071113382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Tree_Branch_1
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 32
+        width: 15
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c05d28c86a11257a0800000000000000
+      internalID: -6390025514265684724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Snowy_Sign
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 13
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52198b4bb538d37f0800000000000000
+      internalID: -631203942864744155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Bush
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 48
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dec3098ea14fdd690800000000000000
+      internalID: -7575630601759212307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Dead_Bush
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55bf3ba0373fd5af0800000000000000
+      internalID: -405900715967120555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Red_Flower
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ee3faf2a192905b0800000000000000
+      internalID: -5401741085608296730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Snowman_Hat
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 1
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50918113dbd688360800000000000000
+      internalID: 7172103065927424261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Transition_Snowman_Hat_Arms
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 1
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37b2283ef06727930800000000000000
+      internalID: 4139500818120452979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 95db2762d34d21648ab6d89adcc95d41
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Snow_Transition_Bush: -7575630601759212307
+      Snow_Transition_Dead_Bush: -405900715967120555
+      Snow_Transition_IceCrystal_0: -863720315579735280
+      Snow_Transition_IceCrystal_1: 5683720937976749122
+      Snow_Transition_IceCrystal_2: -4499585562619248877
+      Snow_Transition_IceCrystal_3: -4507058270037530850
+      Snow_Transition_IceCrystal_4: 2196100681878348450
+      Snow_Transition_Pink_Flower: -3411446300266275699
+      Snow_Transition_Red_Flower: -5401741085608296730
+      Snow_Transition_Rock_0: -4997603312731449741
+      Snow_Transition_Rock_1: -713793570962135898
+      Snow_Transition_Rock_2: -6515886688359338506
+      Snow_Transition_Rock_3: -2086128893938613177
+      Snow_Transition_Rock_4: -6503560550927126935
+      Snow_Transition_Snowman: 4316664922451843865
+      Snow_Transition_Snowman_Hat: 7172103065927424261
+      Snow_Transition_Snowman_Hat_Arms: 4139500818120452979
+      Snow_Transition_Snowy_Sign: -631203942864744155
+      Snow_Transition_Tree_Branch_0: 8703088863071113382
+      Snow_Transition_Tree_Branch_1: -6390025514265684724
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

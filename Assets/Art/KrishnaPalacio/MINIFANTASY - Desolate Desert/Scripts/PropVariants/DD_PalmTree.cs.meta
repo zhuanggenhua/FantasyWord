@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 066c28a8498e51c4291dbda26e6ed3c2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - tree1: {fileID: -5354296583602629241, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - tree2: {fileID: 3273160759410830977, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - tree3: {fileID: 7007132084385223912, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - tree1Shadow: {fileID: 1142065380837886566, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - tree2Shadow: {fileID: 3612423783295610733, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - tree3Shadow: {fileID: -6291115388627392189, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

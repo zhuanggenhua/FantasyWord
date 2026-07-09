@@ -1,0 +1,351 @@
+fileFormatVersion: 2
+guid: dff5e50a885269847868cbed908c6c06
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8695113751652500279
+    second: Pine_Tree_Straight
+  - first:
+      213: 2113155335317958496
+    second: Light_Snow_Pine_Tree_Straight
+  - first:
+      213: -6739213460021051002
+    second: Heavy_Snow_Pine_Tree_Straight
+  - first:
+      213: 2388049998949091963
+    second: Pine_Tree_Left
+  - first:
+      213: 3378739755282588285
+    second: Light_Snow_Pine_Tree_Left
+  - first:
+      213: -8622277561882455703
+    second: Heavy_Snow_Pine_Tree_Left
+  - first:
+      213: 2533838189712142539
+    second: Pine_Tree_Right
+  - first:
+      213: 8615166116172036624
+    second: Light_Snow_Pine_Tree_Right
+  - first:
+      213: -6383479757383353841
+    second: Heavy_Snow_Pine_Tree_Right
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pine_Tree_Straight
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 82
+        width: 22
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7338cd073ef3ba870800000000000000
+      internalID: 8695113751652500279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Light_Snow_Pine_Tree_Straight
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 82
+        width: 22
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06f29dcd49f635d10800000000000000
+      internalID: 2113155335317958496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Snow_Pine_Tree_Straight
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 82
+        width: 22
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6810ae160118972a0800000000000000
+      internalID: -6739213460021051002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_Tree_Left
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 41
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7a8b3552de042120800000000000000
+      internalID: 2388049998949091963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Light_Snow_Pine_Tree_Left
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 41
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d72eb16f7e1b3ee20800000000000000
+      internalID: 3378739755282588285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Snow_Pine_Tree_Left
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 41
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 961dc218d34875880800000000000000
+      internalID: -8622277561882455703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_Tree_Right
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 1
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc07c10a8600a2320800000000000000
+      internalID: 2533838189712142539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Light_Snow_Pine_Tree_Right
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 1
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01a7a6300f73f8770800000000000000
+      internalID: 8615166116172036624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Heavy_Snow_Pine_Tree_Right
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 1
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0ab4465bf25967a0800000000000000
+      internalID: -6383479757383353841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ebb34d0c989da1c419ae332cb48fe7aa
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Heavy_Snow_Pine_Tree_Left: -8622277561882455703
+      Heavy_Snow_Pine_Tree_Right: -6383479757383353841
+      Heavy_Snow_Pine_Tree_Straight: -6739213460021051002
+      Light_Snow_Pine_Tree_Left: 3378739755282588285
+      Light_Snow_Pine_Tree_Right: 8615166116172036624
+      Light_Snow_Pine_Tree_Straight: 2113155335317958496
+      Pine_Tree_Left: 2388049998949091963
+      Pine_Tree_Right: 2533838189712142539
+      Pine_Tree_Straight: 8695113751652500279
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

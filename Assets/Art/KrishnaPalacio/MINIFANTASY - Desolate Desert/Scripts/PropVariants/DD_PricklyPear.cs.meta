@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: d02d25f91c0dbea4db8a01ed033ae450
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pricklyPear1: {fileID: -6765027946815485593, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - pricklyPear2: {fileID: -1951253322014835798, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - pricklyPearFlower1: {fileID: -1119794244380857097, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - pricklyPearFlower2: {fileID: 5736350119071619009, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - pricklyPear1Shadow: {fileID: -8311037636729475843, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - pricklyPear2Shadow: {fileID: -5938204067704756048, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - pricklyPearFlower1Shadow: {fileID: -2536958307697849738, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - pricklyPearFlower2Shadow: {fileID: 2711670746897542236, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

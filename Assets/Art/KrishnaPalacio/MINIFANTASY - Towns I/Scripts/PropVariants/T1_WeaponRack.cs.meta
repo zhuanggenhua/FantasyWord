@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6b450333e7b9f394cbfb501e091e93fd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - weaponRackEast: {fileID: 585449149043964628, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - weaponRackWest: {fileID: 2844800168765016948, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - weaponRackNorth: {fileID: 4637991730894345310, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - weaponRackSouth: {fileID: 4003288054144884600, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowWeaponRackEastWest: {fileID: -3233718551264563540, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowWeaponRackNorthSouth: {fileID: -7724106427287649227, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

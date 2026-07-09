@@ -1,0 +1,2143 @@
+fileFormatVersion: 2
+guid: afd95f5411290d14ea6cbb835d151b63
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6602195850528305877
+    second: TilesetShadows_0
+  - first:
+      213: -9024677906052188695
+    second: TilesetShadows_1
+  - first:
+      213: 9078618864008206999
+    second: TilesetShadows_2
+  - first:
+      213: 1321755804895343303
+    second: TilesetShadows_3
+  - first:
+      213: -2022493073757961843
+    second: TilesetShadows_4
+  - first:
+      213: 8280127915937495686
+    second: TilesetShadows_5
+  - first:
+      213: 8236031217778861116
+    second: TilesetShadows_6
+  - first:
+      213: -1994052337774084591
+    second: TilesetShadows_7
+  - first:
+      213: 2629474360822422253
+    second: Snow_Ground_Shadow_0
+  - first:
+      213: -2882414024146810392
+    second: Snow_Ground_Shadow_1
+  - first:
+      213: -3015373808510106490
+    second: Snow_Ground_Shadow_2
+  - first:
+      213: 4764101288647295894
+    second: Snow_Ground_Shadow_3
+  - first:
+      213: -8639643971970988802
+    second: Snow_Ground_Shadow_4
+  - first:
+      213: -3369090178184710900
+    second: Snow_Ground_Shadow_5
+  - first:
+      213: 9048120946864952409
+    second: Snow_Ground_Shadow_6
+  - first:
+      213: -5339524358797720999
+    second: Snow_Ground_Shadow_7
+  - first:
+      213: -4023505928408630502
+    second: Snow_Ground_Shadow_8
+  - first:
+      213: 6926080871440994723
+    second: Snow_Ground_Shadow_9
+  - first:
+      213: -2311516589726961312
+    second: Snow_Ground_Shadow_10
+  - first:
+      213: 8417310134994656112
+    second: Snow_Ground_Shadow_11
+  - first:
+      213: -6643000815448441840
+    second: Snow_Ground_Shadow_12
+  - first:
+      213: 4324836789637820511
+    second: Snow_Ground_Shadow_13
+  - first:
+      213: 128938952933935674
+    second: Snow_Ground_Shadow_14
+  - first:
+      213: 2686407685542224816
+    second: Snow_Ground_Shadow_15
+  - first:
+      213: 6718333718030824912
+    second: Snow_Ground_Shadow_16
+  - first:
+      213: 6835884655053341744
+    second: Snow_Ground_Shadow_17
+  - first:
+      213: -7191002957489740624
+    second: Eroded_Snowy_Cliff_Shadow_0
+  - first:
+      213: 6152484637614055743
+    second: Eroded_Snowy_Cliff_Shadow_1
+  - first:
+      213: 4492377911226236721
+    second: Snowy_Hill_Shadow
+  - first:
+      213: 2868726811402338273
+    second: Snowy_Cliffs_Shadow_0
+  - first:
+      213: -4791414357778526780
+    second: Snowy_Cliffs_Shadow_1
+  - first:
+      213: -2966321790356948368
+    second: Snowy_Cliffs_Shadow_2
+  - first:
+      213: 8638216629627269276
+    second: Snowy_Cliffs_Shadow_3
+  - first:
+      213: -6793000722590660151
+    second: Snowy_Cliffs_Shadow_4
+  - first:
+      213: 1085220209185031850
+    second: Snowy_Cliffs_Shadow_5
+  - first:
+      213: 7169974104496929504
+    second: Snowy_Cliffs_Shadow_6
+  - first:
+      213: 482018187829274349
+    second: Snowy_Cliffs_Shadow_7
+  - first:
+      213: 2685717301189859157
+    second: Snowy_Cliffs_Shadow_8
+  - first:
+      213: -2036432359082661729
+    second: Snowy_Cliffs_Shadow_9
+  - first:
+      213: 3736966531307163381
+    second: Snowy_Cliffs_Shadow_10
+  - first:
+      213: 3770008859581608261
+    second: Snowy_Cliffs_Shadow_11
+  - first:
+      213: 5273330191486135836
+    second: Snowy_Cliffs_Shadow_12
+  - first:
+      213: -8707620844732421576
+    second: Snowy_Cliffs_Shadow_13
+  - first:
+      213: -3411862090866198457
+    second: Snowy_Cliffs_Shadow_14
+  - first:
+      213: 2394860947228881523
+    second: Snowy_Cliffs_Shadow_15
+  - first:
+      213: 8592770117632506188
+    second: Snowy_Cliffs_Shadow_16
+  - first:
+      213: -2520722609193210149
+    second: Snowy_Cliffs_Shadow_17
+  - first:
+      213: 1044158026990414392
+    second: Snowy_Cliffs_Shadow_18
+  - first:
+      213: -7857613493814562704
+    second: Snowy_Cliffs_Shadow_19
+  - first:
+      213: 12652319388969401
+    second: Snowy_Cliffs_Shadow_20
+  - first:
+      213: -5840824215908082184
+    second: Snowy_Cliffs_Shadow_21
+  - first:
+      213: 5806986750481605227
+    second: Snowy_Cliffs_Shadow_22
+  - first:
+      213: -5804183968690007416
+    second: Snowy_Cliffs_Shadow_23
+  - first:
+      213: -2192790839159083310
+    second: Snowy_Cliffs_Shadow_24
+  - first:
+      213: -7144026764359824064
+    second: Snowy_Cliffs_Shadow_25
+  - first:
+      213: 6531901044823283190
+    second: Snowy_Cliffs_Shadow_26
+  - first:
+      213: 9161676918027050971
+    second: Snowy_Cliffs_Shadow_27
+  - first:
+      213: -8539601389216924761
+    second: Snowy_Cliffs_Shadow_28
+  - first:
+      213: 6442290465754753563
+    second: Snowy_Cliffs_Shadow_29
+  - first:
+      213: 3059040755342197330
+    second: Snowy_Cliffs_Shadow_30
+  - first:
+      213: 7845605449837338852
+    second: Snowy_Cliffs_Shadow_31
+  - first:
+      213: -1639123958391774929
+    second: Snowy_Cliffs_Shadow_32
+  - first:
+      213: -2060529352075873401
+    second: Snowy_Cliffs_Shadow_33
+  - first:
+      213: 7882787966911605642
+    second: Cave_Entrance_Shadow_0
+  - first:
+      213: 2084417694378651527
+    second: Cave_Entrance_Shadow_1
+  - first:
+      213: 9191487808316796442
+    second: Cave_Entrance_Shadow_2
+  - first:
+      213: 1019974300879471726
+    second: Cave_Entrance_Shadow_3
+  - first:
+      213: -1659639126318612013
+    second: Cave_Entrance_Shadow_4
+  - first:
+      213: -5572827902566817338
+    second: Cave_Entrance_Shadow_5
+  - first:
+      213: -7390279417165441253
+    second: Cave_Entrance_Shadow_6
+  - first:
+      213: 6020481860917479526
+    second: Cave_Entrance_Shadow_7
+  - first:
+      213: 8015424473367430623
+    second: Cave_Entrance_Shadow_8
+  - first:
+      213: 235085684321303922
+    second: Cave_Entrance_Shadow_9
+  - first:
+      213: 3684360297096444081
+    second: Cave_Entrance_Shadow_10
+  - first:
+      213: -1720237091835555416
+    second: Cave_Entrance_Shadow_11
+  - first:
+      213: -3673963209165647388
+    second: Cave_Entrance_Shadow_12
+  - first:
+      213: -403567844436375907
+    second: Cave_Entrance_Shadow_13
+  - first:
+      213: -491387848549089989
+    second: Cave_Entrance_Shadow_14
+  - first:
+      213: 7876111476063684197
+    second: Cave_Entrance_Shadow_15
+  - first:
+      213: 1200106958839762836
+    second: Cave_Entrance_Shadow_16
+  - first:
+      213: 1390277233713665154
+    second: Cave_Entrance_Shadow_17
+  - first:
+      213: 160552233610364760
+    second: Cave_Entrance_Shadow_18
+  - first:
+      213: -8354147688626875721
+    second: Cave_Entrance_Shadow_19
+  - first:
+      213: -6478386301379734310
+    second: Cave_Entrance_Shadow_20
+  - first:
+      213: -2832384241812475327
+    second: Cave_Entrance_Shadow_21
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 224
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dea51d6eff4cd7420800000000000000
+      internalID: 2629474360822422253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e9002b77bb9ff7d0800000000000000
+      internalID: -2882414024146810392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6840dbe4f7d3726d0800000000000000
+      internalID: -3015373808510106490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6938dc771ec7d1240800000000000000
+      internalID: 4764101288647295894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef403d01591d91880800000000000000
+      internalID: -8639643971970988802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c05fa0945569e31d0800000000000000
+      internalID: -3369090178184710900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95418aaef02619d70800000000000000
+      internalID: 9048120946864952409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 952015cb2e236e5b0800000000000000
+      internalID: -5339524358797720999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1b7681fca2a928c0800000000000000
+      internalID: -4023505928408630502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a15edb4bd16e1060800000000000000
+      internalID: 6926080871440994723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 061f6e898e7dbefd0800000000000000
+      internalID: -2311516589726961312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07bd6a098fa40d470800000000000000
+      internalID: 8417310134994656112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01cb09854f15fc3a0800000000000000
+      internalID: -6643000815448441840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5037ed6528e40c30800000000000000
+      internalID: 4324836789637820511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3a86576b451ac100800000000000000
+      internalID: 128938952933935674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b3af9a8e89084520800000000000000
+      internalID: 2686407685542224816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_16
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d5b1c9dbe05c3d50800000000000000
+      internalID: 6718333718030824912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Ground_Shadow_17
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0348ffd20e0fdde50800000000000000
+      internalID: 6835884655053341744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eroded_Snowy_Cliff_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b46a04e8ec643c90800000000000000
+      internalID: -7191002957489740624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eroded_Snowy_Cliff_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f31a80f3e24026550800000000000000
+      internalID: 6152484637614055743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Hill_Shadow
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13f737b98e1285e30800000000000000
+      internalID: 4492377911226236721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ef7647f5d3cfc720800000000000000
+      internalID: 2868726811402338273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cd87e0170a718db0800000000000000
+      internalID: -4791414357778526780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07af5444c0285d6d0800000000000000
+      internalID: -2966321790356948368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c903ec5e14c11e770800000000000000
+      internalID: 8638216629627269276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c9030b65d96ab1a0800000000000000
+      internalID: -6793000722590660151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa68c8fc70a7f0f00800000000000000
+      internalID: 1085220209185031850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0eaf94bb57dd08360800000000000000
+      internalID: 7169974104496929504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de667dcecf870b600800000000000000
+      internalID: 482018187829274349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 557da88e7a5954520800000000000000
+      internalID: 2685717301189859157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9864c31f832db3e0800000000000000
+      internalID: -2036432359082661729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fe461cc24f5cd330800000000000000
+      internalID: 3736966531307163381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 541ff6b5513c15430800000000000000
+      internalID: 3770008859581608261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1eafdeaed1ae2940800000000000000
+      internalID: 5273330191486135836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83aefe60af0582780800000000000000
+      internalID: -8707620844732421576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7487c435181a6a0d0800000000000000
+      internalID: -3411862090866198457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 372780ec7514c3120800000000000000
+      internalID: 2394860947228881523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_16
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c49b31245e6af3770800000000000000
+      internalID: 8592770117632506188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_17
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bde2ebd6428940dd0800000000000000
+      internalID: -2520722609193210149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_18
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83ae22081389d7e00800000000000000
+      internalID: 1044158026990414392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_19
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 070fdd6a82624f290800000000000000
+      internalID: -7857613493814562704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_20
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b9a3caa733fc2000800000000000000
+      internalID: 12652319388969401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_21
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fd9c47525931fea0800000000000000
+      internalID: -5840824215908082184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_22
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b622bddceaf869050800000000000000
+      internalID: 5806986750481605227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_23
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 882173fae65637fa0800000000000000
+      internalID: -5804183968690007416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_24
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 208
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2de21358954a191e0800000000000000
+      internalID: -2192790839159083310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_25
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04d037c22815bdc90800000000000000
+      internalID: -7144026764359824064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_26
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f5d1bc8469f5aa50800000000000000
+      internalID: 6531901044823283190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_27
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdfd5e5cd90d42f70800000000000000
+      internalID: 9161676918027050971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_28
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7abfa4008cd3d7980800000000000000
+      internalID: -8539601389216924761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_29
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1aa23fbb0d976950800000000000000
+      internalID: 6442290465754753563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_30
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2524d970c55e37a20800000000000000
+      internalID: 3059040755342197330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_31
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e06c6db69031ec60800000000000000
+      internalID: 7845605449837338852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_32
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f21e93db179a049e0800000000000000
+      internalID: -1639123958391774929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Cliffs_Shadow_33
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7837040b8778763e0800000000000000
+      internalID: -2060529352075873401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8b6d7f14e9456d60800000000000000
+      internalID: 7882787966911605642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78f6afc69d65dec10800000000000000
+      internalID: 2084417694378651527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1e6e0c8679be8f70800000000000000
+      internalID: 9191487808316796442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e64c2fbf83da72e00800000000000000
+      internalID: 1019974300879471726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d1807cf107c7f8e0800000000000000
+      internalID: -1659639126318612013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c1ae197c8659a2b0800000000000000
+      internalID: -5572827902566817338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1719f48604707990800000000000000
+      internalID: -7390279417165441253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6684ba8ca5c0d8350800000000000000
+      internalID: 6020481860917479526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd5c90b47128c3f60800000000000000
+      internalID: 8015424473367430623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27d30c13f21334300800000000000000
+      internalID: 235085684321303922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b87cfc6b2a712330800000000000000
+      internalID: 3684360297096444081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a1d0bbaa7d7028e0800000000000000
+      internalID: -1720237091835555416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e1d3df3de5730dc0800000000000000
+      internalID: -3673963209165647388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9689950f2d366af0800000000000000
+      internalID: -403567844436375907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3db940fa5d3e29f0800000000000000
+      internalID: -491387848549089989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 566472678a19d4d60800000000000000
+      internalID: 7876111476063684197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_16
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49f4e1eabe2a7a010800000000000000
+      internalID: 1200106958839762836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_17
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 284d0de27c14b4310800000000000000
+      internalID: 1390277233713665154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_18
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 857cd34e7656a3200800000000000000
+      internalID: 160552233610364760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_19
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b29e3a70fa101c80800000000000000
+      internalID: -8354147688626875721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_20
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad4118c9bf52816a0800000000000000
+      internalID: -6478386301379734310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cave_Entrance_Shadow_21
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1427a57e98951b8d0800000000000000
+      internalID: -2832384241812475327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: acd59d27f782acc479a4d67872679335
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cave_Entrance_Shadow_0: 7882787966911605642
+      Cave_Entrance_Shadow_1: 2084417694378651527
+      Cave_Entrance_Shadow_10: 3684360297096444081
+      Cave_Entrance_Shadow_11: -1720237091835555416
+      Cave_Entrance_Shadow_12: -3673963209165647388
+      Cave_Entrance_Shadow_13: -403567844436375907
+      Cave_Entrance_Shadow_14: -491387848549089989
+      Cave_Entrance_Shadow_15: 7876111476063684197
+      Cave_Entrance_Shadow_16: 1200106958839762836
+      Cave_Entrance_Shadow_17: 1390277233713665154
+      Cave_Entrance_Shadow_18: 160552233610364760
+      Cave_Entrance_Shadow_19: -8354147688626875721
+      Cave_Entrance_Shadow_2: 9191487808316796442
+      Cave_Entrance_Shadow_20: -6478386301379734310
+      Cave_Entrance_Shadow_21: -2832384241812475327
+      Cave_Entrance_Shadow_3: 1019974300879471726
+      Cave_Entrance_Shadow_4: -1659639126318612013
+      Cave_Entrance_Shadow_5: -5572827902566817338
+      Cave_Entrance_Shadow_6: -7390279417165441253
+      Cave_Entrance_Shadow_7: 6020481860917479526
+      Cave_Entrance_Shadow_8: 8015424473367430623
+      Cave_Entrance_Shadow_9: 235085684321303922
+      Eroded_Snowy_Cliff_Shadow_0: -7191002957489740624
+      Eroded_Snowy_Cliff_Shadow_1: 6152484637614055743
+      Snow_Ground_Shadow_0: 2629474360822422253
+      Snow_Ground_Shadow_1: -2882414024146810392
+      Snow_Ground_Shadow_10: -2311516589726961312
+      Snow_Ground_Shadow_11: 8417310134994656112
+      Snow_Ground_Shadow_12: -6643000815448441840
+      Snow_Ground_Shadow_13: 4324836789637820511
+      Snow_Ground_Shadow_14: 128938952933935674
+      Snow_Ground_Shadow_15: 2686407685542224816
+      Snow_Ground_Shadow_16: 6718333718030824912
+      Snow_Ground_Shadow_17: 6835884655053341744
+      Snow_Ground_Shadow_2: -3015373808510106490
+      Snow_Ground_Shadow_3: 4764101288647295894
+      Snow_Ground_Shadow_4: -8639643971970988802
+      Snow_Ground_Shadow_5: -3369090178184710900
+      Snow_Ground_Shadow_6: 9048120946864952409
+      Snow_Ground_Shadow_7: -5339524358797720999
+      Snow_Ground_Shadow_8: -4023505928408630502
+      Snow_Ground_Shadow_9: 6926080871440994723
+      Snowy_Cliffs_Shadow_0: 2868726811402338273
+      Snowy_Cliffs_Shadow_1: -4791414357778526780
+      Snowy_Cliffs_Shadow_10: 3736966531307163381
+      Snowy_Cliffs_Shadow_11: 3770008859581608261
+      Snowy_Cliffs_Shadow_12: 5273330191486135836
+      Snowy_Cliffs_Shadow_13: -8707620844732421576
+      Snowy_Cliffs_Shadow_14: -3411862090866198457
+      Snowy_Cliffs_Shadow_15: 2394860947228881523
+      Snowy_Cliffs_Shadow_16: 8592770117632506188
+      Snowy_Cliffs_Shadow_17: -2520722609193210149
+      Snowy_Cliffs_Shadow_18: 1044158026990414392
+      Snowy_Cliffs_Shadow_19: -7857613493814562704
+      Snowy_Cliffs_Shadow_2: -2966321790356948368
+      Snowy_Cliffs_Shadow_20: 12652319388969401
+      Snowy_Cliffs_Shadow_21: -5840824215908082184
+      Snowy_Cliffs_Shadow_22: 5806986750481605227
+      Snowy_Cliffs_Shadow_23: -5804183968690007416
+      Snowy_Cliffs_Shadow_24: -2192790839159083310
+      Snowy_Cliffs_Shadow_25: -7144026764359824064
+      Snowy_Cliffs_Shadow_26: 6531901044823283190
+      Snowy_Cliffs_Shadow_27: 9161676918027050971
+      Snowy_Cliffs_Shadow_28: -8539601389216924761
+      Snowy_Cliffs_Shadow_29: 6442290465754753563
+      Snowy_Cliffs_Shadow_3: 8638216629627269276
+      Snowy_Cliffs_Shadow_30: 3059040755342197330
+      Snowy_Cliffs_Shadow_31: 7845605449837338852
+      Snowy_Cliffs_Shadow_32: -1639123958391774929
+      Snowy_Cliffs_Shadow_33: -2060529352075873401
+      Snowy_Cliffs_Shadow_4: -6793000722590660151
+      Snowy_Cliffs_Shadow_5: 1085220209185031850
+      Snowy_Cliffs_Shadow_6: 7169974104496929504
+      Snowy_Cliffs_Shadow_7: 482018187829274349
+      Snowy_Cliffs_Shadow_8: 2685717301189859157
+      Snowy_Cliffs_Shadow_9: -2036432359082661729
+      Snowy_Hill_Shadow: 4492377911226236721
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 08a8c1811e7a1714cab0604c5ca49b24
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - stoveNorth: {fileID: -6967028072309733328, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - stoveEast: {fileID: 6776622062815618917, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - stoveWest: {fileID: -7081866315199964601, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowStoveNorth: {fileID: 6076581341084372371, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowStoveWest: {fileID: 3485207192282220601, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

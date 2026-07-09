@@ -8,8 +8,8 @@
 
 - `legacy-recovery/`：旧恢复任务计划、进度、发现记录、RecoveryNotes、MigrationStaging。
 - `mini-fantasy-uv-evidence/`：MiniFantasy UV 迁移证据、GUID 映射和历史构建日志。它们不是框架本体，也不是应删除的垃圾文件。
-- `legacy-rpg-assets/`：旧 RPG 数据库和 Prefab 资产，因大量脚本引用缺失而从 `Assets` 正式导入入口移出，只作归档参考。
-- `minifantasy-demo-assets/`：MiniFantasy 素材包自带 demo 场景，从正式 `Assets/Art` 入口移出，只作素材表现参考。
+- `legacy-rpg-assets/`：保留“曾被错误归档”的历史说明；相关业务资产现已恢复到 `Assets/Database` 与 `Assets/Prefabs`。
+- `minifantasy-demo-assets/`：保留“曾被错误归档”的历史说明；相关第三方 demo 场景和示例脚本现已恢复到原 `Assets/Art` 目录结构。
 - 旧 UnityMCP 安装器和旧 MiniFantasy UV smoke 工具已经删除，不再保留为当前项目归档。
 
 ## 使用边界

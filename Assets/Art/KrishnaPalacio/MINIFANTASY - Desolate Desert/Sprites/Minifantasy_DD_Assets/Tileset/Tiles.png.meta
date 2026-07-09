@@ -1,0 +1,6805 @@
+fileFormatVersion: 2
+guid: dfc5ec8dcfc5a2746b9aec3cf5d4fc76
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5482172687619707843
+    second: RockCliff_78
+  - first:
+      213: -1956856582431365911
+    second: RockCliff_84
+  - first:
+      213: -246902653570870857
+    second: RockCliff_82
+  - first:
+      213: -1347532211411968617
+    second: Grass_0
+  - first:
+      213: -7645372005702169758
+    second: Grass_1
+  - first:
+      213: 6891631753638271631
+    second: Grass_2
+  - first:
+      213: 475435623110610922
+    second: Grass_3
+  - first:
+      213: 5299400320964040512
+    second: Grass_4
+  - first:
+      213: -7255497285719700247
+    second: Grass_5
+  - first:
+      213: 6828908663453297030
+    second: Grass_6
+  - first:
+      213: 6694032873506494867
+    second: Grass_7
+  - first:
+      213: 2289616372777055746
+    second: Grass_8
+  - first:
+      213: 7471297114442723461
+    second: Grass_9
+  - first:
+      213: 8577017789959637929
+    second: Grass_10
+  - first:
+      213: -6796477259373386654
+    second: Grass_11
+  - first:
+      213: -6259141551469331208
+    second: Grass_12
+  - first:
+      213: 7867572149665653903
+    second: Grass_13
+  - first:
+      213: 1423580199096852351
+    second: Grass_14
+  - first:
+      213: 3123766704050763852
+    second: Grass_15
+  - first:
+      213: 623291888168982980
+    second: Grass_16
+  - first:
+      213: -5626483540472518896
+    second: Grass_17
+  - first:
+      213: 1919191684500152330
+    second: Grass_18
+  - first:
+      213: 8708326412996271838
+    second: Grass_19
+  - first:
+      213: -8275502208090371910
+    second: Dirt_0
+  - first:
+      213: 1412778643854539469
+    second: Dirt_1
+  - first:
+      213: -1278900557311105747
+    second: Dirt_2
+  - first:
+      213: 8641727722977497643
+    second: Dirt_3
+  - first:
+      213: -5696172171868935861
+    second: Dirt_4
+  - first:
+      213: 6680675988988378581
+    second: Dirt_5
+  - first:
+      213: 7824842593332555073
+    second: Dirt_6
+  - first:
+      213: -4410089191414829743
+    second: Dirt_7
+  - first:
+      213: -2411247445559563415
+    second: Dirt_8
+  - first:
+      213: -4685391132033899694
+    second: Dirt_9
+  - first:
+      213: 1018790119610574547
+    second: Dirt_10
+  - first:
+      213: 3489988067640147366
+    second: Dirt_11
+  - first:
+      213: 3561750101690788383
+    second: Dirt_12
+  - first:
+      213: 1229114862393131176
+    second: Dirt_13
+  - first:
+      213: -978763445766528800
+    second: Dirt_14
+  - first:
+      213: -3066017647951802806
+    second: Dirt_15
+  - first:
+      213: 8726226466006397682
+    second: Dirt_16
+  - first:
+      213: -5387267457780789414
+    second: Dirt_17
+  - first:
+      213: 8972266080312304738
+    second: Dirt_18
+  - first:
+      213: -3071992410999177559
+    second: Dirt_19
+  - first:
+      213: -329186006420133163
+    second: Dirt_20
+  - first:
+      213: -7099920346614072531
+    second: Dirt_21
+  - first:
+      213: 8333583983154711278
+    second: Dirt_22
+  - first:
+      213: -1916558277864012105
+    second: Dirt_23
+  - first:
+      213: -8972780422745546122
+    second: Dirt_24
+  - first:
+      213: 8610565575992400378
+    second: Sand_0
+  - first:
+      213: 3623700348287497924
+    second: Sand_1
+  - first:
+      213: -6945038649756141661
+    second: Sand_2
+  - first:
+      213: -7451876566494666742
+    second: Sand_3
+  - first:
+      213: -3098895514709955098
+    second: Sand_4
+  - first:
+      213: -5841890831651314445
+    second: Sand_5
+  - first:
+      213: 585986783326448432
+    second: Sand_6
+  - first:
+      213: -4708790119301175501
+    second: Sand_7
+  - first:
+      213: 8774151864180844191
+    second: Sand_8
+  - first:
+      213: 6835801334202730952
+    second: Sand_9
+  - first:
+      213: -4233545646319245028
+    second: Sand_10
+  - first:
+      213: 7803973253228483333
+    second: Sand_11
+  - first:
+      213: 7759006360657939254
+    second: Sand_12
+  - first:
+      213: 4337464657146819835
+    second: Sand_13
+  - first:
+      213: -1675446407046740919
+    second: Sand_14
+  - first:
+      213: -5933979815152646187
+    second: Sand_15
+  - first:
+      213: 473963228878475727
+    second: Sand_16
+  - first:
+      213: -5939204617039489762
+    second: Sand_17
+  - first:
+      213: -1640665775790378054
+    second: Sand_18
+  - first:
+      213: -7287066857277724933
+    second: Sand_19
+  - first:
+      213: -221424915726821937
+    second: Sand_20
+  - first:
+      213: 2347504195104129236
+    second: Sand_21
+  - first:
+      213: -6605846359336392590
+    second: Sand_22
+  - first:
+      213: -1864156471433332397
+    second: Sand_23
+  - first:
+      213: -8095486474206197790
+    second: Sand_24
+  - first:
+      213: 8073483248002355840
+    second: Sand_25
+  - first:
+      213: 2953687551984712522
+    second: Sand_26
+  - first:
+      213: -3075472573002918600
+    second: Sand_27
+  - first:
+      213: -6798518186432209579
+    second: Sand_28
+  - first:
+      213: 2283827482880640087
+    second: Sand_29
+  - first:
+      213: -214222897351473913
+    second: Sand_30
+  - first:
+      213: -2628885917863336290
+    second: Sand_31
+  - first:
+      213: -3952461108691877087
+    second: Sand_32
+  - first:
+      213: -6097613015718522140
+    second: Sand_33
+  - first:
+      213: 8306558592064062076
+    second: Sand_34
+  - first:
+      213: -7011661911796687584
+    second: Road_0
+  - first:
+      213: -1327040941830986174
+    second: Road_1
+  - first:
+      213: 341726815534335866
+    second: Road_2
+  - first:
+      213: -9156105234983019131
+    second: Road_3
+  - first:
+      213: 7952162831368261598
+    second: Road_4
+  - first:
+      213: -1051987289298369614
+    second: Road_5
+  - first:
+      213: -4761944228523693652
+    second: Road_6
+  - first:
+      213: -2291289878801108978
+    second: Road_7
+  - first:
+      213: -4967339507104349617
+    second: Road_8
+  - first:
+      213: 7348036352636293528
+    second: Road_9
+  - first:
+      213: 4211497614530267102
+    second: Road_10
+  - first:
+      213: 4520941315823212252
+    second: Road_11
+  - first:
+      213: 2686845056676652513
+    second: Road_12
+  - first:
+      213: -395164576794110519
+    second: Road_13
+  - first:
+      213: 3808705679177394456
+    second: Road_14
+  - first:
+      213: -7425884620724483670
+    second: WaterGrassTransition_0_a
+  - first:
+      213: 4902909319128578560
+    second: WaterGrassTransition_1_a
+  - first:
+      213: -1046934159739835427
+    second: WaterGrassTransition_2_a
+  - first:
+      213: 7183030569478783715
+    second: WaterGrassTransition_0_b
+  - first:
+      213: 7038565638255853388
+    second: WaterGrassTransition_1_b
+  - first:
+      213: -217157479626433851
+    second: WaterGrassTransition_2_b
+  - first:
+      213: 138256886209766134
+    second: WaterGrassTransition_3_a
+  - first:
+      213: -8839570022283622564
+    second: WaterGrassTransition_4_a
+  - first:
+      213: 4436050914353486533
+    second: WaterGrassTransition_5_a
+  - first:
+      213: -702031097287568523
+    second: WaterGrassTransition_3_b
+  - first:
+      213: 5627975703325102818
+    second: WaterGrassTransition_4_b
+  - first:
+      213: -3290604181897038977
+    second: WaterGrassTransition_5_b
+  - first:
+      213: -5044827131753568591
+    second: WaterGrassTransition_6_a
+  - first:
+      213: -126009394853739813
+    second: WaterGrassTransition_7_a
+  - first:
+      213: 5083334244371772132
+    second: WaterGrassTransition_8_a
+  - first:
+      213: -6385143650558888775
+    second: WaterGrassTransition_6_b
+  - first:
+      213: 3731109871761042174
+    second: WaterGrassTransition_7_b
+  - first:
+      213: -7106598388165824186
+    second: WaterGrassTransition_8_b
+  - first:
+      213: 5497866728252834924
+    second: WaterGrassTransition_9_a
+  - first:
+      213: -181233536301298538
+    second: WaterGrassTransition_10_a
+  - first:
+      213: -8595340704325350861
+    second: WaterGrassTransition_11_a
+  - first:
+      213: 4915309516477890317
+    second: WaterGrassTransition_9_b
+  - first:
+      213: -5891847008492586028
+    second: WaterGrassTransition_10_b
+  - first:
+      213: -934522380306262238
+    second: WaterGrassTransition_11_b
+  - first:
+      213: -3477977461348828919
+    second: WaterGrassTransition_12_a
+  - first:
+      213: -8228395677655348959
+    second: WaterGrassTransition_13_a
+  - first:
+      213: -6128249350274701594
+    second: WaterGrassTransition_14_a
+  - first:
+      213: -8087056672784812196
+    second: WaterGrassTransition_12_b
+  - first:
+      213: 8533822697403965739
+    second: WaterGrassTransition_13_b
+  - first:
+      213: 5552013866320130486
+    second: WaterGrassTransition_14_b
+  - first:
+      213: -3525128728308497912
+    second: WaterDirtTransition_0_a
+  - first:
+      213: -3664755890642697126
+    second: WaterDirtTransition_1_a
+  - first:
+      213: 66806264590410501
+    second: WaterDirtTransition_2_a
+  - first:
+      213: 9151276899705200595
+    second: WaterDirtTransition_0_b
+  - first:
+      213: 7893960065293098499
+    second: WaterDirtTransition_1_b
+  - first:
+      213: 6771438770783782025
+    second: WaterDirtTransition_2_b
+  - first:
+      213: -4263049078621151995
+    second: WaterDirtTransition_3_a
+  - first:
+      213: 2966138577189297437
+    second: WaterDirtTransition_4_a
+  - first:
+      213: -2438044323087146988
+    second: WaterDirtTransition_5_a
+  - first:
+      213: -712278022220091557
+    second: WaterDirtTransition_3_b
+  - first:
+      213: 7348744107221969761
+    second: WaterDirtTransition_4_b
+  - first:
+      213: 4649838571138672374
+    second: WaterDirtTransition_5_b
+  - first:
+      213: 404448303260117703
+    second: WaterDirtTransition_6_a
+  - first:
+      213: -519500922173876947
+    second: WaterDirtTransition_7_a
+  - first:
+      213: -744171517563175667
+    second: WaterDirtTransition_8_a
+  - first:
+      213: -6970873888996042189
+    second: WaterDirtTransition_6_b
+  - first:
+      213: 903235418387789227
+    second: WaterDirtTransition_7_b
+  - first:
+      213: 1519120869401629434
+    second: WaterDirtTransition_8_b
+  - first:
+      213: 1186601373650649438
+    second: WaterDirtTransition_9_a
+  - first:
+      213: -9077524231772133743
+    second: WaterDirtTransition_10_a
+  - first:
+      213: -711084039408365141
+    second: WaterDirtTransition_11_a
+  - first:
+      213: -6239779233072793153
+    second: WaterDirtTransition_9_b
+  - first:
+      213: 2686486881903609523
+    second: WaterDirtTransition_10_b
+  - first:
+      213: 3967598918408751672
+    second: WaterDirtTransition_11_b
+  - first:
+      213: -1682290348322039845
+    second: WaterDirtTransition_12_a
+  - first:
+      213: 4301329437541212223
+    second: WaterDirtTransition_13_a
+  - first:
+      213: 1299253737415234916
+    second: WaterDirtTransition_14_a
+  - first:
+      213: -468429871235695540
+    second: WaterDirtTransition_12_b
+  - first:
+      213: -3177566795212233333
+    second: WaterDirtTransition_13_b
+  - first:
+      213: 20864373390268566
+    second: WaterDirtTransition_14_b
+  - first:
+      213: 902858739751849524
+    second: WaterSandTransition_0_a
+  - first:
+      213: 8124586437493612629
+    second: WaterSandTransition_1_a
+  - first:
+      213: 90375737582018448
+    second: WaterSandTransition_2_a
+  - first:
+      213: 1809426316287970179
+    second: WaterSandTransition_0_b
+  - first:
+      213: 6988842637956095200
+    second: WaterSandTransition_1_b
+  - first:
+      213: 1511945936608172901
+    second: WaterSandTransition_2_b
+  - first:
+      213: -8265009210128908970
+    second: WaterSandTransition_3_a
+  - first:
+      213: 5745648332303490910
+    second: WaterSandTransition_4_a
+  - first:
+      213: 7153136447345874671
+    second: WaterSandTransition_5_a
+  - first:
+      213: 7420775555934095390
+    second: WaterSandTransition_3_b
+  - first:
+      213: -7140317238865597341
+    second: WaterSandTransition_4_b
+  - first:
+      213: 3958011493868116183
+    second: WaterSandTransition_5_b
+  - first:
+      213: 1445246955005922831
+    second: WaterSandTransition_6_a
+  - first:
+      213: 3623663357369041305
+    second: WaterSandTransition_7_a
+  - first:
+      213: 195347289004606480
+    second: WaterSandTransition_8_a
+  - first:
+      213: -2835416638396668799
+    second: WaterSandTransition_6_b
+  - first:
+      213: 8333481967153673671
+    second: WaterSandTransition_7_b
+  - first:
+      213: -7065480444209141853
+    second: WaterSandTransition_8_b
+  - first:
+      213: -5957149319568829627
+    second: WaterSandTransition_9_a
+  - first:
+      213: -8204450203354278054
+    second: WaterSandTransition_10_a
+  - first:
+      213: 6790777873913198237
+    second: WaterSandTransition_11_a
+  - first:
+      213: 4585664910083180353
+    second: WaterSandTransition_9_b
+  - first:
+      213: -1314356533848468362
+    second: WaterSandTransition_10_b
+  - first:
+      213: 4299549308324809047
+    second: WaterSandTransition_11_b
+  - first:
+      213: 1725943099949282187
+    second: WaterSandTransition_12_a
+  - first:
+      213: -5486244299261875153
+    second: WaterSandTransition_13_a
+  - first:
+      213: -1695828855961798454
+    second: WaterSandTransition_14_a
+  - first:
+      213: 8603200941572127165
+    second: WaterSandTransition_12_b
+  - first:
+      213: -8105611994446461583
+    second: WaterSandTransition_13_b
+  - first:
+      213: -2536085848030609228
+    second: WaterSandTransition_14_b
+  - first:
+      213: 7088374824157290587
+    second: RockCliff_0
+  - first:
+      213: 5766222806627606799
+    second: RockCliff_1
+  - first:
+      213: -5325396311474986994
+    second: RockCliff_2
+  - first:
+      213: 3893480289743979275
+    second: RockCliff_3
+  - first:
+      213: -8489973983873209871
+    second: RockCliff_4
+  - first:
+      213: -3784636317878613712
+    second: RockCliff_5
+  - first:
+      213: 1010607576740613827
+    second: RockCliff_6
+  - first:
+      213: 6875292422079481215
+    second: RockCliff_7
+  - first:
+      213: 1230573094061434418
+    second: RockCliff_8
+  - first:
+      213: -3922536601739083432
+    second: RockCliff_9
+  - first:
+      213: -328465793247808758
+    second: RockCliff_10
+  - first:
+      213: -3794447129792363555
+    second: RockCliff_11
+  - first:
+      213: 7013742501584782327
+    second: RockCliff_12
+  - first:
+      213: 803732895030706829
+    second: RockCliff_13
+  - first:
+      213: -241574819382555127
+    second: RockCliff_14
+  - first:
+      213: -3900075590448797007
+    second: RockCliff_15
+  - first:
+      213: 2876997465399324563
+    second: RockCliff_16
+  - first:
+      213: -5577304811122453034
+    second: RockCliff_17
+  - first:
+      213: 796571517651863509
+    second: RockCliff_18
+  - first:
+      213: 1390852964957113087
+    second: RockCliff_19
+  - first:
+      213: -1587957662747629150
+    second: RockCliff_20
+  - first:
+      213: 3626854647181600485
+    second: RockCliff_21
+  - first:
+      213: 8015664362077349381
+    second: RockCliff_22
+  - first:
+      213: 712635787924445656
+    second: RockCliff_23
+  - first:
+      213: -7413704804631198288
+    second: RockCliff_24
+  - first:
+      213: 2835961353938281935
+    second: RockCliff_25
+  - first:
+      213: 4159363430249363982
+    second: RockCliff_26
+  - first:
+      213: 563296757177972913
+    second: RockCliff_27
+  - first:
+      213: -7982419094329919901
+    second: RockCliff_28
+  - first:
+      213: -980683827423892004
+    second: RockCliff_29
+  - first:
+      213: -8427651727983168237
+    second: RockCliff_30
+  - first:
+      213: -485951931215027428
+    second: RockCliff_31
+  - first:
+      213: -2630820924100121779
+    second: RockCliff_32
+  - first:
+      213: 1581624047148115599
+    second: RockCliff_33
+  - first:
+      213: -863447712162540637
+    second: RockCliff_34
+  - first:
+      213: -1231575236398340155
+    second: RockCliff_35
+  - first:
+      213: -4806337161211797167
+    second: RockCliff_36
+  - first:
+      213: -2027293014280933830
+    second: RockCliff_37
+  - first:
+      213: 5681570367551137398
+    second: RockCliff_38
+  - first:
+      213: 7728207530999756453
+    second: RockCliff_39
+  - first:
+      213: -4159254327748837085
+    second: RockCliff_40
+  - first:
+      213: 5306346925908737352
+    second: RockCliff_41
+  - first:
+      213: 298719804556019607
+    second: RockCliff_42
+  - first:
+      213: -8851995722548183497
+    second: RockCliff_43
+  - first:
+      213: 7755736067003374197
+    second: RockCliff_44
+  - first:
+      213: -750022975341549763
+    second: RockCliff_45
+  - first:
+      213: -5784754201394769023
+    second: RockCliff_46
+  - first:
+      213: -7154280194051190452
+    second: RockCliff_47
+  - first:
+      213: 6799195458412653376
+    second: RockCliff_48
+  - first:
+      213: 1916604759816102088
+    second: RockCliff_49
+  - first:
+      213: -3949587252521544640
+    second: RockCliff_50
+  - first:
+      213: -3448068848646534120
+    second: RockCliff_51
+  - first:
+      213: 33510830319532183
+    second: RockCliff_52
+  - first:
+      213: -5073591071669400602
+    second: RockCliff_53
+  - first:
+      213: -8824735594691884664
+    second: RockCliff_54
+  - first:
+      213: 3012233950849432957
+    second: RockCliff_55
+  - first:
+      213: -4970542184295441573
+    second: RockCliff_56
+  - first:
+      213: -5685577367053867196
+    second: RockCliff_57
+  - first:
+      213: -1911189565945062557
+    second: RockCliff_58
+  - first:
+      213: 4677910913843779356
+    second: RockCliff_59
+  - first:
+      213: 4927141497688006500
+    second: RockCliff_60
+  - first:
+      213: -3998215138302227378
+    second: RockCliff_61
+  - first:
+      213: 6380975295420463827
+    second: RockCliff_62
+  - first:
+      213: -1339801892261483444
+    second: RockCliff_63
+  - first:
+      213: 1251847196742643188
+    second: RockCliff_64
+  - first:
+      213: 7957015604437134533
+    second: RockCliff_65
+  - first:
+      213: 2819706094502669674
+    second: RockCliff_66
+  - first:
+      213: -3463716593565174838
+    second: RockCliff_67
+  - first:
+      213: 1871708163519855190
+    second: RockCliff_68
+  - first:
+      213: -7145632207528072467
+    second: RockCliff_69
+  - first:
+      213: 7504555455108489168
+    second: RockCliff_70
+  - first:
+      213: -3221235213015648700
+    second: RockCliff_71
+  - first:
+      213: -3286285947505070877
+    second: RockCliff_72
+  - first:
+      213: -2234624191319846650
+    second: RockCliff_73
+  - first:
+      213: 9204564829725425575
+    second: RockCliff_74
+  - first:
+      213: -2677878253203085863
+    second: RockCliff_75
+  - first:
+      213: 5820708360032663810
+    second: RockCliff_76
+  - first:
+      213: -345378195709257026
+    second: RockCliff_77
+  - first:
+      213: -3580019631672462557
+    second: RockCliff_83
+  - first:
+      213: 7959402528015566972
+    second: RockCliff_79
+  - first:
+      213: -4588470840600556924
+    second: RockCliff_80
+  - first:
+      213: 2782012949179892275
+    second: RockCliff_81
+  - first:
+      213: -1541480680478779272
+    second: RockCliff_86
+  - first:
+      213: -2531014194610817955
+    second: RockCliff_85
+  - first:
+      213: -1838347506908657112
+    second: RockCliff_87
+  - first:
+      213: -7373252184119033561
+    second: WaterDirtTransition_34
+  - first:
+      213: -7692666565615647018
+    second: WaterDirtTransition_35
+  - first:
+      213: 3485535155828215030
+    second: WaterSandTransition_30
+  - first:
+      213: 3924501204216306629
+    second: WaterSandTransition_31
+  - first:
+      213: -3817702773428277848
+    second: WaterSandTransition_32
+  - first:
+      213: 7387315621816564715
+    second: WaterSandTransition_33
+  - first:
+      213: 2738361582497246705
+    second: WaterSandTransition_34
+  - first:
+      213: -2380156424095357032
+    second: WaterSandTransition_35
+  - first:
+      213: 6959302527311757296
+    second: No_0
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Grass_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79d946fd79a9c4de0800000000000000
+      internalID: -1347532211411968617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26b0860faae26e590800000000000000
+      internalID: -7645372005702169758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_2
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8a5966019ef3af50800000000000000
+      internalID: 6891631753638271631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_3
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aef03152e26199600800000000000000
+      internalID: 475435623110610922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_4
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 216
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04717a5b3804b8940800000000000000
+      internalID: 5299400320964040512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_5
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eccddfe8ab4f4b90800000000000000
+      internalID: -7255497285719700247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_6
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 689a8b09f3825ce50800000000000000
+      internalID: 6828908663453297030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_7
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39954249e6bf5ec50800000000000000
+      internalID: 6694032873506494867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_8
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2067b4bc5f956cf10800000000000000
+      internalID: 2289616372777055746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_9
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58072c514216fa760800000000000000
+      internalID: 7471297114442723461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_10
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ab00caac30b70770800000000000000
+      internalID: 8577017789959637929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_11
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 264670f11ff0ea1a0800000000000000
+      internalID: -6796477259373386654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_12
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fc78c9dbef0329a0800000000000000
+      internalID: -6259141551469331208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_13
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f84e3999f2b3f2d60800000000000000
+      internalID: 7867572149665653903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_14
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7f927c06a291c310800000000000000
+      internalID: 1423580199096852351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_15
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4873245449d95b20800000000000000
+      internalID: 3123766704050763852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_16
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c9d1b18ba066a800800000000000000
+      internalID: 623291888168982980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_17
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 017ad83c707bae1b0800000000000000
+      internalID: -5626483540472518896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_18
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a00e3823ba652aa10800000000000000
+      internalID: 1919191684500152330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_19
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ede5bc2ebb03ad870800000000000000
+      internalID: 8708326412996271838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab800d45692872d80800000000000000
+      internalID: -8275502208090371910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dca353df0b23b9310800000000000000
+      internalID: 1412778643854539469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_2
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d252c6218be604ee0800000000000000
+      internalID: -1278900557311105747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_3
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2218b504959de770800000000000000
+      internalID: 8641727722977497643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_4
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b49694cd69123f0b0800000000000000
+      internalID: -5696172171868935861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_5
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dd322f8a6786bc50800000000000000
+      internalID: 6680675988988378581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_6
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14deeee71ec679c60800000000000000
+      internalID: 7824842593332555073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_7
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15dededfe373cc2c0800000000000000
+      internalID: -4410089191414829743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_8
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96baadd3937898ed0800000000000000
+      internalID: -2411247445559563415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_9
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 253aa55f6952afeb0800000000000000
+      internalID: -4685391132033899694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d6e01c4738732e00800000000000000
+      internalID: 1018790119610574547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_11
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6adfa0228adee6030800000000000000
+      internalID: 3489988067640147366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_12
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1aadf5b8d0ed6130800000000000000
+      internalID: 3561750101690788383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_13
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a088198471be0110800000000000000
+      internalID: 1229114862393131176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_14
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e0e2ffe4dbba62f0800000000000000
+      internalID: -978763445766528800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_15
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4e01c291315375d0800000000000000
+      internalID: -3066017647951802806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_16
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f27cefbcb8c91970800000000000000
+      internalID: 8726226466006397682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_17
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5f44f44ac49c35b0800000000000000
+      internalID: -5387267457780789414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_18
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2642d438674e38c70800000000000000
+      internalID: 8972266080312304738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_19
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9aeb2b5ad271e55d0800000000000000
+      internalID: -3071992410999177559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_20
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5da6c4e321f7e6bf0800000000000000
+      internalID: -329186006420133163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_21
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2bff7ecf04087d90800000000000000
+      internalID: -7099920346614072531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_22
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eea42ddba76d6a370800000000000000
+      internalID: 8333583983154711278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_23
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b6c49096640765e0800000000000000
+      internalID: -1916558277864012105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dirt_24
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6722caeceb74a7380800000000000000
+      internalID: -8972780422745546122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_0
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af9db3845cfde7770800000000000000
+      internalID: 8610565575992400378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c6b2208448f94230800000000000000
+      internalID: 3623700348287497924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_2
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a73de9f4244e9f90800000000000000
+      internalID: -6945038649756141661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0027089ebd959890800000000000000
+      internalID: -7451876566494666742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_4
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 200
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ed69a1b2f28ef4d0800000000000000
+      internalID: -3098895514709955098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_5
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f4efc28d3f6deea0800000000000000
+      internalID: -5841890831651314445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_6
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03b2f3fefd7d12800800000000000000
+      internalID: 585986783326448432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_7
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3372f21b55407aeb0800000000000000
+      internalID: -4708790119301175501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_8
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f96a4dd02ac04c970800000000000000
+      internalID: 8774151864180844191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_9
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c98b488815adde50800000000000000
+      internalID: 6835801334202730952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_10
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c196dba3aac6f35c0800000000000000
+      internalID: -4233545646319245028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_11
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 503555b93584d4c60800000000000000
+      internalID: 7803973253228483333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_12
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63b43011d278dab60800000000000000
+      internalID: 7759006360657939254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_13
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf43c03ff15c13c30800000000000000
+      internalID: 4337464657146819835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_14
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94446c3ae5e9fb8e0800000000000000
+      internalID: -1675446407046740919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_15
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d70d753cc446ada0800000000000000
+      internalID: -5933979815152646187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_16
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc116e5ab0bd39600800000000000000
+      internalID: 473963228878475727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_17
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1550093ed4b39da0800000000000000
+      internalID: -5939204617039489762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_18
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab3bfd66b2f2b39e0800000000000000
+      internalID: -1640665775790378054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_19
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf660754d432fda90800000000000000
+      internalID: -7287066857277724933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_20
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc59ea956375decf0800000000000000
+      internalID: -221424915726821937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_21
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d0cbe9b0a2049020800000000000000
+      internalID: 2347504195104129236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_22
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27862f64cb15354a0800000000000000
+      internalID: -6605846359336392590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_23
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3597872e09f2126e0800000000000000
+      internalID: -1864156471433332397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_24
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e7c5f481fd07af80800000000000000
+      internalID: -8095486474206197790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_25
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0825f392d36ca0070800000000000000
+      internalID: 8073483248002355840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_26
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4bba81ed2b9df820800000000000000
+      internalID: 2953687551984712522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_27
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83554b94df9b155d0800000000000000
+      internalID: -3075472573002918600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_28
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55ddca2cabfc6a1a0800000000000000
+      internalID: -6798518186432209579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_29
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7540065def8c1bf10800000000000000
+      internalID: 2283827482880640087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_30
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7054c9ce86de60df0800000000000000
+      internalID: -214222897351473913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_31
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e96aab6af22548bd0800000000000000
+      internalID: -2628885917863336290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_32
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 123cfdb00990629c0800000000000000
+      internalID: -3952461108691877087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_33
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e29c4cc44de06ba0800000000000000
+      internalID: -6097613015718522140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sand_34
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7282f98703d64370800000000000000
+      internalID: 8306558592064062076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02dd83ef3a291be90800000000000000
+      internalID: -7011661911796687584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_1
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 246a3cb5b47659de0800000000000000
+      internalID: -1327040941830986174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_2
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a77462a6abe0eb400800000000000000
+      internalID: 341726815534335866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_3
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58d1eb6cccafee080800000000000000
+      internalID: -9156105234983019131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_4
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edf05c776f1cb5e60800000000000000
+      internalID: 7952162831368261598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_5
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b3052152279661f0800000000000000
+      internalID: -1051987289298369614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_6
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca9af9a34fc2aedb0800000000000000
+      internalID: -4761944228523693652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_7
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e00bc98bef3b330e0800000000000000
+      internalID: -2291289878801108978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_8
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4208405907701bb0800000000000000
+      internalID: -4967339507104349617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_9
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8911b83912879f560800000000000000
+      internalID: 7348036352636293528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_10
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed74b7654ce327a30800000000000000
+      internalID: 4211497614530267102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_11
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd6970c7c2c9dbe30800000000000000
+      internalID: 4520941315823212252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_12
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e5e9b1f757994520800000000000000
+      internalID: 2686845056676652513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_13
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c59e5c39e7148af0800000000000000
+      internalID: -395164576794110519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Road_14
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 819a165c2ad3bd430800000000000000
+      internalID: 3808705679177394456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_0_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa94eae0845f1f890800000000000000
+      internalID: -7425884620724483670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_1_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00a7c9c8c02aa0440800000000000000
+      internalID: 4902909319128578560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_2_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddb2c79bdea8871f0800000000000000
+      internalID: -1046934159739835427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_0_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e20e80ee304fa360800000000000000
+      internalID: 7183030569478783715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_1_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4fb284f7220ea160800000000000000
+      internalID: 7038565638255853388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_2_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 184
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ca1c8e3c608cfcf0800000000000000
+      internalID: -217157479626433851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_3_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f2e84ec7ef2be100800000000000000
+      internalID: 138256886209766134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_4_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c57c79616e9835580800000000000000
+      internalID: -8839570022283622564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_5_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ca169badc4009d30800000000000000
+      internalID: 4436050914353486533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_3_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57395e0cf62e146f0800000000000000
+      internalID: -702031097287568523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_4_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e2d83975169a1e40800000000000000
+      internalID: 5627975703325102818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_5_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 176
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f73bc915eec6552d0800000000000000
+      internalID: -3290604181897038977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_6_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b6639ac37c2df9b0800000000000000
+      internalID: -5044827131753568591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_7_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd2816d7f13504ef0800000000000000
+      internalID: -126009394853739813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_8_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e2bb560091ab8640800000000000000
+      internalID: 5083334244371772132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_6_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4b8940ea96367a0800000000000000
+      internalID: -6385143650558888775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_7_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: efa254cf8a097c330800000000000000
+      internalID: 3731109871761042174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_8_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 168
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64133081b6a406d90800000000000000
+      internalID: -7106598388165824186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_9_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6403ff09a85c4c40800000000000000
+      internalID: 5497866728252834924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_10_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69c8f571f012c7df0800000000000000
+      internalID: -181233536301298538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_11_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33a4b336b2737b880800000000000000
+      internalID: -8595340704325350861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_9_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0ff2ca76ffa63440800000000000000
+      internalID: 4915309516477890317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_10_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4dbf9d3bc54fb3ea0800000000000000
+      internalID: -5891847008492586028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_11_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 227513fa8d8e703f0800000000000000
+      internalID: -934522380306262238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_12_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 909fc7f0dedbbbfc0800000000000000
+      internalID: -3477977461348828919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_13_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1294ef12abddecd80800000000000000
+      internalID: -8228395677655348959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_14_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e6abdd4fa514faa0800000000000000
+      internalID: -6128249350274701594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_12_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c57753c9dc005cf80800000000000000
+      internalID: -8087056672784812196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_13_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b21ede6778a3e6670800000000000000
+      internalID: 8533822697403965739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterGrassTransition_14_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b1fd021237bc0d40800000000000000
+      internalID: 5552013866320130486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_0_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 802c5a9391a341fc0800000000000000
+      internalID: -3525128728308497912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_1_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a54c8b52feb242dc0800000000000000
+      internalID: -3664755890642697126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_2_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 503aea591f75de000800000000000000
+      internalID: 66806264590410501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_0_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3df9a20dadddffe70800000000000000
+      internalID: 9151276899705200595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_1_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30e1aeafadafc8d60800000000000000
+      internalID: 7893960065293098499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_2_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98400e67fabf8fd50800000000000000
+      internalID: 6771438770783782025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_3_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50ddab8137b96d4c0800000000000000
+      internalID: -4263049078621151995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_4_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1d53f71257d92920800000000000000
+      internalID: 2966138577189297437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_5_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 410abbffa935a2ed0800000000000000
+      internalID: -2438044323087146988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_3_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5fe040a9ea7d16f0800000000000000
+      internalID: -712278022220091557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_4_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16be53884dbfbf560800000000000000
+      internalID: 7348744107221969761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_5_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f661a76b8b878040800000000000000
+      internalID: 4649838571138672374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_6_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ca24d5c693ec9500800000000000000
+      internalID: 404448303260117703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_7_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d259659e9ac5ac8f0800000000000000
+      internalID: -519500922173876947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_8_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0dfea392fb2ca5f0800000000000000
+      internalID: -744171517563175667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_6_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33a5858912b724f90800000000000000
+      internalID: -6970873888996042189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_7_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba53e85d3dfe88c00800000000000000
+      internalID: 903235418387789227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_8_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af2119fc160051510800000000000000
+      internalID: 1519120869401629434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_9_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e51007699a7a77010800000000000000
+      internalID: 1186601373650649438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_10_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 196a8355ec7260280800000000000000
+      internalID: -9077524231772133743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_11_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba15d9965d8b126f0800000000000000
+      internalID: -711084039408365141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_9_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb936d7e8d9d769a0800000000000000
+      internalID: -6239779233072793153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_10_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b68c91e591584520800000000000000
+      internalID: 2686486881903609523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_11_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83a4afee13ebf0730800000000000000
+      internalID: 3967598918408751672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_12_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd7523367dd47a8e0800000000000000
+      internalID: -1682290348322039845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_13_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f302392855461bb30800000000000000
+      internalID: 4301329437541212223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_14_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 465dbb3f360e70210800000000000000
+      internalID: 1299253737415234916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_12_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4c70d2938dcf79f0800000000000000
+      internalID: -468429871235695540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_13_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b856c41d5d307e3d0800000000000000
+      internalID: -3177566795212233333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterDirtTransition_14_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 698536c79002a4000800000000000000
+      internalID: 20864373390268566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_0_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43e04418d39978c00800000000000000
+      internalID: 902858739751849524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_1_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55063c9a15450c070800000000000000
+      internalID: 8124586437493612629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_2_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09fd3e62144114100800000000000000
+      internalID: 90375737582018448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_0_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38b869dd5af5c1910800000000000000
+      internalID: 1809426316287970179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_1_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ec1a7ac95b5df060800000000000000
+      internalID: 6988842637956095200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_2_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56b102791d28bf410800000000000000
+      internalID: 1511945936608172901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_3_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65d3fecc9e9cc4d80800000000000000
+      internalID: -8265009210128908970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_4_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5fd34b67b4acbf40800000000000000
+      internalID: 5745648332303490910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_5_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe653fd23bb054360800000000000000
+      internalID: 7153136447345874671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_3_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e188a591d04ebf660800000000000000
+      internalID: 7420775555934095390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_4_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36c61d16d4f78ec90800000000000000
+      internalID: -7140317238865597341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_5_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d81ce4bb7eade630800000000000000
+      internalID: 3958011493868116183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_6_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0ec7d5c27c8e0410800000000000000
+      internalID: 1445246955005922831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_7_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 991c491ef96d94230800000000000000
+      internalID: 3623663357369041305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_8_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01484f8035306b200800000000000000
+      internalID: 195347289004606480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_6_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 184622e079396a8d0800000000000000
+      internalID: -2835416638396668799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_7_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c5715a42b976a370800000000000000
+      internalID: 8333481967153673671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_8_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a7e17378fe52fd90800000000000000
+      internalID: -7065480444209141853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_9_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 543d3259144f35da0800000000000000
+      internalID: -5957149319568829627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_10_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a57dfa35200f32e80800000000000000
+      internalID: -8204450203354278054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_11_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d96bd2b4f70bd3e50800000000000000
+      internalID: 6790777873913198237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_9_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1474b7890fd83af30800000000000000
+      internalID: 4585664910083180353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_10_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6749fbb32b772cde0800000000000000
+      internalID: -1314356533848468362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_11_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7590af0e0511bab30800000000000000
+      internalID: 4299549308324809047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_12_a
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b83730fda18c3f710800000000000000
+      internalID: 1725943099949282187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_13_a
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2ceb7f80e1fcd3b0800000000000000
+      internalID: -5486244299261875153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_14_a
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac83a80f3a43778e0800000000000000
+      internalID: -1695828855961798454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_12_b
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db976b5bca5b46770800000000000000
+      internalID: 8603200941572127165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_13_b
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1758fdf16d4138f80800000000000000
+      internalID: -8105611994446461583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterSandTransition_14_b
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b08d34ab530eccd0800000000000000
+      internalID: -2536085848030609228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b50a7b4c857fe5260800000000000000
+      internalID: 7088374824157290587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f016bc4871db50050800000000000000
+      internalID: 5766222806627606799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e00ab5615446816b0800000000000000
+      internalID: -5325396311474986994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_3
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b03cc2ae1bb680630800000000000000
+      internalID: 3893480289743979275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_4
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f9edeab4ad8d2a80800000000000000
+      internalID: -8489973983873209871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_5
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0398dcc12554a7bc0800000000000000
+      internalID: -3784636317878613712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_6
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ce41f29c36660e00800000000000000
+      internalID: 1010607576740613827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_7
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f758bf0f702f96f50800000000000000
+      internalID: 6875292422079481215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_8
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2366fad85bfd31110800000000000000
+      internalID: 1230573094061434418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 851cfd24eb95099c0800000000000000
+      internalID: -3922536601739083432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_10
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a03f890f91e017bf0800000000000000
+      internalID: -328465793247808758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_11
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd3c9b5707a675bc0800000000000000
+      internalID: -3794447129792363555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_12
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f3450115a1d55160800000000000000
+      internalID: 7013742501584782327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_13
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d820a964fce672b00800000000000000
+      internalID: 803732895030706829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_14
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90e06005bf0c5acf0800000000000000
+      internalID: -241574819382555127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_15
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1baa02af9e520e9c0800000000000000
+      internalID: -3900075590448797007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_18
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d745db239dfd0b00800000000000000
+      internalID: 796571517651863509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_19
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffa411f076d4d4310800000000000000
+      internalID: 1390852964957113087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_20
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a961994be076f9e0800000000000000
+      internalID: -1587957662747629150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_21
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e6eb31f51d255230800000000000000
+      internalID: 3626854647181600485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_22
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 506e06cb44c5d3f60800000000000000
+      internalID: 8015664362077349381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_23
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d99771397ac3e900800000000000000
+      internalID: 712635787924445656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_24
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b5c95a72ca3d1990800000000000000
+      internalID: -7413704804631198288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_25
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc52a3a63db5b5720800000000000000
+      internalID: 2835961353938281935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_26
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0a73c7a00709b930800000000000000
+      internalID: 4159363430249363982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_27
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b8f8ba8a6b31d700800000000000000
+      internalID: 563296757177972913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_28
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3667b2a5020c83190800000000000000
+      internalID: -7982419094329919901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_29
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cddad6d3149e362f0800000000000000
+      internalID: -980683827423892004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_30
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3153bdea767fa0b80800000000000000
+      internalID: -8427651727983168237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_31
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1363021b4d8149f0800000000000000
+      internalID: -485951931215027428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_32
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4be857ee427d7bd0800000000000000
+      internalID: -2630820924100121779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_33
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f86aa7ae0be03f510800000000000000
+      internalID: 1581624047148115599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_34
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a39d6a61ea6404f0800000000000000
+      internalID: -863447712162540637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_35
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c72f4009d098eee0800000000000000
+      internalID: -1231575236398340155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_36
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 151263321d57c4db0800000000000000
+      internalID: -4806337161211797167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_37
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3e672c9ebb9dd3e0800000000000000
+      internalID: -2027293014280933830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_39
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a63dbbbdcb104b60800000000000000
+      internalID: 7728207530999756453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_40
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3214600c93c5746c0800000000000000
+      internalID: -4159254327748837085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_50
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 044da04d15f3039c0800000000000000
+      internalID: -3949587252521544640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_51
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81c455b96aff520d0800000000000000
+      internalID: -3448068848646534120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_52
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 798f2513ced077000800000000000000
+      internalID: 33510830319532183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_53
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eb4d852dcbf699b0800000000000000
+      internalID: -5073591071669400602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_54
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88905a96bbd388580800000000000000
+      internalID: -8824735594691884664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_55
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7d70cc91da9dc920800000000000000
+      internalID: 3012233950849432957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_59
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c17d49601374be040800000000000000
+      internalID: 4677910913843779356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_75
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d5261eaae346dad0800000000000000
+      internalID: -2677878253203085863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_76
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 209b4ecf96f47c050800000000000000
+      internalID: 5820708360032663810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_77
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eba95936c58f43bf0800000000000000
+      internalID: -345378195709257026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_78
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3c24158cf86be3b0800000000000000
+      internalID: -5482172687619707843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_16
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39f63d8a3f52de720800000000000000
+      internalID: 2876997465399324563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_17
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d518f8f2de6992b0800000000000000
+      internalID: -5577304811122453034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_38
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6766544a52ef8de40800000000000000
+      internalID: 5681570367551137398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_49
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c069abdfd5299a10800000000000000
+      internalID: 1916604759816102088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_60
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46f97c74619b06440800000000000000
+      internalID: 4927141497688006500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_66
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6de5d5e0cb912720800000000000000
+      internalID: 2819706094502669674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_67
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac3fbe51c186eefc0800000000000000
+      internalID: -3463716593565174838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_68
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65abcc178a4a9f910800000000000000
+      internalID: 1871708163519855190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_69
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: deae2becd5d95dc90800000000000000
+      internalID: -7145632207528072467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_70
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0df16f2fc69852860800000000000000
+      internalID: 7504555455108489168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_71
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 446f83ef3afdb43d0800000000000000
+      internalID: -3221235213015648700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_84
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e42bcf5e49d7d4e0800000000000000
+      internalID: -1956856582431365911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_82
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b19ecf3853d29cf0800000000000000
+      internalID: -246902653570870857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_83
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 323fc3ddc17315ec0800000000000000
+      internalID: -3580019631672462557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_79
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c78c6b2bd6a757e60800000000000000
+      internalID: 7959402528015566972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_80
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48a04cbc41a7250c0800000000000000
+      internalID: -4588470840600556924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_81
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 332876c9902bb9620800000000000000
+      internalID: 2782012949179892275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_86
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8785febfc7f8b9ae0800000000000000
+      internalID: -1541480680478779272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_85
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5430c8fff700ecd0800000000000000
+      internalID: -2531014194610817955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RockCliff_87
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82a0cf4bea0ec76e0800000000000000
+      internalID: -1838347506908657112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Dirt_0: -8275502208090371910
+      Dirt_1: 1412778643854539469
+      Dirt_10: 1018790119610574547
+      Dirt_11: 3489988067640147366
+      Dirt_12: 3561750101690788383
+      Dirt_13: 1229114862393131176
+      Dirt_14: -978763445766528800
+      Dirt_15: -3066017647951802806
+      Dirt_16: 8726226466006397682
+      Dirt_17: -5387267457780789414
+      Dirt_18: 8972266080312304738
+      Dirt_19: -3071992410999177559
+      Dirt_2: -1278900557311105747
+      Dirt_20: -329186006420133163
+      Dirt_21: -7099920346614072531
+      Dirt_22: 8333583983154711278
+      Dirt_23: -1916558277864012105
+      Dirt_24: -8972780422745546122
+      Dirt_3: 8641727722977497643
+      Dirt_4: -5696172171868935861
+      Dirt_5: 6680675988988378581
+      Dirt_6: 7824842593332555073
+      Dirt_7: -4410089191414829743
+      Dirt_8: -2411247445559563415
+      Dirt_9: -4685391132033899694
+      Grass_0: -1347532211411968617
+      Grass_1: -7645372005702169758
+      Grass_10: 8577017789959637929
+      Grass_11: -6796477259373386654
+      Grass_12: -6259141551469331208
+      Grass_13: 7867572149665653903
+      Grass_14: 1423580199096852351
+      Grass_15: 3123766704050763852
+      Grass_16: 623291888168982980
+      Grass_17: -5626483540472518896
+      Grass_18: 1919191684500152330
+      Grass_19: 8708326412996271838
+      Grass_2: 6891631753638271631
+      Grass_3: 475435623110610922
+      Grass_4: 5299400320964040512
+      Grass_5: -7255497285719700247
+      Grass_6: 6828908663453297030
+      Grass_7: 6694032873506494867
+      Grass_8: 2289616372777055746
+      Grass_9: 7471297114442723461
+      Road_0: -7011661911796687584
+      Road_1: -1327040941830986174
+      Road_10: 4211497614530267102
+      Road_11: 4520941315823212252
+      Road_12: 2686845056676652513
+      Road_13: -395164576794110519
+      Road_14: 3808705679177394456
+      Road_2: 341726815534335866
+      Road_3: -9156105234983019131
+      Road_4: 7952162831368261598
+      Road_5: -1051987289298369614
+      Road_6: -4761944228523693652
+      Road_7: -2291289878801108978
+      Road_8: -4967339507104349617
+      Road_9: 7348036352636293528
+      RockCliff_0: 7088374824157290587
+      RockCliff_1: 5766222806627606799
+      RockCliff_10: -328465793247808758
+      RockCliff_11: -3794447129792363555
+      RockCliff_12: 7013742501584782327
+      RockCliff_13: 803732895030706829
+      RockCliff_14: -241574819382555127
+      RockCliff_15: -3900075590448797007
+      RockCliff_16: 2876997465399324563
+      RockCliff_17: -5577304811122453034
+      RockCliff_18: 796571517651863509
+      RockCliff_19: 1390852964957113087
+      RockCliff_2: -5325396311474986994
+      RockCliff_20: -1587957662747629150
+      RockCliff_21: 3626854647181600485
+      RockCliff_22: 8015664362077349381
+      RockCliff_23: 712635787924445656
+      RockCliff_24: -7413704804631198288
+      RockCliff_25: 2835961353938281935
+      RockCliff_26: 4159363430249363982
+      RockCliff_27: 563296757177972913
+      RockCliff_28: -7982419094329919901
+      RockCliff_29: -980683827423892004
+      RockCliff_3: 3893480289743979275
+      RockCliff_30: -8427651727983168237
+      RockCliff_31: -485951931215027428
+      RockCliff_32: -2630820924100121779
+      RockCliff_33: 1581624047148115599
+      RockCliff_34: -863447712162540637
+      RockCliff_35: -1231575236398340155
+      RockCliff_36: -4806337161211797167
+      RockCliff_37: -2027293014280933830
+      RockCliff_38: 5681570367551137398
+      RockCliff_39: 7728207530999756453
+      RockCliff_4: -8489973983873209871
+      RockCliff_40: -4159254327748837085
+      RockCliff_49: 1916604759816102088
+      RockCliff_5: -3784636317878613712
+      RockCliff_50: -3949587252521544640
+      RockCliff_51: -3448068848646534120
+      RockCliff_52: 33510830319532183
+      RockCliff_53: -5073591071669400602
+      RockCliff_54: -8824735594691884664
+      RockCliff_55: 3012233950849432957
+      RockCliff_59: 4677910913843779356
+      RockCliff_6: 1010607576740613827
+      RockCliff_60: 4927141497688006500
+      RockCliff_66: 2819706094502669674
+      RockCliff_67: -3463716593565174838
+      RockCliff_68: 1871708163519855190
+      RockCliff_69: -7145632207528072467
+      RockCliff_7: 6875292422079481215
+      RockCliff_70: 7504555455108489168
+      RockCliff_71: -3221235213015648700
+      RockCliff_75: -2677878253203085863
+      RockCliff_76: 5820708360032663810
+      RockCliff_77: -345378195709257026
+      RockCliff_78: -5482172687619707843
+      RockCliff_79: 7959402528015566972
+      RockCliff_8: 1230573094061434418
+      RockCliff_80: -4588470840600556924
+      RockCliff_81: 2782012949179892275
+      RockCliff_82: -246902653570870857
+      RockCliff_83: -3580019631672462557
+      RockCliff_84: -1956856582431365911
+      RockCliff_85: -2531014194610817955
+      RockCliff_86: -1541480680478779272
+      RockCliff_87: -1838347506908657112
+      RockCliff_9: -3922536601739083432
+      Sand_0: 8610565575992400378
+      Sand_1: 3623700348287497924
+      Sand_10: -4233545646319245028
+      Sand_11: 7803973253228483333
+      Sand_12: 7759006360657939254
+      Sand_13: 4337464657146819835
+      Sand_14: -1675446407046740919
+      Sand_15: -5933979815152646187
+      Sand_16: 473963228878475727
+      Sand_17: -5939204617039489762
+      Sand_18: -1640665775790378054
+      Sand_19: -7287066857277724933
+      Sand_2: -6945038649756141661
+      Sand_20: -221424915726821937
+      Sand_21: 2347504195104129236
+      Sand_22: -6605846359336392590
+      Sand_23: -1864156471433332397
+      Sand_24: -8095486474206197790
+      Sand_25: 8073483248002355840
+      Sand_26: 2953687551984712522
+      Sand_27: -3075472573002918600
+      Sand_28: -6798518186432209579
+      Sand_29: 2283827482880640087
+      Sand_3: -7451876566494666742
+      Sand_30: -214222897351473913
+      Sand_31: -2628885917863336290
+      Sand_32: -3952461108691877087
+      Sand_33: -6097613015718522140
+      Sand_34: 8306558592064062076
+      Sand_4: -3098895514709955098
+      Sand_5: -5841890831651314445
+      Sand_6: 585986783326448432
+      Sand_7: -4708790119301175501
+      Sand_8: 8774151864180844191
+      Sand_9: 6835801334202730952
+      WaterDirtTransition_0_a: -3525128728308497912
+      WaterDirtTransition_0_b: 9151276899705200595
+      WaterDirtTransition_10_a: -9077524231772133743
+      WaterDirtTransition_10_b: 2686486881903609523
+      WaterDirtTransition_11_a: -711084039408365141
+      WaterDirtTransition_11_b: 3967598918408751672
+      WaterDirtTransition_12_a: -1682290348322039845
+      WaterDirtTransition_12_b: -468429871235695540
+      WaterDirtTransition_13_a: 4301329437541212223
+      WaterDirtTransition_13_b: -3177566795212233333
+      WaterDirtTransition_14_a: 1299253737415234916
+      WaterDirtTransition_14_b: 20864373390268566
+      WaterDirtTransition_1_a: -3664755890642697126
+      WaterDirtTransition_1_b: 7893960065293098499
+      WaterDirtTransition_2_a: 66806264590410501
+      WaterDirtTransition_2_b: 6771438770783782025
+      WaterDirtTransition_3_a: -4263049078621151995
+      WaterDirtTransition_3_b: -712278022220091557
+      WaterDirtTransition_4_a: 2966138577189297437
+      WaterDirtTransition_4_b: 7348744107221969761
+      WaterDirtTransition_5_a: -2438044323087146988
+      WaterDirtTransition_5_b: 4649838571138672374
+      WaterDirtTransition_6_a: 404448303260117703
+      WaterDirtTransition_6_b: -6970873888996042189
+      WaterDirtTransition_7_a: -519500922173876947
+      WaterDirtTransition_7_b: 903235418387789227
+      WaterDirtTransition_8_a: -744171517563175667
+      WaterDirtTransition_8_b: 1519120869401629434
+      WaterDirtTransition_9_a: 1186601373650649438
+      WaterDirtTransition_9_b: -6239779233072793153
+      WaterGrassTransition_0_a: -7425884620724483670
+      WaterGrassTransition_0_b: 7183030569478783715
+      WaterGrassTransition_10_a: -181233536301298538
+      WaterGrassTransition_10_b: -5891847008492586028
+      WaterGrassTransition_11_a: -8595340704325350861
+      WaterGrassTransition_11_b: -934522380306262238
+      WaterGrassTransition_12_a: -3477977461348828919
+      WaterGrassTransition_12_b: -8087056672784812196
+      WaterGrassTransition_13_a: -8228395677655348959
+      WaterGrassTransition_13_b: 8533822697403965739
+      WaterGrassTransition_14_a: -6128249350274701594
+      WaterGrassTransition_14_b: 5552013866320130486
+      WaterGrassTransition_1_a: 4902909319128578560
+      WaterGrassTransition_1_b: 7038565638255853388
+      WaterGrassTransition_2_a: -1046934159739835427
+      WaterGrassTransition_2_b: -217157479626433851
+      WaterGrassTransition_3_a: 138256886209766134
+      WaterGrassTransition_3_b: -702031097287568523
+      WaterGrassTransition_4_a: -8839570022283622564
+      WaterGrassTransition_4_b: 5627975703325102818
+      WaterGrassTransition_5_a: 4436050914353486533
+      WaterGrassTransition_5_b: -3290604181897038977
+      WaterGrassTransition_6_a: -5044827131753568591
+      WaterGrassTransition_6_b: -6385143650558888775
+      WaterGrassTransition_7_a: -126009394853739813
+      WaterGrassTransition_7_b: 3731109871761042174
+      WaterGrassTransition_8_a: 5083334244371772132
+      WaterGrassTransition_8_b: -7106598388165824186
+      WaterGrassTransition_9_a: 5497866728252834924
+      WaterGrassTransition_9_b: 4915309516477890317
+      WaterSandTransition_0_a: 902858739751849524
+      WaterSandTransition_0_b: 1809426316287970179
+      WaterSandTransition_10_a: -8204450203354278054
+      WaterSandTransition_10_b: -1314356533848468362
+      WaterSandTransition_11_a: 6790777873913198237
+      WaterSandTransition_11_b: 4299549308324809047
+      WaterSandTransition_12_a: 1725943099949282187
+      WaterSandTransition_12_b: 8603200941572127165
+      WaterSandTransition_13_a: -5486244299261875153
+      WaterSandTransition_13_b: -8105611994446461583
+      WaterSandTransition_14_a: -1695828855961798454
+      WaterSandTransition_14_b: -2536085848030609228
+      WaterSandTransition_1_a: 8124586437493612629
+      WaterSandTransition_1_b: 6988842637956095200
+      WaterSandTransition_2_a: 90375737582018448
+      WaterSandTransition_2_b: 1511945936608172901
+      WaterSandTransition_3_a: -8265009210128908970
+      WaterSandTransition_3_b: 7420775555934095390
+      WaterSandTransition_4_a: 5745648332303490910
+      WaterSandTransition_4_b: -7140317238865597341
+      WaterSandTransition_5_a: 7153136447345874671
+      WaterSandTransition_5_b: 3958011493868116183
+      WaterSandTransition_6_a: 1445246955005922831
+      WaterSandTransition_6_b: -2835416638396668799
+      WaterSandTransition_7_a: 3623663357369041305
+      WaterSandTransition_7_b: 8333481967153673671
+      WaterSandTransition_8_a: 195347289004606480
+      WaterSandTransition_8_b: -7065480444209141853
+      WaterSandTransition_9_a: -5957149319568829627
+      WaterSandTransition_9_b: 4585664910083180353
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

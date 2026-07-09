@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: 8bdb809d5d60a1442a12c4f989673a46
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4735127642330765128
+    second: HayBale_Single_Shadow
+  - first:
+      213: 5209312026314314100
+    second: HayBale_Row_Shadow
+  - first:
+      213: -3768744560296465793
+    second: HayBale_Column_Shadow
+  - first:
+      213: 7103769442439403339
+    second: HayBale_Tower_Shadow
+  - first:
+      213: 606128920061419450
+    second: WaterTrough_Empty_Vertical_Shadow
+  - first:
+      213: -5997305211471982960
+    second: WaterTrough_Full_Vertical_Shadow
+  - first:
+      213: -1287669829821089636
+    second: WaterTrough_Empty_Horizontal_Shadow
+  - first:
+      213: 5594280445867232609
+    second: WaterTrough_Full_Horizontal_Shadow
+  - first:
+      213: -8449512094777219207
+    second: ToolChest_Wide_Shadow
+  - first:
+      213: -3954644135043338039
+    second: ToolChest_Short_Shadow
+  - first:
+      213: -1356274833014984469
+    second: HayStack_Shadow
+  - first:
+      213: 4228580260935931253
+    second: Scarecrow_Shadow
+  - first:
+      213: 7231423934833881566
+    second: WaterPump_Shadow
+  - first:
+      213: 2373153782738821162
+    second: Bucket_Shadow
+  - first:
+      213: 5715993395848950063
+    second: Stool_Shadow
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HayBale_Single_Shadow
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 56
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 847124fb08d86b140800000000000000
+      internalID: 4735127642330765128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayBale_Row_Shadow
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 56
+        width: 34
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47192a410b13b4840800000000000000
+      internalID: 5209312026314314100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayBale_Column_Shadow
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 78
+        width: 14
+        height: 27
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7ae7524acab2bbc0800000000000000
+      internalID: -3768744560296465793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayBale_Tower_Shadow
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 76
+        width: 35
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4710e6aba8a59260800000000000000
+      internalID: 7103769442439403339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Empty_Vertical_Shadow
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 82
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abf1a589a07696800800000000000000
+      internalID: 606128920061419450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Full_Vertical_Shadow
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 82
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09e0d9c6faa45cca0800000000000000
+      internalID: -5997305211471982960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Empty_Horizontal_Shadow
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 89
+        width: 16
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c98b685bc17412ee0800000000000000
+      internalID: -1287669829821089636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Full_Horizontal_Shadow
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 81
+        width: 16
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16d84ddfc60e2ad40800000000000000
+      internalID: 5594280445867232609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToolChest_Wide_Shadow
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 64
+        width: 18
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 977ef69648d4dba80800000000000000
+      internalID: -8449512094777219207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToolChest_Short_Shadow
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 65
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c0f8ad9c184e19c0800000000000000
+      internalID: -3954644135043338039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayStack_Shadow
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 73
+        width: 22
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be0f658a93b8d2de0800000000000000
+      internalID: -1356274833014984469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scarecrow_Shadow
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 48
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5759055e75feeaa30800000000000000
+      internalID: 4228580260935931253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPump_Shadow
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 49
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed1f70841cd2b5460800000000000000
+      internalID: 7231423934833881566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bucket_Shadow
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 49
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a20a589bac22fe020800000000000000
+      internalID: 2373153782738821162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stool_Shadow
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 50
+        width: 7
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f213e0a75b9435f40800000000000000
+      internalID: 5715993395848950063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bucket_Shadow: 2373153782738821162
+      HayBale_Column_Shadow: -3768744560296465793
+      HayBale_Row_Shadow: 5209312026314314100
+      HayBale_Single_Shadow: 4735127642330765128
+      HayBale_Tower_Shadow: 7103769442439403339
+      HayStack_Shadow: -1356274833014984469
+      Scarecrow_Shadow: 4228580260935931253
+      Stool_Shadow: 5715993395848950063
+      ToolChest_Short_Shadow: -3954644135043338039
+      ToolChest_Wide_Shadow: -8449512094777219207
+      WaterPump_Shadow: 7231423934833881566
+      WaterTrough_Empty_Horizontal_Shadow: -1287669829821089636
+      WaterTrough_Empty_Vertical_Shadow: 606128920061419450
+      WaterTrough_Full_Horizontal_Shadow: 5594280445867232609
+      WaterTrough_Full_Vertical_Shadow: -5997305211471982960
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

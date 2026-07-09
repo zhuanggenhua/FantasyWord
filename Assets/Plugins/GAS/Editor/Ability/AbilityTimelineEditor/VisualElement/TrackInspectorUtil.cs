@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 namespace GAS.Editor
 {
     using System;
@@ -364,11 +364,7 @@ namespace GAS.Editor
             listView.showFoldoutHeader = true;
             listView.itemsSource = list;
             listView.selectionType = SelectionType.Single;
-            #if UNITY_2022_1_OR_NEWER
             listView.selectionChanged += onSelectionChanged;
-            #else
-            listView.onSelectionChange += onSelectionChanged;
-            #endif
             listView.itemsAdded += onItemsAdded;
             listView.itemsRemoved += onItemsRemoved;
             

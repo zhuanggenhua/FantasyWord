@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a39c24a8ee9c41442a4b1cb56e0151eb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - eastBed: {fileID: -7784227773937116529, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - northBed: {fileID: 5388889587962186249, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - westBed: {fileID: 5561586203883604049, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - southBed: {fileID: -9047657032477576906, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - northSouthBedShadow: {fileID: -3175040775311895783, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - eastWestBedShadow: {fileID: 6788374695443525886, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

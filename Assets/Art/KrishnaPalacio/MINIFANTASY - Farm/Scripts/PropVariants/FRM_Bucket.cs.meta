@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d15bab04cceb78049b2dbfb6b598036e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - waterBucket: {fileID: -1773375359905858904, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - milkBucket: {fileID: -4425829839543317589, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - bucketShadow: {fileID: 2373153782738821162, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

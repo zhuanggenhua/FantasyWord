@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: b1454b70d0960e44786fa8418ec8d7bc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3474738337733818689
+    second: DD_Dirt_FGTPL_Dirt_Transition_0
+  - first:
+      213: -8580996759420229670
+    second: DD_Dirt_FGTPL_Dirt_Transition_1
+  - first:
+      213: 4093834180628182221
+    second: DD_Dirt_FGTPL_Dirt_Transition_2
+  - first:
+      213: -4727361911625922007
+    second: DD_Dirt_FGTPL_Dirt_Transition_3
+  - first:
+      213: -6262801394877354211
+    second: DD_Dirt_FGTPL_Dirt_Transition_4
+  - first:
+      213: 7552979937139742529
+    second: DD_Dirt_FGTPL_Dirt_Transition_5
+  - first:
+      213: 7944134611787762077
+    second: DD_Dirt_FGTPL_Dirt_Transition_6
+  - first:
+      213: 5820178354149586379
+    second: DD_Dirt_FGTPL_Dirt_Transition_7
+  - first:
+      213: -1706396358422169302
+    second: DD_Dirt_FGTPL_Dirt_Transition_8
+  - first:
+      213: -282521416985908294
+    second: DD_Dirt_FGTPL_Dirt_Transition_9
+  - first:
+      213: -3411936342642186448
+    second: DD_Dirt_FGTPL_Dirt_Transition_10
+  - first:
+      213: -951429410515983504
+    second: DD_Dirt_FGTPL_Dirt_Transition_11
+  - first:
+      213: 9141645674298599989
+    second: DD_Dirt_FGTPL_Dirt_Transition_12
+  - first:
+      213: 975689860529284632
+    second: DD_Dirt_FGTPL_Dirt_Transition_13
+  - first:
+      213: 2965698735219107864
+    second: DD_Dirt_FGTPL_Dirt_Transition_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1493e04bb10c83030800000000000000
+      internalID: 3474738337733818689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_1
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad7aaff49ec2ae880800000000000000
+      internalID: -8580996759420229670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc4f1b94f7830d830800000000000000
+      internalID: 4093834180628182221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92a43d45369056eb0800000000000000
+      internalID: -4727361911625922007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_4
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1fa387205f0619a0800000000000000
+      internalID: -6262801394877354211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_5
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 147ddd44c3391d860800000000000000
+      internalID: 7552979937139742529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d99ce7fe65c3f3e60800000000000000
+      internalID: 7944134611787762077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_7
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc5f080606d65c050800000000000000
+      internalID: 5820178354149586379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_8
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a29f93a8d89a158e0800000000000000
+      internalID: -1706396358422169302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abb6d13a448441cf0800000000000000
+      internalID: -282521416985908294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_10
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 037219c39fd56a0d0800000000000000
+      internalID: -3411936342642186448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_11
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 073e555fdf7dbc2f0800000000000000
+      internalID: -951429410515983504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53aed076e46adde70800000000000000
+      internalID: 9141645674298599989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_13
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8166ccb32c85a8d00800000000000000
+      internalID: 975689860529284632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DD_Dirt_FGTPL_Dirt_Transition_14
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8186f876947482920800000000000000
+      internalID: 2965698735219107864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      DD_Dirt_FGTPL_Dirt_Transition_0: 3474738337733818689
+      DD_Dirt_FGTPL_Dirt_Transition_1: -8580996759420229670
+      DD_Dirt_FGTPL_Dirt_Transition_10: -3411936342642186448
+      DD_Dirt_FGTPL_Dirt_Transition_11: -951429410515983504
+      DD_Dirt_FGTPL_Dirt_Transition_12: 9141645674298599989
+      DD_Dirt_FGTPL_Dirt_Transition_13: 975689860529284632
+      DD_Dirt_FGTPL_Dirt_Transition_14: 2965698735219107864
+      DD_Dirt_FGTPL_Dirt_Transition_2: 4093834180628182221
+      DD_Dirt_FGTPL_Dirt_Transition_3: -4727361911625922007
+      DD_Dirt_FGTPL_Dirt_Transition_4: -6262801394877354211
+      DD_Dirt_FGTPL_Dirt_Transition_5: 7552979937139742529
+      DD_Dirt_FGTPL_Dirt_Transition_6: 7944134611787762077
+      DD_Dirt_FGTPL_Dirt_Transition_7: 5820178354149586379
+      DD_Dirt_FGTPL_Dirt_Transition_8: -1706396358422169302
+      DD_Dirt_FGTPL_Dirt_Transition_9: -282521416985908294
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

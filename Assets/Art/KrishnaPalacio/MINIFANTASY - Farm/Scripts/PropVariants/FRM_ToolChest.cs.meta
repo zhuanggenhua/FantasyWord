@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 724bf8949b59df94d8ed7212792ddf19
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - toolChestShort: {fileID: 5233700709782118219, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - toolChestWide: {fileID: 702457181925315867, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - toolChestShortShadow: {fileID: -3954644135043338039, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - toolChestWideShadow: {fileID: -8449512094777219207, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

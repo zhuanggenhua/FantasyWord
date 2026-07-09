@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c0068da00253595479a557acd6ecddd6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - shopSignArmor: {fileID: -60620594294420951, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shopSignPotions: {fileID: -349693762640560957, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shopSignTavern: {fileID: -6045684517192588090, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shopSignWeapons: {fileID: -4423201225985716218, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowshopSign: {fileID: 2003308639001780103, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

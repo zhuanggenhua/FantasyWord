@@ -1,0 +1,63 @@
+{
+  "languages": [
+    {
+      "id": 0,
+      "displayNameTextId": 1,
+      "nativeNameTextId": 1,
+      "iconSpriteId": 0
+    },
+    {
+      "id": 2,
+      "displayNameTextId": 2,
+      "nativeNameTextId": 2,
+      "iconSpriteId": 0
+    }
+  ],
+  "texts": [
+    {
+      "id": 1,
+      "key": "language.chinese_simplified",
+      "name": "Language Chinese Simplified",
+      "values": [
+        "简体中文",
+        "Chinese Simplified"
+      ]
+    },
+    {
+      "id": 2,
+      "key": "language.english",
+      "name": "Language English",
+      "values": [
+        "英语",
+        "English"
+      ]
+    },
+    {
+      "id": 1001,
+      "key": "ui.start_game",
+      "name": "UI Start Game",
+      "values": [
+        "开始游戏",
+        "Start Game"
+      ]
+    },
+    {
+      "id": 1002,
+      "key": "ui.continue_game",
+      "name": "UI Continue Game",
+      "values": [
+        "继续游戏",
+        "Continue"
+      ]
+    },
+    {
+      "id": 1003,
+      "key": "ui.settings",
+      "name": "UI Settings",
+      "values": [
+        "设置",
+        "Settings"
+      ]
+    }
+  ]
+}

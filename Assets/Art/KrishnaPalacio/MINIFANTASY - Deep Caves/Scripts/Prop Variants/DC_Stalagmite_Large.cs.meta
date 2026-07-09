@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 751bbaaeacef44c458ef0189f4350849
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - brownLargeStalagmite0: {fileID: 928751198601444362, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - brownLargeStalagmite1: {fileID: 2823709216585826781, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - brownLargeStalagmite2: {fileID: -8900489995794255275, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowLargeStalagmite0: {fileID: -296938046296057557, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowLargeStalagmite1: {fileID: -8021647886765210120, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowLargeStalagmite2: {fileID: 702574339433227999, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - stalagmiteLarge0Shadow: {fileID: -8451218525139565013, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - stalagmiteLarge1Shadow: {fileID: -1602225373517649614, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - stalagmiteLarge2Shadow: {fileID: -1983772150007240084, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

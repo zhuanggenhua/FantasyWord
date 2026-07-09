@@ -1,0 +1,1212 @@
+fileFormatVersion: 2
+guid: c4c8270a66023734baedd60f2642eb51
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4910088520043721169
+    second: a_0
+  - first:
+      213: 18603833374110876
+    second: Desolate_Desert_Cave_Entrance_0
+  - first:
+      213: -3519864431141520255
+    second: Desolate_Desert_Cave_Entrance_1
+  - first:
+      213: -873553981984269402
+    second: Desolate_Desert_Cave_Entrance_2
+  - first:
+      213: -714105014335134358
+    second: Desolate_Desert_Cave_Entrance_3
+  - first:
+      213: 5118231856593996895
+    second: Desolate_Desert_Cave_Entrance_4
+  - first:
+      213: -1630816826975167502
+    second: Desolate_Desert_Cave_Entrance_5
+  - first:
+      213: 8091423111812877851
+    second: Desolate_Desert_Cave_Entrance_6
+  - first:
+      213: -6791643926834790563
+    second: Desolate_Desert_Cave_Entrance_7
+  - first:
+      213: 2929515069304187987
+    second: Desolate_Desert_Cave_Entrance_8
+  - first:
+      213: 917670845655807293
+    second: Desolate_Desert_Cave_Entrance_9
+  - first:
+      213: 1094444195591152583
+    second: Desolate_Desert_Cave_Entrance_10
+  - first:
+      213: 2355064395434100185
+    second: Desolate_Desert_Cave_Entrance_11
+  - first:
+      213: 1596921655009413711
+    second: Forgotten_Plains_Cave_Entrance_0
+  - first:
+      213: 3549583351714947861
+    second: Forgotten_Plains_Cave_Entrance_1
+  - first:
+      213: 644846310174167186
+    second: Forgotten_Plains_Cave_Entrance_2
+  - first:
+      213: -3982722143118048695
+    second: Forgotten_Plains_Cave_Entrance_3
+  - first:
+      213: 1570257189152020199
+    second: Forgotten_Plains_Cave_Entrance_4
+  - first:
+      213: 5340018803476999138
+    second: Forgotten_Plains_Cave_Entrance_5
+  - first:
+      213: -7889149682787127012
+    second: Forgotten_Plains_Cave_Entrance_6
+  - first:
+      213: -5254630182841201802
+    second: Forgotten_Plains_Cave_Entrance_7
+  - first:
+      213: 8707460400830750692
+    second: Forgotten_Plains_Cave_Entrance_8
+  - first:
+      213: -5970881568398995689
+    second: Forgotten_Plains_Cave_Entrance_9
+  - first:
+      213: -3649741116736953146
+    second: Forgotten_Plains_Cave_Entrance_10
+  - first:
+      213: -7825738368889045839
+    second: Forgotten_Plains_Cave_Entrance_11
+  - first:
+      213: -7504209582428471349
+    second: Dungeon_Cave_Entrance_0
+  - first:
+      213: 7201465794295060002
+    second: Dungeon_Cave_Entrance_1
+  - first:
+      213: 5076718283542416911
+    second: Dungeon_Cave_Entrance_2
+  - first:
+      213: 1492255280401854608
+    second: Dungeon_Cave_Entrance_3
+  - first:
+      213: -4789317208012158299
+    second: Dungeon_Cave_Entrance_4
+  - first:
+      213: -4636281002856479555
+    second: Dungeon_Cave_Entrance_5
+  - first:
+      213: 3039669501978021951
+    second: Dungeon_Cave_Entrance_6
+  - first:
+      213: -6934049989215517848
+    second: Dungeon_Cave_Entrance_7
+  - first:
+      213: 4490878740530218943
+    second: Dungeon_Cave_Entrance_8
+  - first:
+      213: -3884775531033844691
+    second: Dungeon_Cave_Entrance_9
+  - first:
+      213: 7148533581177196402
+    second: Dungeon_Cave_Entrance_10
+  - first:
+      213: -5630892763017422731
+    second: Dungeon_Cave_Entrance_11
+  - first:
+      213: -7954240127880363901
+    second: Dungeon_Cave_Entrance_12
+  - first:
+      213: 7929062138061504732
+    second: Dungeon_Cave_Entrance_13
+  - first:
+      213: 3035493141868407536
+    second: Dungeon_Cave_Entrance_14
+  - first:
+      213: -1215120347634977025
+    second: Dungeon_Cave_Entrance_15
+  - first:
+      213: -3188601082176927080
+    second: Dungeon_Cave_Entrance_16
+  - first:
+      213: 395321426432673770
+    second: Dungeon_Cave_Entrance_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9479bf7618124000800000000000000
+      internalID: 18603833374110876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18cf64ce2fde62fc0800000000000000
+      internalID: -3519864431141520255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ab13bb184380e3f0800000000000000
+      internalID: -873553981984269402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_3
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a65aa30e54df616f0800000000000000
+      internalID: -714105014335134358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_4
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5c8f5a81cc970740800000000000000
+      internalID: 5118231856593996895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fb5a6e7cbc2e59e0800000000000000
+      internalID: -1630816826975167502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_6
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1e0ef233728a4070800000000000000
+      internalID: 8091423111812877851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_7
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5fb21c05db3fb1a0800000000000000
+      internalID: -6791643926834790563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_8
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35ca70e2f6ab7a820800000000000000
+      internalID: 2929515069304187987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_9
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d35fb08a5c83cbc00800000000000000
+      internalID: 917670845655807293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_10
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c3e2b0823f303f00800000000000000
+      internalID: 1094444195591152583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Desolate_Desert_Cave_Entrance_11
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d50509079edea020800000000000000
+      internalID: 2355064395434100185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4a07fcc8c7692610800000000000000
+      internalID: 1596921655009413711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5132c9b7047a24130800000000000000
+      internalID: 3549583351714947861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29017a47d44f2f800800000000000000
+      internalID: 644846310174167186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_3
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 942cd5cef478ab8c0800000000000000
+      internalID: -3982722143118048695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_4
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e6d86d089caac510800000000000000
+      internalID: 1570257189152020199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_5
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2eb27232fce8b1a40800000000000000
+      internalID: 5340018803476999138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_6
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c117699792c148290800000000000000
+      internalID: -7889149682787127012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_7
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67b44bd50bdc317b0800000000000000
+      internalID: -5254630182841201802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_8
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ef1c47b91d17d870800000000000000
+      internalID: 8707460400830750692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_9
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71f86af39da232da0800000000000000
+      internalID: -5970881568398995689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_10
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c4a1ce9ac3895dc0800000000000000
+      internalID: -3649741116736953146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forgotten_Plains_Cave_Entrance_11
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bc39318a64656390800000000000000
+      internalID: -7825738368889045839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_0
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcfb44fc421bbd790800000000000000
+      internalID: -7504209582428471349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22655132cfeb0f360800000000000000
+      internalID: 7201465794295060002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0ec64b9160247640800000000000000
+      internalID: 5076718283542416911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_3
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 090bd8e654e85b410800000000000000
+      internalID: 1492255280401854608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_4
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aa05cbcf5de88db0800000000000000
+      internalID: -4789317208012158299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_5
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db409d1fdfe98afb0800000000000000
+      internalID: -4636281002856479555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f301df3ae431f2a20800000000000000
+      internalID: 3039669501978021951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_7
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8630202e54e45cf90800000000000000
+      internalID: -6934049989215517848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_8
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb748aabb6ec25e30800000000000000
+      internalID: 4490878740530218943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_9
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d242998ac31861ac0800000000000000
+      internalID: -3884775531033844691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_10
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27f8403ea61b43360800000000000000
+      internalID: 7148533581177196402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_11
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5785704addc0bd1b0800000000000000
+      internalID: -5630892763017422731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_12
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 380888f3fbcdc9190800000000000000
+      internalID: -7954240127880363901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_13
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd0c72d2100b90e60800000000000000
+      internalID: 7929062138061504732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_14
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fa63370eec302a20800000000000000
+      internalID: 3035493141868407536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_15
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff63ed75b76032fe0800000000000000
+      internalID: -1215120347634977025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_16
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89a0b6ea530dfb3d0800000000000000
+      internalID: -3188601082176927080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_Cave_Entrance_17
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae7ce9a2eb67c7500800000000000000
+      internalID: 395321426432673770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Desolate_Desert_Cave_Entrance_0: 18603833374110876
+      Desolate_Desert_Cave_Entrance_1: -3519864431141520255
+      Desolate_Desert_Cave_Entrance_10: 1094444195591152583
+      Desolate_Desert_Cave_Entrance_11: 2355064395434100185
+      Desolate_Desert_Cave_Entrance_2: -873553981984269402
+      Desolate_Desert_Cave_Entrance_3: -714105014335134358
+      Desolate_Desert_Cave_Entrance_4: 5118231856593996895
+      Desolate_Desert_Cave_Entrance_5: -1630816826975167502
+      Desolate_Desert_Cave_Entrance_6: 8091423111812877851
+      Desolate_Desert_Cave_Entrance_7: -6791643926834790563
+      Desolate_Desert_Cave_Entrance_8: 2929515069304187987
+      Desolate_Desert_Cave_Entrance_9: 917670845655807293
+      Dungeon_Cave_Entrance_0: -7504209582428471349
+      Dungeon_Cave_Entrance_1: 7201465794295060002
+      Dungeon_Cave_Entrance_10: 7148533581177196402
+      Dungeon_Cave_Entrance_11: -5630892763017422731
+      Dungeon_Cave_Entrance_12: -7954240127880363901
+      Dungeon_Cave_Entrance_13: 7929062138061504732
+      Dungeon_Cave_Entrance_14: 3035493141868407536
+      Dungeon_Cave_Entrance_15: -1215120347634977025
+      Dungeon_Cave_Entrance_16: -3188601082176927080
+      Dungeon_Cave_Entrance_17: 395321426432673770
+      Dungeon_Cave_Entrance_2: 5076718283542416911
+      Dungeon_Cave_Entrance_3: 1492255280401854608
+      Dungeon_Cave_Entrance_4: -4789317208012158299
+      Dungeon_Cave_Entrance_5: -4636281002856479555
+      Dungeon_Cave_Entrance_6: 3039669501978021951
+      Dungeon_Cave_Entrance_7: -6934049989215517848
+      Dungeon_Cave_Entrance_8: 4490878740530218943
+      Dungeon_Cave_Entrance_9: -3884775531033844691
+      Forgotten_Plains_Cave_Entrance_0: 1596921655009413711
+      Forgotten_Plains_Cave_Entrance_1: 3549583351714947861
+      Forgotten_Plains_Cave_Entrance_10: -3649741116736953146
+      Forgotten_Plains_Cave_Entrance_11: -7825738368889045839
+      Forgotten_Plains_Cave_Entrance_2: 644846310174167186
+      Forgotten_Plains_Cave_Entrance_3: -3982722143118048695
+      Forgotten_Plains_Cave_Entrance_4: 1570257189152020199
+      Forgotten_Plains_Cave_Entrance_5: 5340018803476999138
+      Forgotten_Plains_Cave_Entrance_6: -7889149682787127012
+      Forgotten_Plains_Cave_Entrance_7: -5254630182841201802
+      Forgotten_Plains_Cave_Entrance_8: 8707460400830750692
+      Forgotten_Plains_Cave_Entrance_9: -5970881568398995689
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,2483 @@
+fileFormatVersion: 2
+guid: a5e810c0f21e25a40911381ddac3a95f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8196499210030851216
+    second: Outdoor_Barn_Shadow_0
+  - first:
+      213: 6721360469598410708
+    second: Outdoor_Barn_Shadow_1
+  - first:
+      213: -8883380675805766274
+    second: Outdoor_Barn_Shadow_2
+  - first:
+      213: 5562979511336253717
+    second: Outdoor_Barn_Shadow_3
+  - first:
+      213: -4524265893554319740
+    second: Outdoor_Barn_Shadow_8
+  - first:
+      213: -3410616517275788412
+    second: Outdoor_Barn_Shadow_7
+  - first:
+      213: 696051148915542181
+    second: Outdoor_Barn_Shadow_6
+  - first:
+      213: 6411141970275311052
+    second: Outdoor_Barn_Shadow_5
+  - first:
+      213: 6158480284748049438
+    second: Outdoor_Barn_Shadow_4
+  - first:
+      213: -3037285245345016232
+    second: Outdoor_Barn_Shadow_9
+  - first:
+      213: -1041391597822946068
+    second: Outdoor_Barn_Shadow_10
+  - first:
+      213: 5987807702011927680
+    second: Outdoor_Barn_Shadow_11
+  - first:
+      213: 7931359417630560655
+    second: Outdoor_Barn_Shadow_12
+  - first:
+      213: 8944314788363927013
+    second: Outdoor_Barn_Shadow_13
+  - first:
+      213: 6219117479940622183
+    second: Outdoor_Barn_Shadow_14
+  - first:
+      213: 6610653789653815002
+    second: Outdoor_Barn_Shadow_15
+  - first:
+      213: 6455086633835830137
+    second: Outdoor_Barn_Shadow_16
+  - first:
+      213: 5234523288257729767
+    second: Outdoor_Barn_Shadow_17
+  - first:
+      213: -6568123930292291314
+    second: Outdoor_Barn_Shadow_18
+  - first:
+      213: 1637225158911929764
+    second: Outdoor_Barn_Shadow_19
+  - first:
+      213: 5089146307735409827
+    second: Outdoor_Barn_Shadow_20
+  - first:
+      213: 7189559991917385859
+    second: Outdoor_Barn_Shadow_21
+  - first:
+      213: 7230985461711041472
+    second: Outdoor_Barn_Shadow_22
+  - first:
+      213: -6700968841767597399
+    second: Outdoor_Barn_Shadow_23
+  - first:
+      213: -1043718394589158985
+    second: Outdoor_Barn_Shadow_24
+  - first:
+      213: 710314714715113744
+    second: Outdoor_Barn_Shadow_25
+  - first:
+      213: 1270075495133032910
+    second: Outdoor_Barn_Shadow_26
+  - first:
+      213: -7060526212123357172
+    second: Outdoor_Barn_Shadow_27
+  - first:
+      213: -2778130517435587252
+    second: Outdoor_Barn_Shadow_28
+  - first:
+      213: 278937119523044469
+    second: Outdoor_Barn_Shadow_29
+  - first:
+      213: 7220188694301376067
+    second: Outdoor_Barn_Shadow_30
+  - first:
+      213: 4171824992663561627
+    second: Outdoor_Barn_Shadow_31
+  - first:
+      213: -5055488321308967876
+    second: Outdoor_Barn_Shadow_32
+  - first:
+      213: -9162351317721469062
+    second: Outdoor_Barn_Shadow_33
+  - first:
+      213: 1709900575434228033
+    second: Outdoor_Barn_Shadow_34
+  - first:
+      213: 6261545330664313620
+    second: Outdoor_Barn_Shadow_35
+  - first:
+      213: -5004633356246477476
+    second: Outdoor_Barn_Shadow_36
+  - first:
+      213: -1184226546243751778
+    second: Outdoor_Barn_Shadow_37
+  - first:
+      213: 4771455604183181853
+    second: Outdoor_Barn_Shadow_38
+  - first:
+      213: -2037881266550678475
+    second: Outdoor_Barn_Shadow_39
+  - first:
+      213: -6561725098344531404
+    second: Outdoor_Barn_Shadow_40
+  - first:
+      213: -4809605448905201503
+    second: Outdoor_Barn_Shadow_41
+  - first:
+      213: -6468924904795757669
+    second: Outdoor_Barn_Shadow_42
+  - first:
+      213: -5100754550784234270
+    second: Indoor_Barn_Shadow_2
+  - first:
+      213: 7604773994080595226
+    second: Indoor_Barn_Shadow_3
+  - first:
+      213: -6967325949960653828
+    second: Indoor_Barn_Shadow_1
+  - first:
+      213: 190211569322733664
+    second: Indoor_Barn_Shadow_0
+  - first:
+      213: -8277211063079640325
+    second: Indoor_Barn_Shadow_5
+  - first:
+      213: -8637421591400252608
+    second: Indoor_Barn_Shadow_4
+  - first:
+      213: -7546836886191809662
+    second: Indoor_Barn_Shadow_8
+  - first:
+      213: -6580466145415179963
+    second: Indoor_Barn_Shadow_7
+  - first:
+      213: -8503698689724451235
+    second: Indoor_Barn_Shadow_6
+  - first:
+      213: -2735573986257068927
+    second: Indoor_Barn_Shadow_15
+  - first:
+      213: -8584600465924232759
+    second: Indoor_Barn_Shadow_14
+  - first:
+      213: -8383449433387287297
+    second: Indoor_Barn_Shadow_13
+  - first:
+      213: 1628249682870032859
+    second: Indoor_Barn_Shadow_12
+  - first:
+      213: 4655694483998222669
+    second: Indoor_Barn_Shadow_11
+  - first:
+      213: -7012460965451453617
+    second: Indoor_Barn_Shadow_10
+  - first:
+      213: 6778296647520909159
+    second: Indoor_Barn_Shadow_20
+  - first:
+      213: 1133483675444345373
+    second: Indoor_Barn_Shadow_17
+  - first:
+      213: 5615971134188159115
+    second: Indoor_Barn_Shadow_18
+  - first:
+      213: -4597368413884039785
+    second: Indoor_Barn_Shadow_19
+  - first:
+      213: 9145512308936684278
+    second: Indoor_Barn_Shadow_16
+  - first:
+      213: -8359833453476073435
+    second: Indoor_Barn_Shadow_24
+  - first:
+      213: -1245273008807532140
+    second: Indoor_Barn_Shadow_23
+  - first:
+      213: -7526159247798657640
+    second: Indoor_Barn_Shadow_22
+  - first:
+      213: -3261720076045860159
+    second: Indoor_Barn_Shadow_21
+  - first:
+      213: -8443332646016880887
+    second: Indoor_Barn_Shadow_25
+  - first:
+      213: 5111324677977374832
+    second: Indoor_Barn_Shadow_26
+  - first:
+      213: -1969945291107488632
+    second: Indoor_Barn_Shadow_27
+  - first:
+      213: 5318604521099215479
+    second: Indoor_Barn_Shadow_28
+  - first:
+      213: -8952387696341656875
+    second: Indoor_Barn_Shadow_29
+  - first:
+      213: -8968783271779840037
+    second: Indoor_Barn_Shadow_30
+  - first:
+      213: -8633012811188344373
+    second: Indoor_Barn_Shadow_31
+  - first:
+      213: -7321171298110653322
+    second: Indoor_Barn_Shadow_32
+  - first:
+      213: 4234670102867663313
+    second: Fence_Shadow_0
+  - first:
+      213: -5884221323099492727
+    second: Fence_Shadow_2
+  - first:
+      213: -3640376111487827361
+    second: Fence_Shadow_3
+  - first:
+      213: 3799704030529428142
+    second: Fence_Shadow_4
+  - first:
+      213: -1160754463171461970
+    second: Fence_Shadow_6
+  - first:
+      213: 3168373578500665672
+    second: Fence_Shadow_5
+  - first:
+      213: 2013943150036488564
+    second: Fence_Shadow_7
+  - first:
+      213: 6318969480425034948
+    second: Fence_Shadow_12
+  - first:
+      213: 7288764531039758793
+    second: Fence_Shadow_13
+  - first:
+      213: -4628340223794956473
+    second: Fence_Shadow_1
+  - first:
+      213: -4843185649086033797
+    second: Fence_Shadow_14
+  - first:
+      213: 2920107248948385043
+    second: Fence_Shadow_10
+  - first:
+      213: 6665870156164203814
+    second: Fence_Shadow_11
+  - first:
+      213: -8502538887956584533
+    second: Fence_Shadow_9
+  - first:
+      213: 7167103049313890124
+    second: Indoor_Barn_Shadow_33
+  - first:
+      213: 91852165500342142
+    second: Fence_Shadow_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 094a8a7ca90dfb170800000000000000
+      internalID: 8196499210030851216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d714cd5cb1174d50800000000000000
+      internalID: 6721360469598410708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7d170e6754e7b480800000000000000
+      internalID: -8883380675805766274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51939f1446ca33d40800000000000000
+      internalID: 5562979511336253717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48e8741f3249631c0800000000000000
+      internalID: -4524265893554319740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48b52b6095e0ba0d0800000000000000
+      internalID: -3410616517275788412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a80d9405ded8a900800000000000000
+      internalID: 696051148915542181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccd9bde77a3f8f850800000000000000
+      internalID: 6411141970275311052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1c67a0a031577550800000000000000
+      internalID: 6158480284748049438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 856dcad592569d5d0800000000000000
+      internalID: -3037285245345016232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce4dfabfbdb3c81f0800000000000000
+      internalID: -1041391597822946068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08cd4c55167f81350800000000000000
+      internalID: 5987807702011927680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 108
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8191d14e59d11e60800000000000000
+      internalID: 7931359417630560655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ed74b739e6902c70800000000000000
+      internalID: 8944314788363927013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7678840d56ebe4650800000000000000
+      internalID: 6219117479940622183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: adec761d892cdbb50800000000000000
+      internalID: 6610653789653815002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_16
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97b182cc713159950800000000000000
+      internalID: 6455086633835830137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_17
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e49c1d6233c4a840800000000000000
+      internalID: 5234523288257729767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_18
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e097f26b51659d4a0800000000000000
+      internalID: -6568123930292291314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_19
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ad274e8b9798b610800000000000000
+      internalID: 1637225158911929764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_20
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 108
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a45f8a7a9740a640800000000000000
+      internalID: 5089146307735409827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_21
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 388989188b276c360800000000000000
+      internalID: 7189559991917385859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_22
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c3fc4d47fe995460800000000000000
+      internalID: 7230985461711041472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_23
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9aa4b7777506103a0800000000000000
+      internalID: -6700968841767597399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_24
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b1e8f466a7f381f0800000000000000
+      internalID: -1043718394589158985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_25
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 019c359387b8bd900800000000000000
+      internalID: 710314714715113744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_26
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec135550fe630a110800000000000000
+      internalID: 1270075495133032910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_27
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c009d0f71d8f30e90800000000000000
+      internalID: -7060526212123357172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_28
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c45649873091279d0800000000000000
+      internalID: -2778130517435587252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_29
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57c77d315dbfed300800000000000000
+      internalID: 278937119523044469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_30
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34eff1ffc53433460800000000000000
+      internalID: 7220188694301376067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_31
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b95eec04abc45e930800000000000000
+      internalID: 4171824992663561627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_32
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3c3e3a282c47d9b0800000000000000
+      internalID: -5055488321308967876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_33
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f21ef450ac8d080800000000000000
+      internalID: -9162351317721469062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_34
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1414eff8389cab710800000000000000
+      internalID: 1709900575434228033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_35
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 413904b9d4a75e650800000000000000
+      internalID: 6261545330664313620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_36
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c559bd96a78fb8ab0800000000000000
+      internalID: -5004633356246477476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_37
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e90bd810b38c09fe0800000000000000
+      internalID: -1184226546243751778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_38
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1aa2ec779d973240800000000000000
+      internalID: 4771455604183181853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_39
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 124
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53cd2d409cdf7b3e0800000000000000
+      internalID: -2037881266550678475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_40
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43ab86fd9c110f4a0800000000000000
+      internalID: -6561725098344531404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_41
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a8e83c9359d04db0800000000000000
+      internalID: -4809605448905201503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Outdoor_Barn_Shadow_42
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 116
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b93a8faa213c936a0800000000000000
+      internalID: -6468924904795757669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ec6c02d2ca7639b0800000000000000
+      internalID: -5100754550784234270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1d6d42e7a5998960800000000000000
+      internalID: 7604773994080595226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf3fb3686f51f4f90800000000000000
+      internalID: -6967325949960653828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 060b6ad1a64c3a200800000000000000
+      internalID: 190211569322733664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf264368460712d80800000000000000
+      internalID: -8277211063079640325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04b7c4d53d6b12880800000000000000
+      internalID: -8637421591400252608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28bd8bc36df344790800000000000000
+      internalID: -7546836886191809662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5415b02d7ec7da4a0800000000000000
+      internalID: -6580466145415179963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 120
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d56f402a81bccf980800000000000000
+      internalID: -8503698689724451235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18c195404f9490ad0800000000000000
+      internalID: -2735573986257068927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c9eee10c5f5dd880800000000000000
+      internalID: -8584600465924232759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffc3082682108ab80800000000000000
+      internalID: -8383449433387287297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 96
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd95c11b574b89610800000000000000
+      internalID: 1628249682870032859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d49a57d57795c9040800000000000000
+      internalID: 4655694483998222669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4b29f0d7ebbeae90800000000000000
+      internalID: -7012460965451453617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_20
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76774b153e8511e50800000000000000
+      internalID: 6778296647520909159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_17
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1a7099b561fabf00800000000000000
+      internalID: 1133483675444345373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_18
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b80022aedffefed40800000000000000
+      internalID: 5615971134188159115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_19
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79d37d419cdd230c0800000000000000
+      internalID: -4597368413884039785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_16
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f2322f6df26bee70800000000000000
+      internalID: 9145512308936684278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_24
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 520b12034c7ebfb80800000000000000
+      internalID: -8359833453476073435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_23
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 88
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49925a5dbc6e7bee0800000000000000
+      internalID: -1245273008807532140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_22
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89d90f71a06bd8790800000000000000
+      internalID: -7526159247798657640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_21
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c2c6864fda0cb2d0800000000000000
+      internalID: -3261720076045860159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_25
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90f64b171b143da80800000000000000
+      internalID: -8443332646016880887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_26
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0708782b6b21fe640800000000000000
+      internalID: 5111324677977374832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_27
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88ca598e13959a4e0800000000000000
+      internalID: -1969945291107488632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_28
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 772c7ecf1aa7fc940800000000000000
+      internalID: 5318604521099215479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_29
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5da5afb62dab2c380800000000000000
+      internalID: -8952387696341656875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_30
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdfc81a022b788380800000000000000
+      internalID: -8968783271779840037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_31
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc9e8bf7690613880800000000000000
+      internalID: -8633012811188344373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_32
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67c345c5e79f56a90800000000000000
+      internalID: -7321171298110653322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d9d466b50294ca30800000000000000
+      internalID: 4234670102867663313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98e20e0f1eb075ea0800000000000000
+      internalID: -5884221323099492727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5243f1d639ca7dc0800000000000000
+      internalID: -3640376111487827361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eaa935f1fa24bb430800000000000000
+      internalID: 3799704030529428142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eac373737fb24efe0800000000000000
+      internalID: -1160754463171461970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 841f34e9bf258fb20800000000000000
+      internalID: 3168373578500665672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47191c7ef96f2fb10800000000000000
+      internalID: 2013943150036488564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 49
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c4d44b534d71b750800000000000000
+      internalID: 6318969480425034948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c9671439b4e62560800000000000000
+      internalID: 7288764531039758793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 747bc05a615d4cfb0800000000000000
+      internalID: -4628340223794956473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_14
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 47
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7015fcff4c89ccb0800000000000000
+      internalID: -4843185649086033797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3159c9f421e468820800000000000000
+      internalID: 2920107248948385043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6258b09f69de18c50800000000000000
+      internalID: 6665870156164203814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 391
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba727660ee9e00a80800000000000000
+      internalID: -8502538887956584533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadow_15
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 8
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7f8f70de03564100800000000000000
+      internalID: 91852165500342142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Indoor_Barn_Shadow_33
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4f29fa104aa67360800000000000000
+      internalID: 7167103049313890124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Fence_Shadow_0: 4234670102867663313
+      Fence_Shadow_1: -4628340223794956473
+      Fence_Shadow_10: 2920107248948385043
+      Fence_Shadow_11: 6665870156164203814
+      Fence_Shadow_12: 6318969480425034948
+      Fence_Shadow_13: 7288764531039758793
+      Fence_Shadow_14: -4843185649086033797
+      Fence_Shadow_15: 91852165500342142
+      Fence_Shadow_2: -5884221323099492727
+      Fence_Shadow_3: -3640376111487827361
+      Fence_Shadow_4: 3799704030529428142
+      Fence_Shadow_5: 3168373578500665672
+      Fence_Shadow_6: -1160754463171461970
+      Fence_Shadow_7: 2013943150036488564
+      Fence_Shadow_9: -8502538887956584533
+      Indoor_Barn_Shadow_0: 190211569322733664
+      Indoor_Barn_Shadow_1: -6967325949960653828
+      Indoor_Barn_Shadow_10: -7012460965451453617
+      Indoor_Barn_Shadow_11: 4655694483998222669
+      Indoor_Barn_Shadow_12: 1628249682870032859
+      Indoor_Barn_Shadow_13: -8383449433387287297
+      Indoor_Barn_Shadow_14: -8584600465924232759
+      Indoor_Barn_Shadow_15: -2735573986257068927
+      Indoor_Barn_Shadow_16: 9145512308936684278
+      Indoor_Barn_Shadow_17: 1133483675444345373
+      Indoor_Barn_Shadow_18: 5615971134188159115
+      Indoor_Barn_Shadow_19: -4597368413884039785
+      Indoor_Barn_Shadow_2: -5100754550784234270
+      Indoor_Barn_Shadow_20: 6778296647520909159
+      Indoor_Barn_Shadow_21: -3261720076045860159
+      Indoor_Barn_Shadow_22: -7526159247798657640
+      Indoor_Barn_Shadow_23: -1245273008807532140
+      Indoor_Barn_Shadow_24: -8359833453476073435
+      Indoor_Barn_Shadow_25: -8443332646016880887
+      Indoor_Barn_Shadow_26: 5111324677977374832
+      Indoor_Barn_Shadow_27: -1969945291107488632
+      Indoor_Barn_Shadow_28: 5318604521099215479
+      Indoor_Barn_Shadow_29: -8952387696341656875
+      Indoor_Barn_Shadow_3: 7604773994080595226
+      Indoor_Barn_Shadow_30: -8968783271779840037
+      Indoor_Barn_Shadow_31: -8633012811188344373
+      Indoor_Barn_Shadow_32: -7321171298110653322
+      Indoor_Barn_Shadow_33: 7167103049313890124
+      Indoor_Barn_Shadow_4: -8637421591400252608
+      Indoor_Barn_Shadow_5: -8277211063079640325
+      Indoor_Barn_Shadow_6: -8503698689724451235
+      Indoor_Barn_Shadow_7: -6580466145415179963
+      Indoor_Barn_Shadow_8: -7546836886191809662
+      Outdoor_Barn_Shadow_0: 8196499210030851216
+      Outdoor_Barn_Shadow_1: 6721360469598410708
+      Outdoor_Barn_Shadow_10: -1041391597822946068
+      Outdoor_Barn_Shadow_11: 5987807702011927680
+      Outdoor_Barn_Shadow_12: 7931359417630560655
+      Outdoor_Barn_Shadow_13: 8944314788363927013
+      Outdoor_Barn_Shadow_14: 6219117479940622183
+      Outdoor_Barn_Shadow_15: 6610653789653815002
+      Outdoor_Barn_Shadow_16: 6455086633835830137
+      Outdoor_Barn_Shadow_17: 5234523288257729767
+      Outdoor_Barn_Shadow_18: -6568123930292291314
+      Outdoor_Barn_Shadow_19: 1637225158911929764
+      Outdoor_Barn_Shadow_2: -8883380675805766274
+      Outdoor_Barn_Shadow_20: 5089146307735409827
+      Outdoor_Barn_Shadow_21: 7189559991917385859
+      Outdoor_Barn_Shadow_22: 7230985461711041472
+      Outdoor_Barn_Shadow_23: -6700968841767597399
+      Outdoor_Barn_Shadow_24: -1043718394589158985
+      Outdoor_Barn_Shadow_25: 710314714715113744
+      Outdoor_Barn_Shadow_26: 1270075495133032910
+      Outdoor_Barn_Shadow_27: -7060526212123357172
+      Outdoor_Barn_Shadow_28: -2778130517435587252
+      Outdoor_Barn_Shadow_29: 278937119523044469
+      Outdoor_Barn_Shadow_3: 5562979511336253717
+      Outdoor_Barn_Shadow_30: 7220188694301376067
+      Outdoor_Barn_Shadow_31: 4171824992663561627
+      Outdoor_Barn_Shadow_32: -5055488321308967876
+      Outdoor_Barn_Shadow_33: -9162351317721469062
+      Outdoor_Barn_Shadow_34: 1709900575434228033
+      Outdoor_Barn_Shadow_35: 6261545330664313620
+      Outdoor_Barn_Shadow_36: -5004633356246477476
+      Outdoor_Barn_Shadow_37: -1184226546243751778
+      Outdoor_Barn_Shadow_38: 4771455604183181853
+      Outdoor_Barn_Shadow_39: -2037881266550678475
+      Outdoor_Barn_Shadow_4: 6158480284748049438
+      Outdoor_Barn_Shadow_40: -6561725098344531404
+      Outdoor_Barn_Shadow_41: -4809605448905201503
+      Outdoor_Barn_Shadow_42: -6468924904795757669
+      Outdoor_Barn_Shadow_5: 6411141970275311052
+      Outdoor_Barn_Shadow_6: 696051148915542181
+      Outdoor_Barn_Shadow_7: -3410616517275788412
+      Outdoor_Barn_Shadow_8: -4524265893554319740
+      Outdoor_Barn_Shadow_9: -3037285245345016232
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

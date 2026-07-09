@@ -45,6 +45,10 @@ $allowedEquipmentPrefixes = @(
     "Assets\Editor\GameCore\EditorWindows\"
 )
 
+$allowedEquipmentPaths = @(
+    "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAnimator.cs"
+)
+
 $allowedCombatPrefixes = @()
 
 $allowedCombatPaths = @(
@@ -75,6 +79,7 @@ $allowedCombatPaths = @(
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAnimator.cs",
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAudio.cs",
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreFeedback.cs",
+    "Assets\Editor\GameCore\GAS\GasTimelineHitboxSceneHandle.cs",
     "Assets\Editor\GameCore\Bridge\CompositeRuntimeSmokeValidator.cs"
 )
 
@@ -259,6 +264,7 @@ foreach ($file in $scriptFiles) {
     $checkSets = @(
         @{
             AllowedPrefixes = $allowedEquipmentPrefixes
+            AllowedPaths = $allowedEquipmentPaths
             Patterns = $equipmentPatterns
             Plugin = "EquipmentSystem"
         },

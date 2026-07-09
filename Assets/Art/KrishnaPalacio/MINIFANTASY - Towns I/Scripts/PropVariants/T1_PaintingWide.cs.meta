@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fa0a3977138beae429e5a945a0e11eb5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - colors: {fileID: 941318474763483788, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - night: {fileID: -5345360970915909492, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - wave: {fileID: -5345360970915909492, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadow: {fileID: 5115543373762299762, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

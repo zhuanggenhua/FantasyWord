@@ -1,0 +1,611 @@
+fileFormatVersion: 2
+guid: a57b39887cb19074c9f10c973aed61fc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2632943321424041305
+    second: HayBale_Tower
+  - first:
+      213: 35332333598468616
+    second: HayBale_Column
+  - first:
+      213: 2185935413280926468
+    second: HayStack
+  - first:
+      213: 2796490879853539381
+    second: WaterTrough_Empty_Horizontal
+  - first:
+      213: 1869449880114063069
+    second: WaterTrough_Empty_Vertical
+  - first:
+      213: 5451341611840487710
+    second: WaterTrough_Full_Vertical
+  - first:
+      213: -6558404411164161107
+    second: WaterTrough_Full_Horizontal
+  - first:
+      213: 702457181925315867
+    second: ToolChest_Wide
+  - first:
+      213: 5233700709782118219
+    second: ToolChest_Short
+  - first:
+      213: 1131045112597940843
+    second: HayBale_Row
+  - first:
+      213: 6831715243278567750
+    second: HayBale_Single
+  - first:
+      213: -1813051324235782847
+    second: Scarecrow
+  - first:
+      213: -2428350822737176160
+    second: WaterPump
+  - first:
+      213: -1773375359905858904
+    second: Bucket_Water
+  - first:
+      213: -4425829839543317589
+    second: Bucket_Milk
+  - first:
+      213: -2772875574740432294
+    second: Shovel_Left
+  - first:
+      213: 1410055898277330865
+    second: Shovel_Right
+  - first:
+      213: 8831746081841902455
+    second: Shovel_Center
+  - first:
+      213: 6177847297583046168
+    second: Stool
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: HayBale_Tower
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 76
+        width: 33
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7aa68c4cff7e57bd0800000000000000
+      internalID: -2632943321424041305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayBale_Column
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 82
+        width: 12
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80ae839f1968d7000800000000000000
+      internalID: 35332333598468616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayStack
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 75
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40b6e824da0065e10800000000000000
+      internalID: 2185935413280926468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Empty_Horizontal
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 89
+        width: 14
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5303a4783a12fc620800000000000000
+      internalID: 2796490879853539381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Empty_Vertical
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 82
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd6689dd2ce91f910800000000000000
+      internalID: 1869449880114063069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Full_Vertical
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 82
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e11ce03405e07ab40800000000000000
+      internalID: 5451341611840487710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterTrough_Full_Horizontal
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 81
+        width: 14
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dab843b9feddbf4a0800000000000000
+      internalID: -6558404411164161107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToolChest_Wide
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 64
+        width: 16
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b15949ec511afb900800000000000000
+      internalID: 702457181925315867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ToolChest_Short
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 65
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4fd543f017d1a840800000000000000
+      internalID: 5233700709782118219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayBale_Row
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 56
+        width: 32
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6a8751998742bf00800000000000000
+      internalID: 1131045112597940843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HayBale_Single
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 56
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6498d3a51d02fce50800000000000000
+      internalID: 6831715243278567750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scarecrow
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 49
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 145ef533d6fb6d6e0800000000000000
+      internalID: -1813051324235782847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WaterPump
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 49
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a919bceac3cc4ed0800000000000000
+      internalID: -2428350822737176160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bucket_Water
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 49
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aa71638184b367e0800000000000000
+      internalID: -1773375359905858904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bucket_Milk
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 49
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bab42b1c53b4492c0800000000000000
+      internalID: -4425829839543317589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shovel_Left
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 40
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5a4d392b54c489d0800000000000000
+      internalID: -2772875574740432294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shovel_Right
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 40
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bfb3426e56819310800000000000000
+      internalID: 1410055898277330865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shovel_Center
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 40
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77372a2d44aa09a70800000000000000
+      internalID: 8831746081841902455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stool
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 50
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81e5b01b26f1cb550800000000000000
+      internalID: 6177847297583046168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bucket_Milk: -4425829839543317589
+      Bucket_Water: -1773375359905858904
+      HayBale_Column: 35332333598468616
+      HayBale_Row: 1131045112597940843
+      HayBale_Single: 6831715243278567750
+      HayBale_Tower: -2632943321424041305
+      HayStack: 2185935413280926468
+      Scarecrow: -1813051324235782847
+      Shovel_Center: 8831746081841902455
+      Shovel_Left: -2772875574740432294
+      Shovel_Right: 1410055898277330865
+      Stool: 6177847297583046168
+      ToolChest_Short: 5233700709782118219
+      ToolChest_Wide: 702457181925315867
+      WaterPump: -2428350822737176160
+      WaterTrough_Empty_Horizontal: 2796490879853539381
+      WaterTrough_Empty_Vertical: 1869449880114063069
+      WaterTrough_Full_Horizontal: -6558404411164161107
+      WaterTrough_Full_Vertical: 5451341611840487710
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

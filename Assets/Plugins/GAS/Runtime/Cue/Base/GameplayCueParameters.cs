@@ -1,15 +1,17 @@
+﻿using Unity.Entities;
+
 namespace GAS.Runtime
 {
-    public struct GameplayCueParameters
+    public enum CueSourceType
     {
-        public GameplayEffectSpec sourceGameplayEffectSpec;
-        
-        public AbilitySpec sourceAbilitySpec;
-        
-        public object[] customArguments;
-        // AggregatedSourceTags
-        // AggregatedTargetTags
-        // EffectContext
-        // Magnitude
+        None,
+        AbilitySystemCell,
+        GameplayEffect
+    }
+    
+    public class GameplayCueParametersBase
+    {
+        public CueSourceType SourceType;
+        public Entity entity;
     }
 }

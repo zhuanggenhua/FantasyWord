@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 52a068c91830d0f4ba2df3357b771a84
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - leftShovel: {fileID: -2772875574740432294, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - centerShovel: {fileID: 8831746081841902455, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - rightShovel: {fileID: 1410055898277330865, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

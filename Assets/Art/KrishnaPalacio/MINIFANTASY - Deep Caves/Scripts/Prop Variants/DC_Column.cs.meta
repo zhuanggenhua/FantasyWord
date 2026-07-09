@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 0b1a6d47cd4a057478e55bbb12f37436
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - brownColumn0: {fileID: 2446128977128713750, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - brownColumn1: {fileID: 2738303380643629756, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - brownColumn2: {fileID: -8773984377726514618, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - brownColumn3: {fileID: -4268472613960395428, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowColumn0: {fileID: -2489424363505251165, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowColumn1: {fileID: -5783625899798798193, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowColumn2: {fileID: -1027164613770177727, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - yellowColumn3: {fileID: -7959391031641904438, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - column0Shadow: {fileID: -924497047922193526, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - column1Shadow: {fileID: -4362239580950230068, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - column2Shadow: {fileID: 4109865058876985869, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - column3Shadow: {fileID: 1292196012408536732, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

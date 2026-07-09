@@ -1,113 +1,93 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 namespace GAS.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Sirenix.OdinInspector.Editor;
+    using Sirenix.Utilities;
     using UnityEditor;
     using UnityEngine;
-
+    
     public static class ScriptableObjectCreator
     {
         public static void ShowDialog<T>(string defaultDestinationPath, Action<T> onScritpableObjectCreated = null)
             where T : ScriptableObject
         {
-            var types = TypeCache.GetTypesDerivedFrom<T>()
-                .Where(type => type is { IsClass: true, IsAbstract: false })
-                .OrderBy(type => type.Name)
-                .ToArray();
+            var selector = new ScriptableObjectSelector<T>(defaultDestinationPath, onScritpableObjectCreated);
 
-            if (types.Length == 0)
+            if (selector.SelectionTree.EnumerateTree().Count() == 1)
             {
-                EditorUtility.DisplayDialog("创建失败", $"未找到 {typeof(T).Name} 的可创建子类。", "确定");
-                return;
+                // If there is only one scriptable object to choose from in the selector, then 
+                // we'll automatically select it and confirm the selection. 
+                selector.SelectionTree.EnumerateTree().First().Select();
+                selector.SelectionTree.Selection.ConfirmSelection();
             }
-
-            if (types.Length == 1)
+            else
             {
-                CreateAsset(types[0], defaultDestinationPath, onScritpableObjectCreated);
-                return;
+                // Else, we'll open up the selector in a popup and let the user choose.
+                selector.ShowInPopup(300);
             }
-
-            ScriptableObjectTypeSelector<T>.Open(types, defaultDestinationPath, onScritpableObjectCreated);
         }
 
-        private static void CreateAsset<T>(Type selectedType, string defaultDestinationPath, Action<T> onScritpableObjectCreated)
-            where T : ScriptableObject
+        // Here is the actual ScriptableObjectSelector which inherits from OdinSelector.
+        // You can learn more about those in the documentation: http://sirenix.net/odininspector/documentation/sirenix/odininspector/editor/odinselector(t)
+        // This one builds a menu-tree of all types that inherit from T, and when the selection is confirmed, it then prompts the user
+        // with a dialog to save the newly created scriptable object.
+
+        private class ScriptableObjectSelector<T> : OdinSelector<Type> where T : ScriptableObject
         {
-            var obj = ScriptableObject.CreateInstance(selectedType) as T;
-            var destinationPath = defaultDestinationPath.TrimEnd('/');
-
-            if (!Directory.Exists(destinationPath))
-            {
-                Directory.CreateDirectory(destinationPath);
-                AssetDatabase.Refresh();
-            }
-
-            var absolutePath = EditorUtility.SaveFilePanel("保存资源", destinationPath, $"New {typeof(T).Name}", "asset");
-            if (!string.IsNullOrEmpty(absolutePath) &&
-                TryMakeAssetsRelativePath(absolutePath, out var assetPath))
-            {
-                AssetDatabase.CreateAsset(obj, assetPath);
-                AssetDatabase.Refresh();
-                onScritpableObjectCreated?.Invoke(obj);
-                return;
-            }
-
-            UnityEngine.Object.DestroyImmediate(obj);
-        }
-
-        private static bool TryMakeAssetsRelativePath(string absolutePath, out string assetPath)
-        {
-            var projectRoot = Path.GetDirectoryName(Application.dataPath);
-            assetPath = absolutePath;
-            if (string.IsNullOrEmpty(projectRoot))
-            {
-                return false;
-            }
-
-            var relative = Path.GetRelativePath(projectRoot, absolutePath).Replace('\\', '/');
-            if (!relative.StartsWith("Assets/", StringComparison.Ordinal))
-            {
-                return false;
-            }
-
-            assetPath = relative;
-            return true;
-        }
-
-        private sealed class ScriptableObjectTypeSelector<T> : EditorWindow where T : ScriptableObject
-        {
-            private Type[] types;
+            private Action<T> onScritpableObjectCreated;
             private string defaultDestinationPath;
-            private Action<T> onCreated;
-            private Vector2 scroll;
 
-            public static void Open(IEnumerable<Type> types, string defaultDestinationPath, Action<T> onCreated)
+            public ScriptableObjectSelector(string defaultDestinationPath, Action<T> onScritpableObjectCreated = null)
             {
-                var window = CreateInstance<ScriptableObjectTypeSelector<T>>();
-                window.types = types.ToArray();
-                window.defaultDestinationPath = defaultDestinationPath;
-                window.onCreated = onCreated;
-                window.titleContent = new GUIContent("选择资源类型");
-                window.ShowUtility();
+                this.onScritpableObjectCreated = onScritpableObjectCreated;
+                this.defaultDestinationPath = defaultDestinationPath;
+                this.SelectionConfirmed += this.ShowSaveFileDialog;
             }
 
-            private void OnGUI()
+            protected override void BuildSelectionTree(OdinMenuTree tree)
             {
-                EditorGUILayout.LabelField("选择要创建的资源类型", EditorStyles.boldLabel);
-                scroll = EditorGUILayout.BeginScrollView(scroll);
-                foreach (var type in types)
+                var scriptableObjectTypes = AssemblyUtilities.GetTypes(AssemblyCategory.ProjectSpecific)
+                    .Where(x => x.IsClass && !x.IsAbstract && x.InheritsFrom(typeof(T)));
+
+                tree.Selection.SupportsMultiSelect = false;
+                tree.Config.DrawSearchToolbar = true;
+                tree.Config.SelectMenuItemsOnMouseDown = true;
+                tree.AddRange(scriptableObjectTypes, x => x.GetNiceName())
+                    .AddThumbnailIcons();
+            }
+
+            private void ShowSaveFileDialog(IEnumerable<Type> selection)
+            {
+                var obj = ScriptableObject.CreateInstance(selection.FirstOrDefault()) as T;
+
+                string dest = this.defaultDestinationPath.TrimEnd('/');
+
+                if (!Directory.Exists(dest))
                 {
-                    if (GUILayout.Button(type.Name, EditorStyles.toolbarButton))
-                    {
-                        Close();
-                        CreateAsset(type, defaultDestinationPath, onCreated);
-                    }
+                    Directory.CreateDirectory(dest);
+                    AssetDatabase.Refresh();
                 }
 
-                EditorGUILayout.EndScrollView();
+                dest = EditorUtility.SaveFilePanel("Save object as", dest, "New " + typeof(T).Name, "asset");
+
+                if (!string.IsNullOrEmpty(dest) && PathUtilities.TryMakeRelative(Path.GetDirectoryName(Application.dataPath), dest, out dest))
+                {
+                    AssetDatabase.CreateAsset(obj, dest);
+                    AssetDatabase.Refresh();
+
+                    if (this.onScritpableObjectCreated != null)
+                    {
+                        this.onScritpableObjectCreated(obj);
+                    }
+                }
+                else
+                {
+                    UnityEngine.Object.DestroyImmediate(obj);
+                }
             }
         }
     }

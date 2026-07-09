@@ -1,0 +1,2847 @@
+fileFormatVersion: 2
+guid: ead888b89991a2d46ab985caee2039c2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7236093114622367745
+    second: Pumpkin_SeedsPackIcon
+  - first:
+      213: -3083620331183106390
+    second: Pumpkin_MultipleSeeds
+  - first:
+      213: 8849543219396753944
+    second: Pumpkin_GrowingState_1
+  - first:
+      213: -6790045337997289834
+    second: Pumpkin_GrowingState_2
+  - first:
+      213: -8167706393376750763
+    second: Pumpkin_GrowingState_3
+  - first:
+      213: -2336503616238077758
+    second: Pumpkin_Grown
+  - first:
+      213: 4808324162799616755
+    second: Tomato_SeedsPackIcon
+  - first:
+      213: 171407857470338551
+    second: Tomato_MultipleSeeds
+  - first:
+      213: -4831927542099238266
+    second: Tomato_GrowingState_1
+  - first:
+      213: 4098921951314507721
+    second: Tomato_GrowingState_2
+  - first:
+      213: -4108308375448023542
+    second: Tomato_GrowingState_3
+  - first:
+      213: -1774510736362539053
+    second: Tomato_Grown
+  - first:
+      213: -591964658137163676
+    second: Potato_SeedsPackIcon
+  - first:
+      213: -6512840318645302467
+    second: Potato_MultipleSeeds
+  - first:
+      213: -7432717383821659146
+    second: Potato_GrowingState_1
+  - first:
+      213: -5237471478599587194
+    second: Potato_GrowingState_2
+  - first:
+      213: -6284936606863593846
+    second: Potato_GrowingState_3
+  - first:
+      213: -8630285636738604406
+    second: Potato_Grown
+  - first:
+      213: -6983727873654902819
+    second: Eggplant_SeedsPackIcon
+  - first:
+      213: -7400640253047530886
+    second: Eggplant_MultipleSeeds
+  - first:
+      213: -4328877701979989219
+    second: Eggplant_GrowingState_1
+  - first:
+      213: -8040383059294580437
+    second: Eggplant_GrowingState_2
+  - first:
+      213: -2085031838018425045
+    second: Eggplant_GrowingState_3
+  - first:
+      213: 4522371647302003405
+    second: Eggplant_Grown
+  - first:
+      213: -104837209951984594
+    second: Sunflower_SeedsPackIcon
+  - first:
+      213: -3881282731250482171
+    second: Sunflower_MultipleSeeds
+  - first:
+      213: 240469446384009177
+    second: Sunflower_GrowingState_1
+  - first:
+      213: -5830708677689812517
+    second: Sunflower_GrowingState_2
+  - first:
+      213: -2852781540823547238
+    second: Sunflower_GrowingState_3
+  - first:
+      213: -5043516837553944176
+    second: Sunflower_Grown
+  - first:
+      213: -1078545855956642077
+    second: Radish_SeedsPackIcon
+  - first:
+      213: 816295566433080779
+    second: Radish_MultipleSeeds
+  - first:
+      213: 6817988369834575088
+    second: Radish_GrowingState_1
+  - first:
+      213: -1374090259401094004
+    second: Radish_GrowingState_3
+  - first:
+      213: 6828608856904123823
+    second: Radish_Grown
+  - first:
+      213: 1661681395219908646
+    second: Berry_SeedsPackIcon
+  - first:
+      213: 4689303125309347679
+    second: Berry_MultipleSeeds
+  - first:
+      213: 2648185438440419092
+    second: Berry_GrowingState_1
+  - first:
+      213: -2721953124305976406
+    second: Berry_Grown
+  - first:
+      213: -1695143268776692485
+    second: Corn_SeedsPackIcon
+  - first:
+      213: -8666924527310332801
+    second: Corn_MultipleSeeds
+  - first:
+      213: -5956344768223320372
+    second: Corn_GrowingState_1
+  - first:
+      213: 1534344539706294434
+    second: Corn_GrowingState_2
+  - first:
+      213: 5626412631306811331
+    second: Corn_GrowingState_3
+  - first:
+      213: -1993520897354566013
+    second: Corn_Grown
+  - first:
+      213: -8018162198968478298
+    second: Garlic_SeedsPackIcon
+  - first:
+      213: 212935038948989536
+    second: Garlic_MultipleSeeds
+  - first:
+      213: -5165045637432858700
+    second: Garlic_GrowingState_1
+  - first:
+      213: -6253077656026966841
+    second: Garlic_GrowingState_3
+  - first:
+      213: 1308618521010541340
+    second: Garlic_Grown
+  - first:
+      213: 8070403197583365063
+    second: Beet_SeedsPackIcon
+  - first:
+      213: 8919036257571756576
+    second: Beet_MultipleSeeds
+  - first:
+      213: -4349462009939360176
+    second: Beet_GrowingState_1
+  - first:
+      213: 8332478147001696366
+    second: Beet_GrowingState_2
+  - first:
+      213: 6039960369384434933
+    second: Beet_GrowingState_3
+  - first:
+      213: 928486610561660621
+    second: Beet_Grown
+  - first:
+      213: 7054052898260285097
+    second: Rice_SeedsPackIcon
+  - first:
+      213: 1953912040312043488
+    second: Rice_MultipleSeeds
+  - first:
+      213: -6758262692919737198
+    second: Rice_GrowingState_1
+  - first:
+      213: -3564233701335717565
+    second: Rice_GrowingState_2
+  - first:
+      213: -2810629196521054685
+    second: Rice_GrowingState_3
+  - first:
+      213: 762881550055959503
+    second: Rice_Grown
+  - first:
+      213: -4892295773879459506
+    second: Cauliflower_SeedsPackIcon
+  - first:
+      213: -7790893614474233344
+    second: Cauliflower_MultipleSeeds
+  - first:
+      213: 6794172521993248352
+    second: Cauliflower_GrowingState_1
+  - first:
+      213: 2019477992217057338
+    second: Cauliflower_Grown
+  - first:
+      213: -775414101319056833
+    second: Wheat_SeedsPackIcon
+  - first:
+      213: -3836935197557916426
+    second: Wheat_MultipleSeeds
+  - first:
+      213: 9139670170746675019
+    second: Wheat_GrowingState_1
+  - first:
+      213: 256106747711320602
+    second: Wheat_GrowingState_2
+  - first:
+      213: 3587576859124854096
+    second: Wheat_Grown
+  - first:
+      213: -3657746594343932252
+    second: Lettuce_SeedsPackIcon
+  - first:
+      213: 5040600749477535373
+    second: Lettuce_MultipleSeeds
+  - first:
+      213: -5493305639127696391
+    second: Lettuce_GrowingState_1
+  - first:
+      213: 911829301633750885
+    second: Lettuce_Grown
+  - first:
+      213: -3593949875346389212
+    second: Pepper_SeedsPackIcon
+  - first:
+      213: 7857667294633861617
+    second: Pepper_MultipleSeeds
+  - first:
+      213: 8016984001888306092
+    second: Pepper_GrowingState_1
+  - first:
+      213: 1097041737642531405
+    second: Pepper_GrowingState_2
+  - first:
+      213: 7610901157196213885
+    second: Pepper_GrowingState_3
+  - first:
+      213: 1327470950683010249
+    second: Pepper_Grown
+  - first:
+      213: -7241832520292126243
+    second: Pumpkin_SingleSeed
+  - first:
+      213: -6762179734159408106
+    second: Eggplant_SingleSeed
+  - first:
+      213: -7776746994305639998
+    second: Berry_SingleSeed
+  - first:
+      213: 5743311366186518980
+    second: Beet_SingleSeed
+  - first:
+      213: -859485284658617674
+    second: Wheat_SingleSeed
+  - first:
+      213: -7075015286321848458
+    second: Lettuce_SingleSeed
+  - first:
+      213: -3326561003512753122
+    second: Rice_SingleSeed
+  - first:
+      213: 5449123520019327600
+    second: Corn_SingleSeed
+  - first:
+      213: -4726531924618384494
+    second: Sunflower_SingleSeed
+  - first:
+      213: 119651822485985538
+    second: Tomato_SingleSeed
+  - first:
+      213: 6869989584321460854
+    second: Potato_SingleSeed
+  - first:
+      213: -7864751093210266923
+    second: Radish_SingleSeed
+  - first:
+      213: 5843658329934832845
+    second: Garlic_SingleSeed
+  - first:
+      213: -4039870540836502516
+    second: Cauliflower_SingleSeed
+  - first:
+      213: 744374243782256423
+    second: Pepper_SingleSeed
+  - first:
+      213: 758576051735185277
+    second: Cauliflower_GrowingState_2
+  - first:
+      213: -7718792588664285730
+    second: Cauliflower_GrowingState_3
+  - first:
+      213: 4393613270281533889
+    second: Garlic_GrowingState_2
+  - first:
+      213: 8842230447144300509
+    second: Radish_GrowingState_2
+  - first:
+      213: -3698152029523085762
+    second: Berry_GrowingState_2
+  - first:
+      213: 6211423453372978493
+    second: Berry_GrowingState_3
+  - first:
+      213: 7782433574456118443
+    second: Wheat_GrowingState_3
+  - first:
+      213: -3199135825542027725
+    second: Lettuce_GrowingState_2
+  - first:
+      213: 28849422682211144
+    second: Lettuce_GrowingState_3
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pumpkin_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 72
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10857ba6954cb6460800000000000000
+      internalID: 7236093114622367745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pumpkin_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 74
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa698a185a7c435d0800000000000000
+      internalID: -3083620331183106390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pumpkin_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 73
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81a3c90dba4efca70800000000000000
+      internalID: 8849543219396753944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pumpkin_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 73
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 696dfd38db9e4c1a0800000000000000
+      internalID: -6790045337997289834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pumpkin_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55387114f4a76ae80800000000000000
+      internalID: -8167706393376750763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pumpkin_Grown
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c8b6b12752139fd0800000000000000
+      internalID: -2336503616238077758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 72
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f24998b9599ab240800000000000000
+      internalID: 4808324162799616755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 74
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f5fa38c986f06200800000000000000
+      internalID: 171407857470338551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 72
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 682afb8408b81fcb0800000000000000
+      internalID: -4831927542099238266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 72
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c7f6263ccb42e830800000000000000
+      internalID: 4098921951314507721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 72
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0e88ad9c4b5cf6c0800000000000000
+      internalID: -4108308375448023542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_Grown
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 73
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d77ef413ebaf57e0800000000000000
+      internalID: -1774510736362539053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 72
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4681620a74be8c7f0800000000000000
+      internalID: -591964658137163676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 74
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3b0e489c3ebd95a0800000000000000
+      internalID: -6512840318645302467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 72
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f3707d6beea9d890800000000000000
+      internalID: -7432717383821659146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 72
+        width: 8
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68ae4d48073c057b0800000000000000
+      internalID: -5237471478599587194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 72
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8eeb00847b67c8a0800000000000000
+      internalID: -6284936606863593846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_Grown
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 72
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a822a0840f01b3880800000000000000
+      internalID: -8630285636738604406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 56
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddf2ec21080d41f90800000000000000
+      internalID: -6983727873654902819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 58
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7a15ae66e4ab4990800000000000000
+      internalID: -7400640253047530886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 57
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1b9f595aacbce3c0800000000000000
+      internalID: -4328877701979989219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 57
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b219da41532da6090800000000000000
+      internalID: -8040383059294580437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 56
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2f288d179a7013e0800000000000000
+      internalID: -2085031838018425045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_Grown
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 56
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcaebbb7d01b2ce30800000000000000
+      internalID: 4522371647302003405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 56
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e24a19dec1b8b8ef0800000000000000
+      internalID: -104837209951984594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 58
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50405fa7be9e22ac0800000000000000
+      internalID: -3881282731250482171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 56
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dfbd0bffa1565300800000000000000
+      internalID: 240469446384009177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 56
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd9d28d9959251fa0800000000000000
+      internalID: -5830708677689812517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 56
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a92cb65ad42e868d0800000000000000
+      internalID: -2852781540823547238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_Grown
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09945ee6824d10ab0800000000000000
+      internalID: -5043516837553944176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 56
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e61cb5224c3801f0800000000000000
+      internalID: -1078545855956642077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 58
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc558f42e70145b00800000000000000
+      internalID: 816295566433080779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 56
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f40cb29c4c5e9e50800000000000000
+      internalID: 6817988369834575088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 56
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8cc21770304eece0800000000000000
+      internalID: -1374090259401094004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_Grown
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 56
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa54bd9639714ce50800000000000000
+      internalID: 6828608856904123823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 40
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62845fbcc6a7f0710800000000000000
+      internalID: 1661681395219908646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 42
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f575134f850c31140800000000000000
+      internalID: 4689303125309347679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 41
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41f6a9520ae30c420800000000000000
+      internalID: 2648185438440419092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_Grown
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa34a721e0ea93ad0800000000000000
+      internalID: -2721953124305976406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 40
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf4bb25ad24a978e0800000000000000
+      internalID: -1695143268776692485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 42
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7c1c8ecf06e8b780800000000000000
+      internalID: -8666924527310332801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 40
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc6ea4acdffc65da0800000000000000
+      internalID: -5956344768223320372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 40
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a00144ca361b4510800000000000000
+      internalID: 1534344539706294434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 40
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c730d86a78051e40800000000000000
+      internalID: 5626412631306811331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_Grown
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 40
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 386fcd45e479554e0800000000000000
+      internalID: -1993520897354566013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 40
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a5d40b46f3c9b090800000000000000
+      internalID: -8018162198968478298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 42
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06ad9cc2a4f74f200800000000000000
+      internalID: 212935038948989536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 40
+        width: 4
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b7222cbb521258b0800000000000000
+      internalID: -5165045637432858700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 40
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c49497800b9839a0800000000000000
+      internalID: -6253077656026966841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_Grown
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 40
+        width: 5
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c13945b8c95292210800000000000000
+      internalID: 1308618521010541340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 24
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c3122a03f4dfff60800000000000000
+      internalID: 8070403197583365063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 26
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02ad46f9838c6cb70800000000000000
+      internalID: 8919036257571756576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 24
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 056028da85b93a3c0800000000000000
+      internalID: -4349462009939360176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 24
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e60cdb23ab8e2a370800000000000000
+      internalID: 8332478147001696366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 24
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fca89274ff32d350800000000000000
+      internalID: 6039960369384434933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_Grown
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 24
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc6fb3927a5a2ec00800000000000000
+      internalID: 928486610561660621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 24
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a67e9bacb705e160800000000000000
+      internalID: 7054052898260285097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 26
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e7782df5a0bd1b10800000000000000
+      internalID: 1953912040312043488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 24
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2948eb933e3d532a0800000000000000
+      internalID: -6758262692919737198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 24
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 349a86f255c498ec0800000000000000
+      internalID: -3564233701335717565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 24
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32e550a13a3aef8d0800000000000000
+      internalID: -2810629196521054685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_Grown
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcbe8c45abc469a00800000000000000
+      internalID: 762881550055959503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 24
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4125c50ae21b1cb0800000000000000
+      internalID: -4892295773879459506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 26
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00a776a198f21e390800000000000000
+      internalID: -7790893614474233344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 24
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06e902469efb94e50800000000000000
+      internalID: 6794172521993248352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_Grown
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 25
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3811d5c880a60c10800000000000000
+      internalID: 2019477992217057338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 8
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f328c01bbfc2d35f0800000000000000
+      internalID: -775414101319056833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 10
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fcfd5b44c770cac0800000000000000
+      internalID: -3836935197557916426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 8
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4fd693a891a6de70800000000000000
+      internalID: 9139670170746675019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 8
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a12f9e9eabfdd8300800000000000000
+      internalID: 256106747711320602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_Grown
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 8
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05d6c844522a9c130800000000000000
+      internalID: 3587576859124854096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 8
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ae2cbd1ad21d3dc0800000000000000
+      internalID: -3657746594343932252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 10
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8e1d27ecafc3f540800000000000000
+      internalID: 5040600749477535373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 8
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fbb42140abd3c3b0800000000000000
+      internalID: -5493305639127696391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_Grown
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 9
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5671ca33be777ac00800000000000000
+      internalID: 911829301633750885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_SeedsPackIcon
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 8
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4274b6341a9bf1ec0800000000000000
+      internalID: -3593949875346389212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_MultipleSeeds
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 10
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f12bd3d5ca0c0d60800000000000000
+      internalID: 7857667294633861617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_GrowingState_1
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 8
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca3ca82597c024f60800000000000000
+      internalID: 8016984001888306092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 8
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4ad5f3e5a9793f00800000000000000
+      internalID: 1097041737642531405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 8
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7e2a47374a5f9960800000000000000
+      internalID: 7610901157196213885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_Grown
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 8
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c46c11ebcf1c6210800000000000000
+      internalID: 1327470950683010249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pumpkin_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 75
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd1bd1111b7df7b90800000000000000
+      internalID: -7241832520292126243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Eggplant_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 59
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 614451efb59e722a0800000000000000
+      internalID: -6762179734159408106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 43
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c95358cfc1731490800000000000000
+      internalID: -7776746994305639998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beet_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 27
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c9c208124754bf40800000000000000
+      internalID: 5743311366186518980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 11
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b26f36ffae7214f0800000000000000
+      internalID: -859485284658617674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 11
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67fd356051f70dd90800000000000000
+      internalID: -7075015286321848458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rice_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 27
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1494f5646ea5d1d0800000000000000
+      internalID: -3326561003512753122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Corn_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 43
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07a6af388fc2f9b40800000000000000
+      internalID: 5449123520019327600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sunflower_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 59
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29be39db14cf76eb0800000000000000
+      internalID: -4726531924618384494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tomato_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 75
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2095108d2b619a100800000000000000
+      internalID: 119651822485985538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Potato_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 75
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67a3d10d02b175f50800000000000000
+      internalID: 6869989584321460854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 59
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d2465acc8acad290800000000000000
+      internalID: -7864751093210266923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 43
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc4a4804a48d81150800000000000000
+      internalID: 5843658329934832845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 27
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0400e2b52f7fe7c0800000000000000
+      internalID: -4039870540836502516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pepper_SingleSeed
+      rect:
+        serializedVersion: 2
+        x: 178
+        y: 11
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 727679c4e6c845a00800000000000000
+      internalID: 744374243782256423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 24
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d774bc266e0078a00800000000000000
+      internalID: 758576051735185277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cauliflower_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 24
+        width: 7
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed55fb9590751e490800000000000000
+      internalID: -7718792588664285730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Garlic_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 40
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c9b29fadff39fc30800000000000000
+      internalID: 4393613270281533889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Radish_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 56
+        width: 7
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddfed285eb9e5ba70800000000000000
+      internalID: 8842230447144300509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 41
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e36f2e2a2568dacc0800000000000000
+      internalID: -3698152029523085762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Berry_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3593d7a8b8633650800000000000000
+      internalID: 6211423453372978493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wheat_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 8
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bacc7855a12c00c60800000000000000
+      internalID: 7782433574456118443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_GrowingState_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 8
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 336675a9ae26a93d0800000000000000
+      internalID: -3199135825542027725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lettuce_GrowingState_3
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 8
+        width: 7
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 843c2f6a56e766000800000000000000
+      internalID: 28849422682211144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Beet_GrowingState_1: -4349462009939360176
+      Beet_GrowingState_2: 8332478147001696366
+      Beet_GrowingState_3: 6039960369384434933
+      Beet_Grown: 928486610561660621
+      Beet_MultipleSeeds: 8919036257571756576
+      Beet_SeedsPackIcon: 8070403197583365063
+      Beet_SingleSeed: 5743311366186518980
+      Berry_GrowingState_1: 2648185438440419092
+      Berry_GrowingState_2: -3698152029523085762
+      Berry_GrowingState_3: 6211423453372978493
+      Berry_Grown: -2721953124305976406
+      Berry_MultipleSeeds: 4689303125309347679
+      Berry_SeedsPackIcon: 1661681395219908646
+      Berry_SingleSeed: -7776746994305639998
+      Cauliflower_GrowingState_1: 6794172521993248352
+      Cauliflower_GrowingState_2: 758576051735185277
+      Cauliflower_GrowingState_3: -7718792588664285730
+      Cauliflower_Grown: 2019477992217057338
+      Cauliflower_MultipleSeeds: -7790893614474233344
+      Cauliflower_SeedsPackIcon: -4892295773879459506
+      Cauliflower_SingleSeed: -4039870540836502516
+      Corn_GrowingState_1: -5956344768223320372
+      Corn_GrowingState_2: 1534344539706294434
+      Corn_GrowingState_3: 5626412631306811331
+      Corn_Grown: -1993520897354566013
+      Corn_MultipleSeeds: -8666924527310332801
+      Corn_SeedsPackIcon: -1695143268776692485
+      Corn_SingleSeed: 5449123520019327600
+      Eggplant_GrowingState_1: -4328877701979989219
+      Eggplant_GrowingState_2: -8040383059294580437
+      Eggplant_GrowingState_3: -2085031838018425045
+      Eggplant_Grown: 4522371647302003405
+      Eggplant_MultipleSeeds: -7400640253047530886
+      Eggplant_SeedsPackIcon: -6983727873654902819
+      Eggplant_SingleSeed: -6762179734159408106
+      Garlic_GrowingState_1: -5165045637432858700
+      Garlic_GrowingState_2: 4393613270281533889
+      Garlic_GrowingState_3: -6253077656026966841
+      Garlic_Grown: 1308618521010541340
+      Garlic_MultipleSeeds: 212935038948989536
+      Garlic_SeedsPackIcon: -8018162198968478298
+      Garlic_SingleSeed: 5843658329934832845
+      Lettuce_GrowingState_1: -5493305639127696391
+      Lettuce_GrowingState_2: -3199135825542027725
+      Lettuce_GrowingState_3: 28849422682211144
+      Lettuce_Grown: 911829301633750885
+      Lettuce_MultipleSeeds: 5040600749477535373
+      Lettuce_SeedsPackIcon: -3657746594343932252
+      Lettuce_SingleSeed: -7075015286321848458
+      Pepper_GrowingState_1: 8016984001888306092
+      Pepper_GrowingState_2: 1097041737642531405
+      Pepper_GrowingState_3: 7610901157196213885
+      Pepper_Grown: 1327470950683010249
+      Pepper_MultipleSeeds: 7857667294633861617
+      Pepper_SeedsPackIcon: -3593949875346389212
+      Pepper_SingleSeed: 744374243782256423
+      Potato_GrowingState_1: -7432717383821659146
+      Potato_GrowingState_2: -5237471478599587194
+      Potato_GrowingState_3: -6284936606863593846
+      Potato_Grown: -8630285636738604406
+      Potato_MultipleSeeds: -6512840318645302467
+      Potato_SeedsPackIcon: -591964658137163676
+      Potato_SingleSeed: 6869989584321460854
+      Pumpkin_GrowingState_1: 8849543219396753944
+      Pumpkin_GrowingState_2: -6790045337997289834
+      Pumpkin_GrowingState_3: -8167706393376750763
+      Pumpkin_Grown: -2336503616238077758
+      Pumpkin_MultipleSeeds: -3083620331183106390
+      Pumpkin_SeedsPackIcon: 7236093114622367745
+      Pumpkin_SingleSeed: -7241832520292126243
+      Radish_GrowingState_1: 6817988369834575088
+      Radish_GrowingState_2: 8842230447144300509
+      Radish_GrowingState_3: -1374090259401094004
+      Radish_Grown: 6828608856904123823
+      Radish_MultipleSeeds: 816295566433080779
+      Radish_SeedsPackIcon: -1078545855956642077
+      Radish_SingleSeed: -7864751093210266923
+      Rice_GrowingState_1: -6758262692919737198
+      Rice_GrowingState_2: -3564233701335717565
+      Rice_GrowingState_3: -2810629196521054685
+      Rice_Grown: 762881550055959503
+      Rice_MultipleSeeds: 1953912040312043488
+      Rice_SeedsPackIcon: 7054052898260285097
+      Rice_SingleSeed: -3326561003512753122
+      Sunflower_GrowingState_1: 240469446384009177
+      Sunflower_GrowingState_2: -5830708677689812517
+      Sunflower_GrowingState_3: -2852781540823547238
+      Sunflower_Grown: -5043516837553944176
+      Sunflower_MultipleSeeds: -3881282731250482171
+      Sunflower_SeedsPackIcon: -104837209951984594
+      Sunflower_SingleSeed: -4726531924618384494
+      Tomato_GrowingState_1: -4831927542099238266
+      Tomato_GrowingState_2: 4098921951314507721
+      Tomato_GrowingState_3: -4108308375448023542
+      Tomato_Grown: -1774510736362539053
+      Tomato_MultipleSeeds: 171407857470338551
+      Tomato_SeedsPackIcon: 4808324162799616755
+      Tomato_SingleSeed: 119651822485985538
+      Wheat_GrowingState_1: 9139670170746675019
+      Wheat_GrowingState_2: 256106747711320602
+      Wheat_GrowingState_3: 7782433574456118443
+      Wheat_Grown: 3587576859124854096
+      Wheat_MultipleSeeds: -3836935197557916426
+      Wheat_SeedsPackIcon: -775414101319056833
+      Wheat_SingleSeed: -859485284658617674
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

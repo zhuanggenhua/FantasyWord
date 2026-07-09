@@ -1,70 +1,125 @@
+﻿using GAS.Runtime;
+using UnityEngine;
 
 #if UNITY_EDITOR
 namespace GAS.Editor
 {
-    using System.Linq;
-    using GAS.Runtime;
-
+    using UnityEngine.UIElements;
     
-    public class TaskClip : TrackClip<TaskClipEventTrack>
+    public class TaskClip
     {
-        private TimelineAbilityAssetBase AbilityAsset => AbilityTimelineEditorWindow.Instance.AbilityAsset;
-        public TaskClipEvent TaskClipData => clipData as TaskClipEvent;
+        private VisualElement _ve;
+        private AbilityTaskBase _previewTask;
+        private string _previewTaskType;
+        private XParam _previewAbilityParam;
+        private XParam _previewTaskParam;
 
-        public TaskClipEvent ClipDataForSave
+        public VisualElement Ve => _ve;
+        
+        public TaskClipData TaskClipData { get;private set; }
+
+        public TrackClipVisualElement ClipVe => _ve as TrackClipVisualElement;
+        public float FrameUnitWidth { get; protected set; }
+        public int StartFrameIndex => TaskClipData.StartTime;
+        public int EndFrameIndex => TaskClipData.EndTime;
+        public int DurationFrame => EndFrameIndex - StartFrameIndex;
+
+        public Label ItemLabel => ClipVe.ItemLabel;
+        
+        private XParamTimeline AbilityConfig => AbilityTimelineEditorWindow.Instance.AbilityConfig;
+
+        public Object DataInspector => TaskClipEditor.Create(this);
+
+        private AbilityTimelineTrack _track;
+
+        public void InitTrackClip(
+            AbilityTimelineTrack track,
+            VisualElement parent,
+            float frameUnitWidth,
+            TaskClipData taskClipDataData)
         {
-            get
-            {
-                var cueTrackDataForSave = track.TaskClipTrackDataForSave;
-                for (var i = 0; i < cueTrackDataForSave.clipEvents.Count; i++)
-                    if (cueTrackDataForSave.clipEvents[i] == TaskClipData)
-                        return track.TaskClipTrackDataForSave.clipEvents[i];
-                return null;
-            }
+            _track = track;
+            
+            FrameUnitWidth = frameUnitWidth;
+            TaskClipData = taskClipDataData;
+
+            _ve = new TrackClipVisualElement();
+            ClipVe.InitClipInfo(this);
+            parent.Add(_ve);
+            if (AbilityTimelineEditorWindow.Instance.CurrentInspectorObject is TaskClip clipBase &&
+                taskClipDataData == clipBase.TaskClipData)
+                ClipVe.OnSelect();
+            else
+                ClipVe.OnUnSelect();
+  
+            RefreshShow(FrameUnitWidth);
         }
-        
-        
-        public override void Delete()
+
+        public void Delete()
         {
-            var success = track.TaskClipTrackDataForSave.clipEvents.Remove(TaskClipData);
-            AbilityTimelineEditorWindow.Instance.Save();
+            var success = _track.TrackData.TaskClips.Remove(TaskClipData);
             if (!success) return;
-            track.RemoveTrackItem(this);
+            ClearPreviewTaskCache();
+            _track.RemoveTrackItem(this);
             AbilityTimelineEditorWindow.Instance.SetInspector();
         }
 
-        public override void RefreshShow(float newFrameUnitWidth)
+        public void RefreshShow(float newFrameUnitWidth)
         {
-            base.RefreshShow(newFrameUnitWidth);
-            var taskType = TaskClipData.ongoingTask.TaskData.Type;
-            var shortName = taskType.Split('.').Last();
-            ItemLabel.text = !string.IsNullOrEmpty(shortName) ? shortName : "Null!";
+            FrameUnitWidth = newFrameUnitWidth;
+            // clip位置，宽度
+            var mainPos = _ve.transform.position;
+            mainPos.x = StartFrameIndex * FrameUnitWidth;
+            _ve.transform.position = mainPos;
+            _ve.style.width = DurationFrame * FrameUnitWidth;
+            
+            ClipVe.UpdateState(TaskClipData.StartTime == TaskClipData.EndTime);
+            ItemLabel.text = TaskClipData.Name;
         }
 
-        public override void UpdateClipDataStartFrame(int newStartFrame)
+        public void UpdateClipDataStartFrame(int newStartFrame)
         {
-            var updatedClip = ClipDataForSave;
-            ClipDataForSave.startFrame = newStartFrame;
-            AbilityTimelineEditorWindow.Instance.Save();
-            clipData = updatedClip;
+            TaskClipData.StartTime = newStartFrame;
         }
 
-        public override void UpdateClipDataDurationFrame(int newDurationFrame)
+        public void UpdateClipDataEndFrame(int endFrame)
         {
-            var updatedClip = ClipDataForSave;
-            ClipDataForSave.durationFrame = newDurationFrame;
-            AbilityTimelineEditorWindow.Instance.Save();
-            clipData = updatedClip;
+            TaskClipData.EndTime = endFrame;
         }
 
-        public override void OnTickView(int frameIndex, int startFrame, int endFrame)
+        public void ClearPreviewTaskCache()
+        {
+            _previewTask = null;
+            _previewTaskType = null;
+            _previewAbilityParam = null;
+            _previewTaskParam = null;
+        }
+
+        public void OnTickView(int frameIndex, int startFrame, int endFrame)
         {
             if (frameIndex < startFrame || frameIndex > endFrame) return;
-            var ongoingAbilityTask = TaskClipData.Load();
-            ongoingAbilityTask.OnEditorPreview( frameIndex, startFrame, endFrame);
+            var task = GetOrCreatePreviewTask();
+            if (task == null) return;
+            task.OnEditorPreview(AbilityTimelineEditorWindow.Instance.PreviewObject,frameIndex, startFrame, endFrame);
         }
 
-        public override UnityEngine.Object DataInspector => TaskClipEditor.Create(this);
+        private AbilityTaskBase GetOrCreatePreviewTask()
+        {
+            if (_previewTask != null &&
+                _previewTaskType == TaskClipData.TaskType &&
+                ReferenceEquals(_previewAbilityParam, AbilityConfig) &&
+                ReferenceEquals(_previewTaskParam, TaskClipData.Parameter))
+            {
+                return _previewTask;
+            }
+
+            _previewTask = EditorAbilityHelper.CreateTaskInEditor(TaskClipData.TaskType, AbilityConfig,
+                TaskClipData.Parameter);
+            _previewTaskType = TaskClipData.TaskType;
+            _previewAbilityParam = AbilityConfig;
+            _previewTaskParam = TaskClipData.Parameter;
+            return _previewTask;
+        }
     }
 }
 #endif

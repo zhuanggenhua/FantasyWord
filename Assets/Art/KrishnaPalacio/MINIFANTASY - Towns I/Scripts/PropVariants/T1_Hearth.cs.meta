@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c931e3c9b66313c4d8d1f794650bb409
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - hearthStack: {fileID: 1933289406430316489, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - hearthNoStack: {fileID: 7459499326408845396, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - hearthEast: {fileID: 363578968219060554, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - hearthWest: {fileID: 1661336792895497432, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowHearthStack: {fileID: 2974071048452655432, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowHearthNoStack: {fileID: -5079026726737716108, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

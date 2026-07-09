@@ -1,0 +1,2015 @@
+fileFormatVersion: 2
+guid: 69cffd28a6babd1408d3214534a6cf93
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3277401993695368409
+    second: Sidewalk_Shadows_0
+  - first:
+      213: 2190095804314572223
+    second: Sidewalk_Shadows_4
+  - first:
+      213: -3604913292448422458
+    second: Sidewalk_Shadows_1
+  - first:
+      213: -593625456985843713
+    second: Sidewalk_Shadows_3
+  - first:
+      213: -1649009888911190021
+    second: Sidewalk_Shadows_2
+  - first:
+      213: -2962325993882877618
+    second: Sidewalk_Shadows_5
+  - first:
+      213: -3062765729369895101
+    second: Sidewalk_Shadows_6
+  - first:
+      213: -1130489189996752584
+    second: Sidewalk_Shadows_7
+  - first:
+      213: -5609348845935864348
+    second: Sidewalk_Shadows_8
+  - first:
+      213: 4767694623894084197
+    second: Sidewalk_Shadows_9
+  - first:
+      213: -2002752364438542180
+    second: Fence_Shadows_0
+  - first:
+      213: -5818428680230971751
+    second: Fence_Shadows_2
+  - first:
+      213: -1626473074719819401
+    second: Fence_Shadows_4
+  - first:
+      213: -639940990012032042
+    second: Fence_Shadows_5
+  - first:
+      213: -9055988552973872996
+    second: LogPile_Shadows_0
+  - first:
+      213: 5696604975021063577
+    second: Fence_Shadows_6
+  - first:
+      213: 874385903204623912
+    second: LogPile_Shadows_1
+  - first:
+      213: -1101251605710727144
+    second: WoodenBeams_Shadows_6
+  - first:
+      213: 6299684443683783352
+    second: WoodenBeams_Shadows_7
+  - first:
+      213: -656421540141691054
+    second: WoodenBeams_Shadows_5
+  - first:
+      213: 2462287185511442501
+    second: WoodenBeams_Shadows_4
+  - first:
+      213: -3753880158201664446
+    second: WoodenBeams_Shadows_0
+  - first:
+      213: -9096893791357714861
+    second: WoodenBeams_Shadows_1
+  - first:
+      213: 3429699016275263081
+    second: WoodenBeams_Shadows_2
+  - first:
+      213: -1983092319053354896
+    second: WoodenBeams_Shadows_3
+  - first:
+      213: -5933752153261657467
+    second: RoofNorthToSouth_Shadows_0
+  - first:
+      213: 1087732011809945839
+    second: RoofEastToWest_Shadows_1
+  - first:
+      213: 4732483592719189406
+    second: RoofEastToWest_Shadows_0
+  - first:
+      213: -6485244906032259795
+    second: RoofEastToWest_Shadows_4
+  - first:
+      213: -4648372313934952676
+    second: RoofEastToWest_Shadows_3
+  - first:
+      213: -2316257385814783305
+    second: RoofEastToWest_Shadows_2
+  - first:
+      213: 1034725704763912621
+    second: RoofEastToWest_Shadows_5
+  - first:
+      213: 331146850900242217
+    second: RoofEastToWest_Shadows_6
+  - first:
+      213: 6989245849553000594
+    second: Walls_Inside_Shadow_1
+  - first:
+      213: -888258717683022180
+    second: Walls_Inside_Shadow_0
+  - first:
+      213: 1838207180343127855
+    second: Walls_Inside_Shadow_4
+  - first:
+      213: -854969154825209905
+    second: Walls_Inside_Shadow_2
+  - first:
+      213: -5707148335835210200
+    second: Walls_Inside_Shadow_5
+  - first:
+      213: 183574176418404826
+    second: Walls_Inside_Shadow_6
+  - first:
+      213: 1176440925468129077
+    second: Walls_Inside_Shadow_7
+  - first:
+      213: -9125244377111504803
+    second: Walls_Inside_Shadow_8
+  - first:
+      213: -4433058861914439009
+    second: Walls_Inside_Shadow_9
+  - first:
+      213: -6145909116312396739
+    second: Doors_Inside_Shadow_5
+  - first:
+      213: 1839372999799069180
+    second: Doors_Inside_Shadow_6
+  - first:
+      213: 4889531109188659559
+    second: Doors_Inside_Shadow_0
+  - first:
+      213: 5955926184433934773
+    second: Walls_Inside_Shadow_3
+  - first:
+      213: -150085021121519662
+    second: Walls_Inside_Shadow_10
+  - first:
+      213: 1897042186549797158
+    second: Doors_Inside_Shadow_7
+  - first:
+      213: 1760688562449409153
+    second: Counter_Shadows_7
+  - first:
+      213: -8085960613041882402
+    second: Counter_Shadows_6
+  - first:
+      213: -8327653793817927050
+    second: Counter_Shadows_1
+  - first:
+      213: -5847777506984414027
+    second: Counter_Shadows_2
+  - first:
+      213: -6719961760819972560
+    second: Counter_Shadows_0
+  - first:
+      213: -6954544609692664161
+    second: Counter_Shadows_10
+  - first:
+      213: 5342522622515909442
+    second: Counter_Shadows_8
+  - first:
+      213: -1477154678855187277
+    second: Counter_Shadows_5
+  - first:
+      213: -902311909158066326
+    second: Counter_Shadows_3
+  - first:
+      213: 3358323191886012613
+    second: Counter_Shadows_4
+  - first:
+      213: 5523723561030242217
+    second: Counter_Shadows_9
+  - first:
+      213: -6294361043189671961
+    second: Doors_Inside_Shadow_2
+  - first:
+      213: 7068426895828757838
+    second: Doors_Inside_Shadow_4
+  - first:
+      213: -5388079722045846245
+    second: Doors_Inside_Shadow_1
+  - first:
+      213: -3182381253517816911
+    second: Fence_Shadows_3
+  - first:
+      213: 2088696409663361182
+    second: Fence_Shadows_1
+  - first:
+      213: 4678478963668838594
+    second: Doors_Inside_Shadow_3
+  - first:
+      213: -2719821551221488892
+    second: Walls_Inside_Shadow_13
+  - first:
+      213: -4465864674995557744
+    second: Walls_Inside_Shadow_12
+  - first:
+      213: 7033202693497669526
+    second: Walls_Inside_Shadow_11
+  - first:
+      213: 1729127314371764715
+    second: Walls_Outside_Shadow_0
+  - first:
+      213: 5085749505818707474
+    second: Walls_Outside_Shadow_1
+  - first:
+      213: 9031444530816791848
+    second: Walls_Outside_Shadow_2
+  - first:
+      213: 205334219157635195
+    second: Sidewalk_Shadows_Red
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d49e54bfbbab7d20800000000000000
+      internalID: 3277401993695368409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_4
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb55e38c788c46e10800000000000000
+      internalID: 2190095804314572223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 72
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c5278dc576c8fdc0800000000000000
+      internalID: -3604913292448422458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_3
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff7dab2cac403c7f0800000000000000
+      internalID: -593625456985843713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_2
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf7975c2e3a8d19e0800000000000000
+      internalID: -1649009888911190021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_5
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4184b12434b3e6d0800000000000000
+      internalID: -2962325993882877618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_6
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34fcaaedbcede75d0800000000000000
+      internalID: -3062765729369895101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_7
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83113df3212bf40f0800000000000000
+      internalID: -1130489189996752584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_8
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e5deb8b1f69722b0800000000000000
+      internalID: -5609348845935864348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_9
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56a1fb600014a2240800000000000000
+      internalID: 4767694623894084197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c982198e55bc434e0800000000000000
+      internalID: -2002752364438542180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_2
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99653e351f9c04fa0800000000000000
+      internalID: -5818428680230971751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_4
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77976902b5b9d69e0800000000000000
+      internalID: -1626473074719819401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_5
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dbfe156f097e17f0800000000000000
+      internalID: -639940990012032042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LogPile_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 19
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c901df9446aa25280800000000000000
+      internalID: -9055988552973872996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99d7ad9fa086e0f40800000000000000
+      internalID: 5696604975021063577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LogPile_Shadows_1
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 826ee15a851722c00800000000000000
+      internalID: 874385903204623912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8189841df7197b0f0800000000000000
+      internalID: -1101251605710727144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_7
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b283d6df99fc6750800000000000000
+      internalID: 6299684443683783352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_5
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25f80fc461ce3e6f0800000000000000
+      internalID: -656421540141691054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_4
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 548e763462dcb2220800000000000000
+      internalID: 2462287185511442501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24ca00192e987ebc0800000000000000
+      internalID: -3753880158201664446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_1
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35ebaae4b4751c180800000000000000
+      internalID: -9096893791357714861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_2
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96ef79f751db89f20800000000000000
+      internalID: 3429699016275263081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WoodenBeams_Shadows_3
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 078e40eea04aa74e0800000000000000
+      internalID: -1983092319053354896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofNorthToSouth_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 80
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58231afdad317ada0800000000000000
+      internalID: -5933752153261657467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_1
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 109
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe8b0ce6086681f00800000000000000
+      internalID: 1087732011809945839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 109
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e954469f0c82da140800000000000000
+      internalID: 4732483592719189406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_4
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 109
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2d19864e18cff5a0800000000000000
+      internalID: -6485244906032259795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 109
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c178524320aad7fb0800000000000000
+      internalID: -4648372313934952676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_2
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 109
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ba822efd200bdfd0800000000000000
+      internalID: -2316257385814783305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_5
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da13b68db851c5e00800000000000000
+      internalID: 1034725704763912621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoofEastToWest_Shadows_6
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92fe5607e48789400800000000000000
+      internalID: 331146850900242217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_7
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 184e3e44be83f6810800000000000000
+      internalID: 1760688562449409153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_6
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edab6d7e9a5e8cf80800000000000000
+      internalID: -8085960613041882402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_1
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6726c0f0ffa3e6c80800000000000000
+      internalID: -8327653793817927050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_2
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b4bcaa175588dea0800000000000000
+      internalID: -5847777506984414027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_0
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 036fd16e166edb2a0800000000000000
+      internalID: -6719961760819972560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_10
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 16
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9e39a4368e7c7f90800000000000000
+      internalID: -6954544609692664161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_8
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2439c8fe404742a40800000000000000
+      internalID: 5342522622515909442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_5
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b4c78855a7108be0800000000000000
+      internalID: -1477154678855187277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_3
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a67670a69185a73f0800000000000000
+      internalID: -902311909158066326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_4
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c0625d56292b9e20800000000000000
+      internalID: 3358323191886012613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Counter_Shadows_9
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 40
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9afc9a4105538ac40800000000000000
+      internalID: 5523723561030242217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_3
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 24
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bb45346c19e5d3d0800000000000000
+      internalID: -3182381253517816911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence_Shadows_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e905e95715a8cfc10800000000000000
+      internalID: 2088696409663361182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 298da7ec11acef060800000000000000
+      internalID: 6989245849553000594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c960cd707654ca3f0800000000000000
+      internalID: -888258717683022180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2face7f0bf928910800000000000000
+      internalID: 1838207180343127855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc73ab0651a8224f0800000000000000
+      internalID: -854969154825209905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 328
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b1e1a31f43b7a250800000000000000
+      internalID: 5955926184433934773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82e941a83d22cc0b0800000000000000
+      internalID: -5707148335835210200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad99a57adbf2c8200800000000000000
+      internalID: 183574176418404826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53772c5e9ce835010800000000000000
+      internalID: 1176440925468129077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_8
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 160
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5853ad269e9c5180800000000000000
+      internalID: -9125244377111504803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_9
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f924133d37c9a72c0800000000000000
+      internalID: -4433058861914439009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_10
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dfd1fde77acaedf0800000000000000
+      internalID: -150085021121519662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_5
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3c5d5c983855baa0800000000000000
+      internalID: -6145909116312396739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_6
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf9d7767ff3c68910800000000000000
+      internalID: 1839372999799069180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_7
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6212b3551d5a35a10800000000000000
+      internalID: 1897042186549797158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 769696153aa1bd340800000000000000
+      internalID: 4889531109188659559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e75f9ceaffe5a8a0800000000000000
+      internalID: -6294361043189671961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_4
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 104
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4da0b6cfc8181260800000000000000
+      internalID: 7068426895828757838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1dc8f14a02b935b0800000000000000
+      internalID: -5388079722045846245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Doors_Inside_Shadow_3
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 112
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c86e9e64db4de040800000000000000
+      internalID: 4678478963668838594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_13
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 403cdfa95b0414ad0800000000000000
+      internalID: -2719821551221488892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_12
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09aacef3dbf0602c0800000000000000
+      internalID: -4465864674995557744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Inside_Shadow_11
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 697cf331694fa9160800000000000000
+      internalID: 7033202693497669526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Outside_Shadow_0
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 152
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be1ed8091281ff710800000000000000
+      internalID: 1729127314371764715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Outside_Shadow_1
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 144
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21641f6ea36349640800000000000000
+      internalID: 5085749505818707474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Walls_Outside_Shadow_2
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 136
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 825bafb33f2265d70800000000000000
+      internalID: 9031444530816791848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sidewalk_Shadows_Red
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b708f19626e79d200800000000000000
+      internalID: 205334219157635195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Counter_Shadows_0: -6719961760819972560
+      Counter_Shadows_1: -8327653793817927050
+      Counter_Shadows_10: -6954544609692664161
+      Counter_Shadows_2: -5847777506984414027
+      Counter_Shadows_3: -902311909158066326
+      Counter_Shadows_4: 3358323191886012613
+      Counter_Shadows_5: -1477154678855187277
+      Counter_Shadows_6: -8085960613041882402
+      Counter_Shadows_7: 1760688562449409153
+      Counter_Shadows_8: 5342522622515909442
+      Counter_Shadows_9: 5523723561030242217
+      Doors_Inside_Shadow_0: 4889531109188659559
+      Doors_Inside_Shadow_1: -5388079722045846245
+      Doors_Inside_Shadow_2: -6294361043189671961
+      Doors_Inside_Shadow_3: 4678478963668838594
+      Doors_Inside_Shadow_4: 7068426895828757838
+      Doors_Inside_Shadow_5: -6145909116312396739
+      Doors_Inside_Shadow_6: 1839372999799069180
+      Doors_Inside_Shadow_7: 1897042186549797158
+      Fence_Shadows_0: -2002752364438542180
+      Fence_Shadows_1: 2088696409663361182
+      Fence_Shadows_2: -5818428680230971751
+      Fence_Shadows_3: -3182381253517816911
+      Fence_Shadows_4: -1626473074719819401
+      Fence_Shadows_5: -639940990012032042
+      Fence_Shadows_6: 5696604975021063577
+      LogPile_Shadows_0: -9055988552973872996
+      LogPile_Shadows_1: 874385903204623912
+      RoofEastToWest_Shadows_0: 4732483592719189406
+      RoofEastToWest_Shadows_1: 1087732011809945839
+      RoofEastToWest_Shadows_2: -2316257385814783305
+      RoofEastToWest_Shadows_3: -4648372313934952676
+      RoofEastToWest_Shadows_4: -6485244906032259795
+      RoofEastToWest_Shadows_5: 1034725704763912621
+      RoofEastToWest_Shadows_6: 331146850900242217
+      RoofNorthToSouth_Shadows_0: -5933752153261657467
+      Sidewalk_Shadows_0: 3277401993695368409
+      Sidewalk_Shadows_1: -3604913292448422458
+      Sidewalk_Shadows_2: -1649009888911190021
+      Sidewalk_Shadows_3: -593625456985843713
+      Sidewalk_Shadows_4: 2190095804314572223
+      Sidewalk_Shadows_5: -2962325993882877618
+      Sidewalk_Shadows_6: -3062765729369895101
+      Sidewalk_Shadows_7: -1130489189996752584
+      Sidewalk_Shadows_8: -5609348845935864348
+      Sidewalk_Shadows_9: 4767694623894084197
+      Sidewalk_Shadows_Red: 205334219157635195
+      Walls_Inside_Shadow_0: -888258717683022180
+      Walls_Inside_Shadow_1: 6989245849553000594
+      Walls_Inside_Shadow_10: -150085021121519662
+      Walls_Inside_Shadow_11: 7033202693497669526
+      Walls_Inside_Shadow_12: -4465864674995557744
+      Walls_Inside_Shadow_13: -2719821551221488892
+      Walls_Inside_Shadow_2: -854969154825209905
+      Walls_Inside_Shadow_3: 5955926184433934773
+      Walls_Inside_Shadow_4: 1838207180343127855
+      Walls_Inside_Shadow_5: -5707148335835210200
+      Walls_Inside_Shadow_6: 183574176418404826
+      Walls_Inside_Shadow_7: 1176440925468129077
+      Walls_Inside_Shadow_8: -9125244377111504803
+      Walls_Inside_Shadow_9: -4433058861914439009
+      Walls_Outside_Shadow_0: 1729127314371764715
+      Walls_Outside_Shadow_1: 5085749505818707474
+      Walls_Outside_Shadow_2: 9031444530816791848
+      WoodenBeams_Shadows_0: -3753880158201664446
+      WoodenBeams_Shadows_1: -9096893791357714861
+      WoodenBeams_Shadows_2: 3429699016275263081
+      WoodenBeams_Shadows_3: -1983092319053354896
+      WoodenBeams_Shadows_4: 2462287185511442501
+      WoodenBeams_Shadows_5: -656421540141691054
+      WoodenBeams_Shadows_6: -1101251605710727144
+      WoodenBeams_Shadows_7: 6299684443683783352
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

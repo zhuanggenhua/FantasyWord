@@ -2,6 +2,7 @@
 #nullable enable
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -110,14 +111,20 @@ namespace UnityAiBridge.Editor.Tools
                     logger: logger))
                 ?.ToArray();
 
+            MetadataReference[] metadataReferences = AssemblyUtils.AllAssemblies
+                .Where(a => !a.IsDynamic)
+                .Select(a => a.Location)
+                .Where(location => !string.IsNullOrWhiteSpace(location))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Where(File.Exists)
+                .Select(CreateMetadataReferenceSafely)
+                .Where(reference => reference != null)
+                .ToArray()!;
+
             var compilation = CSharpCompilation.Create(
                 assemblyName: "DynamicAssembly",
                 syntaxTrees: new[] { CSharpSyntaxTree.ParseText(code) },
-                references: AssemblyUtils.AllAssemblies
-                    .Where(a => !a.IsDynamic) // Exclude dynamic assemblies
-                    .Where(a => !string.IsNullOrEmpty(a.Location))
-                    .Select(a => MetadataReference.CreateFromFile(a.Location))
-                    .ToArray(),
+                references: metadataReferences,
                 options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
             );
 
@@ -164,6 +171,18 @@ namespace UnityAiBridge.Editor.Tools
                     returnValue = null;
                     return false;
                 }
+            }
+        }
+
+        private static MetadataReference? CreateMetadataReferenceSafely(string assemblyPath)
+        {
+            try
+            {
+                return MetadataReference.CreateFromFile(assemblyPath);
+            }
+            catch
+            {
+                return null;
             }
         }
     }

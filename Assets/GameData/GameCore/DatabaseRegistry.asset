@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0439905db144cb95cc8f7179ab4101, type: 3}
+  m_Name: DatabaseRegistry
+  m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.DatabaseRegistry
+  m_autoAddNewDatabaseEntries: 1
+  m_autoRemoveDatabaseEntries: 1
+  m_entries:
+    m_keys:
+    - 0883061f4b34786409682ff0f0ad5151
+    - aeb37336247d6f24cb54d3ed65fe6f4b
+    - f083d52ea8919b442aaf31dc7e0193ad
+    - 55f829c283b29004f8ec1c250b8eede7
+    - 72b7cfeba6e9bca41a9120e10a298f8f
+    - ea0275aad54498e4084b2d2af6aff2d9
+    - ab4a88b1674feb745b2854848369b955
+    - fc2a59237eae697438caa2c1731116b3
+    - fa526493f8160bf4291fe92c6ef1d6e1
+    - bc79626babe0df74397f1a90caaa1018
+    - b88f2d4abf27df845908f4216afd3a01
+    - 13245a7230bedbe4da633d5325872ce1
+    - b669f9c81be34b47bf3d083609477ab5
+    - 84e4ba86a27558b6ad3c466253600794
+    - f5a16766960d5f699f3434f6afdbc8ea
+    m_values:
+    - {fileID: 11400000, guid: 0883061f4b34786409682ff0f0ad5151, type: 2}
+    - {fileID: 11400000, guid: aeb37336247d6f24cb54d3ed65fe6f4b, type: 2}
+    - {fileID: 11400000, guid: f083d52ea8919b442aaf31dc7e0193ad, type: 2}
+    - {fileID: 11400000, guid: 55f829c283b29004f8ec1c250b8eede7, type: 2}
+    - {fileID: 11400000, guid: 72b7cfeba6e9bca41a9120e10a298f8f, type: 2}
+    - {fileID: 11400000, guid: ea0275aad54498e4084b2d2af6aff2d9, type: 2}
+    - {fileID: 11400000, guid: ab4a88b1674feb745b2854848369b955, type: 2}
+    - {fileID: 11400000, guid: fc2a59237eae697438caa2c1731116b3, type: 2}
+    - {fileID: 11400000, guid: fa526493f8160bf4291fe92c6ef1d6e1, type: 2}
+    - {fileID: 11400000, guid: bc79626babe0df74397f1a90caaa1018, type: 2}
+    - {fileID: 11400000, guid: b88f2d4abf27df845908f4216afd3a01, type: 2}
+    - {fileID: 11400000, guid: 13245a7230bedbe4da633d5325872ce1, type: 2}
+    - {fileID: 11400000, guid: b669f9c81be34b47bf3d083609477ab5, type: 2}
+    - {fileID: 11400000, guid: 84e4ba86a27558b6ad3c466253600794, type: 2}
+    - {fileID: 11400000, guid: f5a16766960d5f699f3434f6afdbc8ea, type: 2}
+  m_GUIDConversionMap:
+    m_keys: []
+    m_values: []

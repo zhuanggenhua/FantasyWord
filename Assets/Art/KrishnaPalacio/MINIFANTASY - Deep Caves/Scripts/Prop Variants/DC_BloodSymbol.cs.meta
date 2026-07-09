@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 47c5bf954d20ff047a4777bd1eba8a85
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bloodSymbol0: {fileID: -991421140878908519, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - bloodSymbol1: {fileID: -5805144435542958930, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - bloodSymbol2: {fileID: 2086985001073793129, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

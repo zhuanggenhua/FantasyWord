@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 1f1cd1b2041309b4485b610a4684d853
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - snowRock_0: {fileID: -3111848916978619606, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowRock_1: {fileID: -3778904985888044948, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowRock_2: {fileID: -4899745250115098549, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowRock_3: {fileID: -5853766974666356945, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowRock_4: {fileID: -4323205363905815213, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowRock_0_Shadow: {fileID: 2282542062134170937, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowRock_1_Shadow: {fileID: -6020500081279571514, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowRock_2_Shadow: {fileID: -2168933673282882777, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowRock_3_Shadow: {fileID: -8660503970326005726, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowRock_4_Shadow: {fileID: 5889304603066556807, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowRock_0_SnowTransition: {fileID: -4997603312731449741, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - snowRock_1_SnowTransition: {fileID: -713793570962135898, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - snowRock_2_SnowTransition: {fileID: -6515886688359338506, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - snowRock_3_SnowTransition: {fileID: -2086128893938613177, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  - snowRock_4_SnowTransition: {fileID: -6503560550927126935, guid: 7c75cd468823ecc42a231903d648a787, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

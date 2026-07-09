@@ -1,0 +1,228 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564fc9924b784054a9fd4bca8d1292b2, type: 3}
+  m_Name: "\u6362\u88C5\u5DE5\u4F5C\u53F0\u76EE\u5F55"
+  m_EditorClassIdentifier: ::EquipmentWorkbenchCatalog
+  characters:
+  - displayName: "\u4EBA\u7C7B"
+    animatorController: {fileID: 9100000, guid: 0be334fca6154804592795b046bebf5c, type: 2}
+    frameData: {fileID: 11400000, guid: 720d2b3b0c58d5b4295a6468bd84a86c, type: 2}
+    appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
+    baseStats:
+      values:
+      - stat: 0
+        value: 8
+      - stat: 1
+        value: 100
+      - stat: 2
+        value: 8
+      - stat: 3
+        value: 6
+      - stat: 4
+        value: 4
+    defaultEquipment:
+    - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
+  - displayName: "\u77EE\u4EBA"
+    animatorController: {fileID: 22100000, guid: 09fa9898e9b56f948ab5f72bd456d8c4, type: 2}
+    frameData: {fileID: 11400000, guid: 81eb04687dcfd354e887de2494386233, type: 2}
+    appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
+    baseStats:
+      values:
+      - stat: 0
+        value: 8
+      - stat: 1
+        value: 100
+      - stat: 2
+        value: 8
+      - stat: 3
+        value: 6
+      - stat: 4
+        value: 4
+    defaultEquipment:
+    - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
+  - displayName: "\u7CBE\u7075"
+    animatorController: {fileID: 22100000, guid: a31c59e1322e42e488b27c0df86c94e3, type: 2}
+    frameData: {fileID: 11400000, guid: 83c7e080e4852844fb3bb0b6a05751d1, type: 2}
+    appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
+    baseStats:
+      values:
+      - stat: 0
+        value: 8
+      - stat: 1
+        value: 100
+      - stat: 2
+        value: 8
+      - stat: 3
+        value: 6
+      - stat: 4
+        value: 4
+    defaultEquipment:
+    - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
+  - displayName: "\u5730\u7CBE"
+    animatorController: {fileID: 22100000, guid: 34e1c292bf2673c4990dfd12f735b95f, type: 2}
+    frameData: {fileID: 11400000, guid: 34387288a2911e34a9a651f287eb7ccd, type: 2}
+    appearance: {fileID: 11400000, guid: 93a168d1740358645a13d2fcd4450383, type: 2}
+    baseStats:
+      values:
+      - stat: 0
+        value: 8
+      - stat: 1
+        value: 100
+      - stat: 2
+        value: 8
+      - stat: 3
+        value: 6
+      - stat: 4
+        value: 4
+    defaultEquipment:
+    - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
+  - displayName: "\u517D\u4EBA"
+    animatorController: {fileID: 22100000, guid: e55553bde0e55f642bde0b4d101151f2, type: 2}
+    frameData: {fileID: 11400000, guid: 2f355237f57507f48baac5069f5d7cd0, type: 2}
+    appearance: {fileID: 11400000, guid: 93a168d1740358645a13d2fcd4450383, type: 2}
+    baseStats:
+      values:
+      - stat: 0
+        value: 8
+      - stat: 1
+        value: 100
+      - stat: 2
+        value: 8
+      - stat: 3
+        value: 6
+      - stat: 4
+        value: 4
+    defaultEquipment:
+    - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
+  equipments:
+  - displayName: "\u5E03\u8863"
+    description: "\u57FA\u7840\u8EAF\u5E72\u5916\u89C2\uFF0C\u9002\u5408\u4F5C\u4E3A\u9ED8\u8BA4\u670D\u88C5\u3002"
+    icon: {fileID: -7878368059501506067, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
+    bonusStats:
+      values:
+      - stat: 1
+        value: 6
+  - displayName: "\u65C5\u884C\u62AB\u98CE"
+    description: "\u8F7B\u578B\u62AB\u98CE\uFF0C\u9002\u5408\u654F\u6377\u7CFB\u89D2\u8272\u3002"
+    icon: {fileID: -6317967199033241044, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 12a1ff95e55e6e945952dd3f3773984b, type: 2}
+    bonusStats:
+      values:
+      - stat: 0
+        value: 1
+      - stat: 4
+        value: 2
+  - displayName: "\u539A\u6597\u7BF7"
+    description: "\u66F4\u539A\u91CD\u7684\u6597\u7BF7\u7248\u672C\uFF0C\u9632\u62A4\u66F4\u7A33\u3002"
+    icon: {fileID: -7878368059501506067, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 28bc3987db4b748408e99b8f8f982f42, type: 2}
+    bonusStats:
+      values:
+      - stat: 0
+        value: 2
+      - stat: 1
+        value: 4
+  - displayName: "\u89D2\u9970\u5934\u76D4"
+    description: "\u5F3A\u8C03\u529B\u91CF\u611F\u7684\u9E7F\u89D2\u5934\u76D4\u3002"
+    icon: {fileID: 2128130918664602331, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 058ca6b39bc754c4888ddfbe4d855fcf, type: 2}
+    bonusStats:
+      values:
+      - stat: 2
+        value: 2
+  - displayName: "\u6218\u65A7"
+    description: "\u66F4\u91CD\u7684\u5355\u624B\u6B66\u5668\uFF0C\u529B\u91CF\u6536\u76CA\u66F4\u9AD8\u3002"
+    icon: {fileID: -9121053648373010813, guid: 17cf10b4cc47c3f4b96931e0c15ad75d, type: 3}
+    visual: {fileID: 11400000, guid: cb06eac0f3ca03f48b6b1c82d9d58edd, type: 2}
+    bonusStats:
+      values:
+      - stat: 2
+        value: 3
+  - displayName: "\u957F\u77DB"
+    description: "\u4E2D\u8DDD\u79BB\u6B66\u5668\uFF0C\u504F\u5411\u5747\u8861\u8F93\u51FA\u3002"
+    icon: {fileID: 527516738877628112, guid: 17cf10b4cc47c3f4b96931e0c15ad75d, type: 3}
+    visual: {fileID: 11400000, guid: c071eb6b046290f4f8aaa90e9fd0215c, type: 2}
+    bonusStats:
+      values:
+      - stat: 2
+        value: 2
+      - stat: 3
+        value: 1
+  - displayName: "\u62A4\u76EE\u955C"
+    description: "\u5934\u90E8\u9970\u4EF6\uFF0C\u504F\u5411\u611F\u77E5\u4E0E\u65BD\u6CD5\u8868\u73B0\u3002"
+    icon: {fileID: 2011742579120227815, guid: cb332505b08a31a4a974556327da91ee, type: 3}
+    visual: {fileID: 11400000, guid: f5849385cd894eb4aa4ae6157583aeb1, type: 2}
+    bonusStats:
+      values:
+      - stat: 3
+        value: 2
+      - stat: 4
+        value: 2
+  - displayName: "\u8F7B\u5E3D"
+    description: "\u8F7B\u91CF\u5934\u9970\uFF0C\u7528\u6765\u6D4B\u8BD5\u5934\u90E8\u8D34\u56FE\u5207\u6362\u3002"
+    icon: {fileID: 3358111728328846536, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 6b4120a4c277326458c9b9f9051ee4a4, type: 2}
+    bonusStats:
+      values:
+      - stat: 3
+        value: 1
+  - displayName: "\u94C1\u76D4 I"
+    description: "\u57FA\u7840\u5934\u76D4\u7248\u672C\u3002"
+    icon: {fileID: 3358111728328846536, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: e5c1a3599aa2a4046a2c2f34e322ceda, type: 2}
+    bonusStats:
+      values:
+      - stat: 0
+        value: 1
+      - stat: 1
+        value: 4
+  - displayName: "\u94C1\u76D4 II"
+    description: "\u66F4\u8FDB\u9636\u7684\u5934\u76D4\u7248\u672C\u3002"
+    icon: {fileID: 2128130918664602331, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 28a4fdf5f2498554cb260a4d544c16e3, type: 2}
+    bonusStats:
+      values:
+      - stat: 0
+        value: 2
+      - stat: 1
+        value: 6
+  - displayName: "\u5C0F\u80CC\u5305"
+    description: "\u7528\u4E8E\u9A8C\u8BC1\u80CC\u5305\u8868\u73B0\u5C42\u4E0E\u989D\u5916\u63D2\u69FD\u3002"
+    icon: {fileID: 481099283849887622, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 3d5f5f390d826f94e83fe535b39178c5, type: 2}
+    bonusStats:
+      values:
+      - stat: 1
+        value: 2
+      - stat: 4
+        value: 3
+  - displayName: "\u91CD\u76FE"
+    description: "\u66F4\u539A\u7684\u526F\u624B\u76FE\u724C\u3002"
+    icon: {fileID: -3706817698237277414, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 89aeedf3fc528724a8e94d93c402bda5, type: 2}
+    bonusStats:
+      values:
+      - stat: 0
+        value: 2
+      - stat: 1
+        value: 8
+  - displayName: "\u5706\u76FE"
+    description: "\u6807\u51C6\u526F\u624B\u76FE\u724C\u3002"
+    icon: {fileID: -7325192433364472684, guid: 679e85ee58076304d97875938629d578, type: 3}
+    visual: {fileID: 11400000, guid: 593d6aae3d47aaa4980c0bd6c5d3a2fe, type: 2}
+    bonusStats:
+      values:
+      - stat: 0
+        value: 1
+      - stat: 1
+        value: 6

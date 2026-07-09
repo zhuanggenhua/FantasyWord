@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: e062d375d87c0ff4d8cea3c6449f56ee
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - emptyHorizontal: {fileID: 2796490879853539381, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - fullHorizontal: {fileID: -6558404411164161107, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - emptyVertical: {fileID: 1869449880114063069, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - fullVertical: {fileID: 5451341611840487710, guid: a57b39887cb19074c9f10c973aed61fc, type: 3}
+  - emptyHorizontalShadow: {fileID: -1287669829821089636, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - fullHorizontalShadow: {fileID: 5594280445867232609, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - emptyVerticalShadow: {fileID: 606128920061419450, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  - fullVerticalShadow: {fileID: -5997305211471982960, guid: 8bdb809d5d60a1442a12c4f989673a46, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

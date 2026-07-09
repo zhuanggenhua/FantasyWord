@@ -1,0 +1,1235 @@
+fileFormatVersion: 2
+guid: 018e5b9a18bcc7c41b90678b9844a115
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2446128977128713750
+    second: Brown_Column_0
+  - first:
+      213: 2738303380643629756
+    second: Brown_Column_1
+  - first:
+      213: -8773984377726514618
+    second: Brown_Column_2
+  - first:
+      213: -4268472613960395428
+    second: Brown_Column_3
+  - first:
+      213: -2489424363505251165
+    second: Yellow_Column_0
+  - first:
+      213: -5783625899798798193
+    second: Yellow_Column_1
+  - first:
+      213: -1027164613770177727
+    second: Yellow_Column_2
+  - first:
+      213: -7959391031641904438
+    second: Yellow_Column_3
+  - first:
+      213: 928751198601444362
+    second: Brown_Large_Stalagmite_0
+  - first:
+      213: 2823709216585826781
+    second: Brown_Large_Stalagmite_1
+  - first:
+      213: -8900489995794255275
+    second: Brown_Large_Stalagmite_2
+  - first:
+      213: -296938046296057557
+    second: Yellow_Large_Stalagmite_0
+  - first:
+      213: -8021647886765210120
+    second: Yellow_Large_Stalagmite_1
+  - first:
+      213: 702574339433227999
+    second: Yellow_Large_Stalagmite_2
+  - first:
+      213: 976860497142651742
+    second: Brown_Medium_Stalagmite_0
+  - first:
+      213: 4132289963616751118
+    second: Brown_Medium_Stalagmite_1
+  - first:
+      213: 3449905868468497368
+    second: Brown_Medium_Stalagmite_2
+  - first:
+      213: -3069077714421509307
+    second: Yellow_Medium_Stalagmite_0
+  - first:
+      213: -4299053766156920440
+    second: Yellow_Medium_Stalagmite_1
+  - first:
+      213: 8206125452566379896
+    second: Yellow_Medium_Stalagmite_2
+  - first:
+      213: 7874163859406204200
+    second: Brown_Small_Stalagmite_0
+  - first:
+      213: 4951237431297612799
+    second: SkullSpear_Straight_0
+  - first:
+      213: 4701872138271819124
+    second: Yellow_Small_Stalagmite_0
+  - first:
+      213: 90712577868931614
+    second: SkullSpear_Left
+  - first:
+      213: 7920596546067926029
+    second: SkullSpear_Straight_1
+  - first:
+      213: -4690319368619271683
+    second: SkullSpear_Right
+  - first:
+      213: 5862046631758625222
+    second: SkullPile
+  - first:
+      213: 1136741936236386817
+    second: Skull_Left
+  - first:
+      213: 2523170632633379195
+    second: Skull_Right
+  - first:
+      213: -991421140878908519
+    second: Blood_Pentagram
+  - first:
+      213: -5805144435542958930
+    second: Ritualistic_Blood_Circle
+  - first:
+      213: 2086985001073793129
+    second: Blood_Circle
+  - first:
+      213: -8779914839650598415
+    second: Crytsal_Large_Red
+  - first:
+      213: -2951603525347945620
+    second: Crytsal_Large_Blue
+  - first:
+      213: -2681588350050417681
+    second: Crytsal_Large_Green
+  - first:
+      213: 4632984451391687705
+    second: Crytsal_Medium_Red
+  - first:
+      213: 1082799226952440354
+    second: Crytsal_Medium_Blue
+  - first:
+      213: -4583312396208510370
+    second: Crytsal_Medium_Green
+  - first:
+      213: -6605162739935332669
+    second: Crytsal_Small_Red
+  - first:
+      213: -4961362837852051916
+    second: Crytsal_Small_Blue
+  - first:
+      213: -558409756126950782
+    second: Crytsal_Small_Green
+  - first:
+      213: -5092841670301015303
+    second: Brown_Small_Stalagmite_1
+  - first:
+      213: -3714875710356237400
+    second: Yellow_Small_Stalagmite_1
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Brown_Column_0
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 122
+        width: 7
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61eeb84385562f120800000000000000
+      internalID: 2446128977128713750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Column_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 122
+        width: 8
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbac382aa68600620800000000000000
+      internalID: 2738303380643629756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Column_2
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 122
+        width: 10
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64ac8cce1bb8c3680800000000000000
+      internalID: -8773984377726514618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Column_3
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 122
+        width: 9
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c55586fd5c653c4c0800000000000000
+      internalID: -4268472613960395428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Column_0
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 122
+        width: 7
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ac011e1bb9c37dd0800000000000000
+      internalID: -2489424363505251165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Column_1
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 122
+        width: 8
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f806eb813ee6cbfa0800000000000000
+      internalID: -5783625899798798193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Column_2
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 122
+        width: 10
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1439066d937ceb1f0800000000000000
+      internalID: -1027164613770177727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Column_3
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 122
+        width: 9
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: acaed8207009a8190800000000000000
+      internalID: -7959391031641904438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Large_Stalagmite_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 98
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0c7b5d5b4693ec00800000000000000
+      internalID: 928751198601444362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Large_Stalagmite_1
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 98
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd148936294df2720800000000000000
+      internalID: 2823709216585826781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Large_Stalagmite_2
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 98
+        width: 14
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 552f3c1718b1b7480800000000000000
+      internalID: -8900489995794255275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Large_Stalagmite_0
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 98
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b29993e8b6011ebf0800000000000000
+      internalID: -296938046296057557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Large_Stalagmite_1
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 98
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f5c81c5fb16da090800000000000000
+      internalID: -8021647886765210120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Large_Stalagmite_2
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 98
+        width: 14
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd6e83aa3ab00c900800000000000000
+      internalID: 702574339433227999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Medium_Stalagmite_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 82
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5b9c4f42718e8d00800000000000000
+      internalID: 976860497142651742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Medium_Stalagmite_1
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 82
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0ec94ef3d7d85930800000000000000
+      internalID: 4132289963616751118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Medium_Stalagmite_2
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 82
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8dba996eb1780ef20800000000000000
+      internalID: 3449905868468497368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Medium_Stalagmite_0
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 82
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54396d354127865d0800000000000000
+      internalID: -3069077714421509307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Medium_Stalagmite_1
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 82
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88959e58061b654c0800000000000000
+      internalID: -4299053766156920440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Medium_Stalagmite_2
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 82
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87db2860f9302e170800000000000000
+      internalID: 8206125452566379896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Small_Stalagmite_0
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 73
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82d202f9f46a64d60800000000000000
+      internalID: 7874163859406204200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Straight_0
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 50
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffb9c13063456b440800000000000000
+      internalID: 4951237431297612799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Small_Stalagmite_0
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 73
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4758ff45cc7604140800000000000000
+      internalID: 4701872138271819124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Left
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 50
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e12a984eb96424100800000000000000
+      internalID: 90712577868931614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Straight_1
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 50
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0c8091f79c9bed60800000000000000
+      internalID: 7920596546067926029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Right
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 50
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df950567263a8eeb0800000000000000
+      internalID: -4690319368619271683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullPile
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 50
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c97fb66a5c2a5150800000000000000
+      internalID: 5862046631758625222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skull_Left
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 50
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10ad8aea4c486cf00800000000000000
+      internalID: 1136741936236386817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skull_Right
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 50
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b796fc1725a140320800000000000000
+      internalID: 2523170632633379195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Blood_Pentagram
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 26
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 993a913a9b3cd32f0800000000000000
+      internalID: -991421140878908519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ritualistic_Blood_Circle
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 24
+        width: 24
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eac50a194ebff6fa0800000000000000
+      internalID: -5805144435542958930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Blood_Circle
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 29
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96852981dc576fc10800000000000000
+      internalID: 2086985001073793129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Large_Red
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 2
+        width: 14
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f10278a8f9772680800000000000000
+      internalID: -8779914839650598415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Large_Blue
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 2
+        width: 14
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6358d16b3cc907d0800000000000000
+      internalID: -2951603525347945620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Large_Green
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 2
+        width: 14
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe34b617a9519cad0800000000000000
+      internalID: -2681588350050417681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Medium_Red
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 2
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91c0c1bdfcaab4040800000000000000
+      internalID: 4632984451391687705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Medium_Blue
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 2
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22a5195f820e60f00800000000000000
+      internalID: 1082799226952440354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Medium_Green
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 2
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5ae859b8adc460c0800000000000000
+      internalID: -4583312396208510370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Small_Red
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 2
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c63282db7fb554a0800000000000000
+      internalID: -6605162739935332669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Small_Blue
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 2
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 436210019c2b52bb0800000000000000
+      internalID: -4961362837852051916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crytsal_Small_Green
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 2
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28ac0fe09412048f0800000000000000
+      internalID: -558409756126950782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Brown_Small_Stalagmite_1
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 74
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f2a660eb779259b0800000000000000
+      internalID: -5092841670301015303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yellow_Small_Stalagmite_1
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 74
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a35d73493c127cc0800000000000000
+      internalID: -3714875710356237400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Blood_Circle: 2086985001073793129
+      Blood_Pentagram: -991421140878908519
+      Brown_Column_0: 2446128977128713750
+      Brown_Column_1: 2738303380643629756
+      Brown_Column_2: -8773984377726514618
+      Brown_Column_3: -4268472613960395428
+      Brown_Large_Stalagmite_0: 928751198601444362
+      Brown_Large_Stalagmite_1: 2823709216585826781
+      Brown_Large_Stalagmite_2: -8900489995794255275
+      Brown_Medium_Stalagmite_0: 976860497142651742
+      Brown_Medium_Stalagmite_1: 4132289963616751118
+      Brown_Medium_Stalagmite_2: 3449905868468497368
+      Brown_Small_Stalagmite_0: 7874163859406204200
+      Brown_Small_Stalagmite_1: -5092841670301015303
+      Crytsal_Large_Blue: -2951603525347945620
+      Crytsal_Large_Green: -2681588350050417681
+      Crytsal_Large_Red: -8779914839650598415
+      Crytsal_Medium_Blue: 1082799226952440354
+      Crytsal_Medium_Green: -4583312396208510370
+      Crytsal_Medium_Red: 4632984451391687705
+      Crytsal_Small_Blue: -4961362837852051916
+      Crytsal_Small_Green: -558409756126950782
+      Crytsal_Small_Red: -6605162739935332669
+      Ritualistic_Blood_Circle: -5805144435542958930
+      SkullPile: 5862046631758625222
+      SkullSpear_Left: 90712577868931614
+      SkullSpear_Right: -4690319368619271683
+      SkullSpear_Straight_0: 4951237431297612799
+      SkullSpear_Straight_1: 7920596546067926029
+      Skull_Left: 1136741936236386817
+      Skull_Right: 2523170632633379195
+      Yellow_Column_0: -2489424363505251165
+      Yellow_Column_1: -5783625899798798193
+      Yellow_Column_2: -1027164613770177727
+      Yellow_Column_3: -7959391031641904438
+      Yellow_Large_Stalagmite_0: -296938046296057557
+      Yellow_Large_Stalagmite_1: -8021647886765210120
+      Yellow_Large_Stalagmite_2: 702574339433227999
+      Yellow_Medium_Stalagmite_0: -3069077714421509307
+      Yellow_Medium_Stalagmite_1: -4299053766156920440
+      Yellow_Medium_Stalagmite_2: 8206125452566379896
+      Yellow_Small_Stalagmite_0: 4701872138271819124
+      Yellow_Small_Stalagmite_1: -3714875710356237400
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

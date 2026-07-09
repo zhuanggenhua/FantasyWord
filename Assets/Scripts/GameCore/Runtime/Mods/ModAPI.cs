@@ -1,0 +1,182 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEngine;
+
+namespace FantasyWord.GameCore
+{
+    /// <summary>
+    /// Mod 内容包运行时 API，迁自 Chris.ModAPI。
+    /// 它只负责发现、校验、启停状态和外部 Addressables catalog 加载，不直接接管 GameCore 玩法系统。
+    /// </summary>
+    public static class ModAPI
+    {
+        public const string DefaultAPIVersion = "0.1.0";
+
+#if !UNITY_EDITOR && UNITY_ANDROID
+        public static readonly string LoadingPath = Path.Combine(Application.persistentDataPath, "Mods");
+#else
+        public static readonly string LoadingPath = Path.Combine(Path.GetDirectoryName(Application.dataPath) ?? Application.persistentDataPath, "Mods");
+#endif
+
+        private static readonly List<ModInfo> ModInfos = new();
+        private static ModConfig s_config;
+        private static event Action s_refreshed;
+
+        public static bool Initialized { get; private set; }
+
+        public static void AddRefreshedListener(Action listener)
+        {
+            if (listener != null)
+            {
+                s_refreshed += listener;
+            }
+        }
+
+        public static void RemoveRefreshedListener(Action listener)
+        {
+            if (listener != null)
+            {
+                s_refreshed -= listener;
+            }
+        }
+
+        public static async UniTask Initialize(ModConfig modConfig = null, IModLoader modLoader = null)
+        {
+            if (Initialized)
+            {
+                Debug.LogError("[ModAPI] Mod api is already initialized.");
+                return;
+            }
+
+            s_config = modConfig ?? ModConfig.LoadOrCreate();
+            modLoader ??= new ModLoader(s_config, new APIValidator(s_config.ApiVersion));
+
+            ModInfos.Clear();
+            if (await modLoader.LoadAllModsAsync(ModInfos))
+            {
+                for (int i = s_config.States.Count - 1; i >= 0; i--)
+                {
+                    ModState state = s_config.States[i];
+                    if (ModInfos.All(info => info.FullName != state.fullName))
+                    {
+                        Debug.LogWarning($"[ModAPI] Missing mod {state.fullName}.");
+                        s_config.States.RemoveAt(i);
+                    }
+                }
+
+                s_config.Save();
+                Initialized = true;
+                NotifyRefreshed();
+            }
+        }
+
+        public static void DeleteMod(ModInfo modInfo)
+        {
+            EnsureInitialized();
+            if (s_config.GetModState(modInfo) == ModStatus.Delete)
+            {
+                return;
+            }
+
+            s_config.DeleteMod(modInfo);
+            s_config.Save();
+            ModInfos.Remove(modInfo);
+            NotifyRefreshed();
+        }
+
+        public static void SetModEnabled(ModInfo modInfo, bool isEnabled)
+        {
+            EnsureInitialized();
+            if (s_config.GetModState(modInfo) == (isEnabled ? ModStatus.Enabled : ModStatus.Disabled))
+            {
+                return;
+            }
+
+            s_config.SetModEnabled(modInfo, isEnabled);
+            s_config.Save();
+            NotifyRefreshed();
+        }
+
+        public static ModStatus GetModState(ModInfo modInfo)
+        {
+            EnsureInitialized();
+            return s_config.GetModState(modInfo);
+        }
+
+        public static ModInfo[] CreateInfoSnapshot()
+        {
+            EnsureInitialized();
+            return ModInfos.ToArray();
+        }
+
+        public static void UnZipAll(string path, bool allDirectories)
+        {
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            foreach (string zip in Directory.GetFiles(path, "*.zip", allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+            {
+                ZipArchiveExtractor.UnzipFile(zip, Path.GetDirectoryName(zip));
+                File.Delete(zip);
+            }
+        }
+
+        public static async UniTask UnZipAllAsync(string path, bool allDirectories)
+        {
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            string[] zips = Directory.GetFiles(path, "*.zip", allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            UniTask[] tasks = zips.Select(zip => UniTask.RunOnThreadPool(() =>
+            {
+                ZipArchiveExtractor.UnzipFile(zip, Path.GetDirectoryName(zip));
+                File.Delete(zip);
+            })).ToArray();
+
+            await UniTask.WhenAll(tasks);
+        }
+
+        public static void DeleteModFromDisk(ModInfo modInfo)
+        {
+            if (modInfo == null || string.IsNullOrWhiteSpace(modInfo.FilePath) || !Directory.Exists(modInfo.FilePath))
+            {
+                return;
+            }
+
+            Directory.Delete(modInfo.FilePath, true);
+        }
+
+        public static async UniTask<ModInfo> LoadModInfo(string modInfoPath)
+        {
+            ModInfo modInfo = JsonConvert.DeserializeObject<ModInfo>(await File.ReadAllTextAsync(modInfoPath));
+            if (modInfo == null)
+            {
+                return null;
+            }
+
+            modInfo.FilePath = Path.GetDirectoryName(modInfoPath)?.Replace(@"\", "/");
+            return modInfo;
+        }
+
+        private static void EnsureInitialized()
+        {
+            if (!Initialized)
+            {
+                throw new InvalidOperationException("ModAPI is not initialized.");
+            }
+        }
+
+        private static void NotifyRefreshed()
+        {
+            s_refreshed?.Invoke();
+        }
+    }
+}

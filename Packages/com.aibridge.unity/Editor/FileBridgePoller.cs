@@ -6,6 +6,8 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEditor.Callbacks;
+using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace UnityAiBridge.Editor
@@ -26,6 +28,8 @@ namespace UnityAiBridge.Editor
 
         private const double PollIntervalSeconds = 0.1;
         private const double ResultExpireSeconds = 300.0; // 5 分钟
+        private const double WatchdogIntervalSeconds = 1.0;
+        private const double WatchdogHeartbeatToleranceSeconds = 2.5;
 
         private static readonly int ProcessId = System.Diagnostics.Process.GetCurrentProcess().Id;
         private static readonly JsonSerializerOptions CompactJsonOptions = new() { WriteIndented = false };
@@ -33,7 +37,10 @@ namespace UnityAiBridge.Editor
         private static double _lastPollTime;
         private static double _lastCleanupTime;
         private static double _lastHeartbeatTime;
+        private static double _lastUpdateTickTime;
+        private static double _nextWatchdogCheckTime;
         private static bool _pendingExecution;
+        private static bool _watchdogScheduled;
         private static string? _pendingCommandId;
         private static string? _pendingToolName;
         private static Dictionary<string, JsonElement>? _pendingParams;
@@ -44,11 +51,15 @@ namespace UnityAiBridge.Editor
 
         static FileBridgePoller()
         {
-            EnsureDirectories();
-            EditorApplication.update += OnEditorUpdate;
-            _lastPollTime = EditorApplication.timeSinceStartup;
-            _lastCleanupTime = EditorApplication.timeSinceStartup;
-            Debug.Log("[UnityAiBridge] FileBridgePoller registered (Temp/UnityBridge).");
+            CompilationPipeline.compilationFinished -= OnCompilationFinished;
+            CompilationPipeline.compilationFinished += OnCompilationFinished;
+            EnsureRegistered("static-init");
+        }
+
+        [DidReloadScripts]
+        private static void OnScriptsReloaded()
+        {
+            EnsureRegistered("did-reload-scripts");
         }
 
         private static void EnsureDirectories()
@@ -64,9 +75,67 @@ namespace UnityAiBridge.Editor
             }
         }
 
+        private static void OnCompilationFinished(object context)
+        {
+            EditorApplication.delayCall += EnsureRegisteredAfterCompilation;
+        }
+
+        private static void EnsureRegisteredAfterCompilation()
+        {
+            EnsureRegistered("compilation-finished");
+        }
+
+        private static void EnsureRegistered(string reason)
+        {
+            EnsureDirectories();
+            EditorApplication.update -= OnEditorUpdate;
+            EditorApplication.update += OnEditorUpdate;
+            _lastPollTime = EditorApplication.timeSinceStartup;
+            _lastCleanupTime = EditorApplication.timeSinceStartup;
+            _lastHeartbeatTime = 0.0d;
+            _lastUpdateTickTime = EditorApplication.timeSinceStartup;
+            _nextWatchdogCheckTime = EditorApplication.timeSinceStartup + WatchdogIntervalSeconds;
+            ScheduleWatchdog();
+            Debug.Log($"[UnityAiBridge] FileBridgePoller registered (Temp/UnityBridge, reason: {reason}).");
+        }
+
+        private static void ScheduleWatchdog()
+        {
+            if (_watchdogScheduled)
+            {
+                return;
+            }
+
+            _watchdogScheduled = true;
+            EditorApplication.delayCall += WatchdogTick;
+        }
+
+        private static void WatchdogTick()
+        {
+            _watchdogScheduled = false;
+
+            double now = EditorApplication.timeSinceStartup;
+            if (now < _nextWatchdogCheckTime)
+            {
+                ScheduleWatchdog();
+                return;
+            }
+
+            _nextWatchdogCheckTime = now + WatchdogIntervalSeconds;
+            if (!EditorApplication.isCompiling &&
+                now - _lastUpdateTickTime > WatchdogHeartbeatToleranceSeconds)
+            {
+                EnsureRegistered("watchdog");
+                return;
+            }
+
+            ScheduleWatchdog();
+        }
+
         private static void OnEditorUpdate()
         {
             double now = EditorApplication.timeSinceStartup;
+            _lastUpdateTickTime = now;
 
             // 更新 heartbeat
             UpdateHeartbeat(now);
@@ -117,7 +186,7 @@ namespace UnityAiBridge.Editor
                     ["pid"] = ProcessId,
                     ["unityVersion"] = Application.unityVersion
                 };
-                BridgeFileUtils.WriteAtomically(HeartbeatFile, JsonSerializer.Serialize(content));
+                BridgeFileUtils.WriteVolatileSnapshot(HeartbeatFile, JsonSerializer.Serialize(content));
             }
             catch
             {

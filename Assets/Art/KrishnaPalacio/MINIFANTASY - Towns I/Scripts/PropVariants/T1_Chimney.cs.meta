@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: a3018beb48c731549ba3f8823783943c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - chimney1: {fileID: 2525769866768050812, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - chimney2: {fileID: 4869832057853091804, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - chimney3: {fileID: 1487856089857597684, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowChimney1: {instanceID: 0}
+  - shadowChimney2: {instanceID: 0}
+  - shadowChimney3: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,983 @@
+using System;
+using System.Collections.Generic;
+using GAS.General;
+using GAS.Runtime;
+using Sirenix.OdinInspector;
+using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+namespace FantasyWord.GameCore
+{
+    public sealed class CatchAreaBox2D : TargetCatcherBase<XParamCatchAreaBox2D>
+    {
+        private static readonly Collider2D[] Colliders = new Collider2D[64];
+        private static readonly HashSet<AbilitySystemCell> UniqueTargets = new();
+
+        protected override void CatchTargetsNonAlloc(AbilitySystemCell mainTarget, List<AbilitySystemCell> results)
+        {
+            if (Parameter == null || results == null)
+            {
+                return;
+            }
+
+            int count;
+            if (Parameter.isWorldSpace)
+            {
+                count = Physics2D.OverlapBoxNonAlloc(
+                    Parameter.offset,
+                    Parameter.size,
+                    Parameter.rotation,
+                    Colliders,
+                    Parameter.layer.value);
+            }
+            else
+            {
+                if (mainTarget?.GameObject == null)
+                {
+                    return;
+                }
+
+                ResolveRelativePose(mainTarget.GameObject, Parameter.offset, Parameter.rotation, out Vector2 center, out float angle);
+                count = Physics2D.OverlapBoxNonAlloc(
+                    center,
+                    Parameter.size,
+                    angle,
+                    Colliders,
+                    Parameter.layer.value);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                Collider2D collider = Colliders[i];
+                if (collider == null)
+                {
+                    continue;
+                }
+
+                AbilitySystemComponent asc = collider.GetComponentInParent<AbilitySystemComponent>();
+                AbilitySystemCell cell = asc != null ? asc.Cell : null;
+                if (cell == null || cell == Owner || !UniqueTargets.Add(cell))
+                {
+                    continue;
+                }
+
+                results.Add(cell);
+            }
+
+            ClearColliderCache(count);
+            UniqueTargets.Clear();
+        }
+
+        public override void OnEditorPreview(GameObject obj)
+        {
+#if UNITY_EDITOR
+            if (Parameter == null)
+            {
+                return;
+            }
+
+            Vector2 center;
+            float angle;
+            if (Parameter.isWorldSpace)
+            {
+                center = Parameter.offset;
+                angle = Parameter.rotation;
+            }
+            else
+            {
+                if (obj == null)
+                {
+                    return;
+                }
+
+                ResolveRelativePose(obj, Parameter.offset, Parameter.rotation, out center, out angle);
+            }
+
+            DebugExtension.DebugBox(center, Parameter.size, angle, Color.green, 0.1f);
+#endif
+        }
+
+        private static void ResolveRelativePose(GameObject source, Vector2 offset, float localRotation, out Vector2 center, out float angle)
+        {
+            Transform sourceTransform = source.transform;
+            Movable movable = source.GetComponent<Movable>();
+            if (movable != null && movable.TryGetGas2DFacingDirection(out Vector2 direction))
+            {
+                angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + localRotation;
+                center = (Vector2)sourceTransform.position + Rotate(offset, angle - localRotation);
+                return;
+            }
+
+            center = sourceTransform.TransformPoint(offset);
+            angle = sourceTransform.eulerAngles.z + localRotation;
+        }
+
+        private static Vector2 Rotate(Vector2 value, float degrees)
+        {
+            float radians = degrees * Mathf.Deg2Rad;
+            float sin = Mathf.Sin(radians);
+            float cos = Mathf.Cos(radians);
+            return new Vector2(
+                value.x * cos - value.y * sin,
+                value.x * sin + value.y * cos);
+        }
+
+        private static void ClearColliderCache(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Colliders[i] = null;
+            }
+        }
+    }
+
+    public sealed class CatchAreaCircle2D : TargetCatcherBase<XParamCatchAreaCircle2D>
+    {
+        private static readonly Collider2D[] Colliders = new Collider2D[64];
+        private static readonly HashSet<AbilitySystemCell> UniqueTargets = new();
+
+        protected override void CatchTargetsNonAlloc(AbilitySystemCell mainTarget, List<AbilitySystemCell> results)
+        {
+            if (Parameter == null || results == null)
+            {
+                return;
+            }
+
+            int count;
+            if (Parameter.isWorldSpace)
+            {
+                count = Physics2D.OverlapCircleNonAlloc(
+                    Parameter.offset,
+                    Parameter.radius,
+                    Colliders,
+                    Parameter.layer.value);
+            }
+            else
+            {
+                if (mainTarget?.GameObject == null)
+                {
+                    return;
+                }
+
+                ResolveRelativeCenter(mainTarget.GameObject, Parameter.offset, out Vector2 center);
+                count = Physics2D.OverlapCircleNonAlloc(
+                    center,
+                    Parameter.radius,
+                    Colliders,
+                    Parameter.layer.value);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                Collider2D collider = Colliders[i];
+                if (collider == null)
+                {
+                    continue;
+                }
+
+                AbilitySystemComponent asc = collider.GetComponentInParent<AbilitySystemComponent>();
+                AbilitySystemCell cell = asc != null ? asc.Cell : null;
+                if (cell == null || cell == Owner || !UniqueTargets.Add(cell))
+                {
+                    continue;
+                }
+
+                results.Add(cell);
+            }
+
+            ClearColliderCache(count);
+            UniqueTargets.Clear();
+        }
+
+        public override void OnEditorPreview(GameObject obj)
+        {
+#if UNITY_EDITOR
+            if (Parameter == null)
+            {
+                return;
+            }
+
+            Vector2 center;
+            if (Parameter.isWorldSpace)
+            {
+                center = Parameter.offset;
+            }
+            else
+            {
+                if (obj == null)
+                {
+                    return;
+                }
+
+                ResolveRelativeCenter(obj, Parameter.offset, out center);
+            }
+
+            DebugExtension.DebugDrawCircle(center, Parameter.radius, Color.green, 0.1f);
+#endif
+        }
+
+        private static void ResolveRelativeCenter(GameObject source, Vector2 offset, out Vector2 center)
+        {
+            Transform sourceTransform = source.transform;
+            Movable movable = source.GetComponent<Movable>();
+            if (movable != null && movable.TryGetGas2DFacingDirection(out Vector2 direction))
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                center = (Vector2)sourceTransform.position + Rotate(offset, angle);
+                return;
+            }
+
+            center = sourceTransform.TransformPoint(offset);
+        }
+
+        private static Vector2 Rotate(Vector2 value, float degrees)
+        {
+            float radians = degrees * Mathf.Deg2Rad;
+            float sin = Mathf.Sin(radians);
+            float cos = Mathf.Cos(radians);
+            return new Vector2(
+                value.x * cos - value.y * sin,
+                value.x * sin + value.y * cos);
+        }
+
+        private static void ClearColliderCache(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Colliders[i] = null;
+            }
+        }
+    }
+
+    public sealed class CatchAreaPolygon2D : TargetCatcherBase<XParamCatchAreaPolygon2D>
+    {
+        private static readonly Collider2D[] Colliders = new Collider2D[64];
+        private static readonly HashSet<AbilitySystemCell> UniqueTargets = new();
+        private static readonly Vector2[] WorldPoints = new Vector2[XParamCatchAreaPolygon2D.MaxPointCount];
+        private static readonly Vector2[] BoxCorners = new Vector2[4];
+        private static readonly Vector2[] BoundsCorners = new Vector2[4];
+
+        protected override void CatchTargetsNonAlloc(AbilitySystemCell mainTarget, List<AbilitySystemCell> results)
+        {
+            if (Parameter == null || results == null || Parameter.Points.Count < 3)
+            {
+                return;
+            }
+
+            if (!TryBuildWorldPolygon(mainTarget, out int pointCount, out Bounds bounds))
+            {
+                return;
+            }
+
+            int count = Physics2D.OverlapBoxNonAlloc(
+                bounds.center,
+                bounds.size,
+                0.0f,
+                Colliders,
+                Parameter.layer.value);
+
+            for (int i = 0; i < count; i++)
+            {
+                Collider2D collider = Colliders[i];
+                if (collider == null)
+                {
+                    continue;
+                }
+
+                if (!ColliderIntersectsPolygon(collider, WorldPoints, pointCount))
+                {
+                    continue;
+                }
+
+                AbilitySystemComponent asc = collider.GetComponentInParent<AbilitySystemComponent>();
+                AbilitySystemCell cell = asc != null ? asc.Cell : null;
+                if (cell == null || cell == Owner || !UniqueTargets.Add(cell))
+                {
+                    continue;
+                }
+
+                results.Add(cell);
+            }
+
+            ClearColliderCache(count);
+            UniqueTargets.Clear();
+        }
+
+        public override void OnEditorPreview(GameObject obj)
+        {
+#if UNITY_EDITOR
+            if (Parameter == null || Parameter.Points.Count < 3)
+            {
+                return;
+            }
+
+            if (!TryBuildWorldPolygon(obj, out int pointCount, out _))
+            {
+                return;
+            }
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                DebugDrawTool.DrawLine(WorldPoints[i], WorldPoints[(i + 1) % pointCount], Color.green, 1.0f, false);
+            }
+#endif
+        }
+
+        private bool TryBuildWorldPolygon(AbilitySystemCell mainTarget, out int pointCount, out Bounds bounds)
+        {
+            if (Parameter.isWorldSpace)
+            {
+                return BuildWorldPolygon(null, out pointCount, out bounds);
+            }
+
+            if (mainTarget?.GameObject == null)
+            {
+                pointCount = 0;
+                bounds = default;
+                return false;
+            }
+
+            return BuildWorldPolygon(mainTarget.GameObject, out pointCount, out bounds);
+        }
+
+        private bool TryBuildWorldPolygon(GameObject previewObject, out int pointCount, out Bounds bounds)
+        {
+            if (Parameter.isWorldSpace)
+            {
+                return BuildWorldPolygon(null, out pointCount, out bounds);
+            }
+
+            if (previewObject == null)
+            {
+                pointCount = 0;
+                bounds = default;
+                return false;
+            }
+
+            return BuildWorldPolygon(previewObject, out pointCount, out bounds);
+        }
+
+        private bool BuildWorldPolygon(GameObject source, out int pointCount, out Bounds bounds)
+        {
+            pointCount = Mathf.Min(Parameter.Points.Count, XParamCatchAreaPolygon2D.MaxPointCount);
+            if (pointCount < 3)
+            {
+                bounds = default;
+                return false;
+            }
+
+            float facingAngle = 0.0f;
+            Vector2 origin = Vector2.zero;
+            Transform sourceTransform = source != null ? source.transform : null;
+
+            if (!Parameter.isWorldSpace && sourceTransform != null)
+            {
+                origin = sourceTransform.position;
+                Movable movable = source.GetComponent<Movable>();
+                if (movable != null && movable.TryGetGas2DFacingDirection(out Vector2 direction))
+                {
+                    facingAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                }
+                else
+                {
+                    facingAngle = sourceTransform.eulerAngles.z;
+                }
+            }
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                Vector2 local = Parameter.Points[i];
+                WorldPoints[i] = Parameter.isWorldSpace
+                    ? local
+                    : origin + Rotate(local, facingAngle);
+            }
+
+            Vector2 min = WorldPoints[0];
+            Vector2 max = WorldPoints[0];
+            for (int i = 1; i < pointCount; i++)
+            {
+                min = Vector2.Min(min, WorldPoints[i]);
+                max = Vector2.Max(max, WorldPoints[i]);
+            }
+
+            Vector2 size = max - min;
+            bounds = new Bounds((min + max) * 0.5f, new Vector3(Mathf.Max(size.x, 0.01f), Mathf.Max(size.y, 0.01f), 0.01f));
+            return true;
+        }
+
+        private static bool ColliderIntersectsPolygon(Collider2D collider, Vector2[] polygon, int pointCount)
+        {
+            if (collider is BoxCollider2D boxCollider)
+            {
+                return BoxColliderIntersectsPolygon(boxCollider, polygon, pointCount);
+            }
+
+            if (collider is CircleCollider2D circleCollider)
+            {
+                return CircleColliderIntersectsPolygon(circleCollider, polygon, pointCount);
+            }
+
+            return ColliderBoundsIntersectsPolygon(collider, polygon, pointCount);
+        }
+
+        private static bool BoxColliderIntersectsPolygon(BoxCollider2D collider, Vector2[] polygon, int pointCount)
+        {
+            Vector2 halfSize = collider.size * 0.5f;
+            Vector2 offset = collider.offset;
+            Transform transform = collider.transform;
+
+            BoxCorners[0] = transform.TransformPoint(offset + new Vector2(-halfSize.x, -halfSize.y));
+            BoxCorners[1] = transform.TransformPoint(offset + new Vector2(-halfSize.x, halfSize.y));
+            BoxCorners[2] = transform.TransformPoint(offset + new Vector2(halfSize.x, halfSize.y));
+            BoxCorners[3] = transform.TransformPoint(offset + new Vector2(halfSize.x, -halfSize.y));
+
+            return ShapePointsIntersectPolygon(BoxCorners, BoxCorners.Length, polygon, pointCount, collider);
+        }
+
+        private static bool CircleColliderIntersectsPolygon(CircleCollider2D collider, Vector2[] polygon, int pointCount)
+        {
+            Transform transform = collider.transform;
+            Vector2 center = transform.TransformPoint(collider.offset);
+            Vector3 scale = transform.lossyScale;
+            float radius = collider.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y));
+            float radiusSquared = radius * radius;
+
+            if (IsPointInPolygon(center, polygon, pointCount))
+            {
+                return true;
+            }
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                if ((polygon[i] - center).sqrMagnitude <= radiusSquared)
+                {
+                    return true;
+                }
+            }
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                Vector2 a = polygon[i];
+                Vector2 b = polygon[(i + 1) % pointCount];
+                if (SegmentDistanceSquared(center, a, b) <= radiusSquared)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool ColliderBoundsIntersectsPolygon(Collider2D collider, Vector2[] polygon, int pointCount)
+        {
+            Bounds bounds = collider.bounds;
+            Vector2 min = bounds.min;
+            Vector2 max = bounds.max;
+
+            BoundsCorners[0] = new Vector2(min.x, min.y);
+            BoundsCorners[1] = new Vector2(min.x, max.y);
+            BoundsCorners[2] = new Vector2(max.x, max.y);
+            BoundsCorners[3] = new Vector2(max.x, min.y);
+
+            return ShapePointsIntersectPolygon(BoundsCorners, BoundsCorners.Length, polygon, pointCount, collider);
+        }
+
+        private static bool ShapePointsIntersectPolygon(
+            Vector2[] shapePoints,
+            int shapePointCount,
+            Vector2[] polygon,
+            int pointCount,
+            Collider2D collider)
+        {
+            for (int i = 0; i < shapePointCount; i++)
+            {
+                if (IsPointInPolygon(shapePoints[i], polygon, pointCount))
+                {
+                    return true;
+                }
+            }
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                if (collider.OverlapPoint(polygon[i]))
+                {
+                    return true;
+                }
+            }
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                Vector2 polygonA = polygon[i];
+                Vector2 polygonB = polygon[(i + 1) % pointCount];
+                for (int j = 0; j < shapePointCount; j++)
+                {
+                    Vector2 shapeA = shapePoints[j];
+                    Vector2 shapeB = shapePoints[(j + 1) % shapePointCount];
+                    if (SegmentsIntersect(polygonA, polygonB, shapeA, shapeB))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsPointInPolygon(Vector2 point, Vector2[] polygon, int pointCount)
+        {
+            bool inside = false;
+            for (int i = 0, j = pointCount - 1; i < pointCount; j = i++)
+            {
+                Vector2 pi = polygon[i];
+                Vector2 pj = polygon[j];
+                if (((pi.y > point.y) != (pj.y > point.y)) &&
+                    point.x < (pj.x - pi.x) * (point.y - pi.y) / (pj.y - pi.y) + pi.x)
+                {
+                    inside = !inside;
+                }
+            }
+
+            return inside;
+        }
+
+        private static bool SegmentsIntersect(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        {
+            float direction1 = Cross(d - c, a - c);
+            float direction2 = Cross(d - c, b - c);
+            float direction3 = Cross(b - a, c - a);
+            float direction4 = Cross(b - a, d - a);
+
+            if (((direction1 > 0.0f && direction2 < 0.0f) || (direction1 < 0.0f && direction2 > 0.0f)) &&
+                ((direction3 > 0.0f && direction4 < 0.0f) || (direction3 < 0.0f && direction4 > 0.0f)))
+            {
+                return true;
+            }
+
+            const float epsilon = 0.0001f;
+            return Mathf.Abs(direction1) <= epsilon && IsPointOnSegment(a, c, d) ||
+                   Mathf.Abs(direction2) <= epsilon && IsPointOnSegment(b, c, d) ||
+                   Mathf.Abs(direction3) <= epsilon && IsPointOnSegment(c, a, b) ||
+                   Mathf.Abs(direction4) <= epsilon && IsPointOnSegment(d, a, b);
+        }
+
+        private static bool IsPointOnSegment(Vector2 point, Vector2 a, Vector2 b)
+        {
+            return point.x >= Mathf.Min(a.x, b.x) - 0.0001f &&
+                   point.x <= Mathf.Max(a.x, b.x) + 0.0001f &&
+                   point.y >= Mathf.Min(a.y, b.y) - 0.0001f &&
+                   point.y <= Mathf.Max(a.y, b.y) + 0.0001f;
+        }
+
+        private static float SegmentDistanceSquared(Vector2 point, Vector2 a, Vector2 b)
+        {
+            Vector2 segment = b - a;
+            float lengthSquared = segment.sqrMagnitude;
+            if (lengthSquared <= 0.0001f)
+            {
+                return (point - a).sqrMagnitude;
+            }
+
+            float t = Mathf.Clamp01(Vector2.Dot(point - a, segment) / lengthSquared);
+            Vector2 closest = a + segment * t;
+            return (point - closest).sqrMagnitude;
+        }
+
+        private static float Cross(Vector2 a, Vector2 b)
+        {
+            return a.x * b.y - a.y * b.x;
+        }
+
+        private static Vector2 Rotate(Vector2 value, float degrees)
+        {
+            float radians = degrees * Mathf.Deg2Rad;
+            float sin = Mathf.Sin(radians);
+            float cos = Mathf.Cos(radians);
+            return new Vector2(
+                value.x * cos - value.y * sin,
+                value.x * sin + value.y * cos);
+        }
+
+        private static void ClearColliderCache(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Colliders[i] = null;
+            }
+        }
+    }
+
+    [Serializable]
+    public sealed class XParamCatchAreaBox2D : XParam
+    {
+        [ShowInInspector]
+        [LabelText("是否是世界空间坐标系")]
+        [BeanField(nameof(SetIsWorldSpace), Order = 1)]
+        public bool isWorldSpace { get; private set; }
+
+        [ShowInInspector]
+        [LabelText("偏移")]
+        [BeanField(nameof(SetOffset), Order = 2)]
+        public Vector2 offset { get; private set; }
+
+        [ShowInInspector]
+        [LabelText("大小")]
+        [BeanField(nameof(SetSize), Order = 3)]
+        public Vector2 size { get; private set; } = Vector2.one;
+
+        [ShowInInspector]
+        [LabelText("旋转")]
+        [BeanField(nameof(SetRotation), Order = 4)]
+        public float rotation { get; private set; }
+
+        [ShowInInspector]
+        [LabelText("监测层级")]
+        [BeanField(nameof(SetLayer), LubanType = "int", Order = 5)]
+        public LayerMask layer { get; private set; } = ~0;
+
+        public void SetIsWorldSpace(bool value) => isWorldSpace = value;
+        public void SetOffset(Vector2 value) => offset = value;
+        public void SetSize(Vector2 value) => size = new Vector2(Mathf.Max(0.01f, value.x), Mathf.Max(0.01f, value.y));
+        public void SetRotation(float value) => rotation = value;
+        public void SetLayer(int value) => layer = value;
+
+#if UNITY_EDITOR
+        public void DecodeExcelData(List<object> paramData)
+        {
+            if (paramData.Count > 0 && bool.TryParse(paramData[0] as string, out bool parsedBool))
+            {
+                SetIsWorldSpace(parsedBool);
+            }
+
+            if (paramData.Count > 1 && TryParseVector2(paramData[1] as string, out Vector2 parsedOffset))
+            {
+                SetOffset(parsedOffset);
+            }
+
+            if (paramData.Count > 2 && TryParseVector2(paramData[2] as string, out Vector2 parsedSize))
+            {
+                SetSize(parsedSize);
+            }
+
+            if (paramData.Count > 3 && float.TryParse(paramData[3] as string, out float parsedRotation))
+            {
+                SetRotation(parsedRotation);
+            }
+
+            if (paramData.Count > 4 && int.TryParse(paramData[4] as string, out int parsedLayer))
+            {
+                SetLayer(parsedLayer);
+            }
+        }
+
+        public List<object> EncodeExcelData()
+        {
+            return new List<object>
+            {
+                isWorldSpace.ToString(),
+                $"{offset.x},{offset.y}",
+                $"{size.x},{size.y}",
+                rotation.ToString(),
+                layer.value.ToString()
+            };
+        }
+#endif
+        internal static bool TryParseVector2(string value, out Vector2 result)
+        {
+            result = default;
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            string[] parts = value.Split(',');
+            return parts.Length == 2 &&
+                   float.TryParse(parts[0], out result.x) &&
+                   float.TryParse(parts[1], out result.y);
+        }
+    }
+
+    [Serializable]
+    public sealed class XParamCatchAreaCircle2D : XParam
+    {
+        [ShowInInspector]
+        [LabelText("是否是世界空间坐标系")]
+        [BeanField(nameof(SetIsWorldSpace), Order = 1)]
+        public bool isWorldSpace { get; private set; }
+
+        [ShowInInspector]
+        [LabelText("偏移")]
+        [BeanField(nameof(SetOffset), Order = 2)]
+        public Vector2 offset { get; private set; }
+
+        [ShowInInspector]
+        [LabelText("半径")]
+        [BeanField(nameof(SetRadius), Order = 3)]
+        public float radius { get; private set; } = 0.5f;
+
+        [ShowInInspector]
+        [LabelText("监测层级")]
+        [BeanField(nameof(SetLayer), LubanType = "int", Order = 4)]
+        public LayerMask layer { get; private set; } = ~0;
+
+        public void SetIsWorldSpace(bool value) => isWorldSpace = value;
+        public void SetOffset(Vector2 value) => offset = value;
+        public void SetRadius(float value) => radius = Mathf.Max(0.01f, value);
+        public void SetLayer(int value) => layer = value;
+
+#if UNITY_EDITOR
+        public void DecodeExcelData(List<object> paramData)
+        {
+            if (paramData.Count > 0 && bool.TryParse(paramData[0] as string, out bool parsedBool))
+            {
+                SetIsWorldSpace(parsedBool);
+            }
+
+            if (paramData.Count > 1 && XParamCatchAreaBox2D.TryParseVector2(paramData[1] as string, out Vector2 parsedOffset))
+            {
+                SetOffset(parsedOffset);
+            }
+
+            if (paramData.Count > 2 && float.TryParse(paramData[2] as string, out float parsedRadius))
+            {
+                SetRadius(parsedRadius);
+            }
+
+            if (paramData.Count > 3 && int.TryParse(paramData[3] as string, out int parsedLayer))
+            {
+                SetLayer(parsedLayer);
+            }
+        }
+
+        public List<object> EncodeExcelData()
+        {
+            return new List<object>
+            {
+                isWorldSpace.ToString(),
+                $"{offset.x},{offset.y}",
+                radius.ToString(),
+                layer.value.ToString()
+            };
+        }
+#endif
+    }
+
+    [Serializable]
+    public sealed class XParamCatchAreaPolygon2D : XParam
+    {
+        public const int MaxPointCount = 16;
+
+        [ShowInInspector]
+        [LabelText("是否是世界空间坐标系")]
+        [BeanField(nameof(SetIsWorldSpace), Order = 1)]
+        public bool isWorldSpace { get; private set; }
+
+        [HideInInspector]
+        [BeanField(nameof(SetPoints), LubanType = "string", Order = 2)]
+        public string points { get; private set; } = "0.2,-0.35;0.95,-0.2;0.95,0.35;0.2,0.45";
+
+        private List<Vector2> _points = new()
+        {
+            new Vector2(0.2f, -0.35f),
+            new Vector2(0.95f, -0.2f),
+            new Vector2(0.95f, 0.35f),
+            new Vector2(0.2f, 0.45f)
+        };
+
+#if UNITY_EDITOR
+        [OnInspectorGUI]
+        private void DrawEditorPoints()
+        {
+            _points ??= new List<Vector2>();
+
+            EditorGUILayout.Space(4);
+            EditorGUILayout.LabelField("顶点", EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox("这里用 Unity 原生数值字段编辑多边形顶点；points 只作为 Excel/Luban 保存格式。选中时间轴命中任务后，也可以在 SceneView 里拖动顶点。", MessageType.None);
+
+            using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+            {
+                for (int i = 0; i < _points.Count; i++)
+                {
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        EditorGUILayout.LabelField($"#{i}", GUILayout.Width(28));
+
+                        EditorGUI.BeginChangeCheck();
+                        float x = EditorGUILayout.FloatField("X", _points[i].x);
+                        float y = EditorGUILayout.FloatField("Y", _points[i].y);
+                        if (EditorGUI.EndChangeCheck())
+                        {
+                            MovePoint(i, new Vector2(x, y));
+                            SceneView.RepaintAll();
+                        }
+
+                        if (GUILayout.Button("+", GUILayout.Width(24)))
+                        {
+                            InsertPoint(i + 1, _points[i] + new Vector2(0.1f, 0.0f));
+                            SceneView.RepaintAll();
+                            GUI.changed = true;
+                            break;
+                        }
+
+                        using (new EditorGUI.DisabledScope(_points.Count <= 3))
+                        {
+                            if (GUILayout.Button("-", GUILayout.Width(24)))
+                            {
+                                RemovePoint(i);
+                                SceneView.RepaintAll();
+                                GUI.changed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                using (new EditorGUI.DisabledScope(_points.Count >= MaxPointCount))
+                {
+                    if (GUILayout.Button("添加顶点"))
+                    {
+                        Vector2 newPoint = _points.Count == 0
+                            ? Vector2.zero
+                            : _points[_points.Count - 1] + new Vector2(0.1f, 0.0f);
+                        InsertPoint(_points.Count, newPoint);
+                        SceneView.RepaintAll();
+                    }
+                }
+            }
+        }
+#endif
+
+        public IReadOnlyList<Vector2> Points => _points;
+
+        [ShowInInspector]
+        [LabelText("监测层级")]
+        [BeanField(nameof(SetLayer), LubanType = "int", Order = 3)]
+        public LayerMask layer { get; private set; } = ~0;
+
+        public void SetIsWorldSpace(bool value) => isWorldSpace = value;
+
+        public void SetPoints(string value)
+        {
+            if (TryParsePoints(value, out List<Vector2> parsedPoints))
+            {
+                SetPoints(parsedPoints);
+            }
+        }
+
+        public void SetPoints(List<Vector2> value)
+        {
+            _points = value != null ? new List<Vector2>(value) : new List<Vector2>();
+            if (_points.Count > MaxPointCount)
+            {
+                _points.RemoveRange(MaxPointCount, _points.Count - MaxPointCount);
+            }
+
+            points = EncodePoints(_points);
+        }
+
+#if UNITY_EDITOR
+#endif
+
+        public void SetLayer(int value) => layer = value;
+
+        public void MovePoint(int index, Vector2 value)
+        {
+            if (index < 0 || index >= _points.Count)
+            {
+                return;
+            }
+
+            _points[index] = value;
+            points = EncodePoints(_points);
+        }
+
+        public void InsertPoint(int index, Vector2 value)
+        {
+            if (_points.Count >= MaxPointCount)
+            {
+                return;
+            }
+
+            _points.Insert(Mathf.Clamp(index, 0, _points.Count), value);
+            points = EncodePoints(_points);
+        }
+
+        public void RemovePoint(int index)
+        {
+            if (_points.Count <= 3 || index < 0 || index >= _points.Count)
+            {
+                return;
+            }
+
+            _points.RemoveAt(index);
+            points = EncodePoints(_points);
+        }
+
+#if UNITY_EDITOR
+        public void DecodeExcelData(List<object> paramData)
+        {
+            if (paramData.Count > 0 && bool.TryParse(paramData[0] as string, out bool parsedBool))
+            {
+                SetIsWorldSpace(parsedBool);
+            }
+
+            if (paramData.Count > 1)
+            {
+                SetPoints(paramData[1]?.ToString());
+            }
+
+            if (paramData.Count > 2 && int.TryParse(paramData[2] as string, out int parsedLayer))
+            {
+                SetLayer(parsedLayer);
+            }
+        }
+
+        public List<object> EncodeExcelData()
+        {
+            return new List<object>
+            {
+                isWorldSpace.ToString(),
+                points,
+                layer.value.ToString()
+            };
+        }
+#endif
+
+        private static string EncodePoints(IReadOnlyList<Vector2> source)
+        {
+            if (source == null || source.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            List<string> encoded = new(source.Count);
+            for (int i = 0; i < source.Count; i++)
+            {
+                encoded.Add($"{source[i].x},{source[i].y}");
+            }
+
+            return string.Join(";", encoded);
+        }
+
+        private static bool TryParsePoints(string value, out List<Vector2> result)
+        {
+            result = new List<Vector2>();
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+
+            string[] pointValues = value.Split(';');
+            for (int i = 0; i < pointValues.Length && result.Count < MaxPointCount; i++)
+            {
+                if (XParamCatchAreaBox2D.TryParseVector2(pointValues[i], out Vector2 point))
+                {
+                    result.Add(point);
+                }
+            }
+
+            return result.Count >= 3;
+        }
+    }
+}

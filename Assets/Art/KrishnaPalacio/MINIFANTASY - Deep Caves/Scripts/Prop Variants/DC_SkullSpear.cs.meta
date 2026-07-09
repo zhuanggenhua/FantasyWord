@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 7304ed3e929b2f54fb420ac64a3c6f96
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - skullSpearLeft: {fileID: 90712577868931614, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - skullSpearStraight0: {fileID: 4951237431297612799, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - skullSpearStraight1: {fileID: 7920596546067926029, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - skullSpearRight: {fileID: -4690319368619271683, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - skullSpearLeftShadow: {fileID: 4766885101772062738, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - skullSpearStraight0Shadow: {fileID: -7152616494132503855, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - skullSpearStraight1Shadow: {fileID: -5732182808740917491, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - skullSpearRightShadow: {fileID: -5187711403013698349, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

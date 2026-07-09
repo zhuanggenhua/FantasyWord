@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1d2b06986233e4a4cb288d7e28cbfcda
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - barrelCactus: {fileID: -4972584720515384212, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - barrelCactusFlower: {fileID: 3913022427134740062, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - barrelCactusShadow: {fileID: 2022372044224418612, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - barrelCactusFlowerShadow: {fileID: -2312250332422408016, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

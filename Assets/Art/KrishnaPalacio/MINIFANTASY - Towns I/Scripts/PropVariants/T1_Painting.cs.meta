@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 15013533c7c45564eafa81fea7189153
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pearl: {fileID: -9080398059469958660, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - scream: {fileID: 1710692624030372781, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - mona: {fileID: 3066313244817705510, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - sunset: {fileID: 6689425921828941318, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - pearlShadow: {fileID: 1488391445110669458, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - screamShadow: {fileID: 2645239785838257802, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - monaShadow: {fileID: -83340968274397313, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - sunsetShadow: {fileID: 2032421386486577608, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

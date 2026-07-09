@@ -1,0 +1,3091 @@
+fileFormatVersion: 2
+guid: aa3ef75d8ec7c344f81552140d04a1fe
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2525769866768050812
+    second: Chimney_1
+  - first:
+      213: 4869832057853091804
+    second: Chimney_2
+  - first:
+      213: 1487856089857597684
+    second: Chimney_3
+  - first:
+      213: 3449223544045758809
+    second: Smokestack_1
+  - first:
+      213: -1649105431738232877
+    second: Smokestack_2
+  - first:
+      213: 1601457354009563754
+    second: Smokestack_3
+  - first:
+      213: -1209480782707865746
+    second: Well
+  - first:
+      213: 7481488362606449352
+    second: PottedPlant_1
+  - first:
+      213: 7632836075553106725
+    second: PottedPlant_2
+  - first:
+      213: 5694307619157401217
+    second: PottedPlant_3
+  - first:
+      213: -688623221153860787
+    second: HenHouse
+  - first:
+      213: 1669189058842976862
+    second: Mailbox_1
+  - first:
+      213: 7832878757009303614
+    second: Mailbox_2
+  - first:
+      213: 1728484853059284468
+    second: LogWithAxe
+  - first:
+      213: -6045684517192588090
+    second: ShopSign_Tavern
+  - first:
+      213: -349693762640560957
+    second: ShopSign_Potions
+  - first:
+      213: -4423201225985716218
+    second: ShopSign_Weapons
+  - first:
+      213: -60620594294420951
+    second: ShopSign_Armor
+  - first:
+      213: 3839197198757065530
+    second: MessageBoard
+  - first:
+      213: 2823878083559927009
+    second: Sign_1
+  - first:
+      213: -396523509504917333
+    second: Sign_2
+  - first:
+      213: 1933289406430316489
+    second: Hearth_Stack
+  - first:
+      213: 7459499326408845396
+    second: Hearth_NoStack
+  - first:
+      213: 363578968219060554
+    second: Hearth_East
+  - first:
+      213: 1661336792895497432
+    second: Hearth_West
+  - first:
+      213: 585449149043964628
+    second: WeaponsRack_East
+  - first:
+      213: 2844800168765016948
+    second: WeaponsRack_West
+  - first:
+      213: 4637991730894345310
+    second: WeaponsRack_North
+  - first:
+      213: 4003288054144884600
+    second: WeaponsRack_South
+  - first:
+      213: -6978664824931964300
+    second: SlackTub_Horizontal
+  - first:
+      213: 8329976786671494348
+    second: Anvil_Horizontal
+  - first:
+      213: 2119673557313422649
+    second: SlackTub_Vertical
+  - first:
+      213: -1289213619920477125
+    second: Anvil_Vertical
+  - first:
+      213: 8538010626128757586
+    second: Minifantasy_TownsProps_33
+  - first:
+      213: 7509917905601394081
+    second: Minifantasy_TownsProps_34
+  - first:
+      213: -1037536025967752747
+    second: Minifantasy_TownsProps_35
+  - first:
+      213: -6967028072309733328
+    second: Stove_North
+  - first:
+      213: 6776622062815618917
+    second: Stove_East
+  - first:
+      213: -7081866315199964601
+    second: Stove_West
+  - first:
+      213: 941318474763483788
+    second: WidePainting_1
+  - first:
+      213: -9080398059469958660
+    second: Painting_1
+  - first:
+      213: 1710692624030372781
+    second: Painting_2
+  - first:
+      213: 3066313244817705510
+    second: Painting_3
+  - first:
+      213: 6689425921828941318
+    second: Painting_4
+  - first:
+      213: -5345360970915909492
+    second: WidePainting_2
+  - first:
+      213: 6800789163421078452
+    second: WidePainting_3
+  - first:
+      213: -8580291753654525444
+    second: WallWeaponDisplay_Knives
+  - first:
+      213: 1319229080958859157
+    second: WallWeaponDisplay_Swords
+  - first:
+      213: 3125356113658385934
+    second: WallWeaponDisplay_Axe
+  - first:
+      213: 5052388943423448741
+    second: WallWeaponDisplay_SwordsAndShield
+  - first:
+      213: 179322424394467755
+    second: LongTable_Plain
+  - first:
+      213: 7813908690006627524
+    second: WideTable_Plain
+  - first:
+      213: -4942627721913773221
+    second: LongTable_Desk
+  - first:
+      213: 3985253829144601360
+    second: WideTable_Desk
+  - first:
+      213: 3946610344063585506
+    second: LongTable_Butcher
+  - first:
+      213: 5646253133918497986
+    second: WideTable_Butcher
+  - first:
+      213: -2007735251305914664
+    second: LongTable_Alchemy
+  - first:
+      213: -2019049120015645736
+    second: WideTable_Alchemy
+  - first:
+      213: -4398011866978843575
+    second: SquareTable_Empty_None
+  - first:
+      213: 7043611358534939022
+    second: SquareTable_Empty_Set1
+  - first:
+      213: -2197941008828769441
+    second: SquareTable_Empty_Set2
+  - first:
+      213: 7603400950740430797
+    second: SquareTable_Empty_Set3
+  - first:
+      213: -407902074647451480
+    second: SquareTable_Tablecloth_Empty
+  - first:
+      213: 2069861988256962418
+    second: SquareTable_Tablecloth_Set1
+  - first:
+      213: 4796743516238508071
+    second: SquareTable_Tablecloth_Set2
+  - first:
+      213: -7712360949442344065
+    second: SquareTable_Tablecloth_Set3
+  - first:
+      213: -3853824034063239485
+    second: WineKeg
+  - first:
+      213: 7257610120706037989
+    second: Bench_Wide
+  - first:
+      213: -342969563365164716
+    second: Bench_Long
+  - first:
+      213: 990690150535703717
+    second: CabinetSide
+  - first:
+      213: -5081682019683542932
+    second: Minifantasy_TownsProps_70
+  - first:
+      213: -9107809075630274423
+    second: Wardrobe_Closed
+  - first:
+      213: 822965046497861137
+    second: Wardrobe_Open_Empty
+  - first:
+      213: -5828397136249317218
+    second: Wardrobe_Open_Hammer
+  - first:
+      213: 5142580850549872709
+    second: Wardrobe_Open_Vials
+  - first:
+      213: -1950840158300907596
+    second: Wardrobe_Open_Books
+  - first:
+      213: 7278690646745542526
+    second: SideLongTripleShelf_1
+  - first:
+      213: -3068083649895302713
+    second: SideLongDoubleShelf_1
+  - first:
+      213: 6449123246464446174
+    second: SideLongSingleShelf_1
+  - first:
+      213: 4196250822577874328
+    second: SideShortTripleShelf_1
+  - first:
+      213: 1449720164420650303
+    second: SideShortDoubleShelf_1
+  - first:
+      213: -4947343679681689462
+    second: SideShortSingleShelf_1
+  - first:
+      213: -5409696369749348566
+    second: Minifantasy_TownsProps_82
+  - first:
+      213: -4033305616763848747
+    second: Minifantasy_TownsProps_83
+  - first:
+      213: -190886257138698622
+    second: Minifantasy_TownsProps_84
+  - first:
+      213: 3743158788700429027
+    second: Minifantasy_TownsProps_85
+  - first:
+      213: -1197283982162316419
+    second: Minifantasy_TownsProps_86
+  - first:
+      213: 1764484699672900483
+    second: Minifantasy_TownsProps_87
+  - first:
+      213: -1912657157123054154
+    second: SideLongTripleShelf_East_2
+  - first:
+      213: -560806804607942310
+    second: SideLongDoubleShelf_East_2
+  - first:
+      213: -1719829312746575225
+    second: SideLongSingleShelf_East_2
+  - first:
+      213: -210509022064310167
+    second: SideShortTripleShelf_East_2
+  - first:
+      213: 6660253113420910405
+    second: SideShortDoubleShelf_East_2
+  - first:
+      213: -6504455138487544373
+    second: SideShortSingleShelf_East_2
+  - first:
+      213: -1796396710867079789
+    second: SideShortSingleShelf_West_2
+  - first:
+      213: 2234198637752289101
+    second: SideShortDoubleShelf_West_2
+  - first:
+      213: -6766272221607167164
+    second: SideShortTripleShelf_West_2
+  - first:
+      213: -2197175997803228512
+    second: SideLongSingleShelf_West_2
+  - first:
+      213: -366386775330713617
+    second: SideLongDoubleShelf_West_2
+  - first:
+      213: -3356247953820110131
+    second: SideLongTripleShelf_West_2
+  - first:
+      213: 632855590886769901
+    second: EmptySingleShortShelf
+  - first:
+      213: 2269590497012598748
+    second: EmptyDoubleShortShelf
+  - first:
+      213: 100103126720190263
+    second: EmptyTripleShortShelf
+  - first:
+      213: -736385688231583772
+    second: BooksSingleShortShelf
+  - first:
+      213: -5363692391373267452
+    second: BooksDoubleShortShelf
+  - first:
+      213: -6329124334494085098
+    second: BooksTripleShortShelf
+  - first:
+      213: -6452789091167015798
+    second: VialsSingleShortShelf
+  - first:
+      213: -1491022406267691846
+    second: VialsDoubleShortShelf
+  - first:
+      213: -2651255810646734117
+    second: VialsTripleShortShelf
+  - first:
+      213: -3563823612721910084
+    second: EmptySingleLongShelf
+  - first:
+      213: -2231804025559895519
+    second: EmptyDoubleLongShelf
+  - first:
+      213: -7559719761397940255
+    second: EmptyTripleLongShelf
+  - first:
+      213: 8650560041096442061
+    second: VialsSingleLongShelf
+  - first:
+      213: -5391794199677358325
+    second: VialsDoubleLongShelf
+  - first:
+      213: 9099431523004704918
+    second: VialsTripleLongShelf
+  - first:
+      213: 2263912682053869796
+    second: BooksSingleLongShelf
+  - first:
+      213: 1096270919116615421
+    second: BooksDoubleLongShelf
+  - first:
+      213: -1917877265747997178
+    second: BooksTripleLongShelf
+  - first:
+      213: -9047657032477576906
+    second: BedSouth
+  - first:
+      213: 5388889587962186249
+    second: BedNorth
+  - first:
+      213: -5310857910804022178
+    second: Bed_3_Minifantasy_TownsProps_120
+  - first:
+      213: -4090305109992874043
+    second: Bed_4_Minifantasy_TownsProps_121
+  - first:
+      213: -7784227773937116529
+    second: BedEast
+  - first:
+      213: 5561586203883604049
+    second: BedWest
+  - first:
+      213: -4836241981168854777
+    second: SmallTable
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Chimney_1
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 361
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7a681dcf465d0320800000000000000
+      internalID: 2525769866768050812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chimney_2
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 361
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdf9424847e159340800000000000000
+      internalID: 4869832057853091804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Chimney_3
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 361
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f02dd01b3de5a410800000000000000
+      internalID: 1487856089857597684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smokestack_1
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 337
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 959e2cdd98a1edf20800000000000000
+      internalID: 3449223544045758809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smokestack_2
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 337
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3df4310e8533d19e0800000000000000
+      internalID: -1649105431738232877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Smokestack_3
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 337
+        width: 11
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a625da48af4893610800000000000000
+      internalID: 1601457354009563754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Well
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 304
+        width: 19
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e674900e2af073fe0800000000000000
+      internalID: -1209480782707865746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PottedPlant_1
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 321
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c25064f60693d760800000000000000
+      internalID: 7481488362606449352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PottedPlant_2
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 321
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52b212068f74de960800000000000000
+      internalID: 7632836075553106725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PottedPlant_3
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 321
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18e5da12c9e360f40800000000000000
+      internalID: 5694307619157401217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HenHouse
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 304
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d43f90f24d48176f0800000000000000
+      internalID: -688623221153860787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mailbox_1
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 305
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e52ed43fa962a2710800000000000000
+      internalID: 1669189058842976862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mailbox_2
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 305
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e382e38aab9f3bc60800000000000000
+      internalID: 7832878757009303614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LogWithAxe
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 305
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fded32e0dfccf710800000000000000
+      internalID: 1728484853059284468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopSign_Tavern
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 281
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c428a886f9691ca0800000000000000
+      internalID: -6045684517192588090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopSign_Potions
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 281
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ccb3a92063a52bf0800000000000000
+      internalID: -349693762640560957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopSign_Weapons
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 281
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6009c0b8be1ad92c0800000000000000
+      internalID: -4423201225985716218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopSign_Armor
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 281
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92a020304e1a82ff0800000000000000
+      internalID: -60620594294420951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MessageBoard
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 281
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a33f696e281974530800000000000000
+      internalID: 3839197198757065530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sign_1
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 281
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1eca99bc72e603720800000000000000
+      internalID: 2823878083559927009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sign_2
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 281
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba04ede08f34f7af0800000000000000
+      internalID: -396523509504917333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hearth_Stack
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 240
+        width: 18
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c70e4ed87c64da10800000000000000
+      internalID: 1933289406430316489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hearth_NoStack
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 240
+        width: 18
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4586dd08d17758760800000000000000
+      internalID: 7459499326408845396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hearth_East
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 240
+        width: 12
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4900803521bb0500800000000000000
+      internalID: 363578968219060554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hearth_West
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 240
+        width: 12
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d4a2d0d2014e0710800000000000000
+      internalID: 1661336792895497432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponsRack_East
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 241
+        width: 5
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4daf1d236eeef1800800000000000000
+      internalID: 585449149043964628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponsRack_West
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 241
+        width: 5
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47bc53c5ea2ca7720800000000000000
+      internalID: 2844800168765016948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponsRack_North
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 245
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e541827f7e47d5040800000000000000
+      internalID: 4637991730894345310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponsRack_South
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 240
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87fded066498e8730800000000000000
+      internalID: 4003288054144884600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlackTub_Horizontal
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 241
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47aaa67f05dc62f90800000000000000
+      internalID: -6978664824931964300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anvil_Horizontal
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 241
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc4edccd0c50a9370800000000000000
+      internalID: 8329976786671494348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlackTub_Vertical
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 241
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 935847faed79a6d10800000000000000
+      internalID: 2119673557313422649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anvil_Vertical
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 241
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b346b011b0bcb1ee0800000000000000
+      internalID: -1289213619920477125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stove_North
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 208
+        width: 19
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 038cdc191e4205f90800000000000000
+      internalID: -6967028072309733328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stove_East
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 208
+        width: 10
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 567233facd56b0e50800000000000000
+      internalID: 6776622062815618917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stove_West
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 208
+        width: 10
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74a93bf8b1828bd90800000000000000
+      internalID: -7081866315199964601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WidePainting_1
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 193
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8a3acc5a2c301d00800000000000000
+      internalID: 941318474763483788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_1
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 192
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf1952e2312fbf180800000000000000
+      internalID: -9080398059469958660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_2
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da3163fb0e99db710800000000000000
+      internalID: 1710692624030372781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62a4f6f66abbd8a20800000000000000
+      internalID: 3066313244817705510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_4
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 194
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60e67ed0f6d95dc50800000000000000
+      internalID: 6689425921828941318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WidePainting_2
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 185
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c80f154948671d5b0800000000000000
+      internalID: -5345360970915909492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WidePainting_3
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 177
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b31a0646b1416e50800000000000000
+      internalID: 6800789163421078452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_Knives
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 177
+        width: 14
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf165324c1eace880800000000000000
+      internalID: -8580291753654525444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_Swords
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 178
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 597faeb0cd7de4210800000000000000
+      internalID: 1319229080958859157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_Axe
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 178
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e06143793de7f5b20800000000000000
+      internalID: 3125356113658385934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_SwordsAndShield
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 177
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a6addfa9f0bd1640800000000000000
+      internalID: 5052388943423448741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LongTable_Plain
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 160
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba94b4e7bc41d7200800000000000000
+      internalID: 179322424394467755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WideTable_Plain
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 160
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c4de2fbd84907c60800000000000000
+      internalID: 7813908690006627524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LongTable_Desk
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 160
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b53d45a2642486bb0800000000000000
+      internalID: -4942627721913773221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WideTable_Desk
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 160
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 013ede92e377e4730800000000000000
+      internalID: 3985253829144601360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LongTable_Butcher
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 160
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2eccac8a23d25c630800000000000000
+      internalID: 3946610344063585506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WideTable_Butcher
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 160
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cce5276f458b5e40800000000000000
+      internalID: 5646253133918497986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LongTable_Alchemy
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 160
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8de91e62d671324e0800000000000000
+      internalID: -2007735251305914664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WideTable_Alchemy
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 160
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d30761d585eaf3e0800000000000000
+      internalID: -2019049120015645736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Empty_None
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94406c6328f17f2c0800000000000000
+      internalID: -4398011866978843575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Empty_Set1
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e81b161463fefb160800000000000000
+      internalID: 7043611358534939022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Empty_Set2
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5b5f733c485f71e0800000000000000
+      internalID: -2197941008828769441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Empty_Set3
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 145
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcf20c151e4b48960800000000000000
+      internalID: 7603400950740430797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Tablecloth_Empty
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a86e796937d65af0800000000000000
+      internalID: -407902074647451480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Tablecloth_Set1
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 277d3200380a9bc10800000000000000
+      internalID: 2069861988256962418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Tablecloth_Set2
+      rect:
+        serializedVersion: 2
+        x: 107
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 720fd0450d4719240800000000000000
+      internalID: 4796743516238508071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Tablecloth_Set3
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7b05ec049038f490800000000000000
+      internalID: -7712360949442344065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WineKeg
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 145
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c63cce9577748ac0800000000000000
+      internalID: -3853824034063239485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bench_Wide
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 145
+        width: 9
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e896fac3f538b460800000000000000
+      internalID: 7257610120706037989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bench_Long
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 145
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45939decff68d3bf0800000000000000
+      internalID: -342969563365164716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CabinetSide
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 125
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aca8296173afbd00800000000000000
+      internalID: 990690150535703717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wardrobe_Closed
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 125
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9888af4a6ef8a9180800000000000000
+      internalID: -9107809075630274423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wardrobe_Open_Empty
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 125
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11e511b7952cb6b00800000000000000
+      internalID: 822965046497861137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wardrobe_Open_Hammer
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 125
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9894fb4faf5d1fa0800000000000000
+      internalID: -5828397136249317218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wardrobe_Open_Vials
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 125
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54850c9790e1e5740800000000000000
+      internalID: 5142580850549872709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wardrobe_Open_Books
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 125
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b758e646393de4e0800000000000000
+      internalID: -1950840158300907596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongTripleShelf_1
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 96
+        width: 5
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7fe93d349a130560800000000000000
+      internalID: 7278690646745542526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongDoubleShelf_1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 96
+        width: 5
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c97ec20d2afb65d0800000000000000
+      internalID: -3068083649895302713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongSingleShelf_1
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 96
+        width: 5
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ede2a3a7c63ef7950800000000000000
+      internalID: 6449123246464446174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortTripleShelf_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 5
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 895e134f3e31c3a30800000000000000
+      internalID: 4196250822577874328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortDoubleShelf_1
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 96
+        width: 5
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3583000fc07e1410800000000000000
+      internalID: 1449720164420650303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortSingleShelf_1
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 96
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a888ccea221875bb0800000000000000
+      internalID: -4947343679681689462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongTripleShelf_East_2
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 72
+        width: 6
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b562940370e475e0800000000000000
+      internalID: -1912657157123054154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongDoubleShelf_East_2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 72
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a51c8b7be2d9738f0800000000000000
+      internalID: -560806804607942310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongSingleShelf_East_2
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 72
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78aaf632a50f128e0800000000000000
+      internalID: -1719829312746575225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortTripleShelf_East_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 72
+        width: 6
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96887d5e82f141df0800000000000000
+      internalID: -210509022064310167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortDoubleShelf_East_2
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 72
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54f84ab4be8fd6c50800000000000000
+      internalID: 6660253113420910405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortSingleShelf_East_2
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 72
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc55cfc73888bb5a0800000000000000
+      internalID: -6504455138487544373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortSingleShelf_West_2
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 72
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39d661d85bae117e0800000000000000
+      internalID: -1796396710867079789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortDoubleShelf_West_2
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 72
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4703e0e2d7710f10800000000000000
+      internalID: 2234198637752289101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideShortTripleShelf_West_2
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 72
+        width: 6
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44bf281834f5912a0800000000000000
+      internalID: -6766272221607167164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongSingleShelf_West_2
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 72
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a29ce532101281e0800000000000000
+      internalID: -2197175997803228512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongDoubleShelf_West_2
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 72
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fef03064b255aeaf0800000000000000
+      internalID: -366386775330713617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideLongTripleShelf_West_2
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 72
+        width: 6
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc2bb66a4463c61d0800000000000000
+      internalID: -3356247953820110131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptySingleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 53
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de40de09eca58c800800000000000000
+      internalID: 632855590886769901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyDoubleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 53
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd7c90048843f7f10800000000000000
+      internalID: 2269590497012598748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyTripleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 53
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 737101d6343a36100800000000000000
+      internalID: 100103126720190263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksSingleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 53
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ef564b3e15d7c5f0800000000000000
+      internalID: -736385688231583772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksDoubleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 53
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40e1bb720365095b0800000000000000
+      internalID: -5363692391373267452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksTripleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 53
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 610133f63fe6a28a0800000000000000
+      internalID: -6329124334494085098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsSingleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 53
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8c697a82861376a0800000000000000
+      internalID: -6452789091167015798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsDoubleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 53
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abc14427503de4be0800000000000000
+      internalID: -1491022406267691846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsTripleShortShelf
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 53
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bda06bd13e8d43bd0800000000000000
+      internalID: -2651255810646734117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptySingleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 29
+        width: 16
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbeaf816e41ca8ec0800000000000000
+      internalID: -3563823612721910084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyDoubleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 29
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1223738301a0701e0800000000000000
+      internalID: -2231804025559895519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyTripleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 29
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1efff5c1eea761790800000000000000
+      internalID: -7559719761397940255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsSingleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 29
+        width: 16
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc0fdb55686fc0870800000000000000
+      internalID: 8650560041096442061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsDoubleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 29
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0f283a0ebf7c25b0800000000000000
+      internalID: -5391794199677358325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsTripleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 29
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 698efa262cca74e70800000000000000
+      internalID: 9099431523004704918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksSingleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 29
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e0a250f6980b6f10800000000000000
+      internalID: 2263912682053869796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksDoubleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 176
+        y: 29
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfe6987b79cb63f00800000000000000
+      internalID: 1096270919116615421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksTripleLongShelf
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 29
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60e0b44c9c45265e0800000000000000
+      internalID: -1917877265747997178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedSouth
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 8
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 631fb919dd3407280800000000000000
+      internalID: -9047657032477576906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedNorth
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 8
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90a8948578e29ca40800000000000000
+      internalID: 5388889587962186249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedEast
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 10
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8a9fbb051ed8f390800000000000000
+      internalID: -7784227773937116529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedWest
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 10
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15802369f29be2d40800000000000000
+      internalID: 5561586203883604049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallTable
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 9
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7095998aa8732ecb0800000000000000
+      internalID: -4836241981168854777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Anvil_Horizontal: 8329976786671494348
+      Anvil_Vertical: -1289213619920477125
+      BedEast: -7784227773937116529
+      BedNorth: 5388889587962186249
+      BedSouth: -9047657032477576906
+      BedWest: 5561586203883604049
+      Bench_Long: -342969563365164716
+      Bench_Wide: 7257610120706037989
+      BooksDoubleLongShelf: 1096270919116615421
+      BooksDoubleShortShelf: -5363692391373267452
+      BooksSingleLongShelf: 2263912682053869796
+      BooksSingleShortShelf: -736385688231583772
+      BooksTripleLongShelf: -1917877265747997178
+      BooksTripleShortShelf: -6329124334494085098
+      CabinetSide: 990690150535703717
+      Chimney_1: 2525769866768050812
+      Chimney_2: 4869832057853091804
+      Chimney_3: 1487856089857597684
+      EmptyDoubleLongShelf: -2231804025559895519
+      EmptyDoubleShortShelf: 2269590497012598748
+      EmptySingleLongShelf: -3563823612721910084
+      EmptySingleShortShelf: 632855590886769901
+      EmptyTripleLongShelf: -7559719761397940255
+      EmptyTripleShortShelf: 100103126720190263
+      Hearth_East: 363578968219060554
+      Hearth_NoStack: 7459499326408845396
+      Hearth_Stack: 1933289406430316489
+      Hearth_West: 1661336792895497432
+      HenHouse: -688623221153860787
+      LogWithAxe: 1728484853059284468
+      LongTable_Alchemy: -2007735251305914664
+      LongTable_Butcher: 3946610344063585506
+      LongTable_Desk: -4942627721913773221
+      LongTable_Plain: 179322424394467755
+      Mailbox_1: 1669189058842976862
+      Mailbox_2: 7832878757009303614
+      MessageBoard: 3839197198757065530
+      Painting_1: -9080398059469958660
+      Painting_2: 1710692624030372781
+      Painting_3: 3066313244817705510
+      Painting_4: 6689425921828941318
+      PottedPlant_1: 7481488362606449352
+      PottedPlant_2: 7632836075553106725
+      PottedPlant_3: 5694307619157401217
+      ShopSign_Armor: -60620594294420951
+      ShopSign_Potions: -349693762640560957
+      ShopSign_Tavern: -6045684517192588090
+      ShopSign_Weapons: -4423201225985716218
+      SideLongDoubleShelf_1: -3068083649895302713
+      SideLongDoubleShelf_East_2: -560806804607942310
+      SideLongDoubleShelf_West_2: -366386775330713617
+      SideLongSingleShelf_1: 6449123246464446174
+      SideLongSingleShelf_East_2: -1719829312746575225
+      SideLongSingleShelf_West_2: -2197175997803228512
+      SideLongTripleShelf_1: 7278690646745542526
+      SideLongTripleShelf_East_2: -1912657157123054154
+      SideLongTripleShelf_West_2: -3356247953820110131
+      SideShortDoubleShelf_1: 1449720164420650303
+      SideShortDoubleShelf_East_2: 6660253113420910405
+      SideShortDoubleShelf_West_2: 2234198637752289101
+      SideShortSingleShelf_1: -4947343679681689462
+      SideShortSingleShelf_East_2: -6504455138487544373
+      SideShortSingleShelf_West_2: -1796396710867079789
+      SideShortTripleShelf_1: 4196250822577874328
+      SideShortTripleShelf_East_2: -210509022064310167
+      SideShortTripleShelf_West_2: -6766272221607167164
+      Sign_1: 2823878083559927009
+      Sign_2: -396523509504917333
+      SlackTub_Horizontal: -6978664824931964300
+      SlackTub_Vertical: 2119673557313422649
+      SmallTable: -4836241981168854777
+      Smokestack_1: 3449223544045758809
+      Smokestack_2: -1649105431738232877
+      Smokestack_3: 1601457354009563754
+      SquareTable_Empty_None: -4398011866978843575
+      SquareTable_Empty_Set1: 7043611358534939022
+      SquareTable_Empty_Set2: -2197941008828769441
+      SquareTable_Empty_Set3: 7603400950740430797
+      SquareTable_Tablecloth_Empty: -407902074647451480
+      SquareTable_Tablecloth_Set1: 2069861988256962418
+      SquareTable_Tablecloth_Set2: 4796743516238508071
+      SquareTable_Tablecloth_Set3: -7712360949442344065
+      Stove_East: 6776622062815618917
+      Stove_North: -6967028072309733328
+      Stove_West: -7081866315199964601
+      VialsDoubleLongShelf: -5391794199677358325
+      VialsDoubleShortShelf: -1491022406267691846
+      VialsSingleLongShelf: 8650560041096442061
+      VialsSingleShortShelf: -6452789091167015798
+      VialsTripleLongShelf: 9099431523004704918
+      VialsTripleShortShelf: -2651255810646734117
+      WallWeaponDisplay_Axe: 3125356113658385934
+      WallWeaponDisplay_Knives: -8580291753654525444
+      WallWeaponDisplay_Swords: 1319229080958859157
+      WallWeaponDisplay_SwordsAndShield: 5052388943423448741
+      Wardrobe_Closed: -9107809075630274423
+      Wardrobe_Open_Books: -1950840158300907596
+      Wardrobe_Open_Empty: 822965046497861137
+      Wardrobe_Open_Hammer: -5828397136249317218
+      Wardrobe_Open_Vials: 5142580850549872709
+      WeaponsRack_East: 585449149043964628
+      WeaponsRack_North: 4637991730894345310
+      WeaponsRack_South: 4003288054144884600
+      WeaponsRack_West: 2844800168765016948
+      Well: -1209480782707865746
+      WidePainting_1: 941318474763483788
+      WidePainting_2: -5345360970915909492
+      WidePainting_3: 6800789163421078452
+      WideTable_Alchemy: -2019049120015645736
+      WideTable_Butcher: 5646253133918497986
+      WideTable_Desk: 3985253829144601360
+      WideTable_Plain: 7813908690006627524
+      WineKeg: -3853824034063239485
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

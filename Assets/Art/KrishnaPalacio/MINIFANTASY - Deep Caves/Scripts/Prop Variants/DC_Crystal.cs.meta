@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 8f09ad8cd3e3c47448598f52d0e8b68d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - crystalLargeRed: {fileID: -8779914839650598415, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalLargeBlue: {fileID: -2951603525347945620, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalLargeGreen: {fileID: -2681588350050417681, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalMediumRed: {fileID: 4632984451391687705, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalMediumBlue: {fileID: 1082799226952440354, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalMediumGreen: {fileID: -4583312396208510370, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalSmallRed: {fileID: -6605162739935332669, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalSmallBlue: {fileID: -4961362837852051916, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalSmallGreen: {fileID: -558409756126950782, guid: 018e5b9a18bcc7c41b90678b9844a115, type: 3}
+  - crystalLargeShadow: {fileID: -629117833439485233, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - crystalMediumShadow: {fileID: -7344200980072785572, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  - crystalSmallShadow: {fileID: 5839761870984305407, guid: 9bb0278747bbf0a48ae45665a2d568c3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

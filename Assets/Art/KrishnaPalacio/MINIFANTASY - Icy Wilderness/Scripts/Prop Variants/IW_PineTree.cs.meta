@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: e793336372b902445bb1fcba3c99f080
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - pine_Tree_Straight: {fileID: 8695113751652500279, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Straight_LightSnow: {fileID: 2113155335317958496, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Straight_HeavySnow: {fileID: -6739213460021051002, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Left: {fileID: 2388049998949091963, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Left_LightSnow: {fileID: 3378739755282588285, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Left_HeavySnow: {fileID: -8622277561882455703, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Right: {fileID: 2533838189712142539, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Right_LightSnow: {fileID: 8615166116172036624, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Right_HeavySnow: {fileID: -6383479757383353841, guid: dff5e50a885269847868cbed908c6c06, type: 3}
+  - pine_Tree_Staight_Shadow: {fileID: 6747226282139085732, guid: a2a392ce3f203dc4bb08773324b4e9fd, type: 3}
+  - pine_Tree_Left_Shadow: {fileID: 1097360748888459250, guid: a2a392ce3f203dc4bb08773324b4e9fd, type: 3}
+  - pine_Tree_Right_Shadow: {fileID: -8107328479033733306, guid: a2a392ce3f203dc4bb08773324b4e9fd, type: 3}
+  - pine_Tree_Straight_SnowTransition: {fileID: -4978478974239817555, guid: 39b53b1d8d1ea5b42af37fa8475194a3, type: 3}
+  - pine_Tree_Left_SnowTransition: {fileID: -2103513501727753380, guid: 39b53b1d8d1ea5b42af37fa8475194a3, type: 3}
+  - pine_Tree_Right_SnowTransition: {fileID: 889800574809299147, guid: 39b53b1d8d1ea5b42af37fa8475194a3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

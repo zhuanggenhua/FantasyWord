@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 05d516ef8bc1d96478eeb5ab8cb3a3f2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - slackTubVertical: {fileID: 2119673557313422649, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - slackTubHorizontal: {fileID: -6978664824931964300, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowSlackTubVertical: {fileID: 4660738655937377151, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowSlackTubHorizontal: {fileID: -3484648660350545196, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

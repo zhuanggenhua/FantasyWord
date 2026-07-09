@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 namespace GAS.Editor
 {
     using UnityEngine.UIElements;
@@ -23,9 +23,15 @@ namespace GAS.Editor
 
             if (CurrentInspectorObject != null && !force)
             {
-                if (CurrentInspectorObject is TrackClipBase oldTrackItem) oldTrackItem.ClipVe.OnUnSelect();
-                if (CurrentInspectorObject is TrackBase oldTrack) oldTrack.OnUnSelect();
-                if (CurrentInspectorObject is TrackMarkBase oldMark) oldMark.OnUnSelect();
+                switch (CurrentInspectorObject)
+                {
+                    case TaskClip oldTrackItem:
+                        oldTrackItem.ClipVe.OnUnSelect();
+                        break;
+                    case AbilityTimelineTrack oldTrack:
+                        oldTrack.OnUnSelect();
+                        break;
+                }
             }
 
             CurrentInspectorObject = target;
@@ -34,14 +40,11 @@ namespace GAS.Editor
                 case null:
                     UnityEditor.Selection.activeObject = null;
                     return;
-                case TrackClipBase trackClip:
+                case TaskClip trackClip:
                     UnityEditor.Selection.activeObject = trackClip.DataInspector;
                     break;
-                case TrackBase track:
+                case AbilityTimelineTrack track:
                     UnityEditor.Selection.activeObject = track.DataInspector;
-                    break;
-                case TrackMarkBase mark:
-                    UnityEditor.Selection.activeObject = mark.DataInspector;
                     break;
             }
         }

@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 1ccd5c6bf013b6843b065d0a24b621bd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - emptyTable: {fileID: -4398011866978843575, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - set1Table: {fileID: 7043611358534939022, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - set2Table: {fileID: -2197941008828769441, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - set3Table: {fileID: 7603400950740430797, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - clothedTable: {fileID: -407902074647451480, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - clothedSet1Table: {fileID: 2069861988256962418, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - clothedSet2Table: {fileID: 4796743516238508071, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - clothedSet3Table: {fileID: -7712360949442344065, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - tableShadow: {fileID: -2151922389881005990, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

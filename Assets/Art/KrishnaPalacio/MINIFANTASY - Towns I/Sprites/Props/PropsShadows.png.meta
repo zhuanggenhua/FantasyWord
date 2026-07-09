@@ -1,0 +1,2197 @@
+fileFormatVersion: 2
+guid: 0b24cc793b398264286277fa52a57925
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7215784183474983743
+    second: Well_Shadow
+  - first:
+      213: -6773397730552521380
+    second: ChickenCoop_Shadow
+  - first:
+      213: -5659585010512519466
+    second: Mailbox_1_Shadow
+  - first:
+      213: 788250099593819014
+    second: Mailbox_2_Shadow
+  - first:
+      213: -5118786308335879121
+    second: AxeLog_Shadow
+  - first:
+      213: -435902480134561646
+    second: PottedPlant_1_Shadow
+  - first:
+      213: 2667979996344511294
+    second: PottedPlant_2_Shadow
+  - first:
+      213: 1085020250950095695
+    second: PottedPlant_3_Shadow
+  - first:
+      213: 2003308639001780103
+    second: ShopSign_Shadow
+  - first:
+      213: -1819797767002628324
+    second: MessageBoard_Shadow
+  - first:
+      213: -1639057789777988276
+    second: Sign_1_Shadow
+  - first:
+      213: 3956217261025535773
+    second: Sign_2_Shadow
+  - first:
+      213: 2974071048452655432
+    second: Hearth_Stack_Shadow
+  - first:
+      213: -3233718551264563540
+    second: WeaponRack_EastWest_Shadow
+  - first:
+      213: -7724106427287649227
+    second: WeaponRack_NorthSouth_Shadow
+  - first:
+      213: -3484648660350545196
+    second: SlackTub_Horizontal_Shadow
+  - first:
+      213: 2684424588587393830
+    second: Anvil_Horizontal_Shadow
+  - first:
+      213: 4660738655937377151
+    second: SlackTub_Vertical_Shadow
+  - first:
+      213: 5883492301440756230
+    second: Anvil_Vertical_Shadow
+  - first:
+      213: 6076581341084372371
+    second: Stove_North_Shadow
+  - first:
+      213: 3485207192282220601
+    second: Stove_West_Shadow
+  - first:
+      213: 5115543373762299762
+    second: WidePainting_Shadow
+  - first:
+      213: 1488391445110669458
+    second: Painting_1_Shadow
+  - first:
+      213: 2032421386486577608
+    second: Painting_4_Shadow
+  - first:
+      213: 2645239785838257802
+    second: Painting_2_Shadow
+  - first:
+      213: -6218919169148180599
+    second: WallWeaponDisplay_Knives_Shadow
+  - first:
+      213: 2861359412912640602
+    second: WallWeaponDisplay_Swords_Shadow
+  - first:
+      213: -5712739911375022902
+    second: WallWeaponDisplay_Axe_Shadow
+  - first:
+      213: -282465402479509830
+    second: LongTable_Shadow
+  - first:
+      213: 2524192782110729413
+    second: WideTable_Shadow
+  - first:
+      213: -2151922389881005990
+    second: SquareTable_Shadow
+  - first:
+      213: -5622660960993017401
+    second: WineKeg_Shadow
+  - first:
+      213: 2525492569675828106
+    second: Bench_Wide_Shadow
+  - first:
+      213: -4450069384095667715
+    second: Bench_Long_Shadow
+  - first:
+      213: 3906822523840898264
+    second: CabinetSide_Shadow
+  - first:
+      213: -4085241472715114688
+    second: Wardrobe_Shadow
+  - first:
+      213: -3175040775311895783
+    second: BedNorthSouth_Shadow
+  - first:
+      213: -501633059168368139
+    second: EmptyTripleLongShelf_Shadow
+  - first:
+      213: 2317096535354330589
+    second: EmptySingleShortShelf_Shadow
+  - first:
+      213: 659689826984905465
+    second: EmptyDoubleLongShelf_Shadow
+  - first:
+      213: -4483923854389611906
+    second: EmptySingleLongShelf_Shadow
+  - first:
+      213: -1424677652029546779
+    second: EmptyDoubleShortShelf_Shadow
+  - first:
+      213: -8513531118421605674
+    second: EmptyTripleShortShelf_Shadow
+  - first:
+      213: -83340968274397313
+    second: Painting_3_Shadow
+  - first:
+      213: 6005147436492298718
+    second: WallWeaponDisplay_SwordsAndShield_Shadow
+  - first:
+      213: 5939502420886227917
+    second: SideTripleLongShelf_Shadow
+  - first:
+      213: -8460437908860662322
+    second: SideDoubleLongShelf_Shadow
+  - first:
+      213: -3046213323390645474
+    second: SideSingleLongShelf_Shadow
+  - first:
+      213: 7655164373194114292
+    second: SideTripleShortShelf_West_Shadow
+  - first:
+      213: -3564433637681148224
+    second: SideDoubleShortShelf_West_Shadow
+  - first:
+      213: 7224170158379095071
+    second: SideSingleShortShelf_West_Shadow
+  - first:
+      213: 6788374695443525886
+    second: BedEastWest_Shadow
+  - first:
+      213: -3022930525729593477
+    second: SideSingleLongShelf_West_Shadow
+  - first:
+      213: -8588214185060392485
+    second: SideDoubleLongShelf_West_Shadow
+  - first:
+      213: 3289018624208975584
+    second: SideTripleLongShelf_West_Shadow
+  - first:
+      213: -5079026726737716108
+    second: Hearth_NoStack
+  - first:
+      213: -8924999357055221593
+    second: LongAlchemyTable_Shadow
+  - first:
+      213: 1814978843040841920
+    second: WideAlchemyTable_Shadow
+  - first:
+      213: 6588935155010796349
+    second: SideTripleShortShelf_Shadow
+  - first:
+      213: 339135518520012073
+    second: SideDoubleShortShelf_Shadow
+  - first:
+      213: -8850710343758396729
+    second: SideSingleShortShelf_Shadow
+  - first:
+      213: -631399356716269096
+    second: SideSingleShortShelf_East_Shadow
+  - first:
+      213: -51323643577587408
+    second: SideDoubleShortShelf_East_Shadow
+  - first:
+      213: -8569416111771457919
+    second: SideTripleShortShelf_East_Shadow
+  - first:
+      213: 5131246554047394282
+    second: SideSingleLongShelf_East_Shadow
+  - first:
+      213: -7295021065256151988
+    second: SideDoubleLongShelf_East_Shadow
+  - first:
+      213: 8142754243501370270
+    second: SideTripleLongShelf_East_Shadow
+  - first:
+      213: 6045441806282484896
+    second: BooksSingleShortShelf_Shadow
+  - first:
+      213: 1289431129352250733
+    second: BooksDoubleShortShelf_Shadow
+  - first:
+      213: 2591924076775912658
+    second: BooksTripleShortShelf_Shadow
+  - first:
+      213: 2788712236700648364
+    second: VialsSingleShortShelf_Shadow
+  - first:
+      213: -6786831739435118215
+    second: VialsDoubleShortShelf_Shadow
+  - first:
+      213: 328240934831763129
+    second: VialsTripleShortShelf_Shadow
+  - first:
+      213: 6432732325735966491
+    second: VialsSingleLongShelf_Shadow
+  - first:
+      213: -8798267066562248188
+    second: BooksSingleLongShelf_Shadow
+  - first:
+      213: -5626115748690290998
+    second: VialsDoubleLongShelf_Shadow
+  - first:
+      213: 4788196097301324909
+    second: BooksDoubleLongShelf_Shadow
+  - first:
+      213: 7870725243669786954
+    second: VialsTripleLongShelf_Shadow
+  - first:
+      213: 1662140351787906262
+    second: BooksTripleLongShelf_Shadow
+  - first:
+      213: 5205860979659562700
+    second: SmallTable_Shadow
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Well_Shadow
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 305
+        width: 15
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3398e7eb7d932460800000000000000
+      internalID: 7215784183474983743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChickenCoop_Shadow
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 305
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5ddafba6ae0002a0800000000000000
+      internalID: -6773397730552521380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mailbox_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 305
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6de96403b6d1571b0800000000000000
+      internalID: -5659585010512519466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mailbox_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 305
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 683b47c0a4d60fa00800000000000000
+      internalID: 788250099593819014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AxeLog_Shadow
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 305
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2cb18a19fa66f8b0800000000000000
+      internalID: -5118786308335879121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PottedPlant_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 321
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2902edaf00d53f9f0800000000000000
+      internalID: -435902480134561646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PottedPlant_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 321
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3b66fdcba1960520800000000000000
+      internalID: 2667979996344511294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PottedPlant_3_Shadow
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 321
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f435cf76b24ce0f00800000000000000
+      internalID: 1085020250950095695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShopSign_Shadow
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 281
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78f1c2bd79e2dcb10800000000000000
+      internalID: 2003308639001780103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MessageBoard_Shadow
+      rect:
+        serializedVersion: 2
+        x: 106
+        y: 281
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1f52c69297ceb6e0800000000000000
+      internalID: -1819797767002628324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sign_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 281
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4532f1df95e049e0800000000000000
+      internalID: -1639057789777988276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sign_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 281
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1722b153ae47e630800000000000000
+      internalID: 3956217261025535773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hearth_Stack_Shadow
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 240
+        width: 18
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8494bcb7cd5064920800000000000000
+      internalID: 2974071048452655432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponRack_EastWest_Shadow
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 241
+        width: 5
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: caee8405c168f13d0800000000000000
+      internalID: -3233718551264563540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponRack_NorthSouth_Shadow
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 245
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5344532e0267ec490800000000000000
+      internalID: -7724106427287649227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlackTub_Horizontal_Shadow
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 241
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d2d3c0818a04afc0800000000000000
+      internalID: -3484648660350545196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anvil_Horizontal_Shadow
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 241
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 623631dc0fdf04520800000000000000
+      internalID: 2684424588587393830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SlackTub_Vertical_Shadow
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 241
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f73341a2d154ea040800000000000000
+      internalID: 4660738655937377151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Anvil_Vertical_Shadow
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 241
+        width: 4
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60a2f1a731d56a150800000000000000
+      internalID: 5883492301440756230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stove_North_Shadow
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 208
+        width: 19
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39dc91cd88a545450800000000000000
+      internalID: 6076581341084372371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Stove_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 208
+        width: 10
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9384e98d971fd5030800000000000000
+      internalID: 3485207192282220601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WidePainting_Shadow
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 193
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 277843a589f0ef640800000000000000
+      internalID: 5115543373762299762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 192
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2904d8c2224d7a410800000000000000
+      internalID: 1488391445110669458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_4_Shadow
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 194
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c970779b7c943c10800000000000000
+      internalID: 2032421386486577608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a86ae94f197c5b420800000000000000
+      internalID: 2645239785838257802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_Knives_Shadow
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 177
+        width: 14
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9872e0407f5f1b9a0800000000000000
+      internalID: -6218919169148180599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_Swords_Shadow
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 178
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a52d065d93795b720800000000000000
+      internalID: 2861359412912640602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_Axe_Shadow
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 177
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac49b48615548b0b0800000000000000
+      internalID: -5712739911375022902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LongTable_Shadow
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 160
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abefed7863b741cf0800000000000000
+      internalID: -282465402479509830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WideTable_Shadow
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 160
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c4a05a26fbb70320800000000000000
+      internalID: 2524192782110729413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SquareTable_Shadow
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 146
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a58deeedcf5d222e0800000000000000
+      internalID: -2151922389881005990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WineKeg_Shadow
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 145
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c10e8765ab48f1b0800000000000000
+      internalID: -5622660960993017401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bench_Wide_Shadow
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 145
+        width: 9
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8b8a6a8c1a5c0320800000000000000
+      internalID: 2525492569675828106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bench_Long_Shadow
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 145
+        width: 5
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df9e22ff87d2e32c0800000000000000
+      internalID: -4450069384095667715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CabinetSide_Shadow
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 125
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d4280ed262d73630800000000000000
+      internalID: 3906822523840898264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wardrobe_Shadow
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 125
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0473f1d668e4e47c0800000000000000
+      internalID: -4085241472715114688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedNorthSouth_Shadow
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 8
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9135728ac3dffe3d0800000000000000
+      internalID: -3175040775311895783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyTripleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 29
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f94da4f367d909f0800000000000000
+      internalID: -501633059168368139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptySingleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 53
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddd451cb50bf72020800000000000000
+      internalID: 2317096535354330589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyDoubleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 29
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9facf570760b72900800000000000000
+      internalID: 659689826984905465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptySingleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 29
+        width: 16
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e72f433e207e5c1c0800000000000000
+      internalID: -4483923854389611906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyDoubleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 53
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ee575749378a3ce0800000000000000
+      internalID: -1424677652029546779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmptyTripleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 53
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d20f3eed8cd9d980800000000000000
+      internalID: -8513531118421605674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Painting_3_Shadow
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7774c6b4d9e7def0800000000000000
+      internalID: -83340968274397313
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallWeaponDisplay_SwordsAndShield_Shadow
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 177
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed998ffd6c1965350800000000000000
+      internalID: 6005147436492298718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideTripleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 96
+        width: 5
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcb0f73abf95d6250800000000000000
+      internalID: 5939502420886227917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideDoubleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 96
+        width: 5
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecd8c161c8c769a80800000000000000
+      internalID: -8460437908860662322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideSingleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 96
+        width: 5
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1b0d353f1da9b5d0800000000000000
+      internalID: -3046213323390645474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideTripleShortShelf_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 72
+        width: 4
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f40679407b9c3a60800000000000000
+      internalID: 7655164373194114292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideDoubleShortShelf_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 72
+        width: 4
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cecf80ed76988ec0800000000000000
+      internalID: -3564433637681148224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideSingleShortShelf_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 72
+        width: 4
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f14d927db78614460800000000000000
+      internalID: 7224170158379095071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BedEastWest_Shadow
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 10
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef07924b1d6253e50800000000000000
+      internalID: 6788374695443525886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideSingleLongShelf_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 72
+        width: 4
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b77e339f3b46c06d0800000000000000
+      internalID: -3022930525729593477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideDoubleLongShelf_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 72
+        width: 4
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd1218473b880d880800000000000000
+      internalID: -8588214185060392485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideTripleLongShelf_West_Shadow
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 72
+        width: 4
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e6be934301f4ad20800000000000000
+      internalID: 3289018624208975584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hearth_NoStack
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 240
+        width: 18
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47c55141a1ca389b0800000000000000
+      internalID: -5079026726737716108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LongAlchemyTable_Shadow
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 160
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a042261f58042480800000000000000
+      internalID: -8924999357055221593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WideAlchemyTable_Shadow
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 160
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c08c4e34a9103910800000000000000
+      internalID: 1814978843040841920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideTripleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 96
+        width: 5
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3b70822d99907b50800000000000000
+      internalID: 6588935155010796349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideDoubleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 96
+        width: 5
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92d6a1015f9d4b400800000000000000
+      internalID: 339135518520012073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideSingleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 96
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c2c76ed5d5fb2580800000000000000
+      internalID: -8850710343758396729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideSingleShortShelf_East_Shadow
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 96
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d1448f51a1dc37f0800000000000000
+      internalID: -631399356716269096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideDoubleShortShelf_East_Shadow
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 96
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 039aaf70b69a94ff0800000000000000
+      internalID: -51323643577587408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideTripleShortShelf_East_Shadow
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 96
+        width: 6
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1866a55f271531980800000000000000
+      internalID: -8569416111771457919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideSingleLongShelf_East_Shadow
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 96
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae131fced89d53740800000000000000
+      internalID: 5131246554047394282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideDoubleLongShelf_East_Shadow
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 96
+        width: 6
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c445a68edf0e2ca90800000000000000
+      internalID: -7295021065256151988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SideTripleLongShelf_East_Shadow
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 96
+        width: 6
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9b2431a7dfd00170800000000000000
+      internalID: 8142754243501370270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksSingleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 53
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ac63cdea49b5e350800000000000000
+      internalID: 6045441806282484896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksDoubleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 53
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d652f5bc7caf4e110800000000000000
+      internalID: 1289431129352250733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksTripleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 53
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d4b209173d58f320800000000000000
+      internalID: 2591924076775912658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsSingleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 53
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca3c359010f73b620800000000000000
+      internalID: 2788712236700648364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsDoubleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 53
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9719f9cbd7450d1a0800000000000000
+      internalID: -6786831739435118215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsTripleShortShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 53
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bea36124652e8400800000000000000
+      internalID: 328240934831763129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsSingleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 29
+        width: 16
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b172aaad7f7a54950800000000000000
+      internalID: 6432732325735966491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksSingleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 29
+        width: 16
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4020a8ad7b646e580800000000000000
+      internalID: -8798267066562248188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsDoubleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 29
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac69516f8850ce1b0800000000000000
+      internalID: -5626115748690290998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksDoubleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 29
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d64ae864bf6137240800000000000000
+      internalID: 4788196097301324909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: VialsTripleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 29
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4133a188ee6a3d60800000000000000
+      internalID: 7870725243669786954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BooksTripleLongShelf_Shadow
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 29
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d43923f7db111710800000000000000
+      internalID: 1662140351787906262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallTable_Shadow
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 9
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccedcaaaafeee3840800000000000000
+      internalID: 5205860979659562700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Anvil_Horizontal_Shadow: 2684424588587393830
+      Anvil_Vertical_Shadow: 5883492301440756230
+      AxeLog_Shadow: -5118786308335879121
+      BedEastWest_Shadow: 6788374695443525886
+      BedNorthSouth_Shadow: -3175040775311895783
+      Bench_Long_Shadow: -4450069384095667715
+      Bench_Wide_Shadow: 2525492569675828106
+      BooksDoubleLongShelf_Shadow: 4788196097301324909
+      BooksDoubleShortShelf_Shadow: 1289431129352250733
+      BooksSingleLongShelf_Shadow: -8798267066562248188
+      BooksSingleShortShelf_Shadow: 6045441806282484896
+      BooksTripleLongShelf_Shadow: 1662140351787906262
+      BooksTripleShortShelf_Shadow: 2591924076775912658
+      CabinetSide_Shadow: 3906822523840898264
+      ChickenCoop_Shadow: -6773397730552521380
+      EmptyDoubleLongShelf_Shadow: 659689826984905465
+      EmptyDoubleShortShelf_Shadow: -1424677652029546779
+      EmptySingleLongShelf_Shadow: -4483923854389611906
+      EmptySingleShortShelf_Shadow: 2317096535354330589
+      EmptyTripleLongShelf_Shadow: -501633059168368139
+      EmptyTripleShortShelf_Shadow: -8513531118421605674
+      Hearth_NoStack: -5079026726737716108
+      Hearth_Stack_Shadow: 2974071048452655432
+      LongAlchemyTable_Shadow: -8924999357055221593
+      LongTable_Shadow: -282465402479509830
+      Mailbox_1_Shadow: -5659585010512519466
+      Mailbox_2_Shadow: 788250099593819014
+      MessageBoard_Shadow: -1819797767002628324
+      Painting_1_Shadow: 1488391445110669458
+      Painting_2_Shadow: 2645239785838257802
+      Painting_3_Shadow: -83340968274397313
+      Painting_4_Shadow: 2032421386486577608
+      PottedPlant_1_Shadow: -435902480134561646
+      PottedPlant_2_Shadow: 2667979996344511294
+      PottedPlant_3_Shadow: 1085020250950095695
+      ShopSign_Shadow: 2003308639001780103
+      SideDoubleLongShelf_East_Shadow: -7295021065256151988
+      SideDoubleLongShelf_Shadow: -8460437908860662322
+      SideDoubleLongShelf_West_Shadow: -8588214185060392485
+      SideDoubleShortShelf_East_Shadow: -51323643577587408
+      SideDoubleShortShelf_Shadow: 339135518520012073
+      SideDoubleShortShelf_West_Shadow: -3564433637681148224
+      SideSingleLongShelf_East_Shadow: 5131246554047394282
+      SideSingleLongShelf_Shadow: -3046213323390645474
+      SideSingleLongShelf_West_Shadow: -3022930525729593477
+      SideSingleShortShelf_East_Shadow: -631399356716269096
+      SideSingleShortShelf_Shadow: -8850710343758396729
+      SideSingleShortShelf_West_Shadow: 7224170158379095071
+      SideTripleLongShelf_East_Shadow: 8142754243501370270
+      SideTripleLongShelf_Shadow: 5939502420886227917
+      SideTripleLongShelf_West_Shadow: 3289018624208975584
+      SideTripleShortShelf_East_Shadow: -8569416111771457919
+      SideTripleShortShelf_Shadow: 6588935155010796349
+      SideTripleShortShelf_West_Shadow: 7655164373194114292
+      Sign_1_Shadow: -1639057789777988276
+      Sign_2_Shadow: 3956217261025535773
+      SlackTub_Horizontal_Shadow: -3484648660350545196
+      SlackTub_Vertical_Shadow: 4660738655937377151
+      SmallTable_Shadow: 5205860979659562700
+      SquareTable_Shadow: -2151922389881005990
+      Stove_North_Shadow: 6076581341084372371
+      Stove_West_Shadow: 3485207192282220601
+      VialsDoubleLongShelf_Shadow: -5626115748690290998
+      VialsDoubleShortShelf_Shadow: -6786831739435118215
+      VialsSingleLongShelf_Shadow: 6432732325735966491
+      VialsSingleShortShelf_Shadow: 2788712236700648364
+      VialsTripleLongShelf_Shadow: 7870725243669786954
+      VialsTripleShortShelf_Shadow: 328240934831763129
+      WallWeaponDisplay_Axe_Shadow: -5712739911375022902
+      WallWeaponDisplay_Knives_Shadow: -6218919169148180599
+      WallWeaponDisplay_SwordsAndShield_Shadow: 6005147436492298718
+      WallWeaponDisplay_Swords_Shadow: 2861359412912640602
+      Wardrobe_Shadow: -4085241472715114688
+      WeaponRack_EastWest_Shadow: -3233718551264563540
+      WeaponRack_NorthSouth_Shadow: -7724106427287649227
+      Well_Shadow: 7215784183474983743
+      WideAlchemyTable_Shadow: 1814978843040841920
+      WidePainting_Shadow: 5115543373762299762
+      WideTable_Shadow: 2524192782110729413
+      WineKeg_Shadow: -5622660960993017401
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,689 @@
+fileFormatVersion: 2
+guid: 9bb0278747bbf0a48ae45665a2d568c3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4362239580950230068
+    second: Column_1_Shadow
+  - first:
+      213: -924497047922193526
+    second: Column_0_Shadow
+  - first:
+      213: 4109865058876985869
+    second: Column_2_Shadow
+  - first:
+      213: 1292196012408536732
+    second: Column_3_Shadow
+  - first:
+      213: -7152616494132503855
+    second: SkullSpear_Straight_0_Shadow
+  - first:
+      213: 4766885101772062738
+    second: SkullSpear_Left_Shadow
+  - first:
+      213: -5732182808740917491
+    second: SkullSpear_Straight_1_Shadow
+  - first:
+      213: -5187711403013698349
+    second: SkullSpear_Right_Shadow
+  - first:
+      213: -8451218525139565013
+    second: Large_Stalagmite_0_Shadow
+  - first:
+      213: -1602225373517649614
+    second: Large_Stalagmite_1_Shadow
+  - first:
+      213: -1983772150007240084
+    second: Large_Stalagmite_2_Shadow
+  - first:
+      213: 2298500690700504284
+    second: Medium_Stalagmite_0_Shadow
+  - first:
+      213: -3096779426352454389
+    second: Medium_Stalagmite_1_Shadow
+  - first:
+      213: 1143720206639768942
+    second: Medium_Stalagmite_2_Shadow
+  - first:
+      213: 4651826651574767324
+    second: Small_Stalagmite_0_Shadow
+  - first:
+      213: -629117833439485233
+    second: Crystal_Large_Shadow
+  - first:
+      213: -7344200980072785572
+    second: Crystal_Medium_Shadow
+  - first:
+      213: 5839761870984305407
+    second: Crystal_Small_Shadow
+  - first:
+      213: -8964250767771109922
+    second: SkullPile_Shadow
+  - first:
+      213: 1594842652600662717
+    second: Skull_Left_Shadow
+  - first:
+      213: 5722276284520613721
+    second: Skull_Right_Shadow
+  - first:
+      213: 3517455291241244143
+    second: Small_Stalagmite_1_Shadow
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Column_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 122
+        width: 14
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccb005896363673c0800000000000000
+      internalID: -4362239580950230068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Column_0_Shadow
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 122
+        width: 15
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8b43b645d68b23f0800000000000000
+      internalID: -924497047922193526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Column_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 122
+        width: 14
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d02172dfe7c290930800000000000000
+      internalID: 4109865058876985869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Column_3_Shadow
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 122
+        width: 17
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9e79cb4d6dcee110800000000000000
+      internalID: 1292196012408536732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Straight_0_Shadow
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 50
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1dad1acd13dccbc90800000000000000
+      internalID: -7152616494132503855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Left_Shadow
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 50
+        width: 14
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 210c9387eb0672240800000000000000
+      internalID: 4766885101772062738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Straight_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 50
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0f85691b123370b0800000000000000
+      internalID: -5732182808740917491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullSpear_Right_Shadow
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 50
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dc0022f6fb8108b0800000000000000
+      internalID: -5187711403013698349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Large_Stalagmite_0_Shadow
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 98
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b260bd1278d37ba80800000000000000
+      internalID: -8451218525139565013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Large_Stalagmite_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 98
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 239ec510380c3c9e0800000000000000
+      internalID: -1602225373517649614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Large_Stalagmite_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 98
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6a61837db93874e0800000000000000
+      internalID: -1983772150007240084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium_Stalagmite_0_Shadow
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 82
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdc8131433ae5ef10800000000000000
+      internalID: 2298500690700504284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium_Stalagmite_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 82
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b052688e4870605d0800000000000000
+      internalID: -3096779426352454389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Medium_Stalagmite_2_Shadow
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 82
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e65233fd77f4fdf00800000000000000
+      internalID: 1143720206639768942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Small_Stalagmite_0_Shadow
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 73
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cde0fc371bb9e8040800000000000000
+      internalID: 4651826651574767324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crystal_Large_Shadow
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 2
+        width: 14
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc2e9f7e9ace447f0800000000000000
+      internalID: -629117833439485233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crystal_Medium_Shadow
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 2
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c599fafae18241a90800000000000000
+      internalID: -7344200980072785572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crystal_Small_Shadow
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 2
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffad3e43b700b0150800000000000000
+      internalID: 5839761870984305407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkullPile_Shadow
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 50
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed5fa7ddb65989380800000000000000
+      internalID: -8964250767771109922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skull_Left_Shadow
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 50
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dba77e451f4022610800000000000000
+      internalID: 1594842652600662717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skull_Right_Shadow
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 50
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9574e7d76fb996f40800000000000000
+      internalID: 5722276284520613721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Small_Stalagmite_1_Shadow
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 74
+        width: 7
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe5a0cb73f280d030800000000000000
+      internalID: 3517455291241244143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Column_0_Shadow: -924497047922193526
+      Column_1_Shadow: -4362239580950230068
+      Column_2_Shadow: 4109865058876985869
+      Column_3_Shadow: 1292196012408536732
+      Crystal_Large_Shadow: -629117833439485233
+      Crystal_Medium_Shadow: -7344200980072785572
+      Crystal_Small_Shadow: 5839761870984305407
+      Large_Stalagmite_0_Shadow: -8451218525139565013
+      Large_Stalagmite_1_Shadow: -1602225373517649614
+      Large_Stalagmite_2_Shadow: -1983772150007240084
+      Medium_Stalagmite_0_Shadow: 2298500690700504284
+      Medium_Stalagmite_1_Shadow: -3096779426352454389
+      Medium_Stalagmite_2_Shadow: 1143720206639768942
+      SkullPile_Shadow: -8964250767771109922
+      SkullSpear_Left_Shadow: 4766885101772062738
+      SkullSpear_Right_Shadow: -5187711403013698349
+      SkullSpear_Straight_0_Shadow: -7152616494132503855
+      SkullSpear_Straight_1_Shadow: -5732182808740917491
+      Skull_Left_Shadow: 1594842652600662717
+      Skull_Right_Shadow: 5722276284520613721
+      Small_Stalagmite_0_Shadow: 4651826651574767324
+      Small_Stalagmite_1_Shadow: 3517455291241244143
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

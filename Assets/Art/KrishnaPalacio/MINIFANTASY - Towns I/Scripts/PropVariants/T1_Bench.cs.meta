@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4193a9db5963ef14fba9d4eaccb8462f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - benchWide: {fileID: 7257610120706037989, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - benchLong: {fileID: -342969563365164716, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowBenchWide: {fileID: 2525492569675828106, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowBenchLong: {fileID: -4450069384095667715, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

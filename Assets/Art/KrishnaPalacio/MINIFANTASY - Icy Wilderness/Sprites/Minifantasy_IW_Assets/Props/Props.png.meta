@@ -1,0 +1,1005 @@
+fileFormatVersion: 2
+guid: 65a7ca5b43c44fb418d34147d6e3fb7c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8585964474570988319
+    second: Minifantasy_IcyWildernessProps_0_00
+  - first:
+      213: 6677616388538038012
+    second: Minifantasy_IcyWildernessProps_1_00
+  - first:
+      213: -1084902917703437020
+    second: Minifantasy_IcyWildernessProps_0_01
+  - first:
+      213: -691008712337935149
+    second: Minifantasy_IcyWildernessProps_1_01
+  - first:
+      213: -5493284341690638205
+    second: Minifantasy_IcyWildernessProps_0_02
+  - first:
+      213: 5217524919541367049
+    second: Minifantasy_IcyWildernessProps_1_02
+  - first:
+      213: 8458844694969780126
+    second: Minifantasy_IcyWildernessProps_0_03
+  - first:
+      213: -3214860957989295675
+    second: Minifantasy_IcyWildernessProps_1_03
+  - first:
+      213: -5848310138796175925
+    second: Minifantasy_IcyWildernessProps_0_04
+  - first:
+      213: -1523941098705584220
+    second: Minifantasy_IcyWildernessProps_1_04
+  - first:
+      213: -5319324980431877433
+    second: Pink_Flower
+  - first:
+      213: -583017114960047015
+    second: Bush
+  - first:
+      213: 5184086650641810564
+    second: Rock_1
+  - first:
+      213: 2622639820239473474
+    second: Rock_2
+  - first:
+      213: 4768211544258394306
+    second: Rock_3
+  - first:
+      213: 586543276280850397
+    second: Rock_4
+  - first:
+      213: 3751930113184852657
+    second: IceCrystal_4
+  - first:
+      213: 1755588968103044709
+    second: Tree_Branch_0
+  - first:
+      213: -395891214928544030
+    second: Bush_Snowy
+  - first:
+      213: -6484046332919046709
+    second: Rock_0
+  - first:
+      213: 2117857558129364588
+    second: Tree_Branch_1
+  - first:
+      213: 7266503925692928825
+    second: Bush_Dead
+  - first:
+      213: -4323205363905815213
+    second: Snow_Rock_4
+  - first:
+      213: 8628471729529752808
+    second: IceCrystal_3
+  - first:
+      213: -933269646715102189
+    second: Snowy_Sign
+  - first:
+      213: 4628231457431173661
+    second: Ice_Fishing_Hole
+  - first:
+      213: 1808768231980181286
+    second: Bush_Snowy_Dead
+  - first:
+      213: -3111848916978619606
+    second: Snow_Rock_0
+  - first:
+      213: -3778904985888044948
+    second: Snow_Rock_1
+  - first:
+      213: -4899745250115098549
+    second: Snow_Rock_2
+  - first:
+      213: -5853766974666356945
+    second: Snow_Rock_3
+  - first:
+      213: -5223827888160046963
+    second: IceCrystal_2
+  - first:
+      213: -6156973334518912048
+    second: Snowman_Nose
+  - first:
+      213: -1505438265601992434
+    second: Snowman
+  - first:
+      213: -1652395247932523250
+    second: Snowman_Arms_Nose
+  - first:
+      213: -7945865441404643146
+    second: Snowman_Arms
+  - first:
+      213: 8231085802549963402
+    second: Snowman_Nose_Hat
+  - first:
+      213: -6380669064500406738
+    second: Snowman_Hat
+  - first:
+      213: -3639735709608660288
+    second: Snowman_Arms_Nose_Hat
+  - first:
+      213: -3734424984759619832
+    second: Snowman_Arms_Hat
+  - first:
+      213: 6916592154788073892
+    second: IceCrystal_1
+  - first:
+      213: -4966470671148839857
+    second: IceCrystal_0
+  - first:
+      213: -4113245347865499130
+    second: Red_Flower
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pink_Flower
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 49
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ca0f700d16fd26b0800000000000000
+      internalID: -5319324980431877433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bush
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 49
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95455dcd505b8e7f0800000000000000
+      internalID: -583017114960047015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_1
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 41
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4848950a75391f740800000000000000
+      internalID: 5184086650641810564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 41
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24b0b2b650d756420800000000000000
+      internalID: 2622639820239473474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_3
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 41
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c8307de2271c2240800000000000000
+      internalID: 4768211544258394306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_4
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 41
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd72d1c8002d32800800000000000000
+      internalID: 586543276280850397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IceCrystal_4
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 41
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ba69723f88811430800000000000000
+      internalID: 3751930113184852657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tree_Branch_0
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 42
+        width: 8
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 566606f6dda1d5810800000000000000
+      internalID: 1755588968103044709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bush_Snowy
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 41
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ee7c7c9903818af0800000000000000
+      internalID: -395891214928544030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 41
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bcd9f23d63a0406a0800000000000000
+      internalID: -6484046332919046709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tree_Branch_1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 33
+        width: 13
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6e4d2d6a34246d10800000000000000
+      internalID: 2117857558129364588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bush_Dead
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 33
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93398e122dec7d460800000000000000
+      internalID: 7266503925692928825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Rock_4
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 17
+        width: 16
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35d945970a3e004c0800000000000000
+      internalID: -4323205363905815213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IceCrystal_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 25
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ec0f19825d7eb770800000000000000
+      internalID: 8628471729529752808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowy_Sign
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 22
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31c54e3733c5c03f0800000000000000
+      internalID: -933269646715102189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ice_Fishing_Hole
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 16
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1a39763df7ca3040800000000000000
+      internalID: 4628231457431173661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bush_Snowy_Dead
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 25
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 627a03caf190a1910800000000000000
+      internalID: 1808768231980181286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Rock_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 17
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2b2ec4b5ed70d4d0800000000000000
+      internalID: -3111848916978619606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Rock_1
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 17
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c68c034dfe1ae8bc0800000000000000
+      internalID: -3778904985888044948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Rock_2
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 17
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b486bfca7ab900cb0800000000000000
+      internalID: -4899745250115098549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snow_Rock_3
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 17
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f27491d73fd33cea0800000000000000
+      internalID: -5853766974666356945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IceCrystal_2
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 17
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d800176763c3187b0800000000000000
+      internalID: -5223827888160046963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Nose
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 2
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dba2709f590e8aa0800000000000000
+      internalID: -6156973334518912048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 2
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e095383afdb9b1be0800000000000000
+      internalID: -1505438265601992434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Arms_Nose
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 2
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0d307ad6438119e0800000000000000
+      internalID: -1652395247932523250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Arms
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 2
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b81604ea7d9ab190800000000000000
+      internalID: -7945865441404643146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Nose_Hat
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 2
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8a60c06de0ba3270800000000000000
+      internalID: 8231085802549963402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Hat
+      rect:
+        serializedVersion: 2
+        x: 82
+        y: 2
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e261125ca4f4377a0800000000000000
+      internalID: -6380669064500406738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Arms_Nose_Hat
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 2
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c2b87008af0d7dc0800000000000000
+      internalID: -3639735709608660288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Snowman_Arms_Hat
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 2
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80f2f0f1348ac2cc0800000000000000
+      internalID: -3734424984759619832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IceCrystal_1
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 9
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a1956a4bebacff50800000000000000
+      internalID: 6916592154788073892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IceCrystal_0
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 1
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4c07c2fc3d831bb0800000000000000
+      internalID: -4966470671148839857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Red_Flower
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 17
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60ae2762621dae6c0800000000000000
+      internalID: -4113245347865499130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 923142b3d9ca5d146b78d91d0bf730e2
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Bush: -583017114960047015
+      Bush_Dead: 7266503925692928825
+      Bush_Snowy: -395891214928544030
+      Bush_Snowy_Dead: 1808768231980181286
+      IceCrystal_0: -4966470671148839857
+      IceCrystal_1: 6916592154788073892
+      IceCrystal_2: -5223827888160046963
+      IceCrystal_3: 8628471729529752808
+      IceCrystal_4: 3751930113184852657
+      Ice_Fishing_Hole: 4628231457431173661
+      Pink_Flower: -5319324980431877433
+      Red_Flower: -4113245347865499130
+      Rock_0: -6484046332919046709
+      Rock_1: 5184086650641810564
+      Rock_2: 2622639820239473474
+      Rock_3: 4768211544258394306
+      Rock_4: 586543276280850397
+      Snow_Rock_0: -3111848916978619606
+      Snow_Rock_1: -3778904985888044948
+      Snow_Rock_2: -4899745250115098549
+      Snow_Rock_3: -5853766974666356945
+      Snow_Rock_4: -4323205363905815213
+      Snowman: -1505438265601992434
+      Snowman_Arms: -7945865441404643146
+      Snowman_Arms_Hat: -3734424984759619832
+      Snowman_Arms_Nose: -1652395247932523250
+      Snowman_Arms_Nose_Hat: -3639735709608660288
+      Snowman_Hat: -6380669064500406738
+      Snowman_Nose: -6156973334518912048
+      Snowman_Nose_Hat: 8231085802549963402
+      Snowy_Sign: -933269646715102189
+      Tree_Branch_0: 1755588968103044709
+      Tree_Branch_1: 2117857558129364588
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

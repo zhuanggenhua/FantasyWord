@@ -1,5 +1,6 @@
 
 #nullable enable
+using System;
 using System.Collections.Generic;
 using UnityAiBridge;
 using UnityAiBridge.Editor.Tools.TestRunner;
@@ -41,27 +42,34 @@ namespace UnityAiBridge.Editor.Tools
         }
         public static TestRunnerApi CreateInstance()
         {
+            // Keep callback registration stable across domain reloads.
             if (BridgeCompat.IsLogEnabled(LogLevel.Trace))
                 Debug.Log($"[{nameof(TestRunnerApi)}] Creating new instance. Existing API: {_testRunnerApi != null}, Existing Collector: {_resultCollector != null}, Callbacks Registered: {_callbacksRegistered}");
 
             _resultCollector ??= new TestResultCollector();
             var testRunnerApi = ScriptableObject.CreateInstance<TestRunnerApi>();
 
-            // Only register callbacks once globally to prevent accumulation
-            // Unity's TestRunnerApi maintains a static callback list, so multiple RegisterCallbacks calls add duplicates
-            if (!_callbacksRegistered)
+            // Unity can recreate TestRunnerApi across domain reloads / repeated calls.
+            // Re-register the live collector onto the fresh API instance so RunStarted/RunFinished
+            // callbacks still arrive, but try to unhook the previous instance first to avoid duplicates.
+            if (_testRunnerApi != null && _callbacksRegistered)
             {
-                if (BridgeCompat.IsLogEnabled(LogLevel.Trace))
-                    Debug.Log($"[{nameof(TestRunnerApi)}] Registering callbacks for the first (and only) time.");
+                try
+                {
+                    _testRunnerApi.UnregisterCallbacks(_resultCollector);
+                }
+                catch (Exception e)
+                {
+                    if (BridgeCompat.IsLogEnabled(LogLevel.Trace))
+                        Debug.LogWarning($"[{nameof(TestRunnerApi)}] Failed to unregister callbacks from previous instance: {e.Message}");
+                }
+            }
 
-                testRunnerApi.RegisterCallbacks(_resultCollector);
-                _callbacksRegistered = true;
-            }
-            else
-            {
-                if (BridgeCompat.IsLogEnabled(LogLevel.Trace))
-                    Debug.LogWarning($"[{nameof(TestRunnerApi)}] Callbacks already registered globally - skipping registration.");
-            }
+            testRunnerApi.RegisterCallbacks(_resultCollector);
+            _callbacksRegistered = true;
+
+            if (BridgeCompat.IsLogEnabled(LogLevel.Trace))
+                Debug.Log($"[{nameof(TestRunnerApi)}] Registered callbacks on the current TestRunnerApi instance.");
 
             return testRunnerApi;
         }

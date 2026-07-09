@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 09c6ad7ea4d67d446b956a8b4ac06ff0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - Sign1: {fileID: 2823878083559927009, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - Sign2: {fileID: -396523509504917333, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowSign1: {fileID: -1639057789777988276, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - shadowSign2: {fileID: 3956217261025535773, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

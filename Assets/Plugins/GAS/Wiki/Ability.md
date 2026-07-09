@@ -27,3 +27,9 @@ Ability的具体实现需要策划和程序配合。
 这一部分是针对策划人员的，程序开发人员可以粗略一览这一部分。
 
 ## Ability的设计原则和一些建议
+
+## Ability标签激活条件（2026-03）
+Ability 激活相关标签条件底层已统一为 `TagRequirementData` 三模式：`all` / `any` / `none`。  
+当前语义规范：
+- `ActivationRequiredTags` 使用 `all` 语义（必须全部满足）。
+- `ActivationBlockedTags` 使用 `none` 语义（命中任一即阻断）。

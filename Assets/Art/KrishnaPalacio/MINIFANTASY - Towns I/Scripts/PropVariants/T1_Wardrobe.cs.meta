@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5137b157110e7db449c6d5a68c9753b1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - closed: {fileID: -9107809075630274423, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - openEmpty: {fileID: 822965046497861137, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - openHammer: {fileID: -5828397136249317218, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - openVials: {fileID: 5142580850549872709, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - openBooks: {fileID: -1950840158300907596, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - wardrobeShadow: {fileID: -4085241472715114688, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

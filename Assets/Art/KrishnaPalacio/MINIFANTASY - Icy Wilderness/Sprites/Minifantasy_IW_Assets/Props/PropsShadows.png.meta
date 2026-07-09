@@ -1,0 +1,741 @@
+fileFormatVersion: 2
+guid: 02d514f1cc9829c41aed55240185f5e5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1049880427262945422
+    second: Shadow_Bush
+  - first:
+      213: -6201440251463368857
+    second: Shadow_Dead_Bush
+  - first:
+      213: 8191494604694919875
+    second: Shadow_Tree_Branch_0
+  - first:
+      213: -7357691390345228590
+    second: Shadow_Tree_Branch_1
+  - first:
+      213: 493043279326022184
+    second: Shadow_Snowy_Sign
+  - first:
+      213: -522874175001582040
+    second: Shadow_Snowman_Nose
+  - first:
+      213: 1499182669241071216
+    second: Shadow_Snowman
+  - first:
+      213: -4496180996426736554
+    second: Shadow_Snowman_Arms_Nose
+  - first:
+      213: -1928620560430925749
+    second: Shadow_Snowman_Arms
+  - first:
+      213: -803709084731615879
+    second: Shadow_Snowman_Nose_Hat
+  - first:
+      213: -6939231171035326758
+    second: Shadow_Snowman_Hat
+  - first:
+      213: 40721073058347088
+    second: Shadow_Snowman_Arms_Nose_Hat
+  - first:
+      213: 4946950354364142536
+    second: Shadow_Snowman_Arms_Hat
+  - first:
+      213: 2282542062134170937
+    second: Shadow_Rock_0
+  - first:
+      213: -6020500081279571514
+    second: Shadow_Rock_1
+  - first:
+      213: -2168933673282882777
+    second: Shadow_Rock_2
+  - first:
+      213: -8660503970326005726
+    second: Shadow_Rock_3
+  - first:
+      213: 5889304603066556807
+    second: Shadow_Rock_4
+  - first:
+      213: 1598544259456346810
+    second: Shadow_IceCrystal_4
+  - first:
+      213: 6042026723663451475
+    second: Shadow_IceCrystal_3
+  - first:
+      213: -2878494687579173192
+    second: Shadow_IceCrystal_2
+  - first:
+      213: -109161244642271460
+    second: Shadow_IceCrystal_1
+  - first:
+      213: -5618215636999315177
+    second: Shadow_IceCrystal_0
+  - first:
+      213: -3692361952794218127
+    second: Shadow_Snow_Dead_Bush
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Shadow_Bush
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 49
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2775b5c50531e61f0800000000000000
+      internalID: -1049880427262945422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Dead_Bush
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 25
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76f77bba2fe00f9a0800000000000000
+      internalID: -6201440251463368857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Tree_Branch_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 42
+        width: 10
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ca9e5c41f80ea170800000000000000
+      internalID: 8191494604694919875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Tree_Branch_1
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 33
+        width: 15
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dec587c9aa34e990800000000000000
+      internalID: -7357691390345228590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowy_Sign
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 22
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82a0f131044a7d600800000000000000
+      internalID: 493043279326022184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Nose
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 2
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8262ec845b06eb8f0800000000000000
+      internalID: -522874175001582040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 2
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0763985d1ba2ec410800000000000000
+      internalID: 1499182669241071216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Arms_Nose
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 2
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65c5f1e943b5a91c0800000000000000
+      internalID: -4496180996426736554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Arms
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 2
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b48fffc81d92c35e0800000000000000
+      internalID: -1928620560430925749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Nose_Hat
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 2
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97551dd78d6a8d4f0800000000000000
+      internalID: -803709084731615879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Hat
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 2
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad61f1cf306e2bf90800000000000000
+      internalID: -6939231171035326758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Arms_Nose_Hat
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 2
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 058f386a99ba09000800000000000000
+      internalID: 40721073058347088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snowman_Arms_Hat
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 2
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c31e51232917a440800000000000000
+      internalID: 4946950354364142536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Rock_0
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 41
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 935156e79e73daf10800000000000000
+      internalID: 2282542062134170937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Rock_1
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 41
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c9ee15f213e27ca0800000000000000
+      internalID: -6020500081279571514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Rock_2
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 41
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 723379ec05666e1e0800000000000000
+      internalID: -2168933673282882777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Rock_3
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 41
+        width: 20
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 228bbd83685bfc780800000000000000
+      internalID: -8660503970326005726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Rock_4
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 41
+        width: 20
+        height: 23
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 781ead765530bb150800000000000000
+      internalID: 5889304603066556807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_IceCrystal_4
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 41
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abaa2a6d88b2f2610800000000000000
+      internalID: 1598544259456346810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_IceCrystal_3
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 25
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 355906b0b4799d350800000000000000
+      internalID: 6042026723663451475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_IceCrystal_2
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 17
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8be8ef225588d08d0800000000000000
+      internalID: -2878494687579173192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_IceCrystal_1
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 9
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1f9bd52d6e2c7ef0800000000000000
+      internalID: -109161244642271460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_IceCrystal_0
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 0
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7116c1d05a61802b0800000000000000
+      internalID: -5618215636999315177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shadow_Snow_Dead_Bush
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 33
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 171788ded5812ccc0800000000000000
+      internalID: -3692361952794218127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8467f9ec01ed5f044ab627f763cfdc31
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Shadow_Bush: -1049880427262945422
+      Shadow_Dead_Bush: -6201440251463368857
+      Shadow_IceCrystal_0: -5618215636999315177
+      Shadow_IceCrystal_1: -109161244642271460
+      Shadow_IceCrystal_2: -2878494687579173192
+      Shadow_IceCrystal_3: 6042026723663451475
+      Shadow_IceCrystal_4: 1598544259456346810
+      Shadow_Rock_0: 2282542062134170937
+      Shadow_Rock_1: -6020500081279571514
+      Shadow_Rock_2: -2168933673282882777
+      Shadow_Rock_3: -8660503970326005726
+      Shadow_Rock_4: 5889304603066556807
+      Shadow_Snow_Dead_Bush: -3692361952794218127
+      Shadow_Snowman: 1499182669241071216
+      Shadow_Snowman_Arms: -1928620560430925749
+      Shadow_Snowman_Arms_Hat: 4946950354364142536
+      Shadow_Snowman_Arms_Nose: -4496180996426736554
+      Shadow_Snowman_Arms_Nose_Hat: 40721073058347088
+      Shadow_Snowman_Hat: -6939231171035326758
+      Shadow_Snowman_Nose: -522874175001582040
+      Shadow_Snowman_Nose_Hat: -803709084731615879
+      Shadow_Snowy_Sign: 493043279326022184
+      Shadow_Tree_Branch_0: 8191494604694919875
+      Shadow_Tree_Branch_1: -7357691390345228590
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

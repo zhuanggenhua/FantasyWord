@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: aa21fc5e02b1f384b963dd580f9c3acb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - small1: {fileID: 7077222428575163504, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - small2: {fileID: -8243136442321748426, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - small3: {fileID: 4356918607187682303, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - large1: {fileID: 6237351384081343441, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - large2: {fileID: 6145205549159175089, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - small1Shadow: {fileID: -2414001879861401527, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - small2Shadow: {fileID: 2645056913321643203, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - small3Shadow: {fileID: 5909981358684136512, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - large1Shadow: {fileID: 7698657091351831206, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - large2Shadow: {fileID: -29512706391898691, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

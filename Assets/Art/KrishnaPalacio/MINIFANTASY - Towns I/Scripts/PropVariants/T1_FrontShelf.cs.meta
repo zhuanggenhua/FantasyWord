@@ -1,0 +1,47 @@
+fileFormatVersion: 2
+guid: 970f78c1ec509984e9ac372e898e0f8e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - emptySingleLongShelf: {fileID: -3563823612721910084, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - emptyDoubleLongShelf: {fileID: -2231804025559895519, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - emptyTripleLongShelf: {fileID: -7559719761397940255, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - emptySingleShortShelf: {fileID: 632855590886769901, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - emptyDoubleShortShelf: {fileID: 2269590497012598748, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - emptyTripleShortShelf: {fileID: 100103126720190263, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - booksSingleLongShelf: {fileID: 2263912682053869796, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - booksDoubleLongShelf: {fileID: 1096270919116615421, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - booksTripleLongShelf: {fileID: -1917877265747997178, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - booksSingleShortShelf: {fileID: -736385688231583772, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - booksDoubleShortShelf: {fileID: -5363692391373267452, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - booksTripleShortShelf: {fileID: -6329124334494085098, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - vialsSingleLongShelf: {fileID: 8650560041096442061, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - vialsDoubleLongShelf: {fileID: -5391794199677358325, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - vialsTripleLongShelf: {fileID: 9099431523004704918, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - vialsSingleShortShelf: {fileID: -6452789091167015798, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - vialsDoubleShortShelf: {fileID: -1491022406267691846, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - vialsTripleShortShelf: {fileID: -2651255810646734117, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - singleLongShelfShadow: {fileID: -4483923854389611906, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - doubleLongShelfShadow: {fileID: 659689826984905465, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - tripleLongShelfShadow: {fileID: -501633059168368139, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - singleShortShelfShadow: {fileID: 2317096535354330589, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - doubleShortShelfShadow: {fileID: -1424677652029546779, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - tripleShortShelfShadow: {fileID: -8513531118421605674, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - booksSingleLongShelfShadow: {fileID: -8798267066562248188, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - booksDoubleLongShelfShadow: {fileID: 4788196097301324909, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - booksTripleLongShelfShadow: {fileID: 1662140351787906262, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - booksSingleShortShelfShadow: {fileID: 6045441806282484896, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - booksDoubleShortShelfShadow: {fileID: 1289431129352250733, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - booksTripleShortShelfShadow: {fileID: 2591924076775912658, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - vialsSingleLongShelfShadow: {fileID: 6432732325735966491, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - vialsDoubleLongShelfShadow: {fileID: -5626115748690290998, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - vialsTripleLongShelfShadow: {fileID: 7870725243669786954, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - vialsSingleShortShelfShadow: {fileID: 2788712236700648364, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - vialsDoubleShortShelfShadow: {fileID: -6786831739435118215, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  - vialsTripleShortShelfShadow: {fileID: 328240934831763129, guid: 0b24cc793b398264286277fa52a57925, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

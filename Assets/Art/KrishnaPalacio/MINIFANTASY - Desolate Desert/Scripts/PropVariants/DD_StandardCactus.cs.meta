@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 551d63ea57fb63f46a1d5174ab389ae5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cactusSmall1: {fileID: -1687994658714621446, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - cactusSmall2: {fileID: 8779771546087034520, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - cactusSmall3: {fileID: -7777210177191582158, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - cactusLarge1: {fileID: 3726919841156045888, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - cactusLarge2: {fileID: 4293994259451012705, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - cactusSmall1Shadow: {fileID: 8020948579508296077, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - cactusSmall2Shadow: {fileID: -9092265933037611124, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - cactusSmall3Shadow: {fileID: -2749551825454983113, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - cactusLarge1Shadow: {fileID: -949146264598688216, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - cactusLarge2Shadow: {fileID: 4739991315742437662, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

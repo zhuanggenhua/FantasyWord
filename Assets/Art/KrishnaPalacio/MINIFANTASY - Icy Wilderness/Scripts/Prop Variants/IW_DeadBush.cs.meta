@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f145bf0e5c947294b93a094b1abe1a7a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - deadBush: {fileID: 1808768231980181286, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - snowDeadBush: {fileID: 7266503925692928825, guid: 65a7ca5b43c44fb418d34147d6e3fb7c, type: 3}
+  - deadBushShadow: {fileID: -6201440251463368857, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  - snowDeadBushShadow: {fileID: -3692361952794218127, guid: 02d514f1cc9829c41aed55240185f5e5, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

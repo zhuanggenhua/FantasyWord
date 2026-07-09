@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 5ce75c71c405804448893b6b53b334fa
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - candleCactus1: {fileID: 738693000397021646, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - candleCactus2: {fileID: -2957847524438052542, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - candleCactusFlower1: {fileID: -4241005341784220150, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - candleCactusFlower2: {fileID: -2576190654123927839, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - candleCactusWide: {fileID: -3763466935684821414, guid: dac93f3a9fb7daf40993a004aa6e4224, type: 3}
+  - candleCactus1Shadow: {fileID: 6917984445002648015, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - candleCactus2Shadow: {fileID: 8243123648181081441, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - candleCactusFlower1Shadow: {fileID: -4431758196396316223, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - candleCactusFlower2Shadow: {fileID: -4431758196396316223, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  - candleCactusWideShadow: {fileID: -8082874717565865465, guid: e9b37d5d20cc0be4fbb9a6d52000610d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

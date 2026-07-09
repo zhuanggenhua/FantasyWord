@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 9e9a2c285ac2067469c052be782f3ee4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - smokestack1: {fileID: 3449223544045758809, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - smokestack2: {fileID: -1649105431738232877, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - smokestack3: {fileID: 1601457354009563754, guid: aa3ef75d8ec7c344f81552140d04a1fe, type: 3}
+  - shadowSmokestack1: {instanceID: 0}
+  - shadowSmokestack2: {instanceID: 0}
+  - shadowSmokestack3: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
