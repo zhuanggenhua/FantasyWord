@@ -4,10 +4,12 @@ namespace FantasyWord.GameCore
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(CharacterBase))]
+    [RequireComponent(typeof(CharacterCommandExecutor))]
     public sealed class CharacterPlayerControl : MonoBehaviour, IPlayerInputTarget
     {
         [Header("Control Composition")]
         [SerializeField] private CharacterBase m_character = null;
+        [SerializeField] private CharacterCommandExecutor m_commandExecutor = null;
         [SerializeField] private bool m_acceptsPlayerInput = true;
 
         private CharacterButtonActivation m_buttonActivation = null;
@@ -15,6 +17,15 @@ namespace FantasyWord.GameCore
 
         public CharacterBase Character => m_character;
         public bool AcceptsPlayerInput => m_acceptsPlayerInput;
+
+        public void SetAcceptsPlayerInput(bool acceptsPlayerInput)
+        {
+            m_acceptsPlayerInput = acceptsPlayerInput;
+            if (!m_acceptsPlayerInput)
+            {
+                ResetLocalControlState();
+            }
+        }
 
         public bool TryGetControlledCharacter(out CharacterBase character)
         {
@@ -29,46 +40,15 @@ namespace FantasyWord.GameCore
 
         public PlayerOrderResult SubmitPlayerOrder(PlayerOrderRequest orderRequest)
         {
-            PlayerCommandResult commandResult = ExecutePlayerCommand(orderRequest.CommandRequest);
-            return commandResult.Succeeded
-                ? PlayerOrderResult.Success(orderRequest, 1, commandResult)
-                : PlayerOrderResult.Failed(orderRequest, 1, commandResult);
-        }
-
-        public PlayerCommandResult ExecutePlayerCommand(PlayerCommandRequest request)
-        {
-            if (!m_character)
+            if (!m_acceptsPlayerInput || !m_character || !m_character.CanBePlayerControlled())
             {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.InvalidControlledCharacter);
+                PlayerCommandResult failed = PlayerCommandResult.Failed(
+                    orderRequest.CommandRequest,
+                    EPlayerCommandFailureReason.ControlLocked);
+                return PlayerOrderResult.Failed(orderRequest, 1, failed);
             }
 
-            if (!isActiveAndEnabled)
-            {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.NotRunning);
-            }
-
-            if (request.CommandContext.HasActor && request.Actor != m_character)
-            {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.ActorMismatch);
-            }
-
-            if (!m_acceptsPlayerInput || !m_character.CanBePlayerControlled())
-            {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.ControlLocked);
-            }
-
-            return request.Kind switch
-            {
-                EPlayerCommandKind.Interact => ExecuteInteractCommand(request),
-                EPlayerCommandKind.OpenGameMenu => ExecuteOpenGameMenuCommand(request),
-                EPlayerCommandKind.Move => ExecuteMoveCommand(request),
-                EPlayerCommandKind.StopMove => ExecuteStopMoveCommand(request),
-                EPlayerCommandKind.ClickMove => ExecuteClickMoveCommand(request),
-                EPlayerCommandKind.ToggleMovementControlMode => ExecuteToggleMovementControlModeCommand(request),
-                EPlayerCommandKind.FireAbility => ExecuteFireAbilityCommand(request),
-                EPlayerCommandKind.StopFireAbility => ExecuteStopFireAbilityCommand(request),
-                _ => PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.InvalidCommand)
-            };
+            return ResolveCommandExecutor().Submit(orderRequest);
         }
 
         public EPlayerMovementControlMode GetMovementControlMode()
@@ -96,9 +76,7 @@ namespace FantasyWord.GameCore
 
         private void Awake()
         {
-            EnsureCharacterReference();
-            ResolveButtonActivation();
-            ResolveMovement();
+            EnsureReferences();
         }
 
         private void Update()
@@ -112,19 +90,45 @@ namespace FantasyWord.GameCore
                 currentControlledCharacter != m_character ||
                 !m_character.CanBePlayerControlled())
             {
-                ResolveButtonActivation()?.ResetState();
-                m_character.ResetTargetDirection();
+                ResetLocalControlState();
                 return;
             }
 
             ResolveButtonActivation()?.RefreshCurrentTarget();
-            if (ResolveMovement() == null || !m_movement.TryUpdatePointerTargetDirection())
+            CharacterMovement movement = ResolveMovement();
+            if (movement == null)
+            {
+                m_character.ResetTargetDirection();
+                return;
+            }
+
+            if (!m_character.CanUpdateTargetDirection())
+            {
+                return;
+            }
+
+            if (!movement.TryUpdatePointerTargetDirection())
             {
                 m_character.ResetTargetDirection();
             }
         }
 
         private void OnDisable()
+        {
+            ResetLocalControlState();
+        }
+
+        private void Reset()
+        {
+            EnsureReferences();
+        }
+
+        private void OnValidate()
+        {
+            EnsureReferences();
+        }
+
+        private void ResetLocalControlState()
         {
             if (m_character)
             {
@@ -135,115 +139,30 @@ namespace FantasyWord.GameCore
             ResolveButtonActivation()?.ResetState();
         }
 
-        private void Reset()
-        {
-            EnsureCharacterReference();
-        }
-
-        private void OnValidate()
-        {
-            EnsureCharacterReference();
-        }
-
-        private void EnsureCharacterReference()
+        private void EnsureReferences()
         {
             if (m_character == null)
             {
                 TryGetComponent(out m_character);
             }
-        }
 
-        private PlayerCommandResult ExecuteInteractCommand(PlayerCommandRequest request)
-        {
-            CharacterButtonActivation buttonActivation = ResolveButtonActivation();
-            if (buttonActivation == null || !buttonActivation.CanInteractNow())
+            if (m_commandExecutor == null)
             {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.InteractionLocked);
+                TryGetComponent(out m_commandExecutor);
             }
 
-            return buttonActivation.TryInteract(request.InteractionTarget)
-                ? PlayerCommandResult.Success(request)
-                : PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
+            ResolveButtonActivation();
+            ResolveMovement();
         }
 
-        private PlayerCommandResult ExecuteOpenGameMenuCommand(PlayerCommandRequest request)
+        private CharacterCommandExecutor ResolveCommandExecutor()
         {
-            if (!m_character.Can(EActionFlags.Interact))
+            if (m_commandExecutor == null)
             {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
+                TryGetComponent(out m_commandExecutor);
             }
 
-            GameRuntimeEvents.RequestMenu(EMenu.Pause);
-            return PlayerCommandResult.Success(request);
-        }
-
-        private PlayerCommandResult ExecuteMoveCommand(PlayerCommandRequest request)
-        {
-            CharacterMovement movement = ResolveMovement();
-            return movement != null && movement.HandleDirectionalMove(request.Direction)
-                ? PlayerCommandResult.Success(request)
-                : PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
-        }
-
-        private PlayerCommandResult ExecuteStopMoveCommand(PlayerCommandRequest request)
-        {
-            CharacterMovement movement = ResolveMovement();
-            return movement != null && movement.StopMovement()
-                ? PlayerCommandResult.Success(request)
-                : PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
-        }
-
-        private PlayerCommandResult ExecuteClickMoveCommand(PlayerCommandRequest request)
-        {
-            if (!request.WorldPosition.HasValue)
-            {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.InvalidTarget);
-            }
-
-            CharacterMovement movement = ResolveMovement();
-            return movement != null && movement.HandleClickMove(request.WorldPosition.Value)
-                ? PlayerCommandResult.Success(request)
-                : PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
-        }
-
-        private PlayerCommandResult ExecuteToggleMovementControlModeCommand(PlayerCommandRequest request)
-        {
-            CharacterMovement movement = ResolveMovement();
-            return movement != null && movement.ToggleMovementControlMode()
-                ? PlayerCommandResult.Success(request)
-                : PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
-        }
-
-        private PlayerCommandResult ExecuteFireAbilityCommand(PlayerCommandRequest request)
-        {
-            if (ResolveButtonActivation()?.HasInteractedThisFrame() == true)
-            {
-                return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.BlockedByState);
-            }
-
-            CharacterAbilityFireResult fireResult = m_character.FireEquippedAbilityAtIndex(
-                request.AbilityIndex,
-                request.CommandContext);
-
-            if (fireResult.HasAbilitySource)
-            {
-                if (fireResult.Result != EAbilityFireCheckResult.Valid)
-                {
-                    GameRuntimeEvents.NotifyPlayerAbilityFireFailed(fireResult.FormalGasAbilityCode, fireResult.Result);
-                    return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.AbilityRejected);
-                }
-
-                return PlayerCommandResult.Success(request);
-            }
-
-            return PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.MissingAbility);
-        }
-
-        private PlayerCommandResult ExecuteStopFireAbilityCommand(PlayerCommandRequest request)
-        {
-            return m_character.StopFireEquippedAbilityAtIndex(request.AbilityIndex)
-                ? PlayerCommandResult.Success(request)
-                : PlayerCommandResult.Failed(request, EPlayerCommandFailureReason.MissingAbility);
+            return m_commandExecutor;
         }
 
         private CharacterButtonActivation ResolveButtonActivation()

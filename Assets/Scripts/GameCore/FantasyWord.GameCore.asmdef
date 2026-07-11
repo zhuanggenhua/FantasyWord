@@ -25,7 +25,8 @@
     "Unity.Cinemachine",
     "Unity.TextMeshPro",
     "Unity.2D.Animation.Runtime",
-    "Unity.Mathematics"
+    "Unity.Mathematics",
+    "AStar.2D.GridPathfinding"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

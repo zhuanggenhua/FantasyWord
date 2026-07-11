@@ -235,14 +235,16 @@ namespace FantasyWord.GameCore
             return TryCommitFormalAbilityUse(abilityCode, false, out result);
         }
 
-        private bool BeginFormalAbilityRuleLifecycle(int abilityCode)
+        private bool BeginFormalAbilityRuleLifecycle(
+            int abilityCode,
+            AbilityActivationContext activationContext)
         {
             if (!TryGetFormalAbilitySpec(abilityCode, out AbilitySpec abilitySpec, out _))
             {
                 return false;
             }
 
-            abilitySpec.TryActivate();
+            abilitySpec.TryActivate(activationContext);
             return true;
         }
 

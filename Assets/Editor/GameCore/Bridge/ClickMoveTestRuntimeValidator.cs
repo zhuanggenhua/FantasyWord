@@ -16,6 +16,7 @@ namespace FantasyWord.GameCore
     {
         private const int FramesToObserveAfterDispatch = 120;
         private const float RequiredMoveDistance = 0.1f;
+        private const float RequiredCameraFollowAlignment = 0.9f;
         private const string ResultRelativePath = "Temp/UnityBridge/results/clickmove-e2e-runtime.json";
 
         private static ValidationResult? s_result;
@@ -97,6 +98,7 @@ namespace FantasyWord.GameCore
             if (camera != null)
             {
                 result.CameraBefore = Format(camera.transform.position);
+                result.CameraBeforeVector = camera.transform.position;
                 result.CameraOrthographicSize = camera.orthographicSize;
             }
 
@@ -135,17 +137,19 @@ namespace FantasyWord.GameCore
             result.ScreenClick = Format(screenPosition);
             result.ClickWasOverUi = UIPointerUtility.IsPositionOverUI(screenPosition);
 
+            Vector2? worldPosition = null;
             if (camera != null && character != null)
             {
                 float distanceToSubjectPlane = character.transform.position.z - camera.transform.position.z;
                 Vector3 world = camera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, distanceToSubjectPlane));
                 result.WorldClick = Format(world);
+                worldPosition = world;
             }
 
             PlayerCommandRequest commandRequest = new(
                 GameCommandContext.LocalPlayer(character),
                 EPlayerCommandKind.ClickMove,
-                screenPosition);
+                worldPosition: worldPosition);
             PlayerCommandResult commandResult = result.HasPlayerSystem
                 ? GameManager.PlayerSystem.SubmitPlayerCommand(commandRequest)
                 : PlayerCommandResult.Failed(commandRequest, EPlayerCommandFailureReason.MissingInputTarget);
@@ -166,18 +170,23 @@ namespace FantasyWord.GameCore
             }
 
             Vector3 playerAfter = character != null ? character.transform.position : Vector3.zero;
+            Vector2 playerDelta = playerAfter - result.PlayerBeforeVector;
             result.PlayerAfterObserve = character != null ? Format(playerAfter) : "null";
-            result.PlayerDelta = Format(playerAfter - result.PlayerBeforeVector);
+            result.PlayerDelta = Format(playerDelta);
             result.MovedDistance = Vector2.Distance(result.PlayerBeforeVector, playerAfter);
             result.HasMoveOrderAfterObserve = character != null && character.HasMoveOrder();
 
             Camera? camera = GameManager.Exists() ? GameManager.MainCamera : null;
             if (camera != null)
             {
+                Vector2 cameraDelta = camera.transform.position - result.CameraBeforeVector;
                 result.CameraAfter = Format(camera.transform.position);
-                result.CameraMovedDistance = Vector2.Distance(
-                    new Vector2(ParseX(result.CameraBefore), ParseY(result.CameraBefore)),
-                    camera.transform.position);
+                result.CameraDelta = Format(cameraDelta);
+                result.CameraMovedDistance = cameraDelta.magnitude;
+                if (playerDelta.sqrMagnitude > Mathf.Epsilon && cameraDelta.sqrMagnitude > Mathf.Epsilon)
+                {
+                    result.CameraFollowAlignment = Vector2.Dot(playerDelta.normalized, cameraDelta.normalized);
+                }
             }
 
             List<string> references = new();
@@ -205,7 +214,11 @@ namespace FantasyWord.GameCore
             Require(result.CommandSucceeded, $"点击移动命令失败：{result.CommandFailureReason}。", failures);
             Require(result.HasMoveOrderAfterDispatch, "点击移动入口没有生成移动指令。", failures);
             Require(result.MovedDistance >= RequiredMoveDistance, $"玩家移动距离不足 {RequiredMoveDistance:0.###}。", failures);
-            Require(result.CameraMovedDistance <= 0.01f, "相机在移动测试中发生位移，无法证明固定视角。", failures);
+            Require(result.CameraMovedDistance >= RequiredMoveDistance, "相机没有跟随玩家移动。", failures);
+            Require(
+                result.CameraFollowAlignment >= RequiredCameraFollowAlignment,
+                $"相机移动方向没有跟随玩家，方向一致度低于 {RequiredCameraFollowAlignment:0.##}。",
+                failures);
             Require(result.ReferenceObjects.Length > 0, "场景缺少移动参照物。", failures);
 
             result.Success = failures.Count == 0;
@@ -250,25 +263,6 @@ namespace FantasyWord.GameCore
         private static string Format(Vector2 value) => $"({value.x:0.###}, {value.y:0.###})";
         private static string Format(Vector3 value) => $"({value.x:0.###}, {value.y:0.###}, {value.z:0.###})";
 
-        private static float ParseX(string value) => TryParseComponent(value, 0);
-        private static float ParseY(string value) => TryParseComponent(value, 1);
-
-        private static float TryParseComponent(string value, int index)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return 0.0f;
-            }
-
-            string[] parts = value.Trim('(', ')').Split(',');
-            if (index >= parts.Length)
-            {
-                return 0.0f;
-            }
-
-            return float.TryParse(parts[index].Trim(), out float parsed) ? parsed : 0.0f;
-        }
-
         [Serializable]
         public sealed class ValidationResult
         {
@@ -281,7 +275,9 @@ namespace FantasyWord.GameCore
             public bool CameraExists;
             public string CameraBefore = string.Empty;
             public string CameraAfter = string.Empty;
+            public string CameraDelta = string.Empty;
             public float CameraMovedDistance;
+            public float CameraFollowAlignment;
             public float CameraOrthographicSize;
             public bool GameManagerExists;
             public bool HasPlayerSystem;
@@ -308,6 +304,7 @@ namespace FantasyWord.GameCore
             public string[] Failures = Array.Empty<string>();
 
             [NonSerialized] public Vector3 PlayerBeforeVector;
+            [NonSerialized] public Vector3 CameraBeforeVector;
         }
     }
 }

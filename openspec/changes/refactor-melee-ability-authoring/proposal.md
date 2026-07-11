@@ -1,4 +1,4 @@
-﻿# Proposal: refactor-melee-ability-authoring
+# Proposal: refactor-melee-ability-authoring
 
 ## Why
 
@@ -18,7 +18,7 @@
 - `TaskApplyEffects` 已能通过 `TargetCatcher` 应用 `GameplayEffect`。
 - `CatchAreaBox2D` 已能用 `Physics2D.OverlapBoxNonAlloc` 做 2D 盒形捕获，并支持 `OnEditorPreview()` 画盒。
 - `TaskPlayCue`、`GameplayCueUnit` 和 `GameplayCueBase.OnPreview()` 已支持 Cue 编辑器预览方向。
-- 项目侧旧执行资产自定义 Inspector 已删除；已迁移普攻的命中、时序和表现预览不再从旧执行资产 Inspector 进入，后续冲刺、投射物、召唤迁移也不得恢复旧执行资产作者面。
+- 项目侧旧执行资产自定义 Inspector 已删除；正式普攻的命中、时序和表现预览不再从旧执行资产 Inspector 进入，后续冲刺、投射物、召唤迁移也不得恢复旧执行资产作者面。
 - 项目自造 `MeleeAbilityTimelineWindow` 已判定为错误扩张方向，已从人类可见入口撤回并删除文件。
 
 ## 职责裁决表
@@ -125,7 +125,7 @@
 迁移约束：
 
 - `AbilitySheet`（已删除） / `ActiveAbilitySheet`（已删除） / `PassiveAbilitySheet`（已删除） 类型已删除；历史存档兼容不得再保留旧表对象身份，必须迁移到 EX-GAS Ability Code、显式迁移数据或明确的待迁移缺口。
-- 已迁移技能的授予、撤回、压制、保存恢复和正式规则绑定必须以 GAS Ability Code / ability code 为主键；不得再以已删除的旧主动能力表对象身份作为正式规则真相。
+- 正式技能的授予、撤回、压制、保存恢复和正式规则绑定必须以 GAS Ability Code / ability code 为主键；不得再以已删除的旧主动能力表对象身份作为正式规则真相。
 - `MeleeAbilityExecutionAsset` 已删除，不再允许作为技能字段暂存地；任何能力进入正式范围时必须重新表达为 EX-GAS 数据。
 - 命中窗口、命中框和命中任务不得由项目侧旧执行资产持有真相；正式真相只能是 EX-GAS Timeline / TargetCatcher / GameplayEffect。
 - 项目自造 `MeleeAbilityTimelineWindow` 不保留为隐藏入口。

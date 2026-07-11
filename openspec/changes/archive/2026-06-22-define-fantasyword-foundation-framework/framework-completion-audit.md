@@ -2,7 +2,7 @@
 
 > 目的：按用户要求复核“正确理由”和“正确框架”是否真的落地。
 > 本文件只记录当前证据，不把未来计划写成已完成。
-> 阅读顺序固定为：`docs/ai/框架最终裁决.md` 先给结论，`docs/ai/框架三项判分矩阵.md` 负责回答“为什么选这边”，`docs/ai/框架正式动作清单.md` 负责回答“到底替换/融合/冻结什么”，`docs/ai/框架实施阶段表.md` 负责回答“先做什么后做什么”，本文件只负责检查当前仓库有没有按这几层裁决执行。
+> 阅读顺序固定为：`.spec/knowledge/features/project/框架最终裁决.md` 先给结论，`.spec/knowledge/features/project/框架三项判分矩阵.md` 负责回答“为什么选这边”，`.spec/knowledge/features/project/框架正式动作清单.md` 负责回答“到底替换/融合/冻结什么”，`.spec/knowledge/features/project/框架实施阶段表.md` 负责回答“先做什么后做什么”，本文件只负责检查当前仓库有没有按这几层裁决执行。
 > 说明：本文若提到历史独立菜单组件名称，只用于留痕说明已删除阶段，不代表当前正式 prefab 或运行时代码里还保留第二套菜单入口。
 
 ## 审计口径
@@ -40,7 +40,7 @@
 | 开放世界模拟层 | `FantasyWord` 自建 | 未开始正式实现。当前没有任何正式 world runtime 入口，区域/Cell、队伍、派系、AI 日程、经济/基地生产仍未落地 |
 | 目录边界 | `GameCore/Editor/Plugins` 当前成立 | 已成立。目录裁决和现态执行一致；`Invoke-FrameworkVerdictGate.ps1` 当前 `MissingDirectoryCount = 0`，顶层 `World/Characters/Combat/...` 仍只是未来晋升目标 |
 | 一级缺口 | 点击移动/实例宿主/出生点分流等仍受阻 | 未解锁。还缺 4 个正式参考位，因此这些能力仍不得硬做 |
-| 提案剩余暂留项 | 只保留确实未决的裁决 | 当前 `patched-parity-matrix.md` 的 runtime patched 项已清零 `暂留`，`docs/ai/foundation-reference-audit.md` 里原先最后 3 条 `暂留` 也已改成正式 `保留`：`GameConfig` 继续作为唯一配置真相入口，`Persistable.Destroy()` 的 fire-and-forget 命令调用只是语言适配，`PersistenceSystem.GetActualIdentifier()` 只是把映射读取统一收回 `GameConfig` API 的内部薄 helper。当前剩余工作已不再是“同职责真相未决”，而是动作表现深化、投射物池化/真实存档/点击移动一级缺口，以及更高层开放世界模拟尚未开工 |
+| 提案剩余暂留项 | 只保留确实未决的裁决 | 当前 `patched-parity-matrix.md` 的 runtime patched 项已清零 `暂留`，`.spec/knowledge/features/project/foundation-reference-audit.md` 里原先最后 3 条 `暂留` 也已改成正式 `保留`：`GameConfig` 继续作为唯一配置真相入口，`Persistable.Destroy()` 的 fire-and-forget 命令调用只是语言适配，`PersistenceSystem.GetActualIdentifier()` 只是把映射读取统一收回 `GameConfig` API 的内部薄 helper。当前剩余工作已不再是“同职责真相未决”，而是动作表现深化、投射物池化/真实存档/点击移动一级缺口，以及更高层开放世界模拟尚未开工 |
 
 这里也要分层理解：
 
@@ -67,17 +67,17 @@
 | 暂不动 | TopDown manager / 输入 / GUI / Level 生命周期 | 禁止升格为正式入口 | 继续禁止升格为正式入口 |
 | 暂不动 | YokiFrame 架构层 | 禁止接管生命周期 | 继续禁止接管生命周期 |
 | 暂不动 | 具体业务 UI 扩写 | 继续禁止 | 当前只做正式入口、资源链和共享构件收口，不因 UIKit 已落地就顺手扩写商店、制作或其它业务流程 |
-| 暂不动 | 完整点击移动 / 自动靠近 / 控制组穿越 / 实例入口 | 待一级参考补齐 | 一级缺口未补齐前不得硬做；当前只允许保留已落地的第一阶段基础点击移动链路 |
+| 暂不动 | 完整点击移动 / 自动靠近 / 控制组穿越 / 实例入口 | 待一级参考补齐 | 一级缺口未补齐前不得硬做；当前只允许保留已落地的当前基础点击移动链路 |
 | 暂不动 | 开放世界模拟空壳 | 待具体规格锁定 | 具体规格未建前不得先写空 `World` 架构 |
 
 ## 裁决依据与证据边界
 
-- `docs/ai/框架最终裁决.md`：默认引用入口。这里把最终结论、目录边界和模块动作先压成单一入口。
-- `docs/ai/框架三项判分矩阵.md`：正式胜负依据。这里定义每个系统在 `设计模式 / 软件工程 / 易用` 三项上的强弱，不允许用现态倒推。
-- `docs/ai/框架正式动作清单.md`：正式动作依据。这里定义每个模块属于 `直接替换 / 正式融合 / 暂不动` 哪一类。
-- `docs/ai/框架代码现态矩阵.md`：代码现态依据。这里回答“当前正式运行时代码已经收口到了哪一步”。
-- `docs/ai/框架代码未收口矩阵.md`：代码缺口依据。这里回答“哪些裁决还只是文档成立，代码尚未彻底收口”。
-- `docs/ai/框架实施阶段表.md`：正式顺序依据。这里定义这些动作先后如何推进。
+- `.spec/knowledge/features/project/框架最终裁决.md`：默认引用入口。这里把最终结论、目录边界和模块动作先压成单一入口。
+- `.spec/knowledge/features/project/框架三项判分矩阵.md`：正式胜负依据。这里定义每个系统在 `设计模式 / 软件工程 / 易用` 三项上的强弱，不允许用现态倒推。
+- `.spec/knowledge/features/project/框架正式动作清单.md`：正式动作依据。这里定义每个模块属于 `直接替换 / 正式融合 / 暂不动` 哪一类。
+- `.spec/knowledge/features/project/框架代码现态矩阵.md`：代码现态依据。这里回答“当前正式运行时代码已经收口到了哪一步”。
+- `.spec/knowledge/features/project/框架代码未收口矩阵.md`：代码缺口依据。这里回答“哪些裁决还只是文档成立，代码尚未彻底收口”。
+- `.spec/knowledge/features/project/框架实施阶段表.md`：正式顺序依据。这里定义这些动作先后如何推进。
 - 本审计里出现的脚本、门禁、搜索结果和文件落点，只用于证明“当前仓库执行到了哪一步”，不反过来充当胜负理由。
 
 ## 框架裁决结果
@@ -87,13 +87,13 @@
 | RPG 世界规则 | `GameCore` 中的 2DRPG 闭包 | `2DRPGEngine` | 已作为地基正式闭包落地 | `Test-FoundationReferenceParity.ps1`：missing 0、unexpected mismatch 0、unexpected extra 0 |
 | 俯视角动作表现 | `GameCore` 正式角色/战斗/表现闭包 | `TopDownEngine` | 已吸收移动、能力权限、武器、命中窗口、受击/死亡/奖励/拾取/交互反馈；未完成相机/屏幕反馈、地图表现接线 | `Movable.cs`、`AbilityPermissionSettings.cs`、`ActiveAbilityBase.cs`、`CharacterBase.cs`、`Monster.cs`、`Entity.cs`、`WeaponExecutionRuntime.cs`、`WeaponHitWindowRuntime.cs`、`GameplayFeedbackSet.cs` |
 | 通用工具 | `YokiFrame` 稳定工具入口 | `YokiFrame` | 已替换对象池、SaveKit 文件层、InputKit 绑定层，并由 `UIManager + UIKit` 接管正式 UI 菜单运行时 | `GameObjectPoolService` 调用点、`SaveSystem.cs`、`InputSystem.cs`、`UIManager.cs` |
-| 开放世界模拟 | FantasyWord 未来世界运行时内核 | Skyrim/Kenshi 概念参考 | 未落代码，只登记缺口 | `docs/ai/三方框架系统对照.md` 的世界运行时候选表 |
+| 开放世界模拟 | FantasyWord 未来世界运行时内核 | Skyrim/Kenshi 概念参考 | 未落代码，只登记缺口 | `.spec/knowledge/features/project/三方框架系统对照.md` 的世界运行时候选表 |
 
 ## 动作详细证据
 
 | 裁决项 | 应做动作 | 当前证据 | 状态 | 下一步 |
 | --- | --- | --- | --- | --- |
-| 旧自造地基 | 用 `GameManager + AGameSystem + GameConfig` 替换旧 Bootstrapper/RuntimeContext/ModuleInstaller/EventBus | `Invoke-FoundationStaticGate.ps1` 通过，旧入口搜索由门禁覆盖 | 已完成静态收口 | 后续只在 Unity smoke 失败时修接线 |
+| 旧自造地基 | 用 `GameManager + AGameSystem + GameConfig` 替换旧 Bootstrapper/RuntimeContext/ModuleInstaller/EventBus | `Invoke-FoundationStaticGate.ps1` 通过，废弃入口搜索由门禁覆盖 | 已完成静态收口 | 后续只在 Unity smoke 失败时修接线 |
 | TopDown manager | 不接入 `GameManager/LevelManager/InputManager/GUIManager/Health` 作为第二生命周期 | `Invoke-PluginFacadeBoundaryGate.ps1` 违规 0 | 已完成门禁约束 | 吸收 TopDown 新模块前继续跑门禁 |
 | YokiFrame 生命周期 | 不把 `Architecture/EventKit/SingletonKit` 当游戏生命周期 | `Invoke-PluginFacadeBoundaryGate.ps1` 违规 0 | 已完成门禁约束 | YokiFrame 继续只做工具层 |
 | 对象池 | 用 YokiFrame `GameObjectPoolService` 替换 2DRPG 浅池和 UI 局部池 | `FloatingTextPool`、`FloatingText`、`UICharacterInfo`、`UIHUDEffectBar`、`UICraft` 均调用 `GameObjectPoolService`；`InstancePool` 被 parity 排除 | 已完成当前收口 | 投射物池化等涉及持久化的对象另开规则 |
@@ -112,9 +112,9 @@
 | 角色实体注册预留删除 | 不为未来多角色语义提前保留无调用者预留系统 | `2026-06-17` 已对 `CharacterRegistrySystem` 做 deletion test，并因没有任何真实调用者而整块撤回；`CharacterBase` 也已去掉注册/反注册接线，正式场景不再摆 `Character Registry System` | 已按当前目标收口 | 后续只有在控制组、世界层筛选或长期身份语义出现真实调用者后，才允许重建正式注册入口 |
 | 当前前台角色回退规则 | 把“当前控制对象为空时回退谁”收回 `PlayerSystem` 正式 API，而不是让 UI/表现/交互层各写一遍 | `PlayerSystem` 已提供 `currentControlledCharacterOrPlayerInstance/currentControlledHeroOrPlayerInstance`，并补了 `currentControlledHeroChanged` 作为 Hero 专属切换事件；`InventorySystem`、`UIInventory`、`UIInventoryStats`、`UIEffectList`、`CameraShake`、`AudioRegion`、`MovementZone`、`PickableItem`、HUD 与能力/角色菜单等调用点都已改用该 API/事件；运行时代码搜索 `currentControlledHero ?? GetPlayerInstance()` 与 `currentControlledCharacter ?? GetPlayerInstance()` 结果为 0 | 已完成第二阶段收口 | 后续若控制组语义变化，只改 `PlayerSystem`，不再逐处扫回退判断 |
 | UI 菜单运行时与缓存 | 以 UIKit 作为正式 UI 机制，保留 `GameCore` 菜单语义拥有权 | `UIManager` 内部菜单运行时、`UIKitMenuPanelBase` 与 `UIKitMenuPanelTypeReference` 已落地；旧 `AUIMenu/IUIMenu/UIMenuManager`、历史阶段独立菜单组件、`UIMenuRegistry`、`MenuHostRuntimeOwnershipGuard` 与 `MenuRouteTopology` 已退场；`2026-06-18` 再次通过 UIKit 非业务面板栈 smoke，正式资源链也已复核到 `MenuParts` 分层与旧菜单壳退场 | 已完成当前阶段 | 后续只在同一正式入口内扩展，不把 UIKit 变成业务真相拥有者 |
-| EquipmentSystem 正式树 | 正式换装运行时不再保留 Legacy 兼容占位或空 Legacy 目录 | `Invoke-EquipmentSystemStaticGate.ps1` 输出 `LegacyRuntimeDirectoryExists = false`、`LegacyRuntimeFileCount = 0`；正式资产搜索 `EquipmentDemoExtension` 命中 0 | 已完成本轮清理 | 后续若还需要测试入口，只能以正式运行时/编辑器工具进入，不再回加同名占位组件 |
+| EquipmentSystem 正式树 | 正式换装运行时不再保留 Archived 兼容占位或空 Archived 目录 | `Invoke-EquipmentSystemStaticGate.ps1` 输出 `ArchivedRuntimeDirectoryExists = false`、`ArchivedRuntimeFileCount = 0`；正式资产搜索 `EquipmentDemoExtension` 命中 0 | 已完成本轮清理 | 后续若还需要测试入口，只能以正式运行时/编辑器工具进入，不再回加同名占位组件 |
 | 地图边界/出生/重生 | `MapSystem/MapInfo` 保留地图真相，吸收 TopDown Level/Checkpoint 表现配置，并把 uMMORPG 的失效保存位置回退规则作为健壮性补强融合进现有闭包 | `MapInfo` 已承载默认出生点、重生延迟、边界和相机目标，并在启用/禁用与 Start 时正式登记给 `MapSystem`；`Checkpoint` 已承载顺序/强制覆盖；无资产实例、无运行时调用的 `GameObjectCheckpoint` 已删除；`MapSystem` 已保存有序检查点状态并按地图配置延迟重生；恢复 `currentMap` 时若保存位置已失效，则回退到 `MapInfo.initialSpawnCheckpoint`；当前 `activeMapInfo` 也已从“注册 + 场景扫描补洞”收回到“注册表 + tracked scene 选择”单一入口 | 已落地基础配置、活动地图配置缓存与当前地图恢复健壮性 | 后续只在正式场景接线时补相机组件读取，不挂 TopDown `LevelManager` |
-| 目录边界 | 当前地基继续以 `Assets/Scripts/GameCore/Runtime` + `Assets/Editor/GameCore` 作为正式落点；顶层 `World/Characters/Combat/...` 只在独立真相源形成后再晋升 | 目录裁决理由已回写到 `docs/ai/三方框架系统对照.md` 和 `docs/ai/项目目录与入口.md`；现态证据包括 `2DRPGEngine` 参考根、`Sync-2DRPGFoundation.ps1` 映射和当前门禁/台账执行面 | 当前执行已对齐裁决 | 后续只有在世界层或项目自有模块正式成形时才迁出 `GameCore` |
+| 目录边界 | 当前地基继续以 `Assets/Scripts/GameCore/Runtime` + `Assets/Editor/GameCore` 作为正式落点；顶层 `World/Characters/Combat/...` 只在独立真相源形成后再晋升 | 目录裁决理由已回写到 `.spec/knowledge/features/project/三方框架系统对照.md` 和 `.spec/knowledge/features/project/项目目录与入口.md`；现态证据包括 `2DRPGEngine` 参考根、`Sync-2DRPGFoundation.ps1` 映射和当前门禁/台账执行面 | 当前执行已对齐裁决 | 后续只有在世界层或项目自有模块正式成形时才迁出 `GameCore` |
 | 世界穿越目标 | 当前仍以玩家存档 Hero 为真相 | `MapSystem.TeleportTo/RespawnPlayer`、`Checkpoint` 与 `Teleporter` 已显式统一到 `PlayerSystem.GetPlayerInstance()`，不再散落依赖 `GameManager.Player` 快捷入口 | 当前边界已收口，但尚未进入控制组/多 Hero 世界穿越语义 | 等控制组和世界角色实体设计锁定后，再决定“当前控制角色是否可以成为世界穿越目标” |
 | 单玩家 Hero 假设 | 输入目标从“静态玩家别名”改成“当前控制对象/控制组”与“玩家长期存档 Hero”分层 | `InputSystem` 已成为唯一 `InputAction` 订阅者；`PlayerSystem` 已持有 `currentInputTarget/currentControlledCharacter/currentControlledCharacterChanged`；`PlayerController` 已实现 `IPlayerInputTarget`；UI 交互提示、玩家触发器、区域音频、HUD 技能栏、HUD 状态条、HUD 效果栏、能力菜单、角色菜单、效果列表、`CameraShake`，以及 `PickableItem` 的“仅玩家可拾取”判定，都已开始跟随当前控制角色；同时玩家长期真相调用点也已显式收回 `PlayerSystem.GetPlayerInstance()`，当前主要包括世界穿越、任务等级校验和重生入口；命令默认目标与能力条件已继续收口到当前受控角色 / 当前受控 Hero。当前运行时代码对 `GameManager.Player` 静态别名的直接引用搜索结果为 0 | 第二阶段已完成：前台控制对象与玩家长期真相已分层，控制组与世界角色实体解耦未完成 | 点击移动/WASD/摇杆继续在同一接口上扩展；后续重点转向控制组、角色实体注册和世界层多角色语义，而不是回退到静态玩家别名 |
 | 背包与角色操作边界 | 背包/货币保留全局真相，装备与可消费物品目标由父级库存上下文显式决定 | `InventorySystem` 仍保留 `items/money` 全局模型；`UIInventory` 现在从 `InventoryMenuContext` 解析 actor 和 display owner，再显式传给 `UIInventoryBag`、`UIInventoryEquipment` 与 `UIInventoryStats`；子控件不再各自回头猜当前受控 Hero 或玩家主角 | 当前边界已收口，尚未进入多 Hero 私有背包/货币模型 | 后续只有在存档、商店、掉落和任务真相明确需要时，才考虑多 Hero 私有背包 |
@@ -124,7 +124,7 @@
 
 1. 反馈层：`GameplayFeedbackSet -> CameraShake/DamageScreenFlash/CombatTextDisplay` 这条正式表现链已建立；后续若继续扩展，只沿同一入口边界补更多相机或屏幕表现，不散落额外反馈入口。
 2. 地图表现层：基础配置已落地；下一步只在正式场景接线时补相机/边界读取组件，不接入 TopDown `LevelManager`。
-3. 控制对象层：当前控制对象接口前两阶段已完成；`PlayerController` 里也已经存在 `Directional + ClickToMove` 的第一阶段基础移动链路。`2026-06-17` 又补过一轮 `ClickMoveTest / SampleScene` 的最小 PlayMode smoke，两张正式场景都没有新的 `Error / Exception / Assert`。但 2D 移动与场景组织仍卡在 4 个一级框架缺口上：单机/本地 2D 导航 Provider、2D 点击移动执行闭包、单机/本地场景实例宿主参考、单机/本地出生点分流宿主参考。当前已经吸收进现有闭包的 `uMMORPG` 规则包括：`Movement.Reset/Warp/IsValidSpawnPoint/NearestValidDestination`、`Navigate(destination, stoppingDistance)`、`PlayerNavMeshMovement.MoveWASD()` 的手动输入取消旧路径、`Database.CharacterLoad()` 的失效保存位置回退，以及 `Portal.cs` 的父级玩家解析；同时现有 `Movable.MoveTo(...)` 已能跑通“点地后直线靠近”。但正式的完整 2D 导航 Provider 仍不存在，也没有“靠近完成后自动续接动作”框架入口，因此“超距后自动靠近再施法/交互”和“控制对象与世界穿越目标统一”都只能继续登记为二级缺口，不能绕过一级缺口先落代码。补充：本机现有参考池已复核到当前边界；工作区虽已新增 `Assets/Plugins/AStar 2D Grid Pathfinding` 本地源码，但它当前不止算法层，还带有 demo 级 world/grid 映射与路径跟随宿主，不过仍缺正式运行时状态和输入/移动闭包整合，不能直接关闭前两个一级缺口。`2DRPGEngine` 的 NodeCanvas `Pathfinding` 任务已确认只是 `NavMeshAgent` 包装，`uMMORPG PlayerCharacterControllerMovement.cs + CharacterController2k.cs` 也已判退为 `Mirror + 3D CharacterController` 玩家运动体系；后续若要补前两个一级缺口，仍需更完整的新参考或继续扩大本地候选取证。
+3. 控制对象层：当前控制对象接口前两阶段已完成；`PlayerController` 里也已经存在 `Directional + ClickToMove` 的当前基础移动链路。`2026-06-17` 又补过一轮 `ClickMoveTest / SampleScene` 的最小 PlayMode smoke，两张正式场景都没有新的 `Error / Exception / Assert`。但 2D 移动与场景组织仍卡在 4 个一级框架缺口上：单机/本地 2D 导航 Provider、2D 点击移动执行闭包、单机/本地场景实例宿主参考、单机/本地出生点分流宿主参考。当前已经吸收进现有闭包的 `uMMORPG` 规则包括：`Movement.Reset/Warp/IsValidSpawnPoint/NearestValidDestination`、`Navigate(destination, stoppingDistance)`、`PlayerNavMeshMovement.MoveWASD()` 的手动输入取消旧路径、`Database.CharacterLoad()` 的失效保存位置回退，以及 `Portal.cs` 的父级玩家解析；同时现有 `Movable.MoveTo(...)` 已能跑通“点地后直线靠近”。但正式的完整 2D 导航 Provider 仍不存在，也没有“靠近完成后自动续接动作”框架入口，因此“超距后自动靠近再施法/交互”和“控制对象与世界穿越目标统一”都只能继续登记为二级缺口，不能绕过一级缺口先落代码。补充：本机现有参考池已复核到当前边界；工作区虽已新增 `Assets/Plugins/AStar 2D Grid Pathfinding` 本地源码，但它当前不止算法层，还带有 demo 级 world/grid 映射与路径跟随宿主，不过仍缺正式运行时状态和输入/移动闭包整合，不能直接关闭前两个一级缺口。`2DRPGEngine` 的 NodeCanvas `Pathfinding` 任务已确认只是 `NavMeshAgent` 包装，`uMMORPG PlayerCharacterControllerMovement.cs + CharacterController2k.cs` 也已判退为 `Mirror + 3D CharacterController` 玩家运动体系；后续若要补前两个一级缺口，仍需更完整的新参考或继续扩大本地候选取证。
 4. 开放世界层：区域/Cell、队伍、派系、AI 日程、经济/基地生产和局部模拟都未实现；当前也没有任何真实调用者需要“live runtime 角色集合”这层真相，因此 `CharacterRegistrySystem` 已撤回，世界层身份、离线状态、区域外角色和长期队伍语义仍待后续正式规格决定。`uMMORPG Instance.cs` 只能证明“实例宿主至少要显式承载入口、归属、边界、实例内出生点和清理策略”，`PortalToInstance.cs` 只额外证明“入口脚本最多负责查找/创建实例并把玩家送到实例入口”，`NetworkManagerMMO.GetStartPositionFor(...) + NetworkStartPositionForClass.cs` 只能证明“出生点分流本身也应有正式宿主”；它们都还不能直接搬回当前单机 `MapSystem + MapInfo + Teleporter`，详见 `ummorpg-movement-scene-audit.md`；因此不能把当前 GameCore 基线说成完整开放世界地基。
 5. Unity 现态验证：当前静态门禁已通过；若继续改运行时代码或场景接线，再跑 AIBridge `Invoke-FoundationBridgeSmoke.ps1`。
 

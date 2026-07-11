@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
+      propertyPath: m_additionalAbilities.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
+      propertyPath: m_additionalFormalGasAbilityCodes.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
+      propertyPath: 'm_additionalFormalGasAbilityCodes.Array.data[0]'
+      value: 20001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
+      propertyPath: 'm_additionalFormalGasAbilityCodes.Array.data[1]'
+      value: 20010
+      objectReference: {fileID: 0}
     - target: {fileID: 2241508400711543608, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
       propertyPath: m_SpriteLibraryAsset
       value: 
@@ -24,18 +40,6 @@ PrefabInstance:
       propertyPath: m_sheet
       value: 
       objectReference: {fileID: 11400000, guid: 13245a7230bedbe4da633d5325872ce1, type: 2}
-    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
-      propertyPath: m_additionalAbilities.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
-      propertyPath: m_additionalFormalGasAbilityCodes.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1265987612345678903, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
-      propertyPath: m_additionalFormalGasAbilityCodes.Array.data[0]
-      value: 20001
-      objectReference: {fileID: 0}
     - target: {fileID: 6241793362038593788, guid: 5865f29bb760d4342b20bf32a1e06ca8, type: 3}
       propertyPath: m_TagString
       value: Player

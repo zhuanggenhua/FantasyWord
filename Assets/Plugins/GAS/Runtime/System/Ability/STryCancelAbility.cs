@@ -29,6 +29,7 @@ namespace GAS.Runtime
                     ASCHelper.RestoreDynamicTags(ability);
                     var abilityLogic = state.EntityManager.GetComponentData<MCAbilityLogic>(ability);
                     abilityLogic.Logic.CancelAbility(globalTimer.ValueRO);
+                    abilityLogic.Logic.ClearActivationContext();
                     GASEventCenter.InvokeOnCancelAbility(ability);
                 }
                 ecb.RemoveComponent<CAbilityInTryCancel>(ability);

@@ -232,15 +232,15 @@ namespace FantasyWord.GameCore
         /// 读档进入当前地图后，如果保存位置对当前 2D 碰撞闭包已不合法，就回退到本地图正式初始出生点，
         /// 而不是依赖后续角色更新去碰运气脱墙。
         /// </summary>
-        internal void EnsureTraversalHeroValidSpawnOnActiveMap()
+        internal void EnsureTraversalCharacterValidSpawnOnActiveMap()
         {
-            Hero traversalHero = GetTraversalHero();
-            if (traversalHero == null)
+            CharacterActor traversalCharacter = GetTraversalCharacter();
+            if (traversalCharacter == null)
             {
                 return;
             }
 
-            if (traversalHero.IsValidSpawnPoint(traversalHero.transform.position))
+            if (traversalCharacter.IsValidSpawnPoint(traversalCharacter.transform.position))
             {
                 return;
             }
@@ -254,16 +254,16 @@ namespace FantasyWord.GameCore
             }
 
             SaveCheckpoint(checkpoint);
-            traversalHero.TeleportTo(checkpoint.position);
+            traversalCharacter.TeleportTo(checkpoint.position);
         }
 
         /// <summary>
-        /// 当前地图传送与重生仍绑定玩家存档 Hero。
+        /// 当前地图传送与重生绑定玩家存档主角色。
         /// 在队伍控制和世界角色实体彻底拆开前，不能让“谁触发世界穿越”与“谁被传送/复活”分别落在两套真相上。
         /// </summary>
-        internal Hero GetTraversalHero()
+        internal CharacterActor GetTraversalCharacter()
         {
-            return GameManager.PlayerSystem.GetPlayerInstance();
+            return GameManager.PlayerSystem.GetPrimaryPlayerCharacter();
         }
 
         public void TeleportTo(ICheckpoint checkpoint, Action onMapLoaded = null, Action onCompletion = null)
@@ -274,16 +274,16 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            Hero traversalHero = GetTraversalHero();
-            Debug.Assert(traversalHero != null, "No traversal hero available. The player instance must exist before teleporting.");
-            if (traversalHero == null)
+            CharacterActor traversalCharacter = GetTraversalCharacter();
+            Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before teleporting.");
+            if (traversalCharacter == null)
             {
                 return;
             }
 
             RequestTransition(checkpoint.map, null, () =>
             {
-                traversalHero.TeleportTo(checkpoint.position);
+                traversalCharacter.TeleportTo(checkpoint.position);
                 onMapLoaded?.Invoke();
             }, onCompletion);
         }
@@ -299,15 +299,15 @@ namespace FantasyWord.GameCore
                     return;
                 }
 
-                Hero traversalHero = GetTraversalHero();
-                Debug.Assert(traversalHero != null, "No traversal hero available. The player instance must exist before teleporting.");
-                if (traversalHero == null)
+                CharacterActor traversalCharacter = GetTraversalCharacter();
+                Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before teleporting.");
+                if (traversalCharacter == null)
                 {
                     return;
                 }
 
                 SaveCheckpoint(checkpoint);
-                traversalHero.TeleportTo(checkpoint.position);
+                traversalCharacter.TeleportTo(checkpoint.position);
             }, onCompletion);
         }
 
@@ -316,15 +316,15 @@ namespace FantasyWord.GameCore
             RequestTransition(map, null, () =>
             {
                 ICheckpoint checkpoint = FindPlaytestCheckpoint();
-                Hero traversalHero = GetTraversalHero();
-                Debug.Assert(traversalHero != null, "No traversal hero available. The player instance must exist before teleporting.");
-                if (traversalHero == null)
+                CharacterActor traversalCharacter = GetTraversalCharacter();
+                Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before teleporting.");
+                if (traversalCharacter == null)
                 {
                     return;
                 }
 
                 SaveCheckpoint(checkpoint);
-                traversalHero.TeleportTo(checkpoint.position);
+                traversalCharacter.TeleportTo(checkpoint.position);
             }, onCompletion);
         }
 
@@ -363,7 +363,7 @@ namespace FantasyWord.GameCore
                 }
                 else
                 {
-                    RequestTransition(block.currentMap, null, EnsureTraversalHeroValidSpawnOnActiveMap);
+                    RequestTransition(block.currentMap, null, EnsureTraversalCharacterValidSpawnOnActiveMap);
                 }
             }
         }
@@ -384,15 +384,15 @@ namespace FantasyWord.GameCore
                 yield return new WaitForSeconds(delay);
             }
 
-            Hero traversalHero = GetTraversalHero();
-            Debug.Assert(traversalHero != null, "No traversal hero available. The player instance must exist before respawning.");
-            if (traversalHero == null)
+            CharacterActor traversalCharacter = GetTraversalCharacter();
+            Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before respawning.");
+            if (traversalCharacter == null)
             {
                 m_respawnCoroutine = null;
                 yield break;
             }
 
-            TeleportTo(checkpoint, traversalHero.Revive);
+            TeleportTo(checkpoint, traversalCharacter.Revive);
             m_respawnCoroutine = null;
         }
 

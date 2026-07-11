@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6184681b9373c8448abb82eba67d0aac, type: 3}
+  m_Name: "\u957F\u77DB"
+  m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.Equipment
+  m_category: 2
+  m_icon: {fileID: 21300000, guid: cfc5d7bfc7af0044cb6dec686171c8a0, type: 3}
+  m_displayName: "\u957F\u77DB"
+  m_description: "\u4E2D\u8DDD\u79BB\u6B66\u5668\uFF1B\u653B\u51FB\u5E8F\u5217\u5305\u542B\u6B66\u5668\u4E0E\u6B66\u5668\u81EA\u5E26\u7279\u6548\u3002"
+  m_price: 50
+  m_onUse:
+    rid: -2
+  m_type: 0
+  m_bonusStats:
+    m_values: 000000000000000000000000000000000000000000000000000000000000000000000000
+  m_visual: {fileID: 11400000, guid: c071eb6b046290f4f8aaa90e9fd0215c, type: 2}
+  m_formalGasAbilityCodes: 
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

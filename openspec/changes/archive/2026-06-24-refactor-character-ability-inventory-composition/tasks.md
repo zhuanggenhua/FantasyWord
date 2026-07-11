@@ -28,7 +28,7 @@
 ## 5. First Migration Tasks
 
 这些任务原本不属于“提案完成”范围；文档完成只算前置阶段，只有代码、Prefab、验证和留档全部闭环后才能归档。
-此前 `Profile / CharacterCompositionProfile / legacy fallback` 口径已判定为无参考迁移层，当前实现口径改为对照 TopDown Koala 的正式组件大清洗。
+此前 `Profile / CharacterCompositionProfile / archived fallback` 口径已判定为无参考迁移层，当前实现口径改为对照 TopDown Koala 的正式组件大清洗。
 
 - [x] 设计正式角色能力/控制/库存/装备组件结构，删除无参考的 `CharacterCompositionProfile`，不再把自造 Profile 当作正式组合入口。
 - [x] 改造 `0_Hero_Base.prefab`；`玩家角色.prefab` 继续通过 prefab 继承该组合入口，让能力、库存、装备和控制边界在玩家角色上可检查。
@@ -47,7 +47,7 @@
 - [x] 继续把主动能力触发、换弹、规则生命周期桥接和 GAS 执行中断从 `CharacterBase.Abilities.cs / CharacterBase.GASRuntime.cs` 往能力组件边界拆；现在 `CharacterAbilitySet` 直接解析能力实例并驱动开火/停火/换弹/冷却查询，`ActiveAbilityBase` 的生命周期、冷却、消耗和 formal cancel 反向中断也先经过能力组件入口。
 - [x] 把角色级库存/背包边界做成 prefab 可检查组件或同等级正式组件边界；`CharacterInventory` 已按 TopDown `CharacterInventory` 的主背包/武器背包/快捷栏角色绑定思路落到基础玩家 prefab，`InventorySystem.GetOwner(CharacterBase)` 优先从该组件解析主库存 owner。
 - [x] 把 `Hero` 的装备槽、装备授予能力和相关存档编排继续拆到 prefab 可见装备/库存边界；`CharacterHandleWeapon` 已按 TopDown `CharacterInventory + CharacterHandleWeapon` 的角色装备/武器组件边界落到基础玩家 prefab，装备槽容器、装备授予/撤回能力、装备效果压制和装备存档快照已由该组件持有，`Hero` 仅保留原公开 API 的兼容转发。
-- [x] 把 TopDown 能力组件化能裁决的 formal ability rule、cooldown、cost、lifecycle 和能力运行时存档入口从 `CharacterBase / Hero` 集中职责里拆到 `CharacterAbilitySet`；`CharacterBase` 只保留属性、ASC 宿主、持续效果和角色状态编排。持续效果 legacy/fallback 壳没有 Koala 同级参考，不作为本次 TopDown 组件化强拆对象。
+- [x] 把 TopDown 能力组件化能裁决的 formal ability rule、cooldown、cost、lifecycle 和能力运行时存档入口从 `CharacterBase / Hero` 集中职责里拆到 `CharacterAbilitySet`；`CharacterBase` 只保留属性、ASC 宿主、持续效果和角色状态编排。持续效果 archived/fallback 壳没有 Koala 同级参考，不作为本次 TopDown 组件化强拆对象。
 - [x] 删除 `PlayerController` 委托壳并清空 `0_Hero_Base.prefab` 上的 `Movable.m_controller` 玩家控制序列化入口；单角色输入由 `CharacterPlayerControl` 承接，控制组通过 `PlayerControlGroup` 分发到成员 `IPlayerInputTarget`。
 - [x] 补 `implementation-log.md`：逐项记录 TopDown 参考脚本/Prefab、改前目标脚本、改后落点、仍未覆盖差距和验证入口；没有这份留档不得归档。
 - [x] 做一次归档前 prefab 审计：`0_Hero_Base.prefab / 玩家角色.prefab` 必须能直接证明控制、能力、库存、装备和表现边界已达到本提案定义的 TopDown 参考吸收目标；否则不得归档。

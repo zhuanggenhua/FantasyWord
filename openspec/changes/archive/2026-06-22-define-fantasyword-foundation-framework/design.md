@@ -34,10 +34,10 @@
 
 对应文档链路固定为：
 
-- `docs/ai/框架最终裁决.md`：默认引用入口，先给最终结论。
-- `docs/ai/框架三项判分矩阵.md`：回答“为什么选这边”。
-- `docs/ai/框架正式动作清单.md`：回答“这个模块到底替换、融合还是冻结”。
-- `docs/ai/框架实施阶段表.md`：回答“这些动作先做什么后做什么”。
+- `.spec/knowledge/features/project/框架最终裁决.md`：默认引用入口，先给最终结论。
+- `.spec/knowledge/features/project/框架三项判分矩阵.md`：回答“为什么选这边”。
+- `.spec/knowledge/features/project/框架正式动作清单.md`：回答“这个模块到底替换、融合还是冻结”。
+- `.spec/knowledge/features/project/框架实施阶段表.md`：回答“这些动作先做什么后做什么”。
 
 按这三项复核后，当前正确框架是四层，而不是“以某个成熟框架整体接管”：
 
@@ -65,7 +65,7 @@
 
 旧 `FantasyWordBootstrapper + FantasyWordRuntimeContext + FantasyWordModuleInstaller + FantasyWordServiceRegistry + FantasyWordEventBus + 五大 ModuleAsset` 没有成熟参考同职责依据，不再作为正式实现、验收口径或后续扩展前提。
 
-当前存在的裁剪闭包不是新的框架设计。它们只允许表示三类情况：移除参考项目第三方依赖、适配当前 Unity/C# 编译语义、或者因为上游参考闭包尚未迁入而暂时禁止某些 API。每个裁剪点必须登记到 `docs/ai/foundation-reference-audit.md` 的“参考偏离台账”；没有登记的偏离不得作为正式实现保留。
+当前存在的裁剪闭包不是新的框架设计。它们只允许表示三类情况：移除参考项目第三方依赖、适配当前 Unity/C# 编译语义、或者因为上游参考闭包尚未迁入而暂时禁止某些 API。每个裁剪点必须登记到 `.spec/knowledge/features/project/foundation-reference-audit.md` 的“参考偏离台账”；没有登记的偏离不得作为正式实现保留。
 
 本 change 的目标不是把多个成熟框架外面再包一层，而是选定单一真相源后直接落地。基础 RPG 数据、生命周期、地图、存档、命令、交互、物品、任务和 UI 闭包默认以 `2DRPGEngine` 为主；俯视角动作手感、能力组件、武器、拾取、机关、相机和 2D 地牢样板默认以 `TopDownEngine` 为局部参考；对象池、协程、资源/场景/文本强类型入口、本地化、日志和 UI 小工具由 `YokiFrame` 承担工具层。任何同职责冲突都必须在这三者中选一个当前真相源，不得通过 `Compatibility`、`Adapter`、`FoundationSupport` 或镜像包装层维持双轨。
 
@@ -93,7 +93,7 @@
 | --- | --- | --- |
 | `GameManager` 13 个静态 system 快捷入口 | 保留为现有 2DRPG 基线快速访问面 | 不拆现有入口；禁止新增开放世界、卡牌模式、GAS、UIKit、TopDown manager 等新快捷入口；跨域调用后续逐步改为明确所有者、上下文或事件 |
 | 已删除的 `NotificationSystem` vs Yoki `EventKit` | 事件派发机制选 Yoki `EventKit.Type`；领域事件类型留在 GameCore | 旧通知中心已从运行时、测试和场景正式移除；新增和既有正式事件统一进入 GameCore 强类型事件结构 + `EventKit.Type` |
-| `AUIMenu/UIMenuManager` vs Yoki `UIKit` | Yoki `UIKit` 原生模型已经是正式 UI 机制真相；项目侧只允许保留承接菜单请求的单一运行时入口，当前已并回 `UIManager`。旧 `AUIMenu` 只保留已被吸收到 `UIKitMenuPanelBase` 的菜单语义，不再保留旧入口 | 不做 adapter 双栈；不再额外挂历史独立菜单组件或任何等价第二入口去复制 panel lifecycle/stack/cache；不允许同一菜单同时有 `AUIMenu` 和 `UIPanel` 两套真相；未来纯工具或非菜单 panel 允许直接按 `UIPanel + UIKit.OpenPanel<T>/PushPanel/PopPanel` 实施 |
+| `AUIMenu/UIMenuManager` vs Yoki `UIKit` | Yoki `UIKit` 原生模型已经是正式 UI 机制真相；项目侧只允许保留承接菜单请求的单一运行时入口，当前已并回 `UIManager`。旧 `AUIMenu` 只保留已被吸收到 `UIKitMenuPanelBase` 的菜单语义，不再保留废弃入口 | 不做 adapter 双栈；不再额外挂历史独立菜单组件或任何等价第二入口去复制 panel lifecycle/stack/cache；不允许同一菜单同时有 `AUIMenu` 和 `UIPanel` 两套真相；未来纯工具或非菜单 panel 允许直接按 `UIPanel + UIKit.OpenPanel<T>/PushPanel/PopPanel` 实施 |
 | `Stats/currentStats` vs GAS `AttributeSet` | GAS 在复杂属性集、效果叠层、标签、冷却和能力规则上是正式替换候选；当前正式读取、通知、死亡判定与当前值存档已优先走 `CharacterBase + ASC`，旧 `Stats/currentStats` 只剩过渡缓冲 | 未完成专项矩阵前，GAS 不并行接管生命、法力、攻击、防御等同一数值；若 GAS 胜出，必须替换对应职责，而不是并行显示/结算/存档 |
 | `GameCore InputSystem` vs Yoki `InputKit` vs TopDown `InputManager` | 玩法输入语义保 GameCore；Yoki 做重绑定工具；TopDown 输入根不接 | 卡牌模式后续需要模式输入上下文，但不新增 `GameManager.CardInputSystem`；不让每个控制器自行订阅全局输入 |
 | `SaveSystem/PersistenceSystem` vs Yoki `SaveKit` | 世界/角色/背包/任务语义保 GameCore 数据块；文件读写、版本迁移和底层存储可由 Yoki SaveKit 承担 | 不建第二套存档真相；SaveKit 只能替换文件层工具，不拥有世界语义 |
@@ -164,7 +164,7 @@
 
 ### 有限联机候选，不生成网络架构
 
-联机方向已更新为长期候选：FishNet 主机权威的有限人数合作。当前 foundation change 仍不接入 FishNet 包、不创建网络 SDK 抽象、网络模块资产或联机上下文容器。当前只要求关键规则避免写死在 UI 回调或单个场景对象里；这是单机复杂开放世界、Mod 兼容和未来有限联机共同需要的维护边界。具体产品边界、Mod 清单握手和类昆特牌局内对战边界见 `docs/ai/联机与Mod边界.md`。
+联机方向已更新为长期候选：FishNet 主机权威的有限人数合作。当前 foundation change 仍不接入 FishNet 包、不创建网络 SDK 抽象、网络模块资产或联机上下文容器。当前只要求关键规则避免写死在 UI 回调或单个场景对象里；这是单机复杂开放世界、Mod 兼容和未来有限联机共同需要的维护边界。具体产品边界、Mod 清单握手和类昆特牌局内对战边界见 `.spec/knowledge/features/project/联机与Mod边界.md`。
 
 ### 第三方和候选资产保护
 

@@ -1,4 +1,4 @@
-﻿# 基础攻击、背刺与蓄力攻击制作流程
+# 基础攻击、背刺与蓄力攻击制作流程
 
 ## 当前结论
 
@@ -7,7 +7,7 @@
 当前基础攻击的正式可用链路是：
 
 1. EX-GAS Ability 配置是基础攻击的正式能力入口。
-2. 已迁移普攻不再拥有已删除的旧能力表身份根；已删除的旧能力表入口不得再把已迁移技能反解、授予、装备或触发成 EX-GAS Ability Code。正式输入配置已经迁入 `exgas.abilityGameCore`。
+2. 正式普攻不再拥有已删除的旧能力表身份根；已删除的旧能力表入口不得再把正式技能反解、授予、装备或触发成 EX-GAS Ability Code。正式输入配置已经迁入 `exgas.abilityGameCore`。
 3. EX-GAS Ability 使用 `ALTimeline` 指向 Timeline。
 4. Timeline 上用 `TaskDoCost` 支付资源。
 5. Timeline 上用 `TaskPlayCue -> CuePlayGameCoreAnimator` 触发装备系统动作键。
@@ -15,10 +15,11 @@
 7. 命中后应用 `GameplayEffect 2003 + FormalDamage`，由正式伤害链结算基础伤害。
 8. 同一个 GameplayEffect 上可配置 `FormalConditionalDamage`；当前背刺用 `ConditionKind = Backstab` 表达附加伤害。
 9. `ALTimelinePlayer` 按帧推进 Timeline。
+10. 开火时把攻击方向写入本次 GAS 激活上下文；TargetCatcher 只读取这份快照，不按上下左右复制 Ability、Timeline、Task 或判定范围。动画仍由开火时角色朝向和正式攻击状态维持，不宣称动画 Cue 直接读取激活上下文。
 
 当前仍未完成的是：
 
-- 基础攻击动画已经收口到 `TaskPlayCue -> CuePlayGameCoreAnimator`，运行时由项目侧 `CuePlayGameCoreAnimator` 把 `AnimationName` 解释为装备系统动作键；角色动作和武器层分离，武器攻击与武器自带特效由装备/武器动作一起承载。`EquipmentSystemDemo` 默认装备使用带 `Attack` 武器序列帧的 `长矛` 作为当前验收资产。基础攻击命中反馈已经收口到 `GameplayEffect 2003 CueOnApply -> CuePlayGameCoreFeedback -> GameplayFeedbackSet`；出手/命中音效当前未配置临时资源，后续正式音效仍走 `TaskPlayCue` 或 GameplayEffect Cue。
+- 基础攻击动画已经收口到 `TaskPlayCue -> CuePlayGameCoreAnimator`，运行时由项目侧 `CuePlayGameCoreAnimator` 把 `AnimationName` 解释为装备系统动作键；角色动作和武器层分离，武器攻击与武器自带特效由装备/武器动作一起承载。当前只验证武器视觉资产自身是否配置 `Attack` 武器序列帧，不把 `EquipmentSystemDemo` 默认装备当作普攻链路验收真相。基础攻击命中反馈已经收口到 `GameplayEffect 2003 CueOnApply -> CuePlayGameCoreFeedback -> GameplayFeedbackSet`；出手/命中音效当前未配置临时资源，后续正式音效仍走 `TaskPlayCue` 或 GameplayEffect Cue。
 - 背刺已经完成正式 GAS Effect 条件表达，当前作为 `GameplayEffect 2003` 的条件化附加伤害配置。
 - 蓄力攻击当前采用单档 `HoldRelease` 正式模型：按下进入蓄力态，松手释放独立 EX-GAS Ability `20004 ChargedAttackRelease`。
 
@@ -47,15 +48,17 @@
      - `TaskDoCost`：在出手前或出手点支付技能消耗。
      - `TaskPlayCue -> CuePlayGameCoreAnimator`：在攻击动画轨道触发装备系统动作键。
    - `TaskApplyEffects`：在命中帧调用目标捕获器并应用 GameplayEffect。
-     - `CatchAreaPolygon2D`：作为项目侧注册到 GAS 的 2D `TargetCatcher`，配置四方向俯视角真实近战判定范围。
+     - `CatchAreaPolygon2D`：作为项目侧注册到 GAS 的 2D `TargetCatcher`，配置一份施法者本地空间真实近战判定范围；运行时按命中帧施法者的当前位置与当前朝向变换。
 
 4. 配置 `TaskPlayCue -> CuePlayGameCoreAnimator`
    - 在动画轨道新增 `TaskPlayCue`。
    - `CueLogic` 选择 `CuePlayGameCoreAnimator`，不要通过覆盖 EX-GAS 内置 `CuePlayAnimator` 来实现项目侧装备动画语义。
    - `AnimatorNodePath` 留空时，从当前技能宿主根节点向子级查找装备动画控制器。
    - `AnimationName` 填装备系统动作键，例如当前基础攻击为 `Attack`，蓄力释放为 `ChargedAttack`。
+   - 不在 GAS 表里填写 `Attack_Up`、`Attack_Down`、`Attack_Left`、`Attack_Right`；GAS 只触发动作键，方向动画由 Animator / 装备系统按开火时角色朝向解析。
+   - 像素攻击使用离散方向动画，默认由 Animator 子状态机或项目装备动画解析承载；Blend Tree 更适合移动、待机等连续朝向动作，不作为普攻方向变体默认方案。
    - 角色动作和武器层分离；武器攻击和武器自带特效必须跟随装备/武器动作，不在当前普攻里单独挂临时特效 Prefab 冒充正式完成。
-   - 当前普攻验收场景默认装备 `长矛`，它必须配置 `Attack` 武器序列帧；如果换成其它武器，也必须满足同一素材组织合同。
+   - 当前普攻素材验收只看被测武器视觉资产本身是否配置 `Attack` 武器序列帧；如果换成其它武器，也必须满足同一素材组织合同。不要为了测试通过去改演示场景默认装备。
    - `Attack` / `ChargedAttack` 属于装备系统动作键；如果运行时找不到装备系统动作，必须显式失败或报警，不得回退到普通角色 `Animator`，避免角色动作播放了但武器攻击和武器特效没有同步。
    - 对已绑定正式 GAS Ability 的基础攻击，不再从项目侧旧执行资产触发同一攻击动画。
 
@@ -70,6 +73,10 @@
    - `isWorldSpace`：基础近战通常为 `false`，表示跟随施放者。
    - `points`：多边形顶点，基础攻击当前为 `0.175,-0.25;1.125,-0.25;1.125,0.55;0.175,0.55`。
    - `layer`：可命中的目标层，例如当前 Hitbox 层为 `128`。
+   - `points` 只保存一份本地形状，不为上下左右重复配置；左右镜像、上下旋转或 3D 朝向落位属于 TargetCatcher 运行时变换。
+   - 命中帧读取施法者当前执行姿态；普通攻击由正式攻击状态锁住前摇期间普通转向，闪现或突进技能则可在命中 Task 前更新位置与朝向。
+   - 激活上下文中的可选瞄准方向只表示本次输入请求，不得自动当作所有后续 Task 的最终执行方向。
+   - 激活上下文允许没有方向；只有使用本地空间方向型 TargetCatcher 时，缺方向才直接报错并拒绝命中。
    - Scene 视图可视化手柄只在 EX-GAS 时间轴窗口当前选中 `TaskApplyEffects -> CatchAreaPolygon2D` 时出现；拖中心点移动整体多边形，拖顶点调整轮廓，右键插入或删除顶点，最终仍由 EX-GAS 时间轴原保存按钮写回表。
    - 运行时性能边界：多边形最多 16 点；先用外接盒做 `OverlapBoxNonAlloc` 候选粗筛，再对候选 Collider 做真实形状与多边形的精筛，不做全场扫描，不在热路径分配临时数组。
 
@@ -99,6 +106,7 @@
    - 拖到 `TaskPlayCue` 所在帧，确认动画能从预览对象上找到 `Animator`。
    - 选中 `TaskApplyEffects -> CatchAreaPolygon2D`，拖到命中帧。
    - 当前会绘制 `CatchAreaPolygon2D` 多边形命中范围和可拖拽顶点，用来确认并调整真实命中轮廓。
+   - 预览不同方向时只能改变预览对象朝向或预览方向上下文；保存结果仍是一份本地多边形，不生成四份方向判定。
    - 调整命中范围后点击 EX-GAS 时间轴窗口原保存按钮；不得新增自动保存、自动读表或第二套命中框保存入口。
 
 10. 保存 GAS 时间轴数据
@@ -111,7 +119,7 @@
 11. 在角色上测试
    - 角色、玩家输入或 AI 决策最终解析到对应 EX-GAS Ability Code。
    - 当前阶段直接按键触发，不做技能栏 UI。
-   - 已删除的旧能力表不再承载已迁移普攻身份；正式能力检查、标签、资源、冷却和命中帧推进都由 EX-GAS 承担。
+   - 已删除的旧能力表不再承载正式普攻身份；正式能力检查、标签、资源、冷却和命中帧推进都由 EX-GAS 承担。
 
 ## 背刺制作流程
 

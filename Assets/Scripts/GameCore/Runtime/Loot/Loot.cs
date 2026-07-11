@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using MackySoft.SerializeReferenceExtensions;
 
 namespace FantasyWord.GameCore
@@ -11,8 +12,10 @@ namespace FantasyWord.GameCore
         public Item item;
         public int quantity;
         public int dropRate;
-        public int minimumMonsterLevel;
-        public int minimumPlayerLevel;
+        [FormerlySerializedAs("minimumMonsterLevel")]
+        public int minimumDefeatedCharacterLevel;
+        [FormerlySerializedAs("minimumPlayerLevel")]
+        public int minimumReceiverLevel;
 
         public bool IsAvailable() => condition?.Evaluate() ?? true;
         public bool ResolveDrop() => UnityEngine.Random.Range(1, 101) <= dropRate;

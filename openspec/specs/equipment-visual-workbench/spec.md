@@ -21,6 +21,25 @@
 - **AND** it does not require a live gameplay player instance to render the preview
 - **AND** it does not become a second gameplay equipment truth source
 
+### Requirement: Workbench Tasks Must Not Mutate Authored Equipment Data Without Explicit Scope
+
+Visual workbench implementation and debugging MUST treat existing authored equipment data as read-only unless the user explicitly includes data authoring or regeneration in the current task.
+
+#### Scenario: Visual test work does not rewrite formal data
+
+- **WHEN** the current task is to build, repair, or verify the visual test layer
+- **THEN** the workbench may read existing `EquipmentRenderData`, `CharacterFrameData`, animation controllers, UV maps, and imported sprites
+- **AND** it MUST NOT add or replace equipment animation sequences
+- **AND** it MUST NOT rewrite frame matrices, anchors, UV references, generated UV textures, texture import settings, animation controllers, or generator/synchronization tools
+- **AND** validation scripts and preview UI MUST NOT save derived test state back into formal assets
+
+#### Scenario: Missing authored data blocks the preview instead of expanding scope
+
+- **WHEN** a preview is missing because the formal equipment asset has no matching sequence, frame data, UV map, or icon source
+- **THEN** the task reports the missing authored data as the blocking fact
+- **AND** it stops before modifying configuration or running batch generation
+- **AND** data authoring proceeds only after the user explicitly expands the task scope
+
 ### Requirement: Equipment Data And Visual Data Must Stay Separated
 
 Equipment content MUST separate gameplay/rule data from visual presentation data.

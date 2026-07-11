@@ -1,4 +1,4 @@
-﻿# Design: refactor-melee-ability-authoring
+# Design: refactor-melee-ability-authoring
 
 ## Final Architecture
 
@@ -135,11 +135,11 @@
 - 第二份项目时间轴
 - Excel 文件人工双写
 
-## Legacy Compatibility Boundary
+## Archived Compatibility Boundary
 
-`AbilitySheet` / `ActiveAbilitySheet` / `PassiveAbilitySheet`（均已删除） 与 `AbilityExecutionAsset` / `MeleeAbilityExecutionAsset` 已删除，不再作为运行、作者或兼容入口。历史数据只能通过显式迁移数据落到 EX-GAS Code，或记录为待迁移缺口。
+`AbilitySheet` / `ActiveAbilitySheet` / `PassiveAbilitySheet`（均已删除） 与 `AbilityExecutionAsset` / `MeleeAbilityExecutionAsset` 已删除，不再作为运行、作者或入口。历史数据只能通过显式迁移数据落到 EX-GAS Code，或记录为待迁移缺口。
 
-已迁移普攻不得再通过已删除的旧能力表、旧执行资产 Inspector、旧命中框字段或旧反馈字段制作；旧主动技能 API 已删除；不得把旧能力表对象推导或升级成 EX-GAS Ability Code。
+正式普攻不得再通过已删除的旧能力表、旧执行资产 Inspector、旧命中框字段或旧反馈字段制作；旧主动技能 API 已删除；不得把旧能力表对象推导或升级成 EX-GAS Ability Code。
 
 ## Editor Refactor Direction
 

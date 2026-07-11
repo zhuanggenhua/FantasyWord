@@ -108,11 +108,11 @@
 
 后面真拿到一个新仓库或新源码时，固定按下面顺序处理：
 
-1. 先对照 `docs/ai/2D移动与场景组织现态速查表.md`
+1. 先对照 `.spec/knowledge/features/project/2D移动与场景组织现态速查表.md`
    - 先确认它是不是还在当前 4 个一级缺口范围内
    - 避免把本机已经排除过的 3D / Mirror / demo 类型再读一遍
-   - 若只是想先确认“项目里是否已有正式移动闭包、当前是否该继续实现”，先读 `docs/ai/2D移动与场景组织下一步入口.md`
-2. 再对照 `docs/ai/2D移动与场景组织找参考清单.md`
+   - 若只是想先确认“项目里是否已有正式移动闭包、当前是否该继续实现”，先读 `.spec/knowledge/features/project/2D移动与场景组织下一步入口.md`
+2. 再对照 `.spec/knowledge/features/project/2D移动与场景组织找参考清单.md`
    - 快速筛掉只有视频、只有 README、只有传送门、只有出生点数组的来源
 3. 如果还值得继续，再按下面的 intake 空白模板填 1 条记录
 4. 填完后只做一个裁决：
@@ -231,10 +231,10 @@
 
 ## 与当前文档的关系
 
-- 总缺口表：`docs/ai/2D移动与场景组织缺口矩阵.md`
-- 现态速查：`docs/ai/2D移动与场景组织现态速查表.md`
-- 下一步入口：`docs/ai/2D移动与场景组织下一步入口.md`
-- 快速筛选单：`docs/ai/2D移动与场景组织找参考清单.md`
+- 总缺口表：`.spec/knowledge/features/project/2D移动与场景组织缺口矩阵.md`
+- 现态速查：`.spec/knowledge/features/project/2D移动与场景组织现态速查表.md`
+- 下一步入口：`.spec/knowledge/features/project/2D移动与场景组织下一步入口.md`
+- 快速筛选单：`.spec/knowledge/features/project/2D移动与场景组织找参考清单.md`
 - `uMMORPG` 专项取证：`ummorpg-movement-scene-audit.md`
 - 正式规格约束：`specs/foundation-runtime/spec.md`
 - 当前任务口径：`tasks.md`

@@ -122,9 +122,9 @@
 
 ### Requirement: New Event Dispatch Must Use The Chosen Event Mechanism
 
-`FantasyWord` MUST use Yoki `EventKit.Type` as the formal event dispatch mechanism for GameCore domain events, and the legacy `NotificationSystem` MUST NOT remain in formal runtime code, tests, or scenes.
+`FantasyWord` MUST use Yoki `EventKit.Type` as the formal event dispatch mechanism for GameCore domain events, and the archived `NotificationSystem` MUST NOT remain in formal runtime code, tests, or scenes.
 
-#### Scenario: Legacy notification hub is removed from the formal runtime
+#### Scenario: Archived notification hub is removed from the formal runtime
 
 - **WHEN** the foundation static gate inspects formal runtime code, tests, and scenes
 - **THEN** `GameManager` does not expose `GameManager.NotificationSystem`
@@ -450,7 +450,7 @@
 - **WHEN** a flag is set or cleared
 - **THEN** `GameRuntimeEvents.NotifyGameFlagChanged(...)` sends a GameCore `GameFlagChangedEvent` through Yoki `EventKit.Type`
 - **AND** project-side code does not call, subscribe to, or unsubscribe from `NotificationSystem.gameFlagChanged` directly
-- **AND** the removed legacy notification hub is not recreated just to carry game-flag events
+- **AND** the removed archived notification hub is not recreated just to carry game-flag events
 
 #### Scenario: Game flags round-trip save data
 

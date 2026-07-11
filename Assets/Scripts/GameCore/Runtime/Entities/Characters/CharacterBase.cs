@@ -168,7 +168,13 @@ namespace FantasyWord.GameCore
             base.OnInteract(sender);
         }
 
-        public override bool CanUpdateTargetDirection() => base.CanUpdateTargetDirection() && Can(EActionFlags.UpdateTargetDirection);
+        public override bool CanUpdateTargetDirection()
+        {
+            return base.CanUpdateTargetDirection() &&
+                Can(EActionFlags.UpdateTargetDirection) &&
+                (!TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet) ||
+                 !abilitySet.ShouldLockTargetDirectionForInputGate());
+        }
         public override bool CanMove() => base.CanMove() && Can(EActionFlags.Move);
 
         protected override float CalculateMoveSpeed()
@@ -198,7 +204,7 @@ namespace FantasyWord.GameCore
 
         /// <summary>
         /// 当前基础属性真相只允许由角色拥有者整体写回。
-        /// Hero/Monster 可以重建整份属性，但不再直接持有旧属性观察器细节。
+        /// CharacterActor 可以重建整份属性，但不再直接持有旧属性观察器细节。
         /// </summary>
         protected void SetResolvedBaseStats(Stats stats)
         {

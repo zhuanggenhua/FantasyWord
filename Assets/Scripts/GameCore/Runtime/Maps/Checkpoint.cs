@@ -42,8 +42,10 @@ namespace FantasyWord.GameCore
 
         private void TrySaveCheckpoint(Component other)
         {
-            Hero traversalHero = GameManager.PlayerSystem.GetPlayerInstance();
-            if (!m_saveOnPlayerEnter || traversalHero == null || other.GetComponentInParent<Hero>() != traversalHero)
+            CharacterActor traversalCharacter = GameManager.MapSystem.GetTraversalCharacter();
+            if (!m_saveOnPlayerEnter ||
+                traversalCharacter == null ||
+                other.GetComponentInParent<CharacterActor>() != traversalCharacter)
             {
                 return;
             }

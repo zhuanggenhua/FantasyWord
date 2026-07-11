@@ -133,14 +133,6 @@ namespace GAS.Runtime
                         cueParam = cp;
                         break;
                     }
-                    case cfg.CuePlayGameCoreAnimator cData:
-                    {
-                        var cp = cueParam as GAS.Runtime.XParamAnimator;
-                        cp?.SetAnimatorNodePath(cData.Param.AnimatorNodePath);
-                        cp?.SetAnimationName(cData.Param.AnimationName);
-                        cueParam = cp;
-                        break;
-                    }
                     case cfg.CuePlaySound cData:
                     {
                         var cp = cueParam as GAS.Runtime.XParamPlaySound;
@@ -149,6 +141,14 @@ namespace GAS.Runtime
                         cp?.SetSpeed(cData.Param.Speed);
                         cp?.SetLoop(cData.Param.Loop);
                         cp?.SetAudioSourceNodePath(cData.Param.AudioSourceNodePath);
+                        cueParam = cp;
+                        break;
+                    }
+                    case cfg.CuePlayGameCoreAnimator cData:
+                    {
+                        var cp = cueParam as GAS.Runtime.XParamAnimator;
+                        cp?.SetAnimatorNodePath(cData.Param.AnimatorNodePath);
+                        cp?.SetAnimationName(cData.Param.AnimationName);
                         cueParam = cp;
                         break;
                     }
@@ -756,14 +756,6 @@ namespace GAS.Runtime
                                             resolvedParam = rp;
                                             break;
                                         }
-                                        case cfg.CuePlayGameCoreAnimator pData:
-                                        {
-                                            var rp = resolvedParam as GAS.Runtime.XParamAnimator;
-                                            rp?.SetAnimatorNodePath(pData.Param.AnimatorNodePath);
-                                            rp?.SetAnimationName(pData.Param.AnimationName);
-                                            resolvedParam = rp;
-                                            break;
-                                        }
                                         case cfg.CuePlaySound pData:
                                         {
                                             var rp = resolvedParam as GAS.Runtime.XParamPlaySound;
@@ -772,6 +764,14 @@ namespace GAS.Runtime
                                             rp?.SetSpeed(pData.Param.Speed);
                                             rp?.SetLoop(pData.Param.Loop);
                                             rp?.SetAudioSourceNodePath(pData.Param.AudioSourceNodePath);
+                                            resolvedParam = rp;
+                                            break;
+                                        }
+                                        case cfg.CuePlayGameCoreAnimator pData:
+                                        {
+                                            var rp = resolvedParam as GAS.Runtime.XParamAnimator;
+                                            rp?.SetAnimatorNodePath(pData.Param.AnimatorNodePath);
+                                            rp?.SetAnimationName(pData.Param.AnimationName);
                                             resolvedParam = rp;
                                             break;
                                         }
@@ -798,6 +798,18 @@ namespace GAS.Runtime
                                     }
                                 }
                                 tp?.SetParam(resolvedParam);
+                                taskParam = tp;
+                                break;
+                            }
+                            case cfg.TaskApplyWorldElement taskData:
+                            {
+                                var tp = taskParam as FantasyWord.GameCore.XParamApplyWorldElement;
+                                tp?.SetElementKind(taskData.Param.ElementKind);
+                                tp?.SetIntensity(taskData.Param.Intensity);
+                                tp?.SetExposureDuration(taskData.Param.ExposureDuration);
+                                tp?.SetIntervalFrames(taskData.Param.IntervalFrames);
+                                tp?.SetConeRange(taskData.Param.ConeRange);
+                                tp?.SetConeHalfAngleDegrees(taskData.Param.ConeHalfAngleDegrees);
                                 taskParam = tp;
                                 break;
                             }

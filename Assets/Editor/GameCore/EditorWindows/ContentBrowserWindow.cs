@@ -297,7 +297,7 @@ namespace FantasyWord.GameCore
                         DrawSummaryRow("装备槽位", equipment.type.ToString());
                         DrawSummaryRow("物品分类", equipment.category.ToString());
                         DrawSummaryRow("价格", equipment.price.ToString());
-                        DrawSummaryRow("表现覆盖", equipment.visualOverride != null ? equipment.visualOverride.name : "未配置");
+                        DrawSummaryRow("装备表现", equipment.visual != null ? equipment.visual.name : "未配置");
                         DrawSummaryRow("附加能力", equipment.bonusAbilityCount.ToString());
                         break;
 

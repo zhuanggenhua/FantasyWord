@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.U2D.Animation;
 
 namespace FantasyWord.GameCore
 {
@@ -27,11 +26,11 @@ namespace FantasyWord.GameCore
         [Header("Equipment")]
         [SerializeField] private EEquipmentType m_type;
         [SerializeField] private Stats m_bonusStats;
-        [SerializeField] private SpriteLibraryAsset m_visualOverride;
+        [SerializeField] private EquipmentVisualAsset m_visual;
         [SerializeField] private int[] m_formalGasAbilityCodes;
 
         public EEquipmentType type => m_type;
-        public SpriteLibraryAsset visualOverride => m_visualOverride;
+        public EquipmentVisualAsset visual => m_visual;
         public int bonusAbilityCount => GetBonusFormalGasAbilityCodes().Length;
 
         /// <summary>

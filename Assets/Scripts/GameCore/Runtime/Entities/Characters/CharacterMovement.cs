@@ -70,6 +70,24 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
+            if (TryGetTerrainNavigationMap(out TerrainNavigationMap terrainNavigationMap))
+            {
+                if (!terrainNavigationMap.TryBuildWorldPath(
+                        m_character.transform.position,
+                        worldPosition,
+                        out Vector2[] worldPath))
+                {
+                    m_character.ResetMovement();
+                    return false;
+                }
+
+                Vector2 pathDestination = worldPath[^1];
+                m_character.SetMovementDirection(Vector2.zero);
+                m_character.LookAtTarget(pathDestination);
+                m_character.MoveAlongPath(worldPath, m_clickMoveStoppingDistance);
+                return true;
+            }
+
             Vector3 resolvedDestination = m_character.NearestValidDestination(worldPosition);
             Vector2 destination = resolvedDestination;
 
@@ -77,6 +95,19 @@ namespace FantasyWord.GameCore
             m_character.LookAtTarget(destination);
             m_character.MoveTo(destination, m_clickMoveStoppingDistance);
             return true;
+        }
+
+        private static bool TryGetTerrainNavigationMap(out TerrainNavigationMap terrainNavigationMap)
+        {
+            terrainNavigationMap = null;
+            if (!GameManager.Exists() ||
+                !GameManager.TryGetSystem(out MapSystem mapSystem))
+            {
+                return false;
+            }
+
+            MapInfo mapInfo = mapSystem.ResolveActiveMapInfo();
+            return mapInfo != null && mapInfo.TryGetTerrainNavigationMap(out terrainNavigationMap);
         }
 
         public bool ToggleMovementControlMode()

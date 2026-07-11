@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using YokiFrame;
 
 namespace FantasyWord.GameCore
@@ -9,18 +10,19 @@ namespace FantasyWord.GameCore
     [Serializable]
     public class PlayerDataBlock : DataBlock
     {
-        public HeroRuntimeStateData heroData;
+        public CharacterActorRuntimeStateData primaryCharacterData;
         public PersistableReference<CharacterBase>[] currentControlledCharacters;
     }
 
     /// <summary>
     /// 玩家实体与当前控制目标的正式真相源。
-    /// 玩家 Hero 仍是 RPG 数据和存档入口，但“谁接玩家输入”不再默认等于唯一 Hero。
+    /// 主角色只承担玩家长期存档归属；当前控制对象可以是队伍中的任意 CharacterActor。
     /// </summary>
     public class PlayerSystem : AGameSystem, IDataBlockHandler<PlayerDataBlock>
     {
         [Header("Scene References")]
-        [SerializeField] private Hero m_playerInstance = null;
+        [FormerlySerializedAs("m_playerInstance")]
+        [SerializeField] private CharacterActor m_primaryPlayerCharacter = null;
 
         private readonly UnityEvent<CharacterBase> m_currentControlledCharacterChanged = new();
         private IPlayerInputTarget m_currentInputTarget;
@@ -36,7 +38,7 @@ namespace FantasyWord.GameCore
             EnsurePlayerInstance();
             ResetCurrentControlToPlayerInstance();
             m_pendingPlayerControlRestore = m_currentInputTarget == null;
-            GameManager.PersistenceSystem.RegisterCustomInstancedPersistable(m_playerInstance, Constants.UniquePlayerIdentifier);
+            GameManager.PersistenceSystem.RegisterCustomInstancedPersistable(m_primaryPlayerCharacter, Constants.UniquePlayerIdentifier);
         }
 
         public override void OnSystemStop()
@@ -58,14 +60,14 @@ namespace FantasyWord.GameCore
             TryRestorePendingPlayerControl();
         }
 
-        internal void NotifyHeroKilled(Hero hero)
+        internal void NotifyCharacterKilled(CharacterActor character)
         {
-            if (hero == m_playerInstance)
+            if (character == m_primaryPlayerCharacter)
             {
                 GameManager.DialogueSystem.Interrupt();
                 GameRuntimeEvents.RequestCloseAllMenus();
                 Debug.Assert(GameManager.Config.hasPlayerDeathAction, "No action specified to execute on player death! Specify an action in the GameConfig.");
-                GameManager.Config.ExecutePlayerDeathAction(GameCommandContext.LocalPlayer(hero));
+                GameManager.Config.ExecutePlayerDeathAction(GameCommandContext.LocalPlayer(character));
                 GameManager.DialogueSystem.Interrupt();
             }
         }
@@ -81,7 +83,7 @@ namespace FantasyWord.GameCore
         internal void NotifyCharacterRevived(CharacterBase character)
         {
             if (m_currentInputTarget == null &&
-                character == m_playerInstance &&
+                character == m_primaryPlayerCharacter &&
                 TryResolveControllableInputTarget(character, out IPlayerInputTarget _))
             {
                 SetCurrentControlledCharacter(character);
@@ -425,29 +427,30 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            if (m_playerInstance != null &&
-                m_playerInstance != currentControlledCharacter &&
-                TryResolveControllableInputTarget(m_playerInstance, out IPlayerInputTarget _))
+            if (m_primaryPlayerCharacter != null &&
+                m_primaryPlayerCharacter != currentControlledCharacter &&
+                TryResolveControllableInputTarget(m_primaryPlayerCharacter, out IPlayerInputTarget _))
             {
-                SetCurrentControlledCharacter(m_playerInstance);
+                SetCurrentControlledCharacter(m_primaryPlayerCharacter);
                 return;
             }
 
             SetCurrentInputTarget(null);
+            m_pendingPlayerControlRestore = m_primaryPlayerCharacter != null;
         }
 
         /// <summary>
-        /// 长期玩家 Hero 的正式查询口。
-        /// 这里表达的是“存档与长期成长归属的玩家实例”，不是“当前前台受控对象”。
+        /// 玩家长期存档归属的主角色查询口。
+        /// 这里不表示当前前台受控对象。
         /// </summary>
-        public Hero GetPlayerInstance()
+        public CharacterActor GetPrimaryPlayerCharacter()
         {
-            return m_playerInstance;
+            return m_primaryPlayerCharacter;
         }
 
         public CharacterBase GetCurrentControlledCharacterOrPlayerInstance()
         {
-            return GetCurrentControlledCharacter() ?? m_playerInstance;
+            return GetCurrentControlledCharacter() ?? m_primaryPlayerCharacter;
         }
 
         public bool TryGetCurrentControlledCharacter(out CharacterBase character)
@@ -477,78 +480,19 @@ namespace FantasyWord.GameCore
             m_currentControlledCharacterChanged.RemoveListener(listener);
         }
 
-        private void ResolvePlayerInstance()
-        {
-            if (TryResolveNamedScenePlayer(out Hero namedScenePlayer) &&
-                (!IsLoadedSceneHero(m_playerInstance) || IsLikelyTrainingDummy(m_playerInstance)))
-            {
-                m_playerInstance = namedScenePlayer;
-                return;
-            }
-
-            if (IsLoadedSceneHero(m_playerInstance))
-            {
-                return;
-            }
-
-            Hero[] sceneHeroes = FindObjectsByType<Hero>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            if (sceneHeroes.Length <= 0)
-            {
-                m_playerInstance = null;
-                return;
-            }
-
-            if (sceneHeroes.Length > 1)
-            {
-                Debug.LogWarning(
-                    $"[{nameof(PlayerSystem)}] Scene contains {sceneHeroes.Length} loaded Hero instances but no valid explicit player instance binding was available. " +
-                    $"Falling back to the first loaded Hero ({sceneHeroes[0].name}). Assign m_playerInstance explicitly to avoid ambiguity.",
-                    sceneHeroes[0]);
-            }
-
-            m_playerInstance = sceneHeroes[0];
-        }
-
-        private static bool TryResolveNamedScenePlayer(out Hero player)
-        {
-            Hero[] sceneHeroes = FindObjectsByType<Hero>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-            foreach (Hero hero in sceneHeroes)
-            {
-                if (hero != null && string.Equals(hero.name, "玩家角色", StringComparison.Ordinal))
-                {
-                    player = hero;
-                    return true;
-                }
-            }
-
-            player = null;
-            return false;
-        }
-
-        private static bool IsLikelyTrainingDummy(Hero hero)
-        {
-            return hero != null && hero.name.Contains("训练假人", StringComparison.Ordinal);
-        }
-
-        private static bool IsLoadedSceneHero(Hero hero)
-        {
-            if (!hero)
-            {
-                return false;
-            }
-
-            UnityEngine.SceneManagement.Scene scene = hero.gameObject.scene;
-            return scene.IsValid() && scene.isLoaded;
-        }
-
         private void EnsurePlayerInstance()
         {
-            ResolvePlayerInstance();
-
-            if (!m_playerInstance)
+            if (!m_primaryPlayerCharacter)
             {
                 throw new InvalidOperationException(
-                    "PlayerSystem requires a valid player instance. Assign m_playerInstance explicitly or ensure at least one loaded Hero is available.");
+                    "PlayerSystem requires an explicitly assigned primary player character.");
+            }
+
+            UnityEngine.SceneManagement.Scene scene = m_primaryPlayerCharacter.gameObject.scene;
+            if (!scene.IsValid() || !scene.isLoaded)
+            {
+                throw new InvalidOperationException(
+                    "PlayerSystem primary player character must belong to a loaded scene.");
             }
         }
 
@@ -557,9 +501,9 @@ namespace FantasyWord.GameCore
             EnsurePlayerInstance();
             StageControlledCharacterRestore(block);
 
-            if (block?.heroData != null)
+            if (block?.primaryCharacterData != null)
             {
-                m_playerInstance.LoadHeroRuntimeState(block.heroData);
+                m_primaryPlayerCharacter.LoadActorRuntimeState(block.primaryCharacterData);
             }
 
             ResetCurrentControlToPlayerInstance();
@@ -573,14 +517,14 @@ namespace FantasyWord.GameCore
             CharacterBase[] controlledCharacters = CreateCurrentControlledCharacterSnapshot();
             return new PlayerDataBlock
             {
-                heroData = m_playerInstance.CreateHeroRuntimeState(),
+                primaryCharacterData = m_primaryPlayerCharacter.CreateActorRuntimeState(),
                 currentControlledCharacters = CreateControlledCharacterReferenceSnapshot(controlledCharacters)
             };
         }
 
         /// <summary>
         /// 当前控制对象一旦被销毁，正式回退规则必须只留在 PlayerSystem 闭包内。
-        /// 这样未来改成控制组、多 Hero 或世界角色接管时，不需要再去 UI、表现或交互层逐处补兜底。
+        /// 控制对象销毁后的回退规则只留在 PlayerSystem 闭包内。
         /// </summary>
         private void OnCurrentControlledCharacterDestroyed()
         {
@@ -589,7 +533,7 @@ namespace FantasyWord.GameCore
 
         private void ResetCurrentControlToPlayerInstance()
         {
-            SetCurrentControlledCharacter(m_playerInstance);
+            SetCurrentControlledCharacter(m_primaryPlayerCharacter);
         }
 
         private bool TryRestorePendingPlayerControl()
@@ -605,7 +549,7 @@ namespace FantasyWord.GameCore
                 return true;
             }
 
-            if (!TryResolveControllableInputTarget(m_playerInstance, out IPlayerInputTarget inputTarget))
+            if (!TryResolveControllableInputTarget(m_primaryPlayerCharacter, out IPlayerInputTarget inputTarget))
             {
                 return false;
             }

@@ -1,8 +1,8 @@
 # 属性与 GAS 专项矩阵
 
 > 本文件只裁决属性、能力和效果规则的真相边界。
-> 当前不迁移具体技能或状态效果，不创建项目侧 GAS 兼容入口层。
-> 但 GAS 不是可有可无候选；复杂开放世界的属性、能力和状态效果需要下一阶段专项裁决，胜出后替换同职责旧入口。
+> 当前不迁移具体技能或状态效果，不创建项目侧 GAS 入口层。
+> 但 GAS 不是可有可无候选；复杂开放世界的属性、能力和状态效果需要下一阶段专项裁决，胜出后替换同职责废弃入口。
 
 ## 当前结论
 
@@ -12,7 +12,7 @@
 | 当前能力/效果真相 | 替换前暂由 `Ability/Effect/Stats` 2DRPG 闭包，加上已登记的 TopDown 能力权限和武器执行吸收承载 |
 | EX-GAS 当前角色 | 下一阶段属性/效果/能力规则替换候选；复杂叠层、标签、冷却和组合规则必须正面对比 |
 | 当前门禁 | `Invoke-FoundationStaticGate.ps1` 当前改为“白名单外禁止引用 GAS 运行时类型”；最新结果仍是 `GameCoreGasRuntimeReferenceHitCount = 0`，含义是白名单外 0 命中，不再是整个 `GameCore` 完全 0 引用 GAS |
-| 当前动作 | 先禁止双真相；`2026-06-16` 已补 `attribute-field-mapping.md` 与 `FormalAttributeCatalog`，先把正式属性稳定 ID、显示名和当前真相入口收成一处；同日又把 `CharacterBase` 内部的 `Stats/currentStats` 运行时细节收进旧属性缓冲，避免角色本体继续同时承担属性存储、资源语义、上下限联动和通知细节；`2026-06-18` 先后落了三刀并补了一轮回退修复：第一刀用 `FormalGameplayAttributeSet + CharacterBase.GASRuntime` 固定实体级 ASC 所有权、正式属性字段形状和旧 Stats 快照回填路径；第二刀又把 `CharacterBase` 的正式读取口、资源写入口和最小战斗快照优先切到 ASC；第三刀继续把属性通知、零血死亡判定与当前值存档/读档收回 `CharacterBase` 正式拥有者，并把当时的回退路径也收回同一正式拥有者。`2026-06-21` 本轮又继续把读取 fallback 从“`m_isFormalAbilitySystemReady` 未就绪就一直宽容”收紧成“只允许 `Awake` 期间 bootstrap 窗口临时借用旧快照”，避免正式运行态继续默默吃 legacy 读口。当前旧 `AttributeBootstrapBuffer` 已降到“快照缓冲 + 旧档导入缓冲 + 正式镜像回填 + 启动窗口临时读取”，下一阶段继续按实施提案替换，不允许把这层过渡镜像误报成最终完成 |
+| 当前动作 | 先禁止双真相；`2026-06-16` 已补 `attribute-field-mapping.md` 与 `FormalAttributeCatalog`，先把正式属性稳定 ID、显示名和当前真相入口收成一处；同日又把 `CharacterBase` 内部的 `Stats/currentStats` 运行时细节收进旧属性缓冲，避免角色本体继续同时承担属性存储、资源语义、上下限联动和通知细节；`2026-06-18` 先后落了三刀并补了一轮回退修复：第一刀用 `FormalGameplayAttributeSet + CharacterBase.GASRuntime` 固定实体级 ASC 所有权、正式属性字段形状和旧 Stats 快照回填路径；第二刀又把 `CharacterBase` 的正式读取口、资源写入口和最小战斗快照优先切到 ASC；第三刀继续把属性通知、零血死亡判定与当前值存档/读档收回 `CharacterBase` 正式拥有者，并把当时的回退路径也收回同一正式拥有者。`2026-06-21` 本轮又继续把读取 fallback 从“`m_isFormalAbilitySystemReady` 未就绪就一直宽容”收紧成“只允许 `Awake` 期间 bootstrap 窗口临时借用旧快照”，避免正式运行态继续默默吃 archived 读口。当前旧 `AttributeBootstrapBuffer` 已降到“快照缓冲 + 旧档导入缓冲 + 正式镜像回填 + 启动窗口临时读取”，下一阶段继续按实施提案替换，不允许把这层过渡镜像误报成最终完成 |
 
 ## 取舍
 
@@ -62,6 +62,6 @@
 | 3 | 已落 GAS 第一刀：固定 `FormalGameplayAttributeSet` 字段形状、`CharacterBase` 的实体级 ASC 持有边界，以及从旧 Stats 快照初始化 ASC 的代码落点 |
 | 4 | 已落 GAS 第二刀：`CharacterBase` 正式读取口、资源写入口和 `CombatStatSnapshot` 已优先转到 ASC；旧 `AttributeBootstrapBuffer` 当前只保留镜像/导入缓冲 |
 | 5 | 已落 GAS 第三刀：`CharacterBase` 现已直接持有属性通知、零血死亡判定和当前值存档/读档入口，UI 与死亡链不再依赖旧 runtime 监听 |
-| 6 | 裁决 GAS 是否替换属性层、效果层和能力规则层；如果只替换一部分，必须写清旧入口退场边界 |
+| 6 | 裁决 GAS 是否替换属性层、效果层和能力规则层；如果只替换一部分，必须写清废弃入口退场边界 |
 | 7 | 设计 `AbilitySystemComponent` 初始化、禁用、销毁和对象池复用边界 |
 | 8 | 下一步继续把旧 runtime 压到只剩旧档导入、正式镜像回填和启动窗口 fallback，再接能力/效果运行时与对象池清理边界 |

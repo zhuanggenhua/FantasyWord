@@ -1,6 +1,6 @@
 ---
 name: unity-timeline-signal-debug
-description: 排查和修复 Unity Timeline Signal 链路问题，适用于 PlayableDirector、SignalTrack、SignalEmitter、SignalReceiver、场景 binding、SignalAsset 不一致、listener 未触发、Timeline 到点但业务未执行等问题。用户提到 Timeline 信号、导演不触发、SignalReceiver、SignalTrack、marker 到点没反应、PlayableDirector 绑定异常时应优先使用。
+description: "排查 Unity Timeline Signal 链路。用于 PlayableDirector、SignalTrack、SignalEmitter、SignalReceiver、场景 binding、SignalAsset、listener 未触发、marker 到点无反应或业务未执行。"
 ---
 
 # Unity Timeline Signal 排查

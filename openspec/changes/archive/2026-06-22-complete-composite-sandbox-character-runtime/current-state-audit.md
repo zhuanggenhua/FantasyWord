@@ -59,7 +59,7 @@
 - `CharacterBase + ASC` 已是正式属性读取、资源写入口、通知、零血死亡判定和当前值存档的优先真相。
 - 规则层与执行层已明确分工：`GAS` 管规则，`GameCore` 管动作执行。
 - `TemporalAbilityGrant / Suppression / Replacement / Control / SpeedModifier` 这些正式 effect 闭包已存在。
-- `legacy Stats/currentStats` 当前只剩三类边界：`AttributeBootstrapBuffer` 的 bootstrap 读取窗口、`CharacterBaseDataBlock.currentStats` 的正式当前值存档快照、以及未 formal 化历史持续效果导入所需的 legacy execution shell 重建面；它们已不再参与正式运行时读写裁决。
+- `archived Stats/currentStats` 当前只剩三类边界：`AttributeBootstrapBuffer` 的 bootstrap 读取窗口、`CharacterBaseDataBlock.currentStats` 的正式当前值存档快照、以及未 formal 化历史持续效果导入所需的 archived execution shell 重建面；它们已不再参与正式运行时读写裁决。
 - `ActiveAbilityBase` 当前会把能力前提、消耗、冷却、激活生命周期和取消链优先委托给 `CharacterBase.GASRuntime` 的 `TryEvaluateFormalAbilityActivation / TryApplyFormalAbilityCost / TryApplyFormalAbilityCooldown / BeginFormalAbilityRuleLifecycle / CancelFormalAbilityRuleLifecycle`。
 - 已映射 formal GameplayEffect 的持续效果现在优先走 `TryRestoreMappedFormalTemporalRuntimeStateWithoutExecutionShell(...)` 与 detached runtime 跟踪；formal 恢复失败时会主动清理半挂 spec/registry，不再回退成第二条长期 live truth。
 

@@ -1,4 +1,5 @@
 using System;
+using GAS.Runtime;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,7 +17,10 @@ namespace FantasyWord.GameCore
 
     public interface ITriggerableAbility
     {
-        public void Fire(GameCommandContext commandContext, UnityAction onAbilityEnded);
+        public void Fire(
+            GameCommandContext commandContext,
+            AbilityActivationContext activationContext,
+            UnityAction onAbilityEnded);
         public void StopFire();
         public bool Reload();
         public EAbilityFireCheckResult CanFire();
@@ -35,6 +39,7 @@ namespace FantasyWord.GameCore
         private bool m_effectCostPaidForCurrentUse = false;
         private bool m_abilityPermitted = true;
         private GameCommandContext m_fireCommandContext = GameCommandContext.Script();
+        private AbilityActivationContext m_fireActivationContext = null;
 
         public float remainingCooldown
         {
@@ -69,12 +74,16 @@ namespace FantasyWord.GameCore
             InitializeFormalAbilityInputGate();
         }
 
-        public void Fire(GameCommandContext commandContext, UnityAction onAbilityEnded)
+        public void Fire(
+            GameCommandContext commandContext,
+            AbilityActivationContext activationContext,
+            UnityAction onAbilityEnded)
         {
             m_onAbilityEndedCallback = onAbilityEnded;
             m_fireCommandContext = commandContext.HasActor
                 ? commandContext
                 : GameCommandContext.Recreate(commandContext.IssuerKind, m_character, commandContext.IssuerId);
+            m_fireActivationContext = activationContext;
             m_inputGate.RequestUse();
         }
 
@@ -153,7 +162,16 @@ namespace FantasyWord.GameCore
                     return;
                 }
 
-                if (!m_characterAbilitySet.BeginFormalGasAbilityRuleLifecycle(formalGasAbilityCode))
+                if (!TryCreateActivationContext(out AbilityActivationContext activationContext))
+                {
+                    Debug.LogError($"{GetAbilityDebugName()} 无法激活：角色实例缺失，无法创建本次 GAS 激活上下文。", this);
+                    m_inputGate?.Interrupt();
+                    return;
+                }
+
+                if (!m_characterAbilitySet.BeginFormalGasAbilityRuleLifecycle(
+                        formalGasAbilityCode,
+                        activationContext))
                 {
                     m_characterAbilitySet.CancelFormalGasAbilityRuleLifecycle(formalGasAbilityCode);
                     m_inputGate?.Interrupt();
@@ -232,6 +250,7 @@ namespace FantasyWord.GameCore
                 m_casting = false;
                 m_effectCostPaidForCurrentUse = false;
                 m_onAbilityEndedCallback = null;
+                m_fireActivationContext = null;
                 return;
             }
 
@@ -243,6 +262,7 @@ namespace FantasyWord.GameCore
             }
             m_remainingCooldownTimer = 0.0f;
             m_fireCommandContext = GameCommandContext.ResolveForActor(m_character);
+            m_fireActivationContext = null;
             InitializeFormalAbilityInputGate();
             m_casting = false;
             m_effectCostPaidForCurrentUse = false;
@@ -368,6 +388,7 @@ namespace FantasyWord.GameCore
 
         protected void TerminateCasting()
         {
+            m_fireActivationContext = null;
             if (!m_casting)
             {
                 return;
@@ -461,6 +482,24 @@ namespace FantasyWord.GameCore
 
         protected abstract GameplayFeedbackSet ResolveGameplayFeedbacks();
 
+        private bool TryCreateActivationContext(out AbilityActivationContext activationContext)
+        {
+            activationContext = null;
+            if (m_character == null)
+            {
+                return false;
+            }
+
+            activationContext = CreateFormalGasActivationContext();
+            return activationContext != null;
+        }
+
+        protected virtual AbilityActivationContext CreateFormalGasActivationContext()
+        {
+            return m_fireActivationContext ??
+                new AbilityActivationContext(m_character.transform.position);
+        }
+
         internal bool ShouldUpdateLookAtDirectionOnFireForRuntime()
         {
             if (usesFormalGasAbility)
@@ -470,6 +509,18 @@ namespace FantasyWord.GameCore
             }
 
             return false;
+        }
+
+        internal bool ShouldLockTargetDirectionDuringInputGateForRuntime()
+        {
+            if (!ShouldUpdateLookAtDirectionOnFireForRuntime())
+            {
+                return false;
+            }
+
+            return inputGateState == EFormalAbilityInputGateState.Start ||
+                inputGateState == EFormalAbilityInputGateState.DelayBeforeUse ||
+                inputGateState == EFormalAbilityInputGateState.Use;
         }
 
         protected Animator ResolveCharacterAnimator()

@@ -40,8 +40,8 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void Damage_UpdatesFormalAscCurrentHealth()
         {
-            Hero attacker = CreateHero("attacker", CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", CreateStats(health: 50, physicalDefense: 3));
+            CharacterActor attacker = CreateCharacter("attacker", CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", CreateStats(health: 50, physicalDefense: 3));
 
             int previousHealth = defender.GetCurrentHealth();
             int previousMaxHealth = defender.GetMaxHealth();
@@ -84,7 +84,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void ConsumeMana_UpdatesFormalAscCurrentManaWithoutChangingMaxMana()
         {
-            Hero caster = CreateHero("caster", CreateStats(health: 30, mana: 12));
+            CharacterActor caster = CreateCharacter("caster", CreateStats(health: 30, mana: 12));
 
             int previousMana = caster.GetCurrentMana();
             int previousMaxMana = caster.GetMaxMana();
@@ -128,31 +128,31 @@ namespace FantasyWord.GameCore.Tests
             SetStaticField(typeof(GameManager), "_instance", gameManager);
         }
 
-        private Hero CreateHero(string name, Stats baseStats)
+        private CharacterActor CreateCharacter(string name, Stats baseStats)
         {
-            GameObject heroObject = new(name);
-            m_createdObjects.Add(heroObject);
+            GameObject characterObject = new(name);
+            m_createdObjects.Add(characterObject);
 
-            Rigidbody2D rigidbody2D = heroObject.AddComponent<Rigidbody2D>();
-            Hero hero = heroObject.AddComponent<Hero>();
-            AbilitySystemComponent abilitySystemComponent = heroObject.GetComponent<AbilitySystemComponent>();
-            CharacterAbilitySet abilitySet = heroObject.GetComponent<CharacterAbilitySet>();
+            Rigidbody2D rigidbody2D = characterObject.AddComponent<Rigidbody2D>();
+            CharacterActor character = characterObject.AddComponent<CharacterActor>();
+            AbilitySystemComponent abilitySystemComponent = characterObject.GetComponent<AbilitySystemComponent>();
+            CharacterAbilitySet abilitySet = characterObject.GetComponent<CharacterAbilitySet>();
 
-            HeroSheet sheet = ScriptableObject.CreateInstance<HeroSheet>();
+            CharacterSheet sheet = ScriptableObject.CreateInstance<CharacterSheet>();
             m_createdObjects.Add(sheet);
             SetInstanceField(sheet, "m_baseStats", baseStats.Clone());
-            SetInstanceField(hero, "m_sheet", sheet);
-            SetInstanceField(hero, "m_rigidbody", rigidbody2D);
+            SetInstanceField(character, "m_sheet", sheet);
+            SetInstanceField(character, "m_rigidbody", rigidbody2D);
 
             InvokeLifecycle(abilitySystemComponent, "Awake");
-            SetInstanceField(abilitySet, "m_character", hero);
+            SetInstanceField(abilitySet, "m_character", character);
             InvokeLifecycle(abilitySet, "Awake");
-            InvokeLifecycle(hero, "Awake");
+            InvokeLifecycle(character, "Awake");
             InvokeLifecycle(abilitySystemComponent, "OnEnable");
             InvokeLifecycle(abilitySet, "OnEnable");
-            InvokeLifecycle(hero, "OnEnable");
+            InvokeLifecycle(character, "OnEnable");
 
-            return hero;
+            return character;
         }
 
         private static Stats CreateStats(

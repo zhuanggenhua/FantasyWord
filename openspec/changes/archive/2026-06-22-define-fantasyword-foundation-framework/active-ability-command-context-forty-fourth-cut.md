@@ -17,7 +17,7 @@
   - 当前受控角色解析为 `LocalPlayer(actor)`。
   - 带 `AIController` 的角色解析为 `AI(actor)`。
   - 其它角色保留 `Unknown(actor)`。
-- `CharacterBase.FireAbility(ActiveAbilitySheet sheet)` 保留兼容入口，并委托到 `FireAbility(sheet, GameCommandContext.ResolveForActor(this))`。
+- `CharacterBase.FireAbility(ActiveAbilitySheet sheet)` 保留入口，并委托到 `FireAbility(sheet, GameCommandContext.ResolveForActor(this))`。
 - `CharacterBase.FireAbility(ActiveAbilitySheet sheet, GameCommandContext commandContext)` 把上下文传给 `ITriggerableAbility.Fire(...)`。
 - `ITriggerableAbility.Fire(...)` 和 `ActiveAbilityBase.Fire(...)` 改为接收 `GameCommandContext`。
 - `ActiveAbilityBase` 保存释放瞬间的上下文，并通过 `activeCommandContext` 暴露给具体主动能力子类在动画事件或武器执行阶段使用。

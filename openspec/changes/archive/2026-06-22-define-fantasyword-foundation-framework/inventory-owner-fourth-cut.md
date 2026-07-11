@@ -21,7 +21,7 @@
 ## Preserved Compatibility
 
 - `m_inventoryScope` 默认是 `Party`，因此旧任务资产和旧条件资产继续按队伍共享库存判定。
-- `InventorySystem.GetItemCount(Item)` 与 `HasItemInBag(Item, int)` 继续保留默认队伍 owner 兼容入口。
+- `InventorySystem.GetItemCount(Item)` 与 `HasItemInBag(Item, int)` 继续保留默认队伍 owner 入口。
 
 ## Why Not Default Everything To Current Character
 

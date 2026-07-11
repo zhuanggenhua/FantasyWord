@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace YokiFrame
 {
     /// <summary>
-    /// BuffKit 独立查看器窗口 - 兼容旧入口，实际复用工具页弹窗
+    /// BuffKit 独立查看器窗口 - 委托到统一工具页弹窗
     /// </summary>
     public class BuffKitViewerWindow : EditorWindow
     {

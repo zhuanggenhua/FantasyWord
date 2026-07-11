@@ -104,11 +104,22 @@ namespace GAS.Runtime
         #region Operations  
   
         /// <summary>尝试激活（添加 CAbilityInTryActivate 标记，下一帧由 System 处理）</summary>  
-        public void TryActivate()  
-        {  
-            if (!IsValid) return;  
-            EntityHelper.AddComponent<CAbilityInTryActivate>(_abilityEntity);  
-        }  
+        public void TryActivate()
+        {
+            TryActivate(null);
+        }
+
+        /// <summary>
+        /// 尝试激活，并为本次激活提供独立运行时上下文。
+        /// 上下文不会覆盖 AbilityLogic 的作者配置参数。
+        /// </summary>
+        public void TryActivate(AbilityActivationContext activationContext)
+        {
+            if (!IsValid) return;
+            var logic = _em.GetComponentData<MCAbilityLogic>(_abilityEntity);
+            logic?.Logic?.SetPendingActivationContext(activationContext);
+            EntityHelper.AddComponent<CAbilityInTryActivate>(_abilityEntity);
+        }
   
         /// <summary>尝试结束（添加 CAbilityInTryEnd 标记，下一帧由 System 处理）</summary>  
         public void TryEnd()  
@@ -171,12 +182,13 @@ namespace GAS.Runtime
         public XParam GetParamRaw()  
         {  
             var logic = GetLogic();  
-            if (logic == null) return null;  
-            // AbilityLogicBase._paramRaw is protected,   
-            // 需要通过 Logic 暴露或通过反射获取  
-            // 这里建议在 AbilityLogicBase 上新增 public XParam ParamRaw => _paramRaw;  
-            return null; // 需要 AbilityLogicBase 配合暴露  
+            return logic?.ParamRaw;
         }  
+
+        public AbilityActivationContext GetActivationContext()
+        {
+            return GetLogic()?.ActivationContext;
+        }
   
         #endregion  
         

@@ -18,18 +18,18 @@ namespace FantasyWord.GameCore
         {
             if (m_inn != null)
             {
-                Hero targetHero = source as Hero;
+                CharacterActor targetCharacter = source as CharacterActor;
 
                 if (GameManager.InventorySystem.HasSufficientFunds(m_inn.price))
                 {
                     await target.Say(m_dialogueIfCanPay, source, (messages) =>
                     {
-                        if (messages.Contains(EDialogueMessageType.Accept) && targetHero != null)
+                        if (messages.Contains(EDialogueMessageType.Accept) && targetCharacter != null)
                         {
                             GameRuntimeEvents.RequestAudioPlayback(m_inn.healingSound);
                             GameManager.InventorySystem.RemoveMoney(m_inn.price);
-                            targetHero.Heal(m_inn.healAmount);
-                            targetHero.RecoverMana(m_inn.manaRecoveredAmount);
+                            targetCharacter.Heal(m_inn.healAmount);
+                            targetCharacter.RecoverMana(m_inn.manaRecoveredAmount);
                         }
                     }, m_inn.price.ToString());
                 }

@@ -22,9 +22,9 @@
 
 ## Preserved Compatibility
 
-- `InventorySystem.TryEquip(Equipment)`、`TryUnequip(EEquipmentType)`、`GetEquipment(EEquipmentType)` 仍保留旧入口，继续以默认队伍背包作为物品来源或回收目的地。
-- `Item.Use(CharacterBase target, EItemLocation location)` 仍保留旧入口。
-- `Chest.TryOpen()` 仍保留旧入口，回退到当前受控角色。
+- `InventorySystem.TryEquip(Equipment)`、`TryUnequip(EEquipmentType)`、`GetEquipment(EEquipmentType)` 仍保留废弃入口，继续以默认队伍背包作为物品来源或回收目的地。
+- `Item.Use(CharacterBase target, EItemLocation location)` 仍保留废弃入口。
+- `Chest.TryOpen()` 仍保留废弃入口，回退到当前受控角色。
 - `InventoryDataBlock.money/items` 旧存档镜像字段不变。
 - 队伍金币仍是默认共享钱包；箱子金币和地面金币继续进入队伍钱包。
 

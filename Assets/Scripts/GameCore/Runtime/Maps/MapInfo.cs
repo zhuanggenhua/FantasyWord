@@ -31,6 +31,11 @@ namespace FantasyWord.GameCore
         [Tooltip("本地图的固定相机目标。普通移动场景应留空，让正式玩家相机 Rig 跟随当前控制角色。")]
         [SerializeField] private Transform m_cameraTarget = null;
 
+        [Header("地形导航")]
+        [InspectorName("地形导航地图")]
+        [Tooltip("本场景唯一的 Tilemap 地形规则入口。未配置时保留旧的直线点击移动，正式地形验收场景必须配置。")]
+        [SerializeField] private TerrainNavigationMap m_terrainNavigationMap = null;
+
         public float respawnDelay => m_respawnDelay;
 
         /// <summary>
@@ -89,6 +94,12 @@ namespace FantasyWord.GameCore
         {
             cameraTarget = m_cameraTarget;
             return cameraTarget != null;
+        }
+
+        public bool TryGetTerrainNavigationMap(out TerrainNavigationMap terrainNavigationMap)
+        {
+            terrainNavigationMap = m_terrainNavigationMap;
+            return terrainNavigationMap != null;
         }
     }
 }

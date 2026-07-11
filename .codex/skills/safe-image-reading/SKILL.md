@@ -1,6 +1,6 @@
 ---
 name: safe-image-reading
-description: FantasyWord 项目内的安全图片读取 workflow。用于用户当前需求需要 AI 读取本地 JPG/PNG/WebP、截图、裁图、图集、SpriteSheet、规则页、OCR 图或看图验收时；普通单图默认先压缩/裁切成轻量图，由主线程直接读取并按当前目的给结论，压缩图就是给 AI 看的默认输入；只有大图、批量图、atlas/SpriteSheet/整页图或用户明确要求“本会话安全读取图片”时，才升级为带目的和验收标准的子代理/OCR/外部开图链路，避免原图/base64 反复污染后续上下文。
+description: "FantasyWord 安全读图流程。用于 AI 读取 JPG/PNG/WebP、截图、裁图、图集、SpriteSheet、规则页、OCR 图或看图验收；默认先压缩/裁切成轻量图，大图/批量/atlas/整页图再升级为子代理、OCR 或外部开图。"
 ---
 
 # Safe Image Reading
@@ -72,7 +72,7 @@ description: FantasyWord 项目内的安全图片读取 workflow。用于用户�
    - 业务对象，例如角色 SpriteSheet、MiniFantasy 装备层、Tile、Prefab 截图、UI 截图或 Console 关联截图。
    - 用户当前需求：素材核对、OCR 读字、导入设置核对、实现验收、UI 对比、排障定位。
    - 图片需要回答的问题。
-   - 结果用途：写入 `docs/ai/`、作为当轮验收结论、指导代码/资源修改，或仅作为排障证据。
+   - 结果用途：写入 `.spec/knowledge/features/project/`、作为当轮验收结论、指导代码/资源修改，或仅作为排障证据。
 
 2. **生成轻量输入**
    - 先读文件大小和尺寸。

@@ -24,19 +24,23 @@ namespace FantasyWord.GameCore
 
         private void OnTriggerStay2D(Collider2D collision)
         {
-            Hero traversalHero = GameManager.PlayerSystem.GetPlayerInstance();
-            Hero collisionHero = collision != null ? collision.GetComponentInParent<Hero>() : null;
+            CharacterActor traversalCharacter = GameManager.MapSystem.GetTraversalCharacter();
+            CharacterActor collisionCharacter = collision != null
+                ? collision.GetComponentInParent<CharacterActor>()
+                : null;
 
-            if (!_teleportationInProgress && traversalHero != null && collisionHero == traversalHero)
+            if (!_teleportationInProgress &&
+                traversalCharacter != null &&
+                collisionCharacter == traversalCharacter)
             {
-                if (traversalHero.dead) return;
+                if (traversalCharacter.dead) return;
 
-                if (m_requiredVerticalMovement == EVerticalDirection.Up && !traversalHero.IsMovingUp()) return;
-                if (m_requiredVerticalMovement == EVerticalDirection.Down && !traversalHero.IsMovingDown()) return;
-                if (m_requiredHorizontalMovement == EHorizontalDirection.Left && !traversalHero.IsMovingLeft()) return;
-                if (m_requiredHorizontalMovement == EHorizontalDirection.Right && !traversalHero.IsMovingRight()) return;
+                if (m_requiredVerticalMovement == EVerticalDirection.Up && !traversalCharacter.IsMovingUp()) return;
+                if (m_requiredVerticalMovement == EVerticalDirection.Down && !traversalCharacter.IsMovingDown()) return;
+                if (m_requiredHorizontalMovement == EHorizontalDirection.Left && !traversalCharacter.IsMovingLeft()) return;
+                if (m_requiredHorizontalMovement == EHorizontalDirection.Right && !traversalCharacter.IsMovingRight()) return;
 
-                traversalHero.InterruptPush();
+                traversalCharacter.InterruptPush();
 
                 GameRuntimeEvents.RequestAudioPlayback(m_activationAudio);
 

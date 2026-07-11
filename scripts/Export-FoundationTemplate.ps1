@@ -113,7 +113,7 @@ $coreItems = @(
     "Assets\Editor\GameCore\FantasyWord.GameCore.Editor.asmdef.meta",
     "Assets\Editor\GameCore\Tests\FantasyWord.GameCore.EditModeTests.asmdef",
     "Assets\Editor\GameCore\Tests\FantasyWord.GameCore.EditModeTests.asmdef.meta",
-    "docs\ai",
+    ".spec",
     "openspec\AGENTS.md",
     "openspec\project.md",
     "scripts",

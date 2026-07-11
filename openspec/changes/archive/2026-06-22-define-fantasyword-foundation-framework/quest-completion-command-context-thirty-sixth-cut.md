@@ -17,7 +17,7 @@
 
 - 如果交互发起角色是当前受控角色，任务完成命令使用 `GameCommandContext.LocalPlayer(source)`。
 - 如果交互发起角色不是当前受控角色，任务完成命令使用 `GameCommandContext.Unknown(source)`，保留 actor 但不伪造成本地玩家、AI 或远程访客。
-- `JournalSystem.CompleteQuest(Quest quest)` 与 `Quest.ExecuteOnQuestCompletion()` 的无参兼容入口保留，继续表达脚本/编辑器/旧调用没有显式 actor 的语义。
+- `JournalSystem.CompleteQuest(Quest quest)` 与 `Quest.ExecuteOnQuestCompletion()` 的无参入口保留，继续表达脚本/编辑器/旧调用没有显式 actor 的语义。
 
 ## 边界
 

@@ -22,6 +22,7 @@ namespace GAS.Runtime
             foreach (var (_, basicInfo, ability) in SystemAPI
                          .Query<RefRO<CAbilityInTryActivate>, RefRO<CAbilityBaseInfo>>().WithEntityAccess())
             {
+                var abilityLogic = state.EntityManager.GetComponentData<MCAbilityLogic>(ability);
                 var result = AbilityUtil.CanActivateAbility(ability);
                 if (result == AbilityActivationResult.Success)
                 {
@@ -37,11 +38,15 @@ namespace GAS.Runtime
                     // 添加激活tag
                     ecb.AddComponent(ability, new CAbilityActive());
                     // 激活能力【自定义逻辑】
-                    var abilityLogic = state.EntityManager.GetComponentData<MCAbilityLogic>(ability);
+                    abilityLogic.Logic.CommitPendingActivationContext();
                     abilityLogic.Logic.ActivateAbility(globalTimer.ValueRO);
                     
                     // 激活成功后，根据 CancelAbilityWithTags 取消其他匹配的能力  
                     AbilityUtil.CancelAbilitiesWithTags(ability);
+                }
+                else
+                {
+                    abilityLogic.Logic.RejectPendingActivationContext();
                 }
 
                 GASEventCenter.InvokeOnActivateResult(ability, result);

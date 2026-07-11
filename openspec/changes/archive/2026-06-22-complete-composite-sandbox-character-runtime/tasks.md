@@ -24,11 +24,11 @@
 
 ## 3. GAS Full Contract
 
-- [x] 复核 `attribute-gas-ownership-matrix.md`、`attribute-field-mapping.md` 与现有 `CharacterBase.*` GAS 闭包，列出仍属于 legacy 过渡面的代码与存档口。现态结论已回写 `current-state-audit.md`。
-- [x] 裁决 legacy `Stats/currentStats`、过渡镜像、临时 fallback 和旧 effect/runtime 壳的最终退场边界。当前只保留 `CharacterBase.AttributeBootstrapBuffer` 的 bootstrap 读取窗口、`CharacterBaseDataBlock.currentStats` 的正式当前值存档快照，以及 `CharacterTemporalEffectRuntimeStateData.TryCreateLegacyExecutionShell(...)` 对未完成 formal 化的历史持续效果导入面。
+- [x] 复核 `attribute-gas-ownership-matrix.md`、`attribute-field-mapping.md` 与现有 `CharacterBase.*` GAS 闭包，列出仍属于 archived 过渡面的代码与存档口。现态结论已回写 `current-state-audit.md`。
+- [x] 裁决 archived `Stats/currentStats`、过渡镜像、临时 fallback 和旧 effect/runtime 壳的最终退场边界。当前只保留 `CharacterBase.AttributeBootstrapBuffer` 的 bootstrap 读取窗口、`CharacterBaseDataBlock.currentStats` 的正式当前值存档快照，以及 `CharacterTemporalEffectRuntimeStateData.TryCreateArchivedExecutionShell(...)` 对未完成 formal 化的历史持续效果导入面。
 - [x] 补齐属性、冷却、消耗、标签阻断、持续效果、能力授予/压制/替换/撤回的正式唯一运行时链。代码证据为 `CharacterBase.Resources.cs`、`CharacterBase.Abilities.cs`、`CharacterBase.GASRuntime.cs` 中的 `TryEvaluateFormalAbilityActivation / TryApplyFormalAbilityCost / TryApplyFormalAbilityCooldown / BeginFormalAbilityRuleLifecycle / CancelFormalAbilityRuleLifecycle` 与 `TemporalAbilityGrant / Suppression / Replacement / Control / SpeedModifier` formal 恢复链。
 - [x] 补齐对象禁用、对象池复用、存档、读档恢复和 detached runtime 跟踪的正式收口。代码证据为 `LoadOwnedTemporalEffects(...)`、`TryRestoreMappedFormalTemporalRuntimeStateWithoutExecutionShell(...)`、`TrackDetachedFormalTemporalRuntime(...)`、`CollapseDetachedFormalTemporalRuntimeAfterRefreshFailure(...)` 与 `ClearLiveFormalTemporalEffectRules()`。
-- [x] 为 GAS 替换补静态门禁，禁止 legacy 与 formal 双轨重新回潮。验证证据为 `Invoke-FoundationStaticGate.ps1 -AsJson` 中 `GameCoreGasRuntimeReferenceHitCount = 0`、`FormalMutableStatsLeakHitCount = 0`、`CharacterBaseTemporalEffectRuntimeDisallowedPatternCount = 0`、`CharacterBasePersistenceDisallowedPatternCount = 0`。
+- [x] 为 GAS 替换补静态门禁，禁止 archived 与 formal 双轨重新回潮。验证证据为 `Invoke-FoundationStaticGate.ps1 -AsJson` 中 `GameCoreGasRuntimeReferenceHitCount = 0`、`FormalMutableStatsLeakHitCount = 0`、`CharacterBaseTemporalEffectRuntimeDisallowedPatternCount = 0`、`CharacterBasePersistenceDisallowedPatternCount = 0`。
 
 ## 4. Verification
 

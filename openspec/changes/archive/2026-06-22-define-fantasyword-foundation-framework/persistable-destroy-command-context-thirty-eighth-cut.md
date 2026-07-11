@@ -8,7 +8,7 @@
 
 ## 本刀变更
 
-- `Persistable.Destroy()` 保留为旧兼容入口，继续表示无显式 actor 的脚本销毁。
+- `Persistable.Destroy()` 保留为废弃入口，继续表示无显式 actor 的脚本销毁。
 - `Persistable.Destroy(GameCommandContext context)` 新增为正式上下文入口，销毁时用传入上下文执行 `m_executeOnDeath`。
 - `DestroyEntity.Execute(GameCommandContext context)` 改为调用 `m_toDestroy?.Destroy(context)`，不再丢弃命令链上下文。
 - `Invoke-FoundationStaticGate.ps1` 新增 `PersistableDestroyCommandContextMissingPatternCount / PersistableDestroyCommandContextDisallowedPatternCount`，防止命令销毁回退到无 actor 销毁链路。

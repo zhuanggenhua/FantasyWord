@@ -43,7 +43,7 @@ namespace FantasyWord.GameCore
         [Tooltip("开启后，只有带 CharacterBase 的对象才能拾取。")]
         [SerializeField] private bool m_requireCharacterComponent = true;
 
-        [Tooltip("开启后，只有当前正式受控角色才能拾取；若当前没有受控角色，则回退到玩家存档 Hero。")]
+        [Tooltip("开启后，只有当前正式受控角色才能拾取；若当前没有受控角色，则回退到玩家存档主角色。")]
         [SerializeField] private bool m_requirePlayerType = true;
 
         private Collider m_collider = null;

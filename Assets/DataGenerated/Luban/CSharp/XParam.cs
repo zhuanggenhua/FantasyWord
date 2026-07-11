@@ -49,11 +49,12 @@ public abstract partial class XParam : Luban.BeanBase
             case "XParamString": return new XParamString(_buf);
             case "XParamVector2": return new XParamVector2(_buf);
             case "XParamVector3": return new XParamVector3(_buf);
+            case "XParamApplyWorldElement": return new XParamApplyWorldElement(_buf);
             case "XParamCatchAreaBox2D": return new XParamCatchAreaBox2D(_buf);
             case "XParamCatchAreaCircle2D": return new XParamCatchAreaCircle2D(_buf);
+            case "XParamCatchAreaPolygon2D": return new XParamCatchAreaPolygon2D(_buf);
             case "XParamGameCoreAudio": return new XParamGameCoreAudio(_buf);
             case "XParamGameCoreFeedback": return new XParamGameCoreFeedback(_buf);
-            case "XParamCatchAreaPolygon2D": return new XParamCatchAreaPolygon2D(_buf);
             default: throw new SerializationException();
         }
     }

@@ -9,8 +9,10 @@ namespace GAS.Runtime
         public XParam ParamRaw => _paramRaw;
         protected Entity _abilityEntity;
         protected int _code;
+        private AbilityActivationContext _pendingActivationContext;
 
         public AbilitySpec Spec => Owner.GetAbilitySpec(_code);
+        public AbilityActivationContext ActivationContext { get; private set; }
 
         protected AbilityLogicBase(Entity ability)
         {
@@ -81,6 +83,28 @@ namespace GAS.Runtime
         public virtual void SetParam(XParam abilityParam)
         {
             _paramRaw = abilityParam;
+        }
+
+        internal void SetPendingActivationContext(AbilityActivationContext activationContext)
+        {
+            _pendingActivationContext = activationContext;
+        }
+
+        internal void CommitPendingActivationContext()
+        {
+            ActivationContext = _pendingActivationContext;
+            _pendingActivationContext = null;
+        }
+
+        internal void RejectPendingActivationContext()
+        {
+            _pendingActivationContext = null;
+        }
+
+        internal void ClearActivationContext()
+        {
+            _pendingActivationContext = null;
+            ActivationContext = null;
         }
         
         protected Entity CreateGameplayEffectEntity(GameplayEffectConfig config)

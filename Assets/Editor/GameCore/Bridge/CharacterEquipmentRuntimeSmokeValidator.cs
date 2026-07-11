@@ -12,23 +12,22 @@ namespace FantasyWord.GameCore
 {
     /// <summary>
     /// CharacterEquipment 正式运行态 smoke。
-    /// 只验证当前 change 的设备边界：独立装备、装备授予能力、装备压制可逆、非 Hero 尸体转移。
+    /// 验证统一角色实体的独立装备、装备授予能力、装备压制可逆和尸体转移。
     /// </summary>
     public static class CharacterEquipmentRuntimeSmokeValidator
     {
         private const string ResultRelativePath = "Temp/UnityBridge/results/character-equipment-runtime-smoke.json";
-        private const string HeroPrefabPath = "Assets/Prefabs/Entities/Characters/Heroes/0_Hero_Base.prefab";
-        private const string BaseCharacterPrefabPath = "Assets/Prefabs/Entities/Characters/0_Character_Base.prefab";
-        private const string SmokeNpcSheetAssetPath = "Assets/Editor/GameCore/Bridge/CharacterEquipmentRuntimeSmoke_NPCSheet.asset";
+        private const string CharacterPrefabPath = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab";
+        private const string SmokeCharacterSheetAssetPath = "Assets/Editor/GameCore/Bridge/CharacterEquipmentRuntimeSmoke_CharacterSheet.asset";
         private const string SmokeHeadEquipmentAssetPath = "Assets/Editor/GameCore/Bridge/CharacterEquipmentRuntimeSmoke_Head.asset";
         private const string SmokeAbilityEquipmentAssetPath = "Assets/Editor/GameCore/Bridge/CharacterEquipmentRuntimeSmoke_TorsoAbility.asset";
         private const string SmokeSuppressionSourceId = "character-equipment-runtime-smoke-suppression";
         private const int SmokeEquipmentAbilityCode = FormalGasAbilityCodes.BasicAttack;
 
-        private static NPC? s_characterAlpha;
-        private static NPC? s_characterBeta;
-        private static NPC? s_nonHeroNpc;
-        private static NPCSheet? s_smokeNpcSheet;
+        private static CharacterActor? s_characterAlpha;
+        private static CharacterActor? s_characterBeta;
+        private static CharacterActor? s_corpseTransferCharacter;
+        private static CharacterSheet? s_smokeCharacterSheet;
         private static Equipment? s_smokeHeadEquipment;
         private static Equipment? s_smokeAbilityEquipment;
         private static bool s_registeredHeadEquipment;
@@ -83,24 +82,23 @@ namespace FantasyWord.GameCore
                 throw new InvalidOperationException("GameManager / InventorySystem / PersistenceSystem 未完整启动。");
             }
 
-            result.HeroPrefabFound = AssetDatabase.LoadAssetAtPath<GameObject>(HeroPrefabPath) != null;
-            result.BaseCharacterPrefabFound = AssetDatabase.LoadAssetAtPath<GameObject>(BaseCharacterPrefabPath) != null;
+            result.CharacterPrefabFound = AssetDatabase.LoadAssetAtPath<GameObject>(CharacterPrefabPath) != null;
             result.FormalGasAbilitySmokeCodeConfigured = SmokeEquipmentAbilityCode > 0;
-            if (!result.HeroPrefabFound || !result.BaseCharacterPrefabFound || !result.FormalGasAbilitySmokeCodeConfigured)
+            if (!result.CharacterPrefabFound || !result.FormalGasAbilitySmokeCodeConfigured)
             {
                 throw new InvalidOperationException("运行态 smoke 缺少正式 prefab 或 EX-GAS 能力 code。");
             }
 
             result.SmokeAssetsPrepared = PrepareSmokeAssets();
-            if (!result.SmokeAssetsPrepared || s_smokeHeadEquipment == null || s_smokeAbilityEquipment == null || s_smokeNpcSheet == null)
+            if (!result.SmokeAssetsPrepared || s_smokeHeadEquipment == null || s_smokeAbilityEquipment == null || s_smokeCharacterSheet == null)
             {
                 throw new InvalidOperationException("运行态 smoke 资产准备失败。");
             }
 
             InventorySystem inventorySystem = GameManager.InventorySystem;
 
-            s_characterAlpha = CreateSmokeNpc("装备烟雾-角色A", new Vector3(-2.0f, 0.0f, 0.0f));
-            s_characterBeta = CreateSmokeNpc("装备烟雾-角色B", new Vector3(-0.5f, 0.0f, 0.0f));
+            s_characterAlpha = CreateSmokeCharacter("装备烟雾-角色A", new Vector3(-2.0f, 0.0f, 0.0f));
+            s_characterBeta = CreateSmokeCharacter("装备烟雾-角色B", new Vector3(-0.5f, 0.0f, 0.0f));
             result.CharacterAlphaRegisteredPersistable = TryRegisterCustomPersistable(s_characterAlpha);
             result.CharacterBetaRegisteredPersistable = TryRegisterCustomPersistable(s_characterBeta);
 
@@ -158,33 +156,34 @@ namespace FantasyWord.GameCore
             s_characterBeta.RemoveAllAlterationEquipmentEffectSuppressionRules(suppressionSource);
             result.FormalGasAbilityUnsuppressedAfterRemoval = !s_characterBeta.IsFormalGasAbilitySuppressed(SmokeEquipmentAbilityCode);
 
-            s_nonHeroNpc = CreateSmokeNpc("装备烟雾-NPC", new Vector3(1.5f, 0.0f, 0.0f));
-            result.NonHeroRegisteredPersistable = TryRegisterCustomPersistable(s_nonHeroNpc);
-            result.NonHeroIsHero = s_nonHeroNpc.GetComponent<Hero>() != null;
+            s_corpseTransferCharacter = CreateSmokeCharacter("装备烟雾-尸体转移角色", new Vector3(1.5f, 0.0f, 0.0f));
+            result.CorpseTransferCharacterRegisteredPersistable = TryRegisterCustomPersistable(s_corpseTransferCharacter);
+            result.CorpseTransferCharacterUsesUnifiedActor =
+                s_corpseTransferCharacter.GetComponent<CharacterActor>() == s_corpseTransferCharacter;
 
-            InventoryOwnerHandle nonHeroOwner = inventorySystem.GetOwner(s_nonHeroNpc);
-            InventoryOwnerHandle nonHeroCorpseOwner = inventorySystem.GetCorpseOwner(s_nonHeroNpc);
-            result.NonHeroOwner = nonHeroOwner.ToString();
-            result.NonHeroCorpseOwner = nonHeroCorpseOwner.ToString();
+            InventoryOwnerHandle corpseTransferCharacterOwner = inventorySystem.GetOwner(s_corpseTransferCharacter);
+            InventoryOwnerHandle corpseTransferCharacterCorpseOwner = inventorySystem.GetCorpseOwner(s_corpseTransferCharacter);
+            result.CorpseTransferCharacterOwner = corpseTransferCharacterOwner.ToString();
+            result.CorpseTransferCharacterCorpseOwner = corpseTransferCharacterCorpseOwner.ToString();
 
-            if (!s_nonHeroNpc.TryGetComponent(out CharacterEquipment nonHeroEquipment))
+            if (!s_corpseTransferCharacter.TryGetComponent(out CharacterEquipment corpseTransferCharacterEquipment))
             {
-                throw new InvalidOperationException("非 Hero 装备烟雾角色缺少 CharacterEquipment。");
+                throw new InvalidOperationException("尸体转移测试角色缺少 CharacterEquipment。");
             }
 
-            inventorySystem.AddToBag(nonHeroOwner, s_smokeHeadEquipment, 1, EItemTransferType.Command);
-            result.NonHeroBagBeforeEquip = inventorySystem.GetItemCount(nonHeroOwner, s_smokeHeadEquipment);
-            EEquipmentOperationResult nonHeroEquipResult = inventorySystem.TryEquip(nonHeroOwner, nonHeroEquipment, s_smokeHeadEquipment);
-            result.NonHeroEquipResult = nonHeroEquipResult.ToString();
-            result.NonHeroEquippedHead =
-                inventorySystem.GetEquipment(nonHeroEquipment, s_smokeHeadEquipment.type) == s_smokeHeadEquipment;
-            result.NonHeroBagAfterEquip = inventorySystem.GetItemCount(nonHeroOwner, s_smokeHeadEquipment);
+            inventorySystem.AddToBag(corpseTransferCharacterOwner, s_smokeHeadEquipment, 1, EItemTransferType.Command);
+            result.CorpseTransferCharacterBagBeforeEquip = inventorySystem.GetItemCount(corpseTransferCharacterOwner, s_smokeHeadEquipment);
+            EEquipmentOperationResult corpseTransferCharacterEquipResult = inventorySystem.TryEquip(corpseTransferCharacterOwner, corpseTransferCharacterEquipment, s_smokeHeadEquipment);
+            result.CorpseTransferCharacterEquipResult = corpseTransferCharacterEquipResult.ToString();
+            result.CorpseTransferCharacterEquippedHead =
+                inventorySystem.GetEquipment(corpseTransferCharacterEquipment, s_smokeHeadEquipment.type) == s_smokeHeadEquipment;
+            result.CorpseTransferCharacterBagAfterEquip = inventorySystem.GetItemCount(corpseTransferCharacterOwner, s_smokeHeadEquipment);
 
-            result.NonHeroCorpseTransferResult = inventorySystem.TransferCharacterEquipmentToCorpse(s_nonHeroNpc);
-            result.NonHeroEquipmentRemovedFromSlots =
-                inventorySystem.GetEquipment(nonHeroEquipment, s_smokeHeadEquipment.type) == null;
-            result.NonHeroCorpseHeadCount = inventorySystem.GetItemCount(nonHeroCorpseOwner, s_smokeHeadEquipment);
-            result.NonHeroBagAfterCorpseTransfer = inventorySystem.GetItemCount(nonHeroOwner, s_smokeHeadEquipment);
+            result.CorpseTransferCharacterCorpseTransferResult = inventorySystem.TransferCharacterEquipmentToCorpse(s_corpseTransferCharacter);
+            result.CorpseTransferCharacterEquipmentRemovedFromSlots =
+                inventorySystem.GetEquipment(corpseTransferCharacterEquipment, s_smokeHeadEquipment.type) == null;
+            result.CorpseTransferCharacterCorpseHeadCount = inventorySystem.GetItemCount(corpseTransferCharacterCorpseOwner, s_smokeHeadEquipment);
+            result.CorpseTransferCharacterBagAfterCorpseTransfer = inventorySystem.GetItemCount(corpseTransferCharacterOwner, s_smokeHeadEquipment);
         }
 
         private static void FinalizeResult(ValidationResult result)
@@ -194,8 +193,7 @@ namespace FantasyWord.GameCore
             Require(result.GameManagerExists, "GameManager 未启动。", failures);
             Require(result.HasInventorySystem, "InventorySystem 未注册。", failures);
             Require(result.HasPersistenceSystem, "PersistenceSystem 未注册。", failures);
-            Require(result.HeroPrefabFound, "没有找到 0_Hero_Base.prefab。", failures);
-            Require(result.BaseCharacterPrefabFound, "没有找到 0_Character_Base.prefab。", failures);
+            Require(result.CharacterPrefabFound, "没有找到 0_CharacterActor_Base.prefab。", failures);
             Require(result.FormalGasAbilitySmokeCodeConfigured, "没有配置装备 smoke 使用的 EX-GAS 能力 code。", failures);
             Require(result.SmokeAssetsPrepared, "运行态 smoke 资产未准备完成。", failures);
             Require(result.CharacterAlphaRegisteredPersistable, "角色A 没有登记为正式持久化 owner。", failures);
@@ -222,16 +220,16 @@ namespace FantasyWord.GameCore
             Require(result.FormalGasAbilityStillOwnedDuringSuppression, "装备压制期间角色B 丢失了 EX-GAS 能力实例，而不是进入压制态。", failures);
             Require(result.FormalGasAbilitySuppressedDuringSuppression, "EX-GAS 能力在压制期间没有进入 suppressed 状态。", failures);
             Require(result.FormalGasAbilityUnsuppressedAfterRemoval, "解除压制后 EX-GAS 能力没有恢复可用。", failures);
-            Require(result.NonHeroRegisteredPersistable, "非 Hero 角色没有登记为正式持久化 owner。", failures);
-            Require(!result.NonHeroIsHero, "非 Hero 尸体转移 smoke 实际上仍然用了 Hero。", failures);
-            Require(result.NonHeroBagBeforeEquip == 1, $"非 Hero 装备前背包数量应为 1，实际为 {result.NonHeroBagBeforeEquip}。", failures);
-            Require(result.NonHeroEquipResult == EEquipmentOperationResult.Valid.ToString(), $"非 Hero 装备失败：{result.NonHeroEquipResult}。", failures);
-            Require(result.NonHeroEquippedHead, "非 Hero 没有持有自己的头部装备。", failures);
-            Require(result.NonHeroBagAfterEquip == 0, $"非 Hero 装备后背包数量应为 0，实际为 {result.NonHeroBagAfterEquip}。", failures);
-            Require(result.NonHeroCorpseTransferResult, "非 Hero 装备没有通过正式尸体转移入口进入尸体 owner。", failures);
-            Require(result.NonHeroEquipmentRemovedFromSlots, "非 Hero 尸体转移后装备槽仍保留装备。", failures);
-            Require(result.NonHeroCorpseHeadCount == 1, $"非 Hero 尸体 owner 中装备数量应为 1，实际为 {result.NonHeroCorpseHeadCount}。", failures);
-            Require(result.NonHeroBagAfterCorpseTransfer == 0, $"非 Hero 尸体转移后原 owner 背包数量应为 0，实际为 {result.NonHeroBagAfterCorpseTransfer}。", failures);
+            Require(result.CorpseTransferCharacterRegisteredPersistable, "尸体转移测试角色没有登记为正式持久化 owner。", failures);
+            Require(result.CorpseTransferCharacterUsesUnifiedActor, "尸体转移测试没有使用统一 CharacterActor。", failures);
+            Require(result.CorpseTransferCharacterBagBeforeEquip == 1, $"尸体转移角色装备前背包数量应为 1，实际为 {result.CorpseTransferCharacterBagBeforeEquip}。", failures);
+            Require(result.CorpseTransferCharacterEquipResult == EEquipmentOperationResult.Valid.ToString(), $"尸体转移角色装备失败：{result.CorpseTransferCharacterEquipResult}。", failures);
+            Require(result.CorpseTransferCharacterEquippedHead, "尸体转移角色没有持有自己的头部装备。", failures);
+            Require(result.CorpseTransferCharacterBagAfterEquip == 0, $"尸体转移角色装备后背包数量应为 0，实际为 {result.CorpseTransferCharacterBagAfterEquip}。", failures);
+            Require(result.CorpseTransferCharacterCorpseTransferResult, "角色装备没有通过正式尸体转移入口进入尸体 owner。", failures);
+            Require(result.CorpseTransferCharacterEquipmentRemovedFromSlots, "角色尸体转移后装备槽仍保留装备。", failures);
+            Require(result.CorpseTransferCharacterCorpseHeadCount == 1, $"角色尸体 owner 中装备数量应为 1，实际为 {result.CorpseTransferCharacterCorpseHeadCount}。", failures);
+            Require(result.CorpseTransferCharacterBagAfterCorpseTransfer == 0, $"角色尸体转移后原 owner 背包数量应为 0，实际为 {result.CorpseTransferCharacterBagAfterCorpseTransfer}。", failures);
 
             result.Success = failures.Count == 0;
             result.Failures = failures.ToArray();
@@ -241,58 +239,60 @@ namespace FantasyWord.GameCore
             result.Completed = true;
         }
 
-        private static NPC CreateSmokeNpc(string cloneName, Vector3 spawnPosition)
+        private static CharacterActor CreateSmokeCharacter(string cloneName, Vector3 spawnPosition)
         {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(BaseCharacterPrefabPath)
-                ?? throw new InvalidOperationException($"无法加载 Character base prefab: {BaseCharacterPrefabPath}");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CharacterPrefabPath)
+                ?? throw new InvalidOperationException($"无法加载统一角色 prefab：{CharacterPrefabPath}");
 
             GameObject cloneObject = UnityEngine.Object.Instantiate(prefab, spawnPosition, Quaternion.identity);
             cloneObject.name = cloneName;
             ApplyDontSaveHierarchy(cloneObject);
             cloneObject.SetActive(false);
 
-            NPC npc = cloneObject.AddComponent<NPC>();
-            SetPrivateField(npc, "m_sheet", s_smokeNpcSheet);
-            ConfigureCoreCharacterReferences(cloneObject, npc);
+            CharacterActor character = cloneObject.GetComponent<CharacterActor>()
+                ?? throw new InvalidOperationException("统一角色 prefab 缺少 CharacterActor。");
+            SetPrivateField(character, "m_sheet", s_smokeCharacterSheet);
+            ConfigureCoreCharacterReferences(cloneObject, character);
 
             CharacterAbilitySet abilitySet = cloneObject.GetComponent<CharacterAbilitySet>()
                 ?? cloneObject.AddComponent<CharacterAbilitySet>();
-            SetPrivateField(abilitySet, "m_character", npc);
+            SetPrivateField(abilitySet, "m_character", character);
             ConfigureAbilityRoots(cloneObject.transform, abilitySet);
 
             if (!cloneObject.TryGetComponent(out CharacterInventory characterInventory))
             {
                 characterInventory = cloneObject.AddComponent<CharacterInventory>();
             }
-            SetPrivateField(characterInventory, "m_character", npc);
+            SetPrivateField(characterInventory, "m_character", character);
 
             if (!cloneObject.TryGetComponent(out CharacterEquipment characterEquipment))
             {
                 characterEquipment = cloneObject.AddComponent<CharacterEquipment>();
             }
-            SetPrivateField(characterEquipment, "m_character", npc);
+            SetPrivateField(characterEquipment, "m_character", character);
 
             cloneObject.transform.position = spawnPosition;
             cloneObject.SetActive(true);
+            RefreshCharacterStats(character);
             if (cloneObject.TryGetComponent(out Rigidbody2D rigidbody))
             {
                 rigidbody.position = spawnPosition;
             }
 
             cloneObject.transform.position = spawnPosition;
-            npc.ResetMovement();
-            NormalizeCharacterRuntimeState(npc);
-            return npc;
+            character.ResetMovement();
+            NormalizeCharacterRuntimeState(character);
+            return character;
         }
 
         private static void ConfigureAbilityRoots(Transform root, CharacterAbilitySet abilitySet)
         {
             Transform staticRoot = root.Find("Static Pivot")
-                ?? throw new InvalidOperationException("0_Character_Base 缺少 Static Pivot。");
+                ?? throw new InvalidOperationException("0_CharacterActor_Base 缺少 Static Pivot。");
             Transform polydirectionalRoot = root.Find("Polydirectional Pivot")
-                ?? throw new InvalidOperationException("0_Character_Base 缺少 Polydirectional Pivot。");
+                ?? throw new InvalidOperationException("0_CharacterActor_Base 缺少 Polydirectional Pivot。");
             Transform horizontalRoot = root.Find("Horizontal Pivot")
-                ?? throw new InvalidOperationException("0_Character_Base 缺少 Horizontal Pivot。");
+                ?? throw new InvalidOperationException("0_CharacterActor_Base 缺少 Horizontal Pivot。");
 
             SetPrivateField(abilitySet, "m_staticAbilityRoot", staticRoot);
             SetPrivateField(abilitySet, "m_polydirectionalAbilityRoot", polydirectionalRoot);
@@ -319,16 +319,16 @@ namespace FantasyWord.GameCore
             }
         }
 
-        private static void ConfigureCoreCharacterReferences(GameObject cloneObject, NPC npc)
+        private static void ConfigureCoreCharacterReferences(GameObject cloneObject, CharacterActor character)
         {
             Rigidbody2D rigidbody = cloneObject.GetComponent<Rigidbody2D>()
-                ?? throw new InvalidOperationException("0_Character_Base 缺少 Rigidbody2D。");
-            SetPrivateField(npc, "m_rigidbody", rigidbody);
+                ?? throw new InvalidOperationException("0_CharacterActor_Base 缺少 Rigidbody2D。");
+            SetPrivateField(character, "m_rigidbody", rigidbody);
         }
 
         private static bool PrepareSmokeAssets()
         {
-            s_smokeNpcSheet = CreateOrUpdateSmokeNpcSheet();
+            s_smokeCharacterSheet = CreateOrUpdateSmokeCharacterSheet();
             s_smokeHeadEquipment = CreateOrUpdateSmokeEquipment(
                 SmokeHeadEquipmentAssetPath,
                 "CharacterEquipment Runtime Smoke Head",
@@ -340,7 +340,7 @@ namespace FantasyWord.GameCore
                 EEquipmentType.Torso,
                 SmokeEquipmentAbilityCode);
 
-            if (s_smokeNpcSheet == null || s_smokeHeadEquipment == null || s_smokeAbilityEquipment == null)
+            if (s_smokeCharacterSheet == null || s_smokeHeadEquipment == null || s_smokeAbilityEquipment == null)
             {
                 return false;
             }
@@ -350,20 +350,25 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        private static NPCSheet? CreateOrUpdateSmokeNpcSheet()
+        private static CharacterSheet? CreateOrUpdateSmokeCharacterSheet()
         {
-            NPCSheet npcSheet = AssetDatabase.LoadAssetAtPath<NPCSheet>(SmokeNpcSheetAssetPath);
-            if (npcSheet == null)
+            CharacterSheet characterSheet = AssetDatabase.LoadAssetAtPath<CharacterSheet>(SmokeCharacterSheetAssetPath);
+            if (characterSheet == null)
             {
-                npcSheet = ScriptableObject.CreateInstance<NPCSheet>();
-                AssetDatabase.CreateAsset(npcSheet, SmokeNpcSheetAssetPath);
+                characterSheet = ScriptableObject.CreateInstance<CharacterSheet>();
+                AssetDatabase.CreateAsset(characterSheet, SmokeCharacterSheetAssetPath);
             }
 
-            SetPrivateField(npcSheet, "m_displayName", "CharacterEquipment Runtime Smoke NPC");
-            SetPrivateField(npcSheet, "m_formalGasAbilitiesPerLevel", new SerializableDictionary<int, int>());
-            EditorUtility.SetDirty(npcSheet);
+            SetPrivateField(characterSheet, "m_displayName", "CharacterEquipment Runtime Smoke Character");
+            SetPrivateField(characterSheet, "m_formalGasAbilitiesPerLevel", new SerializableDictionary<int, int>());
+            Stats baseStats = new();
+            baseStats[EStat.Health] = 100;
+            baseStats[EStat.Mana] = 100;
+            SetPrivateField(characterSheet, "m_baseStats", baseStats);
+            SetPrivateField(characterSheet, "m_useLevelScaledStats", false);
+            EditorUtility.SetDirty(characterSheet);
             AssetDatabase.SaveAssets();
-            return npcSheet;
+            return characterSheet;
         }
 
         private static Equipment? CreateOrUpdateSmokeEquipment(
@@ -418,7 +423,7 @@ namespace FantasyWord.GameCore
 
                     CleanupCharacterInventoryState(inventorySystem, s_characterAlpha, s_smokeHeadEquipment);
                     CleanupCharacterInventoryState(inventorySystem, s_characterBeta, s_smokeAbilityEquipment);
-                    CleanupCharacterInventoryState(inventorySystem, s_nonHeroNpc, s_smokeHeadEquipment);
+                    CleanupCharacterInventoryState(inventorySystem, s_corpseTransferCharacter, s_smokeHeadEquipment);
                 }
             }
             catch
@@ -426,18 +431,18 @@ namespace FantasyWord.GameCore
                 // cleanup 失败不能覆盖原始 smoke 结果
             }
 
-            SafeDestroy(s_nonHeroNpc);
+            SafeDestroy(s_corpseTransferCharacter);
             SafeDestroy(s_characterBeta);
             SafeDestroy(s_characterAlpha);
 
             UnregisterAndDeleteSmokeEquipment(s_smokeHeadEquipment, SmokeHeadEquipmentAssetPath, s_registeredHeadEquipment);
             UnregisterAndDeleteSmokeEquipment(s_smokeAbilityEquipment, SmokeAbilityEquipmentAssetPath, s_registeredAbilityEquipment);
-            DeleteSmokeAsset(SmokeNpcSheetAssetPath);
+            DeleteSmokeAsset(SmokeCharacterSheetAssetPath);
 
-            s_nonHeroNpc = null;
+            s_corpseTransferCharacter = null;
             s_characterBeta = null;
             s_characterAlpha = null;
-            s_smokeNpcSheet = null;
+            s_smokeCharacterSheet = null;
             s_smokeHeadEquipment = null;
             s_smokeAbilityEquipment = null;
             s_registeredHeadEquipment = false;
@@ -513,6 +518,19 @@ namespace FantasyWord.GameCore
 
             character.Heal(int.MaxValue, EEffectVisualFlags.NoFloatingText);
             character.RecoverMana(int.MaxValue, EEffectVisualFlags.NoFloatingText);
+        }
+
+        private static void RefreshCharacterStats(CharacterActor character)
+        {
+            MethodInfo? refreshMethod = typeof(CharacterActor).GetMethod(
+                "RefreshResolvedStats",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            if (refreshMethod == null)
+            {
+                throw new MissingMethodException(typeof(CharacterActor).FullName, "RefreshResolvedStats");
+            }
+
+            refreshMethod.Invoke(character, null);
         }
 
         private static bool TryRegisterCustomPersistable(Persistable persistable)
@@ -595,8 +613,7 @@ namespace FantasyWord.GameCore
             public bool GameManagerExists;
             public bool HasInventorySystem;
             public bool HasPersistenceSystem;
-            public bool HeroPrefabFound;
-            public bool BaseCharacterPrefabFound;
+            public bool CharacterPrefabFound;
             public bool FormalGasAbilitySmokeCodeConfigured;
             public bool SmokeAssetsPrepared;
 
@@ -628,18 +645,18 @@ namespace FantasyWord.GameCore
             public bool FormalGasAbilitySuppressedDuringSuppression;
             public bool FormalGasAbilityUnsuppressedAfterRemoval;
 
-            public bool NonHeroRegisteredPersistable;
-            public bool NonHeroIsHero;
-            public string NonHeroOwner = string.Empty;
-            public string NonHeroCorpseOwner = string.Empty;
-            public int NonHeroBagBeforeEquip;
-            public string NonHeroEquipResult = string.Empty;
-            public bool NonHeroEquippedHead;
-            public int NonHeroBagAfterEquip;
-            public bool NonHeroCorpseTransferResult;
-            public bool NonHeroEquipmentRemovedFromSlots;
-            public int NonHeroCorpseHeadCount;
-            public int NonHeroBagAfterCorpseTransfer;
+            public bool CorpseTransferCharacterRegisteredPersistable;
+            public bool CorpseTransferCharacterUsesUnifiedActor;
+            public string CorpseTransferCharacterOwner = string.Empty;
+            public string CorpseTransferCharacterCorpseOwner = string.Empty;
+            public int CorpseTransferCharacterBagBeforeEquip;
+            public string CorpseTransferCharacterEquipResult = string.Empty;
+            public bool CorpseTransferCharacterEquippedHead;
+            public int CorpseTransferCharacterBagAfterEquip;
+            public bool CorpseTransferCharacterCorpseTransferResult;
+            public bool CorpseTransferCharacterEquipmentRemovedFromSlots;
+            public int CorpseTransferCharacterCorpseHeadCount;
+            public int CorpseTransferCharacterBagAfterCorpseTransfer;
 
             public string[] Failures = Array.Empty<string>();
         }

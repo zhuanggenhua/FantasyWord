@@ -40,7 +40,7 @@
 - 参考目标：TopDown `CharacterAbility.cs` 定义 ability 组件合同、授权和阻断；`CharacterHandleWeapon.cs` 拆出武器持有和切换；`Weapon.cs` 拆出武器执行状态。
 - 改前目标：`CharacterBase.Abilities.cs`、`CharacterBase.GASRuntime.cs` 和 `Hero.cs` 曾集中承载能力实例、技能槽、装备授予能力、formal cancel 和存档恢复编排。
 - 改后落点：`CharacterAbilitySet.cs` 已挂在 `0_Hero_Base.prefab`，现在直接持有 formal ability rule roster、cooldown cache、生命周期桥接、能力运行时快照/恢复和技能槽底层；`CharacterBase` 继续承担身份、属性、ASC 宿主、状态和持续效果编排。
-- 未覆盖差距：没有 TopDown/Koala 同级参考的持续效果 legacy/fallback 执行壳不在本次组件化范围内硬拆。
+- 未覆盖差距：没有 TopDown/Koala 同级参考的持续效果 archived/fallback 执行壳不在本次组件化范围内硬拆。
 - 验证入口：静态检查 `CharacterAbilitySet`、`CharacterBase.Abilities.cs`、`CharacterBase.GASRuntime.cs` 和 `CharacterBase.Persistence.cs` 调用链；归档前还要跑 Unity 编译、组合式 smoke 和 prefab 审计。
 
 ### Inventory boundary
@@ -71,4 +71,4 @@
 
 当前实现与验证已闭环，可进入归档流程。
 
-原因不是“文档写完了”，而是当前 change 的有参考实现范围、prefab 审计、OpenSpec 校验、Unity 导入/编译和组合式 smoke 都已经有证据。持续效果 legacy/fallback 执行壳没有 TopDown/Koala 同级参考，不作为本次组件化强拆对象；若后续要继续重构，应另行按 GAS/持续效果参考立项。
+原因不是“文档写完了”，而是当前 change 的有参考实现范围、prefab 审计、OpenSpec 校验、Unity 导入/编译和组合式 smoke 都已经有证据。持续效果 archived/fallback 执行壳没有 TopDown/Koala 同级参考，不作为本次组件化强拆对象；若后续要继续重构，应另行按 GAS/持续效果参考立项。

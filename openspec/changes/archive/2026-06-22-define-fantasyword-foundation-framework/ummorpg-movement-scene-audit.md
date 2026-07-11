@@ -253,7 +253,7 @@
 
 补充现态：
 
-- 当前项目自己的第一阶段基础点击移动链路已经落在现有 `Movable / PlayerController / IPlayerInputTarget` 闭包里。
+- 当前项目自己的当前基础点击移动链路已经落在现有 `Movable / PlayerController / IPlayerInputTarget` 闭包里。
 - 这条链路现在只承诺“点地后按当前 2D 碰撞闭包直线靠近，并使用 `stoppingDistance` 判到达”，不能冒充完整 2D 导航 Provider。
 
 ### 2.1 进入施法/交互距离再执行动作

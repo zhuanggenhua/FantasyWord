@@ -1,9 +1,6 @@
 ---
 name: unity-ui-development
-description: |
-  Unity UI development with UGUI and UI Toolkit.
-  PROACTIVELY activate for: (1) building Unity user interfaces, (2) UGUI (Canvas, RectTransform, anchors), (3) UI Toolkit (USS, UXML, VisualElement), (4) EventSystem and input handling, (5) common UI components (buttons, scroll views, dropdowns), (6) inventory UIs, HUDs, health bars, menu systems, (7) TextMeshPro setup and rich text, (8) responsive UI (anchors, layout groups), (9) runtime UI generation, (10) world-space canvases for in-game UI.
-  Provides: UGUI vs UI Toolkit comparison, RectTransform patterns, USS/UXML examples, layout group recipes, and TextMeshPro templates.
+description: "Unity UI 开发入口，覆盖 UGUI 与 UI Toolkit。用于 Canvas、RectTransform、锚点、USS/UXML、VisualElement、EventSystem、按钮/滚动/下拉、背包/HUD/血条/菜单、TextMeshPro、响应式布局、运行时 UI 和 World Space Canvas。"
 ---
 
 # Unity UI Development
@@ -93,7 +90,7 @@ Always `RemoveListener` in `OnDisable` to prevent leaks and ghost references.
 
 ### TextMeshPro
 
-Always use TextMeshPro (`TMP_Text`, `TextMeshProUGUI`) over legacy `Text`. Import TMP Essentials when prompted. Use rich text tags: `<color=#FF0000>`, `<b>`, `<size=24>`, `<sprite=0>` for inline icons.
+Always use TextMeshPro (`TMP_Text`, `TextMeshProUGUI`) over archived `Text`. Import TMP Essentials when prompted. Use rich text tags: `<color=#FF0000>`, `<b>`, `<size=24>`, `<sprite=0>` for inline icons.
 
 ## UI Toolkit (USS/UXML)
 

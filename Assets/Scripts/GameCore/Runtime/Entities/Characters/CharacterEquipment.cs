@@ -12,10 +12,14 @@ namespace FantasyWord.GameCore
         [Header("Equipment Ownership")]
         [SerializeField] private CharacterBase m_character = null;
 
+        [Header("Initial Equipment")]
+        [SerializeField] private Equipment[] m_initialEquipment = Array.Empty<Equipment>();
+
         private readonly CharacterEquippedItemLoadout m_equipmentLoadout = new();
         private readonly Dictionary<CharacterAbilitySourceKey, int> m_alterationEquipmentEffectSuppressions = new();
 
         public CharacterBase Character => m_character;
+        public event Action EquipmentLoadoutChanged;
 
         public Stats CreateStatContributionSnapshot()
         {
@@ -31,10 +35,17 @@ namespace FantasyWord.GameCore
             IEnumerable<CharacterEquipmentSlotData> equipmentSlots,
             Func<DatabaseEntryReference<Equipment>, Equipment> resolveEquipment)
         {
-            return m_equipmentLoadout.RestoreFromSlotData(
+            bool restored = m_equipmentLoadout.RestoreFromSlotData(
                 equipmentSlots,
                 resolveEquipment,
                 item => Equip(item, autoUpdateStats: false));
+            if (restored)
+            {
+                RefreshCharacterStats();
+                EquipmentLoadoutChanged?.Invoke();
+            }
+
+            return restored;
         }
 
         public EEquipmentOperationResult TryEquip(Equipment equipment, out Equipment previousEquipment)
@@ -240,6 +251,7 @@ namespace FantasyWord.GameCore
                 RefreshCharacterStats();
             }
 
+            EquipmentLoadoutChanged?.Invoke();
             return change.PreviousEquipment;
         }
 
@@ -344,6 +356,7 @@ namespace FantasyWord.GameCore
         private void Awake()
         {
             EnsureCharacterReference();
+            ApplyInitialEquipment();
         }
 
         private void Reset()
@@ -362,6 +375,27 @@ namespace FantasyWord.GameCore
             {
                 TryGetComponent(out m_character);
             }
+        }
+
+        private void ApplyInitialEquipment()
+        {
+            if (m_initialEquipment == null || m_initialEquipment.Length == 0)
+            {
+                return;
+            }
+
+            foreach (Equipment equipment in m_initialEquipment)
+            {
+                if (!equipment)
+                {
+                    continue;
+                }
+
+                Equip(equipment, autoUpdateStats: false);
+            }
+
+            RefreshCharacterStats();
+            EquipmentLoadoutChanged?.Invoke();
         }
     }
 }

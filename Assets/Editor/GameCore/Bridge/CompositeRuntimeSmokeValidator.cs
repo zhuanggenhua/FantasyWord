@@ -20,7 +20,7 @@ namespace FantasyWord.GameCore
         private const string ResultRelativePath = "Temp/UnityBridge/results/composite-runtime-smoke.json";
         private const string SmokeTransformationId = "composite-runtime-smoke-transformation";
         private const int SmokeBaselineAbilityCode = FormalGasAbilityCodes.BasicAttack;
-        private const int SmokeReplacementAbilityCode = FormalGasAbilityCodes.BasicAttack;
+        private const int SmokeReplacementAbilityCode = 20002;
         private const string SmokeContainerName = "Composite runtime smoke container";
         private const string SmokeItemName = "Composite runtime smoke item";
         private const int MinimumObservationFrames = 1;
@@ -30,9 +30,9 @@ namespace FantasyWord.GameCore
         private static ValidationResult? s_result;
         private static bool s_running;
         private static int s_dispatchFrame;
-        private static Hero? s_originalPlayer;
-        private static Hero? s_primaryActor;
-        private static Hero? s_companion;
+        private static CharacterActor? s_originalPlayer;
+        private static CharacterActor? s_primaryActor;
+        private static CharacterActor? s_companion;
         private static Persistable? s_container;
         private static Item? s_probeItem;
         private static int s_baselineAbilityCode;
@@ -142,11 +142,11 @@ namespace FantasyWord.GameCore
             }
 
             PlayerSystem playerSystem = GameManager.PlayerSystem;
-            Hero player = playerSystem.GetCurrentControlledCharacterOrPlayerInstance() as Hero
-                ?? playerSystem.GetPlayerInstance();
+            CharacterActor player = playerSystem.GetCurrentControlledCharacterOrPlayerInstance() as CharacterActor
+                ?? playerSystem.GetPrimaryPlayerCharacter();
             if (player == null)
             {
-                throw new InvalidOperationException("当前场景没有可用 Hero。");
+                throw new InvalidOperationException("当前场景没有可用 CharacterActor。");
             }
 
             s_originalPlayer = player;
@@ -160,7 +160,7 @@ namespace FantasyWord.GameCore
                 throw new InvalidOperationException("当前玩家实例没有 CharacterPlayerControl。");
             }
 
-            Hero primaryActor = player;
+            CharacterActor primaryActor = player;
             if (!s_originalPlayerWasControllable)
             {
                 primaryActor = CreateCompanionClone(player, "控制组主控");
@@ -185,7 +185,7 @@ namespace FantasyWord.GameCore
             playerSystem.SetCurrentControlledCharacter(primaryActor);
             playerControl.SetMovementControlMode(EPlayerMovementControlMode.ClickToMove);
 
-            Hero companion = CreateCompanionClone(primaryActor, "控制组陪练");
+            CharacterActor companion = CreateCompanionClone(primaryActor, "控制组陪练");
             if (companion == null)
             {
                 throw new InvalidOperationException("无法创建控制组陪练角色。");
@@ -249,8 +249,11 @@ namespace FantasyWord.GameCore
             result.OrderSpacing = orderRequest.SpatialContract.Spacing;
             result.OrderAnchor = Format(commandRequest.WorldPosition ?? Vector2.zero);
 
-            s_expectedPlayerTarget = primaryActor.NearestValidDestination(commandRequest.WorldPosition ?? Vector2.zero);
-            s_expectedCompanionTarget = companion.NearestValidDestination(
+            s_expectedPlayerTarget = ResolveClickMoveDestination(
+                primaryActor,
+                commandRequest.WorldPosition ?? Vector2.zero);
+            s_expectedCompanionTarget = ResolveClickMoveDestination(
+                companion,
                 ResolveDistributedRingPosition(
                     commandRequest.WorldPosition ?? Vector2.zero,
                     orderRequest.SpatialContract.Spacing,
@@ -268,8 +271,8 @@ namespace FantasyWord.GameCore
             result.OrderLastFailureReason = orderResult.LastCommandResult.FailureReason.ToString();
             result.PlayerHasMoveOrderAfterDispatch = primaryActor.HasMoveOrder();
             result.CompanionHasMoveOrderAfterDispatch = companion.HasMoveOrder();
-            result.PlayerMoveOrderTargetAvailable = TryGetCurrentMoveOrderTarget(primaryActor, out Vector2 primaryMoveOrderTarget);
-            result.CompanionMoveOrderTargetAvailable = TryGetCurrentMoveOrderTarget(companion, out Vector2 companionMoveOrderTarget);
+            result.PlayerMoveOrderTargetAvailable = TryGetMoveOrderDestination(primaryActor, out Vector2 primaryMoveOrderTarget);
+            result.CompanionMoveOrderTargetAvailable = TryGetMoveOrderDestination(companion, out Vector2 companionMoveOrderTarget);
             result.PlayerMoveOrderTargetAfterDispatch = Format(primaryMoveOrderTarget);
             result.CompanionMoveOrderTargetAfterDispatch = Format(companionMoveOrderTarget);
             result.PlayerMoveOrderTargetDistanceToExpected = Vector2.Distance(primaryMoveOrderTarget, s_expectedPlayerTarget);
@@ -430,7 +433,7 @@ namespace FantasyWord.GameCore
             result.Completed = true;
         }
 
-        private static Hero CreateCompanionClone(Hero player, string cloneName)
+        private static CharacterActor CreateCompanionClone(CharacterActor player, string cloneName)
         {
             Vector3 spawnPosition = ResolveCompanionSpawnPosition(player);
             GameObject sourceObject = PrefabUtility.GetCorrespondingObjectFromSource(player.gameObject) ?? player.gameObject;
@@ -442,11 +445,11 @@ namespace FantasyWord.GameCore
                 companionObject.tag = "Untagged";
             }
 
-            Hero companion = companionObject.GetComponent<Hero>();
+            CharacterActor companion = companionObject.GetComponent<CharacterActor>();
             if (companion == null)
             {
                 UnityEngine.Object.DestroyImmediate(companionObject);
-                throw new InvalidOperationException("控制组陪练对象不是 Hero。");
+                throw new InvalidOperationException("控制组陪练对象不是 CharacterActor。");
             }
 
             companion.TeleportTo(spawnPosition);
@@ -454,7 +457,7 @@ namespace FantasyWord.GameCore
             return companion;
         }
 
-        private static Vector3 ResolveCompanionSpawnPosition(Hero player)
+        private static Vector3 ResolveCompanionSpawnPosition(CharacterActor player)
         {
             Vector3 origin = player.transform.position;
             Vector3[] candidates =
@@ -477,7 +480,7 @@ namespace FantasyWord.GameCore
             return origin + new Vector3(0.9f, 0.0f, 0.0f);
         }
 
-        private static Vector2 ResolveOrderAnchor(Hero player, Hero companion)
+        private static Vector2 ResolveOrderAnchor(CharacterActor player, CharacterActor companion)
         {
             Vector2 playerOrigin = player.transform.position;
             Vector2[] offsets =
@@ -502,6 +505,35 @@ namespace FantasyWord.GameCore
             }
 
             return player.NearestValidDestination(playerOrigin + offsets[0]);
+        }
+
+        private static Vector2 ResolveClickMoveDestination(CharacterActor character, Vector2 requestedTarget)
+        {
+            if (GameManager.Exists() &&
+                GameManager.TryGetSystem(out MapSystem mapSystem))
+            {
+                MapInfo mapInfo = ResolveActiveMapInfo(mapSystem);
+                if (mapInfo != null &&
+                    mapInfo.TryGetTerrainNavigationMap(out TerrainNavigationMap terrainNavigationMap) &&
+                    terrainNavigationMap.TryBuildWorldPath(
+                        character.transform.position,
+                        requestedTarget,
+                        out Vector2[] worldPath) &&
+                    worldPath.Length > 0)
+                {
+                    return worldPath[^1];
+                }
+            }
+
+            return character.NearestValidDestination(requestedTarget);
+        }
+
+        private static MapInfo ResolveActiveMapInfo(MapSystem mapSystem)
+        {
+            MethodInfo? resolveMethod = typeof(MapSystem).GetMethod(
+                "ResolveActiveMapInfo",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            return resolveMethod?.Invoke(mapSystem, null) as MapInfo;
         }
 
         private static Vector2 ResolveDistributedRingPosition(
@@ -531,7 +563,7 @@ namespace FantasyWord.GameCore
             return anchor + offset * radius;
         }
 
-        private static void CaptureCurrentControlledInventoryScopeEvidence(ValidationResult result, Hero primaryActor, Hero companion)
+        private static void CaptureCurrentControlledInventoryScopeEvidence(ValidationResult result, CharacterActor primaryActor, CharacterActor companion)
         {
             if (!GameManager.Exists() || !GameManager.HasSystem<InventorySystem>())
             {
@@ -547,7 +579,7 @@ namespace FantasyWord.GameCore
             result.InventoryScopeResolvedToCompanionAfterSwitch = currentOwner.Equals(companionOwner);
         }
 
-        private static void CaptureRestoredControlledInventoryScopeEvidence(ValidationResult result, Hero primaryActor)
+        private static void CaptureRestoredControlledInventoryScopeEvidence(ValidationResult result, CharacterActor primaryActor)
         {
             if (!GameManager.Exists() || !GameManager.HasSystem<InventorySystem>())
             {
@@ -560,7 +592,7 @@ namespace FantasyWord.GameCore
             result.InventoryScopeResolvedToPrimaryAfterRestore = currentOwner.Equals(primaryOwner);
         }
 
-        private static void RunInventoryOwnershipSmoke(ValidationResult result, Hero primaryActor, Hero companion)
+        private static void RunInventoryOwnershipSmoke(ValidationResult result, CharacterActor primaryActor, CharacterActor companion)
         {
             InventorySystem inventorySystem = GameManager.InventorySystem;
             InventoryOwnerHandle primaryOwner = inventorySystem.GetOwner(primaryActor);
@@ -619,7 +651,7 @@ namespace FantasyWord.GameCore
             inventorySystem.RemoveFromBag(companionOwner, s_probeItem, inventorySystem.GetItemCount(companionOwner, s_probeItem));
         }
 
-        private static void RunAbilityCompositionSmoke(ValidationResult result, Hero primaryActor)
+        private static void RunAbilityCompositionSmoke(ValidationResult result, CharacterActor primaryActor)
         {
             s_baselineAbilityCode = SmokeBaselineAbilityCode;
             s_replacementAbilityCode = SmokeReplacementAbilityCode;
@@ -744,7 +776,7 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        private static bool TryGetCurrentMoveOrderTarget(Movable movable, out Vector2 targetPosition)
+        private static bool TryGetMoveOrderDestination(Movable movable, out Vector2 targetPosition)
         {
             targetPosition = Vector2.zero;
             if (movable == null)
@@ -764,6 +796,13 @@ namespace FantasyWord.GameCore
             if (boxedMoveOrder == null)
             {
                 return false;
+            }
+
+            FieldInfo? waypointsField = boxedMoveOrder.GetType().GetField("waypoints", BindingFlags.Instance | BindingFlags.Public);
+            if (waypointsField?.GetValue(boxedMoveOrder) is Vector2[] { Length: > 0 } waypoints)
+            {
+                targetPosition = waypoints[^1];
+                return true;
             }
 
             FieldInfo? targetPositionField = boxedMoveOrder.GetType().GetField("targetPosition", BindingFlags.Instance | BindingFlags.Public);

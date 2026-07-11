@@ -125,9 +125,9 @@
 
 ### Requirement: New Event Dispatch Must Use The Chosen Event Mechanism
 
-`FantasyWord` MUST use Yoki `EventKit.Type` as the formal event dispatch mechanism for GameCore domain events, and the legacy `NotificationSystem` MUST NOT remain in formal runtime code, tests, or scenes.
+`FantasyWord` MUST use Yoki `EventKit.Type` as the formal event dispatch mechanism for GameCore domain events, and the archived `NotificationSystem` MUST NOT remain in formal runtime code, tests, or scenes.
 
-#### Scenario: Legacy notification hub is removed from the formal runtime
+#### Scenario: Archived notification hub is removed from the formal runtime
 
 - **WHEN** the foundation static gate inspects formal runtime code, tests, and scenes
 - **THEN** `GameManager` does not expose `GameManager.NotificationSystem`
@@ -462,7 +462,7 @@
 - **WHEN** a flag is set or cleared
 - **THEN** `GameRuntimeEvents.NotifyGameFlagChanged(...)` sends a GameCore `GameFlagChangedEvent` through Yoki `EventKit.Type`
 - **AND** project-side code does not call, subscribe to, or unsubscribe from `NotificationSystem.gameFlagChanged` directly
-- **AND** the removed legacy notification hub is not recreated just to carry game-flag events
+- **AND** the removed archived notification hub is not recreated just to carry game-flag events
 
 #### Scenario: Game flags round-trip save data
 
@@ -701,11 +701,11 @@
 
 `FantasyWord` MUST complete the formal GAS replacement boundary for attributes, ability rules, and temporal effect rules without keeping a long-term dual-truth runtime.
 
-#### Scenario: Legacy runtime data no longer acts as a peer truth source
+#### Scenario: Archived runtime data no longer acts as a peer truth source
 
 - **WHEN** the formal runtime reads or writes health, mana, attack, defense, speed, cooldown, cost, or effect state
 - **THEN** the formal GAS-backed owner chain is the only runtime truth source
-- **AND** legacy `Stats/currentStats`, bootstrap mirrors, or old effect runtime shells remain only as strictly bounded migration or bootstrap compatibility surfaces
+- **AND** archived `Stats/currentStats`, bootstrap mirrors, or old effect runtime shells remain only as strictly bounded migration or bootstrap compatibility surfaces
 
 #### Scenario: Ability rules are unique while execution remains outside GAS
 
@@ -718,7 +718,7 @@
 
 - **WHEN** a character is saved, loaded, disabled, pooled, or restored with temporal ability/effect state
 - **THEN** the formal GAS recovery/runtime owner completes restoration, cleanup, and detached-runtime tracking through one formal lifecycle
-- **AND** the runtime does not keep a second long-term effect lifecycle alive in legacy execution-shell state
+- **AND** the runtime does not keep a second long-term effect lifecycle alive in archived execution-shell state
 
 ### Requirement: Character Prefab Composition Must Be Explicit
 

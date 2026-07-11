@@ -9,6 +9,8 @@ namespace GAS.Runtime
     {
         public const int ABILITY_Attack = 20001;
         public const int ABILITY_TransformReplaceSmoke = 20002;
+        public const int ABILITY_ChargedAttackRelease = 20004;
+        public const int ABILITY_Flamethrower = 20010;
 
         public static void LoadAbilityCode()
         {
@@ -35,6 +37,9 @@ namespace GAS.Runtime
             GAS.Runtime.AbilityHelper.RegisterAbilityTask(TaskDoNothing.Name, TaskDoNothing,typeof(GAS.Runtime.XParamNone));
             var TaskPlayCue = typeof(GAS.Runtime.TaskPlayCue);
             GAS.Runtime.AbilityHelper.RegisterAbilityTask(TaskPlayCue.Name, TaskPlayCue,typeof(GAS.Runtime.XParamCue));
+            var TaskApplyWorldElement = typeof(FantasyWord.GameCore.TaskApplyWorldElement);
+            GAS.Runtime.AbilityHelper.RegisterAbilityTask(TaskApplyWorldElement.Name, TaskApplyWorldElement,typeof(FantasyWord.GameCore.XParamApplyWorldElement));
+
             ///  TargetCatcher
             var CatchAreaBox3D = typeof(GAS.Runtime.CatchAreaBox3D);
             GAS.Runtime.TargetCatcherHelper.RegisterTargetCatcher(CatchAreaBox3D.Name, CatchAreaBox3D,typeof(GAS.Runtime.XParamCatchAreaBox3D));

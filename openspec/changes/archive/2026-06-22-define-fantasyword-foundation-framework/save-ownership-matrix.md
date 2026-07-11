@@ -11,7 +11,7 @@
 | 对象持久化真相 | `PersistenceSystem + Persistable + PersistableReference` |
 | 地图真相 | `MapSystem/MapDataBlock` |
 | 文件层工具 | Yoki `SaveKit` |
-| 当前动作 | 保持正式融合：GameCore 组装语义，SaveKit 负责文件、槽位、版本和元数据；`2026-06-18` 已把 `CharacterBase` 上由持续效果派生出来的 `legacyLockedActions/legacySpeedModifiers` 从独立写盘中撤回；`2026-06-21` 又进一步删除了 `legacyTemporalEffects` 兼容层，读档时动作锁与速度修饰现在只允许由 `temporalEffectRuntimeStates` 这条正式持续效果恢复链重建 |
+| 当前动作 | 保持正式融合：GameCore 组装语义，SaveKit 负责文件、槽位、版本和元数据；`2026-06-18` 已把 `CharacterBase` 上由持续效果派生出来的 `archivedLockedActions/archivedSpeedModifiers` 从独立写盘中撤回；`2026-06-21` 又进一步删除了 `archivedTemporalEffects` 兼容层，读档时动作锁与速度修饰现在只允许由 `temporalEffectRuntimeStates` 这条正式持续效果恢复链重建 |
 
 ## 取舍
 

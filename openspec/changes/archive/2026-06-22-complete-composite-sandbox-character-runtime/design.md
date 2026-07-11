@@ -24,7 +24,7 @@
 
 - 不新造 `Adapter/Facade/Wrapper/Compatibility`
 - 不把 TopDown manager、RTS 全局控制器或 GAS manager 变成项目生命周期真相
-- 不为了“先能跑”继续长期保留 legacy 与新运行时并行改同一事实
+- 不为了“先能跑”继续长期保留 archived 与新运行时并行改同一事实
 
 ## Track A: Control Group Runtime
 
@@ -71,14 +71,14 @@
 
 - 正式属性读取、资源写入口、通知、零血死亡判定和当前值存档已优先走 `CharacterBase + ASC`。
 - 规则与动作执行分工已经定成 `GAS 管规则，GameCore/TopDown 管执行`。
-- 仍存在 legacy 缓冲、过渡镜像、部分持续效果执行壳和历史闭包残留。
+- 仍存在 archived 缓冲、过渡镜像、部分持续效果执行壳和历史闭包残留。
 
 本 change 的目标是把“已部分接入”推进到“正式完成替换边界”：
 
 - 属性真相必须唯一。
 - 冷却、消耗、标签阻断和持续效果规则必须有唯一裁决口。
 - 能力授予、压制、替换、撤回、存档和读档恢复必须走统一正式链路。
-- legacy `Stats/currentStats`、旧 effect/runtime 镜像和仅用于过渡的 fallback 必须压缩到迁移与兼容最小面，不能继续参与正式运行时裁决。
+- archived `Stats/currentStats`、旧 effect/runtime 镜像和仅用于过渡的 fallback 必须压缩到迁移与兼容最小面，不能继续参与正式运行时裁决。
 
 仍保持的边界：
 

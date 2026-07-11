@@ -24,7 +24,7 @@
 - `ItemPickable` 已改为把物品写入执行拾取的 `CharacterBase` owner。
 - `MoneyPickable` 继续写默认队伍钱包，因为当前用户故事允许队伍资金共享，且共享钱包不等于共享物品背包。
 
-## Current Call Sites Still On Legacy Owner
+## Current Call Sites Still On Archived Owner
 
 这些调用点仍使用无 owner 旧接口，后续必须逐步迁移：
 

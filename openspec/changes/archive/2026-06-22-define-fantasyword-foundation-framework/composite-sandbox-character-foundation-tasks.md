@@ -12,7 +12,7 @@
 - [x] 裁决 `InventorySystem` 新职责：库存服务/转移服务/查询服务/事件出口，而不是全局背包真相。
 - [x] 设计角色背包、装备栏、快捷栏和能力来源的存档结构：角色存档记录背包 owner 绑定，背包物品数量仍由 `InventorySystem` owner 数据块持有；Hero 存档新增显式装备槽和快捷栏槽位；能力来源新增来源类型、来源 id 和叠层数量，旧汇总字段保留兼容。详见 `character-persistence-thirteenth-cut.md`。
 - [x] 列出必须迁移的调用点：拾取、掉落、奖励、商店、制作、任务物品条件、物品使用、装备/卸装、UI 背包。
-- [x] 第一刀实现：`InventorySystem` 增加显式 owner API，`ItemPickable` 写入执行拾取角色 owner，旧无 owner API 保留为默认队伍 owner 兼容入口。详见 `inventory-owner-first-cut.md`。
+- [x] 第一刀实现：`InventorySystem` 增加显式 owner API，`ItemPickable` 写入执行拾取角色 owner，旧无 owner API 保留为默认队伍 owner 入口。详见 `inventory-owner-first-cut.md`。
 - [x] 第二刀实现：背包 UI、物品消耗、装备/卸装和箱子物品奖励接入当前操作角色 owner；怪物掉落、商店、制作和任务条件保留为后续带上下文裁决。详见 `inventory-owner-second-cut.md`。
 - [x] 第三刀实现：商店买卖、制作材料/产物和脚本物品命令接入当前受控角色 owner；队伍金钱继续共享。详见 `inventory-owner-third-cut.md`。
 - [x] 第四刀实现：任务条件和物品收集任务新增显式库存查询范围，旧资产默认队伍库存，新资产可选当前受控角色库存。详见 `inventory-owner-fourth-cut.md`。
@@ -46,12 +46,12 @@
 - [x] 第三十五刀实现：玩家主角死亡动作不再用无 actor 脚本上下文，而是由 `PlayerSystem.NotifyHeroKilled(hero)` 把死亡玩家 Hero 作为 `LocalPlayer(hero)` 上下文传给 `GameConfig.ExecutePlayerDeathAction(...)`。任务、对话和持久化对象死亡回调仍未裁决。详见 `player-death-command-context-thirty-fifth-cut.md`。
 - [x] 第三十六刀实现：任务完成资产命令不再由 `QuestInteraction -> JournalSystem -> Quest` 链路丢掉完成者上下文；当前受控角色完成任务时使用 `LocalPlayer(source)`，非当前受控角色完成任务时保留 `Unknown(source)` actor，不伪造 AI、远程访客或本地玩家来源。对话节点生命周期、持久化对象销毁、任务进度节点 actor、控制组、多选和网络 ownership 仍未裁决。详见 `quest-completion-command-context-thirty-sixth-cut.md`。
 - [x] 第三十七刀实现：对话节点开始/完成命令不再由 `DialogueChannel -> DialogueNode` 链路强制使用无 actor `Script()`；交互对话跟随交互发起者，命令对话跟随命令上下文，宝箱掉落展示对话跟随打开者，纯 UI/系统提示仍保留 `Script()` 语义。持久化对象销毁、控制组、多选和网络 ownership 仍未裁决。详见 `dialogue-lifecycle-command-context-thirty-seventh-cut.md`。
-- [x] 第三十八刀实现：`DestroyEntity` 命令销毁实体时不再丢弃命令上下文，`Persistable.Destroy(GameCommandContext)` 会用传入上下文执行对象销毁回调；旧无参 `Destroy()` 仍保留为脚本兼容入口。角色死亡、投射物寿命结束、召唤物清理、控制组、多选和网络 ownership 仍未裁决。详见 `persistable-destroy-command-context-thirty-eighth-cut.md`。
+- [x] 第三十八刀实现：`DestroyEntity` 命令销毁实体时不再丢弃命令上下文，`Persistable.Destroy(GameCommandContext)` 会用传入上下文执行对象销毁回调；旧无参 `Destroy()` 仍保留为脚本入口。角色死亡、投射物寿命结束、召唤物清理、控制组、多选和网络 ownership 仍未裁决。详见 `persistable-destroy-command-context-thirty-eighth-cut.md`。
 - [x] 第三十九刀实现：角色死亡动画结束后的销毁回调不再固定使用无 actor `Script()`；`Movable` 保留脚本默认语义，`CharacterBase` 基于最后有效伤害来源生成 `LocalPlayer(source)` 或 `Unknown(source)` 上下文。投射物寿命结束、召唤物清理、脚本强杀来源归因、控制组、多选和网络 ownership 仍未裁决。详见 `character-death-destroy-command-context-thirty-ninth-cut.md`。
 - [x] 第四十刀实现：投射物寿命结束、碰撞终止和销毁动画结束后的销毁回调不再固定使用无 actor `Script()`；`Projectile` 基于发射来源 `m_source` 生成 `LocalPlayer(m_source)` 或 `Unknown(m_source)` 上下文，来源缺失时保留脚本语义。召唤物清理、脚本强杀来源归因、控制组、多选和网络 ownership 仍未裁决。详见 `projectile-destroy-command-context-fortieth-cut.md`。
 - [x] 第四十一刀实现：召唤能力主动打断和数量超限清理召唤物时，召唤物死亡销毁回调不再固定使用无 actor `Script()`；`SummoningAbility` 基于召唤者/能力拥有者 `m_character` 生成 `LocalPlayer(m_character)` 或 `Unknown(m_character)` 上下文，召唤者缺失时保留脚本语义。普通伤害死亡、环境死亡、脚本强杀、控制组、多选和网络 ownership 仍未裁决。详见 `summon-cleanup-command-context-forty-first-cut.md`。
 - [x] 第四十二刀实现：默认库存菜单和简化外部库存转移入口不再把当前受控角色的转移请求降级成 `Unknown(actor)`；`InventoryMenuContext` 会在创建转移请求时把当前受控角色解析为 `LocalPlayer(actor)`，非当前受控角色仍保留 `Unknown(actor)`。该刀不改变库存 owner、物品数量、装备槽、双栏 UI、控制组、多选、远程访客或网络 ownership。详见 `inventory-menu-command-context-forty-second-cut.md`。
-- [x] 第四十三刀实现：NPC 接任务和物品开任务不再直接调用无上下文 `StartQuest(...)`；`JournalSystem.StartQuest(quest, context)` 会把接取者上下文透传到 `QuestStartedEvent`，纯脚本旧入口仍保留 `Script()`。该刀不新增任务开始命令、不改任务资产协议、任务归属保存、队伍共享/个人任务分流、控制组、多选或网络 ownership。详见 `quest-start-command-context-forty-third-cut.md`。
+- [x] 第四十三刀实现：NPC 接任务和物品开任务不再直接调用无上下文 `StartQuest(...)`；`JournalSystem.StartQuest(quest, context)` 会把接取者上下文透传到 `QuestStartedEvent`，纯脚本废弃入口仍保留 `Script()`。该刀不新增任务开始命令、不改任务资产协议、任务归属保存、队伍共享/个人任务分流、控制组、多选或网络 ownership。详见 `quest-start-command-context-forty-third-cut.md`。
 - [x] 第四十四刀实现：主动能力释放入口不再在玩家和 AI 之间混用无上下文 `FireAbility(sheet)`；本地玩家释放能力透传 `PlayerCommandRequest.CommandContext`，AI 攻击释放能力透传 `AI(actor)`，主动能力基类保存释放时上下文并让投射物、读档恢复后的投射物销毁回调和召唤能力主动清理沿用该来源。该刀不改变 GAS 规则层、被动伤害、持续 Tick、控制组、多选、远程访客或网络 ownership。详见 `active-ability-command-context-forty-fourth-cut.md`。
 - [x] 第四十五刀实现：`Movable` 支持主控制器加额外控制器，变形/感染/丧尸化规则可通过 `forceAIControl` 来源化切到同一角色已配置的 `AIController`；规则撤回、单层撤回、读档恢复和清理都会回滚控制器覆盖。没有 `AIController` 的角色只会失去玩家直接控制，不伪造 AI。该刀不新增 AI 行为树、控制组、多选、远程访客或网络 ownership。详见 `character-alteration-ai-control-forty-fifth-cut.md`。
 - [x] 第四十六刀实现：`IPlayerInputTarget` 新增当前受控角色快照，`PlayerControlGroup` 作为本地玩家控制组输入目标进入正式闭包，`PlayerSystem.SetCurrentControlGroup(...)` 可把多角色切成同一输入目标。移动类命令分发给所有仍可控成员，交互、菜单和能力命令仍只交给主控角色。该刀不实现框选、阵型、订单队列、导航 Provider、拾取/攻击多成员分发、远程访客、网络 ownership 或 ECS。详见 `player-control-group-forty-sixth-cut.md`。

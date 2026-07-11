@@ -113,7 +113,7 @@ Shader "EquipmentSystem/EquipmentUV"
         _DebugMode ("Debug Mode", Float) = 0
         
         [Header(Shadow)]
-        _ShadowEnabled ("Enable Shadow", Float) = 0
+        _ShadowEnabled ("Enable Shadow", Float) = 1
         _ShadowColor ("Shadow Color", Color) = (0,0,0,0.6)
         _ShadowMode ("Shadow Mode", Float) = 0
         _ShadowLeftX ("Shadow Left X", Float) = 0
@@ -126,7 +126,7 @@ Shader "EquipmentSystem/EquipmentUV"
         [HDR] _HitOutlineColor ("Hit Outline Color", Color) = (0.7059, 0.0353, 0.0353, 1)
 
         [Header(Default Outline)]
-        [Toggle] _DefaultOutlineEnabled ("Default Outline Enabled", Float) = 0
+        [Toggle] _DefaultOutlineEnabled ("Default Outline Enabled", Float) = 1
 
         [Header(Extra Outline)]
         _ExtraOutlineEnabled ("Extra Outline Enabled", Float) = 0
@@ -421,9 +421,13 @@ Shader "EquipmentSystem/EquipmentUV"
             {
                 float2 coord = TransformUV(uv, rect);
                 fixed4 c = tex2D(tex, coord);
-                outColor = c.rgb;
                 if (c.a > CUTOFF)
+                {
+                    outColor = c.rgb;
                     return true;
+                }
+
+                outColor = 0;
                 return false;
             }
 
@@ -663,9 +667,7 @@ Shader "EquipmentSystem/EquipmentUV"
             // - 手脚与衣服的前后关系：
             //   * 朝南: 手脚在衣服前（显示手套/鞋子）
             //   * 朝北: 手脚也视为 Torso 区域，由衣服/斗篷覆盖
-            // baseAlpha：主贴图(_MainTex)在该像素处的 alpha，用于判断是否有身体像素遮挡。
-            // bodyUV.a：由 UV 生成器写入的真实身体核心遮罩。UV 图的 RGB 通道会在扩展区保留采样坐标，
-            // 但 alpha=0 的扩展区不能直接当作可渲染身体，否则装备会铺满透明背景。
+            // baseAlpha：主贴图(_MainTex)在该像素处的 alpha，用于判断是否有身体像素遮挡
             void ApplyBodyLayers(fixed4 bodyUV, PartIDs parts, bool isHeadCore, float baseAlpha, inout fixed4 ioColor, out float bodyLayerAlpha, out float bodySrcId)
             {
                 bodyLayerAlpha = 0;
@@ -673,11 +675,9 @@ Shader "EquipmentSystem/EquipmentUV"
 
                 bool isAnyHand = parts.isLeftHand || parts.isRightHand;
                 bool isAnyFoot = parts.isLeftFoot || parts.isRightFoot;
-                bool hasBodyMask = bodyUV.a > 0.5 || baseAlpha > CUTOFF;
-                bool hasLimbMask = baseAlpha > CUTOFF;
 
                 // 朝北时：手脚也视为 Torso 区域，用衣服/裤子/斗篷覆盖
-                bool useTorsoEquip = hasBodyMask && (parts.isTorso || (_BodyInFront > 0.5 && (isAnyHand || isAnyFoot)));
+                bool useTorsoEquip = parts.isTorso || (_BodyInFront > 0.5 && (isAnyHand || isAnyFoot));
 
                 if (useTorsoEquip)
                 {
@@ -716,26 +716,26 @@ Shader "EquipmentSystem/EquipmentUV"
                         bodySrcId = SRC_CLOAK;
                     }
                 }
-                else if (hasLimbMask && (parts.isLeftHand || parts.isRightHand) && _EnableGloves > 0.5)
+                else if ((parts.isLeftHand || parts.isRightHand) && _EnableGloves > 0.5)
                 {
                     // 只有朝南时才会走到这里；朝北时手脚已被视为 Torso 覆盖
                     ioColor.rgb = parts.isLeftHand ? _LeftHandColor.rgb : _RightHandColor.rgb;
                     bodyLayerAlpha = 1.0;
                     bodySrcId = SRC_OTHER;
                 }
-                else if (hasLimbMask && (parts.isLeftFoot || parts.isRightFoot) && _EnableShoes > 0.5)
+                else if ((parts.isLeftFoot || parts.isRightFoot) && _EnableShoes > 0.5)
                 {
                     ioColor.rgb = parts.isLeftFoot ? _LeftFootColor.rgb : _RightFootColor.rgb;
                     bodyLayerAlpha = 1.0;
                     bodySrcId = SRC_OTHER;
                 }
-                else if (hasLimbMask && parts.isLeftEye && _EnableLeftEye > 0.5)
+                else if (parts.isLeftEye && _EnableLeftEye > 0.5)
                 {
                     ioColor.rgb = _LeftEyeColor.rgb;
                     bodyLayerAlpha = 1.0;
                     bodySrcId = SRC_OTHER;
                 }
-                else if (hasLimbMask && parts.isRightEye && _EnableRightEye > 0.5)
+                else if (parts.isRightEye && _EnableRightEye > 0.5)
                 {
                     ioColor.rgb = _RightEyeColor.rgb;
                     bodyLayerAlpha = 1.0;
@@ -743,16 +743,12 @@ Shader "EquipmentSystem/EquipmentUV"
                 }
             }
 
-            // 头部层顺序：头发（底层）-> 面部装饰 -> 胡子 -> 头盔（顶层）
+            // 头部层顺序：头发/面部装饰/胡子 -> 眼部装饰 -> 面罩 -> 头盔（顶层）
             // 若当前像素属于任意一只手且同时处于头部区域，则跳过头部层覆盖，保留身体层（手）颜色
-            void ApplyHeadLayers(fixed4 headUV, PartIDs parts, float baseAlpha, inout fixed4 ioColor, out float headLayerAlpha, out float headSrcId)
+            void ApplyHeadLayers(float2 baseHeadUV, PartIDs parts, inout fixed4 ioColor, out float headLayerAlpha, out float headSrcId)
             {
                 headLayerAlpha = 0;
                 headSrcId = SRC_NONE;
-                // headUV.b marks the full head equipment region; headUV.a only marks the
-                // core head silhouette. Only helmet/hat may use the expanded region;
-                // hair, beard, face accessories and masks stay on the core head so
-                // they do not spill into the hat/helmet extension area.
                 if (!parts.isHead) return;
 
                 // 无论身体朝向如何，只要当前像素属于手，就不让头部装备覆盖
@@ -760,10 +756,9 @@ Shader "EquipmentSystem/EquipmentUV"
                 if (isAnyHand)
                     return;
 
-                bool isHeadCore = headUV.a > 0.5 && baseAlpha > CUTOFF;
                 fixed3 sampled;
                 // 头盔（顶层）：命中则提前返回
-                if (_EnableHelmet > 0.5 && TrySampleEquip(headUV.rg, _HelmetRect, _HelmetTex, sampled))
+                if (_EnableHelmet > 0.5 && TrySampleEquip(baseHeadUV, _HelmetRect, _HelmetTex, sampled))
                 {
                     ioColor.rgb = sampled;
                     headLayerAlpha = 1.0;
@@ -772,27 +767,35 @@ Shader "EquipmentSystem/EquipmentUV"
                 }
 
                 bool wrote = false;
-                if (isHeadCore && _EnableBeard > 0.5 && TrySampleEquip(headUV.rg, _BeardRect, _BeardTex, sampled))
+                if (_EnableBeard > 0.5 && TrySampleEquip(baseHeadUV, _BeardRect, _BeardTex, sampled))
                 {
                     ioColor.rgb = sampled;
                     wrote = true;
                     headSrcId = SRC_BEARD;
                 }
-                if (isHeadCore && !wrote && _EnableFaceAccessory > 0.5 && TrySampleEquip(headUV.rg, _FaceAccessoryRect, _FaceAccessoryTex, sampled))
+                if (!wrote && _EnableFaceAccessory > 0.5 && TrySampleEquip(baseHeadUV, _FaceAccessoryRect, _FaceAccessoryTex, sampled))
                 {
                     ioColor.rgb = sampled;
                     wrote = true;
                     headSrcId = SRC_FACE;
                 }
-                if (isHeadCore && !wrote && _EnableHair > 0.5 && TrySampleEquip(headUV.rg, _HairRect, _HairTex, sampled))
+                if (!wrote && _EnableHair > 0.5 && TrySampleEquip(baseHeadUV, _HairRect, _HairTex, sampled))
                 {
                     ioColor.rgb = sampled;
                     wrote = true;
                     headSrcId = SRC_HAIR;
                 }
 
+                // 刀疤等眼部装饰属于面部层：可以覆盖头发/胡子，但必须被面罩和头盔遮挡。
+                if (_EnableEyeDeco > 0.5 && TrySampleEquip(baseHeadUV, _EyeDecoRect, _EyeDecoTex, sampled))
+                {
+                    ioColor.rgb = sampled;
+                    wrote = true;
+                    headSrcId = SRC_FACE;
+                }
+
                 // 面罩图层：优先级高于胡子/饰品/头发，仅次于头盔
-                if (isHeadCore && _EnableMask > 0.5 && TrySampleEquip(headUV.rg, _MaskRect, _MaskTex, sampled))
+                if (_EnableMask > 0.5 && TrySampleEquip(baseHeadUV, _MaskRect, _MaskTex, sampled))
                 {
                     ioColor.rgb = sampled;
                     wrote = true;
@@ -817,22 +820,17 @@ Shader "EquipmentSystem/EquipmentUV"
                 // 2）身体装备轮廓（裤子 / 上衣 / 披风）
                 fixed4 bodyUVSample = tex2D(_BodyUVMap, uvSample);
                 fixed3 equipSample;
-                bool hasBodyMaskSample = bodyUVSample.a > 0.5 || baseColorSample.a > CUTOFF;
-
-                if (hasBodyMaskSample)
+                if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
                 {
-                    if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
-                    {
-                        alphaSample = max(alphaSample, 1.0);
-                    }
-                    if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
-                    {
-                        alphaSample = max(alphaSample, 1.0);
-                    }
-                    if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
-                    {
-                        alphaSample = max(alphaSample, 1.0);
-                    }
+                    alphaSample = max(alphaSample, 1.0);
+                }
+                if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
+                {
+                    alphaSample = max(alphaSample, 1.0);
+                }
+                if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
+                {
+                    alphaSample = max(alphaSample, 1.0);
                 }
 
                 // 3）头部装备轮廓（头盔 / 头发 / 面饰 / 胡子 / 面罩）
@@ -843,21 +841,19 @@ Shader "EquipmentSystem/EquipmentUV"
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                bool isHeadCoreSample = IsPartID(headUVSample.b, ID_HEAD) && headUVSample.a > 0.5;
-
-                if (isHeadCoreSample && _EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
+                if (_EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (isHeadCoreSample && _EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
+                if (_EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (isHeadCoreSample && _EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
+                if (_EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (isHeadCoreSample && _EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
+                if (_EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
@@ -880,22 +876,17 @@ Shader "EquipmentSystem/EquipmentUV"
                 // 2）身体装备轮廓（裤子 / 上衣 / 披风）
                 fixed4 bodyUVSample = tex2D(_BodyUVMap, uvSample);
                 fixed3 equipSample;
-                bool hasBodyMaskSample = bodyUVSample.a > 0.5 || baseColorSample.a > CUTOFF;
-
-                if (hasBodyMaskSample)
+                if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
                 {
-                    if (_EnablePants > 0.5 && TrySampleEquip(bodyUVSample.rg, _PantsRect, _PantsTex, equipSample))
-                    {
-                        alphaSample = max(alphaSample, 1.0);
-                    }
-                    if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
-                    {
-                        alphaSample = max(alphaSample, 1.0);
-                    }
-                    if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
-                    {
-                        alphaSample = max(alphaSample, 1.0);
-                    }
+                    alphaSample = max(alphaSample, 1.0);
+                }
+                if (_EnableCloth > 0.5 && TrySampleEquip(bodyUVSample.rg, _ClothRect, _ClothTex, equipSample))
+                {
+                    alphaSample = max(alphaSample, 1.0);
+                }
+                if (_EnableCloak > 0.5 && TrySampleEquip(bodyUVSample.rg, _CloakRect, _CloakTex, equipSample))
+                {
+                    alphaSample = max(alphaSample, 1.0);
                 }
 
                 // 3）头部装备轮廓
@@ -906,21 +897,19 @@ Shader "EquipmentSystem/EquipmentUV"
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                bool isHeadCoreSample = IsPartID(headUVSample.b, ID_HEAD) && headUVSample.a > 0.5;
-
-                if (isHeadCoreSample && _EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
+                if (_EnableHair > 0.5 && TrySampleEquip(headUVSample.rg, _HairRect, _HairTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (isHeadCoreSample && _EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
+                if (_EnableBeard > 0.5 && TrySampleEquip(headUVSample.rg, _BeardRect, _BeardTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (isHeadCoreSample && _EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
+                if (_EnableFaceAccessory > 0.5 && TrySampleEquip(headUVSample.rg, _FaceAccessoryRect, _FaceAccessoryTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
-                if (isHeadCoreSample && _EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
+                if (_EnableMask > 0.5 && TrySampleEquip(headUVSample.rg, _MaskRect, _MaskTex, headEquipSample))
                 {
                     alphaSample = max(alphaSample, 1.0);
                 }
@@ -996,10 +985,7 @@ Shader "EquipmentSystem/EquipmentUV"
             {
                 if (_EnableBag < 0.5) return 0.0;
                 float2 uvSample = lerp(frameMin, frameMax, frameUVSample);
-                fixed4 baseColorSample = tex2D(_MainTex, uvSample);
                 fixed4 bodyUVSample = tex2D(_BodyUVMap, uvSample);
-                bool hasBodyMaskSample = bodyUVSample.a > 0.5 || baseColorSample.a > CUTOFF;
-                if (!hasBodyMaskSample) return 0.0;
                 fixed3 bagSample;
                 if (TrySampleEquip(bodyUVSample.rg, _BagRect, _BagTex, bagSample))
                     return 1.0;
@@ -1037,6 +1023,8 @@ Shader "EquipmentSystem/EquipmentUV"
                     else if (parts.isRightHand) debugColor.rgb = fixed3(0.9, 0.6, 0.2); // 橙色
                     else if (parts.isLeftFoot)  debugColor.rgb = fixed3(0.6, 0.3, 0.9); // 紫色
                     else if (parts.isRightFoot) debugColor.rgb = fixed3(0.9, 0.3, 0.6); // 粉色
+                    else if (parts.isLeftEye)   debugColor.rgb = fixed3(1.0, 0.0, 1.0); // 洋红：左眼
+                    else if (parts.isRightEye)  debugColor.rgb = fixed3(1.0, 0.0, 0.0); // 红色：右眼
                     return debugColor;
                 }
 
@@ -1119,14 +1107,14 @@ Shader "EquipmentSystem/EquipmentUV"
                 if (_BodyInFront > 0.5)
                 {
                     // 身体在前：先绘制头部，再绘制身体（衣服/斗篷可以盖住头）
-                    ApplyHeadLayers(headUV, parts, baseColor.a, charColor, headLayerAlpha, headSrcId);
+                    ApplyHeadLayers(headUV.rg, parts, charColor, headLayerAlpha, headSrcId);
                     ApplyBodyLayers(bodyUV, parts, isHeadCore, baseColor.a, charColor, bodyLayerAlpha, bodySrcId);
                 }
                 else
                 {
                     // 身体在后：先绘制身体，再绘制头部（头部始终在衣服前）
                     ApplyBodyLayers(bodyUV, parts, isHeadCore, baseColor.a, charColor, bodyLayerAlpha, bodySrcId);
-                    ApplyHeadLayers(headUV, parts, baseColor.a, charColor, headLayerAlpha, headSrcId);
+                    ApplyHeadLayers(headUV.rg, parts, charColor, headLayerAlpha, headSrcId);
                 }
 
                 // 角色最终 alpha：包含底图 + 身体层 + 头部层
@@ -1428,16 +1416,6 @@ Shader "EquipmentSystem/EquipmentUV"
                         finalColor.rgb = outlineColor;
                         finalAlpha = 1.0;
                         finalColor.a = finalAlpha;
-                    }
-                }
-
-                // ========== 眼部装饰（贴图方式，在角色和武器之上、阴影之前）==========
-                if (_EnableEyeDeco > 0.5 && parts.isHead)
-                {
-                    fixed3 eyeDecoSample;
-                    if (TrySampleEquip(headUV.rg, _EyeDecoRect, _EyeDecoTex, eyeDecoSample))
-                    {
-                        finalColor.rgb = eyeDecoSample;
                     }
                 }
 

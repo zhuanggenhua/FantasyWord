@@ -9,14 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb947649a45eef42ae3a20119c58fce, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e92dea6a87c91149a5b3618a3c9517a, type: 3}
   m_Name: "\u73A9\u5BB6\u89D2\u8272\u914D\u7F6E"
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.CharacterSheet
   m_alignment: 0
   m_displayName: 
-  m_abilitiesPerLevel:
-    m_keys: []
-    m_values: 
+  m_formalGasAbilitiesPerLevel:
+    m_keys:
+    - 20001
+    m_values:
+    - 1
   m_hitAudio: {fileID: 0}
   m_deathAudio: {fileID: 0}
   m_feedbacks:
@@ -40,6 +42,35 @@ MonoBehaviour:
     m_interactionDeniedFeedbacks: {fileID: 0}
   m_baseStats:
     m_values: 64000000280000000a000000060000000600000004000000080000000400000064000000
+  m_useLevelScaledStats: 0
+  m_levelScaledStats:
+    m_initialValue:
+      m_values: 000000000000000000000000000000000000000000000000000000000000000000000000
+    m_evolutionProfile:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_evolutionScale: 1
   m_pointsPerLevel: 5
   m_experience:
     m_initialValue: 0
@@ -68,3 +99,65 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_evolutionScale: 1
+  m_killExperience:
+    m_initialValue: 0
+    m_evolutionProfile:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_evolutionScale: 1
+  m_killMoney:
+    m_initialValue: 0
+    m_evolutionProfile:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 1
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_evolutionScale: 1
+  m_potentialLoot: []
+  m_executeOnDeath:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

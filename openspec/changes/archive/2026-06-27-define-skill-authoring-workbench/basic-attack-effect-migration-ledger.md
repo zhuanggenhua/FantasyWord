@@ -32,7 +32,7 @@
 
 ## 已新增最小 GAS-backed 规则入口
 
-当前已新增运行时代码入口，并已迁移 `测试-基础攻击.asset`：
+当前已新增运行时代码入口，并正式 `测试-基础攻击.asset`：
 
 - `FormalInstantDamageExecution`：挂在 `GameplayEffectAsset.Executions` 上，由 GAS 瞬时效果调用；真正扣血仍走 `CharacterBase.Damage(...)`，不绕过受击动画、击退、无敌帧、死亡和表现反馈，也不让 Cue 承担规则结算。
 - `FormalGameplayEffectImmediateEffect`：作为 GameCore 命中后的迁移期执行壳，只负责把一次命中目标转交给指定 `GameplayEffectAsset`；目标快照仍由 `MeleeAttackAbility` 负责。
@@ -41,7 +41,7 @@
 ## 迁移步骤状态
 
 1. 已为基础攻击创建测试用 `GameplayEffectAsset` 和 `FormalInstantDamageExecution`，表达当前测试伤害语义；这些资产仍明确标记为测试样例，不是正式技能内容。
-2. 已迁移 `测试-基础攻击.asset`：用 `FormalGameplayEffectImmediateEffect` 引用测试 `GameplayEffectAsset`，旧 `ImmediateDamageEffect` 已清掉。
+2. 正式 `测试-基础攻击.asset`：用 `FormalGameplayEffectImmediateEffect` 引用测试 `GameplayEffectAsset`，旧 `ImmediateDamageEffect` 已清掉。
 3. 已把伤害执行从 `FormalInstantDamageCue` 模式收口到 `GameplayEffectAsset.Executions -> FormalInstantDamageExecution`。
 4. `ClickMoveTest` / composite PlayMode smoke 已重新补跑通过，证明当前正式现态下的场景、控制组、RTS 订单链与 GAS formal 恢复链路没有被本轮重构打断；但它不是“基础攻击命中训练假人扣血”专项验证。
 

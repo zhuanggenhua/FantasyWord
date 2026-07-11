@@ -85,5 +85,34 @@
         "ID": 20004
       }
     }
+  },
+  {
+    "ID": 20010,
+    "Name": "Flamethrower",
+    "Desc": "持续喷火：角色命中走正式 GameplayEffect，地表反应走 TaskApplyWorldElement",
+    "Cost": 0,
+    "CdEffect": 0,
+    "Cd": 0,
+    "AssetTags": [],
+    "ActivationOwnedTags": [
+      3003
+    ],
+    "ActivationBlockedTags": {
+      "All": [
+        0
+      ],
+      "Any": [
+        0
+      ],
+      "None": [
+        3003
+      ]
+    },
+    "AbilityLogic": {
+      "$type": "ALTimeline",
+      "Param": {
+        "ID": 20010
+      }
+    }
   }
 ]

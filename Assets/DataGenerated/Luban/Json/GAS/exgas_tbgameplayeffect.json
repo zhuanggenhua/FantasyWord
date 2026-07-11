@@ -364,7 +364,7 @@
         "x": 0,
         "y": 0
       },
-      "PushMode": 0,
+      "PushMode": 1,
       "PushIntensity": 0,
       "PushResistance": 0,
       "InvincibilityDuration": 0
@@ -382,7 +382,7 @@
         "x": 0,
         "y": 0
       },
-      "PushMode": 0,
+      "PushMode": 1,
       "PushIntensity": 0,
       "PushResistance": 0,
       "InvincibilityDuration": 0

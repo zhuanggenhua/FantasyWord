@@ -32,11 +32,12 @@ namespace GAS.Runtime
         {  
             if (_catcher == null || Parameter?.IDs == null) return;  
             
-            // 延迟初始化：确保 Owner 已被正确设置  
-            if (_catcher.Owner == null)  
-                _catcher.Init(Owner);  
+            // 每次激活都刷新上下文；同一个 AbilitySpec 会被重复使用。
+            AbilityActivationContext activationContext = _logic.ActivationContext;
+            _catcher.Init(Owner, activationContext);
             
-            _catcher.CatchTargetsNonAllocSafe(Owner, ref _catchResults);  
+            AbilitySystemCell mainTarget = activationContext?.MainTarget ?? Owner;
+            _catcher.CatchTargetsNonAllocSafe(mainTarget, ref _catchResults);
             foreach (var target in _catchResults)  
             {  
                 foreach (var id in Parameter.IDs)  

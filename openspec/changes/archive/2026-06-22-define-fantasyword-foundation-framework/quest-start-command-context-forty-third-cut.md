@@ -11,10 +11,10 @@
 
 ## 本刀变更
 
-- `JournalSystem.StartQuest(Quest quest)` 保留脚本兼容入口，并委托到新增的 `StartQuest(Quest quest, GameCommandContext context)`。
+- `JournalSystem.StartQuest(Quest quest)` 保留脚本入口，并委托到新增的 `StartQuest(Quest quest, GameCommandContext context)`。
 - `JournalSystem.StartQuest(Quest quest, GameCommandContext context)` 在任务开始事件中透传上下文。
 - `QuestStartedEvent` 新增 `CommandContext` 属性；旧构造仍保留并使用 `GameCommandContext.Script()`。
-- `GameRuntimeEvents.NotifyQuestStarted(Quest quest)` 保留脚本兼容入口，并委托到新增的 `NotifyQuestStarted(Quest quest, GameCommandContext commandContext)`。
+- `GameRuntimeEvents.NotifyQuestStarted(Quest quest)` 保留脚本入口，并委托到新增的 `NotifyQuestStarted(Quest quest, GameCommandContext commandContext)`。
 - `QuestInteraction.TryOfferingQuest(...)` 在玩家接受任务时，按交互发起者生成 `LocalPlayer(source)` 或 `Unknown(source)`。
 - `AItemEffect.OnUse(...)` 新增 `sourceOwner` 参数，让物品效果能区分“物品来源角色”和“效果目标角色”。
 - `ItemStartQuestEffect` 使用 `sourceOwner` 优先生成任务启动上下文；缺失时才回退目标角色，仍缺失则保留 `Unknown()`。

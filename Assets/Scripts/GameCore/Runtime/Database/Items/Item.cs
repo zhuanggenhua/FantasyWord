@@ -26,7 +26,7 @@ namespace FantasyWord.GameCore
         Trading, // when the item is added to or removed from the inventory during a trade (buy/sell)
         Use, // when the item is removed from the inventory by using it
         Chest, // when the item is added to the inventory by opening a chest
-        MonsterDrop, // when the item is added to the inventory by defeating a monster
+        CharacterDrop, // when the item is added to the inventory by defeating a character
         Command, // when the item is added to the inventory by using a command
         Unknown, // when the item is added to the inventory by any other means
         Corpse // when an inventory owner is moved onto a corpse owner after death

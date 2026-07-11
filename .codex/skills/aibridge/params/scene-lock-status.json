@@ -1,6 +1,0 @@
-{
-  "name": "scene-lock-status",
-  "title": "Bridge / Scene Lock / Status",
-  "description": "Inspect the current AIBridge scene lock without touching Unity Editor.",
-  "parameters": []
-}

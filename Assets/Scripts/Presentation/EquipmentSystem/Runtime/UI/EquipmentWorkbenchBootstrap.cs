@@ -48,21 +48,33 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
 
     void Awake()
     {
+        if (!Application.isPlaying)
+            return;
+
         EnsureControllerBinding();
     }
 
     void OnEnable()
     {
+        if (!Application.isPlaying)
+            return;
+
         EnsureWorkbenchReady();
     }
 
     void Start()
     {
+        if (!Application.isPlaying)
+            return;
+
         EnsureWorkbenchReady();
     }
 
     public void EnsureWorkbenchReady()
     {
+        if (!Application.isPlaying)
+            return;
+
         EnsureControllerBinding();
         if (controller == null)
             return;

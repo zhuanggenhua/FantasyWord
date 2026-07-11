@@ -6,12 +6,21 @@ namespace GAS.Runtime
 {
     public abstract class TargetCatcherBase  
     {  
-        public AbilitySystemCell Owner;  
+        public AbilitySystemCell Owner;
+        public AbilityActivationContext ActivationContext { get; private set; }
   
         public virtual void Init(AbilitySystemCell owner)  
-        {  
-            Owner = owner;  
-        }  
+        {
+            Init(owner, null);
+        }
+
+        public virtual void Init(
+            AbilitySystemCell owner,
+            AbilityActivationContext activationContext)
+        {
+            Owner = owner;
+            ActivationContext = activationContext;
+        }
   
         [Obsolete("请使用CatchTargetsNonAlloc方法来避免产生垃圾收集（GC）。")]  
         public List<AbilitySystemCell> CatchTargets(AbilitySystemCell mainTarget)  

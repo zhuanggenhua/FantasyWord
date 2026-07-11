@@ -1,15 +1,20 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using MackySoft.SerializeReferenceExtensions;
 using UnityEngine;
+using UnityEngine.Serialization;
 using azixMcAze.SerializableDictionary;
 
 namespace FantasyWord.GameCore
 {
-    public abstract class CharacterSheet : DatabaseEntry, INameable
+    [CreateAssetMenu(menuName = AssetMenuIndexer.FantasyWord_Characters + nameof(CharacterSheet))]
+    public sealed class CharacterSheet : DatabaseEntry, INameable
     {
-        [Header("General")]
+        [Header("Identity")]
         [SerializeField] private EAlignment m_alignment = EAlignment.Default;
         [SerializeField] private string m_displayName = string.Empty;
+        [FormerlySerializedAs("m_abilitiesPerLevel")]
         [SerializeField] private SerializableDictionary<int, int> m_formalGasAbilitiesPerLevel;
 
         [Header("Audio")]
@@ -17,26 +22,59 @@ namespace FantasyWord.GameCore
         [SerializeField] private AudioClipResolver m_deathAudio;
 
         [Header("Feedbacks")]
-        [SerializeField]
-        [Tooltip("角色受击、死亡和奖励发放的表现反馈。只承接表现触发点，不改变 RPG 属性、掉落或存档真相。")]
-        private GameplayFeedbackSet m_feedbacks = new();
+        [SerializeField] private GameplayFeedbackSet m_feedbacks = new();
+
+        [Header("Stats")]
+        [SerializeField, FormerlySerializedAs("baseStats")]
+        private Stats m_baseStats = new();
+
+        [SerializeField] private bool m_useLevelScaledStats = false;
+        [SerializeField] private LevelScaledStats m_levelScaledStats = new();
+
+        [Header("Progression")]
+        [SerializeField, FormerlySerializedAs("pointsPerLevel")]
+        private int m_pointsPerLevel = 5;
+
+        [SerializeField, FormerlySerializedAs("experience")]
+        private LevelScaledInteger m_experience = new();
+
+        [Header("Kill Rewards")]
+        [SerializeField] private LevelScaledInteger m_killExperience = new();
+        [SerializeField] private LevelScaledInteger m_killMoney = new();
+        [SerializeField] private Loot[] m_potentialLoot = Array.Empty<Loot>();
+        [SerializeReference, SubclassSelector] private ICommand m_executeOnDeath;
 
         public EAlignment alignment => m_alignment;
         public string displayName => DisplayNameUtils.GetNameOrDefault(this, m_displayName);
         public AudioClipResolver hitAudio => m_hitAudio;
         public AudioClipResolver deathAudio => m_deathAudio;
-        public GameplayFeedbackSet feedbacks
+        public GameplayFeedbackSet feedbacks => m_feedbacks ??= new GameplayFeedbackSet();
+        public Stats baseStats => m_baseStats?.Clone() ?? new Stats();
+        public int pointsPerLevel => m_pointsPerLevel;
+        public int GetExperienceRequiredAtLevel(int level) => (m_experience ??= new LevelScaledInteger())[level];
+
+        public Stats GetStatsAtLevel(int level)
         {
-            get
+            if (!m_useLevelScaledStats)
             {
-                m_feedbacks ??= new GameplayFeedbackSet();
-                return m_feedbacks;
+                return baseStats;
             }
+
+            return ((m_levelScaledStats ??= new LevelScaledStats())[level])?.Clone() ?? new Stats();
         }
 
-        public CharacterSheet(EAlignment alignment)
+        public int GetExperienceRewardAtLevel(int level) =>
+            (m_killExperience ??= new LevelScaledInteger())[level];
+
+        public int GetMoneyRewardAtLevel(int level) =>
+            (m_killMoney ??= new LevelScaledInteger())[level];
+
+        public Loot[] GetPotentialLoot() =>
+            m_potentialLoot != null ? (Loot[])m_potentialLoot.Clone() : Array.Empty<Loot>();
+
+        public void ExecuteOnDeath(GameCommandContext context)
         {
-            m_alignment = alignment;
+            m_executeOnDeath?.Execute(context);
         }
 
         public int[] GetAvailableFormalGasAbilitiesAtLevel(int level)
@@ -44,9 +82,9 @@ namespace FantasyWord.GameCore
             return CreateDistinctFormalGasAbilityCodes(
                 m_formalGasAbilitiesPerLevel != null
                     ? m_formalGasAbilitiesPerLevel
-                    .Where(keyValuePair => keyValuePair.Key > 0 && keyValuePair.Value <= level)
-                    .Select(keyValuePair => keyValuePair.Key)
-                    : System.Array.Empty<int>());
+                        .Where(keyValuePair => keyValuePair.Key > 0 && keyValuePair.Value <= level)
+                        .Select(keyValuePair => keyValuePair.Key)
+                    : Array.Empty<int>());
         }
 
         public int[] GetFormalGasAbilitiesUnlockedAtLevel(int level)
@@ -54,9 +92,9 @@ namespace FantasyWord.GameCore
             return CreateDistinctFormalGasAbilityCodes(
                 m_formalGasAbilitiesPerLevel != null
                     ? m_formalGasAbilitiesPerLevel
-                    .Where(keyValuePair => keyValuePair.Key > 0 && keyValuePair.Value == level)
-                    .Select(keyValuePair => keyValuePair.Key)
-                    : System.Array.Empty<int>());
+                        .Where(keyValuePair => keyValuePair.Key > 0 && keyValuePair.Value == level)
+                        .Select(keyValuePair => keyValuePair.Key)
+                    : Array.Empty<int>());
         }
 
         private static int[] CreateDistinctFormalGasAbilityCodes(params IEnumerable<int>[] sources)
@@ -82,4 +120,3 @@ namespace FantasyWord.GameCore
         }
     }
 }
-

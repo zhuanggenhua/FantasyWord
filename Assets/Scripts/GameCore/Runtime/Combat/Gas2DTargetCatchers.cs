@@ -10,6 +10,68 @@ using UnityEditor;
 
 namespace FantasyWord.GameCore
 {
+    internal static class Gas2DTargetCatcherDirectionResolver
+    {
+        private const float DirectionEpsilon = 0.0001f;
+
+        public static bool TryResolveRuntime(
+            GameObject source,
+            out Vector2 direction)
+        {
+            direction = default;
+            if (source == null)
+            {
+                Debug.LogError(
+                    "EX-GAS 2D 目标捕获缺少施法者对象，无法读取命中帧姿态。");
+                return false;
+            }
+
+            Movable movable = source.GetComponent<Movable>();
+            if (movable == null)
+            {
+                Debug.LogError(
+                    "EX-GAS 2D 目标捕获要求施法者挂载 Movable，以读取命中帧的当前朝向。",
+                    source);
+                return false;
+            }
+
+            if (!movable.TryGetGas2DFacingDirection(out direction))
+            {
+                Debug.LogError(
+                    "EX-GAS 2D 目标捕获无法取得施法者在命中帧的当前朝向。",
+                    source);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryResolvePreview(GameObject source, out Vector2 direction)
+        {
+            direction = default;
+            if (source == null)
+            {
+                return false;
+            }
+
+            Movable movable = source.GetComponent<Movable>();
+            if (movable != null && movable.TryGetGas2DFacingDirection(out direction))
+            {
+                return true;
+            }
+
+            Vector3 transformRight = source.transform.right;
+            direction = new Vector2(transformRight.x, transformRight.y);
+            if (direction.sqrMagnitude <= DirectionEpsilon)
+            {
+                return false;
+            }
+
+            direction.Normalize();
+            return true;
+        }
+    }
+
     public sealed class CatchAreaBox2D : TargetCatcherBase<XParamCatchAreaBox2D>
     {
         private static readonly Collider2D[] Colliders = new Collider2D[64];
@@ -34,12 +96,22 @@ namespace FantasyWord.GameCore
             }
             else
             {
-                if (mainTarget?.GameObject == null)
+                if (Owner?.GameObject == null)
                 {
                     return;
                 }
 
-                ResolveRelativePose(mainTarget.GameObject, Parameter.offset, Parameter.rotation, out Vector2 center, out float angle);
+                if (!TryResolveRelativePose(
+                        Owner.GameObject,
+                        Parameter.offset,
+                        Parameter.rotation,
+                        true,
+                        out Vector2 center,
+                        out float angle))
+                {
+                    return;
+                }
+
                 count = Physics2D.OverlapBoxNonAlloc(
                     center,
                     Parameter.size,
@@ -92,26 +164,46 @@ namespace FantasyWord.GameCore
                     return;
                 }
 
-                ResolveRelativePose(obj, Parameter.offset, Parameter.rotation, out center, out angle);
+                if (!TryResolveRelativePose(
+                        obj,
+                        Parameter.offset,
+                        Parameter.rotation,
+                        false,
+                        out center,
+                        out angle))
+                {
+                    return;
+                }
             }
 
             DebugExtension.DebugBox(center, Parameter.size, angle, Color.green, 0.1f);
 #endif
         }
 
-        private static void ResolveRelativePose(GameObject source, Vector2 offset, float localRotation, out Vector2 center, out float angle)
+        private bool TryResolveRelativePose(
+            GameObject source,
+            Vector2 offset,
+            float localRotation,
+            bool useRuntimePose,
+            out Vector2 center,
+            out float angle)
         {
             Transform sourceTransform = source.transform;
-            Movable movable = source.GetComponent<Movable>();
-            if (movable != null && movable.TryGetGas2DFacingDirection(out Vector2 direction))
+            Vector2 direction;
+            bool hasDirection = useRuntimePose
+                ? Gas2DTargetCatcherDirectionResolver.TryResolveRuntime(source, out direction)
+                : Gas2DTargetCatcherDirectionResolver.TryResolvePreview(source, out direction);
+            if (!hasDirection)
             {
-                angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + localRotation;
-                center = (Vector2)sourceTransform.position + Rotate(offset, angle - localRotation);
-                return;
+                center = default;
+                angle = 0.0f;
+                return false;
             }
 
-            center = sourceTransform.TransformPoint(offset);
-            angle = sourceTransform.eulerAngles.z + localRotation;
+            float facingAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            angle = facingAngle + localRotation;
+            center = (Vector2)sourceTransform.position + Rotate(offset, facingAngle);
+            return true;
         }
 
         private static Vector2 Rotate(Vector2 value, float degrees)
@@ -156,12 +248,20 @@ namespace FantasyWord.GameCore
             }
             else
             {
-                if (mainTarget?.GameObject == null)
+                if (Owner?.GameObject == null)
                 {
                     return;
                 }
 
-                ResolveRelativeCenter(mainTarget.GameObject, Parameter.offset, out Vector2 center);
+                if (!TryResolveRelativeCenter(
+                        Owner.GameObject,
+                        Parameter.offset,
+                        true,
+                        out Vector2 center))
+                {
+                    return;
+                }
+
                 count = Physics2D.OverlapCircleNonAlloc(
                     center,
                     Parameter.radius,
@@ -211,25 +311,36 @@ namespace FantasyWord.GameCore
                     return;
                 }
 
-                ResolveRelativeCenter(obj, Parameter.offset, out center);
+                if (!TryResolveRelativeCenter(obj, Parameter.offset, false, out center))
+                {
+                    return;
+                }
             }
 
             DebugExtension.DebugDrawCircle(center, Parameter.radius, Color.green, 0.1f);
 #endif
         }
 
-        private static void ResolveRelativeCenter(GameObject source, Vector2 offset, out Vector2 center)
+        private bool TryResolveRelativeCenter(
+            GameObject source,
+            Vector2 offset,
+            bool useRuntimePose,
+            out Vector2 center)
         {
             Transform sourceTransform = source.transform;
-            Movable movable = source.GetComponent<Movable>();
-            if (movable != null && movable.TryGetGas2DFacingDirection(out Vector2 direction))
+            Vector2 direction;
+            bool hasDirection = useRuntimePose
+                ? Gas2DTargetCatcherDirectionResolver.TryResolveRuntime(source, out direction)
+                : Gas2DTargetCatcherDirectionResolver.TryResolvePreview(source, out direction);
+            if (!hasDirection)
             {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                center = (Vector2)sourceTransform.position + Rotate(offset, angle);
-                return;
+                center = default;
+                return false;
             }
 
-            center = sourceTransform.TransformPoint(offset);
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            center = (Vector2)sourceTransform.position + Rotate(offset, angle);
+            return true;
         }
 
         private static Vector2 Rotate(Vector2 value, float degrees)
@@ -329,24 +440,24 @@ namespace FantasyWord.GameCore
         {
             if (Parameter.isWorldSpace)
             {
-                return BuildWorldPolygon(null, out pointCount, out bounds);
+                return BuildWorldPolygon(null, false, out pointCount, out bounds);
             }
 
-            if (mainTarget?.GameObject == null)
+            if (Owner?.GameObject == null)
             {
                 pointCount = 0;
                 bounds = default;
                 return false;
             }
 
-            return BuildWorldPolygon(mainTarget.GameObject, out pointCount, out bounds);
+            return BuildWorldPolygon(Owner.GameObject, true, out pointCount, out bounds);
         }
 
         private bool TryBuildWorldPolygon(GameObject previewObject, out int pointCount, out Bounds bounds)
         {
             if (Parameter.isWorldSpace)
             {
-                return BuildWorldPolygon(null, out pointCount, out bounds);
+                return BuildWorldPolygon(null, false, out pointCount, out bounds);
             }
 
             if (previewObject == null)
@@ -356,10 +467,14 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            return BuildWorldPolygon(previewObject, out pointCount, out bounds);
+            return BuildWorldPolygon(previewObject, false, out pointCount, out bounds);
         }
 
-        private bool BuildWorldPolygon(GameObject source, out int pointCount, out Bounds bounds)
+        private bool BuildWorldPolygon(
+            GameObject source,
+            bool useRuntimePose,
+            out int pointCount,
+            out Bounds bounds)
         {
             pointCount = Mathf.Min(Parameter.Points.Count, XParamCatchAreaPolygon2D.MaxPointCount);
             if (pointCount < 3)
@@ -375,15 +490,17 @@ namespace FantasyWord.GameCore
             if (!Parameter.isWorldSpace && sourceTransform != null)
             {
                 origin = sourceTransform.position;
-                Movable movable = source.GetComponent<Movable>();
-                if (movable != null && movable.TryGetGas2DFacingDirection(out Vector2 direction))
+                Vector2 direction;
+                bool hasDirection = useRuntimePose
+                    ? Gas2DTargetCatcherDirectionResolver.TryResolveRuntime(source, out direction)
+                    : Gas2DTargetCatcherDirectionResolver.TryResolvePreview(source, out direction);
+                if (!hasDirection)
                 {
-                    facingAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    bounds = default;
+                    return false;
                 }
-                else
-                {
-                    facingAngle = sourceTransform.eulerAngles.z;
-                }
+
+                facingAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             }
 
             for (int i = 0; i < pointCount; i++)

@@ -100,15 +100,15 @@ namespace FantasyWord.GameCore
     public readonly struct LootPresentationContext
     {
         public readonly Vector3 position;
-        public readonly Monster monster;
+        public readonly CharacterActor character;
         public readonly CharacterBase receiver;
         public readonly bool grantedReward;
         public readonly int money;
 
-        public LootPresentationContext(Vector3 position, Monster monster, CharacterBase receiver, bool grantedReward, int money)
+        public LootPresentationContext(Vector3 position, CharacterActor character, CharacterBase receiver, bool grantedReward, int money)
         {
             this.position = position;
-            this.monster = monster;
+            this.character = character;
             this.receiver = receiver;
             this.grantedReward = grantedReward;
             this.money = money;

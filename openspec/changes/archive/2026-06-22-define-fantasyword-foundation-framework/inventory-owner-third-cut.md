@@ -21,7 +21,7 @@
 
 ## Preserved Compatibility
 
-- `Recipe.CalculateCraftCapacity()`、`Recipe.CanCraft(...)`、`CraftingStation.CanCraft(...)`、`CraftingStation.Craft(...)` 旧入口保留；它们默认解析当前受控角色，若后续没有当前角色则由 `InventorySystem` 的 `null owner -> 默认队伍 owner` 兼容规则兜底。
+- `Recipe.CalculateCraftCapacity()`、`Recipe.CanCraft(...)`、`CraftingStation.CanCraft(...)`、`CraftingStation.Craft(...)` 废弃入口保留；它们默认解析当前受控角色，若后续没有当前角色则由 `InventorySystem` 的 `null owner -> 默认队伍 owner` 兼容规则兜底。
 - `AddOrRemoveMoney` 未改，继续读写共享队伍钱包。
 - `UIShop` 和 `UICraft` 的金钱显示继续使用默认队伍钱包。
 

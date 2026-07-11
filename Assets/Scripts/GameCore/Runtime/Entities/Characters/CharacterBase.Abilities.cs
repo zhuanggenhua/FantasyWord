@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GAS.Runtime;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityObject = UnityEngine.Object;
@@ -383,9 +384,17 @@ namespace FantasyWord.GameCore
 
         public CharacterAbilityFireResult FireEquippedAbilityAtIndex(int index, GameCommandContext commandContext)
         {
+            return FireEquippedAbilityAtIndex(index, commandContext, null);
+        }
+
+        internal CharacterAbilityFireResult FireEquippedAbilityAtIndex(
+            int index,
+            GameCommandContext commandContext,
+            AbilityActivationContext activationContext)
+        {
             if (TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
             {
-                return abilitySet.FireEquippedAbilityAtIndex(index, commandContext);
+                return abilitySet.FireEquippedAbilityAtIndex(index, commandContext, activationContext);
             }
 
             return new CharacterAbilityFireResult(EAbilityFireCheckResult.Unknown, 0);

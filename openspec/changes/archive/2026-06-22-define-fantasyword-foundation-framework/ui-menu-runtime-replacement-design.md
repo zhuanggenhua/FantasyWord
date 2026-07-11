@@ -1,6 +1,6 @@
 # UI 菜单运行时替换设计
 
-> 范围：本设计只处理 `AUIMenu/UIMenuManager/IUIMenu` 到 Yoki `UIKit` 的菜单运行时替换。当前系统菜单分支、`Death`、`Shop` 与 `Craft` 都已切到 `UIManager + UIKitMenuPanelBase`；后续只继续做旧入口退场后的资源与共享构件收口，不夹带额外业务扩写。
+> 范围：本设计只处理 `AUIMenu/UIMenuManager/IUIMenu` 到 Yoki `UIKit` 的菜单运行时替换。当前系统菜单分支、`Death`、`Shop` 与 `Craft` 都已切到 `UIManager + UIKitMenuPanelBase`；后续只继续做废弃入口退场后的资源与共享构件收口，不夹带额外业务扩写。
 > 说明：本文若提到历史独立菜单组件，只是在追溯迁移阶段，不代表当前 prefab 或运行时代码里还保留第二套菜单入口；当前实际正式落点已经并回 `UIManager`。
 > 目标：把当前正式菜单语义收口到一套 `UIManager + UIKitMenuPanelBase + UIKit` 菜单运行时闭包里，不保留双栈，不引入 adapter/wrapper。
 
@@ -20,7 +20,7 @@
 | `CanPop()` 不可返回策略 | `AUIMenu.CanPop()` | 保留 | UIKit 面板基类 |
 | `OnMenuPushed/OnMenuPopped` 局部副作用 | 例如 `UIGameMenu` 播暂停/恢复音 | 保留 | UIKit 面板基类生命周期钩子 |
 | `Show/Hide` 激活对象 | `AUIMenu.Show/Hide` | 不保留旧实现 | UIKit 面板生命周期接管 |
-| `EnableInteractions()` 只切 `CanvasGroup.interactable` | `AUIMenu.EnableInteractions()` | 保留语义，不保留旧入口 | UIKit 面板基类 |
+| `EnableInteractions()` 只切 `CanvasGroup.interactable` | `AUIMenu.EnableInteractions()` | 保留语义，不保留废弃入口 | UIKit 面板基类 |
 | `FindSomethingToSelect()` | 各菜单子类 | 保留 | UIKit 面板基类默认焦点解析 |
 | 关闭菜单时清空物品详情 | `UIMenuManager.Hide -> NotifyItemDetailsClosed()` | 保留 | 新运行时协调器继续拥有 |
 
@@ -37,7 +37,7 @@
 - `UIMenuManager`
 - `IUIMenu`
 - `AUIMenu`
-- `UIMenuNavigationUtility` 里基于 `EventSystem.SetSelectedGameObject(...)` 的旧入口实现
+- `UIMenuNavigationUtility` 里基于 `EventSystem.SetSelectedGameObject(...)` 的废弃入口实现
 - `UIMenuManager` 中依赖 `menu.Show()/menu.Hide()` 的旧调用面
 
 ### 替换完成后继续保留
@@ -48,7 +48,7 @@
 原因：
 
 - 菜单栈和菜单查找的语义仍然要保留，但正式实现已经直接收回 `UIKit` 原生 stack 与 `UIManager` 内部序列化声明，不再保留独立 `UIMenuStack/UIMenuRegistry` 类型。
-- 真正要退场的是 `AUIMenu` 那套“MonoBehaviour 自己开关 active + 事件系统自己选焦点”的旧入口机制；这一步当前已经完成。
+- 真正要退场的是 `AUIMenu` 那套“MonoBehaviour 自己开关 active + 事件系统自己选焦点”的废弃入口机制；这一步当前已经完成。
 
 ## 3. 新运行时闭包
 
@@ -134,7 +134,7 @@
 - 新增 `UIManager` 内部菜单运行时
 - 保持 `GameRuntimeEvents.RequestMenu/RequestShop/RequestCraft/RequestCloseAllMenus` 不变
 - 先让 UIKit 菜单运行时能跑空面板和 smoke 面板
-- 历史阶段曾短暂并行过旧入口与一层独立过渡菜单组件
+- 历史阶段曾短暂并行过废弃入口与一层独立过渡菜单组件
 - 该并行阶段现在已明确失效，不得恢复成“先双入口再慢慢收口”；当前正式入口只剩并回 `UIManager` 的这一条
 - 正式菜单到 UIKit 面板的未来映射，不再靠运行时代码硬注册；应通过可序列化的面板类型引用和 Inspector 注册表登记
 
@@ -166,7 +166,7 @@
 - 删除 `AUIMenu`
 - 删除旧 `UIMenuNavigationUtility` 的旧焦点实现
 
-`2026-06-16` 当前这一步也已完成：旧入口代码已经从正式树移除，后续不再回到“双入口并行”阶段。
+`2026-06-16` 当前这一步也已完成：废弃入口代码已经从正式树移除，后续不再回到“双入口并行”阶段。
 
 ## 8. 验收
 
@@ -180,7 +180,7 @@
 
 ## 9. 当前可直接开工的第一刀
 
-当前这条设计线已经进入“旧入口退场后的收口阶段”，下一步不再是改正式入口，而是补齐剩余收口：
+当前这条设计线已经进入“废弃入口退场后的收口阶段”，下一步不再是改正式入口，而是补齐剩余收口：
 
 1. `UIManager` 已真实承接正式 `User Interface.prefab` 上的菜单序列化声明
 2. `UIManager` 内部菜单运行时已收回为唯一菜单入口，不再需要额外所有权守卫或独立注册表

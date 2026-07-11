@@ -16,17 +16,17 @@ namespace FantasyWord.GameCore
 
         public Task Execute(GameCommandContext context)
         {
-            Hero target = null;
-            if (context.Actor is Hero actorHero)
+            CharacterActor target = null;
+            if (context.Actor is CharacterActor actor)
             {
-                target = actorHero;
+                target = actor;
             }
             else if (context.Actor == null &&
                      GameManager.Exists() &&
                      GameManager.HasSystem<PlayerSystem>())
             {
                 GameManager.PlayerSystem.TryGetCurrentControlledCharacter(out CharacterBase currentCharacter);
-                target = currentCharacter as Hero;
+                target = currentCharacter as CharacterActor;
             }
 
             target?.AddExperience(m_experience);

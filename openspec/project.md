@@ -19,9 +19,9 @@
 ## 固定技术站位
 
 - 编辑器自动化：AIBridge
-- 技能/状态替换方向：EX-GAS（当前专项推进中；必须替换同职责旧入口，不得并行）
+- 技能/状态替换方向：EX-GAS（当前专项推进中；必须替换同职责废弃入口，不得并行）
 - 基础设施：YokiFrame
-- Inspector 辅助：当前未锁定固定第三方 Inspector 辅助插件；如后续重新接入 NaughtyAttributes，先更新 `docs/ai/第三方插件接入清单.md`
+- Inspector 辅助：当前未锁定固定第三方 Inspector 辅助插件；如后续重新接入 NaughtyAttributes，先更新 `.spec/knowledge/features/project/第三方插件接入清单.md`
 - 异步流程：UniTask
 - 音频后端：BroAudio
 - 像素素材来源：MiniFantasy 是正式美术基线，当前工程已有像素素材按来源与授权复核后纳入

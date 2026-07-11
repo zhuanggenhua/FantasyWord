@@ -20,9 +20,9 @@ namespace FantasyWord.GameCore
         [Header("Completion")]
         [SerializeReference, SubclassSelector] private ICommand m_toExecuteOnQuestCompletion = null;
 
-        [Header("Related NPCs")]
-        [SerializeField] private NPCSheet m_offeredBy = null;
-        [SerializeField] private NPCSheet m_reportTo = null;
+        [Header("Related Characters")]
+        [SerializeField] private CharacterSheet m_offeredBy = null;
+        [SerializeField] private CharacterSheet m_reportTo = null;
 
         [Header("Dialogues")]
         [SerializeField] private DialogueSequence m_questOfferDialogue = null;
@@ -35,8 +35,8 @@ namespace FantasyWord.GameCore
         public int recommendedLevel => m_recommendedLevel;
         public int requiredLevel => m_requiredLevel;
         public bool repeatable => m_repeatable;
-        public NPCSheet offeredBy => m_offeredBy;
-        public NPCSheet reportTo => m_reportTo;
+        public CharacterSheet offeredBy => m_offeredBy;
+        public CharacterSheet reportTo => m_reportTo;
         public DialogueSequence questOfferDialogue => m_questOfferDialogue;
         public DialogueSequence questHintDialogue => m_questHintDialogue;
         public DialogueSequence questCompletedDialogue => m_questCompletedDialogue;

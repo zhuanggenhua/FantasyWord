@@ -14,7 +14,7 @@ namespace FantasyWord.GameCore
         [SerializeField] private UICharacterStat[] m_stats = null;
         [SerializeField] private TextMeshProUGUI m_applyButtonText = null;
 
-        private Hero m_currentHero = null;
+        private CharacterActor m_currentCharacter = null;
         private CharacterMenuContext m_context = CharacterMenuContext.CurrentControlledCharacter();
 
         private Stats m_tempStats;
@@ -24,7 +24,7 @@ namespace FantasyWord.GameCore
         protected override void OnPanelInit()
         {
             GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            BindHero(m_context.ResolveActor() as Hero);
+            BindCharacter(m_context.ResolveActor() as CharacterActor);
 
             foreach (UICharacterStat stat in m_stats)
             {
@@ -49,20 +49,20 @@ namespace FantasyWord.GameCore
 
         protected override void OnPanelShown(UIKitMenuOpenData openData)
         {
-            BindHero(m_context.ResolveActor() as Hero);
+            BindCharacter(m_context.ResolveActor() as CharacterActor);
             m_tempStats = new();
-            m_availablePoints = m_currentHero != null ? m_currentHero.availablePoints : 0;
+            m_availablePoints = m_currentCharacter != null ? m_currentCharacter.availablePoints : 0;
             m_totalAvailablePoints = m_availablePoints;
             UpdateUI();
         }
 
         public void Apply()
         {
-            if (m_currentHero != null && m_tempStats.GetTotal() > 0)
+            if (m_currentCharacter != null && m_tempStats.GetTotal() > 0)
             {
-                m_currentHero.LogUsedPoints(m_totalAvailablePoints - m_availablePoints);
+                m_currentCharacter.LogUsedPoints(m_totalAvailablePoints - m_availablePoints);
                 m_totalAvailablePoints = m_availablePoints;
-                m_currentHero.AddCustomStats(m_tempStats);
+                m_currentCharacter.AddCustomStats(m_tempStats);
                 m_tempStats = new();
 
                 UpdateUI();
@@ -83,7 +83,7 @@ namespace FantasyWord.GameCore
 
         private void UpdateInfoSection()
         {
-            if (m_currentHero == null)
+            if (m_currentCharacter == null)
             {
                 m_class.text = string.Empty;
                 m_level.text = string.Empty;
@@ -93,9 +93,9 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            m_class.text = m_currentHero.characterSheet.displayName;
-            m_level.text = m_currentHero.level.ToString();
-            m_experience.text = StringFormatter.Format("{0}", m_currentHero.nextLevelExperience - m_currentHero.experience);
+            m_class.text = m_currentCharacter.characterSheet.displayName;
+            m_level.text = m_currentCharacter.level.ToString();
+            m_experience.text = StringFormatter.Format("{0}", m_currentCharacter.nextLevelExperience - m_currentCharacter.experience);
             m_skillPoints.text = m_availablePoints.ToString();
             m_currency.text = StringFormatter.Format("{0}", GameManager.InventorySystem.money.ToString());
         }
@@ -104,13 +104,13 @@ namespace FantasyWord.GameCore
         {
             foreach (UICharacterStat stat in m_stats)
             {
-                stat.UpdateUI(m_currentHero, m_tempStats);
+                stat.UpdateUI(m_currentCharacter, m_tempStats);
             }
         }
 
         public void OnAddButtonPressed(EStat stat)
         {
-            if (m_currentHero != null && m_availablePoints > 0)
+            if (m_currentCharacter != null && m_availablePoints > 0)
             {
                 m_tempStats[stat] += 1;
                 --m_availablePoints;
@@ -120,7 +120,7 @@ namespace FantasyWord.GameCore
 
         public void OnRemoveButtonPressed(EStat stat)
         {
-            if (m_currentHero != null && m_tempStats[stat] > 0)
+            if (m_currentCharacter != null && m_tempStats[stat] > 0)
             {
                 m_tempStats[stat] -= 1;
                 ++m_availablePoints;
@@ -132,18 +132,18 @@ namespace FantasyWord.GameCore
         {
             if (m_context.FollowsCurrentControlledCharacter)
             {
-                BindHero(m_context.ResolveActor() as Hero);
+                BindCharacter(m_context.ResolveActor() as CharacterActor);
             }
         }
 
-        private void BindHero(Hero hero)
+        private void BindCharacter(CharacterActor character)
         {
-            if (ReferenceEquals(m_currentHero, hero))
+            if (ReferenceEquals(m_currentCharacter, character))
             {
                 return;
             }
 
-            m_currentHero = hero;
+            m_currentCharacter = character;
 
             if (!gameObject.activeInHierarchy)
             {
@@ -152,7 +152,7 @@ namespace FantasyWord.GameCore
 
             m_tempStats ??= new Stats();
             m_tempStats = new Stats();
-            m_availablePoints = m_currentHero != null ? m_currentHero.availablePoints : 0;
+            m_availablePoints = m_currentCharacter != null ? m_currentCharacter.availablePoints : 0;
             m_totalAvailablePoints = m_availablePoints;
             UpdateUI();
         }

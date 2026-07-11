@@ -133,8 +133,7 @@ namespace FantasyWord.GameCore
                 // 一旦开始直接方向驱动，就立刻取消现有导航/MoveOrder，避免继续沿旧路径滑行。
                 if (direction != Vector2.zero && m_moveOrder.HasValue)
                 {
-                    m_moveOrder.Value.task?.TrySetResult(false);
-                    m_moveOrder = null;
+                    CompleteMoveOrder(false);
                 }
 
                 m_owner.m_movementDirection = direction;
@@ -159,20 +158,31 @@ namespace FantasyWord.GameCore
 
             public TaskCompletionSource<bool> MoveTo(Vector2 destination, float stoppingDistance, float? speedOverride = null)
             {
-                if (m_moveOrder.HasValue)
+                return StartMoveOrder(
+                    new[] { destination },
+                    stoppingDistance,
+                    speedOverride);
+            }
+
+            public TaskCompletionSource<bool> MoveAlongPath(
+                IReadOnlyList<Vector2> waypoints,
+                float stoppingDistance,
+                float? speedOverride = null)
+            {
+                if (waypoints == null || waypoints.Count == 0)
                 {
-                    m_moveOrder.Value.task.SetCanceled();
+                    TaskCompletionSource<bool> failedTask = new();
+                    failedTask.SetResult(false);
+                    return failedTask;
                 }
 
-                m_moveOrder = new MoveOrder
+                Vector2[] route = new Vector2[waypoints.Count];
+                for (int i = 0; i < waypoints.Count; i++)
                 {
-                    targetPosition = destination,
-                    stoppingDistance = math.max(0.0f, stoppingDistance),
-                    speedOverride = speedOverride,
-                    task = new TaskCompletionSource<bool>()
-                };
+                    route[i] = waypoints[i];
+                }
 
-                return m_moveOrder.Value.task;
+                return StartMoveOrder(route, stoppingDistance, speedOverride);
             }
 
             public bool IsMovingUp()
@@ -317,9 +327,7 @@ namespace FantasyWord.GameCore
 
                 if (targetDelta.magnitude <= stoppingDistance)
                 {
-                    m_moveOrder.Value.task.SetResult(true);
-                    m_moveOrder = null;
-                    m_owner.m_animationStrategy?.SetMovement(Vector2.zero);
+                    CompleteCurrentWaypoint();
                     return;
                 }
 
@@ -327,16 +335,66 @@ namespace FantasyWord.GameCore
                 float speed = m_moveOrder.Value.speedOverride ?? m_owner.CalculateMoveSpeed();
                 if (!MoveInDirection(direction, speed, false, false))
                 {
-                    m_moveOrder.Value.task.SetResult(false);
-                    m_moveOrder = null;
+                    CompleteMoveOrder(false);
                     return;
                 }
 
                 if (Vector2.Distance(m_owner.m_rigidbody.position, m_moveOrder.Value.targetPosition) <= stoppingDistance)
                 {
-                    m_moveOrder.Value.task.SetResult(true);
-                    m_moveOrder = null;
+                    CompleteCurrentWaypoint();
                 }
+            }
+
+            private TaskCompletionSource<bool> StartMoveOrder(
+                Vector2[] waypoints,
+                float stoppingDistance,
+                float? speedOverride)
+            {
+                if (m_moveOrder.HasValue)
+                {
+                    m_moveOrder.Value.task?.TrySetCanceled();
+                }
+
+                TaskCompletionSource<bool> task = new();
+                m_moveOrder = new MoveOrder
+                {
+                    waypoints = waypoints,
+                    waypointIndex = 0,
+                    targetPosition = waypoints[0],
+                    stoppingDistance = math.max(0.0f, stoppingDistance),
+                    speedOverride = speedOverride,
+                    task = task
+                };
+
+                return task;
+            }
+
+            private void CompleteCurrentWaypoint()
+            {
+                MoveOrder order = m_moveOrder.Value;
+                int nextWaypointIndex = order.waypointIndex + 1;
+                if (order.waypoints != null && nextWaypointIndex < order.waypoints.Length)
+                {
+                    order.waypointIndex = nextWaypointIndex;
+                    order.targetPosition = order.waypoints[nextWaypointIndex];
+                    m_moveOrder = order;
+                    return;
+                }
+
+                CompleteMoveOrder(true);
+            }
+
+            private void CompleteMoveOrder(bool success)
+            {
+                if (!m_moveOrder.HasValue)
+                {
+                    return;
+                }
+
+                TaskCompletionSource<bool> task = m_moveOrder.Value.task;
+                m_moveOrder = null;
+                task?.TrySetResult(success);
+                m_owner.m_animationStrategy?.SetMovement(Vector2.zero);
             }
 
             private bool MoveInDirection(Vector2 direction, float moveSpeed, bool force = false, bool applyInputHandling = false)
@@ -518,6 +576,8 @@ namespace FantasyWord.GameCore
 
             private struct MoveOrder
             {
+                public Vector2[] waypoints;
+                public int waypointIndex;
                 public Vector2 targetPosition;
                 public float stoppingDistance;
                 public float? speedOverride;

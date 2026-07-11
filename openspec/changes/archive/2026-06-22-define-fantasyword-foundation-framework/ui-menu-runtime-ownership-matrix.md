@@ -12,7 +12,7 @@
 | Yoki UIKit 角色 | 当前正式 UI 机制真相；原生推荐入口是 `UIKit.OpenPanel<T>() / ClosePanel<T>() / PushPanel / PopPanel`，并由 `UIRoot + UIPanel` 承担生命周期、栈、焦点和缓存 |
 | `UIManager` 菜单角色 | 唯一允许的项目菜单运行时入口；只负责把 `EMenu/Shop/Craft` 请求、返回键、`GameState.Menu` 和关闭任务接到原生 `UIKit` |
 | TopDown GUI 角色 | 不接入，不能成为项目 UI 生命周期 |
-| 当前动作 | 运行时入口替换设计、非业务化 smoke 与序列化注册机制都已落地；`2026-06-16` 当前正式 `User Interface.prefab` 已把 `Pause/Character/Abilities/Inventory/Journal/Save/Settings/Death/Shop/Craft` 全部切到 `UIManager + UIKitMenuPanelBase`，不再跨入口嵌套，也不再额外挂独立过渡菜单组件；`UIShop/UICraft` 也已改继承 `UIKitMenuPanelBase`，正式资源链补到 `Assets/Resources/Art/UIPrefab/UIShop.prefab` 与 `UICraft.prefab`。同期 `UIRoot` 已改为复用场景 `EventSystem`，`UIKit.prefab` 不再保留第二套输入入口；`ClickMoveTest` 也已改成显式场景 `EventSystem + InputSystemUIInputModule`，避免正式验证场景再靠 fallback 临时生成输入入口。同时 `UIRoot` 的 fallback 已改成显式暴露：如果 `SampleScene` 或 `ClickMoveTest` 仍缺显式输入入口，就会创建名为 `UIKitFallbackEventSystem` 的临时对象并打错误日志，不再允许正式场景静默依赖 fallback。本轮又直接删除 `UIMenuManager/AUIMenu/IUIMenu/UIMenuStack/UIMenuNavigationUtility` 并从正式 prefab 上移除旧入口组件，同时清空 `User Interface.prefab/Menus` 下预摆的直系菜单实例，删掉已失联的顶层旧菜单壳 `Craft Menu / Death Menu / Shop Menu`；随后继续删除 `MenuHostRuntimeOwnershipGuard`、`UIMenuRegistry`、`MenuRouteTopology` 与 `m_claim*` 序列化字段，让正式树只剩 `UIManager + UIKitMenuPanelBase` 这条菜单运行时入口，再把仍被正式 UIKit 资源链复用的共享条目 prefab 从误导性的 `Assets/Prefabs/UI/Menus` 整体重命名到 `Assets/Prefabs/UI/MenuParts`，并继续按职责拆到 `Frames / Abilities / Stats / Crafting / Inventory / Quests / Shop / StatusEffects / SystemMenu` |
+| 当前动作 | 运行时入口替换设计、非业务化 smoke 与序列化注册机制都已落地；`2026-06-16` 当前正式 `User Interface.prefab` 已把 `Pause/Character/Abilities/Inventory/Journal/Save/Settings/Death/Shop/Craft` 全部切到 `UIManager + UIKitMenuPanelBase`，不再跨入口嵌套，也不再额外挂独立过渡菜单组件；`UIShop/UICraft` 也已改继承 `UIKitMenuPanelBase`，正式资源链补到 `Assets/Resources/Art/UIPrefab/UIShop.prefab` 与 `UICraft.prefab`。同期 `UIRoot` 已改为复用场景 `EventSystem`，`UIKit.prefab` 不再保留第二套输入入口；`ClickMoveTest` 也已改成显式场景 `EventSystem + InputSystemUIInputModule`，避免正式验证场景再靠 fallback 临时生成输入入口。同时 `UIRoot` 的 fallback 已改成显式暴露：如果 `SampleScene` 或 `ClickMoveTest` 仍缺显式输入入口，就会创建名为 `UIKitFallbackEventSystem` 的临时对象并打错误日志，不再允许正式场景静默依赖 fallback。本轮又直接删除 `UIMenuManager/AUIMenu/IUIMenu/UIMenuStack/UIMenuNavigationUtility` 并从正式 prefab 上移除废弃入口组件，同时清空 `User Interface.prefab/Menus` 下预摆的直系菜单实例，删掉已失联的顶层旧菜单壳 `Craft Menu / Death Menu / Shop Menu`；随后继续删除 `MenuHostRuntimeOwnershipGuard`、`UIMenuRegistry`、`MenuRouteTopology` 与 `m_claim*` 序列化字段，让正式树只剩 `UIManager + UIKitMenuPanelBase` 这条菜单运行时入口，再把仍被正式 UIKit 资源链复用的共享条目 prefab 从误导性的 `Assets/Prefabs/UI/Menus` 整体重命名到 `Assets/Prefabs/UI/MenuParts`，并继续按职责拆到 `Frames / Abilities / Stats / Crafting / Inventory / Quests / Shop / StatusEffects / SystemMenu` |
 
 ## 为什么 `UIManager` 不是第二宿主
 
@@ -38,7 +38,7 @@
 | 维度 | `AUIMenu/UIMenuManager` | Yoki `UIKit/UIPanel` | 当前判断 |
 | --- | --- | --- | --- |
 | 设计模式 | 旧模型把菜单语义和入口生命周期绑在同一套 `AUIMenu/UIMenuManager` 里 | 原生把面板生命周期、焦点、缓存和资源加载模型都收在 `UIRoot + UIPanel + static UIKit` | `UIKit` 赢 UI 机制；项目侧只允许额外保留一条菜单运行时入口，而不是再保留第二入口 |
-| 软件工程 | 旧入口已退场；若继续保留会重建第二套菜单生命周期 | 原生入口已经足够完整，继续加 wrapper 只会制造第二套路由/stack/cache | 不允许玩法代码散落直开系统菜单 panel 绕过菜单运行时入口；但在运行时入口内部和纯 `UIPanel` 机制内，应直接使用 `UIKit` 原生 API |
+| 软件工程 | 废弃入口已退场；若继续保留会重建第二套菜单生命周期 | 原生入口已经足够完整，继续加 wrapper 只会制造第二套路由/stack/cache | 不允许玩法代码散落直开系统菜单 panel 绕过菜单运行时入口；但在运行时入口内部和纯 `UIPanel` 机制内，应直接使用 `UIKit` 原生 API |
 | 易用 | 旧方式对当前菜单资源熟，但可扩展性差 | 原生 API 简单直接，和插件文档一致，后续纯工具 panel 也更容易实现 | 以原生用法为默认；项目菜单语义统一由 `UIManager` 内部运行时入口出场 |
 
 ## 正式迁移条件

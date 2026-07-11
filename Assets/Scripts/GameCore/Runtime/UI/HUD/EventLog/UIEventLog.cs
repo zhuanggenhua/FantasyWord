@@ -69,8 +69,8 @@ namespace FantasyWord.GameCore
         /// </summary>
         private void OnEnable()
         {
-            EventKit.Type.Register<HeroExperienceGainedEvent>(OnHeroExperienceGained);
-            EventKit.Type.Register<HeroLevelUpEvent>(OnHeroLevelUp);
+            EventKit.Type.Register<CharacterExperienceGainedEvent>(OnCharacterExperienceGained);
+            EventKit.Type.Register<CharacterLevelUpEvent>(OnCharacterLevelUp);
             EventKit.Type.Register<InventoryMoneyAddedEvent>(OnMoneyAdded);
             EventKit.Type.Register<InventoryMoneyRemovedEvent>(OnMoneyRemoved);
             EventKit.Type.Register<InventoryItemAddedEvent>(OnItemAdded);
@@ -84,8 +84,8 @@ namespace FantasyWord.GameCore
 
         private void OnDisable()
         {
-            EventKit.Type.UnRegister<HeroExperienceGainedEvent>(OnHeroExperienceGained);
-            EventKit.Type.UnRegister<HeroLevelUpEvent>(OnHeroLevelUp);
+            EventKit.Type.UnRegister<CharacterExperienceGainedEvent>(OnCharacterExperienceGained);
+            EventKit.Type.UnRegister<CharacterLevelUpEvent>(OnCharacterLevelUp);
             EventKit.Type.UnRegister<InventoryMoneyAddedEvent>(OnMoneyAdded);
             EventKit.Type.UnRegister<InventoryMoneyRemovedEvent>(OnMoneyRemoved);
             EventKit.Type.UnRegister<InventoryItemAddedEvent>(OnItemAdded);
@@ -102,8 +102,11 @@ namespace FantasyWord.GameCore
             ReturnLines();
         }
 
-        private void OnHeroExperienceGained(HeroExperienceGainedEvent heroExperienceGainedEvent) => OnExperienceGained(heroExperienceGainedEvent.Amount);
-        private void OnHeroLevelUp(HeroLevelUpEvent heroLevelUpEvent) => OnLevelUp(heroLevelUpEvent.Level);
+        private void OnCharacterExperienceGained(CharacterExperienceGainedEvent characterExperienceGainedEvent) =>
+            OnExperienceGained(characterExperienceGainedEvent.Amount);
+
+        private void OnCharacterLevelUp(CharacterLevelUpEvent characterLevelUpEvent) =>
+            OnLevelUp(characterLevelUpEvent.Level);
         private void OnExperienceGained(int experience) => Log(m_experienceAdded, experience);
         private void OnLevelUp(int level) => Log(m_levelUp, level);
         private void OnMoneyAdded(InventoryMoneyAddedEvent inventoryMoneyAddedEvent)

@@ -110,7 +110,7 @@ public static class DirectionalSpriteHelper
 /// 装备渲染数据
 /// </summary>
 [CreateAssetMenu(fileName = "装备表现", menuName = "Equipment System/Equipment Data")]
-public class EquipmentRenderData : ScriptableObject
+public class EquipmentRenderData : FantasyWord.GameCore.EquipmentVisualAsset
 {
     // 基础
     public string equipmentId;

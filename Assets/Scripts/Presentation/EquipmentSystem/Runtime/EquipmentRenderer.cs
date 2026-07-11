@@ -249,10 +249,7 @@ public class EquipmentRenderer : MonoBehaviour
     /// </summary>
     void SyncAnimationName()
     {
-        if (_animator == null)
-            _animator = ResolveCharacterAnimator();
-
-        if (_animator == null || frameData == null)
+        if (frameData == null)
             return;
 
         if (_animationController == null)
@@ -269,6 +266,12 @@ public class EquipmentRenderer : MonoBehaviour
             ApplyPreviewDirection(_animationController.CurrentDirectionIndex, true);
             return;
         }
+
+        if (_animator == null)
+            _animator = ResolveCharacterAnimator();
+
+        if (_animator == null)
+            return;
 
         // 方案 D：使用缓存的参数列表，避免 try/catch
         CacheValidAnimParams();
@@ -520,9 +523,9 @@ public class EquipmentRenderer : MonoBehaviour
         if (_shaderMaterial.HasProperty(DefaultOutlineEnabledProp))
             _shaderMaterial.SetFloat(DefaultOutlineEnabledProp, 1f);
         if (_shaderMaterial.HasProperty(ShadowEnabledProp))
-            _shaderMaterial.SetFloat(ShadowEnabledProp, 0f);
+            _shaderMaterial.SetFloat(ShadowEnabledProp, 1f);
         if (_shaderMaterial.HasProperty(ShadowModeProp))
-            _shaderMaterial.SetFloat(ShadowModeProp, -1f);
+            _shaderMaterial.SetFloat(ShadowModeProp, 0f);
     }
 
     void EnsureRendererInitialized()
@@ -583,6 +586,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
 
         _lastSprite = _charRenderer.sprite;
+        SyncAnimationName();
         SyncFromSprite();
     }
 
@@ -754,8 +758,8 @@ public class EquipmentRenderer : MonoBehaviour
         if (_animationController == null)
             _animationController = GetComponentInParent<AnimationController>();
 
-        AnimationData animationData = FindAnimationByKey(animationType.name);
-        if (animationData == null)
+        AnimationData animationData = frameData.GetAnimationByKey(animationType.name);
+        if (!IsStandaloneBodyAnimation(animationData))
             return false;
 
         _currentAnimData = animationData;
@@ -1196,20 +1200,15 @@ public class EquipmentRenderer : MonoBehaviour
 
     void UpdateUVMapTexture()
     {
-        if (_shaderMaterial == null || _currentAnimData == null)
+        if (_shaderMaterial == null)
             return;
 
-        // 双层 UV Map
-        _debugHasBodyUVMap = _currentAnimData.bodyUVMap != null;
-        _debugHasHeadUVMap = _currentAnimData.headUVMap != null;
+        // 双层 UV Map：缺失时必须主动清空，避免上一动作的 UV 图残留。
+        _debugHasBodyUVMap = _currentAnimData != null && _currentAnimData.bodyUVMap != null;
+        _debugHasHeadUVMap = _currentAnimData != null && _currentAnimData.headUVMap != null;
 
-        // 设置身体层 UV Map
-        if (_currentAnimData.bodyUVMap != null)
-            _shaderMaterial.SetTexture(BodyUVMapProp, _currentAnimData.bodyUVMap);
-
-        // 设置头部层 UV Map
-        if (_currentAnimData.headUVMap != null)
-            _shaderMaterial.SetTexture(HeadUVMapProp, _currentAnimData.headUVMap);
+        _shaderMaterial.SetTexture(BodyUVMapProp, _debugHasBodyUVMap ? _currentAnimData.bodyUVMap : null);
+        _shaderMaterial.SetTexture(HeadUVMapProp, _debugHasHeadUVMap ? _currentAnimData.headUVMap : null);
     }
 
     /// <summary>
@@ -1472,6 +1471,15 @@ public class EquipmentRenderer : MonoBehaviour
         {
             var variant = GetVariantForPart(cfg.BodyPart);
             finalSprite = equip.GetSprite(facing, variant);
+        }
+
+        if (finalSprite == null || finalSprite.texture == null)
+            return;
+
+        if (!usesSequenceSprite && IsInvalidEquipmentLayerSprite(finalSprite))
+        {
+            DisableSpriteEquipmentLayer(cfg);
+            return;
         }
 
         if (finalSprite == null || finalSprite.texture == null)
@@ -2096,9 +2104,7 @@ public class EquipmentRenderer : MonoBehaviour
         if (charSpriteShader == null)
             return;
 
-        // 是否配置了当前动画的序列帧。
-        // 如果一个武器已经有作者序列帧，就按序列帧语义渲染；当前动作没有序列时不回退到静态世界道具图。
-        bool hasAnySequence = equip.animSequences != null && equip.animSequences.Count > 0;
+        // 是否配置了当前动画的序列帧
         bool hasSequence = equip.HasSequenceForKey(_currentAnimName);
 
         FrameDepthMode depthMode = FrameDepthMode.Front;
@@ -2108,24 +2114,22 @@ public class EquipmentRenderer : MonoBehaviour
 
         if (hasSequence)
         {
-            // 1）有序列帧：本帧完全由序列帧驱动，避免缺帧时混入静态图造成残影。
+            // 1）有序列帧：完全由序列帧驱动，不再回退到静态四向贴图
             seqSprite = GetEquipSequenceSprite(equip, weaponFacing, out depthMode);
-            if (seqSprite != null && seqSprite.texture != null && !IsInvalidEquipmentLayerSprite(seqSprite))
+            weaponSprite = seqSprite;
+
+            // 该帧拿不到序列帧 Sprite 时，本帧不渲染武器（不使用静态贴图兜底）
+            if (weaponSprite == null || weaponSprite.texture == null || IsInvalidEquipmentLayerSprite(weaponSprite))
             {
-                weaponSprite = seqSprite;
-                useSequence = true;
-                slotIsFront = (depthMode != FrameDepthMode.Back);
+                DisableGeneratedWeaponRenderer(equip);
+                SetWeaponShaderEnabled(shaderSlot, false);
+                return;
             }
-        }
 
-        if (weaponSprite == null && hasAnySequence)
-        {
-            DisableGeneratedWeaponRenderer(equip);
-            SetWeaponShaderEnabled(shaderSlot, false);
-            return;
+            useSequence = true;
+            slotIsFront = (depthMode != FrameDepthMode.Back);
         }
-
-        if (weaponSprite == null)
+        else
         {
             // 2）无序列帧：使用静态四向贴图 + 原有前后规则
             weaponSprite = equip.GetSpriteByRow(weaponRowIndex);
@@ -2144,14 +2148,6 @@ public class EquipmentRenderer : MonoBehaviour
         bool hasWestSprite = equip.spriteSW != null; // SW 是西向的基础图
         bool flipX = !useSequence && isWestFacing && !hasWestSprite;
 
-        if (useSequence)
-        {
-            SpriteRenderer sr = GetOrCreateWeaponRenderer(equip);
-            ConfigureWeaponPreviewRenderer(sr, weaponSprite, anchor, anchorType, weaponRowIndex, slotIsFront, true, false);
-            SetWeaponShaderEnabled(shaderSlot, false);
-            return;
-        }
-
         // 帧尺寸
         var charRect = charSpriteShader.rect;
         int frameW = _currentAnimData != null ? _currentAnimData.frameSize.x : (int)charRect.width;
@@ -2160,8 +2156,8 @@ public class EquipmentRenderer : MonoBehaviour
         frameH = Mathf.Max(frameH, 1);
 
         // 计算手点在角色帧中的像素位置：
-        // - 有锚点时使用正式手部锚点；
-        // - 缺锚点时仅为后续参数提供中性中心点；静态武器实际位置由 SpriteRenderer fallback 偏移处理。
+        // - 静态武器：必须有锚点，否则直接返回；
+        // - 序列帧：优先用锚点，缺失时退回到帧中心。
         float anchorPixelX;
         float anchorPixelY;
         if (anchor != null)
@@ -2171,6 +2167,13 @@ public class EquipmentRenderer : MonoBehaviour
         }
         else
         {
+            if (!useSequence)
+            {
+                DisableGeneratedWeaponRenderer(equip);
+                SetWeaponShaderEnabled(shaderSlot, false);
+                return;
+            }
+
             anchorPixelX = frameW * 0.5f;
             anchorPixelY = frameH * 0.5f;
         }
@@ -2219,11 +2222,20 @@ public class EquipmentRenderer : MonoBehaviour
 
         bool hideOutlineOnBody = equip.hideOutlineOnBody;
 
-        // 静态四向武器是独立小图，不是角色整帧贴图。继续走角色 shader 的整帧采样会把长矛这类细条武器
-        // 拉成横向残影；这里改回独立 SpriteRenderer，只把有完整角色整帧的序列武器交给序列路径处理。
-        SpriteRenderer staticRenderer = GetOrCreateWeaponRenderer(equip);
-        ConfigureWeaponPreviewRenderer(staticRenderer, weaponSprite, anchor, anchorType, weaponRowIndex, slotIsFront, false, flipX);
-        SetWeaponShaderEnabled(shaderSlot, false);
+        // 场景新增前的正式换装逻辑：武器通过角色 Shader 按帧 UV 和作者锚点合成。
+        // 子 SpriteRenderer 只作为挂载对象保留，不参与主武器图像渲染。
+        DisableGeneratedWeaponRenderer(equip);
+        SetWeaponShaderParams(
+            shaderSlot,
+            weaponSprite,
+            anchorAndHandUV,
+            rotCosSin,
+            flipX,
+            slotIsFront,
+            handInFront,
+            useSequence,
+            hideOutlineOnBody
+        );
     }
 
     void DisableGeneratedWeaponRenderer(EquipmentRenderData equip)
@@ -2355,12 +2367,26 @@ public class EquipmentRenderer : MonoBehaviour
             return;
 
         int enableProp = slot == 0 ? Weapon0EnabledProp : Weapon1EnabledProp;
+        int texProp = slot == 0 ? Weapon0TexProp : Weapon1TexProp;
+        int rectProp = slot == 0 ? Weapon0RectProp : Weapon1RectProp;
+        int anchorProp = slot == 0 ? Weapon0AnchorFrameUVProp : Weapon1AnchorFrameUVProp;
+        int rotProp = slot == 0 ? Weapon0RotCosSinProp : Weapon1RotCosSinProp;
+        int flipProp = slot == 0 ? Weapon0FlipXProp : Weapon1FlipXProp;
+        int depthProp = slot == 0 ? Weapon0DepthModeProp : Weapon1DepthModeProp;
+        int handInFrontProp = slot == 0 ? Weapon0HandInFrontProp : Weapon1HandInFrontProp;
         int isSequenceProp = slot == 0 ? Weapon0IsSequenceProp : Weapon1IsSequenceProp;
         int hideOutlineOnBodyProp = slot == 0 ? Weapon0HideOutlineOnBodyProp : Weapon1HideOutlineOnBodyProp;
 
         _shaderMaterial.SetFloat(enableProp, enabled ? 1f : 0f);
         if (!enabled)
         {
+            _shaderMaterial.SetTexture(texProp, null);
+            _shaderMaterial.SetVector(rectProp, Vector4.zero);
+            _shaderMaterial.SetVector(anchorProp, Vector4.zero);
+            _shaderMaterial.SetVector(rotProp, Vector4.zero);
+            _shaderMaterial.SetFloat(flipProp, 0f);
+            _shaderMaterial.SetFloat(depthProp, 0f);
+            _shaderMaterial.SetFloat(handInFrontProp, 0f);
             _shaderMaterial.SetFloat(isSequenceProp, 0f);
             _shaderMaterial.SetFloat(hideOutlineOnBodyProp, 0f);
         }

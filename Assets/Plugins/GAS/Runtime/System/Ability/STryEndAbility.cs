@@ -29,6 +29,7 @@ namespace GAS.Runtime
                     ASCHelper.RestoreDynamicTags(ability);
                     var abilityLogic = state.EntityManager.GetComponentData<MCAbilityLogic>(ability);
                     abilityLogic.Logic.EndAbility(globalTimer.ValueRO);
+                    abilityLogic.Logic.ClearActivationContext();
                     GASEventCenter.InvokeOnEndAbility(ability);
                 }
 

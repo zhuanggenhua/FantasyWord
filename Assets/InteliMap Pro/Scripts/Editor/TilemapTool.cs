@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 namespace InteliMapPro
 {
-    public class TilemapTool : EditorTool, IDrawSelectedHandles
+    public class TilemapTool : UnityEditor.EditorTools.EditorTool, IDrawSelectedHandles
     {
         public bool isDragging = false;
         public bool forceDraw = false;

@@ -7,12 +7,12 @@ namespace FantasyWord.GameCore
     [Serializable]
     public class QuestInteraction : IInteraction
     {
-        private async Task<bool> TryProgressingQuest(CharacterBase source, NPC npc)
+        private async Task<bool> TryProgressingQuest(CharacterBase source, CharacterActor character)
         {
-            TalkToNPCTaskProgress taskProgress = GameManager.JournalSystem.GetTaskToComplete(npc);
+            TalkToCharacterTaskProgress taskProgress = GameManager.JournalSystem.GetTaskToComplete(character);
             if (taskProgress != null)
             {
-                await npc.Say(taskProgress.talkToNPCTask.dialogue, source);
+                await character.Say(taskProgress.talkToCharacterTask.dialogue, source);
                 taskProgress.MarkAsCompleted();
                 return true;
             }
@@ -20,15 +20,15 @@ namespace FantasyWord.GameCore
             return false;
         }
 
-        private async Task<bool> TryCompletingQuest(CharacterBase source, NPC npc)
+        private async Task<bool> TryCompletingQuest(CharacterBase source, CharacterActor character)
         {
-            Quest quest = GameManager.JournalSystem.GetQuestToComplete(npc);
+            Quest quest = GameManager.JournalSystem.GetQuestToComplete(character);
 
             if (quest)
             {
                 if (quest.questCompletedDialogue != null)
                 {
-                    await npc.Say(quest.questCompletedDialogue, source, (actionFeed) =>
+                    await character.Say(quest.questCompletedDialogue, source, (actionFeed) =>
                     {
                         GameManager.JournalSystem.CompleteQuest(quest, ResolveQuestCompletionCommandContext(source));
                     });
@@ -74,15 +74,15 @@ namespace FantasyWord.GameCore
             return null;
         }
 
-        private async Task<bool> TryGivingHint(CharacterBase source, NPC npc)
+        private async Task<bool> TryGivingHint(CharacterBase source, CharacterActor character)
         {
             // Try to find a hint for a fullfilled quest (quest with no task, such as "Talk to X")
-            Quest quest = GameManager.JournalSystem.GetFullfilledQuest(npc);
+            Quest quest = GameManager.JournalSystem.GetFullfilledQuest(character);
 
             if (!quest)
             {
                 // Try to find a hint for a started quest
-                quest = GameManager.JournalSystem.GetStartedQuest(npc);
+                quest = GameManager.JournalSystem.GetStartedQuest(character);
             }
 
             if (quest != null)
@@ -91,7 +91,7 @@ namespace FantasyWord.GameCore
 
                 if (dialogue)
                 {
-                    await npc.Say(dialogue, source);
+                    await character.Say(dialogue, source);
                     return true;
                 }
             }
@@ -99,15 +99,15 @@ namespace FantasyWord.GameCore
             return false;
         }
 
-        private async Task<bool> TryOfferingQuest(CharacterBase source, NPC npc)
+        private async Task<bool> TryOfferingQuest(CharacterBase source, CharacterActor character)
         {
-            Quest quest = GameManager.JournalSystem.GetQuestToStart(npc);
+            Quest quest = GameManager.JournalSystem.GetQuestToStart(character);
 
             if (quest)
             {
                 if (quest.questOfferDialogue != null)
                 {
-                    await npc.Say(quest.questOfferDialogue, source, (messages) =>
+                    await character.Say(quest.questOfferDialogue, source, (messages) =>
                     {
                         if (messages.Contains(EDialogueMessageType.Accept))
                         {
@@ -133,15 +133,15 @@ namespace FantasyWord.GameCore
 
         public async Task<bool> TryExecute(CharacterBase source, IInteractionTarget target)
         {
-            if (target is NPC npc)
+            if (target is CharacterActor character)
             {
-                if (!await TryCompletingQuest(source, npc))
+                if (!await TryCompletingQuest(source, character))
                 {
-                    if (!await TryProgressingQuest(source, npc))
+                    if (!await TryProgressingQuest(source, character))
                     {
-                        if (!await TryOfferingQuest(source, npc))
+                        if (!await TryOfferingQuest(source, character))
                         {
-                            if (!await TryGivingHint(source, npc))
+                            if (!await TryGivingHint(source, character))
                             {
                                 return false;
                             }
@@ -151,7 +151,7 @@ namespace FantasyWord.GameCore
             }
             else
             {
-                Debug.LogError("QuestInteraction can only be used with NPC targets.");
+                Debug.LogError("QuestInteraction requires a CharacterActor target.");
                 return false;
             }
 

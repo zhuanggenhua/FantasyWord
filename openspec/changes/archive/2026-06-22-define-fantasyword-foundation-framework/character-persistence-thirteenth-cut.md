@@ -11,7 +11,7 @@
   - 背包物品和金钱仍由 `InventorySystem.InventoryDataBlock.inventories` 作为唯一物品数量真相，角色存档不复制物品清单。
 - `CharacterBaseDataBlock` 新增 `abilitySources`：
   - 每条记录保存能力引用、来源类型、来源 id 和叠层数量。
-  - 来源类型当前覆盖 `LegacyBonus / Script / ItemUse / Equipment / Summon / StatusEffect / Transformation / Infection`。
+  - 来源类型当前覆盖 `ArchivedBonus / Script / ItemUse / Equipment / Summon / StatusEffect / Transformation / Infection`。
 - `CharacterAbilitySetRuntime` 的加成能力运行时从“能力到总数”改为“能力到来源桶再到数量”。
 - `HeroDataBlock` 新增 `equipmentSlots`：
   - 每条装备记录显式保存槽位类型和装备引用。

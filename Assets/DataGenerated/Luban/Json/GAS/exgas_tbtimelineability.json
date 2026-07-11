@@ -227,5 +227,286 @@
         ]
       }
     ]
+  },
+  {
+    "ID": 20010,
+    "Name": "持续喷火",
+    "LifeTime": 65,
+    "ManualEndAbility": false,
+    "Tracks": [
+      {
+        "Name": "表现轨道",
+        "TaskClips": [
+          {
+            "StartTime": 1,
+            "EndTime": 60,
+            "Name": "播放喷火动作",
+            "Task": {
+              "$type": "TaskPlayCue",
+              "Param": {
+                "RequiredTags": [
+                  0
+                ],
+                "ImmunityTags": [
+                  0
+                ],
+                "CueLogic": {
+                  "$type": "CuePlayGameCoreAnimator",
+                  "Param": {
+                    "AnimatorNodePath": "",
+                    "AnimationName": "Attack"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 1,
+            "EndTime": 60,
+            "Name": "播放喷火流",
+            "Task": {
+              "$type": "TaskPlayCue",
+              "Param": {
+                "RequiredTags": [
+                  0
+                ],
+                "ImmunityTags": [
+                  0
+                ],
+                "CueLogic": {
+                  "$type": "CueMountPrefab",
+                  "Param": {
+                    "PrefabPath": "Assets/Prefabs/Abilities/World/喷火-火焰表现.prefab",
+                    "MountPointPath": "",
+                    "FollowHost": true,
+                    "LocalPosition": {
+                      "x": 0,
+                      "y": 0,
+                      "z": 0
+                    },
+                    "LocalRotation": {
+                      "x": 0,
+                      "y": 0,
+                      "z": 0
+                    },
+                    "LocalScale": {
+                      "x": 1,
+                      "y": 1,
+                      "z": 1
+                    },
+                    "UseWorldSpace": false,
+                    "Layer": -1,
+                    "SortingOrder": 0,
+                    "SortingLayerName": "",
+                    "RecursiveLayer": false,
+                    "DestroyWithHost": true,
+                    "DestroyOnStop": true,
+                    "DestroyDelay": 0,
+                    "AutoPlayParticle": false,
+                    "StopParticleOnDeactivate": false,
+                    "ParticleStopAction": 0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 1,
+            "EndTime": 60,
+            "Name": "播放喷火音效",
+            "Task": {
+              "$type": "TaskPlayCue",
+              "Param": {
+                "RequiredTags": [
+                  0
+                ],
+                "ImmunityTags": [
+                  0
+                ],
+                "CueLogic": {
+                  "$type": "CuePlayGameCoreAudio",
+                  "Param": {
+                    "AudioResolverGuid": "3b7e4c26c0a18a74ea6711d1d29f0312"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "Name": "世界元素轨道",
+        "TaskClips": [
+          {
+            "StartTime": 1,
+            "EndTime": 60,
+            "Name": "持续施加火元素",
+            "Task": {
+              "$type": "TaskApplyWorldElement",
+              "Param": {
+                "ElementKind": 1,
+                "Intensity": 1,
+                "ExposureDuration": 0.1,
+                "IntervalFrames": 3,
+                "ConeRange": 3.5,
+                "ConeHalfAngleDegrees": 30
+              }
+            }
+          }
+        ]
+      },
+      {
+        "Name": "角色命中轨道",
+        "TaskClips": [
+          {
+            "StartTime": 1,
+            "EndTime": 1,
+            "Name": "喷火命中1",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 10,
+            "EndTime": 10,
+            "Name": "喷火命中2",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 20,
+            "EndTime": 20,
+            "Name": "喷火命中3",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 30,
+            "EndTime": 30,
+            "Name": "喷火命中4",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 40,
+            "EndTime": 40,
+            "Name": "喷火命中5",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 50,
+            "EndTime": 50,
+            "Name": "喷火命中6",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          },
+          {
+            "StartTime": 60,
+            "EndTime": 60,
+            "Name": "喷火命中7",
+            "Task": {
+              "$type": "TaskApplyEffects",
+              "Param": {
+                "IDs": [
+                  2003
+                ],
+                "TargetCatcher": {
+                  "$type": "CatchAreaPolygon2D",
+                  "Param": {
+                    "isWorldSpace": false,
+                    "points": "0.2,-0.3;1.2,-0.7;3.2,-1.8;3.2,1.8;1.2,0.7;0.2,0.3",
+                    "layer": 128
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -68,8 +68,7 @@ namespace FantasyWord.GameCore
             if (GameManager.Exists() && GameManager.TryGetSystem(out PlayerSystem playerSystem))
             {
                 CharacterBase currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();
-                Hero playerInstance = playerSystem.GetPlayerInstance();
-                if (!playerInstance || !currentControlledCharacter)
+                if (!currentControlledCharacter)
                 {
                     return;
                 }

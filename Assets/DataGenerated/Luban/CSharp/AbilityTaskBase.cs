@@ -32,6 +32,7 @@ public abstract partial class AbilityTaskBase : Luban.BeanBase
             case "TaskDoCost": return new TaskDoCost(_buf);
             case "TaskDoNothing": return new TaskDoNothing(_buf);
             case "TaskPlayCue": return new TaskPlayCue(_buf);
+            case "TaskApplyWorldElement": return new TaskApplyWorldElement(_buf);
             default: throw new SerializationException();
         }
     }

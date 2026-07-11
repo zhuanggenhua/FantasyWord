@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using FantasyWord.GameCore;
 using UnityEngine;
 
 /// <summary>
 /// 动画控制器组件
 /// 挂在角色上，提供动画切换、方向控制和阴影开关 API
 /// </summary>
-public class AnimationController : MonoBehaviour
+public class AnimationController : MonoBehaviour, ICharacterAnimationDriver
 {
     [Header("动画配置")]
     [Tooltip("动画类型数据库")]
@@ -36,8 +37,10 @@ public class AnimationController : MonoBehaviour
     int _currentAnimIndex = 0;
     int _currentDirIndex = 0;
     GameObject _shadowObject;
+    Movable _movable;
     bool _shadowEnabled = true;
     AnimationTypeItem _lastAnimType;
+    string _lockedAnimationKey = string.Empty;
     [SerializeField]
     string _debugCurrentState = "";
     [SerializeField]
@@ -91,15 +94,30 @@ public class AnimationController : MonoBehaviour
     void Awake()
     {
         _animator = ResolveCharacterAnimator();
+        _movable = GetComponentInParent<Movable>();
         RefreshAnimatorParameterCache();
         FindShadowObject();
     }
     
     void OnEnable()
     {
+        if (_movable == null)
+            _movable = GetComponentInParent<Movable>();
+        if (_movable != null)
+        {
+            _movable.AddTargetDirectionChangedListener(SetFacingDirection);
+            SetFacingDirection(_movable.GetTargetDirection());
+        }
+
         // 激活时应用当前状态
         ApplyAnimation();
         ApplyDirection();
+    }
+
+    void OnDisable()
+    {
+        if (_movable != null)
+            _movable.RemoveTargetDirectionChangedListener(SetFacingDirection);
     }
     
     /// <summary>
@@ -109,6 +127,12 @@ public class AnimationController : MonoBehaviour
     public void SetAnimation(int index)
     {
         if (animDatabase == null || index < 0 || index >= animDatabase.Count) return;
+        if (!animDatabase.TryGetByIndex(index, out AnimationTypeItem animationType)
+            || IsBlockedByAnimationLock(animationType?.name))
+        {
+            return;
+        }
+
         _currentAnimIndex = index;
         ApplyAnimation();
     }
@@ -118,13 +142,117 @@ public class AnimationController : MonoBehaviour
     /// </summary>
     public void SetAnimation(AnimationTypeItem animType)
     {
-        if (animDatabase == null || animType == null) return;
+        if (animDatabase == null || animType == null || IsBlockedByAnimationLock(animType.name)) return;
         int index = animDatabase.IndexOf(animType);
         if (index >= 0)
         {
             _currentAnimIndex = index;
             ApplyAnimation();
         }
+    }
+
+    public bool TryPlayAnimation(string animationKey)
+    {
+        string normalizedKey = animationKey?.Trim();
+        if (!string.IsNullOrEmpty(_lockedAnimationKey)
+            && !string.Equals(normalizedKey, _lockedAnimationKey, System.StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        return TryApplyAnimation(normalizedKey);
+    }
+
+    public bool TryLockAnimation(string animationKey)
+    {
+        string normalizedKey = animationKey?.Trim();
+        if (!TryApplyAnimation(normalizedKey))
+        {
+            return false;
+        }
+
+        _lockedAnimationKey = normalizedKey;
+        return true;
+    }
+
+    public void ClearAnimationLock()
+    {
+        _lockedAnimationKey = string.Empty;
+    }
+
+    public bool TryRestoreAnimation(string expectedAnimationKey, string fallbackAnimationKey)
+    {
+        if (!string.IsNullOrEmpty(_lockedAnimationKey))
+        {
+            return true;
+        }
+
+        string normalizedExpectedKey = expectedAnimationKey?.Trim();
+        if (!string.Equals(
+                CurrentAnimationKey,
+                normalizedExpectedKey,
+                System.StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        return TryApplyAnimation(fallbackAnimationKey?.Trim());
+    }
+
+    bool IsBlockedByAnimationLock(string animationKey)
+    {
+        return !string.IsNullOrEmpty(_lockedAnimationKey)
+            && !string.Equals(
+                animationKey?.Trim(),
+                _lockedAnimationKey,
+                System.StringComparison.Ordinal);
+    }
+
+    bool TryApplyAnimation(string animationKey)
+    {
+        if (animDatabase == null || string.IsNullOrWhiteSpace(animationKey))
+            return false;
+
+        AnimationTypeItem animationType = animDatabase.GetByKey(animationKey);
+        if (animationType == null || !SupportsAnimation(animationType))
+            return false;
+
+        SetAnimation(animationType);
+        return true;
+    }
+
+    public bool TryPreviewAnimation(string animationKey, float normalizedTime)
+    {
+        if (!TryPlayAnimation(animationKey) || _animator == null)
+            return false;
+
+        string stateName = ResolvePlayableStateName(CurrentAnimationType);
+        if (string.IsNullOrWhiteSpace(stateName))
+            return false;
+
+        _animator.Play(Animator.StringToHash(stateName), 0, Mathf.Clamp01(normalizedTime));
+        _animator.Update(0f);
+
+        EquipmentRenderer[] renderers = GetComponentsInChildren<EquipmentRenderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+            renderers[i].Refresh();
+
+        return true;
+    }
+
+    public void SetFacingDirection(Vector2 direction)
+    {
+        if (direction.sqrMagnitude <= 0.0001f)
+            return;
+
+        bool currentlyEast = _currentDirIndex == 0 || _currentDirIndex == 2;
+        bool currentlyNorth = _currentDirIndex == 2 || _currentDirIndex == 3;
+        bool east = Mathf.Abs(direction.x) > 0.0001f ? direction.x >= 0f : currentlyEast;
+        bool north = Mathf.Abs(direction.y) > 0.0001f ? direction.y > 0f : currentlyNorth;
+
+        SetDirection(north
+            ? (east ? 2 : 3)
+            : (east ? 0 : 1));
     }
 
     public void SetAnimationDatabase(AnimationTypeDatabase database, bool resetSelection)
@@ -462,8 +590,15 @@ public class AnimationController : MonoBehaviour
 
         switch (animationKey)
         {
+            case "Attack":
+                yield return "Skill_Attack";
+                break;
             case "ChargedAttack":
                 yield return "ChargedAttack_Human";
+                yield return "Skill_ChargedAttack";
+                break;
+            case "SlashAttack":
+                yield return "Skill_SlashAttack";
                 break;
             case "SoulDie":
                 yield return "DieSoul";

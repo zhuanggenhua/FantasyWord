@@ -16,7 +16,7 @@
 - 控制组正式 owner 已收口到 `PlayerSystem + PlayerControlGroup`。
 - 正式订单对象已收口到 `PlayerCommandRequest + PlayerOrderRequest + PlayerOrderResult`。
 - 订单分发现在已补批量空间落点合同：`PlayerOrderSpatialContract + DistributedRing` 把点击移动的分布式目标语义收回运行时，调用方不再自己算偏移。
-- GAS 侧当前正式结论是“运行时真相已单一，legacy 面已压成兼容边界”：属性读写、能力冷却/消耗/标签阻断、持续效果 formal 恢复和 detached runtime 跟踪都已回到 `CharacterBase + ASC` 正式闭包；剩余 legacy 面只作为 bootstrap / 存档兼容 / 历史 effect 导入存在。
+- GAS 侧当前正式结论是“运行时真相已单一，archived 面已压成兼容边界”：属性读写、能力冷却/消耗/标签阻断、持续效果 formal 恢复和 detached runtime 跟踪都已回到 `CharacterBase + ASC` 正式闭包；剩余 archived 面只作为 bootstrap / 存档兼容 / 历史 effect 导入存在。
 - `CompositeRuntimeSmokeValidator` 当前正式验收口径是：
   - 控制组建立、主控切换与收缩都必须经由 `PlayerSystem + PlayerControlGroup`。
   - `PlayerOrderRequest` 必须把订单分发给 2 个成员，并把 `MoveOrder.targetPosition` 分别写到主控锚点与 `DistributedRing` 分布点。

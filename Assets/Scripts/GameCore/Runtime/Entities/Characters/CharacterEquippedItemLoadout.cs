@@ -72,7 +72,7 @@ namespace FantasyWord.GameCore
             System.Action<Equipment> applyEquipment)
         {
             CharacterEquipmentSlotData[] slotDataSnapshot = equipmentSlots?.ToArray();
-            if (slotDataSnapshot == null || slotDataSnapshot.Length == 0)
+            if (slotDataSnapshot == null)
             {
                 return false;
             }

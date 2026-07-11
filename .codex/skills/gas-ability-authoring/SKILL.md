@@ -1,6 +1,6 @@
 ---
 name: gas-ability-authoring
-description: FantasyWord 项目内 EX-GAS 技能制作与排查流程。用于制作、修改或验收 GAS/EX-GAS Ability、Timeline、TaskApplyEffects、GameplayEffect、GameplayCue、TargetCatcher、普攻、背刺、蓄力攻击、命中范围预览与编辑；也用于避免把 AbilitySheet、旧执行资产、项目侧第二套命中框或自动刷新补丁重新带回正式链路。
+description: "FantasyWord 的 EX-GAS 技能制作、修改、排查和验收流程。用于 Ability、Timeline、GameplayEffect/Cue、TargetCatcher、普攻、背刺、蓄力攻击、命中范围预览；避免旧 AbilitySheet、旧执行资产或第二套命中框回流。"
 ---
 
 # FantasyWord GAS Ability Authoring
@@ -20,7 +20,7 @@ description: FantasyWord 项目内 EX-GAS 技能制作与排查流程。用于�
 
 - 技能身份、规则、消耗、冷却、阻断、时间轴、命中帧、伤害、Cue 触发，默认由 EX-GAS 承担。
 - 项目侧只能保留已登记的薄扩展：`exgas.abilityGameCore`、`CuePlayGameCoreAnimator`、`CuePlayGameCoreAudio`、`CuePlayGameCoreFeedback`、`CatchAreaPolygon2D`、正式伤害桥等。
-- 不恢复 `AbilitySheet`、`ActiveAbilitySheet`、`PassiveAbilitySheet`、`MeleeAbilityExecutionAsset` 或项目侧第二套时间轴作为已迁移技能的正式入口。
+- 不恢复 `AbilitySheet`、`ActiveAbilitySheet`、`PassiveAbilitySheet`、`MeleeAbilityExecutionAsset` 或项目侧第二套时间轴作为正式技能的正式入口。
 - 如果 EX-GAS 缺能力，优先在 GAS 主轴或项目 fork patch 内补正式能力；不要新造并行制作窗口或缓存页。
 
 ## 制作流程
@@ -39,13 +39,20 @@ description: FantasyWord 项目内 EX-GAS 技能制作与排查流程。用于�
 
 3. **动画与素材**
    - `CuePlayGameCoreAnimator.AnimationName` 填装备系统动作键，例如 `Attack` 或 `ChargedAttack`。
+   - GAS 表不配置 `Attack_Up`、`Attack_Down`、`Attack_Left`、`Attack_Right` 这类方向动画名；方向变体由 Animator / 装备动画系统根据开火时角色朝向解析。
+   - 像素攻击动作优先用 Animator 子状态机或项目装备动画解析做离散方向状态；Blend Tree 主要用于移动、待机等连续朝向动作，不作为普攻方向变体的默认承载。
    - FantasyWord 当前素材组织是角色动作和武器层分离；武器攻击与武器自带特效随装备/武器动作播放。
    - 只有用户拆出正式独立特效素材后，才新增独立特效 Cue；不要用临时特效 Prefab 冒充完成。
 
 4. **命中范围**
    - `TaskApplyEffects.IDs` 填 GameplayEffect ID。
-   - `TargetCatcher` 优先用 `CatchAreaPolygon2D` 表达四方向俯视角真实近战范围。
-   - `points` 保存多边形顶点；`layer` 保存可命中目标层。
+   - `TargetCatcher` 优先用 `CatchAreaPolygon2D` 表达施法者本地空间里的真实近战范围。
+   - `points` 保存一份本地多边形；运行时由 TargetCatcher 按命中帧施法者的当前位置与当前朝向变换到世界空间。
+   - GAS 激活上下文保存本次请求的起点、可选输入瞄准方向和可选主目标；输入方向不自动等于 Timeline 任务执行时的最终方向。
+   - `CatchAreaBox2D`、`CatchAreaCircle2D`、`CatchAreaPolygon2D` 这类施法者本地空间捕获器读取命中帧的施法者姿态；施法者缺少 `Movable` 或有效朝向时直接报错并拒绝命中。
+   - 普通攻击依靠正式攻击状态阻止前摇期间普通转向，因此命中帧读取当前姿态仍会保持起手方向；闪现、突进、强制转身技能只需在命中 Task 前更新施法者位置与朝向。
+   - `layer` 保存可命中目标层。
+   - 横版、3D 或俯视角默认都不要求为左/右/上/下分别配置判定；只有动作视觉明显不对称且手感验证失败时，才考虑方向 override。
    - 不在场景里手摆武器 Hitbox 子物体作为技能真相。
 
 5. **GameplayEffect**
@@ -66,8 +73,9 @@ description: FantasyWord 项目内 EX-GAS 技能制作与排查流程。用于�
 - 选择 Timeline，例如普攻 `101`。
 - 在 `预览实例` 里指定当前场景角色，例如 `EquipmentSystemDemoCharacter`；不要自动绑定。
 - 选中 `TaskApplyEffects -> CatchAreaPolygon2D` 片段。
-- 选中后应自动跳到命中帧并刷新预览；SceneView 中显示多边形手柄。
+- 选中后应自动跳到命中帧并刷新预览；SceneView 中显示按当前预览对象朝向变换后的多边形手柄。
 - 拖中心点移动整体，拖顶点调整轮廓，右键插入或删除顶点。
+- 如需检查不同朝向，编辑器只能切换预览朝向或调整预览对象朝向；不得保存四份方向判定。
 - 调整后仍用 EX-GAS 原保存按钮写回表；不要新增自动保存、自动读表、自动重建缓存或第二套保存入口。
 
 ## 排查顺序
@@ -86,6 +94,8 @@ description: FantasyWord 项目内 EX-GAS 技能制作与排查流程。用于�
 - 不新造项目侧替代窗口、替代时间轴、替代命中框保存入口。
 - 不把 TopDownEngine 的武器 Prefab / CharacterAbility 运行时直接混进 EX-GAS 技能主轴。
 - 不把 2DRPGEngine 的时间轴或编辑器当作正式运行时 owner。
+- 不把多方向素材误解为多方向 GAS 配置；一个动作键、一条 Timeline、一份本地命中形状是默认结构。
+- 不把攻击方向做成所有 Ability 的必填配置；激活上下文中的输入方向只是可选请求数据，默认近战 TargetCatcher 以执行帧施法者姿态为准。
 - 不把插件小报错止血说成根因修复；必须回到原位点验证。
 - 不在未验证当前窗口状态时调用 `ShowWindow()` 重新打开窗口冒充用户原始位点。
 
@@ -93,5 +103,5 @@ description: FantasyWord 项目内 EX-GAS 技能制作与排查流程。用于�
 
 - 完整制作流程：`openspec/changes/refactor-melee-ability-authoring/authoring-flow-basic-attack-and-backstab.md`
 - GAS 正式边界：`openspec/specs/ability-authoring-foundation/spec.md`
-- 插件边界与验证规则：`docs/ai/开发与验收规范.md`
+- 插件边界与验证规则：`.spec/knowledge/features/project/开发与验收规范.md`
 - Unity 自动化：`.codex/skills/aibridge/SKILL.md`

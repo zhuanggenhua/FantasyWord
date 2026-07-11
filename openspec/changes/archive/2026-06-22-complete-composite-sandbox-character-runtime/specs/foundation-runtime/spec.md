@@ -49,11 +49,11 @@
 
 `FantasyWord` MUST complete the formal GAS replacement boundary for attributes, ability rules, and temporal effect rules without keeping a long-term dual-truth runtime.
 
-#### Scenario: Legacy runtime data no longer acts as a peer truth source
+#### Scenario: Archived runtime data no longer acts as a peer truth source
 
 - **WHEN** the formal runtime reads or writes health, mana, attack, defense, speed, cooldown, cost, or effect state
 - **THEN** the formal GAS-backed owner chain is the only runtime truth source
-- **AND** legacy `Stats/currentStats`, bootstrap mirrors, or old effect runtime shells remain only as strictly bounded migration or bootstrap compatibility surfaces
+- **AND** archived `Stats/currentStats`, bootstrap mirrors, or old effect runtime shells remain only as strictly bounded migration or bootstrap compatibility surfaces
 
 #### Scenario: Ability rules are unique while execution remains outside GAS
 
@@ -66,4 +66,4 @@
 
 - **WHEN** a character is saved, loaded, disabled, pooled, or restored with temporal ability/effect state
 - **THEN** the formal GAS recovery/runtime owner completes restoration, cleanup, and detached-runtime tracking through one formal lifecycle
-- **AND** the runtime does not keep a second long-term effect lifecycle alive in legacy execution-shell state
+- **AND** the runtime does not keep a second long-term effect lifecycle alive in archived execution-shell state

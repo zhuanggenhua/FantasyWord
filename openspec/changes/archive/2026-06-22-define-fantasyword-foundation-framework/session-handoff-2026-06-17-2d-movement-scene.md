@@ -60,8 +60,8 @@
 
 ## 下一会话正确起手
 
-1. 先读 `docs/ai/2D移动与场景组织下一步入口.md`
-2. 再读 `docs/ai/2D移动与场景组织现态速查表.md`
+1. 先读 `.spec/knowledge/features/project/2D移动与场景组织下一步入口.md`
+2. 再读 `.spec/knowledge/features/project/2D移动与场景组织现态速查表.md`
 3. 若用户给了新参考，再按 `movement-scene-reference-intake.md` 做 intake
 4. 若没有新参考，就不要进入实现态
 

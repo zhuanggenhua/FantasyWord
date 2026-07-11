@@ -78,7 +78,7 @@ namespace FantasyWord.GameCore
 
         public string GenerateSavefileHeader()
         {
-            Hero player = GameManager.PlayerSystem.GetPlayerInstance();
+            CharacterActor player = GameManager.PlayerSystem.GetPrimaryPlayerCharacter();
             GameConfig config = GameManager.Config;
 
             return string.Format("{0} {1}{2}",

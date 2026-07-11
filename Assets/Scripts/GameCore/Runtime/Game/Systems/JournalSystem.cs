@@ -131,23 +131,23 @@ namespace FantasyWord.GameCore
             GameRuntimeEvents.NotifyQuestUnlocked(quest);
         }
 
-        public QuestProgress GetNonFullfilledQuestToReportTo(NPC npc)
+        public QuestProgress GetNonFullfilledQuestToReportTo(CharacterActor character)
         {
-            return m_activeQuests.Find(quest => quest.quest.reportTo == npc.characterSheet);
+            return m_activeQuests.Find(quest => quest.quest.reportTo == character.characterSheet);
         }
 
-        public Quest GetQuestToComplete(NPC npc)
+        public Quest GetQuestToComplete(CharacterActor character)
         {
-            return m_fullfilledQuests.Find(quest => quest.reportTo == npc.characterSheet);
+            return m_fullfilledQuests.Find(quest => quest.reportTo == character.characterSheet);
         }
 
-        public TalkToNPCTaskProgress GetTaskToComplete(NPC npc)
+        public TalkToCharacterTaskProgress GetTaskToComplete(CharacterActor character)
         {
             foreach (QuestProgress quest in m_activeQuests)
             {
                 foreach (IQuestTaskProgress task in quest.GetCurrentTasks())
                 {
-                    if (task is TalkToNPCTaskProgress progress && progress.talkToNPCTask.target == npc.characterSheet)
+                    if (task is TalkToCharacterTaskProgress progress && progress.talkToCharacterTask.target == character.characterSheet)
                     {
                         return progress;
                     }
@@ -157,20 +157,20 @@ namespace FantasyWord.GameCore
             return null;
         }
 
-        public Quest GetQuestToStart(NPC npc)
+        public Quest GetQuestToStart(CharacterActor character)
         {
-            return m_availableQuests.Find(quest => quest.offeredBy == npc.characterSheet);
+            return m_availableQuests.Find(quest => quest.offeredBy == character.characterSheet);
         }
 
-        public Quest GetStartedQuest(NPC npc)
+        public Quest GetStartedQuest(CharacterActor character)
         {
-            List<QuestProgress> results = m_activeQuests.FindAll(quest => quest.quest.offeredBy == npc.characterSheet);
+            List<QuestProgress> results = m_activeQuests.FindAll(quest => quest.quest.offeredBy == character.characterSheet);
             return results.Count > 0 ? results[0].quest : null;
         }
 
-        public Quest GetFullfilledQuest(NPC npc)
+        public Quest GetFullfilledQuest(CharacterActor character)
         {
-            List<Quest> results = m_fullfilledQuests.FindAll(quest => quest.offeredBy == npc.characterSheet);
+            List<Quest> results = m_fullfilledQuests.FindAll(quest => quest.offeredBy == character.characterSheet);
             return results.Count > 0 ? results[0] : null;
         }
 
@@ -195,12 +195,12 @@ namespace FantasyWord.GameCore
 
         public override void OnSystemStart()
         {
-            EventKit.Type.Register<HeroLevelUpEvent>(OnHeroLevelUp);
+            EventKit.Type.Register<CharacterLevelUpEvent>(OnCharacterLevelUp);
         }
 
         public override void OnSystemStop()
         {
-            EventKit.Type.UnRegister<HeroLevelUpEvent>(OnHeroLevelUp);
+            EventKit.Type.UnRegister<CharacterLevelUpEvent>(OnCharacterLevelUp);
         }
 
         public override void OnSaveFileLoaded()
@@ -208,7 +208,7 @@ namespace FantasyWord.GameCore
             UpdateQuestsAvailability();
         }
 
-        private void OnHeroLevelUp(HeroLevelUpEvent heroLevelUpEvent)
+        private void OnCharacterLevelUp(CharacterLevelUpEvent characterLevelUpEvent)
         {
             UpdateQuestsAvailability();
         }
@@ -269,7 +269,7 @@ namespace FantasyWord.GameCore
 
         private bool CheckIfQuestRequirementsAreMet(Quest quest)
         {
-            return quest.requiredLevel <= GameManager.PlayerSystem.GetPlayerInstance().level;
+            return quest.requiredLevel <= GameManager.PlayerSystem.GetPrimaryPlayerCharacter().level;
         }
     }
 }

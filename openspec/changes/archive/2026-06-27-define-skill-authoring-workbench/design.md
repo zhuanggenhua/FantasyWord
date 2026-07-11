@@ -16,7 +16,7 @@
 - 当前代码现态补证：`测试-基础攻击` 已有 EX-GAS `TimelineAbilityAsset`，但真正命中判定仍由 `MeleeAttackAbility` 的 `BoxCollider2D + Physics2D.OverlapCollider` 和 `EffectDispatcher` 执行；这只能算 GAS 规则层混合接入，不是 EX-GAS 原生技能闭包。
 - 当前偏离原因补证：此前为了避免 GAS 时间轴与 GameCore 命中盒各自结算一次伤害，先把 GAS 时间轴降成可见参考节点；这只是迁移期保护，不是正式推荐用法完成证据。
 - 当前裁决方向补证：基础攻击、蓄力攻击和背刺不预设必须收敛到 EX-GAS 原生闭包，也不预设允许无边界混合；下一步必须比较 EX-GAS 原生闭包、三方参考能力/武器闭包和当前混合闭包。只有比较后证明更优的职责划分，才允许成为对应职责的一手真相源并进入重构。
-- 当前裁决留档：详见 `ability-system-reference-verdict.md` 与长期入口 `docs/ai/技能系统职责裁决矩阵.md`。当前只能确认“项目执行壳 + GAS 规则层”的收口方向仍成立；执行真相尚未裁死单一赢家，不能把某个整体框架写成最终胜出。
+- 当前裁决留档：详见 `ability-system-reference-verdict.md` 与长期入口 `.spec/knowledge/features/project/技能系统职责裁决矩阵.md`。当前只能确认“项目执行壳 + GAS 规则层”的收口方向仍成立；执行真相尚未裁死单一赢家，不能把某个整体框架写成最终胜出。
 - 当前作者工具参考补证：用户提供的 Kybernetik Platformer Game Kit 已登记为基础攻击判定框作者参考；其 melee hit boxes 文档证明正式命中盒编辑应围绕动画帧命中数据、Inspector/Preview 可视化和运行时触发器组织。当前普通 `AbilitySheet` Inspector 只能算迁移期样例数据入口，不能称为正式可视化技能编辑器。
 - 当前代码残留补证：近战基础攻击的基础 `effects` 仍直接挂在 `AbilitySheet`，背刺额外效果仍挂在 `MeleeAbilityExecutionAsset`。这说明规则真相还没完全从旧效果链和执行资产中迁出。
 - 当前编辑器现态补证：`MeleeAbilityExecutionAssetEditor` 现有命中框面板只提供静态迁移预览，不是按动画帧编辑命中数据的正式作者面。

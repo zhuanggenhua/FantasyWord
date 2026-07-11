@@ -1,64 +1,68 @@
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 非召唤怪物死亡时发送的领域事件。它只描述被击杀的怪物表，不处理奖励、任务内容或 UI 日志。
+    /// 非召唤角色死亡时发送的领域事件。它只描述被击杀的角色配置，不处理奖励、任务内容或 UI 日志。
     /// </summary>
-    public readonly struct MonsterKilledEvent
+    public readonly struct CharacterKilledEvent
     {
-        public MonsterKilledEvent(MonsterSheet monster)
+        public CharacterKilledEvent(CharacterSheet character)
         {
-            Monster = monster;
+            Character = character;
         }
 
-        public MonsterSheet Monster { get; }
+        public CharacterSheet Character { get; }
     }
 
     /// <summary>
-    /// 玩家长期 Hero 获得经验时发送的成长事件。它只描述数值变化，不决定 UI 日志、任务可用性或等级规则。
+    /// 任意角色获得经验时发送的成长事件。
     /// </summary>
-    public readonly struct HeroExperienceGainedEvent
+    public readonly struct CharacterExperienceGainedEvent
     {
-        public HeroExperienceGainedEvent(int amount)
+        public CharacterExperienceGainedEvent(CharacterActor character, int amount)
         {
+            Character = character;
             Amount = amount;
         }
 
+        public CharacterActor Character { get; }
         public int Amount { get; }
     }
 
     /// <summary>
-    /// 玩家长期 Hero 升级时发送的成长事件。等级规则仍由 Hero/CharacterBase 负责，监听者只响应结果。
+    /// 任意角色升级时发送的成长事件。
     /// </summary>
-    public readonly struct HeroLevelUpEvent
+    public readonly struct CharacterLevelUpEvent
     {
-        public HeroLevelUpEvent(int level)
+        public CharacterLevelUpEvent(CharacterActor character, int level)
         {
+            Character = character;
             Level = level;
         }
 
+        public CharacterActor Character { get; }
         public int Level { get; }
     }
 
     public static partial class GameRuntimeEvents
     {
-        public static void NotifyMonsterKilled(MonsterSheet monster)
+        public static void NotifyCharacterKilled(CharacterSheet character)
         {
-            if (!monster)
+            if (!character)
             {
                 return;
             }
 
-            Publish(new MonsterKilledEvent(monster));
+            Publish(new CharacterKilledEvent(character));
         }
 
-        public static void NotifyHeroExperienceGained(int amount)
+        public static void NotifyCharacterExperienceGained(CharacterActor character, int amount)
         {
-            Publish(new HeroExperienceGainedEvent(amount));
+            Publish(new CharacterExperienceGainedEvent(character, amount));
         }
 
-        public static void NotifyHeroLevelUp(int level)
+        public static void NotifyCharacterLevelUp(CharacterActor character, int level)
         {
-            Publish(new HeroLevelUpEvent(level));
+            Publish(new CharacterLevelUpEvent(character, level));
         }
     }
 }

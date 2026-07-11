@@ -14,7 +14,7 @@ namespace FantasyWord.GameCore
         [Tooltip("可触发该区域的层。")]
         [SerializeField] private LayerMask m_targetLayerMask = ~0;
 
-        [Tooltip("开启后，只有当前控制角色会受该区域影响；若尚未切控制对象，则回退到玩家 Hero。")]
+        [Tooltip("开启后，只有当前控制角色会受该区域影响；若尚未切控制对象，则回退到玩家主角色。")]
         [SerializeField] private bool m_requirePlayerType = true;
 
         [Header("Movement Zone")]

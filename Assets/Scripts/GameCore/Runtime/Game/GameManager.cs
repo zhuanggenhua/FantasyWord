@@ -45,6 +45,7 @@ namespace FantasyWord.GameCore
         private static GameManager _instance = null;
         private Dictionary<Type, AGameSystem> m_systems = null;
         private bool m_lifecycleEventsEnabled = false;
+        private bool m_startInvoked = false;
 
         private void Awake()
         {
@@ -58,12 +59,25 @@ namespace FantasyWord.GameCore
         private void OnEnable()
         {
             m_lifecycleEventsEnabled = true;
+            if (m_startInvoked)
+            {
+                StartSystems();
+            }
+        }
+
+        private void Start()
+        {
+            m_startInvoked = true;
             StartSystems();
         }
 
         private void OnDisable()
         {
-            StopSystems();
+            if (m_startInvoked)
+            {
+                StopSystems();
+            }
+
             m_lifecycleEventsEnabled = false;
         }
 

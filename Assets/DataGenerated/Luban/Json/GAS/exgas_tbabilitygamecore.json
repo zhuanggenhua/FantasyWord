@@ -43,5 +43,20 @@
     "DelayBeforeUseReleaseInterruption": true,
     "TimeBetweenUsesReleaseInterruption": true,
     "UpdateLookAtDirectionOnFire": true
+  },
+  {
+    "ID": 20010,
+    "PrefabGuid": "a146750504c64be4a948e93b1a20e117",
+    "PrefabPath": "Assets/Prefabs/Abilities/World/喷火.prefab",
+    "IconGuid": "",
+    "IconPath": "",
+    "AbilityRootMode": 1,
+    "InputTriggerMode": 1,
+    "BufferInput": false,
+    "NewInputExtendsBuffer": false,
+    "MaximumBufferDuration": 0,
+    "DelayBeforeUseReleaseInterruption": true,
+    "TimeBetweenUsesReleaseInterruption": true,
+    "UpdateLookAtDirectionOnFire": true
   }
 ]

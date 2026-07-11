@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdb947649a45eef42ae3a20119c58fce, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e92dea6a87c91149a5b3618a3c9517a, type: 3}
   m_Name: "\u6D4B\u8BD5-\u8BAD\u7EC3\u5047\u4EBA\u914D\u7F6E"
-  m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.HeroSheet
+  m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.CharacterSheet
   m_alignment: 1
   m_displayName: "\u6D4B\u8BD5\u8BAD\u7EC3\u5047\u4EBA"
   m_abilitiesPerLevel:

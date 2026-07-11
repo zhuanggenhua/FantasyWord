@@ -46,7 +46,7 @@
 
 - `tasks.md` 第 2、3 节已明确记录撤回
 - 当前仓库残留扫描未再发现项目代码/资产中的 `BasicAttackAuthoringWorkbench`、`AbilityComparisonWorkbench`、`BasicAttackTestSceneRuntimeBootstrap` 正式入口
-- `docs/ai/编辑器工具与验证入口.md` 已与当前 change 口径一致
+- `.spec/knowledge/features/project/编辑器工具与验证入口.md` 已与当前 change 口径一致
 
 说明：
 

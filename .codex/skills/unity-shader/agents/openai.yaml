@@ -1,4 +1,0 @@
-interface:
-  display_name: "Unity Shader"
-  short_description: "Write production Unity shaders across URP/HDRP/Built-in RP"
-  default_prompt: "Write or optimize a production Unity shader across URP, HDRP, or Built-in RP."

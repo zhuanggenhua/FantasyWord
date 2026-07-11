@@ -65,20 +65,6 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     static readonly Color SlotEquipped = new Color(0.20f, 0.36f, 0.50f, 1f);
     static readonly Color SlotMuted = new Color(0.14f, 0.16f, 0.20f, 1f);
     static readonly Color IconPanel = new Color(0.09f, 0.11f, 0.14f, 0.94f);
-    static readonly string[] EquipmentPreviewAnimationKeys =
-    {
-        "Idle",
-        "Walk",
-        "Attack",
-        "SlashAttack",
-        "ChargedAttack",
-        "Dmg",
-        "Dmg2",
-        "Die",
-        "Jump",
-        "SpinDie",
-        "SoulDie",
-    };
     static readonly List<AnimationTypeItem> SupportedAnimationBuffer = new List<AnimationTypeItem>();
     static readonly Color Accent = new Color(0.87f, 0.80f, 0.58f, 1f);
     static readonly Color BadgeColor = new Color(0.89f, 0.82f, 0.59f, 1f);
@@ -87,6 +73,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     static readonly Color TextMuted = new Color(0.61f, 0.67f, 0.73f, 1f);
     static readonly Color TextOnBadge = new Color(0.15f, 0.17f, 0.21f, 1f);
     static readonly Color OutlineIdle = new Color(0f, 0f, 0f, 0.35f);
+    static readonly Vector2 DefaultWorkbenchReferenceSize = new Vector2(1600f, 900f);
     static readonly Vector2 CompactChipSize = new Vector2(88f, 32f);
     static readonly Vector2 CompactCategoryChipSize = new Vector2(96f, 34f);
     static readonly Vector2 CharacterSlotSize = new Vector2(84f, 92f);
@@ -112,6 +99,8 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
 
     public void Bind(EquipmentWorkbenchController controller, TMP_FontAsset font)
     {
+        ConfigureRootRectForPreview();
+
         bool controllerChanged = _controller != controller;
         if (_controller != null)
             _controller.StateChanged -= Refresh;
@@ -132,6 +121,34 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             _controller.StateChanged += Refresh;
 
         Refresh();
+    }
+
+    void OnValidate()
+    {
+        ConfigureRootRectForPreview();
+    }
+
+    void Reset()
+    {
+        ConfigureRootRectForPreview();
+    }
+
+    void ConfigureRootRectForPreview()
+    {
+        if (transform is not RectTransform root)
+            return;
+
+        root.localScale = Vector3.one;
+        root.anchorMin = Vector2.zero;
+        root.anchorMax = Vector2.one;
+        root.offsetMin = Vector2.zero;
+        root.offsetMax = Vector2.zero;
+        root.pivot = new Vector2(0.5f, 0.5f);
+
+        if (root.rect.width <= 1f || root.rect.height <= 1f)
+            root.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, DefaultWorkbenchReferenceSize.x);
+        if (root.rect.width <= 1f || root.rect.height <= 1f)
+            root.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, DefaultWorkbenchReferenceSize.y);
     }
 
     void OnDestroy()
@@ -1187,7 +1204,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         if (animation == null || animation.spritesheet == null)
             return null;
 
-        Sprite previewSprite = CreateCharacterFirstFramePreviewSprite(animation);
+        Sprite previewSprite = CreateNormalizedCharacterPreviewSprite(animation);
         _characterPreviewCache[character] = previewSprite;
         return previewSprite;
     }
@@ -1254,7 +1271,6 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         int framesPerRow = Mathf.Max(1, animation.framesPerRow);
         int rowCount = Mathf.Max(1, animation.rowCount);
         CharacterFrameCandidate candidate = FindCharacterPreviewFrame(source, frameWidth, frameHeight, framesPerRow, rowCount);
-
         Texture2D texture = new Texture2D(CharacterPreviewCanvasSize, CharacterPreviewCanvasSize, TextureFormat.RGBA32, false)
         {
             name = $"{source.name}_CharacterPreview",
@@ -1307,6 +1323,49 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         _generatedPreviewSprites.Add(texture);
         _generatedPreviewSprites.Add(sprite);
         return sprite;
+    }
+
+    static Color ApplyCharacterPreviewAppearance(
+        Color sourceColor,
+        int sourceX,
+        int sourceY,
+        int frameHeight,
+        CharacterFrameCandidate candidate,
+        FrameData frame,
+        CharacterAppearance appearance)
+    {
+        if (appearance == null || frame?.limbMask == null)
+            return sourceColor;
+
+        int localX = sourceX - candidate.FrameX;
+        int localY = frameHeight - 1 - (sourceY - candidate.FrameY);
+        Vector2Int framePosition = new Vector2Int(localX, localY);
+        if (!frame.leftEyeClosed && ContainsPixel(frame.limbMask.leftEye, framePosition))
+            return PreserveSourceAlpha(appearance.leftEyeColor, sourceColor);
+        if (!frame.rightEyeClosed && ContainsPixel(frame.limbMask.rightEye, framePosition))
+            return PreserveSourceAlpha(appearance.rightEyeColor, sourceColor);
+
+        return sourceColor;
+    }
+
+    static bool ContainsPixel(List<Vector2Int> pixels, Vector2Int position)
+    {
+        if (pixels == null)
+            return false;
+
+        for (int i = 0; i < pixels.Count; i++)
+        {
+            if (pixels[i] == position)
+                return true;
+        }
+
+        return false;
+    }
+
+    static Color PreserveSourceAlpha(Color color, Color source)
+    {
+        color.a = source.a;
+        return color;
     }
 
     static CharacterFrameCandidate FindCharacterPreviewFrame(
@@ -1522,7 +1581,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         EquipmentRenderData visual = option?.Visual;
         if (visual != null)
         {
-            Sprite sequenceSource = FindAnyEquipmentSequencePreview(visual);
+            Sprite sequenceSource = FindFirstConfiguredEquipmentSequenceSprite(visual);
             if (IsUsablePreviewSprite(sequenceSource))
                 return GetSequenceFramePreviewSprite(sequenceSource);
 
@@ -1725,11 +1784,11 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         if (visual == null)
             return null;
 
-        Sprite directionalSprite = FindFirstDirectionalEquipmentSprite(visual);
-        if (directionalSprite != null)
-            return directionalSprite;
+        Sprite sequenceSprite = FindFirstConfiguredEquipmentSequenceSprite(visual);
+        if (sequenceSprite != null)
+            return sequenceSprite;
 
-        return FindAnyEquipmentSequencePreview(visual);
+        return FindFirstDirectionalEquipmentSprite(visual);
     }
 
     static bool ShouldUseGeneratedEquipmentIcon(EquipmentWorkbenchEquipmentOption option)
@@ -1760,9 +1819,13 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         if (visual == null)
             return false;
 
-        for (int actionIndex = 0; actionIndex < EquipmentPreviewAnimationKeys.Length; actionIndex++)
+        if (visual.animSequences == null || visual.animSequences.Count == 0)
+            return false;
+
+        for (int actionIndex = 0; actionIndex < visual.animSequences.Count; actionIndex++)
         {
-            string key = EquipmentPreviewAnimationKeys[actionIndex];
+            AnimSequenceEntry entry = visual.animSequences[actionIndex];
+            string key = entry != null && entry.animationType != null ? entry.animationType.name : null;
             if (!visual.HasSequenceForKey(key))
                 continue;
 
@@ -1786,6 +1849,10 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
 
     static bool IsCharacterOrProfessionFrameSprite(Sprite sprite)
     {
+        string textureName = sprite != null && sprite.texture != null ? sprite.texture.name : string.Empty;
+        if (IsKnownEquipmentOverlayTexture(textureName))
+            return false;
+
         string path = GetEditorAssetPath(sprite);
         if (IsEquipmentArtSpritePath(path))
             return false;
@@ -1799,7 +1866,6 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             return true;
         }
 
-        string textureName = sprite != null && sprite.texture != null ? sprite.texture.name : string.Empty;
         return ContainsIgnoreCase(textureName, "HumanBase")
             || ContainsIgnoreCase(textureName, "CreaturesHuman")
             || ContainsIgnoreCase(textureName, "Human_")
@@ -1813,6 +1879,12 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     {
         return ContainsPathSegment(path, "/Art/equip/")
             || ContainsPathSegment(path, "/ImportedSource/Art/equip/");
+    }
+
+    static bool IsKnownEquipmentOverlayTexture(string textureName)
+    {
+        return ContainsIgnoreCase(textureName, "Slash_sword_f")
+            || ContainsIgnoreCase(textureName, "Slash_sword_b");
     }
 
     static bool ContainsPathSegment(string source, string marker)
@@ -2009,22 +2081,26 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         }
     }
 
-    static Sprite FindAnyEquipmentSequencePreview(EquipmentRenderData visual)
+    static Sprite FindFirstConfiguredEquipmentSequenceSprite(EquipmentRenderData visual)
     {
-        if (visual == null)
+        if (visual?.animSequences == null)
             return null;
 
-        for (int actionIndex = 0; actionIndex < EquipmentPreviewAnimationKeys.Length; actionIndex++)
+        for (int actionIndex = 0; actionIndex < visual.animSequences.Count; actionIndex++)
         {
-            string key = EquipmentPreviewAnimationKeys[actionIndex];
-            if (!visual.HasSequenceForKey(key))
+            AnimSequenceEntry entry = visual.animSequences[actionIndex];
+            if (entry?.strips == null)
                 continue;
 
-            for (int row = 0; row < 4; row++)
+            for (int stripIndex = 0; stripIndex < entry.strips.Count; stripIndex++)
             {
-                for (int frame = 0; frame < 16; frame++)
+                DirectionalStrip strip = entry.strips[stripIndex];
+                if (strip?.frames == null)
+                    continue;
+
+                for (int frameIndex = 0; frameIndex < strip.frames.Count; frameIndex++)
                 {
-                    Sprite sprite = visual.TryGetSequenceSpriteByKey(key, row, frame);
+                    Sprite sprite = strip.frames[frameIndex];
                     if (sprite != null)
                         return sprite;
                 }
@@ -2346,7 +2422,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
 
         static void ApplyWeaponEquipment(Texture2D frameTexture, EquipmentRenderData visual)
         {
-            Sprite sprite = FindAnyEquipmentSequencePreview(visual);
+            Sprite sprite = FindFirstConfiguredEquipmentSequenceSprite(visual);
             if (sprite == null)
                 sprite = visual.GetSprite(CharacterFacing.SouthEast);
             if (sprite == null || sprite.texture == null)

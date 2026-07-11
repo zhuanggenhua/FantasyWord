@@ -88,14 +88,17 @@ namespace FantasyWord.GameCore
             return FireResolvedAbility(ability, commandContext);
         }
 
-        internal CharacterAbilityFireResult FireEquippedAbilityAtIndex(int index, GameCommandContext commandContext)
+        internal CharacterAbilityFireResult FireEquippedAbilityAtIndex(
+            int index,
+            GameCommandContext commandContext,
+            AbilityActivationContext activationContext = null)
         {
             int formalGasAbilityCode = m_equippedAbilityLoadout.GetFormalGasAbilityCode(index);
             if (formalGasAbilityCode > 0 &&
                 TryGetResolvedFormalGasActiveAbility(formalGasAbilityCode, out ActiveAbilityBase formalAbility))
             {
                 return new CharacterAbilityFireResult(
-                    FireResolvedAbility(formalAbility, commandContext),
+                    FireResolvedAbility(formalAbility, commandContext, activationContext),
                     formalGasAbilityCode);
             }
 
@@ -175,6 +178,25 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        internal bool ShouldLockTargetDirectionForInputGate()
+        {
+            if (!m_ownsAbilityComposition)
+            {
+                return false;
+            }
+
+            foreach (KeyValuePair<int, AbilityBase> entry in m_runtime.GetFormalGasAbilityInstanceEntriesSnapshot())
+            {
+                if (entry.Value is ActiveAbilityBase ability &&
+                    ability.ShouldLockTargetDirectionDuringInputGateForRuntime())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         internal bool TryGetFormalGasAbilityRuleCooldownState(
             int formalGasAbilityCode,
             out float remainingCooldown,
@@ -222,11 +244,13 @@ namespace FantasyWord.GameCore
                 TryValidateFormalAbilityUseAtFirePoint(formalGasAbilityCode, out result);
         }
 
-        internal bool BeginFormalGasAbilityRuleLifecycle(int formalGasAbilityCode)
+        internal bool BeginFormalGasAbilityRuleLifecycle(
+            int formalGasAbilityCode,
+            AbilityActivationContext activationContext)
         {
             return m_ownsAbilityComposition &&
                 formalGasAbilityCode > 0 &&
-                BeginFormalAbilityRuleLifecycle(formalGasAbilityCode);
+                BeginFormalAbilityRuleLifecycle(formalGasAbilityCode, activationContext);
         }
 
         internal void EndFormalGasAbilityRuleLifecycle(int formalGasAbilityCode)
@@ -537,7 +561,10 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        private EAbilityFireCheckResult FireResolvedAbility(ActiveAbilityBase ability, GameCommandContext commandContext)
+        private EAbilityFireCheckResult FireResolvedAbility(
+            ActiveAbilityBase ability,
+            GameCommandContext commandContext,
+            AbilityActivationContext activationContext = null)
         {
             EAbilityFireCheckResult triggerAbilityCheckResult = ability.CanFire();
 
@@ -545,17 +572,35 @@ namespace FantasyWord.GameCore
             {
                 if (ability.ShouldUpdateLookAtDirectionOnFireForRuntime())
                 {
-                    m_character.SetLookAtDirection(m_character.GetTargetDirection());
+                    Vector2 targetDirection = m_character.GetTargetDirection();
+                    if (activationContext != null &&
+                        activationContext.TryGetAimDirection(out Vector3 aimDirection))
+                    {
+                        Vector2 requestedDirection = new(aimDirection.x, aimDirection.y);
+                        if (requestedDirection.sqrMagnitude > 0.0001f)
+                        {
+                            targetDirection = requestedDirection.normalized;
+                            m_character.SetTargetDirection(targetDirection);
+                        }
+                    }
+
+                    if (targetDirection.sqrMagnitude > 0.0001f)
+                    {
+                        m_character.SetLookAtDirection(targetDirection);
+                    }
                 }
 
                 if (ability.UsesAutomaticRuntimeStateManagement())
                 {
                     ability.gameObject.SetActive(true);
-                    ability.Fire(commandContext, () => ability.gameObject.SetActive(false));
+                    ability.Fire(
+                        commandContext,
+                        activationContext,
+                        () => ability.gameObject.SetActive(false));
                 }
                 else
                 {
-                    ability.Fire(commandContext, null);
+                    ability.Fire(commandContext, activationContext, null);
                 }
             }
 

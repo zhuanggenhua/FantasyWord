@@ -201,10 +201,15 @@ namespace FantasyWord.GameCore
             PlayDeathAudio();
             ResetMovement();
 
-            if (!(m_animationStrategy?.PlayDeathAnimation() ?? false))
+            if (!TryPlayDeathAnimation())
             {
                 OnDeath();
             }
+        }
+
+        protected virtual bool TryPlayDeathAnimation()
+        {
+            return m_animationStrategy?.PlayDeathAnimation() ?? false;
         }
 
         /// <summary>
@@ -390,6 +395,18 @@ namespace FantasyWord.GameCore
             return motionRuntime.MoveTo(destination, stoppingDistance, speedOverride);
         }
 
+        /// <summary>
+        /// 按顺序连续执行一组世界坐标路径点。
+        /// 路径计算不属于 Movable；该入口只复用现有 Rigidbody2D 碰撞和速度规则执行路线。
+        /// </summary>
+        public TaskCompletionSource<bool> MoveAlongPath(
+            IReadOnlyList<Vector2> waypoints,
+            float stoppingDistance,
+            float? speedOverride = null)
+        {
+            return motionRuntime.MoveAlongPath(waypoints, stoppingDistance, speedOverride);
+        }
+
         public bool IsMovingUp() => motionRuntime.IsMovingUp();
         public bool IsMovingDown() => motionRuntime.IsMovingDown();
         public bool IsMovingLeft() => motionRuntime.IsMovingLeft();
@@ -455,7 +472,7 @@ namespace FantasyWord.GameCore
             direction = GetTargetDirection();
             if (direction.sqrMagnitude <= 0.0001f)
             {
-                direction = Vector2.right;
+                return false;
             }
 
             direction.Normalize();

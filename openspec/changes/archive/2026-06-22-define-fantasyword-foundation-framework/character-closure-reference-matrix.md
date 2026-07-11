@@ -77,9 +77,9 @@
 
 ## Implementation Direction
 
-第一阶段应先改 owner 和命令边界，而不是重写整个角色系统：
+当前应先改 owner 和命令边界，而不是重写整个角色系统：
 
-1. `InventorySystem` 先从全局背包扩展为显式 owner 库存服务，保留旧接口作为兼容入口。
+1. `InventorySystem` 先从全局背包扩展为显式 owner 库存服务，保留旧接口作为入口。
 2. 拾取、奖励、装备、使用物品和 UI 查询逐步改为显式 owner。
 3. `CharacterBase` 保持角色长期身份、存档和规则入口，动作执行继续吸收 TopDown 的组件调度模式。
 4. GAS 只接规则真相，不二次执行动作。

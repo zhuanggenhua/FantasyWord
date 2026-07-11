@@ -156,7 +156,7 @@ FantasyWord Rules Engine 解释 Ability/Effect/Trigger/Resolution 配置
 
 ## 编辑器策略
 
-当前不先做大型编辑器。第一阶段只需要配置资产和校验门禁：
+当前不先做大型编辑器。当前只需要配置资产和校验门禁：
 
 - 能创建/读取/校验 AbilityDefinition、EffectDefinition、TriggerDefinition、ResolutionDefinition。
 - 能检查 ID、引用、目标模板、资源消耗、触发循环和重复结算。

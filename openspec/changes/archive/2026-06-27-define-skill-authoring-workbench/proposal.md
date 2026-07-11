@@ -28,7 +28,7 @@
 - 在不引入未确认职业、技能树和正式技能内容的前提下，第一版作者流还必须至少能对齐并复现 `2DRPGEngine` 当前真实存在的技能族：`Melee / Projectile / Dash / SelfCast / Summoning / ContactDamage / Ticking`。其中动作和角色素材优先使用项目内现有资源，不直接照搬参考工程素材；只有投射物允许使用参考或外部现成投射物资源作为过渡样例。
 - 将前一轮过窄的 `ProjectileDefinition / ImpactReaction` 从顶层架构降级为 `EffectDefinition` 或执行/表现子类型；顶层改为 `AbilityDefinition / CastDefinition / CostDefinition / TargetDefinition / EffectDefinition / TriggerDefinition / ProcDefinition / ResolutionDefinition`。表现只作为规则结果的引用集合，不作为规则顶层真相。
 - 明确 GameCore `GameplayFeedbackSet` 是当前项目侧表现反馈真相源；EX-GAS `GameplayCue` 只作为 GAS 侧表现触发入口，不得承担伤害、治疗、资源、状态、位移等规则结算。基础攻击当前已收口到 `GameplayEffect.Executions -> FormalInstantDamageExecution`，后续技能同样不得回退到 Cue 扣血模式。
-- 新增玩家“炼金式法术配置”方向：玩家可以通过受限配方配置能力的触发与反应逻辑，不只是改变数值属性。该系统应编译或解释为同一套 Ability / Effect / Trigger / Cost 配置；第一版 UI 可以是槽位式或链式配方，不把自由节点图作为第一阶段规则地基。
+- 新增玩家“炼金式法术配置”方向：玩家可以通过受限配方配置能力的触发与反应逻辑，不只是改变数值属性。该系统应编译或解释为同一套 Ability / Effect / Trigger / Cost 配置；第一版 UI 可以是槽位式或链式配方，不把自由节点图作为当前规则地基。
 - 明确节点图裁决：节点图不是当前规则系统的主方案；只有当玩家/Mod 配方需要大量条件分支、触发链、数据流和可视化编排时，才作为高级编辑 UI 候选进入后续裁决。不得因为未来可能需要节点，就提前新造第二套技能运行真相。
 - 明确技能编辑/角色构筑实现前，必须先由用户确认的最小数据模型问题。
 - 明确在这些问题未确认前，允许先做的内容无关框架。

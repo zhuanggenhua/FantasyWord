@@ -8,9 +8,7 @@ namespace FantasyWord.GameCore
     public class DatabaseWindow : EditorWindow
     {
         private static readonly Type[] Tabs = {
-            typeof(HeroSheet),
-            typeof(MonsterSheet),
-            typeof(NPCSheet),
+            typeof(CharacterSheet),
             typeof(Item),
             typeof(Shop),
             typeof(Recipe),

@@ -107,7 +107,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void FormalGasQuickSlotSave_WritesGasCodeWithoutLegacyAbilityReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             GrantBasicAttack(owner);
 
             Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "测试前应能只凭 EX-GAS Ability Code 把基础攻击装入快捷槽。");
@@ -125,7 +125,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void FormalGasQuickSlotEquip_UsesGasCodeAsSlotTruth()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             GrantBasicAttack(owner);
 
             Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "已迁移基础攻击应能直接按 EX-GAS Ability Code 装入快捷槽。");
@@ -142,7 +142,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void FormalGasQuickSlotCooldownSnapshot_UsesGasCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             GrantBasicAttack(owner);
 
             Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "测试前应能只凭 EX-GAS Ability Code 把基础攻击装入快捷槽。");
@@ -161,7 +161,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void FormalGasActiveAbilitySnapshot_DoesNotExposeLegacySheetForMigratedAbility()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             GrantBasicAttack(owner);
 
             Assert.IsNull(
@@ -223,7 +223,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void CharacterAbilityInventoryEvents_OnlyExposeFormalGasCode()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
 
             CharacterAbilityAddedEvent addedEvent = new(owner, BasicAttackAbilityCode);
             CharacterAbilityRemovedEvent removedEvent = new(owner, BasicAttackAbilityCode);
@@ -237,7 +237,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void AddOrRemoveAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             AddOrRemoveAbility command = new();
             SetInstanceField(command, "m_formalGasAbilityCode", BasicAttackAbilityCode);
             Assert.IsNull(FindInstanceField(typeof(AddOrRemoveAbility), "m_abilitySheet"), "脚本授予能力命令不应再保留旧能力表字段。");
@@ -270,7 +270,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void FormalGasAbilitySourceAndRuntimeState_SaveGasCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
 
             Assert.IsTrue(
                 owner.AddBonusFormalGasAbility(BasicAttackAbilityCode, CharacterAbilitySourceKey.Script),
@@ -294,7 +294,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void ItemAddAbilityEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             ItemAddAbilityEffect effect = new();
             SetInstanceField(effect, "m_formalGasAbilityCode", BasicAttackAbilityCode);
             Assert.IsNull(FindInstanceField(typeof(ItemAddAbilityEffect), "m_ability"), "道具授予能力效果不应再保留旧能力表字段。");
@@ -309,7 +309,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void EquipmentBonusAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             CharacterEquipment characterEquipment = owner.gameObject.AddComponent<CharacterEquipment>();
             SetInstanceField(characterEquipment, "m_character", owner);
             InvokeLifecycle(characterEquipment, "Awake");
@@ -341,7 +341,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void CharacterSheetInitialAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero(
+            CharacterActor owner = CreateCharacter(
                 "owner",
                 Vector2.zero,
                 CreateStats(health: 30),
@@ -363,7 +363,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void CharacterAbilitySetAdditionalAbility_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero(
+            CharacterActor owner = CreateCharacter(
                 "owner",
                 Vector2.zero,
                 CreateStats(health: 30),
@@ -386,7 +386,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void TemporalAbilityGrantEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             TemporalAbilityGrantEffect effect = new();
             SetInstanceField(
                 effect,
@@ -421,7 +421,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void TemporalAbilitySuppressionEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             GrantBasicAttack(owner);
             TemporalAbilitySuppressionEffect effect = new();
             SetInstanceField(
@@ -450,7 +450,7 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void TemporalAbilityReplacementEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
-            Hero owner = CreateHero("owner", Vector2.zero, CreateStats(health: 30));
+            CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
             TemporalAbilityReplacementEffect effect = new();
             SetInstanceField(
                 effect,
@@ -486,6 +486,28 @@ namespace FantasyWord.GameCore.Tests
             Assert.That(joinedLines, Does.Contain("造成伤害:4 固定伤害+1 属性缩放伤害 物理"), "基础攻击描述仍应读取 EX-GAS GameplayEffect 里的正式基础伤害。");
             Assert.IsFalse(lines.Exists(line => line.content == "5"), "已绑定 EX-GAS 的基础攻击不应再把 项目侧旧能力表 manaCost 显示成正式消耗描述。");
             Assert.IsFalse(lines.Exists(line => line.content == "9s"), "已绑定 EX-GAS 的基础攻击不应再把 项目侧旧能力表 cooldown 显示成正式冷却描述。");
+        }
+
+        [Test]
+        public void FormalGasBasicAttackGameplayEffect_DisablesDefaultPush()
+        {
+            string gameplayEffectJson =
+                File.ReadAllText("Assets/DataGenerated/Luban/Json/GAS/exgas_tbgameplayeffect.json");
+            int effectStart = gameplayEffectJson.IndexOf("\"ID\": 2003", StringComparison.Ordinal);
+            int nextEffectStart = gameplayEffectJson.IndexOf("\"ID\": 2004", effectStart + 1, StringComparison.Ordinal);
+
+            Assert.GreaterOrEqual(effectStart, 0, "基础攻击必须保留正式 GameplayEffect 2003。");
+            Assert.Greater(nextEffectStart, effectStart, "基础攻击 GameplayEffect 2003 必须能与下一条效果配置明确分隔。");
+
+            string basicAttackEffectJson = gameplayEffectJson.Substring(effectStart, nextEffectStart - effectStart);
+            Assert.AreEqual(
+                2,
+                System.Text.RegularExpressions.Regex.Matches(basicAttackEffectJson, "\"PushMode\": 1").Count,
+                "基础攻击普通伤害和背刺附加伤害都必须显式禁用默认击退。");
+            Assert.That(
+                basicAttackEffectJson,
+                Does.Not.Contain("\"PushMode\": 0"),
+                "基础攻击不能再把 PushMode=0 误当成无击退。");
         }
 
         [Test]
@@ -630,8 +652,8 @@ namespace FantasyWord.GameCore.Tests
         [Test]
         public void Fire_HitsTargetInsideHitbox_AndUpdatesFormalHealth()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
             GrantBasicAttack(attacker);
 AssertFormalAttackAbilityReady(attacker);
             attacker.SetLookAtDirection(Vector2.right);
@@ -661,10 +683,74 @@ AssertFormalAttackAbilityReady(attacker);
         }
 
         [Test]
+        public void Fire_DoesNotBakeFacingDirectionIntoGasActivationContext()
+        {
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(attacker);
+            CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
+            AssertFormalAttackAbilityReady(attacker);
+            Assert.IsTrue(TryGetFormalAbilitySpec(abilitySet, BasicAttackAbilityCode, out AbilitySpec abilitySpec), "技能 EX-GAS Ability 20001 未注册正式 GAS AbilitySpec。");
+            Assert.IsTrue(TryGetFormalGasAbilityInstance(abilitySet, BasicAttackAbilityCode, out AbilityBase abilityBase), "未找到正式近战能力实例。");
+            ActiveAbilityBase activeAbility = abilityBase as ActiveAbilityBase;
+            Assert.IsNotNull(activeAbility, "近战能力实例不是主动能力。");
+
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            defender.SetLookAtDirection(Vector2.left);
+            defender.SetTargetDirection(Vector2.left);
+
+            int previousHealth = defender.GetCurrentHealth();
+            int expectedDamage = CalculateExpectedResolvedDamage(attacker, defender, CreateBasicAttackBaseDamagePayload());
+
+            EAbilityFireCheckResult fireResult = attacker.FireFormalGasAbility(BasicAttackAbilityCode, GameCommandContext.ResolveForActor(attacker));
+
+            Assert.AreEqual(EAbilityFireCheckResult.Valid, fireResult);
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => abilitySpec.IsActive && abilitySpec.GetActivationContext() != null,
+                CalculateExpectedGasTimelineHitTicks());
+
+            AbilityActivationContext activationContext = abilitySpec.GetActivationContext();
+            Assert.IsNotNull(activationContext, "正式 GAS Ability 激活后必须持有本次攻击上下文。");
+            Assert.IsFalse(
+                activationContext.TryGetAimDirection(out _),
+                "通用主动技能入口不应把角色起手朝向写成最终执行方向；闪现、突进等技能会在命中前改变姿态。");
+            Assert.IsInstanceOf<XParamALTimelineID>(
+                abilitySpec.GetParamRaw(),
+                "运行时激活上下文不能覆盖 ALTimeline 的作者配置参数。");
+
+            Assert.IsFalse(
+                attacker.CanUpdateTargetDirection(),
+                "正式攻击状态仍应通过 Event.Attacking 阻止普通目标方向更新；激活快照不应改变该动作规则。");
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => defender.GetCurrentHealth() == previousHealth - expectedDamage,
+                CalculateExpectedGasTimelineHitTicks());
+            Assert.AreEqual(previousHealth - expectedDamage, defender.GetCurrentHealth(), "普通攻击期间正式攻击状态会锁住转向，命中帧读取当前朝向仍应稳定命中。");
+
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => activeAbility.inputGateState == EFormalAbilityInputGateState.Idle && !abilitySpec.IsActive,
+                40);
+            Assert.IsNull(
+                abilitySpec.GetActivationContext(),
+                "正式 GAS Ability 结束后必须清理本次激活上下文，后续攻击不能复用上一轮目标或输入意图。");
+        }
+
+        [Test]
+        public void AbilityActivationContext_AllowsDirectionlessAbilities()
+        {
+            AbilityActivationContext activationContext = new(Vector3.one);
+
+            Assert.IsFalse(
+                activationContext.TryGetAimDirection(out Vector3 aimDirection),
+                "自疗、全屏 Buff 等无方向能力不应被强制要求攻击方向。");
+            Assert.AreEqual(Vector3.zero, aimDirection);
+        }
+
+        [Test]
         public void Fire_WhenTargetBackFacesAttacker_AppliesFormalGasBackstabBonus()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
             GrantBasicAttack(attacker);
 AssertFormalAttackAbilityReady(attacker);
             attacker.SetLookAtDirection(Vector2.right);
@@ -691,8 +777,8 @@ AssertFormalAttackAbilityReady(attacker);
         [Test]
         public void Fire_WhenTargetFacesAttacker_DoesNotApplyFormalGasBackstabBonus()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
             GrantBasicAttack(attacker);
 AssertFormalAttackAbilityReady(attacker);
             attacker.SetLookAtDirection(Vector2.right);
@@ -715,8 +801,8 @@ AssertFormalAttackAbilityReady(attacker);
         [Test]
         public void Fire_DoesNotHitTargetOutsideHitbox()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(2.5f, 0.0f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(2.5f, 0.0f), CreateStats(health: 40, physicalDefense: 2));
             GrantBasicAttack(attacker);
 AssertFormalAttackAbilityReady(attacker);
             attacker.SetLookAtDirection(Vector2.right);
@@ -742,8 +828,8 @@ AssertFormalAttackAbilityReady(attacker);
         [Test]
         public void CatchAreaBox2D_CatchesChildHitboxAbilitySystemComponent_AndFiltersOwner()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
             Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
             Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc), "目标缺少正式 GAS ASC。");
 
@@ -758,7 +844,9 @@ AssertFormalAttackAbilityReady(attacker);
             parameter.SetLayer(1 << hitboxLayer);
 
             CatchAreaBox2D catcher = new();
-            catcher.Init(attackerAsc.Cell);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            catcher.Init(attackerAsc.Cell, new AbilityActivationContext(attacker.transform.position));
             catcher.InitParameters(parameter);
 
             List<AbilitySystemCell> results = new();
@@ -770,11 +858,11 @@ AssertFormalAttackAbilityReady(attacker);
         }
 
         [Test]
-        public void CatchAreaBox2D_UsesCharacterFacingDirectionWithoutTransformRotation()
+        public void CatchAreaBox2D_UsesOwnerFacingAtHitFrameWithoutTransformRotation()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defenderAbove = CreateHero("defender-above", new Vector2(-0.15f, 0.65f), CreateStats(health: 40, physicalDefense: 2));
-            Hero defenderRight = CreateHero("defender-right", new Vector2(0.65f, -0.6f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defenderAbove = CreateCharacter("defender-above", new Vector2(-0.15f, 0.65f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor defenderRight = CreateCharacter("defender-right", new Vector2(0.65f, -0.6f), CreateStats(health: 40, physicalDefense: 2));
             Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
             Assert.IsTrue(defenderAbove.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAboveAsc), "上方目标缺少正式 GAS ASC。");
             Assert.IsTrue(defenderRight.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderRightAsc), "右侧目标缺少正式 GAS ASC。");
@@ -794,22 +882,24 @@ AssertFormalAttackAbilityReady(attacker);
             parameter.SetLayer(1 << hitboxLayer);
 
             CatchAreaBox2D catcher = new();
-            catcher.Init(attackerAsc.Cell);
+            catcher.Init(
+                attackerAsc.Cell,
+                new AbilityActivationContext(attacker.transform.position, Vector3.right));
             catcher.InitParameters(parameter);
 
             List<AbilitySystemCell> results = new();
             catcher.CatchTargetsNonAllocSafe(attackerAsc.Cell, ref results);
 
-            Assert.Contains(defenderAboveAsc.Cell, results, "CatchAreaBox2D 应按角色 2D 目标方向旋转命中盒，而不是只看 Transform Z 旋转。");
-            Assert.IsFalse(results.Contains(defenderRightAsc.Cell), "角色朝上时，原本朝右的未旋转偏移不应继续命中右侧目标。");
+            Assert.Contains(defenderAboveAsc.Cell, results, "CatchAreaBox2D 应读取施法者命中帧的当前朝向，而不是只看 Transform Z 旋转。");
+            Assert.IsFalse(results.Contains(defenderRightAsc.Cell), "激活上下文中的旧输入方向不能覆盖施法者命中帧的实际朝向。");
         }
 
         [Test]
         public void CatchAreaPolygon2D_CatchesOnlyTargetsInsideAuthoredPolygon()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defenderInside = CreateHero("defender-inside", new Vector2(0.65f, 0.05f), CreateStats(health: 40, physicalDefense: 2));
-            Hero defenderOutside = CreateHero("defender-outside", new Vector2(0.95f, 0.35f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defenderInside = CreateCharacter("defender-inside", new Vector2(0.65f, 0.05f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor defenderOutside = CreateCharacter("defender-outside", new Vector2(0.95f, 0.35f), CreateStats(health: 40, physicalDefense: 2));
             Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
             Assert.IsTrue(defenderInside.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderInsideAsc), "多边形内目标缺少正式 GAS ASC。");
             Assert.IsTrue(defenderOutside.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderOutsideAsc), "多边形外目标缺少正式 GAS ASC。");
@@ -826,7 +916,9 @@ AssertFormalAttackAbilityReady(attacker);
             parameter.SetLayer(1 << hitboxLayer);
 
             CatchAreaPolygon2D catcher = new();
-            catcher.Init(attackerAsc.Cell);
+            attacker.SetLookAtDirection(Vector2.right);
+            attacker.SetTargetDirection(Vector2.right);
+            catcher.Init(attackerAsc.Cell, new AbilityActivationContext(attacker.transform.position));
             catcher.InitParameters(parameter);
 
             List<AbilitySystemCell> results = new();
@@ -835,6 +927,45 @@ AssertFormalAttackAbilityReady(attacker);
             Assert.Contains(defenderInsideAsc.Cell, results, "CatchAreaPolygon2D 应按编辑出的多边形真实命中范围返回目标。");
             Assert.IsFalse(results.Contains(defenderOutsideAsc.Cell), "多边形外目标不应被外接盒粗筛误判为命中。");
             Assert.IsFalse(results.Contains(attackerAsc.Cell), "CatchAreaPolygon2D 默认不应把施放者自己的 Hitbox 返回为目标。");
+        }
+
+        [Test]
+        public void CatchAreaPolygon2D_UsesOwnerPoseAtHitFrame_AfterTeleport()
+        {
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor targetAtDestination = CreateCharacter("target-at-destination", new Vector2(1.35f, 0.0f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor targetAtCastOrigin = CreateCharacter("target-at-cast-origin", new Vector2(0.65f, 0.0f), CreateStats(health: 40, physicalDefense: 2));
+            Assert.IsTrue(attacker.TryGetFormalAbilitySystem(out AbilitySystemComponent attackerAsc), "攻击者缺少正式 GAS ASC。");
+            Assert.IsTrue(targetAtDestination.TryGetFormalAbilitySystem(out AbilitySystemComponent destinationAsc), "闪现落点目标缺少正式 GAS ASC。");
+            Assert.IsTrue(targetAtCastOrigin.TryGetFormalAbilitySystem(out AbilitySystemComponent castOriginAsc), "起手位置目标缺少正式 GAS ASC。");
+            GetDamageHitbox(targetAtDestination).size = new Vector2(0.06f, 0.06f);
+            GetDamageHitbox(targetAtCastOrigin).size = new Vector2(0.06f, 0.06f);
+
+            int hitboxLayer = LayerMask.NameToLayer("Hitbox");
+            Assert.GreaterOrEqual(hitboxLayer, 0, "测试项目必须存在 Hitbox 层。");
+
+            XParamCatchAreaPolygon2D parameter = new();
+            parameter.SetIsWorldSpace(false);
+            parameter.SetPoints("0.2,-0.25;1.0,-0.2;0.85,0.35;0.25,0.4");
+            parameter.SetLayer(1 << hitboxLayer);
+
+            AbilityActivationContext activationContext = new(
+                attacker.transform.position,
+                Vector3.right,
+                destinationAsc.Cell);
+            CatchAreaPolygon2D catcher = new();
+            catcher.Init(attackerAsc.Cell, activationContext);
+            catcher.InitParameters(parameter);
+
+            attacker.transform.position = new Vector3(2.0f, 0.0f, 0.0f);
+            attacker.SetLookAtDirection(Vector2.left);
+            attacker.SetTargetDirection(Vector2.left);
+
+            List<AbilitySystemCell> results = new();
+            catcher.CatchTargetsNonAllocSafe(destinationAsc.Cell, ref results);
+
+            Assert.Contains(destinationAsc.Cell, results, "闪现后攻击应以命中帧的施法者位置和朝向计算范围。");
+            Assert.IsFalse(results.Contains(castOriginAsc.Cell), "闪现后攻击不能继续使用起手位置或起手方向计算命中范围。");
         }
 
         [Test]
@@ -888,20 +1019,19 @@ AssertFormalAttackAbilityReady(attacker);
             Assert.That(cueSource, Does.Not.Contain("NormalizeAnimationKey"), "项目侧动画 Cue 不应再把旧角色动画名静默转成装备动作键。");
             Assert.That(cueSource, Does.Not.Contain("Skill_Attack"), "普攻正式配置必须直接使用装备系统 Attack 动作键，不能保留旧 Skill_Attack 兼容口。");
             Assert.That(cueSource, Does.Not.Contain("Skill_ChargedAttack"), "蓄力释放正式配置必须直接使用装备系统 ChargedAttack 动作键，不能保留旧 Skill_ChargedAttack 兼容口。");
-            StringAssert.Contains("RequiresEquipmentAnimation(animationKey)", cueSource, "项目侧动画 Cue 必须区分装备动作，避免普攻/蓄力绕开装备层。");
-            StringAssert.Contains("\"Attack\" => true", cueSource, "普攻动作必须声明为装备系统动作，失败时不得退回普通角色 Animator。");
-            StringAssert.Contains("\"ChargedAttack\" => true", cueSource, "蓄力释放动作必须声明为装备系统动作，失败时不得退回普通角色 Animator。");
-            StringAssert.Contains("已拒绝回退普通 Animator", cueSource, "装备动作失败时必须显式拒绝普通 Animator 回退，避免角色动作和武器攻击/特效脱节。");
+            StringAssert.Contains("ICharacterAnimationDriver", cueSource, "项目侧动画 Cue 必须通过正式角色动作驱动合同进入装备表现层。");
+            StringAssert.Contains("TryPlayAnimation(animationKey)", cueSource, "GAS 动画 Cue 必须只提交动作键，由角色表现驱动同步身体、武器和武器自带特效。");
+            StringAssert.Contains("Debug.LogError", cueSource, "运行时角色 Prefab 缺少动作驱动或动作配置时必须直接报错。");
+            Assert.That(cueSource, Does.Not.Contain("Type.GetType"), "正式动画链不得再通过字符串反射猜测装备动画组件。");
+            Assert.That(cueSource, Does.Not.Contain("TryPlayAnimatorFallback"), "装备动作失败时不得回退普通 Animator，避免角色动作和武器攻击/特效脱节。");
         }
 
         [Test]
-        public void FormalGasAttackEquipmentMaterialChain_UsesWeaponAttackSequenceForBuiltInVfx()
+        public void FormalGasAttackWeaponVisual_UsesWeaponAttackSequenceForBuiltInVfx()
         {
             const string attackAnimationTypeGuid = "381921f99eee5f44584b409fe08a6788";
-            const string spearVisualGuid = "c071eb6b046290f4f8aaa90e9fd0215c";
 
             string spearAsset = File.ReadAllText("Assets/GameData/EquipmentSystem/Equip/Visual/长矛.asset");
-            string equipmentDemoScene = File.ReadAllText("Assets/Scenes/EquipmentSystemDemo.unity");
 
             StringAssert.Contains(
                 "animSequences:",
@@ -911,17 +1041,13 @@ AssertFormalAttackAbilityReady(attacker);
                 attackAnimationTypeGuid,
                 spearAsset,
                 "长矛必须把 Attack 动作键接到武器攻击序列帧；武器自带特效随这组序列帧播放。");
-            StringAssert.Contains(
-                spearVisualGuid,
-                equipmentDemoScene,
-                "EquipmentSystemDemo 默认装备必须包含带 Attack 序列帧的武器，避免验收场景只播放角色动作。");
         }
 
         [Test]
         public void Fire_ChargedAttackRelease_HoldsUntilInputReleaseThenHitsThroughGasTimeline()
         {
-            Hero attacker = CreateHero("charged-attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("charged-defender", new Vector2(0.75f, 0.2f), CreateStats(health: 50, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("charged-attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("charged-defender", new Vector2(0.75f, 0.2f), CreateStats(health: 50, physicalDefense: 2));
             GrantFormalGasAbility(attacker, ChargedAttackReleaseAbilityCode);
             AssertFormalAbilityReady(attacker, expectFormalCost: false, EAbilityFireCheckResult.Valid, ChargedAttackReleaseAbilityCode);
             attacker.SetLookAtDirection(Vector2.right);
@@ -957,19 +1083,23 @@ AssertFormalAttackAbilityReady(attacker);
         }
 
         [Test]
-        public void TaskApplyEffects_OnEditorPreviewWithoutCatcher_IsUpstreamPatchCandidate()
+        public void TaskApplyEffects_OnEditorPreviewWithoutCatcher_SkipsPreviewWithoutThrowing()
         {
             TaskApplyEffects task = new(null);
 
-            Assert.Throws<NullReferenceException>(
+            LogAssert.Expect(
+                LogType.Warning,
+                "TaskApplyEffects preview skipped: target catcher is not initialized. CatcherType=");
+
+            Assert.DoesNotThrow(
                 () => task.OnEditorPreview(null, 0, 0, 0),
-                "EX-GAS 上游 TaskApplyEffects 在未初始化 TargetCatcher 时仍会空引用；项目侧不直接修改插件源码，此项只记录为可选上游补丁候选。");
+                "EX-GAS TaskApplyEffects 编辑器预览没有初始化 TargetCatcher 时，应跳过预览并给出警告，不能再空引用打断时间轴预览。");
         }
 
         [Test]
         public void FormalGasAttack_UsesGasTimelineExecutionGate_NotExecutionAssetTiming()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
             SerializedObject prefabAbilitySerializedObject = new SerializedObject(LoadBasicAttackAbilityPrefabComponent());
             Assert.IsNull(prefabAbilitySerializedObject.FindProperty("m_inputGate"), "近战技能资产不应再保留 legacy m_inputGate。");
 
@@ -994,7 +1124,7 @@ AssertFormalAttackAbilityReady(attacker);
         public void FormalGasAttackRuntimeInstance_UsesGasContextNotMigrationSheetFlag()
         {
             RegisterFormalGasAbilityDescriptionGeneratedRuntime();
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
             Assert.IsTrue(
                 FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(BasicAttackAbilityCode, out FormalGasAbilityRuntimeConfig config),
                 "测试前应能从 exgas.abilityGameCore 解析基础攻击运行配置。");
@@ -1021,7 +1151,7 @@ AssertFormalAttackAbilityReady(attacker);
         public void FormalGasAttackRuntimeInstance_DoesNotInheritLegacy旧主动能力表RuntimeShell()
         {
             RegisterFormalGasAbilityDescriptionGeneratedRuntime();
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
             Assert.IsTrue(
                 FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(BasicAttackAbilityCode, out FormalGasAbilityRuntimeConfig config),
                 "测试前应能从 exgas.abilityGameCore 解析基础攻击运行配置。");
@@ -1047,8 +1177,8 @@ AssertFormalAttackAbilityReady(attacker);
         [Test]
         public void FormalGasAttack_DoesNotRequireLegacyExecutionAssetForRuntime()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
             GrantBasicAttack(attacker);
             AssertFormalAttackAbilityReady(attacker);
 
@@ -1063,7 +1193,7 @@ AssertFormalAttackAbilityReady(attacker);
         [Test]
         public void FormalGasAttack_DoesNotUseLegacyExecutionFeedbacks()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
             GrantBasicAttack(attacker);
             AssertFormalAttackAbilityReady(attacker);
 
@@ -1079,7 +1209,7 @@ AssertFormalAttackAbilityReady(attacker);
         [Test]
         public void FormalGasAttack_DoesNotDeclareLegacyHitWindowRuntime()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
 GrantBasicAttack(attacker);
             AssertFormalAttackAbilityReady(attacker);
 
@@ -1094,7 +1224,7 @@ GrantBasicAttack(attacker);
         [Test]
         public void FormalGasAttack_DoesNotUseLegacyExecutionInterruptOrReloadFeedbacks()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
 GrantBasicAttack(attacker);
             AssertFormalAttackAbilityReady(attacker);
 
@@ -1115,8 +1245,8 @@ GrantBasicAttack(attacker);
         [Test]
         public void FormalGasAttack_TriggersTargetHitFeedbackThroughGameplayCue()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
 GrantBasicAttack(attacker);
             AssertFormalAttackAbilityReady(attacker);
             attacker.SetLookAtDirection(Vector2.right);
@@ -1146,7 +1276,7 @@ GrantBasicAttack(attacker);
         [Test]
         public void FormalGasAttack_UsesActivationOwnedAttackingTag_NotLegacyDisabledActions()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 12, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 12, physicalAttack: 10));
             GrantBasicAttack(attacker);
 
             CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
@@ -1169,7 +1299,7 @@ GrantBasicAttack(attacker);
         [Test]
         public void FormalGasAttack_DoesNotUseLegacyCanInterruptAsActionInterruptGate()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 12, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 12, physicalAttack: 10));
             GrantBasicAttack(attacker);
 
             CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
@@ -1194,7 +1324,7 @@ GrantBasicAttack(attacker);
         [Test]
         public void Fire_WithWindup_ActivatesFormalGasAbilityDuringWeaponSequenceAndEndsAfterStop()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, physicalAttack: 10));
 GrantBasicAttack(attacker);
             CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
             AssertFormalAttackAbilityReady(attacker);
@@ -1220,8 +1350,8 @@ GrantBasicAttack(attacker);
         [Test]
         public void Fire_WhenBlockedTagAppearsDuringWindup_DoesNotApplyHitOrCooldown()
         {
-            Hero attacker = CreateHero("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 10, physicalAttack: 10));
-            Hero defender = CreateHero("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
+            CharacterActor attacker = CreateCharacter("attacker", new Vector2(0.0f, 0.0f), CreateStats(health: 30, mana: 10, physicalAttack: 10));
+            CharacterActor defender = CreateCharacter("defender", new Vector2(0.6f, 0.2f), CreateStats(health: 40, physicalDefense: 2));
 GrantBasicAttack(attacker);
             CharacterAbilitySet abilitySet = attacker.GetComponent<CharacterAbilitySet>();
             AssertFormalAttackAbilityReady(attacker);
@@ -1254,6 +1384,193 @@ GrantBasicAttack(attacker);
             Assert.AreEqual(previousHealth, defender.GetCurrentHealth(), "GAS 阻断标签在真正出手前出现时，不应结算基础攻击命中。");
             Assert.AreEqual(previousMana, attacker.GetCurrentMana(), "GAS 阻断标签在真正出手前出现时，不应扣蓝。");
             Assert.IsTrue(abilitySpec.IsCooldownReady, "GAS 阻断标签提交失败时不应启动冷却。");
+        }
+
+        [Test]
+        public void PlayerControl_WhenTargetDirectionUpdateIsLocked_PreservesFacingUntilUnlocked()
+        {
+            CharacterActor player = CreateCharacter(
+                "player-facing-lock",
+                Vector2.zero,
+                CreateStats(health: 30));
+
+            CharacterMovement movement = player.gameObject.AddComponent<CharacterMovement>();
+            SetInstanceField(movement, "m_character", player);
+
+            CharacterCommandExecutor commandExecutor = player.gameObject.AddComponent<CharacterCommandExecutor>();
+            SetInstanceField(commandExecutor, "m_character", player);
+            InvokeLifecycle(commandExecutor, "Awake");
+
+            CharacterPlayerControl playerControl = player.gameObject.AddComponent<CharacterPlayerControl>();
+            SetInstanceField(playerControl, "m_character", player);
+            SetInstanceField(playerControl, "m_commandExecutor", commandExecutor);
+            InvokeLifecycle(playerControl, "Awake");
+
+            GameObject playerSystemObject = new("PlayerSystemFacingLock");
+            m_createdObjects.Add(playerSystemObject);
+            PlayerSystem playerSystem = playerSystemObject.AddComponent<PlayerSystem>();
+            SetInstanceField(playerSystem, "m_primaryPlayerCharacter", player);
+
+            IDictionary systems = GetInstanceFieldValue(GameManager.Instance, "m_systems") as IDictionary;
+            Assert.IsNotNull(systems, "测试 GameManager.m_systems 未初始化或类型不兼容。");
+            systems[typeof(PlayerSystem)] = playerSystem;
+            playerSystem.SetCurrentControlledCharacter(player);
+
+            player.SetLookAtDirection(Vector2.down);
+            player.SetTargetDirection(Vector2.right);
+            player.DisableActions(EActionFlags.UpdateTargetDirection);
+
+            Assert.IsFalse(player.CanUpdateTargetDirection(), "测试必须先进入禁止更新朝向的状态。");
+            InvokeLifecycle(playerControl, "Update");
+            Assert.AreEqual(
+                Vector2.right,
+                player.GetTargetDirection(),
+                "攻击前摇等禁止转向状态必须保留起手方向，不能退回上一段移动方向。");
+
+            player.EnableActions(EActionFlags.UpdateTargetDirection);
+            InvokeLifecycle(playerControl, "Update");
+            Assert.AreEqual(
+                Vector2.down,
+                player.GetTargetDirection(),
+                "解除朝向锁后，无指针目标时仍应恢复原有的移动朝向回退行为。");
+        }
+
+        [Test]
+        public void PlayerCommand_FireAbility_PreservesRequestedDirectionUntilGasActivation()
+        {
+            CharacterActor player = CreateCharacter(
+                "player-command-facing-lock",
+                Vector2.zero,
+                CreateStats(health: 30, physicalAttack: 10));
+            CharacterActor target = CreateCharacter(
+                "player-command-facing-target",
+                Vector2.down * 0.8f,
+                CreateStats(health: 40, physicalDefense: 2));
+            GrantBasicAttack(player);
+
+            CharacterMovement movement = player.gameObject.AddComponent<CharacterMovement>();
+            SetInstanceField(movement, "m_character", player);
+
+            CharacterCommandExecutor commandExecutor = player.gameObject.AddComponent<CharacterCommandExecutor>();
+            SetInstanceField(commandExecutor, "m_character", player);
+            InvokeLifecycle(commandExecutor, "Awake");
+
+            CharacterPlayerControl playerControl = player.gameObject.AddComponent<CharacterPlayerControl>();
+            SetInstanceField(playerControl, "m_character", player);
+            SetInstanceField(playerControl, "m_commandExecutor", commandExecutor);
+            InvokeLifecycle(playerControl, "Awake");
+
+            GameObject playerSystemObject = new("PlayerSystemCommandFacingLock");
+            m_createdObjects.Add(playerSystemObject);
+            PlayerSystem playerSystem = playerSystemObject.AddComponent<PlayerSystem>();
+            SetInstanceField(playerSystem, "m_primaryPlayerCharacter", player);
+
+            IDictionary systems = GetInstanceFieldValue(GameManager.Instance, "m_systems") as IDictionary;
+            Assert.IsNotNull(systems, "测试 GameManager.m_systems 未初始化或类型不兼容。");
+            systems[typeof(PlayerSystem)] = playerSystem;
+            playerSystem.SetCurrentControlledCharacter(player);
+
+            CharacterAbilitySet abilitySet = player.GetComponent<CharacterAbilitySet>();
+            AssertFormalAttackAbilityReady(player);
+            Assert.IsTrue(
+                TryGetFormalAbilitySpec(abilitySet, BasicAttackAbilityCode, out AbilitySpec abilitySpec),
+                "技能 EX-GAS Ability 20001 未注册正式 GAS AbilitySpec。");
+            Assert.IsTrue(
+                target.TryGetFormalAbilitySystem(out AbilitySystemComponent targetAbilitySystem),
+                "目标未绑定正式 GAS AbilitySystemComponent。");
+
+            player.SetLookAtDirection(Vector2.right);
+            player.SetTargetDirection(Vector2.right);
+
+            PlayerCommandResult fireResult = commandExecutor.Execute(new PlayerCommandRequest(
+                GameCommandContext.ResolveForActor(player),
+                EPlayerCommandKind.FireAbility,
+                abilityIndex: 0,
+                targetCharacter: target));
+
+            Assert.IsTrue(fireResult.Succeeded, $"玩家普攻命令应被接受，实际失败原因：{fireResult.FailureReason}。");
+            Assert.IsFalse(abilitySpec.IsActive, "该回归测试必须覆盖本地前摇已开始、GAS 尚未激活的帧间隙。");
+            Assert.IsFalse(player.CanUpdateTargetDirection(), "本地前摇门控期间应锁住本次攻击方向。");
+            Assert.That(
+                Vector2.Dot(player.GetTargetDirection().normalized, Vector2.down),
+                Is.GreaterThan(0.999f),
+                "带目标的玩家技能命令应在前摇开始时朝向目标。");
+
+            InvokeLifecycle(playerControl, "Update");
+
+            Assert.That(
+                Vector2.Dot(player.GetTargetDirection().normalized, Vector2.down),
+                Is.GreaterThan(0.999f),
+                "GAS 激活前的同帧玩家控制更新不能把本次攻击方向重置成旧移动方向。");
+
+            GasEditModeTestHelper.AdvanceWorldUntil(
+                () => abilitySpec.IsActive,
+                CalculateExpectedFormalGasInputGateUseTicks());
+            Assert.IsTrue(abilitySpec.IsActive, "正式 GAS Ability 应在本地前摇后激活。");
+
+            AbilityActivationContext activationContext = abilitySpec.GetActivationContext();
+            Assert.IsNotNull(activationContext, "正式 GAS 激活必须保留玩家命令创建的激活上下文。");
+            Assert.IsTrue(
+                activationContext.TryGetAimDirection(out Vector3 aimDirection),
+                "玩家技能命令的目标方向必须进入 GAS 激活上下文。");
+            Assert.That(
+                Vector2.Dot(new Vector2(aimDirection.x, aimDirection.y).normalized, Vector2.down),
+                Is.GreaterThan(0.999f),
+                "GAS 激活上下文中的瞄准方向必须与玩家命令目标一致。");
+            Assert.AreSame(
+                targetAbilitySystem.Cell,
+                activationContext.MainTarget,
+                "玩家技能命令的主目标必须进入 GAS 激活上下文。");
+        }
+
+        [Test]
+        public void PlayerSystem_RevalidateTransientControlLoss_RestoresPrimaryPlayerInputTarget()
+        {
+            CharacterActor player = CreateCharacter(
+                "player-control-recovery",
+                Vector2.zero,
+                CreateStats(health: 30));
+            CharacterCommandExecutor commandExecutor = player.gameObject.AddComponent<CharacterCommandExecutor>();
+            SetInstanceField(commandExecutor, "m_character", player);
+            InvokeLifecycle(commandExecutor, "Awake");
+
+            CharacterPlayerControl playerControl = player.gameObject.AddComponent<CharacterPlayerControl>();
+            SetInstanceField(playerControl, "m_character", player);
+            SetInstanceField(playerControl, "m_commandExecutor", commandExecutor);
+            InvokeLifecycle(playerControl, "Awake");
+
+            GameObject playerSystemObject = new("PlayerSystemControlRecovery");
+            m_createdObjects.Add(playerSystemObject);
+            PlayerSystem playerSystem = playerSystemObject.AddComponent<PlayerSystem>();
+            SetInstanceField(playerSystem, "m_primaryPlayerCharacter", player);
+
+            IDictionary systems = GetInstanceFieldValue(GameManager.Instance, "m_systems") as IDictionary;
+            Assert.IsNotNull(systems, "测试 GameManager.m_systems 未初始化或类型不兼容。");
+            systems[typeof(PlayerSystem)] = playerSystem;
+
+            playerSystem.SetCurrentControlledCharacter(player);
+            Assert.IsTrue(
+                playerSystem.TryGetCurrentInputTarget(out IPlayerInputTarget initialTarget),
+                "测试前必须建立主角色输入目标。");
+            Assert.AreSame(playerControl, initialTarget);
+
+            playerControl.enabled = false;
+            playerSystem.RevalidateCurrentControlledCharacter();
+
+            Assert.IsFalse(
+                playerSystem.TryGetCurrentInputTarget(out _),
+                "控制组件短暂失效时应清空当前输入目标。");
+            Assert.IsTrue(
+                (bool)GetInstanceFieldValue(playerSystem, "m_pendingPlayerControlRestore"),
+                "清空主角色输入目标后必须保留恢复请求，不能永久卡在 MissingInputTarget。");
+
+            playerControl.enabled = true;
+            playerSystem.OnMapLoaded();
+
+            Assert.IsTrue(
+                playerSystem.TryGetCurrentInputTarget(out IPlayerInputTarget restoredTarget),
+                "控制组件恢复后必须重新建立主角色输入目标。");
+            Assert.AreSame(playerControl, restoredTarget);
         }
 
 
@@ -1290,66 +1607,66 @@ GrantBasicAttack(attacker);
             SetStaticField(typeof(GameManager), "_instance", gameManager);
         }
 
-        private static void RegisterPlayerSystemForConditionTests(Hero player)
+        private static void RegisterPlayerSystemForConditionTests(CharacterActor player)
         {
             Assert.IsTrue(GameManager.Exists(), "注册测试 PlayerSystem 前必须已有 GameManager。");
             GameObject playerSystemObject = new("EditModePlayerSystem");
             PlayerSystem playerSystem = playerSystemObject.AddComponent<PlayerSystem>();
-            SetInstanceField(playerSystem, "m_playerInstance", player);
+            SetInstanceField(playerSystem, "m_primaryPlayerCharacter", player);
 
             IDictionary systems = GetInstanceFieldValue(GameManager.Instance, "m_systems") as IDictionary;
             Assert.IsNotNull(systems, "测试 GameManager.m_systems 未初始化或类型不兼容。");
             systems[typeof(PlayerSystem)] = playerSystem;
         }
 
-        private Hero CreateHero(string name, Vector2 position, Stats baseStats, bool initializeAbilities = true)
+        private CharacterActor CreateCharacter(string name, Vector2 position, Stats baseStats, bool initializeAbilities = true)
         {
-            GameObject heroObject = new(name)
+            GameObject characterObject = new(name)
             {
                 layer = 0
             };
-            heroObject.transform.position = position;
-            m_createdObjects.Add(heroObject);
+            characterObject.transform.position = position;
+            m_createdObjects.Add(characterObject);
 
-            Rigidbody2D rigidbody2D = heroObject.AddComponent<Rigidbody2D>();
+            Rigidbody2D rigidbody2D = characterObject.AddComponent<Rigidbody2D>();
             rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
-            BoxCollider2D bodyCollider = heroObject.AddComponent<BoxCollider2D>();
-            CreateDamageHitbox(heroObject.transform, bodyCollider);
-            heroObject.AddComponent<Animator>();
+            BoxCollider2D bodyCollider = characterObject.AddComponent<BoxCollider2D>();
+            CreateDamageHitbox(characterObject.transform, bodyCollider);
+            characterObject.AddComponent<Animator>();
 
-            Hero hero = heroObject.AddComponent<Hero>();
-            AbilitySystemComponent abilitySystemComponent = heroObject.GetComponent<AbilitySystemComponent>();
-            CharacterAbilitySet abilitySet = heroObject.GetComponent<CharacterAbilitySet>();
+            CharacterActor character = characterObject.AddComponent<CharacterActor>();
+            AbilitySystemComponent abilitySystemComponent = characterObject.GetComponent<AbilitySystemComponent>();
+            CharacterAbilitySet abilitySet = characterObject.GetComponent<CharacterAbilitySet>();
 
-            HeroSheet sheet = ScriptableObject.CreateInstance<HeroSheet>();
+            CharacterSheet sheet = ScriptableObject.CreateInstance<CharacterSheet>();
             m_createdObjects.Add(sheet);
             SetInstanceField(sheet, "m_baseStats", baseStats.Clone());
             SetInstanceField(
                 sheet,
                 "m_formalGasAbilitiesPerLevel",
                 Activator.CreateInstance(GetRequiredFieldType(typeof(CharacterSheet), "m_formalGasAbilitiesPerLevel")));
-            SetInstanceField(hero, "m_sheet", sheet);
-            SetInstanceField(hero, "m_rigidbody", rigidbody2D);
-            SetInstanceField(hero, "m_animationStrategy", new NullAnimationStrategy());
+            SetInstanceField(character, "m_sheet", sheet);
+            SetInstanceField(character, "m_rigidbody", rigidbody2D);
+            SetInstanceField(character, "m_animationStrategy", new NullAnimationStrategy());
 
-            ConfigureAbilityRoots(heroObject.transform, abilitySet);
+            ConfigureAbilityRoots(characterObject.transform, abilitySet);
 
             InvokeLifecycle(abilitySystemComponent, "Awake");
-            SetInstanceField(abilitySet, "m_character", hero);
+            SetInstanceField(abilitySet, "m_character", character);
             InvokeLifecycle(abilitySet, "Awake");
-            InvokeLifecycle(hero, "Awake");
+            InvokeLifecycle(character, "Awake");
             InvokeLifecycle(abilitySystemComponent, "OnEnable");
             InvokeLifecycle(abilitySet, "OnEnable");
-            InvokeLifecycle(hero, "OnEnable");
+            InvokeLifecycle(character, "OnEnable");
             if (initializeAbilities)
             {
-                InvokeStaticLifecycle(hero, "InitializeAbilities");
+                InvokeStaticLifecycle(character, "InitializeAbilities");
             }
 
-            hero.SetLookAtDirection(Vector2.right);
-            hero.SetTargetDirection(Vector2.right);
+            character.SetLookAtDirection(Vector2.right);
+            character.SetTargetDirection(Vector2.right);
 
-            return hero;
+            return character;
         }
 
         private static void CreateDamageHitbox(Transform owner, BoxCollider2D bodyCollider)
@@ -1368,7 +1685,7 @@ GrantBasicAttack(attacker);
             }
         }
 
-        private static BoxCollider2D GetDamageHitbox(Hero owner)
+        private static BoxCollider2D GetDamageHitbox(CharacterActor owner)
         {
             int hitboxLayer = LayerMask.NameToLayer("Hitbox");
             foreach (BoxCollider2D collider in owner.GetComponentsInChildren<BoxCollider2D>())
@@ -1471,12 +1788,12 @@ GrantBasicAttack(attacker);
             return method.Invoke(null, new object[] { abilityCueJson }) is bool value && value;
         }
 
-        private static void GrantBasicAttack(Hero owner)
+        private static void GrantBasicAttack(CharacterActor owner)
         {
             GrantFormalGasAbility(owner, BasicAttackAbilityCode);
         }
 
-        private static void GrantFormalGasAbility(Hero owner, int formalGasAbilityCode)
+        private static void GrantFormalGasAbility(CharacterActor owner, int formalGasAbilityCode)
         {
             owner.AddBonusFormalGasAbility(formalGasAbilityCode, CharacterAbilitySourceKey.Script);
             Assert.IsTrue(owner.HasFormalGasAbility(formalGasAbilityCode), $"角色未正式持有 EX-GAS Ability：{formalGasAbilityCode}");
@@ -1504,13 +1821,13 @@ GrantBasicAttack(attacker);
         }
 
         private static void AssertFormalAttackAbilityReady(
-            Hero owner,
+            CharacterActor owner,
             bool expectFormalCost = false)
         {
             AssertFormalAbilityReady(owner, expectFormalCost, EAbilityFireCheckResult.Valid, BasicAttackAbilityCode);
         }
         private static void AssertFormalAbilityReady(
-            Hero owner,
+            CharacterActor owner,
             bool expectFormalCost,
             EAbilityFireCheckResult expectedResult,
             int formalGasAbilityCode = BasicAttackAbilityCode)
@@ -1530,7 +1847,7 @@ GrantBasicAttack(attacker);
         }
 
         private static void AssertFormalAbilityInputGateState(
-            Hero owner,
+            CharacterActor owner,
             int formalGasAbilityCode,
             EFormalAbilityInputGateState expectedState)
         {
@@ -1722,15 +2039,15 @@ GrantBasicAttack(attacker);
             return value is DotEntity entity ? entity : DotEntity.Null;
         }
 
-        private static void ConfigureAbilityRoots(Transform heroTransform, CharacterAbilitySet abilitySet)
+        private static void ConfigureAbilityRoots(Transform characterTransform, CharacterAbilitySet abilitySet)
         {
             GameObject staticRoot = new("StaticAbilityRoot");
             GameObject polydirectionalRoot = new("PolydirectionalAbilityRoot");
             GameObject horizontalRoot = new("HorizontalAbilityRoot");
 
-            staticRoot.transform.SetParent(heroTransform, false);
-            polydirectionalRoot.transform.SetParent(heroTransform, false);
-            horizontalRoot.transform.SetParent(heroTransform, false);
+            staticRoot.transform.SetParent(characterTransform, false);
+            polydirectionalRoot.transform.SetParent(characterTransform, false);
+            horizontalRoot.transform.SetParent(characterTransform, false);
 
             SetInstanceField(abilitySet, "m_staticAbilityRoot", staticRoot.transform);
             SetInstanceField(abilitySet, "m_polydirectionalAbilityRoot", polydirectionalRoot.transform);
