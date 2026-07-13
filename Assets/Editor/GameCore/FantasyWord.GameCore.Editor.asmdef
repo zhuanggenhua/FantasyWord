@@ -3,6 +3,7 @@
   "rootNamespace": "FantasyWord.GameCore",
   "references": [
     "FantasyWord.GameCore",
+    "ContextSteering2D.Runtime",
     "com.exhard.exgas.general",
     "com.exhard.exgas.runtime",
     "com.exhard.exgas.editor",
@@ -16,6 +17,8 @@
     "Unity.Addressables.Editor",
     "MackySoft.SerializeReferenceExtensions",
     "azixMcAze.SerializableDictionary",
+    "Unity.Collections",
+    "Unity.Entities",
     "Unity.Mathematics"
   ],
   "includePlatforms": [

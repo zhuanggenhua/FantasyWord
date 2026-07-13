@@ -57,3 +57,11 @@ metadata:
 - 恢复门禁：清理素材差异前必须同时检查 `git check-attr filter` 和 HEAD 原始 Blob。HEAD Blob 是 LFS 指针时，必须经过 `git lfs smudge` 或其它 LFS 感知方式还原真实对象；路径虽然命中现行 LFS 规则、但 HEAD 仍是历史普通图片 Blob 时，不得擅自转换文件或修改 `.gitattributes`，应以 `git hash-object --no-filters` 与 HEAD Blob 的原始哈希一致作为“内容未变化”证据，并把 `git status` 的假修改单独说明。
 - 来源：用户纠偏、`2c1c5e21` 与 `ade3a56f` 数据层差异、当前工作区 diff。
 - 状态：已升格 -> `openspec/specs/equipment-visual-workbench/spec.md`、`.spec/knowledge/features/project/bugs/换装测试回归矩阵.md`
+
+### 外部参考源未核验不得实施
+- 日期：2026-07-12
+- 现象：用户要求参考 `duolafashi` 做插件级转向行为，但实际给出的参考路径 `C:\Gamedev\Godot\Temp\dulafashi\duolafashi1\duolafashi1` 尚未读取时，就先按当前仓库搜索结果和历史规范印象实施了插件级抽象。
+- 根因：把“当前 Unity 仓库里没搜到源码”误当成“参考不可用”，没有把用户当轮给出的外部路径作为最高优先级真相源，也没有在缺少参考实现入口时拒绝实施。
+- 规避：用户给出本地路径、外部参考工程、仓库、网页、文档或资源目录时，必须先读取或验证该精确来源，并锁定原设计入口、关键实现、数据/资源来源和适用边界；未读到前只能查证或拒绝实施，不得先做通用版、插件级或架构级改动。
+- 来源：用户纠偏。
+- 状态：已升格 -> `.spec/rules/system.md`、`.spec/skills/before-you-code/SKILL.md`、`.spec/knowledge/standards/workflow.md`

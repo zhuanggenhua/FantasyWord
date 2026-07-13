@@ -106,8 +106,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            MapInfo mapInfo = mapSystem.ResolveActiveMapInfo();
-            return mapInfo != null && mapInfo.TryGetTerrainNavigationMap(out terrainNavigationMap);
+            return mapSystem.TryGetActiveTerrainNavigationMap(out terrainNavigationMap);
         }
 
         public bool ToggleMovementControlMode()

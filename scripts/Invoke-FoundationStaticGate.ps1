@@ -1162,7 +1162,7 @@ $sceneMissingPatterns = @(
         "m_TagString: MainCamera",
         "AudioListener:",
         "orthographic: 1",
-        "m_playerInstance: {fileID:",
+        "m_primaryPlayerCharacter: {fileID:",
         "m_SourcePrefab: {fileID: 100100000, guid: f32187b1edab1484a99d97ef54021bf5, type: 3}",
         "m_config: {fileID: 11400000, guid: b669f9c81be34b47bf3d083609477ab5, type: 2}",
         "guid: e20381a1779a446fa50ceb2fe6ef78ba",
@@ -1741,8 +1741,7 @@ $aiControllerMissingPatterns = Test-ContainsAll -Content $aiControllerContent -P
     "private BehaviourRuntime behaviourRuntime => m_behaviourRuntime ??= new BehaviourRuntime(this);",
     "behaviourRuntime.Initialize();",
     "behaviourRuntime.TryHandleProvoked(source);",
-    "behaviourRuntime.Tick();",
-    "behaviourRuntime.DrawGizmos();"
+    "behaviourRuntime.Tick();"
 )
 
 $aiControllerDisallowedPatterns = Test-ContainsAny -Content $aiControllerContent -Patterns @(
@@ -1766,17 +1765,21 @@ $aiControllerDisallowedPatterns = Test-ContainsAny -Content $aiControllerContent
 
 $aiControllerBehaviourRuntimeMissingPatterns = Test-ContainsAll -Content $aiControllerBehaviourRuntimeContent -Patterns @(
     "private sealed class BehaviourRuntime",
-    "private readonly List<RaycastHit2D> m_castCollisions = new();",
-    "private readonly float[] m_interests = new float[8];",
-    "private readonly float[] m_dangers = new float[8];",
-    "private readonly float[] m_steering = new float[8];",
+    "private CharacterSteeringAdapter2D m_steeringAdapter = null;",
+    "private readonly CharacterSteeringPathCursor2D m_pathCursor = new();",
     "public void Initialize()",
+    "m_steeringAdapter = new CharacterSteeringAdapter2D(character, m_owner.m_steeringProfile);",
+    "ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId,",
+    "ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId,",
     "public void TryHandleProvoked(CharacterBase source)",
     "public void Tick()",
-    "public void DrawGizmos()",
     "private void RefreshTarget()",
-    "m_owner.m_subject.FireFormalGasAbility(formalGasAbilityCode, GameCommandContext.AI(m_owner.m_subject));",
-    "private void ApplyMovement()"
+    "m_owner.m_subject.FireFormalGasAbility(",
+    "GameCommandContext.AI(m_owner.m_subject)",
+    "private void ApplyMovement()",
+    "m_steeringAdapter.Submit(",
+    "m_steeringAdapter.ApplyLatestResult();",
+    "private void ValidateSteeringGroupMapping"
 )
 
 $playerSystemDisallowedPatterns = Test-ContainsAny -Content $playerSystemContent -Patterns @(
@@ -4506,7 +4509,6 @@ $informationalCountNames = @(
 
 $expectedNonFailureCountValues = @{
     ActiveAbilityBaseMissingPatternCount = 2
-    AIControllerBehaviourRuntimeMissingPatternCount = 1
     CharacterAlterationRuleMissingPatternCount = 6
     CharacterBaseAbilitiesMissingPatternCount = 22
     CharacterBaseAbilitySetRuntimeMissingPatternCount = 8

@@ -10,23 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7640e02495c74f84c8280ac6933f1aee, type: 3}
-  m_Name: 元素反应-草地燃尽形成焦土
+  m_Name: 元素反应-草地燃尽移除上层覆盖
   m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.ElementReactionDefinition
   m_trigger: 1
   m_elementKind: 0
   m_expiredStateKind: 2
   m_minimumIntensity: 0
-  m_requireBaseSurface: 1
-  m_baseSurface: 1
-  m_requireEffectiveSurface: 1
-  m_effectiveSurface: 1
+  m_requireBaseSurface: 0
+  m_baseSurface: 0
+  m_requireEffectiveSurface: 0
+  m_effectiveSurface: 0
+  m_requireSurfaceCover: 1
+  m_surfaceCover: 1
+  m_requiredSurfaceCoverTraits: 2
+  m_forbiddenSurfaceCoverTraits: 0
   m_requiredStates: 0
   m_forbiddenStates: 0
   m_priority: 100
   m_operations:
-  - m_kind: 2
+  - m_kind: 5
     m_stateKind: 0
     m_intensityMultiplier: 1
     m_durationOverride: 0
-    m_surfaceKind: 6
+    m_surfaceKind: 0
+    m_surfaceCoverKind: 0
     m_presentationSignal: 0

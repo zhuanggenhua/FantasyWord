@@ -208,6 +208,13 @@ namespace FantasyWord.GameCore
             return m_activeMapInfo;
         }
 
+        internal bool TryGetActiveTerrainNavigationMap(out TerrainNavigationMap terrainNavigationMap)
+        {
+            terrainNavigationMap = null;
+            MapInfo mapInfo = ResolveActiveMapInfo();
+            return mapInfo != null && mapInfo.TryGetTerrainNavigationMap(out terrainNavigationMap);
+        }
+
         private Scene ResolveTrackedScene()
         {
             if (HasCurrentMap())

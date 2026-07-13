@@ -1,4 +1,5 @@
 using System;
+using ContextSteering2D;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -28,7 +29,12 @@ namespace FantasyWord.GameCore
         [SerializeField, Min(0.1f)] private float m_soughtDistanceFromTarget = 1.0f;
 
         [Header("Steering Settings")]
-        [SerializeField, Min(0.1f)] private float m_steeringDriftResponsiveness = 3.0f;
+        [SerializeField] private ContextSteeringProfile2D m_steeringProfile = null;
+        [SerializeField] private string m_transitSteeringGroupId = "transit";
+        [SerializeField] private string m_targetPursuitSteeringGroupId = "predictive-target";
+        [SerializeField, Min(0.1f)] private float m_navigationRepathInterval = 0.5f;
+        [SerializeField, Min(0.05f)] private float m_navigationTargetMoveThreshold = 0.5f;
+        [SerializeField, Min(0.05f)] private float m_navigationWaypointTolerance = 0.2f;
         [SerializeField, Min(0.1f)] private float m_timeBeforeResetAfterTargetSightLost = 3.0f;
         [SerializeField, Min(0.1f)] private float m_cannotSeeTargetRetargetCooldown = 1.0f;
 
@@ -65,12 +71,28 @@ namespace FantasyWord.GameCore
         protected override void OnStop()
         {
             m_subject.RemoveProvokedListener(OnProvoked);
+            behaviourRuntime.Stop();
         }
+
+        protected override void OnTerminate() => m_behaviourRuntime?.Dispose();
 
         public void SetMaster(Entity master, float? soughtDistanceFromMaster = null)
         {
             m_soughtDistanceFromMasterTarget = soughtDistanceFromMaster ?? m_soughtDistanceFromMasterTarget;
             m_master = master;
+        }
+
+        public bool TrySetCombatTarget(CharacterBase target)
+        {
+            if (!target || m_subject == null || !CombatSolver.IsJudiciousTarget(m_subject, target))
+            {
+                return false;
+            }
+
+            m_target = target;
+            m_retargetCooldownTimer = 0.0f;
+            m_timeSinceTargetLastSeen = 0.0f;
+            return true;
         }
 
         private void OnProvoked(CharacterBase source)
@@ -81,11 +103,6 @@ namespace FantasyWord.GameCore
         protected override void OnFixedUpdate()
         {
             behaviourRuntime.Tick();
-        }
-
-        protected override void OnDrawGizmos()
-        {
-            behaviourRuntime.DrawGizmos();
         }
 
         protected override Type GetDataBlockType() => typeof(AIControllerDataBlock);

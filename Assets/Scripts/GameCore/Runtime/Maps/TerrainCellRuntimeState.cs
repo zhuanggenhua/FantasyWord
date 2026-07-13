@@ -84,6 +84,9 @@ namespace FantasyWord.GameCore
         public TerrainCellRuntimeStateSnapshot(
             bool hasEffectiveSurfaceOverride,
             ETerrainSurfaceKind effectiveSurface,
+            bool hasSurfaceCoverOverride,
+            ETerrainSurfaceCoverKind effectiveSurfaceCover,
+            ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle,
             ETerrainRuntimeSurfaceState runtimeStateFlags,
             ETerrainRuntimePersistencePolicy persistencePolicy,
             int revision,
@@ -91,6 +94,9 @@ namespace FantasyWord.GameCore
         {
             HasEffectiveSurfaceOverride = hasEffectiveSurfaceOverride;
             EffectiveSurface = effectiveSurface;
+            HasSurfaceCoverOverride = hasSurfaceCoverOverride;
+            EffectiveSurfaceCover = effectiveSurfaceCover;
+            SurfaceCoverLifecycle = surfaceCoverLifecycle;
             RuntimeStateFlags = runtimeStateFlags;
             PersistencePolicy = persistencePolicy;
             Revision = revision;
@@ -99,6 +105,9 @@ namespace FantasyWord.GameCore
 
         public bool HasEffectiveSurfaceOverride { get; }
         public ETerrainSurfaceKind EffectiveSurface { get; }
+        public bool HasSurfaceCoverOverride { get; }
+        public ETerrainSurfaceCoverKind EffectiveSurfaceCover { get; }
+        public ETerrainSurfaceCoverLifecycle SurfaceCoverLifecycle { get; }
         public ETerrainRuntimeSurfaceState RuntimeStateFlags { get; }
         public ETerrainRuntimePersistencePolicy PersistencePolicy { get; }
         public int Revision { get; }
@@ -106,9 +115,21 @@ namespace FantasyWord.GameCore
 
         public static TerrainCellRuntimeStateSnapshot Empty(ETerrainSurfaceKind baseSurface)
         {
+            return Empty(baseSurface, ETerrainSurfaceCoverKind.None);
+        }
+
+        public static TerrainCellRuntimeStateSnapshot Empty(
+            ETerrainSurfaceKind baseSurface,
+            ETerrainSurfaceCoverKind baseSurfaceCover)
+        {
             return new TerrainCellRuntimeStateSnapshot(
                 false,
                 baseSurface,
+                false,
+                baseSurfaceCover,
+                baseSurfaceCover == ETerrainSurfaceCoverKind.None
+                    ? ETerrainSurfaceCoverLifecycle.None
+                    : ETerrainSurfaceCoverLifecycle.Alive,
                 ETerrainRuntimeSurfaceState.None,
                 ETerrainRuntimePersistencePolicy.Transient,
                 0,
@@ -244,6 +265,11 @@ namespace FantasyWord.GameCore
     {
         [SerializeField] private bool m_hasEffectiveSurfaceOverride;
         [SerializeField] private ETerrainSurfaceKind m_effectiveSurfaceOverride;
+        [SerializeField] private bool m_hasSurfaceCoverOverride;
+        [SerializeField] private ETerrainSurfaceCoverKind m_surfaceCoverOverride =
+            ETerrainSurfaceCoverKind.None;
+        [SerializeField] private ETerrainSurfaceCoverLifecycle m_surfaceCoverLifecycle =
+            ETerrainSurfaceCoverLifecycle.None;
         [SerializeField] private List<TerrainElementStateInstance> m_activeStates = new();
         [SerializeField] private ETerrainRuntimePersistencePolicy m_persistencePolicy =
             ETerrainRuntimePersistencePolicy.Transient;
@@ -251,6 +277,9 @@ namespace FantasyWord.GameCore
 
         public bool HasEffectiveSurfaceOverride => m_hasEffectiveSurfaceOverride;
         public ETerrainSurfaceKind EffectiveSurfaceOverride => m_effectiveSurfaceOverride;
+        public bool HasSurfaceCoverOverride => m_hasSurfaceCoverOverride;
+        public ETerrainSurfaceCoverKind SurfaceCoverOverride => m_surfaceCoverOverride;
+        public ETerrainSurfaceCoverLifecycle SurfaceCoverLifecycle => m_surfaceCoverLifecycle;
         public IReadOnlyList<TerrainElementStateInstance> ActiveStates => m_activeStates;
         public ETerrainRuntimePersistencePolicy PersistencePolicy
         {
@@ -284,7 +313,10 @@ namespace FantasyWord.GameCore
             }
         }
 
-        public bool IsEmpty => !m_hasEffectiveSurfaceOverride && m_activeStates.Count == 0;
+        public bool IsEmpty =>
+            !m_hasEffectiveSurfaceOverride &&
+            !m_hasSurfaceCoverOverride &&
+            m_activeStates.Count == 0;
 
         public ETerrainRuntimeSurfaceState RuntimeStateFlags
         {
@@ -303,6 +335,25 @@ namespace FantasyWord.GameCore
         public ETerrainSurfaceKind GetEffectiveSurface(ETerrainSurfaceKind baseSurface)
         {
             return m_hasEffectiveSurfaceOverride ? m_effectiveSurfaceOverride : baseSurface;
+        }
+
+        public ETerrainSurfaceCoverKind GetEffectiveSurfaceCover(
+            ETerrainSurfaceCoverKind baseSurfaceCover)
+        {
+            return m_hasSurfaceCoverOverride ? m_surfaceCoverOverride : baseSurfaceCover;
+        }
+
+        public ETerrainSurfaceCoverLifecycle GetSurfaceCoverLifecycle(
+            ETerrainSurfaceCoverKind baseSurfaceCover)
+        {
+            if (m_hasSurfaceCoverOverride)
+            {
+                return m_surfaceCoverLifecycle;
+            }
+
+            return baseSurfaceCover == ETerrainSurfaceCoverKind.None
+                ? ETerrainSurfaceCoverLifecycle.None
+                : ETerrainSurfaceCoverLifecycle.Alive;
         }
 
         public bool TryGetState(
@@ -412,6 +463,64 @@ namespace FantasyWord.GameCore
             return true;
         }
 
+        public bool SetSurfaceCover(
+            ETerrainSurfaceCoverKind coverKind,
+            ETerrainSurfaceCoverLifecycle lifecycle = ETerrainSurfaceCoverLifecycle.Alive)
+        {
+            if (coverKind == ETerrainSurfaceCoverKind.None)
+            {
+                return RemoveSurfaceCover();
+            }
+
+            ETerrainSurfaceCoverLifecycle normalizedLifecycle =
+                lifecycle == ETerrainSurfaceCoverLifecycle.None ||
+                lifecycle == ETerrainSurfaceCoverLifecycle.Removed
+                    ? ETerrainSurfaceCoverLifecycle.Alive
+                    : lifecycle;
+            if (m_hasSurfaceCoverOverride &&
+                m_surfaceCoverOverride == coverKind &&
+                m_surfaceCoverLifecycle == normalizedLifecycle)
+            {
+                return false;
+            }
+
+            m_hasSurfaceCoverOverride = true;
+            m_surfaceCoverOverride = coverKind;
+            m_surfaceCoverLifecycle = normalizedLifecycle;
+            m_revision++;
+            return true;
+        }
+
+        public bool RemoveSurfaceCover()
+        {
+            if (m_hasSurfaceCoverOverride &&
+                m_surfaceCoverOverride == ETerrainSurfaceCoverKind.None &&
+                m_surfaceCoverLifecycle == ETerrainSurfaceCoverLifecycle.Removed)
+            {
+                return false;
+            }
+
+            m_hasSurfaceCoverOverride = true;
+            m_surfaceCoverOverride = ETerrainSurfaceCoverKind.None;
+            m_surfaceCoverLifecycle = ETerrainSurfaceCoverLifecycle.Removed;
+            m_revision++;
+            return true;
+        }
+
+        public bool ClearSurfaceCoverOverride()
+        {
+            if (!m_hasSurfaceCoverOverride)
+            {
+                return false;
+            }
+
+            m_hasSurfaceCoverOverride = false;
+            m_surfaceCoverOverride = ETerrainSurfaceCoverKind.None;
+            m_surfaceCoverLifecycle = ETerrainSurfaceCoverLifecycle.None;
+            m_revision++;
+            return true;
+        }
+
         public bool ClearStates()
         {
             if (m_activeStates.Count == 0)
@@ -456,6 +565,13 @@ namespace FantasyWord.GameCore
 
         public TerrainCellRuntimeStateSnapshot CreateSnapshot(ETerrainSurfaceKind baseSurface)
         {
+            return CreateSnapshot(baseSurface, ETerrainSurfaceCoverKind.None);
+        }
+
+        public TerrainCellRuntimeStateSnapshot CreateSnapshot(
+            ETerrainSurfaceKind baseSurface,
+            ETerrainSurfaceCoverKind baseSurfaceCover)
+        {
             TerrainElementStateSnapshot[] stateSnapshots =
                 new TerrainElementStateSnapshot[m_activeStates.Count];
             for (int i = 0; i < m_activeStates.Count; i++)
@@ -466,6 +582,9 @@ namespace FantasyWord.GameCore
             return new TerrainCellRuntimeStateSnapshot(
                 m_hasEffectiveSurfaceOverride,
                 GetEffectiveSurface(baseSurface),
+                m_hasSurfaceCoverOverride,
+                GetEffectiveSurfaceCover(baseSurfaceCover),
+                GetSurfaceCoverLifecycle(baseSurfaceCover),
                 RuntimeStateFlags,
                 m_persistencePolicy,
                 m_revision,

@@ -13,7 +13,7 @@ EX-GAS Timeline
      -> ElementReactionDefinition 匹配
      -> TerrainCellRuntimeState 变更
      -> 地表查询/路径代价刷新
-     -> TerrainSurfacePresentation 刷新临时效果层与结果覆盖层
+     -> TerrainSurfacePresentation 刷新临时效果层
 ```
 
 两条 Timeline 轨道可以同时存在，但职责不重叠：EX-GAS 处理角色战斗效果，世界元素链只处理地表与其他未来世界状态。
@@ -76,7 +76,7 @@ GameManager.TryGetSystem<ElementReactionSystem>(out ...)
 - 决定 Fire + Grass 的结果。
 - 推进状态时间。
 - 播放视觉效果。
-- 保存临时效果 Tilemap 或结果覆盖 Tilemap 引用。
+- 保存临时效果 Tilemap 引用；不保存 Dirt/焦土结果覆盖 Tilemap 作为露土入口。
 - 直接清空、设置或刷新表现 Tilemap。
 - 解释 Ability 或 GameplayCue。
 
@@ -88,7 +88,7 @@ GameManager.TryGetSystem<ElementReactionSystem>(out ...)
 
 - `TerrainNavigationMap`
 - 临时效果 Tilemap
-- 最终结果覆盖 Tilemap
+- 通用作者地表覆盖 Tilemap；当前 `ClickMoveTest` 为 `地表覆盖`
 - 地表表现配置资产
 
 它订阅单格状态变化并刷新对应格，不保存规则真相。
@@ -120,9 +120,9 @@ GameManager.TryGetSystem<ElementReactionSystem>(out ...)
 
 | 字段 | 含义 |
 | --- | --- |
-| `EffectiveSurfaceOverride` | 可选的运行时有效地表覆盖，例如 ScorchedDirt |
+| `EffectiveSurfaceOverride` | 可选的运行时有效地表覆盖；旧版曾用它表达草燃尽后的 Dirt，后续应拆成底层地表 + 草覆盖层状态，不再用它表达草层销毁 |
 | `ActiveStates` | 当前状态实例集合，不再以 Flags 作为唯一真相 |
-| `PersistencePolicy` | `Transient` 或未来可持久化；首批全部按 Transient |
+| `PersistencePolicy` | 当前可为 `Transient` 或未来可持久化；玩家造成的地貌变化最终必须落入可保存世界变更层 |
 | `Revision` | 状态变更版本，用于刷新和调试 |
 
 每个状态实例至少包含：
@@ -205,18 +205,18 @@ GameManager.TryGetSystem<ElementReactionSystem>(out ...)
 - 重复施加默认刷新剩余时间并取更高强度。
 - 规则可以选择叠加强度、只刷新时间或拒绝覆盖。
 - Fire + Oiled 的“强燃烧”通过规则输出修改 Burning 强度/持续时间，不写在技能中。
-- Water + Burning 通过同一规则操作移除 Burning、添加/刷新 Wet，并发送一次蒸汽表现信号。
+- Water + Burning 通过同一规则操作移除 Burning、添加/刷新 Wet；Steam 表现等待正式蒸汽素材后再接。
 
 ### Expiration
 
 - `ElementReactionSystem` 使用可配置固定模拟步长推进状态。
-- 每次状态提交后，根据是否仍存在计时状态更新派生活跃格索引；永久覆盖但无计时状态的 ScorchedDirt 不留在 Tick 集合。
+- 每次状态提交后，根据是否仍存在计时状态更新派生活跃格索引；持久的草覆盖层缺失/再生进度不应伪装成永久地表覆盖。
 - 固定步长对活跃格坐标做快照后推进，避免到期反应修改集合时破坏枚举。
 - 游戏暂停或 `Time.timeScale == 0` 时，首批元素计时随游戏时间停止。
 - 状态到期先触发 `OnStateExpired` 规则，再移除状态。
-- `Burning Grass expires -> ScorchedDirt` 在同一原子变更中完成：
+- `Burning grass cover expires -> remove grass cover / start regrowth` 在同一原子变更中完成：
   - 移除 Burning。
-  - 设置 EffectiveSurfaceOverride = ScorchedDirt。
+  - 提交草覆盖层移除和再生语义；当前代码中的 `EffectiveSurfaceOverride = Dirt` 只是旧版待重构表达。
   - 恢复或重算通行代价。
   - 发布一次格状态变化。
 
@@ -255,7 +255,7 @@ EffectiveTraversalCost =
 ```
 
 - Burning 首批配置为高代价但仍可行走。
-- 首批 ScorchedDirt 只改变有效地表与视觉，不额外修改基础通行代价；未来若需要地貌代价表，另由明确的地表定义承担。
+- 当前首批结果必须移除或隐藏 Grass 上层覆盖，让作者已经铺好的 Dirt 底层自然露出；不得再用 `EffectiveSurfaceOverride = Dirt` 或结果覆盖 Tile 表达“草烧掉后露土”。未来若需要焦痕，只能作为短期视觉效果或可选装饰，不是基础地貌结果。
 - 状态变化时只更新对应 cell 的 cost map。
 - cost map 更新始终从基础 Tile 代价重新派生，不在旧值上连续乘除，避免重复施加和清除后的累计误差。
 - 新路径请求读取最新 cost map。
@@ -264,6 +264,17 @@ EffectiveTraversalCost =
 
 ## Presentation Layers
 
+### Authored Ground Layers
+
+`ClickMoveTest` 的作者地图按以下职责分层：
+
+- `基础地面`：低地只保存 Dirt 等不会因草燃尽而消失的底层地貌。
+- `地表覆盖`：保存可独立移除的上层地表视觉，以及未来的雪、苔藓等覆盖；是否属于 Grass、是否可燃、可销毁、可再生由 Tile 映射属性决定，不按 Tile 资产名或 Tilemap 名称硬编码。
+- `地表装饰`：原样保存来源场景 `GroundDecoration` 的道路、岸线、碎石、植被等视觉内容；元素拆层不得重命名、迁出或删除其中的 Tile。
+- `地形规则`：隐藏的导航、层级、坡道和阻挡真相源。
+
+地图布局真相源是 `Assets/Art/KrishnaPalacio/MINIFANTASY - Forgotten Plains/Scenes/Demo - Forgotten Plains (Rule + Animated Tiles).unity`。首批拆分范围包含 617 格低地规则格，但规则格名称不等于视觉覆盖类型：来源 `Ground` 在这些格中由 547 格草坪视觉和 70 格裸 Dirt 组成。迁移必须只把这 547 格原草坪 Tile 原样移动到同坐标覆盖层，并在 617 格低地基础层保留或补齐现有 Dirt；原本 70 格 Dirt 必须保持无覆盖。来源 `GroundDecoration` 由 Unity 加载后的 267 个有效格必须逐格保持一致；不得把 YAML 中包含重复/陈旧记录的 302 条序列化项当作有效格数。不得按规则层名称统一铺 Grass，不得重绘、扩张或移动地图布局。高台规则资产继续把 `Grass` 作为基础结构地表，视觉由带碰撞的草地与悬崖边缘合成 Tile 承担；它不是可销毁覆盖层，也不匹配 `Dirt + Grass Cover` 燃烧规则。在没有正式可拆分土壤/覆盖素材前，不得把高台改称为可销毁覆盖或用普通 Dirt/Grass Tile 伪造拆层。
+
 ### Temporary Effect Layer
 
 用于：
@@ -271,7 +282,7 @@ EffectiveTraversalCost =
 - Burning 火焰
 - Wet 湿润
 - Electrified 电流
-- Water + Burning 的短暂蒸汽
+- Water + Burning 的短暂蒸汽（等待正式素材）
 
 状态移除或短暂信号结束时清除。
 
@@ -279,10 +290,9 @@ EffectiveTraversalCost =
 
 用于：
 
-- ScorchedDirt 焦土
 - 后续 Mud、FrozenWater 等最终运行时地貌
 
-临时状态清除时不得清除最终结果覆盖。
+Grass 燃尽后的 Dirt 必须来自隐藏 `地表覆盖` 后自然露出 `基础地面`；临时状态清除时不得写入或依赖 Dirt/焦土结果覆盖。
 
 ### GameplayCue Boundary
 
@@ -292,7 +302,7 @@ EffectiveTraversalCost =
 - 喷口/锥形火焰表现。
 - 音效、震动和即时反馈。
 
-每格 Burning、蒸汽、电流和焦土由 `TerrainSurfacePresentation` 根据世界状态驱动。GameplayCue 不调用 `SetTile`，不写地表状态，不决定反应结果。
+每格 Burning 火焰由 `TerrainSurfacePresentation` 根据世界状态驱动；蒸汽、电流等等待正式素材。露土结果不是表现层盖 Tile，而是后续地形变更系统移除草覆盖层。GameplayCue 不调用 `SetTile`，不写地表状态，不决定反应结果。
 
 ## Evidence-Based Owner Decision
 
@@ -323,7 +333,7 @@ EffectiveTraversalCost =
 - `TimelineActiveAbility` 只解析正式 GAS Ability Code 对应的 Timeline 输入门控、使用间隔和中断。
 - 技能时序、消耗、冷却、角色命中、伤害、元素施加和 Cue 仍由 EX-GAS 数据与 Task 拥有。
 - `MeleeAttackAbility` 只保留为通用桥的近战语义子类，维持原近战 Prefab 和脚本 GUID，不把近战名称扩散到其他 Timeline 技能。
-- 通用桥不得出现 Fire、Grass、Burning、ScorchedDirt、GameplayEffect `2003` 或喷火锥形参数。
+- 通用桥不得出现 Fire、Grass、Burning、Dirt、GameplayEffect `2003` 或喷火锥形参数。
 
 这项拆分只消除喷火复用近战组件的错误语义，不创建第二套 Ability 执行框架。
 
@@ -340,7 +350,7 @@ Task 行为：
 2. `OnTick` 仅在 `frameIndex > startFrame` 且 `(frameIndex - startFrame) % IntervalFrames == 0` 时重复提交，避免开始帧被 Begin/Tick 双重施加。
 3. 每次提交重新读取执行帧的角色位置和正式 2D 朝向。
 4. 缺少来源实体、正式朝向、当前地图、规则 Tilemap 或 `ElementReactionSystem` 时明确报错并跳过本次提交。
-5. 不直接读取或修改 Grass、Burning、ScorchedDirt。
+5. 不直接读取或修改 Grass、Burning、Dirt。
 
 参数首批包含：
 
@@ -382,11 +392,11 @@ Task 行为：
 
 | 触发 | 条件 | 结果 |
 | --- | --- | --- |
-| Fire applied | EffectiveSurface = Grass，且没有不可燃覆盖 | 添加/刷新 Burning |
-| Water applied | 当前有 Burning | 移除 Burning，添加/刷新 Wet，发出 Steam 信号 |
+| Fire applied | BaseSurface = Dirt 且 EffectiveSurfaceCover = Grass，覆盖层具有可燃/可销毁属性 | 添加/刷新 Burning |
+| Water applied | 当前有 Burning | 移除 Burning，添加/刷新 Wet；Steam 表现需正式素材 |
 | Electricity applied | 当前有 Wet | 添加/刷新 Electrified |
 | Fire applied | 当前有 Oiled | 按规则增强 Burning |
-| Burning expired | BaseSurface = Grass，且有效地表仍可烧毁 | 设置 ScorchedDirt |
+| Burning expired | BaseSurface = Dirt 且 EffectiveSurfaceCover = Grass | 移除 Grass 覆盖层，露出底层 Dirt |
 
 具体持续秒数、强度倍率和移动代价倍率属于数据调参，不写死在 Ability Task。
 
@@ -422,7 +432,7 @@ Task 行为：
 
 ### Static
 
-- 搜索 Ability、Task、Cue 和表现层，确认没有 `Grass -> Burning/ScorchedDirt` 直接分支。
+- 搜索 Ability、Task、Cue 和表现层，确认没有 `Grass -> Burning/Dirt` 直接分支。
 - 搜索生成目录，确认没有手工修改标记或旁路注册。
 - 确认规则 Tile 资产不被 `SetTile` / 替换 API 修改。
 - 确认不新增 `GameManager.ElementReactionSystem` 静态快捷入口。
@@ -435,14 +445,14 @@ Task 行为：
 
 - 规则优先级和稳定顺序。
 - 重复状态的刷新/合并。
-- Burning 到期转化 ScorchedDirt。
+- Burning 到期后应移除草覆盖层并进入再生流程；视觉露土必须移除草覆盖/植被层，露出原本存在的土壤底层。
 - Water 灭火和 Electricity + Wet。
 - 锥形格查询不能跨悬崖，能经过合法坡道。
 - Burning 状态变化会更新对应格路径代价。
 - EX-GAS Task 按片段帧间隔提交，且不包含地表结果逻辑。
 - 同一喷火 Timeline 的角色命中仍通过 `TaskApplyEffects` / GameplayEffect，世界元素 Task 不处理角色状态。
 - 首批 4 个状态、6 个反应和 1 个表现配置资产均可验证，且在 `DatabaseRegistry` 中每个资产只登记一次。
-- Burning 正式状态资产的通行代价倍率为 `4x`，表现配置包含状态、焦土和蒸汽映射。
+- Burning 正式状态资产的通行代价倍率为 `4x`，表现配置首批只包含用户提供的火焰序列帧映射。
 
 ### End-to-End
 
@@ -454,7 +464,28 @@ Task 行为：
 4. 确认高台不会被跨悬崖点燃。
 5. 确认合法坡道连接的格可以被覆盖。
 6. 对比燃烧前后的新路径选择。
-7. 等待燃烧结束，确认火焰层清除、焦土层保留。
-8. 再次喷火，确认焦土不重新燃烧。
-9. 重载场景，确认恢复作者 Grass。
+7. 等待燃烧结束，确认 Burning 清除、火焰临时层清除、Grass 覆盖层移除或隐藏，底层 Dirt 自然显露，且结果覆盖层为空。
+8. 再次喷火，确认无 Grass 覆盖层的 Dirt 土壤格不重新进入 Burning。
+9. 当前实现重载场景会恢复作者 Grass；这只记录首批未接持久化的限制。正式开放世界验收应改为：保存后重载仍保留“草覆盖层被移除、露出作者 Dirt 底层”的地貌变化。
+
+## Persistent World Direction
+
+项目目标是玩家行为能永久改变世界，类似 Minecraft。因此元素反应系统的最终落点不是“临时战斗贴花”，而是“规则驱动的世界地貌改写”。
+
+正式持久世界设计应按以下分层推进：
+
+| 层级 | 职责 | 当前状态 | 后续目标 |
+|------|------|----------|----------|
+| 作者规则 Tilemap | 初始地貌模板、层级、坡道、阻挡、基础地表 | 已存在 | 作为新世界/未修改区块的初始模板 |
+| 当前世界格状态 | 当前格实际玩法状态，例如底层土壤 + 草覆盖层 Alive/Burning/Removed/Regrowing | 本 change 只完成临时元素状态；覆盖层模型待后续实现 | 作为元素反应、导航和表现消费的统一查询结果 |
+| 世界地形变更层 | 玩家造成的地貌修改、区块脏标记、保存与加载 | 未实现 | 新增 `implement-persistent-world-terrain-mutation` |
+| 表现层 | 显示临时火焰、水、电、草层移除后露土等结果 | 本 change 只保留临时效果层 | 消费当前世界格状态；不负责保存 |
+
+关键裁决：
+
+1. `ElementReactionSystem` 仍只裁决规则和提交地貌变化，不直接写场景 Tilemap 文件。
+2. 玩家造成的最终世界变化，例如草覆盖层被烧毁、底层土壤显露和草层再生进度，应写入世界地形变更层，而不是只留在一次性运行时字典。
+3. 作者绘制的基础 Tilemap 不应在 PlayMode 中直接被破坏；它是世界模板。正式运行时应由模板叠加玩家改写层得到当前世界。
+4. 视觉上应表现为草消失后露出下面土壤；如果需要焦痕，只作为短暂效果或附加装饰，不作为首批持久地貌。
+5. 地形保存、区块加载、地图重载、多人同步和编辑器回滚不应塞回本 change；它们需要独立规格、任务和验收。
 10. 检查 Console、场景 dirty 状态和生成数据一致性。

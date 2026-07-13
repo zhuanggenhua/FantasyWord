@@ -134,6 +134,12 @@ Shader "EquipmentSystem/EquipmentUV"
         
         [Header(Skin Palette)]
         _SkinPaletteEnabled ("Skin Palette Enabled", Float) = 0
+
+        [HideInInspector] _WaterReflectionProxy ("Water Reflection Proxy", Float) = 0
+        [HideInInspector] _WaterReflectionAnchorWS ("Water Reflection Anchor WS", Vector) = (0,0,0,0)
+        [HideInInspector] _WaterReflectionVerticalScale ("Water Reflection Vertical Scale", Float) = 0.65
+        [HideInInspector] _WaterReflectionSkew ("Water Reflection Skew", Float) = -0.35
+        [HideInInspector] _WaterReflectionLengthScale ("Water Reflection Length Scale", Float) = 1
         
         _Color ("Tint", Color) = (1,1,1,1)
     }
@@ -203,6 +209,12 @@ Shader "EquipmentSystem/EquipmentUV"
             sampler2D _MaskTex;
             sampler2D _Weapon0Tex;
             sampler2D _Weapon1Tex;
+
+            float _WaterReflectionProxy;
+            float4 _WaterReflectionAnchorWS;
+            float _WaterReflectionVerticalScale;
+            float _WaterReflectionSkew;
+            float _WaterReflectionLengthScale;
             
             // ============================================================
             // 每个装备贴图在纹理中的 Sprite Rect（minU, minV, maxU, maxV）
@@ -650,7 +662,16 @@ Shader "EquipmentSystem/EquipmentUV"
             v2f vert(appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                float4 worldPosition = mul(unity_ObjectToWorld, v.vertex);
+                if (_WaterReflectionProxy > 0.5)
+                {
+                    float2 delta = worldPosition.xy - _WaterReflectionAnchorWS.xy;
+                    float reflectedY = -delta.y * _WaterReflectionVerticalScale * _WaterReflectionLengthScale;
+                    worldPosition.x = _WaterReflectionAnchorWS.x + delta.x + reflectedY * _WaterReflectionSkew;
+                    worldPosition.y = _WaterReflectionAnchorWS.y + reflectedY;
+                }
+
+                o.vertex = mul(UNITY_MATRIX_VP, worldPosition);
                 o.uv = v.uv;
                 o.color = v.color * _Color;
                 return o;

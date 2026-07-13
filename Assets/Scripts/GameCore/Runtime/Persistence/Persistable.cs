@@ -14,6 +14,7 @@ namespace FantasyWord.GameCore
 
         private bool m_destroyed = false;
         private UnityEvent m_destroyedEvent = new();
+        [SerializeField, Tooltip("启用后，此场景实例不读取或写入持久化数据。")]
         private bool m_forceNoPersistence = false;
 
         internal bool isMarkedAsDestroyed => m_destroyed;

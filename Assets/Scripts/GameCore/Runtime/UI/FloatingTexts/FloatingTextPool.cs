@@ -33,6 +33,7 @@ namespace FantasyWord.GameCore
 
         // Private Members
         private float m_cooldown = 0.0f;
+        private float m_poolExhaustedWarningCooldown = 0.0f;
         private readonly Queue<FloatingTextAnimation> m_queue = new();
 
         private void Awake()
@@ -56,11 +57,19 @@ namespace FantasyWord.GameCore
                 }
                 else
                 {
-                    Debug.LogError("No floating text available. Consider expanding pool");
+                    if (m_poolExhaustedWarningCooldown <= 0.0f)
+                    {
+                        Debug.LogWarning(
+                            "No floating text available. The queued text will wait for a pooled instance.");
+                        m_poolExhaustedWarningCooldown = 1.0f;
+                    }
                 }
             }
 
             m_cooldown = Mathf.Max(0.0f, m_cooldown - Time.deltaTime);
+            m_poolExhaustedWarningCooldown = Mathf.Max(
+                0.0f,
+                m_poolExhaustedWarningCooldown - Time.deltaTime);
         }
 
         private FloatingText RentFloatingText()

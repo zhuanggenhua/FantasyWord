@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using ContextSteering2D;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -7,32 +7,17 @@ namespace FantasyWord.GameCore
     public partial class AIController
     {
         /// <summary>
-        /// `AIController` 的内部行为执行模块。
-        /// 这里只收口视野检测、追敌裁决、转向数组和避障执行，不替代 `AIController` 自己的正式控制器入口或可持久化追敌状态。
+        /// `AIController` 的内部业务行为模块。
+        /// 这里只维护目标、攻击和追击状态；转向求解、检测和局部避让统一交给 ContextSteering2D 世界模拟。
         /// </summary>
         private sealed class BehaviourRuntime
         {
             private readonly AIController m_owner;
-            private readonly List<RaycastHit2D> m_castCollisions = new();
-            private readonly float[] m_interests = new float[8];
-            private readonly float[] m_dangers = new float[8];
-            private readonly float[] m_steering = new float[8];
-            private readonly Vector2[] m_directions =
-            {
-                Vector2.up,
-                new Vector2(0.5f, 0.5f).normalized,
-                Vector3.right,
-                new Vector2(0.5f, -0.5f).normalized,
-                Vector2.down,
-                new Vector2(-0.5f, -0.5f).normalized,
-                Vector2.left,
-                new Vector2(-0.5f, 0.5f).normalized,
-            };
-
-            private Rigidbody2D m_rigidbody = null;
+            private CharacterSteeringAdapter2D m_steeringAdapter = null;
+            private readonly CharacterSteeringPathCursor2D m_pathCursor = new();
             private Vector2 m_steeringAverageOutput = Vector2.zero;
             private Vector2 m_targetPosition = Vector2.zero;
-            private Vector2 m_lerpedTargetDirection = Vector2.zero;
+            private float m_navigationRepathTimer;
 
             public BehaviourRuntime(AIController owner)
             {
@@ -41,11 +26,28 @@ namespace FantasyWord.GameCore
 
             public void Initialize()
             {
-                m_rigidbody = m_owner.m_subject.GetComponent<Rigidbody2D>();
                 m_owner.m_initialPosition = m_owner.m_subject.transform.position;
 
-                Debug.Assert(m_owner.m_subject is CharacterBase, "AIController can only be attached to a CharacterBase");
-                Debug.Assert(m_rigidbody != null, "No rigidbody found attached to this character");
+                if (m_owner.m_subject is not CharacterBase character)
+                {
+                    throw new InvalidOperationException("AIController can only be attached to a CharacterBase.");
+                }
+
+                m_steeringAdapter = new CharacterSteeringAdapter2D(character, m_owner.m_steeringProfile);
+                ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId, "中间路线");
+                ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId, "移动目标追击");
+            }
+
+            public void Stop()
+            {
+                InvalidateNavigationPath();
+                m_steeringAdapter?.Stop();
+            }
+
+            public void Dispose()
+            {
+                m_steeringAdapter?.Dispose();
+                m_steeringAdapter = null;
             }
 
             public void TryHandleProvoked(CharacterBase source)
@@ -64,24 +66,6 @@ namespace FantasyWord.GameCore
                 ApplyMovement();
             }
 
-            public void DrawGizmos()
-            {
-                for (int i = 0; i < m_directions.Length; ++i)
-                {
-                    Gizmos.color = m_steering[i] > 0.0f ? Color.green : Color.red;
-                    Gizmos.DrawRay(m_owner.transform.position, m_directions[i] * Mathf.Abs(m_steering[i]));
-                }
-
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawRay(m_owner.transform.position, m_steeringAverageOutput);
-
-                if (m_owner.m_target)
-                {
-                    Gizmos.color = CanSee(m_owner.m_target) ? Color.cyan : Color.magenta;
-                    Gizmos.DrawLine(m_owner.transform.position, m_owner.m_target.transform.position);
-                }
-            }
-
             private bool CanSee(CharacterBase other)
             {
                 Vector2 targetPosition = other.transform.position;
@@ -97,11 +81,10 @@ namespace FantasyWord.GameCore
 
             private CharacterBase FindTarget()
             {
-                RaycastHit2D[] hits = Physics2D.CircleCastAll(m_owner.transform.position, m_owner.m_detectionRadius, Vector2.zero, 0.0f);
-
-                foreach (RaycastHit2D hit in hits)
+                foreach (Collider2D collider in m_steeringAdapter.DetectedColliders)
                 {
-                    if (hit.transform.TryGetComponent(out CharacterBase potentialTarget) &&
+                    CharacterBase potentialTarget = collider != null ? collider.GetComponentInParent<CharacterBase>() : null;
+                    if (potentialTarget != null &&
                         CombatSolver.IsHostileTowards(m_owner.m_subject, potentialTarget) &&
                         CanSee(potentialTarget))
                     {
@@ -122,6 +105,11 @@ namespace FantasyWord.GameCore
                 if (m_owner.m_attackCooldownTimer > 0.0f)
                 {
                     m_owner.m_attackCooldownTimer = Math.Max(m_owner.m_attackCooldownTimer - Time.fixedDeltaTime, 0.0f);
+                }
+
+                if (m_navigationRepathTimer > 0.0f)
+                {
+                    m_navigationRepathTimer = Math.Max(m_navigationRepathTimer - Time.fixedDeltaTime, 0.0f);
                 }
             }
 
@@ -154,9 +142,22 @@ namespace FantasyWord.GameCore
                 {
                     if (m_owner.m_subject.TryGetFirstTriggerableFormalGasAbilityCode(out int formalGasAbilityCode))
                     {
-                        m_owner.m_subject.SetTargetDirection((m_owner.m_target.transform.position - m_owner.transform.position).normalized);
-                        m_owner.m_subject.FireFormalGasAbility(formalGasAbilityCode, GameCommandContext.AI(m_owner.m_subject));
-                        m_owner.m_attackCooldownTimer = m_owner.m_attackCooldown;
+                        Vector2 attackDirection = m_owner.m_target.transform.position - m_owner.transform.position;
+                        if (attackDirection.sqrMagnitude > 0.0001f)
+                        {
+                            attackDirection.Normalize();
+                            m_owner.m_subject.SetLookAtDirection(attackDirection);
+                            m_owner.m_subject.SetTargetDirection(attackDirection);
+                        }
+
+                        m_owner.m_subject.StopFireFormalGasAbility(formalGasAbilityCode);
+                        EAbilityFireCheckResult fireResult = m_owner.m_subject.FireFormalGasAbility(
+                            formalGasAbilityCode,
+                            GameCommandContext.AI(m_owner.m_subject));
+                        if (fireResult == EAbilityFireCheckResult.Valid)
+                        {
+                            m_owner.m_attackCooldownTimer = m_owner.m_attackCooldown;
+                        }
                     }
                 }
             }
@@ -177,6 +178,7 @@ namespace FantasyWord.GameCore
             {
                 m_owner.m_retargetCooldownTimer = retargetCooldown;
                 m_owner.m_target = null;
+                InvalidateNavigationPath();
             }
 
             private void UpdateTargetPosition()
@@ -211,65 +213,166 @@ namespace FantasyWord.GameCore
                     m_owner.m_target ?
                     m_owner.m_soughtDistanceFromTarget :
                     m_owner.m_soughtDistanceFromMasterTarget;
+                Vector2 currentPosition = m_owner.transform.position;
+                float distanceToDestination = Vector2.Distance(currentPosition, m_targetPosition);
+                float finalApproachDistance = soughtDistance +
+                    Mathf.Max(m_owner.m_navigationWaypointTolerance, 0.05f);
 
-                if (Vector2.Distance(m_owner.transform.position, m_targetPosition) > soughtDistance)
+                if (distanceToDestination <= finalApproachDistance)
                 {
-                    m_steeringAverageOutput = Vector2.zero;
-
-                    for (int i = 0; i < m_directions.Length; ++i)
+                    string finalGroupId = m_owner.m_target
+                        ? m_owner.m_targetPursuitSteeringGroupId
+                        : m_owner.m_steeringProfile.DefaultGroupIdValue;
+                    Vector2 targetVelocity = Vector2.zero;
+                    if (m_owner.m_target &&
+                        m_owner.m_target.TryGetComponent(out Rigidbody2D targetBody))
                     {
-                        ProcessSteeringBehaviour(i);
-                        m_steeringAverageOutput += m_directions[i] * m_steering[i];
+                        targetVelocity = targetBody.linearVelocity;
                     }
 
-                    m_steeringAverageOutput.Normalize();
+                    m_steeringAdapter.Submit(
+                        true,
+                        m_targetPosition,
+                        targetVelocity,
+                        m_owner.m_subject.transform.right,
+                        finalGroupId,
+                        m_owner.m_detectionRadius,
+                        soughtDistance);
+                    m_steeringAdapter.ApplyLatestResult();
 
-                    m_lerpedTargetDirection =
-                        !m_owner.m_subject.IsMoving() ?
-                        m_steeringAverageOutput :
-                        Vector2.Lerp(m_lerpedTargetDirection, m_steeringAverageOutput, Time.fixedDeltaTime * m_owner.m_steeringDriftResponsiveness);
-
-                    m_owner.m_subject.SetMovementDirection(m_lerpedTargetDirection.normalized);
+                    if (m_owner.m_subject.CanMove())
+                    {
+                        m_owner.m_subject.LookAtTarget(m_targetPosition);
+                    }
                     return;
                 }
 
-                m_owner.m_subject.SetMovementDirection(Vector2.zero);
-
-                if (m_owner.m_subject.CanMove())
+                if (!TryResolveSteeringTarget(
+                        currentPosition,
+                        m_targetPosition,
+                        out Vector2 steeringTarget,
+                        out string behaviourGroupId,
+                        out bool isFinalTarget))
                 {
-                    m_owner.m_subject.LookAtTarget(m_targetPosition);
+                    m_steeringAdapter.Submit(
+                        false,
+                        null,
+                        Vector2.zero,
+                        m_owner.m_subject.transform.right,
+                        semanticQueryRadius: m_owner.m_detectionRadius);
+                    m_owner.m_subject.SetSteeringMotion(1.0f, Vector2.zero);
+                    m_owner.m_subject.SetMovementDirection(Vector2.zero);
+                    return;
+                }
+
+                Vector2 forward = m_owner.m_subject.IsMoving()
+                    ? m_steeringAverageOutput
+                    : (steeringTarget - currentPosition);
+                if (forward.sqrMagnitude <= 0.0001f)
+                {
+                    forward = m_owner.m_subject.transform.right;
+                }
+
+                Vector2 resolvedTargetVelocity = Vector2.zero;
+                if (isFinalTarget &&
+                    m_owner.m_target &&
+                    m_owner.m_target.TryGetComponent(out Rigidbody2D resolvedTargetBody))
+                {
+                    resolvedTargetVelocity = resolvedTargetBody.linearVelocity;
+                }
+
+                m_steeringAdapter.Submit(
+                    true,
+                    steeringTarget,
+                    resolvedTargetVelocity,
+                    forward,
+                    behaviourGroupId,
+                    m_owner.m_detectionRadius,
+                    isFinalTarget ? soughtDistance : -1.0f);
+                m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                m_steeringAdapter.ApplyLatestResult();
+            }
+
+            private bool TryResolveSteeringTarget(
+                Vector2 currentPosition,
+                Vector2 finalDestination,
+                out Vector2 steeringTarget,
+                out string behaviourGroupId,
+                out bool isFinalTarget)
+            {
+                steeringTarget = finalDestination;
+                behaviourGroupId = m_owner.m_steeringProfile.DefaultGroupIdValue;
+                isFinalTarget = true;
+
+                if (!GameManager.Exists() ||
+                    !GameManager.TryGetSystem(out MapSystem mapSystem) ||
+                    !mapSystem.TryGetActiveTerrainNavigationMap(out TerrainNavigationMap navigationMap))
+                {
+                    InvalidateNavigationPath();
+                    return true;
+                }
+
+                float targetMoveThreshold = Mathf.Max(m_owner.m_navigationTargetMoveThreshold, 0.05f);
+                bool destinationMoved = m_pathCursor.HasDestinationMoved(
+                    finalDestination,
+                    targetMoveThreshold);
+                if (!m_pathCursor.HasPath ||
+                    destinationMoved ||
+                    m_navigationRepathTimer <= 0.0f)
+                {
+                    m_navigationRepathTimer = Mathf.Max(m_owner.m_navigationRepathInterval, 0.1f);
+                    if (!navigationMap.TryBuildWorldPathWithoutDebug(
+                            currentPosition,
+                            finalDestination,
+                            out Vector2[] navigationPath))
+                    {
+                        m_pathCursor.Clear();
+                        return false;
+                    }
+
+                    m_pathCursor.SetPath(navigationPath, finalDestination);
+                }
+
+                if (!m_pathCursor.TryGetTarget(
+                        currentPosition,
+                        Mathf.Max(m_owner.m_navigationWaypointTolerance, 0.05f),
+                        out steeringTarget,
+                        out isFinalTarget))
+                {
+                    return false;
+                }
+
+                behaviourGroupId = isFinalTarget
+                    ? (m_owner.m_target
+                        ? m_owner.m_targetPursuitSteeringGroupId
+                        : m_owner.m_steeringProfile.DefaultGroupIdValue)
+                    : m_owner.m_transitSteeringGroupId;
+                return true;
+            }
+
+            private void ValidateSteeringGroupMapping(string groupId, string usage)
+            {
+                if (string.IsNullOrWhiteSpace(groupId))
+                {
+                    throw new InvalidOperationException($"AIController 的{usage}未配置 ContextSteering 行为组 ID。");
+                }
+
+                try
+                {
+                    m_owner.m_steeringProfile.GetBehaviourGroup(groupId);
+                }
+                catch (InvalidOperationException exception)
+                {
+                    throw new InvalidOperationException(
+                        $"AIController 的{usage}配置为行为组 '{groupId}'，但 Profile '{m_owner.m_steeringProfile.name}' 中不存在该组。",
+                        exception);
                 }
             }
 
-            private void ProcessSteeringBehaviour(int index)
+            private void InvalidateNavigationPath()
             {
-                ProcessChaseBehaviour(index);
-                ProcessAvoidBehaviour(index);
-                m_steering[index] = m_interests[index] - m_dangers[index];
-            }
-
-            private void ProcessChaseBehaviour(int index)
-            {
-                Vector2 direction = m_directions[index];
-                Vector2 currentPosition = m_owner.transform.position;
-                Vector2 directionToTarget = m_targetPosition - currentPosition;
-                directionToTarget.Normalize();
-
-                float angleToTargetDirection = Vector2.Angle(direction, directionToTarget);
-                m_interests[index] = Math.Max(1.0f - (angleToTargetDirection / 90.0f), 0.0f);
-            }
-
-            private void ProcessAvoidBehaviour(int index)
-            {
-                Vector2 direction = m_directions[index];
-
-                int count = m_rigidbody.Cast(
-                    direction,
-                    GameManager.Config.collisionContactFilter,
-                    m_castCollisions,
-                    1.0f);
-
-                m_dangers[index] = count > 0 ? 1.0f - m_castCollisions[0].distance : 0.0f;
+                m_pathCursor.Clear();
+                m_navigationRepathTimer = 0.0f;
             }
         }
     }

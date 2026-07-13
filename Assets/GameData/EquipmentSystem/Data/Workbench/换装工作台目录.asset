@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: ::EquipmentWorkbenchCatalog
   characters:
   - displayName: "\u4EBA\u7C7B"
-    animatorController: {fileID: 9100000, guid: 0be334fca6154804592795b046bebf5c, type: 2}
     frameData: {fileID: 11400000, guid: 720d2b3b0c58d5b4295a6468bd84a86c, type: 2}
     appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
     baseStats:
@@ -32,7 +31,6 @@ MonoBehaviour:
     defaultEquipment:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u77EE\u4EBA"
-    animatorController: {fileID: 22100000, guid: 09fa9898e9b56f948ab5f72bd456d8c4, type: 2}
     frameData: {fileID: 11400000, guid: 81eb04687dcfd354e887de2494386233, type: 2}
     appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
     baseStats:
@@ -50,7 +48,6 @@ MonoBehaviour:
     defaultEquipment:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u7CBE\u7075"
-    animatorController: {fileID: 22100000, guid: a31c59e1322e42e488b27c0df86c94e3, type: 2}
     frameData: {fileID: 11400000, guid: 83c7e080e4852844fb3bb0b6a05751d1, type: 2}
     appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
     baseStats:
@@ -68,7 +65,6 @@ MonoBehaviour:
     defaultEquipment:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u5730\u7CBE"
-    animatorController: {fileID: 22100000, guid: 34e1c292bf2673c4990dfd12f735b95f, type: 2}
     frameData: {fileID: 11400000, guid: 34387288a2911e34a9a651f287eb7ccd, type: 2}
     appearance: {fileID: 11400000, guid: 93a168d1740358645a13d2fcd4450383, type: 2}
     baseStats:
@@ -86,7 +82,6 @@ MonoBehaviour:
     defaultEquipment:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u517D\u4EBA"
-    animatorController: {fileID: 22100000, guid: e55553bde0e55f642bde0b4d101151f2, type: 2}
     frameData: {fileID: 11400000, guid: 2f355237f57507f48baac5069f5d7cd0, type: 2}
     appearance: {fileID: 11400000, guid: 93a168d1740358645a13d2fcd4450383, type: 2}
     baseStats:

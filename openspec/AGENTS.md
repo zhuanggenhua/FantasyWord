@@ -50,5 +50,6 @@
 - 当前活跃 change：
   - `plan-core-framework-roadmap`：只制定核心框架阶段路线，不实现具体技能、战斗、AI、世界交互、任务或建造系统。
   - `implement-element-reaction-foundation`：实现首条世界地表元素反应竖切；角色伤害与角色状态继续由 EX-GAS 承担，不创建第二套角色状态框架。
+  - `implement-persistent-world-terrain-mutation`：定义玩家行为持久改变世界地貌的保存/加载闭环；首批承接喷火烧毁草覆盖层后露出底层土壤、草层可再生且重载仍保持进度，不把表现覆盖层当保存真相。
   - `implement-realtime-terrain-navigation`：推进即时制连续点击移动、单层高低地与坡道导航闭环，并作为多层地形实施的前置 change。
   - `introduce-multilevel-terrain-navigation`：定义桥面/桥洞等重叠可行走表面的节点身份、跨层连接、碰撞、渲染、点击解析与地表状态隔离；当前仅完成提案，尚未进入代码和场景实施。

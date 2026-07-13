@@ -105,7 +105,7 @@ namespace FantasyWord.GameCore.Tests
                 application,
                 ETerrainElementStateKind.None,
                 ETerrainSurfaceKind.Grass,
-                ETerrainSurfaceKind.ScorchedDirt,
+                ETerrainSurfaceKind.Dirt,
                 ETerrainRuntimeSurfaceState.Oiled);
             ElementReactionContext missingStateContext = new(
                 EElementReactionTrigger.OnElementApplied,
@@ -256,7 +256,7 @@ namespace FantasyWord.GameCore.Tests
 
             TerrainStateTileMapping[] stateMappings =
                 GetPrivateField<TerrainStateTileMapping[]>(presentation, "m_stateTiles");
-            Assert.AreEqual(4, stateMappings.Length, "首批临时状态表现映射数量不完整。");
+            Assert.AreEqual(1, stateMappings.Length, "首批只允许接入用户提供的正式火焰表现。");
             HashSet<ETerrainElementStateKind> presentationStateKinds = new();
             for (int i = 0; i < stateMappings.Length; i++)
             {
@@ -272,128 +272,68 @@ namespace FantasyWord.GameCore.Tests
             CollectionAssert.AreEquivalent(
                 new[]
                 {
-                    ETerrainElementStateKind.Wet,
-                    ETerrainElementStateKind.Burning,
-                    ETerrainElementStateKind.Oiled,
-                    ETerrainElementStateKind.Electrified
+                    ETerrainElementStateKind.Burning
                 },
                 presentationStateKinds);
 
             TerrainSurfaceTileMapping[] surfaceMappings =
                 GetPrivateField<TerrainSurfaceTileMapping[]>(presentation, "m_surfaceTiles");
-            Assert.AreEqual(1, surfaceMappings.Length, "首批结果地表表现映射数量不完整。");
-            Assert.IsNotNull(surfaceMappings[0]);
-            Assert.AreEqual(ETerrainSurfaceKind.ScorchedDirt, surfaceMappings[0].SurfaceKind);
-            Assert.IsNotNull(surfaceMappings[0].Tile, "焦土缺少正式表现 Tile。");
+            Assert.AreEqual(
+                0,
+                surfaceMappings.Length,
+                "草燃尽露土不能依赖结果覆盖 Tile；应移除草覆盖层，露出作者预先铺好的 Dirt 底层。");
 
             TerrainSignalTileMapping[] signalMappings =
                 GetPrivateField<TerrainSignalTileMapping[]>(presentation, "m_signalTiles");
-            Assert.AreEqual(1, signalMappings.Length, "首批短暂信号表现映射数量不完整。");
-            Assert.IsNotNull(signalMappings[0]);
-            Assert.AreEqual(EElementPresentationSignal.Steam, signalMappings[0].Signal);
-            Assert.IsNotNull(signalMappings[0].Tile, "蒸汽缺少正式表现 Tile。");
-            Assert.AreEqual(0.35f, signalMappings[0].Duration);
+            Assert.AreEqual(0, signalMappings.Length, "没有正式蒸汽素材时不得擅自配置占位表现。");
         }
 
         [Test]
-        public void TerrainElementPresentationTiles_UseStableAtlasSprites()
+        public void TerrainElementPresentationTiles_UseProvidedFireSpriteSheetOnly()
         {
-            const string AtlasPath =
-                "Assets/ArtRes/Effects/Elements/Terrain/TerrainElementOverlays.png";
-            const string AtlasGuid = "34b35ad294d3fc14e941df99f5cec9d6";
-            string[] tilePaths =
+            const string FireSpriteSheetPath =
+                "Assets/Art/元素/地表/火焰/32x32火3.png";
+            const string FireSpriteSheetGuid =
+                "d942c4c859af7f646a21f383e552f9f2";
+            Dictionary<ETerrainElementStateKind, string> expectedStatePaths = new()
             {
-                "Assets/GameData/Elements/Presentation/Tiles/地表元素-燃烧.asset",
-                "Assets/GameData/Elements/Presentation/Tiles/地表元素-湿润.asset",
-                "Assets/GameData/Elements/Presentation/Tiles/地表元素-油污.asset",
-                "Assets/GameData/Elements/Presentation/Tiles/地表元素-导电.asset",
-                "Assets/GameData/Elements/Presentation/Tiles/地表元素-焦土.asset",
-                "Assets/GameData/Elements/Presentation/Tiles/地表元素-蒸汽.asset"
-            };
-            string[] expectedTileGuids =
-            {
-                "b2f76a85dac64cabad770dfe6e199f26",
-                "526f2a712a604f449433ce30e45677fd",
-                "f5d65f7c93cb4310a291544c5ad52181",
-                "0fe69fa78e644f90bb01845020df2ee8",
-                "a98ef136e65e4465903c155da7ac41a2",
-                "e0f90e8e7d1946f8ae7c9e2e0575b01e"
-            };
-            string[] expectedSpriteNames =
-            {
-                "TerrainElement_Burning",
-                "TerrainElement_Wet",
-                "TerrainElement_Oiled",
-                "TerrainElement_Electrified",
-                "TerrainElement_ScorchedDirt",
-                "TerrainElement_Steam"
+                [ETerrainElementStateKind.Burning] =
+                    "Assets/GameData/Elements/Presentation/Tiles/地表元素-燃烧.asset"
             };
 
             Assert.AreEqual(
-                AtlasGuid,
-                AssetDatabase.AssetPathToGUID(AtlasPath),
-                "正式地表元素图集 GUID 被替换，会使现有 Tile 子资源引用失效。");
+                FireSpriteSheetGuid,
+                AssetDatabase.AssetPathToGUID(FireSpriteSheetPath),
+                "正式火焰序列帧 GUID 被替换，会使 Burning 动画瓦片失效。");
 
-            TextureImporter importer = AssetImporter.GetAtPath(AtlasPath) as TextureImporter;
-            Assert.IsNotNull(importer, "正式地表元素图集没有 TextureImporter。");
-            Assert.AreEqual(SpriteImportMode.Multiple, importer.spriteImportMode);
-            Assert.AreEqual(16f, importer.spritePixelsPerUnit);
-            Assert.AreEqual(FilterMode.Point, importer.filterMode);
-            Assert.AreEqual(TextureImporterCompression.Uncompressed, importer.textureCompression);
-            Assert.IsFalse(importer.mipmapEnabled);
+            TextureImporter fireImporter = AssetImporter.GetAtPath(FireSpriteSheetPath) as TextureImporter;
+            Assert.IsNotNull(fireImporter, "正式火焰序列帧没有 TextureImporter。");
+            Assert.AreEqual(FilterMode.Point, fireImporter.filterMode);
+            Assert.AreEqual(TextureImporterCompression.Uncompressed, fireImporter.textureCompression);
+            Assert.IsFalse(fireImporter.mipmapEnabled);
+            Assert.IsTrue(fireImporter.alphaIsTransparency);
+            Assert.AreEqual(32f, fireImporter.spritePixelsPerUnit);
 
-            Sprite[] sprites = AssetDatabase.LoadAllAssetRepresentationsAtPath(AtlasPath)
-                .OfType<Sprite>()
-                .OrderBy(sprite => sprite.rect.x)
-                .ToArray();
-            Assert.AreEqual(6, sprites.Length, "正式地表元素图集必须保持 6 个切片。");
-
-            for (int i = 0; i < expectedSpriteNames.Length; i++)
-            {
-                Sprite sprite = sprites.SingleOrDefault(
-                    candidate => candidate.name == expectedSpriteNames[i]);
-                Assert.IsNotNull(sprite, $"图集缺少切片：{expectedSpriteNames[i]}。");
-                Assert.AreEqual(16f, sprite.rect.width);
-                Assert.AreEqual(16f, sprite.rect.height);
-                Assert.AreEqual(i * 16f, sprite.rect.x);
-                Assert.AreEqual(0f, sprite.rect.y);
-                Assert.AreEqual(16f, sprite.pixelsPerUnit);
-                Assert.AreEqual(new Vector2(8f, 8f), sprite.pivot);
-
-                Assert.AreEqual(
-                    expectedTileGuids[i],
-                    AssetDatabase.AssetPathToGUID(tilePaths[i]),
-                    $"{tilePaths[i]} 的 GUID 被替换，表现配置引用不再稳定。");
-
-                Tile tile = AssetDatabase.LoadAssetAtPath<Tile>(tilePaths[i]);
-                Assert.IsNotNull(tile, $"正式地表元素 Tile 不存在：{tilePaths[i]}。");
-                Assert.AreSame(
-                    sprite,
-                    tile.sprite,
-                    $"{tile.name} 没有引用预期图集切片 {expectedSpriteNames[i]}。");
-                Assert.AreEqual(Color.white, tile.color, $"{tile.name} 不应二次染色。");
-                Assert.AreEqual(
-                    Matrix4x4.identity,
-                    tile.transform,
-                    $"{tile.name} 不应携带额外缩放、旋转或偏移。");
-                Assert.AreEqual(
-                    Tile.ColliderType.None,
-                    tile.colliderType,
-                    $"{tile.name} 是纯表现覆盖，不应生成碰撞。");
-            }
+            TerrainSpriteSheetAnimatedTile burningTile =
+                AssetDatabase.LoadAssetAtPath<TerrainSpriteSheetAnimatedTile>(
+                    expectedStatePaths[ETerrainElementStateKind.Burning]);
+            Assert.IsNotNull(burningTile, "燃烧表现必须使用序列帧动画 Tile。");
+            Assert.AreEqual(
+                "b2f76a85dac64cabad770dfe6e199f26",
+                AssetDatabase.AssetPathToGUID(expectedStatePaths[ETerrainElementStateKind.Burning]),
+                "燃烧表现 Tile GUID 被替换，配置引用会失效。");
+            Texture2D fireTexture = GetPrivateField<Texture2D>(burningTile, "m_texture");
+            Assert.AreEqual(FireSpriteSheetPath, AssetDatabase.GetAssetPath(fireTexture));
+            Assert.AreEqual(new Vector2Int(32, 32), GetPrivateField<Vector2Int>(burningTile, "m_framePixelSize"));
+            Assert.AreEqual(32f, GetPrivateField<float>(burningTile, "m_pixelsPerUnit"));
+            Assert.AreEqual(8f, GetPrivateField<float>(burningTile, "m_minSpeed"));
+            Assert.AreEqual(8f, GetPrivateField<float>(burningTile, "m_maxSpeed"));
 
             TerrainSurfacePresentationConfig presentation =
                 AssetDatabase.LoadAssetAtPath<TerrainSurfacePresentationConfig>(
                     "Assets/GameData/Elements/Presentation/地表元素表现-首批.asset");
             Assert.IsNotNull(presentation);
 
-            Dictionary<ETerrainElementStateKind, string> expectedStatePaths = new()
-            {
-                [ETerrainElementStateKind.Burning] = tilePaths[0],
-                [ETerrainElementStateKind.Wet] = tilePaths[1],
-                [ETerrainElementStateKind.Oiled] = tilePaths[2],
-                [ETerrainElementStateKind.Electrified] = tilePaths[3]
-            };
             TerrainStateTileMapping[] stateMappings =
                 GetPrivateField<TerrainStateTileMapping[]>(presentation, "m_stateTiles");
             for (int i = 0; i < stateMappings.Length; i++)
@@ -406,11 +346,14 @@ namespace FantasyWord.GameCore.Tests
 
             TerrainSurfaceTileMapping[] surfaceMappings =
                 GetPrivateField<TerrainSurfaceTileMapping[]>(presentation, "m_surfaceTiles");
-            Assert.AreEqual(tilePaths[4], AssetDatabase.GetAssetPath(surfaceMappings[0].Tile));
+            Assert.AreEqual(
+                0,
+                surfaceMappings.Length,
+                "表现配置不得把 Dirt 当作烧草后的覆盖素材。");
 
             TerrainSignalTileMapping[] signalMappings =
                 GetPrivateField<TerrainSignalTileMapping[]>(presentation, "m_signalTiles");
-            Assert.AreEqual(tilePaths[5], AssetDatabase.GetAssetPath(signalMappings[0].Tile));
+            Assert.AreEqual(0, signalMappings.Length, "没有正式蒸汽素材时不得保留占位信号表现。");
         }
 
         private static void AssertRegistrySerializationIsUnique(DatabaseRegistry registry)

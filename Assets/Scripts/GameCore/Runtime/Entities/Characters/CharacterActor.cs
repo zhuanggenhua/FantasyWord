@@ -198,6 +198,26 @@ namespace FantasyWord.GameCore
             }
         }
 
+        protected override bool TryPlayHitAnimation()
+        {
+            if (m_animationDriverBehaviour == null)
+            {
+                return base.TryPlayHitAnimation();
+            }
+
+            if (m_animationDriverBehaviour is ICharacterAnimationDriver animationDriver &&
+                animationDriver.TryPlayAnimation("Dmg"))
+            {
+                return true;
+            }
+
+            Debug.LogError(
+                $"角色“{name}”无法通过正式动画驱动播放 Dmg。"
+                + "请检查统一角色 Prefab 的动画驱动引用、动画数据库和 Animator 状态。",
+                this);
+            return false;
+        }
+
         protected override bool TryPlayDeathAnimation()
         {
             if (m_animationDriverBehaviour == null)

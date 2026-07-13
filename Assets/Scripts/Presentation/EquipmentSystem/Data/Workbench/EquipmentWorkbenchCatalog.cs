@@ -9,9 +9,6 @@ public sealed class EquipmentWorkbenchCharacterOption
     string displayName;
 
     [SerializeField]
-    RuntimeAnimatorController animatorController;
-
-    [SerializeField]
     CharacterFrameData frameData;
 
     [SerializeField]
@@ -27,7 +24,6 @@ public sealed class EquipmentWorkbenchCharacterOption
         ? (frameData != null ? frameData.name : "Unnamed Character")
         : displayName;
 
-    public RuntimeAnimatorController AnimatorController => animatorController;
     public CharacterFrameData FrameData => frameData;
     public CharacterAppearance Appearance => appearance;
     public WorkbenchStatBlock BaseStats => baseStats;

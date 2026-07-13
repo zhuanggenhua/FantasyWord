@@ -263,7 +263,6 @@ public class EquipmentRenderer : MonoBehaviour
         {
             _debugAnimatorState = "code:" + codeDrivenKey;
             ApplyAnimationKey(codeDrivenKey);
-            ApplyPreviewDirection(_animationController.CurrentDirectionIndex, true);
             return;
         }
 
@@ -591,6 +590,27 @@ public class EquipmentRenderer : MonoBehaviour
     }
 
     /// <summary>
+    /// 将当前实际参与角色表现的 SpriteRenderer 追加到调用方提供的列表。
+    /// 用于水面倒影等表现系统复用换装主体与动态武器，不暴露内部渲染器容器。
+    /// </summary>
+    public void AppendActivePresentationRenderers(List<SpriteRenderer> results)
+    {
+        if (results == null)
+            throw new ArgumentNullException(nameof(results));
+
+        EnsureRendererInitialized();
+        if (_charRenderer != null && _charRenderer.enabled && _charRenderer.sprite != null)
+            results.Add(_charRenderer);
+
+        foreach (var pair in _weaponRenderers)
+        {
+            SpriteRenderer renderer = pair.Value;
+            if (renderer != null && renderer.enabled && renderer.sprite != null)
+                results.Add(renderer);
+        }
+    }
+
+    /// <summary>
     /// 在下一帧 Animator 采样后再次同步 Sprite。
     /// UI 点击发生在当前帧中途时，SpriteRenderer 可能仍是上一动作。
     /// </summary>
@@ -770,9 +790,6 @@ public class EquipmentRenderer : MonoBehaviour
             : $"{_currentAnimName} -> {resolvedKey}";
         _cachedFrame = null;
         _frameIndex = 0;
-        if (_animationController != null)
-            _rowIndex = Mathf.Clamp(_animationController.CurrentDirectionIndex, 0, 3);
-
         UpdateUVMapTexture();
 
         if (autoRefresh)

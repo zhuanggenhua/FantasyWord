@@ -228,8 +228,8 @@ namespace FantasyWord.GameCore
 
                 if (!damageInput.silent)
                 {
-                    InterruptActions();
-                    m_animationStrategy?.PlayHitAnimation();
+                    RequestActionInterruptAfterFormalDamage();
+                    TryPlayHitAnimation();
                 }
 
                 ApplyCurrentHealthLossViaFormalGameplayEffect(damageInput.damage, sourceCharacter);

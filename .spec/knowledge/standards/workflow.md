@@ -17,6 +17,8 @@ metadata:
 - 目标入口/环境：在当前项目根、Unity Editor、`.spec/knowledge/features/project/`、`openspec/`、`.spec/` 还是全局 `D:\codex-home`。
 - 验收口径：完成后回到哪里验证，使用什么证据证明。
 
+当用户给出本地路径、外部参考工程、仓库、网页、文档或资源目录时，该来源优先级高于历史印象和当前仓库搜索结果。实施前必须读取或验证该精确来源，并锁定它的原设计入口、关键实现、数据/资源来源和适用边界；否则只能继续查证或拒绝实施。
+
 ## 执行边界
 
 - 根 `AGENTS.md` 是入口，只放指针，不再堆项目细节。
@@ -24,6 +26,7 @@ metadata:
 - `.spec/knowledge/features/project/` 是当前项目知识库正式入口；废弃目录不得作为规范入口继续引用。
 - `openspec` 承载 proposal/change/spec，不混进 `.spec/decisions`。
 - `.codex/skills` 和 `.agents/skills` 的现有项目 skill 继续可用；重复 skill 已在 `skill-conflicts.md` 收口。
+- 参考工程接入或插件级抽象不得先写实现再补证据；如果外部参考路径尚未读取、关键入口尚未定位，必须停在“前提未锁定”，不能用“先做一个通用版本”代替参考裁决。
 
 ## LumioAgent 吸收边界
 

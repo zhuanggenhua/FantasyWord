@@ -26,7 +26,8 @@
     "Unity.TextMeshPro",
     "Unity.2D.Animation.Runtime",
     "Unity.Mathematics",
-    "AStar.2D.GridPathfinding"
+    "AStar.2D.GridPathfinding",
+    "ContextSteering2D.Runtime"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

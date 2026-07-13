@@ -14,12 +14,18 @@
 # Local runtime / AI automation artifacts
 /.codexbridge/
 /AIBridgeCache/
+/_ai_preview_*.jpg
+/test-results/
 /.puerts-unity-mcp/
 /.uloop/
 /.dotnet/
 /.unity-env/
 /.learnings/
 /Unity/
+/[Aa]ssets/[Ss]creenshots/
+/[Aa]ssets/[Ss]creenshots.meta
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
 /[Aa]ssets/puerts-unity-mcp/Runtime/Generated/
 /[Aa]ssets/puerts-unity-mcp/Runtime/Generated/Plugins/puerts_il2cpp/
 

@@ -959,13 +959,13 @@ AssertFormalAttackAbilityReady(attacker);
 
             attacker.transform.position = new Vector3(2.0f, 0.0f, 0.0f);
             attacker.SetLookAtDirection(Vector2.left);
-            attacker.SetTargetDirection(Vector2.left);
+            attacker.SetTargetDirection(Vector2.right);
 
             List<AbilitySystemCell> results = new();
             catcher.CatchTargetsNonAllocSafe(destinationAsc.Cell, ref results);
 
             Assert.Contains(destinationAsc.Cell, results, "闪现后攻击应以命中帧的施法者位置和朝向计算范围。");
-            Assert.IsFalse(results.Contains(castOriginAsc.Cell), "闪现后攻击不能继续使用起手位置或起手方向计算命中范围。");
+            Assert.IsFalse(results.Contains(castOriginAsc.Cell), "闪现后攻击不能继续使用起手位置、起手方向或输入目标方向计算命中范围。");
         }
 
         [Test]
@@ -1128,6 +1128,9 @@ AssertFormalAttackAbilityReady(attacker);
             Assert.IsTrue(
                 FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(BasicAttackAbilityCode, out FormalGasAbilityRuntimeConfig config),
                 "测试前应能从 exgas.abilityGameCore 解析基础攻击运行配置。");
+            Assert.IsFalse(
+                config.InputGate.updateLookAtDirectionOnFire,
+                "四方向俯视角普攻必须按角色当前朝向执行；开火瞬间不能用鼠标、点击目标或输入请求方向改写朝向。");
             Assert.IsTrue(config.TryLoadPrefab(out GameObject prefab), "测试前应能从 exgas.abilityGameCore 加载基础攻击 Prefab。");
 
             GameObject instance = UnityEngine.Object.Instantiate(prefab, attacker.transform);

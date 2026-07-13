@@ -10,6 +10,137 @@ using UnityEditor;
 
 namespace FantasyWord.GameCore
 {
+    internal static class Gas2DTargetCatcherRuntimeDebug
+    {
+        private static readonly Color HitRangeColor = new(0.0f, 1.0f, 0.15f, 0.85f);
+        private static Material s_lineMaterial;
+        private const float HitRangeDuration = 0.25f;
+        private const float HitRangeWidth = 0.035f;
+
+        public static void DrawBox(Vector2 center, Vector2 size, float angle)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Vector2 halfSize = size * 0.5f;
+            Vector2[] corners =
+            {
+                Rotate(new Vector2(-halfSize.x, -halfSize.y), angle) + center,
+                Rotate(new Vector2(-halfSize.x, halfSize.y), angle) + center,
+                Rotate(new Vector2(halfSize.x, halfSize.y), angle) + center,
+                Rotate(new Vector2(halfSize.x, -halfSize.y), angle) + center
+            };
+            DrawPolygon(corners, corners.Length);
+#endif
+        }
+
+        public static void DrawCircle(Vector2 center, float radius)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            const int segmentCount = 48;
+            Vector2[] points = new Vector2[segmentCount];
+            for (int i = 0; i < segmentCount; i++)
+            {
+                float radians = (Mathf.PI * 2.0f * i) / segmentCount;
+                points[i] = center + new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * radius;
+            }
+
+            DrawPolygon(points, segmentCount);
+#endif
+        }
+
+        public static void DrawPolygon(Vector2[] points, int pointCount)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (points == null || pointCount < 3)
+            {
+                return;
+            }
+
+            GameObject lineObject = new("GAS Attack Hit Range");
+            lineObject.hideFlags = HideFlags.HideAndDontSave;
+            LineRenderer lineRenderer = lineObject.AddComponent<LineRenderer>();
+            lineRenderer.useWorldSpace = true;
+            lineRenderer.loop = true;
+            lineRenderer.positionCount = pointCount;
+            lineRenderer.startColor = HitRangeColor;
+            lineRenderer.endColor = HitRangeColor;
+            lineRenderer.startWidth = HitRangeWidth;
+            lineRenderer.endWidth = HitRangeWidth;
+            lineRenderer.numCapVertices = 3;
+            lineRenderer.numCornerVertices = 3;
+            lineRenderer.sharedMaterial = GetLineMaterial();
+            lineRenderer.textureMode = LineTextureMode.Stretch;
+            lineRenderer.sortingOrder = 32762;
+            lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            lineRenderer.receiveShadows = false;
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                Vector2 point = points[i];
+                lineRenderer.SetPosition(i, new Vector3(point.x, point.y, 0.0f));
+            }
+
+            DestroyLineObject(lineObject);
+#endif
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private static void DestroyLineObject(GameObject lineObject)
+        {
+            if (Application.isPlaying)
+            {
+                UnityEngine.Object.Destroy(lineObject, HitRangeDuration);
+                return;
+            }
+
+#if UNITY_EDITOR
+            UnityEngine.Object.DestroyImmediate(lineObject);
+#else
+            UnityEngine.Object.Destroy(lineObject);
+#endif
+        }
+
+        private static Material GetLineMaterial()
+        {
+            if (s_lineMaterial != null)
+            {
+                return s_lineMaterial;
+            }
+
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
+            }
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Hidden/Internal-Colored");
+            }
+
+            if (shader == null)
+            {
+                return null;
+            }
+
+            s_lineMaterial = new Material(shader)
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            return s_lineMaterial;
+        }
+
+        private static Vector2 Rotate(Vector2 value, float degrees)
+        {
+            float radians = degrees * Mathf.Deg2Rad;
+            float sin = Mathf.Sin(radians);
+            float cos = Mathf.Cos(radians);
+            return new Vector2(
+                value.x * cos - value.y * sin,
+                value.x * sin + value.y * cos);
+        }
+#endif
+    }
+
     internal static class Gas2DTargetCatcherDirectionResolver
     {
         private const float DirectionEpsilon = 0.0001f;
@@ -85,12 +216,16 @@ namespace FantasyWord.GameCore
             }
 
             int count;
+            Vector2 debugCenter;
+            float debugAngle;
             if (Parameter.isWorldSpace)
             {
+                debugCenter = Parameter.offset;
+                debugAngle = Parameter.rotation;
                 count = Physics2D.OverlapBoxNonAlloc(
-                    Parameter.offset,
+                    debugCenter,
                     Parameter.size,
-                    Parameter.rotation,
+                    debugAngle,
                     Colliders,
                     Parameter.layer.value);
             }
@@ -112,13 +247,17 @@ namespace FantasyWord.GameCore
                     return;
                 }
 
+                debugCenter = center;
+                debugAngle = angle;
                 count = Physics2D.OverlapBoxNonAlloc(
-                    center,
+                    debugCenter,
                     Parameter.size,
-                    angle,
+                    debugAngle,
                     Colliders,
                     Parameter.layer.value);
             }
+
+            Gas2DTargetCatcherRuntimeDebug.DrawBox(debugCenter, Parameter.size, debugAngle);
 
             for (int i = 0; i < count; i++)
             {
@@ -238,10 +377,12 @@ namespace FantasyWord.GameCore
             }
 
             int count;
+            Vector2 debugCenter;
             if (Parameter.isWorldSpace)
             {
+                debugCenter = Parameter.offset;
                 count = Physics2D.OverlapCircleNonAlloc(
-                    Parameter.offset,
+                    debugCenter,
                     Parameter.radius,
                     Colliders,
                     Parameter.layer.value);
@@ -262,12 +403,15 @@ namespace FantasyWord.GameCore
                     return;
                 }
 
+                debugCenter = center;
                 count = Physics2D.OverlapCircleNonAlloc(
-                    center,
+                    debugCenter,
                     Parameter.radius,
                     Colliders,
                     Parameter.layer.value);
             }
+
+            Gas2DTargetCatcherRuntimeDebug.DrawCircle(debugCenter, Parameter.radius);
 
             for (int i = 0; i < count; i++)
             {
@@ -388,6 +532,8 @@ namespace FantasyWord.GameCore
                 0.0f,
                 Colliders,
                 Parameter.layer.value);
+
+            Gas2DTargetCatcherRuntimeDebug.DrawPolygon(WorldPoints, pointCount);
 
             for (int i = 0; i < count; i++)
             {

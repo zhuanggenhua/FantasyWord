@@ -57,15 +57,15 @@
 - [x] 新增 `TerrainSurfacePresentation`
 - [x] 将 `TerrainNavigationMap.m_runtimeSurfaceVisualTilemap` 引用和 Tilemap 清理职责迁移到 `TerrainSurfacePresentation`
 - [x] 重新接线正式地形场景，确认 Map 不再直接写入或清空表现 Tilemap
-- [x] 将临时效果 Tilemap 与最终结果覆盖 Tilemap 分开
+- [x] 将地表元素表现收敛为临时效果层；草燃尽不再使用最终结果覆盖 Tilemap
 - [x] 创建首批地表元素表现配置资产
-- [x] 创建项目自有 `TerrainElementOverlays.png`，并将 Burning、Wet、Oiled、Electrified、ScorchedDirt 和 Steam 切分为 6 个正式 Tile 资产
-- [x] 填充 Burning、Wet、Oiled、Electrified、ScorchedDirt 和 Steam 的状态/地表/短暂信号表现映射
-- [x] 为新地表图集的导入设置、6 个 Sprite 切片和现有 Tile 的稳定引用补资产合同测试；`TerrainElementPresentationTiles_UseStableAtlasSprites` 已通过，相关测试为 7/7
-- [x] 在真实 GameView 校准 6 个表现 Tile 的缩放、位置和最终观感；Burning、Wet、Oiled、Electrified、Steam 和 ScorchedDirt 均已完成真实画面核验，同尺度联系表位于 `test-results/evidence-image-validation/element-reaction-terrain-presentation/states-runtime/contact-sheet-six-states.png`
+- [x] 移除前序自造的 `TerrainElementOverlays.png` 和湿润/油污/导电/蒸汽/焦土占位 Tile；首批只保留用户提供的火焰序列帧表现
+- [x] 表现配置只填充 Burning -> 用户提供火焰序列帧；Wet/Oiled/Electrified/Steam 没有正式素材时不得配置占位表现
+- [x] 为 Burning 火焰序列帧导入设置、动画 Tile 和表现配置稳定引用补资产合同测试；`TerrainElementPresentationTiles_UseProvidedFireSpriteSheetOnly` 已纳入 EditMode 复测
+- [x] 重新进行真实 GameView / PlayMode 验收：验证 Burning 火焰临时效果、Grass 覆盖层移除或隐藏、底层 Dirt 自然显露；验收目标是运行时世界状态闭环，截图只作为辅助视觉证据
 - [x] Burning 添加/移除时只刷新对应格临时效果
-- [x] ScorchedDirt 写入结果覆盖层，Burning 清除时不删除焦土
-- [x] Water + Burning 能触发一次短暂蒸汽表现信号
+- [x] 禁止 Dirt/焦土写入结果覆盖层；Burning 清除后只允许清除火焰临时效果
+- [ ] Water + Burning 的 Steam 表现等待正式蒸汽素材；当前只能验证规则信号，不配置占位图
 - [x] 缺少表现资产时明确记录配置缺口，不修改规则结果
 
 ## 7. EX-GAS Timeline Task
@@ -84,6 +84,12 @@
 
 ## 8. Flamethrower Vertical Slice
 
+- [x] 锁定地图正式来源场景为 `Demo - Forgotten Plains (Rule + Animated Tiles).unity`；来源 `Ground` 为 900 个有效格（830 格草坪视觉、70 格 Dirt），`GroundDecoration` 为 Unity 加载后的 267 个有效格（YAML 302 条记录包含重复/陈旧项）
+- [x] 新建通用 `地表覆盖` Tilemap：617 格低地规则格基础层均为现有 Dirt，仅将 Git 迁移前确实显示草坪的 547 格原 Tile 逐格原样移动到同坐标覆盖层，保留原本 70 格裸 Dirt；不按规则名统一铺 Grass、不改变布局、不创建任何美术素材
+- [x] 保持 `地表装饰` 与来源 `GroundDecoration` 的 267 个有效格逐格一致；元素拆层不得重命名、迁出或删除装饰层 Tile
+- [x] 将 `TerrainNavigationMap` 与 `TerrainSurfacePresentation` 的正式覆盖引用同时切换到 `地表覆盖`
+- [x] 高台规则资产明确保留为永久 `Grass` 结构地表，`CliffGrass` 复合 Tile 不进入可销毁覆盖层；未来若要支持高台草燃烧，必须先有正式可拆分素材再另做迁移，禁止 AI 造图或占位通过
+
 - [x] 新增通用 `TimelineActiveAbility`，并保留 `MeleeAttackAbility` 为近战语义子类
 - [x] 新增喷火独立 Prefab，使用 `TimelineActiveAbility` 而不是复用近战 Prefab
 - [x] 新增 `FormalGasAbilityCodes.Flamethrower = 20010`
@@ -99,12 +105,13 @@
 - [x] 验证正式 Ability 激活时 `CuePlayGameCoreAudio` 实际消费目标 Resolver 并播放 `Flamethrower_FireSpell03_CC0`；`Temp/ElementReactionAudioE2E.txt` 已记录 `resolverMatched=True`、`matchingSourceCount=1`、`playingMatchingSourceCount=1`
 - [x] 用 `AudioPlaybackRequestedEvent` 探针记录持续喷火的音频请求次数与时间，并配对调用 `StopFireFormalGasAbility(20010)`；`Temp/ElementReactionAudioHoldProbe.txt` 记录请求发生在 1.050 秒和 3.253 秒，3.603 秒停止后新增请求为 0，确认第二次播放属于 `Auto` 输入门控的合法持续施法重启，不是单次 Ability 重复 Cue
 - [x] 确认 GameplayCue 不修改 Tile、状态或地表类型
-- [x] Grass 命中后进入 Burning 并显示火焰覆盖
-- [x] 悬崖另一侧高台不会被直接点燃
-- [x] 合法坡道连接范围内的 Grass 可以被点燃
-- [x] Burning 到期后转化为 ScorchedDirt
-- [x] 焦土不会再次匹配 Grass 可燃规则
-- [x] 场景重载后恢复原始 Grass，明确尚未持久化
+- [x] 地图恢复并通过来源逐格审计后，重新验证 Grass 覆盖命中后进入 Burning 并显示火焰覆盖；`test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260713.json` 为 Success
+- [x] 地图恢复并通过来源逐格审计后，重新验证悬崖另一侧高台不会被直接点燃；定向测试 CollectAffectedCells_RejectsHighGroundAcrossCliff 通过
+- [x] 地图恢复并通过来源逐格审计后，重新验证合法坡道连接范围内的 Grass 可以被点燃；定向测试 CollectAffectedCells_ReachesHighGroundThroughRamp 通过
+- [x] 地图恢复并通过来源逐格审计后，重新验证 Burning 到期后移除 Grass 覆盖层并露出原本存在的 Dirt 底层；q-wide PlayMode 验证 6 格草覆盖隐藏、底层 Dirt 可见且无结果覆盖 Tile
+- [ ] 草覆盖层再生流程、再生进度和保存/加载由 `implement-persistent-world-terrain-mutation` 承接
+- [x] 无草覆盖层的土壤格不会再次匹配有草覆盖可燃规则；q-wide 二次 Q 探针证明目标格保持 Dirt + 覆盖 Removed，`ReapplyBurningCellCount = 0`
+- [x] 地图恢复并通过来源逐格审计后，重新验证场景重载后当前实现会恢复原始 Grass，并明确这只是首批未接持久化的限制；退出 PlayMode 后，地表覆盖 547 格均可见、临时/结果覆盖层均为空
 
 ## 9. Verification
 
@@ -117,9 +124,10 @@
 - [x] 验证没有新增平行角色状态容器，角色元素效果仍走 EX-GAS
 - [x] 在清理注册重复和填充表现映射后，重新运行四组定向 EditMode 测试并保存新鲜结果
 - [x] 运行编译敏感搜索并检查生成物一致性
-- [x] 在正式地形测试入口完成真实喷火端到端
-- [x] 审计 `ClickMoveTest.unity` 保存后的大规模差异：只新增 20 个预期对象、没有删除旧对象、旧对象仅 5 处明确变化；约 899 格规则 Tilemap 解释主要新增行，两层运行时覆盖 Tilemap 为空，无需恢复旧场景
-- [x] 退出 PlayMode 后从磁盘重新打开 `ClickMoveTest`，确认场景 clean、磁盘哈希保持 `E6A4BFE7CE5B221164C68E34081022E10487065BEF5A98A5148B0C5013810E11`，临时效果与结果覆盖 Tilemap 的已用 Tile 数量均为 0 且引用正确
-- [x] 生成 Wet、Electrified 和六状态同尺度联系表，完成轻量真实 GameView 图面核验
-- [x] 最终收口已完成：完整 GameCore EditMode 状态 `Passed`、失败/跳过为 0；元素职责搜索和 EX-GAS 边界为 0；最近 1 分钟 Console Error/Exception 为空；场景 clean、三类核心组件各一个、两张覆盖 Tilemap 均为空且磁盘哈希不变；完整 `git diff --check` 已执行并确认唯一失败是 `ClickMoveTest.unity` 的 Unity 历史空值尾随空格，排除场景后的 tracked 文本与本 change 未跟踪文本检查通过
+- [x] 地图恢复后重新在正式地形测试入口完成真实喷火端到端；新鲜结果 `test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260713.json` 为 Success，旧截图和旧运行结果不作为通过证据
+- [x] 重新审计 `ClickMoveTest.unity` 地图来源差异：`test-results/evidence-runtime-validation/element-surface/tilemap-source-audit-20260713.json` 记录当前可见地面以 `基础地面 + 地表覆盖` 组合对比来源 `Ground` 为 900/900 且差异 0，`地表装饰` 对比来源 `GroundDecoration` 为 267/267 且差异 0；此前“无需恢复旧场景”的旧审计结论废弃
+- [x] 地图恢复后重新进入 PlayMode，验证正式 Q/EX-GAS 喷火、Burning 火焰、Grass 移除、Dirt 露出和场景重载恢复；运行时目标来自 547 格正式低地草覆盖，不依赖旧 6 格补丁
+- [x] 地图恢复后重新生成元素地表视觉证据；新鲜图 clickmove-element-surface-q-wide-burning.png / clickmove-element-surface-q-wide-expired.png 已生成并通过轻量联系表核验
+- [ ] Wet/Electrified/Steam 等其它元素表现等待正式素材后再验收，不能用占位图通过
+- [ ] 新分层后的最终全量收口尚未完成：元素相关 EditMode 类级测试已通过，但完整 `FantasyWord.GameCore.EditModeTests` 当前仍因 `MeleeAttackAbilityEditModeTests.FormalGasAttackRuntimeInstance_UsesGasContextNotMigrationSheetFlag` 失败，不能称全量通过；结果保存在 `test-results/evidence-runtime-validation/element-surface/gamecore-editmode-20260713-element-surface.json`
 - [x] 运行 `npx openspec validate implement-element-reaction-foundation --strict`

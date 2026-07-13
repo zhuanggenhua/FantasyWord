@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AStar;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,6 +21,20 @@ namespace FantasyWord.GameCore
         [Tooltip("同一个地形导航入口管理的多个逻辑规则层。为空时自动使用兼容默认规则 Tilemap。")]
         [SerializeField] private TerrainNavigationLayerSource[] m_layerSources = Array.Empty<TerrainNavigationLayerSource>();
 
+        [Header("上层地表")]
+        [InspectorName("上层地表 Tilemap")]
+        [Tooltip("第二层地表覆盖，例如草、雪、苔藓、落叶和道路覆盖。为空时表示当前地图尚未配置覆盖层。")]
+        [SerializeField] private Tilemap m_surfaceCoverTilemap = null;
+
+        [InspectorName("上层地表 Tile 映射")]
+        [Tooltip("显式声明 Tile 对应的覆盖类型和属性，不从 Sprite 名称推断规则。")]
+        [SerializeField] private TerrainSurfaceCoverTileMapping[] m_surfaceCoverTileMappings =
+            Array.Empty<TerrainSurfaceCoverTileMapping>();
+
+        [InspectorName("跨层连接")]
+        [Tooltip("显式连接两个地形节点的坡道、楼梯、梯子或落差入口。同格不同层不会自动连通。")]
+        [SerializeField] private TerrainTransitionLink[] m_transitionLinks = Array.Empty<TerrainTransitionLink>();
+
         [Header("路径设置")]
         [InspectorName("最近可行走格搜索半径")]
         [Min(0)]
@@ -35,13 +48,44 @@ namespace FantasyWord.GameCore
 
         [InspectorName("路径标记半径")]
         [Min(0.01f)]
-        [SerializeField] private float m_debugMarkerRadius = 0.12f;
+        [SerializeField] private float m_debugMarkerRadius = 0.26f;
 
         [InspectorName("成功路径颜色")]
-        [SerializeField] private Color m_debugPathColor = new(0.0f, 0.85f, 1.0f, 1.0f);
+        [SerializeField] private Color m_debugPathColor = new(1.0f, 0.88f, 0.05f, 1.0f);
 
         [InspectorName("失败目标颜色")]
         [SerializeField] private Color m_debugFailureColor = new(1.0f, 0.25f, 0.2f, 1.0f);
+
+        [InspectorName("吸附目标颜色")]
+        [SerializeField] private Color m_debugResolvedGoalColor = new(0.15f, 0.75f, 1.0f, 1.0f);
+
+        [Header("编辑器路径预览")]
+        [InspectorName("启用编辑器路径预览")]
+        [Tooltip("选中本组件时，可在 Scene 视图拖动起点和点击点并直接查看真实导航路径。")]
+        [SerializeField] private bool m_showEditorNavigationPreview = true;
+
+        [InspectorName("预览起点")]
+        [SerializeField] private Vector2 m_editorPreviewStart = new(0.75f, -3.1f);
+
+        [InspectorName("预览点击点")]
+        [SerializeField] private Vector2 m_editorPreviewDestination = new(5.2f, -3.1f);
+
+        [Header("运行时路径提示")]
+        [InspectorName("显示运行时路径提示")]
+        [Tooltip("在 Game 视图中显示最近一次点击移动的路径线、目标点或失败红叉。用于 RTS 式连续点击移动调试。")]
+        [SerializeField] private bool m_showRuntimeNavigationPath = true;
+
+        [InspectorName("路径线宽")]
+        [Min(0.01f)]
+        [SerializeField] private float m_runtimePathLineWidth = 0.18f;
+
+        [InspectorName("路径点半径")]
+        [Min(0.01f)]
+        [SerializeField] private float m_runtimeWaypointRadius = 0.11f;
+
+        [InspectorName("目标圆环分段")]
+        [Range(12, 96)]
+        [SerializeField] private int m_runtimeMarkerSegments = 40;
 
         private static readonly Vector3Int[] CardinalNeighborOffsets =
         {
@@ -56,19 +100,50 @@ namespace FantasyWord.GameCore
         private readonly Queue<Vector3Int> m_areaTraversalQueue = new();
         private readonly HashSet<Vector3Int> m_areaVisitedCells = new();
         private readonly List<TerrainNodeKey> m_areaNodeScratch = new();
+        private readonly List<TerrainNavigationLayerSource> m_activeLayerSources = new();
+        private readonly HashSet<int> m_layerIdScratch = new();
+        private readonly HashSet<TerrainNodeKey> m_layerNodeScratch = new();
+        private readonly HashSet<int> m_destinationLayerScratch = new();
+        private readonly List<TerrainNodeKey> m_nodePathScratch = new();
+        private readonly TerrainNavigationGraph m_navigationGraph = new();
+        private readonly TerrainDestinationResolver m_destinationResolver = new();
 
         private BoundsInt m_cachedBounds;
         private TerrainNavigationTile[,] m_cachedTiles;
         private float[,] m_cachedCostMap;
         private Vector2 m_lastDebugStart;
         private Vector2 m_lastDebugDestination;
+        private Vector2 m_lastDebugFinalDestination;
+        private Vector2 m_lastDebugResolvedCellCenter;
         private Vector2[] m_lastDebugWorldPath = Array.Empty<Vector2>();
         private bool m_hasDebugPathRequest;
         private bool m_lastDebugPathSucceeded;
+        private string m_lastDebugPathStatus = string.Empty;
+        private bool m_suppressNavigationDebug;
+        private Transform m_runtimePathRoot;
+        private LineRenderer m_runtimePathLine;
+        private LineRenderer m_runtimeStartRing;
+        private LineRenderer m_runtimeClickRing;
+        private LineRenderer m_runtimeFinalDestinationRing;
+        private LineRenderer m_runtimeResolvedCellRing;
+        private LineRenderer m_runtimeFailureCross;
+        private LineRenderer m_runtimeClickToResolvedLine;
+        private LineRenderer m_runtimeResolvedToEndLine;
+        private TextMesh m_runtimeStartLabel;
+        private TextMesh m_runtimeClickLabel;
+        private TextMesh m_runtimeFinalDestinationLabel;
+        private TextMesh m_runtimeResolvedCellLabel;
+        private TextMesh m_runtimeStatusLabel;
+        private readonly List<LineRenderer> m_runtimeWaypointRings = new();
+        private Material m_runtimePathMaterial;
 
         public Tilemap RuleTilemap => ActiveRuleTilemap;
         public IReadOnlyList<TerrainNavigationLayerSource> LayerSources => m_layerSources;
+        public IReadOnlyList<TerrainTransitionLink> TransitionLinks => m_transitionLinks;
         public int RuntimeStateCount => m_runtimeSurfaceStates.Count;
+        public bool ShowEditorNavigationPreview => m_showEditorNavigationPreview;
+        public Vector2 EditorPreviewStart => m_editorPreviewStart;
+        public Vector2 EditorPreviewDestination => m_editorPreviewDestination;
 
         private Tilemap ActiveRuleTilemap
         {
@@ -113,17 +188,25 @@ namespace FantasyWord.GameCore
             RefreshNavigationData();
         }
 
+        private void OnDisable()
+        {
+            ClearRuntimeNavigationDebugPath();
+        }
+
         /// <summary>
         /// 重新读取规则 Tilemap。地图作者修改规则格或运行时替换规则后必须调用一次。
         /// </summary>
         public void RefreshNavigationData()
         {
-            Tilemap activeRuleTilemap = ActiveRuleTilemap;
+            if (!TryRefreshLayerSources(out Tilemap activeRuleTilemap))
+            {
+                ClearNavigationCache();
+                return;
+            }
+
             if (activeRuleTilemap == null)
             {
-                m_cachedBounds = default;
-                m_cachedTiles = null;
-                m_cachedCostMap = null;
+                ClearNavigationCache();
                 return;
             }
 
@@ -132,8 +215,7 @@ namespace FantasyWord.GameCore
             int height = m_cachedBounds.size.y;
             if (width <= 0 || height <= 0)
             {
-                m_cachedTiles = null;
-                m_cachedCostMap = null;
+                ClearNavigationCache();
                 return;
             }
 
@@ -153,8 +235,10 @@ namespace FantasyWord.GameCore
 
             foreach (KeyValuePair<TerrainNodeKey, float> runtimeCost in m_runtimeTraversalCostMultipliers)
             {
-                UpdateCachedTraversalCost(runtimeCost.Key.Cell, runtimeCost.Value);
+                UpdateCachedTraversalCost(runtimeCost.Key, runtimeCost.Value);
             }
+
+            BuildNavigationGraph();
         }
 
         /// <summary>
@@ -163,49 +247,147 @@ namespace FantasyWord.GameCore
         /// </summary>
         public bool TryBuildWorldPath(Vector2 startWorld, Vector2 destinationWorld, out Vector2[] worldPath)
         {
+            return TryBuildWorldPath(
+                startWorld,
+                TerrainNodeKey.DefaultLayerId,
+                destinationWorld,
+                out worldPath,
+                out _);
+        }
+
+        internal bool TryBuildWorldPathWithoutDebug(
+            Vector2 startWorld,
+            Vector2 destinationWorld,
+            out Vector2[] worldPath)
+        {
+            Vector2 previousStart = m_lastDebugStart;
+            Vector2 previousDestination = m_lastDebugDestination;
+            Vector2 previousFinalDestination = m_lastDebugFinalDestination;
+            Vector2 previousResolvedCellCenter = m_lastDebugResolvedCellCenter;
+            Vector2[] previousWorldPath = m_lastDebugWorldPath;
+            bool previousHasRequest = m_hasDebugPathRequest;
+            bool previousSucceeded = m_lastDebugPathSucceeded;
+            string previousStatus = m_lastDebugPathStatus;
+            bool previousSuppress = m_suppressNavigationDebug;
+
+            m_suppressNavigationDebug = true;
+            try
+            {
+                return TryBuildWorldPath(startWorld, destinationWorld, out worldPath);
+            }
+            finally
+            {
+                m_lastDebugStart = previousStart;
+                m_lastDebugDestination = previousDestination;
+                m_lastDebugFinalDestination = previousFinalDestination;
+                m_lastDebugResolvedCellCenter = previousResolvedCellCenter;
+                m_lastDebugWorldPath = previousWorldPath;
+                m_hasDebugPathRequest = previousHasRequest;
+                m_lastDebugPathSucceeded = previousSucceeded;
+                m_lastDebugPathStatus = previousStatus;
+                m_suppressNavigationDebug = previousSuppress;
+            }
+        }
+
+        public bool TryBuildWorldPath(
+            Vector2 startWorld,
+            int currentLayerId,
+            Vector2 destinationWorld,
+            out Vector2[] worldPath,
+            out TerrainNodeKey destinationNode)
+        {
             worldPath = Array.Empty<Vector2>();
+            destinationNode = default;
             m_hasDebugPathRequest = true;
             m_lastDebugStart = startWorld;
             m_lastDebugDestination = destinationWorld;
+            m_lastDebugFinalDestination = destinationWorld;
+            m_lastDebugResolvedCellCenter = destinationWorld;
             m_lastDebugWorldPath = Array.Empty<Vector2>();
             m_lastDebugPathSucceeded = false;
+            m_lastDebugPathStatus = "正在计算路径";
 
             if (!EnsureNavigationData())
             {
+                m_lastDebugPathStatus = "失败：缺少有效规则地图";
                 Debug.LogError($"地形导航组件 '{name}' 缺少有效的规则 Tilemap，无法计算路径。", this);
+                SyncRuntimeNavigationDebugPath();
                 return false;
             }
 
-            Tilemap activeRuleTilemap = ActiveRuleTilemap;
-            Vector3Int requestedStart = activeRuleTilemap.WorldToCell(startWorld);
-            Vector3Int requestedGoal = activeRuleTilemap.WorldToCell(destinationWorld);
-            if (!TryResolveWalkableCell(requestedStart, out Vector3Int startCell) ||
-                !TryResolveWalkableCell(requestedGoal, out Vector3Int goalCell))
+            if (!m_destinationResolver.TryResolveStart(
+                    this,
+                    startWorld,
+                    currentLayerId,
+                    out TerrainDestinationCandidate start))
             {
+                m_lastDebugPathStatus = "失败：当前地形层附近没有可行走起点";
+                SyncRuntimeNavigationDebugPath();
                 return false;
             }
 
-            (int startX, int startY) = CellToIndex(startCell);
-            (int goalX, int goalY) = CellToIndex(goalCell);
-            (int x, int y)[] gridPath = AStarPathfinding.GeneratePathSync(
-                startX,
-                startY,
-                goalX,
-                goalY,
-                m_cachedCostMap,
-                manhattanHeuristic: false,
-                walkableDiagonals: false);
-
-            gridPath = ExpandDiagonalSteps(gridPath);
-            if (gridPath.Length == 0 || !ValidateElevationTransitions(gridPath))
+            if (!m_destinationResolver.TryResolveDestination(
+                    this,
+                    start.NodeKey,
+                    destinationWorld,
+                    currentLayerId,
+                    out TerrainDestinationCandidate destination,
+                    out ETerrainDestinationResolutionFailure resolutionFailure))
             {
+                m_lastDebugPathStatus = GetDestinationFailureStatus(resolutionFailure);
+                SyncRuntimeNavigationDebugPath();
                 return false;
             }
 
-            worldPath = ConvertToWorldPath(gridPath, requestedGoal == goalCell, destinationWorld);
+            destinationNode = destination.NodeKey;
+            if (!TryGetNodeWorldCenter(destination.NodeKey, out Vector2 resolvedCellCenter))
+            {
+                m_lastDebugPathStatus = "失败：目标地形层缺少有效 Tilemap";
+                SyncRuntimeNavigationDebugPath();
+                return false;
+            }
+
+            m_lastDebugResolvedCellCenter = resolvedCellCenter;
+            m_lastDebugFinalDestination = destination.WorldPosition;
+            m_nodePathScratch.Clear();
+            if (!m_navigationGraph.TryFindPath(
+                    start.NodeKey,
+                    destination.NodeKey,
+                    m_nodePathScratch))
+            {
+                m_lastDebugPathStatus = "失败：目标节点不可达";
+                SyncRuntimeNavigationDebugPath();
+                return false;
+            }
+
+            worldPath = ConvertNodePathToWorldPath(m_nodePathScratch, destination);
             m_lastDebugWorldPath = worldPath;
             m_lastDebugPathSucceeded = worldPath.Length > 0;
+            if (m_lastDebugPathSucceeded)
+            {
+                m_lastDebugFinalDestination = worldPath[^1];
+            }
+
+            m_lastDebugPathStatus = m_lastDebugPathSucceeded
+                ? $"成功：{worldPath.Length} 个路径点"
+                : "失败：路径点为空";
+            SyncRuntimeNavigationDebugPath();
             return m_lastDebugPathSucceeded;
+        }
+
+        private static string GetDestinationFailureStatus(
+            ETerrainDestinationResolutionFailure failure)
+        {
+            return failure switch
+            {
+                ETerrainDestinationResolutionFailure.NoCandidate =>
+                    "失败：点击点附近没有可行走地形层",
+                ETerrainDestinationResolutionFailure.Unreachable =>
+                    "失败：点击位置存在地形层，但当前节点无法到达",
+                ETerrainDestinationResolutionFailure.Ambiguous =>
+                    "失败：点击位置对应多个可达地形层，无法确定目标",
+                _ => "失败：无法解析点击目标"
+            };
         }
 
         /// <summary>
@@ -233,42 +415,105 @@ namespace FantasyWord.GameCore
             out TerrainSurfaceSample sample)
         {
             sample = default;
-            if (!IsSupportedNode(nodeKey) || !EnsureNavigationData())
+            if (!EnsureNavigationData())
             {
                 return false;
             }
 
-            Vector3Int cell = nodeKey.Cell;
-            if (!TryGetTile(cell, out TerrainNavigationTile tile))
+            if (nodeKey.IsDefaultLayer)
+            {
+                return TryGetDefaultLayerSurfaceSample(nodeKey, out sample);
+            }
+
+            return TryGetLayerSurfaceSample(nodeKey, out sample);
+        }
+
+        private bool TryGetDefaultLayerSurfaceSample(
+            in TerrainNodeKey nodeKey,
+            out TerrainSurfaceSample sample)
+        {
+            sample = default;
+            if (!TryGetTile(nodeKey.Cell, out TerrainNavigationTile tile))
             {
                 return false;
             }
 
+            (int x, int y) = CellToIndex(nodeKey.Cell);
+            sample = CreateSurfaceSample(
+                nodeKey,
+                tile,
+                m_cachedCostMap[y, x]);
+            return true;
+        }
+
+        private bool TryGetLayerSurfaceSample(
+            in TerrainNodeKey nodeKey,
+            out TerrainSurfaceSample sample)
+        {
+            sample = default;
+            if (!TryGetLayerTile(nodeKey, out TerrainNavigationTile tile))
+            {
+                return false;
+            }
+
+            sample = CreateSurfaceSample(
+                nodeKey,
+                tile,
+                GetEffectiveTraversalCost(nodeKey, tile));
+            return true;
+        }
+
+        private TerrainSurfaceSample CreateSurfaceSample(
+            in TerrainNodeKey nodeKey,
+            TerrainNavigationTile tile,
+            float effectiveTraversalCost)
+        {
             TerrainCellRuntimeStateSnapshot runtimeStateSnapshot;
             ETerrainSurfaceKind effectiveSurface;
+            ETerrainSurfaceCoverKind baseSurfaceCover =
+                ResolveBaseSurfaceCover(nodeKey, out ETerrainSurfaceCoverTraits coverTraits);
+            ETerrainSurfaceCoverKind effectiveSurfaceCover;
+            ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle;
             if (m_runtimeSurfaceStates.TryGetValue(
                     nodeKey,
                     out TerrainCellRuntimeState runtimeState))
             {
-                runtimeStateSnapshot = runtimeState.CreateSnapshot(tile.SurfaceKind);
+                runtimeStateSnapshot = runtimeState.CreateSnapshot(
+                    tile.SurfaceKind,
+                    baseSurfaceCover);
                 effectiveSurface = runtimeStateSnapshot.EffectiveSurface;
+                effectiveSurfaceCover = runtimeStateSnapshot.EffectiveSurfaceCover;
+                surfaceCoverLifecycle = runtimeStateSnapshot.SurfaceCoverLifecycle;
             }
             else
             {
-                runtimeStateSnapshot = TerrainCellRuntimeStateSnapshot.Empty(tile.SurfaceKind);
+                runtimeStateSnapshot = TerrainCellRuntimeStateSnapshot.Empty(
+                    tile.SurfaceKind,
+                    baseSurfaceCover);
                 effectiveSurface = tile.SurfaceKind;
+                effectiveSurfaceCover = baseSurfaceCover;
+                surfaceCoverLifecycle = baseSurfaceCover == ETerrainSurfaceCoverKind.None
+                    ? ETerrainSurfaceCoverLifecycle.None
+                    : ETerrainSurfaceCoverLifecycle.Alive;
             }
 
-            (int x, int y) = CellToIndex(cell);
-            sample = new TerrainSurfaceSample(
+            ETerrainSurfaceCoverTraits effectiveCoverTraits =
+                effectiveSurfaceCover == baseSurfaceCover
+                    ? coverTraits
+                    : ETerrainSurfaceCoverTraits.None;
+
+            return new TerrainSurfaceSample(
                 nodeKey,
                 tile.Elevation,
                 tile.SurfaceKind,
                 effectiveSurface,
+                baseSurfaceCover,
+                effectiveSurfaceCover,
+                effectiveCoverTraits,
+                surfaceCoverLifecycle,
                 tile.TraversalCost,
-                m_cachedCostMap[y, x],
+                effectiveTraversalCost,
                 runtimeStateSnapshot);
-            return true;
         }
 
         public bool TryGetRuntimeState(
@@ -284,12 +529,6 @@ namespace FantasyWord.GameCore
             in TerrainNodeKey nodeKey,
             out TerrainCellRuntimeState runtimeState)
         {
-            if (!IsSupportedNode(nodeKey))
-            {
-                runtimeState = null;
-                return false;
-            }
-
             return m_runtimeSurfaceStates.TryGetValue(nodeKey, out runtimeState);
         }
 
@@ -450,9 +689,8 @@ namespace FantasyWord.GameCore
             in TerrainNodeKey nodeKey,
             out TerrainCellRuntimeState runtimeState)
         {
-            if (!IsSupportedNode(nodeKey) ||
-                !EnsureNavigationData() ||
-                !TryGetTile(nodeKey.Cell, out _))
+            if (!EnsureNavigationData() ||
+                !TryGetNodeTile(nodeKey, out _))
             {
                 runtimeState = null;
                 return false;
@@ -529,6 +767,172 @@ namespace FantasyWord.GameCore
             }
         }
 
+        internal int NavigationGraphNodeCount => m_navigationGraph.NodeCount;
+        internal int NavigationGraphEdgeCount => m_navigationGraph.EdgeCount;
+
+        internal bool HasNavigationGraphNode(TerrainNodeKey nodeKey)
+        {
+            EnsureNavigationData();
+            return m_navigationGraph.ContainsNode(nodeKey);
+        }
+
+        internal bool HasNavigationGraphEdge(TerrainNodeKey fromNode, TerrainNodeKey toNode)
+        {
+            EnsureNavigationData();
+            return m_navigationGraph.HasEdge(fromNode, toNode);
+        }
+
+        internal bool TryBuildNodePath(
+            TerrainNodeKey startNode,
+            TerrainNodeKey goalNode,
+            List<TerrainNodeKey> nodePath)
+        {
+            EnsureNavigationData();
+            return m_navigationGraph.TryFindPath(startNode, goalNode, nodePath);
+        }
+
+        internal void CollectNavigationCandidates(
+            Vector2 worldPosition,
+            List<TerrainDestinationCandidate> candidates)
+        {
+            if (candidates == null)
+            {
+                throw new ArgumentNullException(nameof(candidates));
+            }
+
+            candidates.Clear();
+            m_destinationLayerScratch.Clear();
+            if (TryResolveNavigationCandidateOnLayer(
+                    worldPosition,
+                    TerrainNodeKey.DefaultLayerId,
+                    out TerrainDestinationCandidate defaultCandidate))
+            {
+                candidates.Add(defaultCandidate);
+                m_destinationLayerScratch.Add(TerrainNodeKey.DefaultLayerId);
+            }
+
+            for (int i = 0; i < m_activeLayerSources.Count; i++)
+            {
+                TerrainNavigationLayerSource source = m_activeLayerSources[i];
+                if (!m_destinationLayerScratch.Add(source.LayerId) ||
+                    !TryResolveNavigationCandidateOnLayer(
+                        worldPosition,
+                        source.LayerId,
+                        out TerrainDestinationCandidate candidate))
+                {
+                    continue;
+                }
+
+                candidates.Add(candidate);
+            }
+
+            bool hasExactCandidate = false;
+            for (int i = 0; i < candidates.Count; i++)
+            {
+                if (!candidates[i].WasSnapped)
+                {
+                    hasExactCandidate = true;
+                    break;
+                }
+            }
+
+            if (!hasExactCandidate)
+            {
+                return;
+            }
+
+            for (int i = candidates.Count - 1; i >= 0; i--)
+            {
+                if (candidates[i].WasSnapped)
+                {
+                    candidates.RemoveAt(i);
+                }
+            }
+        }
+
+        internal bool TryResolveNavigationCandidateOnLayer(
+            Vector2 worldPosition,
+            int layerId,
+            out TerrainDestinationCandidate candidate)
+        {
+            if (!TryGetLayerTilemap(layerId, out Tilemap tilemap))
+            {
+                candidate = default;
+                return false;
+            }
+
+            Vector3Int requestedCell = tilemap.WorldToCell(worldPosition);
+            TerrainNodeKey requestedNode = new(layerId, requestedCell);
+            if (m_navigationGraph.ContainsNode(requestedNode))
+            {
+                candidate = new TerrainDestinationCandidate(
+                    requestedNode,
+                    worldPosition,
+                    wasSnapped: false);
+                return true;
+            }
+
+            bool found = false;
+            float bestDistanceSquared = float.PositiveInfinity;
+            Vector3Int bestCell = default;
+            for (int radius = 1; radius <= m_nearestWalkableSearchRadius; radius++)
+            {
+                for (int y = -radius; y <= radius; y++)
+                {
+                    for (int x = -radius; x <= radius; x++)
+                    {
+                        if (Mathf.Abs(x) != radius && Mathf.Abs(y) != radius)
+                        {
+                            continue;
+                        }
+
+                        Vector3Int cell = requestedCell + new Vector3Int(x, y);
+                        TerrainNodeKey nodeKey = new(layerId, cell);
+                        if (!m_navigationGraph.ContainsNode(nodeKey))
+                        {
+                            continue;
+                        }
+
+                        Vector2 center = tilemap.GetCellCenterWorld(cell);
+                        float distanceSquared = (center - worldPosition).sqrMagnitude;
+                        if (!found ||
+                            distanceSquared < bestDistanceSquared - 0.0001f ||
+                            Mathf.Approximately(distanceSquared, bestDistanceSquared) &&
+                            IsCellBefore(cell, bestCell))
+                        {
+                            found = true;
+                            bestDistanceSquared = distanceSquared;
+                            bestCell = cell;
+                        }
+                    }
+                }
+
+                if (found)
+                {
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                candidate = default;
+                return false;
+            }
+
+            TerrainNodeKey resolvedNode = new(layerId, bestCell);
+            candidate = new TerrainDestinationCandidate(
+                resolvedNode,
+                tilemap.GetCellCenterWorld(bestCell),
+                wasSnapped: true);
+            return true;
+        }
+
+        private static bool IsCellBefore(Vector3Int candidate, Vector3Int current)
+        {
+            return candidate.y < current.y ||
+                candidate.y == current.y && candidate.x < current.x;
+        }
+
         internal bool CommitRuntimeState(
             Vector3Int cell,
             in TerrainSurfaceSample previousSample,
@@ -548,8 +952,7 @@ namespace FantasyWord.GameCore
             float traversalCostMultiplier,
             EElementPresentationSignal presentationSignal)
         {
-            if (!IsSupportedNode(nodeKey) ||
-                !EnsureNavigationData() ||
+            if (!EnsureNavigationData() ||
                 !m_runtimeSurfaceStates.TryGetValue(
                     nodeKey,
                     out TerrainCellRuntimeState runtimeState))
@@ -561,13 +964,13 @@ namespace FantasyWord.GameCore
             {
                 m_runtimeSurfaceStates.Remove(nodeKey);
                 m_runtimeTraversalCostMultipliers.Remove(nodeKey);
-                UpdateCachedTraversalCost(nodeKey.Cell, 1.0f);
+                UpdateCachedTraversalCost(nodeKey, 1.0f);
             }
             else
             {
                 float normalizedMultiplier = Mathf.Max(0.01f, traversalCostMultiplier);
                 m_runtimeTraversalCostMultipliers[nodeKey] = normalizedMultiplier;
-                UpdateCachedTraversalCost(nodeKey.Cell, normalizedMultiplier);
+                UpdateCachedTraversalCost(nodeKey, normalizedMultiplier);
             }
 
             if (!TryGetSurfaceSample(nodeKey, out TerrainSurfaceSample currentSample))
@@ -594,9 +997,256 @@ namespace FantasyWord.GameCore
             return ActiveRuleTilemap != null && m_cachedTiles != null && m_cachedCostMap != null;
         }
 
-        private static bool IsSupportedNode(in TerrainNodeKey nodeKey)
+        private bool TryRefreshLayerSources(out Tilemap activeRuleTilemap)
         {
-            return nodeKey.IsDefaultLayer;
+            activeRuleTilemap = null;
+            m_activeLayerSources.Clear();
+            m_layerIdScratch.Clear();
+            m_layerNodeScratch.Clear();
+
+            if (m_layerSources != null && m_layerSources.Length > 0)
+            {
+                for (int i = 0; i < m_layerSources.Length; i++)
+                {
+                    TerrainNavigationLayerSource source = m_layerSources[i];
+                    if (source == null || !source.IsValid)
+                    {
+                        continue;
+                    }
+
+                    if (!m_layerIdScratch.Add(source.LayerId))
+                    {
+                        Debug.LogError(
+                            $"地形导航组件 '{name}' 存在重复地形层 ID：{source.LayerId}。请确保每个规则层来源使用唯一 LayerId。",
+                            this);
+                        return false;
+                    }
+
+                    if (!TryRegisterLayerNodes(source))
+                    {
+                        return false;
+                    }
+
+                    m_activeLayerSources.Add(source);
+                    if (source.LayerId == TerrainNodeKey.DefaultLayerId)
+                    {
+                        activeRuleTilemap = source.RuleTilemap;
+                    }
+                }
+            }
+
+            if (activeRuleTilemap != null)
+            {
+                return true;
+            }
+
+            activeRuleTilemap = m_ruleTilemap;
+            return activeRuleTilemap != null;
+        }
+
+        private bool TryRegisterLayerNodes(TerrainNavigationLayerSource source)
+        {
+            BoundsInt bounds = source.RuleTilemap.cellBounds;
+            foreach (Vector3Int cell in bounds.allPositionsWithin)
+            {
+                if (source.RuleTilemap.GetTile<TerrainNavigationTile>(cell) == null)
+                {
+                    continue;
+                }
+
+                TerrainNodeKey nodeKey = source.CreateNodeKey(cell);
+                if (m_layerNodeScratch.Add(nodeKey))
+                {
+                    continue;
+                }
+
+                Debug.LogError(
+                    $"地形导航组件 '{name}' 的规则层来源产生重复节点：{nodeKey}。同一 LayerId + Cell 只能由一个规则来源提供。",
+                    this);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearNavigationCache()
+        {
+            m_cachedBounds = default;
+            m_cachedTiles = null;
+            m_cachedCostMap = null;
+            m_navigationGraph.Clear();
+        }
+
+        private void BuildNavigationGraph()
+        {
+            m_navigationGraph.Clear();
+            if (DefaultLayerSource == null)
+            {
+                BuildLegacyDefaultLayerGraph();
+            }
+
+            for (int i = 0; i < m_activeLayerSources.Count; i++)
+            {
+                BuildLayerSourceGraph(m_activeLayerSources[i]);
+            }
+
+            RegisterTransitionLinks();
+        }
+
+        private void BuildLegacyDefaultLayerGraph()
+        {
+            for (int y = 0; y < m_cachedBounds.size.y; y++)
+            {
+                for (int x = 0; x < m_cachedBounds.size.x; x++)
+                {
+                    TerrainNavigationTile tile = m_cachedTiles[y, x];
+                    if (tile == null || !tile.Walkable)
+                    {
+                        continue;
+                    }
+
+                    Vector3Int cell = IndexToCell(x, y);
+                    TerrainNodeKey nodeKey = TerrainNodeKey.Default(cell);
+                    m_navigationGraph.AddNode(nodeKey, tile, m_cachedCostMap[y, x]);
+                }
+            }
+
+            for (int y = 0; y < m_cachedBounds.size.y; y++)
+            {
+                for (int x = 0; x < m_cachedBounds.size.x; x++)
+                {
+                    Vector3Int cell = IndexToCell(x, y);
+                    TerrainNodeKey fromNode = TerrainNodeKey.Default(cell);
+                    if (!m_navigationGraph.ContainsNode(fromNode))
+                    {
+                        continue;
+                    }
+
+                    AddDefaultLayerGraphEdges(fromNode, cell);
+                }
+            }
+        }
+
+        private void BuildLayerSourceGraph(TerrainNavigationLayerSource source)
+        {
+            BoundsInt bounds = source.RuleTilemap.cellBounds;
+            foreach (Vector3Int cell in bounds.allPositionsWithin)
+            {
+                TerrainNavigationTile tile = source.RuleTilemap.GetTile<TerrainNavigationTile>(cell);
+                if (tile == null || !tile.Walkable)
+                {
+                    continue;
+                }
+
+                TerrainNodeKey nodeKey = source.CreateNodeKey(cell);
+                m_navigationGraph.AddNode(
+                    nodeKey,
+                    tile,
+                    GetEffectiveTraversalCost(nodeKey, tile));
+            }
+
+            foreach (Vector3Int cell in bounds.allPositionsWithin)
+            {
+                TerrainNodeKey fromNode = source.CreateNodeKey(cell);
+                if (!m_navigationGraph.ContainsNode(fromNode))
+                {
+                    continue;
+                }
+
+                AddLayerSourceGraphEdges(source, fromNode, cell);
+            }
+        }
+
+        private void AddDefaultLayerGraphEdges(TerrainNodeKey fromNode, Vector3Int fromCell)
+        {
+            for (int i = 0; i < CardinalNeighborOffsets.Length; i++)
+            {
+                Vector3Int toCell = fromCell + CardinalNeighborOffsets[i];
+                TerrainNodeKey toNode = TerrainNodeKey.Default(toCell);
+                if (!m_navigationGraph.ContainsNode(toNode) ||
+                    !CanTraverseCardinalCells(fromCell, toCell) ||
+                    !TryGetTile(toCell, out TerrainNavigationTile toTile))
+                {
+                    continue;
+                }
+
+                m_navigationGraph.TryAddSameLayerEdge(
+                    fromNode,
+                    toNode,
+                    GetEffectiveTraversalCost(toNode, toTile));
+            }
+        }
+
+        private void AddLayerSourceGraphEdges(
+            TerrainNavigationLayerSource source,
+            TerrainNodeKey fromNode,
+            Vector3Int fromCell)
+        {
+            TerrainNavigationTile fromTile = source.RuleTilemap.GetTile<TerrainNavigationTile>(fromCell);
+            if (fromTile == null || !fromTile.Walkable)
+            {
+                return;
+            }
+
+            for (int i = 0; i < CardinalNeighborOffsets.Length; i++)
+            {
+                Vector3Int toCell = fromCell + CardinalNeighborOffsets[i];
+                TerrainNavigationTile toTile = source.RuleTilemap.GetTile<TerrainNavigationTile>(toCell);
+                TerrainNodeKey toNode = source.CreateNodeKey(toCell);
+                if (toTile == null ||
+                    !toTile.Walkable ||
+                    !m_navigationGraph.ContainsNode(toNode) ||
+                    !CanTraverseElevation(fromCell, fromTile, toCell, toTile))
+                {
+                    continue;
+                }
+
+                m_navigationGraph.TryAddSameLayerEdge(
+                    fromNode,
+                    toNode,
+                    GetEffectiveTraversalCost(toNode, toTile));
+            }
+        }
+
+        private void RegisterTransitionLinks()
+        {
+            if (m_transitionLinks == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < m_transitionLinks.Length; i++)
+            {
+                TerrainTransitionLink link = m_transitionLinks[i];
+                if (link == null)
+                {
+                    continue;
+                }
+
+                if (!link.IsValid)
+                {
+                    Debug.LogError(
+                        $"地形导航组件 '{name}' 存在无效跨层连接：第 {i} 项端点相同或类型为空。",
+                        this);
+                    continue;
+                }
+
+                if (!m_navigationGraph.ContainsNode(link.FromNode) ||
+                    !m_navigationGraph.ContainsNode(link.ToNode))
+                {
+                    Debug.LogError(
+                        $"地形导航组件 '{name}' 的跨层连接端点不存在：{link.FromNode} -> {link.ToNode}。",
+                        this);
+                    continue;
+                }
+
+                if (!m_navigationGraph.TryAddTransitionEdge(link))
+                {
+                    Debug.LogError(
+                        $"地形导航组件 '{name}' 的跨层连接重复或被已有边占用：{link.FromNode} -> {link.ToNode}。",
+                        this);
+                }
+            }
         }
 
         private bool TryResolveWalkableCell(Vector3Int requestedCell, out Vector3Int resolvedCell)
@@ -767,7 +1417,17 @@ namespace FantasyWord.GameCore
             return Vector2.Dot(offset.normalized, application.Direction) >= minimumDot;
         }
 
-        private void UpdateCachedTraversalCost(Vector3Int cell, float stateMultiplier)
+        private void UpdateCachedTraversalCost(in TerrainNodeKey nodeKey, float stateMultiplier)
+        {
+            if (!nodeKey.IsDefaultLayer)
+            {
+                return;
+            }
+
+            UpdateCachedDefaultTraversalCost(nodeKey.Cell, stateMultiplier);
+        }
+
+        private void UpdateCachedDefaultTraversalCost(Vector3Int cell, float stateMultiplier)
         {
             if (!TryGetTile(cell, out TerrainNavigationTile tile) ||
                 !TryCellToIndex(cell, out int x, out int y))
@@ -778,6 +1438,129 @@ namespace FantasyWord.GameCore
             m_cachedCostMap[y, x] = tile.Walkable
                 ? tile.TraversalCost * Mathf.Max(0.01f, stateMultiplier)
                 : -1.0f;
+        }
+
+        private bool TryGetNodeTile(
+            in TerrainNodeKey nodeKey,
+            out TerrainNavigationTile tile)
+        {
+            return nodeKey.IsDefaultLayer
+                ? TryGetTile(nodeKey.Cell, out tile)
+                : TryGetLayerTile(nodeKey, out tile);
+        }
+
+        private bool TryGetLayerTile(
+            in TerrainNodeKey nodeKey,
+            out TerrainNavigationTile tile)
+        {
+            tile = null;
+            TerrainNavigationLayerSource source = GetLayerSource(nodeKey.LayerId);
+            if (source == null)
+            {
+                return false;
+            }
+
+            tile = source.RuleTilemap.GetTile<TerrainNavigationTile>(nodeKey.Cell);
+            return tile != null;
+        }
+
+        private TerrainNavigationLayerSource GetLayerSource(int layerId)
+        {
+            for (int i = 0; i < m_activeLayerSources.Count; i++)
+            {
+                TerrainNavigationLayerSource source = m_activeLayerSources[i];
+                if (source.LayerId == layerId)
+                {
+                    return source;
+                }
+            }
+
+            return null;
+        }
+
+        private bool TryGetLayerTilemap(int layerId, out Tilemap tilemap)
+        {
+            TerrainNavigationLayerSource source = GetLayerSource(layerId);
+            if (source != null && source.IsValid)
+            {
+                tilemap = source.RuleTilemap;
+                return true;
+            }
+
+            if (layerId == TerrainNodeKey.DefaultLayerId && ActiveRuleTilemap != null)
+            {
+                tilemap = ActiveRuleTilemap;
+                return true;
+            }
+
+            tilemap = null;
+            return false;
+        }
+
+        private bool TryGetNodeWorldCenter(
+            in TerrainNodeKey nodeKey,
+            out Vector2 worldCenter)
+        {
+            if (!TryGetLayerTilemap(nodeKey.LayerId, out Tilemap tilemap))
+            {
+                worldCenter = default;
+                return false;
+            }
+
+            worldCenter = tilemap.GetCellCenterWorld(nodeKey.Cell);
+            return true;
+        }
+
+        private float GetEffectiveTraversalCost(
+            in TerrainNodeKey nodeKey,
+            TerrainNavigationTile tile)
+        {
+            float multiplier = m_runtimeTraversalCostMultipliers.TryGetValue(
+                nodeKey,
+                out float runtimeMultiplier)
+                ? runtimeMultiplier
+                : 1.0f;
+            return tile.Walkable
+                ? tile.TraversalCost * Mathf.Max(0.01f, multiplier)
+                : -1.0f;
+        }
+
+        private ETerrainSurfaceCoverKind ResolveBaseSurfaceCover(
+            in TerrainNodeKey nodeKey,
+            out ETerrainSurfaceCoverTraits traits)
+        {
+            traits = ETerrainSurfaceCoverTraits.None;
+            if (m_surfaceCoverTilemap == null)
+            {
+                return ETerrainSurfaceCoverKind.None;
+            }
+
+            TileBase coverTile = m_surfaceCoverTilemap.GetTile(nodeKey.Cell);
+            if (coverTile == null)
+            {
+                return ETerrainSurfaceCoverKind.None;
+            }
+
+            if (m_surfaceCoverTileMappings == null)
+            {
+                return ETerrainSurfaceCoverKind.None;
+            }
+
+            for (int i = 0; i < m_surfaceCoverTileMappings.Length; i++)
+            {
+                TerrainSurfaceCoverTileMapping mapping = m_surfaceCoverTileMappings[i];
+                if (mapping == null ||
+                    !mapping.IsValid ||
+                    mapping.Tile != coverTile)
+                {
+                    continue;
+                }
+
+                traits = mapping.Traits;
+                return mapping.CoverKind;
+            }
+
+            return ETerrainSurfaceCoverKind.None;
         }
 
         private static bool CanTraverseElevation(
@@ -922,6 +1705,100 @@ namespace FantasyWord.GameCore
             }
 
             List<Vector2> compressedPoints = CompressWorldPoints(sampledPoints, preservedPoints);
+            compressedPoints.RemoveAt(0);
+            return compressedPoints.ToArray();
+        }
+
+        private Vector2[] ConvertNodePathToWorldPath(
+            IReadOnlyList<TerrainNodeKey> nodePath,
+            in TerrainDestinationCandidate destination)
+        {
+            if (nodePath == null || nodePath.Count == 0)
+            {
+                return Array.Empty<Vector2>();
+            }
+
+            bool isDefaultLayerPath = true;
+            for (int i = 0; i < nodePath.Count; i++)
+            {
+                if (!nodePath[i].IsDefaultLayer)
+                {
+                    isDefaultLayerPath = false;
+                    break;
+                }
+            }
+
+            if (isDefaultLayerPath)
+            {
+                (int x, int y)[] gridPath = new (int x, int y)[nodePath.Count];
+                for (int i = 0; i < nodePath.Count; i++)
+                {
+                    gridPath[i] = CellToIndex(nodePath[i].Cell);
+                }
+
+                return ConvertToWorldPath(
+                    gridPath,
+                    useRequestedDestination: !destination.WasSnapped,
+                    destination.WorldPosition);
+            }
+
+            if (nodePath.Count == 1)
+            {
+                return new[] { destination.WorldPosition };
+            }
+
+            if (!TryGetNodeWorldCenter(nodePath[0], out Vector2 startCenter))
+            {
+                return Array.Empty<Vector2>();
+            }
+
+            List<Vector2> sampledPoints = new() { startCenter };
+            List<bool> preservedPoints = new() { false };
+            for (int i = 1; i < nodePath.Count; i++)
+            {
+                TerrainNodeKey fromNode = nodePath[i - 1];
+                TerrainNodeKey toNode = nodePath[i];
+                if (!m_navigationGraph.TryGetEdge(fromNode, toNode, out TerrainNavigationGraphEdge edge) ||
+                    !TryGetNodeWorldCenter(toNode, out Vector2 toCenter))
+                {
+                    return Array.Empty<Vector2>();
+                }
+
+                TerrainTransitionLink transition = edge.TransitionLink;
+                if (transition != null && transition.WorldWaypoints.Count > 0)
+                {
+                    bool forward = fromNode == transition.FromNode;
+                    for (int waypointIndex = 0;
+                         waypointIndex < transition.WorldWaypoints.Count;
+                         waypointIndex++)
+                    {
+                        int sourceIndex = forward
+                            ? waypointIndex
+                            : transition.WorldWaypoints.Count - 1 - waypointIndex;
+                        AppendWorldPoint(
+                            sampledPoints,
+                            preservedPoints,
+                            transition.WorldWaypoints[sourceIndex],
+                            preserve: true);
+                    }
+                }
+
+                AppendWorldPoint(
+                    sampledPoints,
+                    preservedPoints,
+                    toCenter,
+                    preserve: edge.IsTransition);
+            }
+
+            if (!destination.WasSnapped)
+            {
+                sampledPoints[^1] = destination.WorldPosition;
+                preservedPoints[^1] = true;
+            }
+
+            List<Vector2> compressedPoints = CompressWorldPoints(
+                sampledPoints,
+                preservedPoints);
             compressedPoints.RemoveAt(0);
             return compressedPoints.ToArray();
         }
@@ -1111,21 +1988,37 @@ namespace FantasyWord.GameCore
             Tilemap activeRuleTilemap = ActiveRuleTilemap;
             float z = (activeRuleTilemap != null ? activeRuleTilemap.transform.position.z : transform.position.z) - 0.05f;
             Vector3 start = ToDebugPosition(m_lastDebugStart, z);
-            Vector3 destination = ToDebugPosition(m_lastDebugDestination, z);
+            Vector3 click = ToDebugPosition(m_lastDebugDestination, z);
+            Vector3 finalDestination = ToDebugPosition(m_lastDebugFinalDestination, z);
+            Vector3 resolvedCell = ToDebugPosition(m_lastDebugResolvedCellCenter, z);
 
-            Gizmos.color = Color.yellow;
+            Gizmos.color = Color.white;
             Gizmos.DrawWireSphere(start, m_debugMarkerRadius);
+            Gizmos.color = m_debugFailureColor;
+            Gizmos.DrawWireSphere(click, m_debugMarkerRadius * 0.78f);
 
             if (!m_lastDebugPathSucceeded)
             {
                 Gizmos.color = m_debugFailureColor;
-                Gizmos.DrawWireSphere(destination, m_debugMarkerRadius);
-                DrawFailureCross(destination);
+                Gizmos.DrawWireSphere(click, m_debugMarkerRadius);
+                DrawFailureCross(click);
                 return;
             }
 
+            Gizmos.color = m_debugResolvedGoalColor;
+            Gizmos.DrawWireSphere(resolvedCell, m_debugMarkerRadius * 0.55f);
+            if ((m_lastDebugResolvedCellCenter - m_lastDebugDestination).sqrMagnitude > 0.0001f)
+            {
+                Gizmos.DrawLine(click, resolvedCell);
+            }
+
             Gizmos.color = m_debugPathColor;
-            Gizmos.DrawWireSphere(destination, m_debugMarkerRadius);
+            Gizmos.DrawWireSphere(finalDestination, m_debugMarkerRadius);
+            if ((m_lastDebugFinalDestination - m_lastDebugResolvedCellCenter).sqrMagnitude > 0.0001f)
+            {
+                Gizmos.DrawLine(resolvedCell, finalDestination);
+            }
+
             Vector3 previous = start;
             for (int i = 0; i < m_lastDebugWorldPath.Length; i++)
             {
@@ -1136,6 +2029,455 @@ namespace FantasyWord.GameCore
             }
 
             Gizmos.DrawSphere(previous, m_debugMarkerRadius * 0.45f);
+#if UNITY_EDITOR
+            UnityEditor.Handles.color = Color.white;
+            UnityEditor.Handles.Label(
+                start + Vector3.up * m_debugMarkerRadius * 1.5f,
+                $"Start\n{m_lastDebugPathStatus}");
+            UnityEditor.Handles.color = m_debugFailureColor;
+            UnityEditor.Handles.Label(
+                click + Vector3.down * m_debugMarkerRadius * 1.5f,
+                "Click");
+            UnityEditor.Handles.color = m_debugResolvedGoalColor;
+            UnityEditor.Handles.Label(
+                resolvedCell + Vector3.down * m_debugMarkerRadius * 2.7f,
+                "Cell");
+            UnityEditor.Handles.color = m_debugPathColor;
+            UnityEditor.Handles.Label(
+                finalDestination + Vector3.up * m_debugMarkerRadius * 1.5f,
+                "End");
+#endif
+        }
+
+        private void SyncRuntimeNavigationDebugPath()
+        {
+            if (m_suppressNavigationDebug)
+            {
+                return;
+            }
+
+            if (!Application.isPlaying ||
+                !m_showRuntimeNavigationPath ||
+                !m_hasDebugPathRequest)
+            {
+                ClearRuntimeNavigationDebugPath();
+                return;
+            }
+
+            EnsureRuntimeNavigationDebugObjects();
+            float z = GetRuntimeDebugZ();
+            Vector3 start = ToDebugPosition(m_lastDebugStart, z);
+            Vector3 click = ToDebugPosition(m_lastDebugDestination, z);
+            Vector3 finalDestination = ToDebugPosition(m_lastDebugFinalDestination, z);
+            Vector3 resolvedCell = ToDebugPosition(m_lastDebugResolvedCellCenter, z);
+
+            SyncRingRenderer(
+                m_runtimeStartRing,
+                start,
+                m_debugMarkerRadius * 0.75f,
+                Color.white,
+                m_runtimePathLineWidth * 0.72f);
+
+            SyncRingRenderer(
+                m_runtimeClickRing,
+                click,
+                m_debugMarkerRadius * 0.72f,
+                m_debugFailureColor,
+                m_runtimePathLineWidth * 0.58f);
+            SyncRuntimeLabel(
+                m_runtimeStartLabel,
+                start + Vector3.up * m_debugMarkerRadius * 1.45f,
+                "起点",
+                Color.white);
+            SyncRuntimeLabel(
+                m_runtimeClickLabel,
+                click + Vector3.down * m_debugMarkerRadius * 1.45f,
+                "点击",
+                m_debugFailureColor);
+            SyncRuntimeLabel(
+                m_runtimeStatusLabel,
+                start + Vector3.up * m_debugMarkerRadius * 2.35f,
+                m_lastDebugPathStatus,
+                Color.white);
+
+            if (!m_lastDebugPathSucceeded)
+            {
+                SetLineRendererPositions(m_runtimePathLine, Array.Empty<Vector3>(), m_debugPathColor);
+                SetLineRendererPositions(m_runtimeFinalDestinationRing, Array.Empty<Vector3>(), m_debugPathColor);
+                SetLineRendererPositions(m_runtimeResolvedCellRing, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
+                SetLineRendererPositions(m_runtimeClickToResolvedLine, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
+                SetLineRendererPositions(m_runtimeResolvedToEndLine, Array.Empty<Vector3>(), m_debugPathColor);
+                ClearRuntimeLabel(m_runtimeFinalDestinationLabel);
+                ClearRuntimeLabel(m_runtimeResolvedCellLabel);
+                ClearRuntimeWaypointRings();
+                SyncFailureCrossRenderer(click, m_debugFailureColor);
+                return;
+            }
+
+            SyncRingRenderer(
+                m_runtimeFinalDestinationRing,
+                finalDestination,
+                m_debugMarkerRadius,
+                m_debugPathColor,
+                m_runtimePathLineWidth);
+            SyncRuntimeLabel(
+                m_runtimeFinalDestinationLabel,
+                finalDestination + Vector3.up * m_debugMarkerRadius * 1.45f,
+                "终点",
+                m_debugPathColor);
+
+            if ((m_lastDebugResolvedCellCenter - m_lastDebugFinalDestination).sqrMagnitude > 0.0001f)
+            {
+                SyncRingRenderer(
+                    m_runtimeResolvedCellRing,
+                    resolvedCell,
+                    m_debugMarkerRadius * 0.54f,
+                    m_debugResolvedGoalColor,
+                    m_runtimePathLineWidth * 0.48f);
+                SyncRuntimeLabel(
+                    m_runtimeResolvedCellLabel,
+                    resolvedCell + Vector3.down * m_debugMarkerRadius * 2.35f,
+                    "吸附格",
+                    m_debugResolvedGoalColor);
+            }
+            else
+            {
+                SetLineRendererPositions(m_runtimeResolvedCellRing, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
+                ClearRuntimeLabel(m_runtimeResolvedCellLabel);
+            }
+
+            SyncRuntimeSegment(
+                m_runtimeClickToResolvedLine,
+                click,
+                resolvedCell,
+                m_debugResolvedGoalColor,
+                m_runtimePathLineWidth * 0.38f);
+            SyncRuntimeSegment(
+                m_runtimeResolvedToEndLine,
+                resolvedCell,
+                finalDestination,
+                m_debugPathColor,
+                m_runtimePathLineWidth * 0.38f);
+
+            Vector3[] pathPositions = new Vector3[m_lastDebugWorldPath.Length + 1];
+            pathPositions[0] = start;
+            for (int i = 0; i < m_lastDebugWorldPath.Length; i++)
+            {
+                pathPositions[i + 1] = ToDebugPosition(m_lastDebugWorldPath[i], z);
+            }
+
+            SetLineRendererPositions(m_runtimePathLine, pathPositions, m_debugPathColor);
+            SyncRuntimeWaypointRings(z);
+            SetLineRendererPositions(m_runtimeFailureCross, Array.Empty<Vector3>(), m_debugFailureColor);
+        }
+
+        private void EnsureRuntimeNavigationDebugObjects()
+        {
+            if (m_runtimePathRoot == null)
+            {
+                GameObject root = new($"{name} Runtime Navigation Debug");
+                root.hideFlags = HideFlags.DontSave;
+                root.transform.SetParent(transform, worldPositionStays: false);
+                m_runtimePathRoot = root.transform;
+            }
+
+            m_runtimePathMaterial ??= CreateRuntimeDebugMaterial();
+            m_runtimePathLine = EnsureRuntimeLineRenderer(
+                m_runtimePathLine,
+                "Path",
+                loop: false);
+            m_runtimeStartRing = EnsureRuntimeLineRenderer(
+                m_runtimeStartRing,
+                "Start",
+                loop: true);
+            m_runtimeClickRing = EnsureRuntimeLineRenderer(
+                m_runtimeClickRing,
+                "Click",
+                loop: true);
+            m_runtimeFinalDestinationRing = EnsureRuntimeLineRenderer(
+                m_runtimeFinalDestinationRing,
+                "End",
+                loop: true);
+            m_runtimeResolvedCellRing = EnsureRuntimeLineRenderer(
+                m_runtimeResolvedCellRing,
+                "Resolved Cell",
+                loop: true);
+            m_runtimeFailureCross = EnsureRuntimeLineRenderer(
+                m_runtimeFailureCross,
+                "Failure",
+                loop: false);
+            m_runtimeClickToResolvedLine = EnsureRuntimeLineRenderer(
+                m_runtimeClickToResolvedLine,
+                "Click To Resolved Cell",
+                loop: false);
+            m_runtimeResolvedToEndLine = EnsureRuntimeLineRenderer(
+                m_runtimeResolvedToEndLine,
+                "Resolved Cell To End",
+                loop: false);
+            m_runtimeStartLabel = EnsureRuntimeTextMesh(m_runtimeStartLabel, "Start Label");
+            m_runtimeClickLabel = EnsureRuntimeTextMesh(m_runtimeClickLabel, "Click Label");
+            m_runtimeFinalDestinationLabel = EnsureRuntimeTextMesh(m_runtimeFinalDestinationLabel, "End Label");
+            m_runtimeResolvedCellLabel = EnsureRuntimeTextMesh(m_runtimeResolvedCellLabel, "Resolved Cell Label");
+            m_runtimeStatusLabel = EnsureRuntimeTextMesh(m_runtimeStatusLabel, "Status Label");
+        }
+
+        private LineRenderer EnsureRuntimeLineRenderer(
+            LineRenderer lineRenderer,
+            string objectName,
+            bool loop)
+        {
+            if (lineRenderer != null)
+            {
+                return lineRenderer;
+            }
+
+            GameObject lineObject = new(objectName);
+            lineObject.transform.SetParent(m_runtimePathRoot, worldPositionStays: false);
+            lineRenderer = lineObject.AddComponent<LineRenderer>();
+            lineObject.hideFlags = HideFlags.DontSave;
+            lineRenderer.useWorldSpace = true;
+            lineRenderer.loop = loop;
+            lineRenderer.material = m_runtimePathMaterial;
+            lineRenderer.textureMode = LineTextureMode.Stretch;
+            lineRenderer.numCapVertices = 4;
+            lineRenderer.numCornerVertices = 4;
+            lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            lineRenderer.receiveShadows = false;
+            lineRenderer.sortingOrder = 32760;
+            return lineRenderer;
+        }
+
+        private TextMesh EnsureRuntimeTextMesh(TextMesh textMesh, string objectName)
+        {
+            if (textMesh != null)
+            {
+                return textMesh;
+            }
+
+            GameObject textObject = new(objectName);
+            textObject.transform.SetParent(m_runtimePathRoot, worldPositionStays: false);
+            textObject.hideFlags = HideFlags.DontSave;
+            textMesh = textObject.AddComponent<TextMesh>();
+            textMesh.anchor = TextAnchor.MiddleCenter;
+            textMesh.alignment = TextAlignment.Center;
+            textMesh.fontSize = 48;
+            textMesh.characterSize = 0.045f;
+            textMesh.richText = false;
+
+            MeshRenderer meshRenderer = textObject.GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshRenderer.sortingOrder = 32761;
+            }
+
+            return textMesh;
+        }
+
+        private Material CreateRuntimeDebugMaterial()
+        {
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null)
+            {
+                shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
+            }
+
+            if (shader == null)
+            {
+                shader = Shader.Find("Hidden/Internal-Colored");
+            }
+
+            return new Material(shader)
+            {
+                name = $"{name} Runtime Navigation Debug Material",
+                hideFlags = HideFlags.HideAndDontSave
+            };
+        }
+
+        private void SyncRingRenderer(
+            LineRenderer lineRenderer,
+            Vector3 center,
+            float radius,
+            Color color,
+            float width)
+        {
+            int segmentCount = Mathf.Clamp(m_runtimeMarkerSegments, 12, 96);
+            Vector3[] positions = new Vector3[segmentCount];
+            for (int i = 0; i < segmentCount; i++)
+            {
+                float angle = i / (float)segmentCount * Mathf.PI * 2.0f;
+                positions[i] = center + new Vector3(
+                    Mathf.Cos(angle) * radius,
+                    Mathf.Sin(angle) * radius,
+                    0.0f);
+            }
+
+            SetLineRendererPositions(lineRenderer, positions, color, width);
+        }
+
+        private void SyncFailureCrossRenderer(Vector3 destination, Color color)
+        {
+            float radius = m_debugMarkerRadius * 0.9f;
+            Vector3[] positions =
+            {
+                destination + new Vector3(-radius, -radius, 0.0f),
+                destination + new Vector3(radius, radius, 0.0f),
+                destination,
+                destination + new Vector3(-radius, radius, 0.0f),
+                destination + new Vector3(radius, -radius, 0.0f)
+            };
+
+            SetLineRendererPositions(m_runtimeFailureCross, positions, color, m_runtimePathLineWidth);
+        }
+
+        private void SyncRuntimeSegment(
+            LineRenderer lineRenderer,
+            Vector3 from,
+            Vector3 to,
+            Color color,
+            float width)
+        {
+            if ((from - to).sqrMagnitude <= 0.0001f)
+            {
+                SetLineRendererPositions(lineRenderer, Array.Empty<Vector3>(), color, width);
+                return;
+            }
+
+            SetLineRendererPositions(
+                lineRenderer,
+                new[] { from, to },
+                color,
+                width);
+        }
+
+        private void SyncRuntimeLabel(
+            TextMesh textMesh,
+            Vector3 position,
+            string text,
+            Color color)
+        {
+            if (textMesh == null)
+            {
+                return;
+            }
+
+            textMesh.gameObject.SetActive(true);
+            textMesh.transform.position = position;
+            textMesh.text = text;
+            textMesh.color = color;
+        }
+
+        private static void ClearRuntimeLabel(TextMesh textMesh)
+        {
+            if (textMesh == null)
+            {
+                return;
+            }
+
+            textMesh.text = string.Empty;
+            textMesh.gameObject.SetActive(false);
+        }
+
+        private void SyncRuntimeWaypointRings(float z)
+        {
+            ClearRuntimeWaypointRings();
+            if (m_lastDebugWorldPath == null || m_lastDebugWorldPath.Length == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < m_lastDebugWorldPath.Length - 1; i++)
+            {
+                LineRenderer waypointRing = GetOrCreateRuntimeWaypointRing(i);
+                SyncRingRenderer(
+                    waypointRing,
+                    ToDebugPosition(m_lastDebugWorldPath[i], z),
+                    m_runtimeWaypointRadius,
+                    m_debugPathColor,
+                    m_runtimePathLineWidth * 0.55f);
+            }
+        }
+
+        private LineRenderer GetOrCreateRuntimeWaypointRing(int index)
+        {
+            while (m_runtimeWaypointRings.Count <= index)
+            {
+                m_runtimeWaypointRings.Add(EnsureRuntimeLineRenderer(
+                    null,
+                    $"Waypoint {m_runtimeWaypointRings.Count:00}",
+                    loop: true));
+            }
+
+            return m_runtimeWaypointRings[index];
+        }
+
+        private void ClearRuntimeWaypointRings()
+        {
+            for (int i = 0; i < m_runtimeWaypointRings.Count; i++)
+            {
+                SetLineRendererPositions(
+                    m_runtimeWaypointRings[i],
+                    Array.Empty<Vector3>(),
+                    m_debugPathColor,
+                    m_runtimePathLineWidth * 0.55f);
+            }
+        }
+
+        private void SetLineRendererPositions(
+            LineRenderer lineRenderer,
+            IReadOnlyList<Vector3> positions,
+            Color color)
+        {
+            SetLineRendererPositions(
+                lineRenderer,
+                positions,
+                color,
+                m_runtimePathLineWidth);
+        }
+
+        private void SetLineRendererPositions(
+            LineRenderer lineRenderer,
+            IReadOnlyList<Vector3> positions,
+            Color color,
+            float width)
+        {
+            if (lineRenderer == null)
+            {
+                return;
+            }
+
+            lineRenderer.startWidth = width;
+            lineRenderer.endWidth = width;
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+            lineRenderer.positionCount = positions?.Count ?? 0;
+            for (int i = 0; positions != null && i < positions.Count; i++)
+            {
+                lineRenderer.SetPosition(i, positions[i]);
+            }
+        }
+
+        private void ClearRuntimeNavigationDebugPath()
+        {
+            SetLineRendererPositions(m_runtimePathLine, Array.Empty<Vector3>(), m_debugPathColor);
+            SetLineRendererPositions(m_runtimeStartRing, Array.Empty<Vector3>(), Color.white);
+            SetLineRendererPositions(m_runtimeClickRing, Array.Empty<Vector3>(), m_debugFailureColor);
+            SetLineRendererPositions(m_runtimeFinalDestinationRing, Array.Empty<Vector3>(), m_debugPathColor);
+            SetLineRendererPositions(m_runtimeResolvedCellRing, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
+            SetLineRendererPositions(m_runtimeFailureCross, Array.Empty<Vector3>(), m_debugFailureColor);
+            SetLineRendererPositions(m_runtimeClickToResolvedLine, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
+            SetLineRendererPositions(m_runtimeResolvedToEndLine, Array.Empty<Vector3>(), m_debugPathColor);
+            ClearRuntimeLabel(m_runtimeStartLabel);
+            ClearRuntimeLabel(m_runtimeClickLabel);
+            ClearRuntimeLabel(m_runtimeFinalDestinationLabel);
+            ClearRuntimeLabel(m_runtimeResolvedCellLabel);
+            ClearRuntimeLabel(m_runtimeStatusLabel);
+            ClearRuntimeWaypointRings();
+        }
+
+        private float GetRuntimeDebugZ()
+        {
+            Tilemap activeRuleTilemap = ActiveRuleTilemap;
+            return (activeRuleTilemap != null ? activeRuleTilemap.transform.position.z : transform.position.z) - 0.08f;
         }
 
         private void DrawFailureCross(Vector3 destination)

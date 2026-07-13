@@ -30,10 +30,11 @@ metadata:
 - `tests-run` 不是每个需求的默认步骤。
 - 不为了自动化新增长期菜单。
 - 不把开发审计入口写成策划作者流。
-- 只要 `scene-list-opened` 证明当前打开的是正式场景且 `isDirty:true`，自动化立刻降级成只读取证；不要继续切 PlayMode、切场景、改对象或发可能继续改写场景的 `script-execute`。
+- `scene-list-opened` 发现正式场景 `isDirty:true` 时，先判断来源：若 dirty 的就是本轮已锁定目标场景，且改动可证明来自本轮自动化、验证、截图、修复、PlayMode 或同一条恢复链，默认由 AI 在保存前后各取证一次并自行保存，然后继续；不要再向用户追问是否保存。
+- 若 dirty 的不是当前目标场景，或无法证明改动来源属于本轮同一链路，才立即降级成只读取证；不得保存、丢弃、切场景、切 PlayMode、改对象或发送写操作型 `script-execute`。
 - 唯一例外：`scene-open` 且目标是 `Single` 切场景时，`bridge.py` 现在会先显式保存当前已打开的 dirty 正式场景，再继续切场景，用来避免 Unity 的保存弹窗把自动化卡住。
 - 另一个明确例外：如果当前命令已经显式持有 `scene lock`，并且 dirty 的正是这条自动化流程正在修改的正式场景，`bridge.py` 现在会先自动保存当前正式场景，再继续执行后续受保护命令；不要再把这种情况抛回给用户做人肉确认。
-- `bridge.py` 现在会在发出写操作型 Unity 命令前，先用只读的 `scene-list-opened` 做一层正式场景 dirty 拦截；发现正式场景已脏时，直接拒绝后续写命令，不再先靠内部 `script-execute` 探针才发现问题。
+- `bridge.py` 在发出写操作型 Unity 命令前，先用只读的 `scene-list-opened` 检查正式场景 dirty；命中本轮已锁定且来源明确的目标场景时按上述规则保存，命中未知来源或非目标场景时拒绝后续写命令。
 - 即使某条多步流程显式传了 `bridgeSceneDirtyPolicy:"ignore"`，它也不能跨过普通脏场景继续写；`ignore` 只允许临时保留“已知生成/恢复残留”的收尾窗口，不是绕过正式场景 dirty 保护的后门。
 
 ## 恢复场景弹窗
@@ -53,7 +54,7 @@ metadata:
   - 如果进过 PlayMode，显式退出 PlayMode
   - `scene-list-opened` 复查正式场景是否仍为 `dirty`
   - `scene-lock-release`
-- 只要最后复查时正式场景还是 `dirty`，就视为本次自动化未收尾；停止继续写操作，先报告。
+- 最后复查时若本轮目标场景仍为 `dirty`，按“来源明确则自行保存”的规则完成收尾；若来源不明或不是目标场景，才停止写操作并报告。
 
 ## 当前常用命令
 

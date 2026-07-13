@@ -37,5 +37,6 @@ MonoBehaviour:
   m_walkable: 1
   m_elevation: 3
   m_transitionKind: 0
-  m_surfaceKind: 1
+  m_rampDirection: 0
+  m_surfaceKind: 2
   m_traversalCost: 1

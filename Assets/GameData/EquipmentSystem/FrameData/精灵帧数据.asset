@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: "\u7CBE\u7075\u5E27\u6570\u636E"
   m_EditorClassIdentifier: ::CharacterFrameData
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
+  animationSpriteLibraries:
+    southEast: {fileID: 11400000, guid: 34b1764ac4de91641a0331289ceefc02, type: 2}
+    southWest: {fileID: 11400000, guid: 33090d16176b16e44a439cd635eec8aa, type: 2}
+    northEast: {fileID: 11400000, guid: 0b93288332de75b4cbec15231d0cb97f, type: 2}
+    northWest: {fileID: 11400000, guid: 5dc77209eba3388449b05cbf79d843d6, type: 2}
   paletteRefSprite: {fileID: 0}
   paletteSize: {x: 32, y: 32}
   headUVRegion:

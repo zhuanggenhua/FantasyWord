@@ -25,6 +25,12 @@ namespace FantasyWord.GameCore
 
         public static string ResultPath => Path.GetFullPath(ResultRelativePath);
 
+        [MenuItem("Tools/FantasyWord/Validation/Start ClickMoveTest Runtime Validator")]
+        public static void StartFromMenu()
+        {
+            Start();
+        }
+
         public static string Start()
         {
             if (!Application.isPlaying)

@@ -14,10 +14,11 @@ namespace FantasyWord.GameCore
 
         [Header("表现层")]
         [SerializeField] private Tilemap m_temporaryEffectTilemap = null;
-        [SerializeField] private Tilemap m_resultOverrideTilemap = null;
+        [SerializeField] private Tilemap m_surfaceCoverTilemap = null;
 
         private readonly List<Vector3Int> m_runtimeCells = new();
         private readonly Dictionary<Vector3Int, Coroutine> m_signalCoroutines = new();
+        private readonly HashSet<Vector3Int> m_hiddenSurfaceCoverCells = new();
         private readonly HashSet<string> m_reportedMissingMappings = new();
 
         private void OnEnable()
@@ -41,6 +42,7 @@ namespace FantasyWord.GameCore
             }
 
             StopAllSignalCoroutines();
+            RestoreAllSurfaceCoverCells();
         }
 
         private bool ValidateReferences()
@@ -70,21 +72,13 @@ namespace FantasyWord.GameCore
                 valid = false;
             }
 
-            if (m_resultOverrideTilemap == null)
-            {
-                Debug.LogError(
-                    "TerrainSurfacePresentation 缺少结果覆盖 Tilemap。",
-                    this);
-                valid = false;
-            }
-
             return valid;
         }
 
         private void RefreshAllRuntimeCells()
         {
             m_temporaryEffectTilemap.ClearAllTiles();
-            m_resultOverrideTilemap.ClearAllTiles();
+            RestoreAllSurfaceCoverCells();
             m_navigationMap.CollectRuntimeStateCells(m_runtimeCells);
             for (int i = 0; i < m_runtimeCells.Count; i++)
             {
@@ -111,11 +105,13 @@ namespace FantasyWord.GameCore
         {
             StopAllSignalCoroutines();
             m_temporaryEffectTilemap.ClearAllTiles();
-            m_resultOverrideTilemap.ClearAllTiles();
+            RestoreAllSurfaceCoverCells();
         }
 
         private void RefreshCell(in TerrainSurfaceSample sample)
         {
+            RefreshSurfaceCoverCell(sample);
+
             if (m_config.TryGetTemporaryStateTile(
                     sample.RuntimeStateSnapshot,
                     out TileBase temporaryTile))
@@ -131,24 +127,75 @@ namespace FantasyWord.GameCore
                 }
             }
 
-            if (sample.EffectiveSurface != sample.BaseSurface)
+            // 燃尽后的“露出土壤”不是盖一张结果 Tile，而是由正式地图层移除草覆盖后露出底层土壤。
+            // 这里仍只负责临时元素效果；永久/持久地貌变化必须走后续世界地形变更链路。
+        }
+
+        private void RefreshSurfaceCoverCell(in TerrainSurfaceSample sample)
+        {
+            if (m_surfaceCoverTilemap == null ||
+                sample.BaseSurfaceCover == ETerrainSurfaceCoverKind.None)
             {
-                if (m_config.TryGetSurfaceTile(
-                        sample.EffectiveSurface,
-                        out TileBase resultTile))
-                {
-                    m_resultOverrideTilemap.SetTile(sample.Cell, resultTile);
-                }
-                else
-                {
-                    m_resultOverrideTilemap.SetTile(sample.Cell, null);
-                    ReportMissingMappingOnce($"surface:{sample.EffectiveSurface}");
-                }
+                return;
+            }
+
+            bool shouldHide =
+                sample.EffectiveSurfaceCover == ETerrainSurfaceCoverKind.None ||
+                sample.SurfaceCoverLifecycle == ETerrainSurfaceCoverLifecycle.Removed;
+            if (shouldHide)
+            {
+                HideSurfaceCoverCell(sample.Cell);
             }
             else
             {
-                m_resultOverrideTilemap.SetTile(sample.Cell, null);
+                RestoreSurfaceCoverCell(sample.Cell);
             }
+        }
+
+        private void HideSurfaceCoverCell(Vector3Int cell)
+        {
+            if (m_hiddenSurfaceCoverCells.Add(cell))
+            {
+                m_surfaceCoverTilemap.SetTileFlags(cell, TileFlags.None);
+            }
+
+            Color color = m_surfaceCoverTilemap.GetColor(cell);
+            if (!Mathf.Approximately(color.a, 0.0f))
+            {
+                color.a = 0.0f;
+                m_surfaceCoverTilemap.SetColor(cell, color);
+            }
+        }
+
+        private void RestoreSurfaceCoverCell(Vector3Int cell)
+        {
+            if (!m_hiddenSurfaceCoverCells.Remove(cell) ||
+                m_surfaceCoverTilemap == null)
+            {
+                return;
+            }
+
+            Color color = m_surfaceCoverTilemap.GetColor(cell);
+            if (!Mathf.Approximately(color.a, 1.0f))
+            {
+                color.a = 1.0f;
+                m_surfaceCoverTilemap.SetColor(cell, color);
+            }
+        }
+
+        private void RestoreAllSurfaceCoverCells()
+        {
+            if (m_surfaceCoverTilemap != null)
+            {
+                foreach (Vector3Int cell in m_hiddenSurfaceCoverCells)
+                {
+                    Color color = m_surfaceCoverTilemap.GetColor(cell);
+                    color.a = 1.0f;
+                    m_surfaceCoverTilemap.SetColor(cell, color);
+                }
+            }
+
+            m_hiddenSurfaceCoverCells.Clear();
         }
 
         private void PlaySignal(

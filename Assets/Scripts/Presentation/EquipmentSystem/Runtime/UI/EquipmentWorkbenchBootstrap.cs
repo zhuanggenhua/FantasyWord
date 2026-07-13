@@ -24,6 +24,9 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
     AnimationController animationController;
 
     [SerializeField]
+    DirectionalAnimationVariantDriver directionDriver;
+
+    [SerializeField]
     EquipmentWorkbenchController controller;
 
     [SerializeField]
@@ -43,6 +46,7 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
     {
         equipmentRenderer = GetComponent<EquipmentRenderer>();
         animationController = GetComponent<AnimationController>();
+        directionDriver = GetComponent<DirectionalAnimationVariantDriver>();
         controller = GetComponent<EquipmentWorkbenchController>();
     }
 
@@ -90,12 +94,14 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
             equipmentRenderer = GetComponent<EquipmentRenderer>();
         if (animationController == null)
             animationController = GetComponent<AnimationController>();
+        if (directionDriver == null)
+            directionDriver = GetComponent<DirectionalAnimationVariantDriver>();
         if (controller == null)
             controller = GetComponent<EquipmentWorkbenchController>();
         if (controller == null)
             controller = gameObject.AddComponent<EquipmentWorkbenchController>();
 
-        controller.Configure(catalog, equipmentRenderer, animationController);
+        controller.Configure(catalog, equipmentRenderer, animationController, directionDriver);
     }
 
     void EnsureEventSystem()

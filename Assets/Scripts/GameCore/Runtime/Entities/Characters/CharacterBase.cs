@@ -43,6 +43,9 @@ namespace FantasyWord.GameCore
         private CharacterBase m_lastEffectiveDamageSource = null;
         private bool m_hasDeathCommandContextOverride = false;
         private GameCommandContext m_deathCommandContextOverride;
+        private TerrainSurfaceDamageSystem m_registeredTerrainSurfaceDamageSystem = null;
+        private bool m_pendingDeathAfterFormalCurrentValueMutation = false;
+        private bool m_pendingActionInterruptAfterFormalDamage = false;
 
         protected override void Awake()
         {
@@ -65,17 +68,33 @@ namespace FantasyWord.GameCore
             base.OnEnable();
             EnsureFormalAbilitySystemInitializedAfterAwake();
             RegisterFormalAttributeEvents();
+            TryRegisterTerrainSurfaceDamageTarget();
         }
         
         protected override void Update()
         {
             EnsureFormalAbilitySystemInitializedAfterAwake();
+            TryRegisterTerrainSurfaceDamageTarget();
+            ProcessPendingActionInterruptAfterFormalDamage();
+            ProcessPendingDeathAfterFormalCurrentValueMutation();
+            if (IsMarkedAsDestroyed())
+            {
+                return;
+            }
+
             base.Update();
             AdvanceCharacterRuntime(Time.deltaTime);
         }
 
         internal void AdvanceCharacterRuntime(float deltaTime)
         {
+            ProcessPendingActionInterruptAfterFormalDamage();
+            ProcessPendingDeathAfterFormalCurrentValueMutation();
+            if (IsMarkedAsDestroyed())
+            {
+                return;
+            }
+
             float safeDeltaTime = Mathf.Max(0.0f, deltaTime);
             m_temporaryInvincibilityTimer = Mathf.Max(0.0f, m_temporaryInvincibilityTimer - safeDeltaTime);
             AbilityRuntime.UpdateRuntime(safeDeltaTime);
@@ -101,6 +120,7 @@ namespace FantasyWord.GameCore
         /// </summary>
         protected override void OnDisable()
         {
+            UnregisterTerrainSurfaceDamageTarget();
             UnregisterFormalAttributeEvents();
             CleanupOwnedTransientRuntimeState();
             base.OnDisable();
@@ -175,6 +195,12 @@ namespace FantasyWord.GameCore
                 (!TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet) ||
                  !abilitySet.ShouldLockTargetDirectionForInputGate());
         }
+
+        protected virtual bool TryPlayHitAnimation()
+        {
+            return m_animationStrategy?.PlayHitAnimation() ?? false;
+        }
+
         public override bool CanMove() => base.CanMove() && Can(EActionFlags.Move);
 
         protected override float CalculateMoveSpeed()
@@ -231,6 +257,7 @@ namespace FantasyWord.GameCore
                 return;
             }
 
+            m_pendingDeathAfterFormalCurrentValueMutation = false;
             characterSheet.feedbacks.PlayDeath(transform.position);
             GameRuntimeEvents.NotifyDeathPresentation(new DeathPresentationContext(transform.position, this, m_lastEffectiveDamageSource));
             TransferOwnedInventoryToCorpseOwner();
@@ -240,6 +267,40 @@ namespace FantasyWord.GameCore
 
             Cleanse(new[] { EEffectType.Buff, EEffectType.Debuff });
             AbilityRuntime.InterruptInstances();
+        }
+
+        private void RequestDeathAfterFormalCurrentValueMutation()
+        {
+            m_pendingDeathAfterFormalCurrentValueMutation = true;
+        }
+
+        private void RequestActionInterruptAfterFormalDamage()
+        {
+            m_pendingActionInterruptAfterFormalDamage = true;
+        }
+
+        private void ProcessPendingActionInterruptAfterFormalDamage()
+        {
+            if (!m_pendingActionInterruptAfterFormalDamage ||
+                IsMarkedAsDestroyed())
+            {
+                return;
+            }
+
+            m_pendingActionInterruptAfterFormalDamage = false;
+            InterruptActions();
+        }
+
+        private void ProcessPendingDeathAfterFormalCurrentValueMutation()
+        {
+            if (!m_pendingDeathAfterFormalCurrentValueMutation ||
+                IsMarkedAsDestroyed() ||
+                !dead)
+            {
+                return;
+            }
+
+            Kill();
         }
 
         public void Kill(GameCommandContext context)
@@ -284,6 +345,7 @@ namespace FantasyWord.GameCore
         private void CleanupOwnedTransientRuntimeState()
         {
             m_temporaryInvincibilityTimer = 0.0f;
+            m_pendingActionInterruptAfterFormalDamage = false;
             m_animationStrategy?.OnInvincibleAnimationStop();
             AbilityRuntime.InterruptInstances();
             FinalizeOwnedTemporalEffects(
@@ -425,6 +487,30 @@ namespace FantasyWord.GameCore
             {
                 playerSystem.NotifyCharacterRevived(this);
             }
+        }
+
+        private void TryRegisterTerrainSurfaceDamageTarget()
+        {
+            if (m_registeredTerrainSurfaceDamageSystem != null ||
+                !GameManager.Exists() ||
+                !GameManager.TryGetSystem(out TerrainSurfaceDamageSystem damageSystem))
+            {
+                return;
+            }
+
+            damageSystem.RegisterTarget(this);
+            m_registeredTerrainSurfaceDamageSystem = damageSystem;
+        }
+
+        private void UnregisterTerrainSurfaceDamageTarget()
+        {
+            if (m_registeredTerrainSurfaceDamageSystem == null)
+            {
+                return;
+            }
+
+            m_registeredTerrainSurfaceDamageSystem.UnregisterTarget(this);
+            m_registeredTerrainSurfaceDamageSystem = null;
         }
 
         private void CloseAttributeBootstrapReadWindow()

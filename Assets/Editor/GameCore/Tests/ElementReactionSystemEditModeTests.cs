@@ -14,6 +14,7 @@ namespace FantasyWord.GameCore.Tests
 
         private GameObject m_gridObject;
         private Tilemap m_tilemap;
+        private Tilemap m_surfaceCoverTilemap;
         private TerrainNavigationMap m_navigationMap;
         private ElementReactionSystem m_reactionSystem;
         private Vector3Int m_testCell;
@@ -28,8 +29,19 @@ namespace FantasyWord.GameCore.Tests
                 typeof(TilemapRenderer));
             tilemapObject.transform.SetParent(m_gridObject.transform);
             m_tilemap = tilemapObject.GetComponent<Tilemap>();
+            GameObject coverTilemapObject = new(
+                "上层地表",
+                typeof(Tilemap),
+                typeof(TilemapRenderer));
+            coverTilemapObject.transform.SetParent(m_gridObject.transform);
+            m_surfaceCoverTilemap = coverTilemapObject.GetComponent<Tilemap>();
+
             m_navigationMap = m_gridObject.AddComponent<TerrainNavigationMap>();
             SetPrivateField(m_navigationMap, "m_ruleTilemap", m_tilemap);
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceCoverTilemap",
+                m_surfaceCoverTilemap);
 
             GameObject systemObject = new("元素反应系统");
             m_createdObjects.Add(systemObject);
@@ -58,7 +70,9 @@ namespace FantasyWord.GameCore.Tests
                 "fire-grass",
                 EWorldElementKind.Fire,
                 priority: 10,
-                requireEffectiveSurface: ETerrainSurfaceKind.Grass,
+                requireEffectiveSurface: null,
+                requireSurfaceCover: ETerrainSurfaceCoverKind.Grass,
+                requiredSurfaceCoverTraits: ETerrainSurfaceCoverTraits.Flammable,
                 requiredStates: ETerrainRuntimeSurfaceState.None,
                 CreateOperation(
                     EElementReactionOperationKind.AddOrRefreshState,
@@ -67,7 +81,9 @@ namespace FantasyWord.GameCore.Tests
                 "oil-surface",
                 EWorldElementKind.Oil,
                 priority: 10,
-                requireEffectiveSurface: ETerrainSurfaceKind.Grass,
+                requireEffectiveSurface: null,
+                requireSurfaceCover: ETerrainSurfaceCoverKind.Grass,
+                requiredSurfaceCoverTraits: ETerrainSurfaceCoverTraits.None,
                 requiredStates: ETerrainRuntimeSurfaceState.None,
                 CreateOperation(
                     EElementReactionOperationKind.AddOrRefreshState,
@@ -76,7 +92,9 @@ namespace FantasyWord.GameCore.Tests
                 "fire-oiled",
                 EWorldElementKind.Fire,
                 priority: 20,
-                requireEffectiveSurface: ETerrainSurfaceKind.Grass,
+                requireEffectiveSurface: null,
+                requireSurfaceCover: ETerrainSurfaceCoverKind.Grass,
+                requiredSurfaceCoverTraits: ETerrainSurfaceCoverTraits.Flammable,
                 requiredStates: ETerrainRuntimeSurfaceState.Oiled,
                 CreateOperation(
                     EElementReactionOperationKind.AddOrRefreshState,
@@ -87,6 +105,8 @@ namespace FantasyWord.GameCore.Tests
                 EWorldElementKind.Water,
                 priority: 30,
                 requireEffectiveSurface: null,
+                requireSurfaceCover: null,
+                requiredSurfaceCoverTraits: ETerrainSurfaceCoverTraits.None,
                 requiredStates: ETerrainRuntimeSurfaceState.Burning,
                 CreateOperation(
                     EElementReactionOperationKind.RemoveState,
@@ -102,6 +122,8 @@ namespace FantasyWord.GameCore.Tests
                 EWorldElementKind.Electricity,
                 priority: 10,
                 requireEffectiveSurface: null,
+                requireSurfaceCover: null,
+                requiredSurfaceCoverTraits: ETerrainSurfaceCoverTraits.None,
                 requiredStates: ETerrainRuntimeSurfaceState.Wet,
                 CreateOperation(
                     EElementReactionOperationKind.AddOrRefreshState,
@@ -109,19 +131,38 @@ namespace FantasyWord.GameCore.Tests
             RegisterReaction(CreateExpirationReaction(
                 "burning-grass-expired",
                 ETerrainElementStateKind.Burning,
-                ETerrainSurfaceKind.Grass,
+                ETerrainSurfaceCoverKind.Grass,
                 CreateOperation(
-                    EElementReactionOperationKind.SetEffectiveSurface,
-                    surfaceKind: ETerrainSurfaceKind.ScorchedDirt)));
+                    EElementReactionOperationKind.RemoveSurfaceCover)));
 
             m_testCell = Vector3Int.zero;
-            TerrainNavigationTile grassTile =
+            TerrainNavigationTile dirtTile =
                 ScriptableObject.CreateInstance<TerrainNavigationTile>();
-            m_createdObjects.Add(grassTile);
-            SetPrivateField(grassTile, "m_walkable", true);
-            SetPrivateField(grassTile, "m_surfaceKind", ETerrainSurfaceKind.Grass);
-            SetPrivateField(grassTile, "m_traversalCost", 1.0f);
-            m_tilemap.SetTile(m_testCell, grassTile);
+            m_createdObjects.Add(dirtTile);
+            SetPrivateField(dirtTile, "m_walkable", true);
+            SetPrivateField(dirtTile, "m_surfaceKind", ETerrainSurfaceKind.Dirt);
+            SetPrivateField(dirtTile, "m_traversalCost", 1.0f);
+            m_tilemap.SetTile(m_testCell, dirtTile);
+
+            Tile grassCoverTile = ScriptableObject.CreateInstance<Tile>();
+            m_createdObjects.Add(grassCoverTile);
+            m_surfaceCoverTilemap.SetTile(m_testCell, grassCoverTile);
+            TerrainSurfaceCoverTileMapping grassCoverMapping = new();
+            SetPrivateField(grassCoverMapping, "m_tile", grassCoverTile);
+            SetPrivateField(
+                grassCoverMapping,
+                "m_coverKind",
+                ETerrainSurfaceCoverKind.Grass);
+            SetPrivateField(
+                grassCoverMapping,
+                "m_traits",
+                ETerrainSurfaceCoverTraits.Flammable |
+                ETerrainSurfaceCoverTraits.Destructible |
+                ETerrainSurfaceCoverTraits.Regrowable);
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceCoverTileMappings",
+                new[] { grassCoverMapping });
             m_navigationMap.RefreshNavigationData();
         }
 
@@ -154,8 +195,12 @@ namespace FantasyWord.GameCore.Tests
             Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
                 m_testCell,
                 out TerrainSurfaceSample sample));
-            Assert.AreEqual(ETerrainSurfaceKind.Grass, sample.BaseSurface);
-            Assert.AreEqual(ETerrainSurfaceKind.Grass, sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.BaseSurface);
+            Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.BaseSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.EffectiveSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceCoverLifecycle.Alive, sample.SurfaceCoverLifecycle);
+            Assert.IsTrue(sample.IsSurfaceCoverFlammable);
             Assert.AreEqual(
                 ETerrainRuntimeSurfaceState.Burning,
                 sample.RuntimeState);
@@ -204,7 +249,28 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
-        public void BurningExpiration_SetsScorchedDirtAndRemovesBurning()
+        public void ApplyFireToBareDirt_DoesNotAddBurning()
+        {
+            m_surfaceCoverTilemap.SetTile(m_testCell, null);
+            m_navigationMap.RefreshNavigationData();
+
+            bool changed = m_reactionSystem.Apply(
+                CreateApplication(EWorldElementKind.Fire, 1.0f));
+
+            Assert.IsFalse(changed);
+            Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                m_testCell,
+                out TerrainSurfaceSample sample));
+            Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.None, sample.EffectiveSurfaceCover);
+            Assert.AreEqual(
+                ETerrainRuntimeSurfaceState.None,
+                sample.RuntimeState);
+            Assert.AreEqual(0, m_reactionSystem.ActiveTimedCellCount);
+        }
+
+        [Test]
+        public void BurningExpiration_RemovesGrassCoverAndKeepsDirtGround()
         {
             Assert.IsTrue(m_reactionSystem.Apply(
                 CreateApplication(EWorldElementKind.Fire, 1.0f)));
@@ -217,14 +283,29 @@ namespace FantasyWord.GameCore.Tests
             Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
                 m_testCell,
                 out TerrainSurfaceSample sample));
-            Assert.AreEqual(ETerrainSurfaceKind.Grass, sample.BaseSurface);
-            Assert.AreEqual(
-                ETerrainSurfaceKind.ScorchedDirt,
-                sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.BaseSurface);
+            Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.BaseSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.None, sample.EffectiveSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceCoverLifecycle.Removed, sample.SurfaceCoverLifecycle);
+            Assert.IsFalse(sample.HasSurfaceCover);
             Assert.AreEqual(
                 ETerrainRuntimeSurfaceState.None,
                 sample.RuntimeState);
             Assert.AreEqual(1.0f, sample.EffectiveTraversalCost);
+            Assert.AreEqual(0, m_reactionSystem.ActiveTimedCellCount);
+
+            bool reapplied = m_reactionSystem.Apply(
+                CreateApplication(EWorldElementKind.Fire, 1.0f));
+
+            Assert.IsFalse(reapplied, "草覆盖已移除的 Dirt 格不应再次匹配 Fire + Grass 规则。");
+            Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                m_testCell,
+                out TerrainSurfaceSample reappliedSample));
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, reappliedSample.BaseSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.None, reappliedSample.EffectiveSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceCoverLifecycle.Removed, reappliedSample.SurfaceCoverLifecycle);
+            Assert.AreEqual(ETerrainRuntimeSurfaceState.None, reappliedSample.RuntimeState);
             Assert.AreEqual(0, m_reactionSystem.ActiveTimedCellCount);
         }
 
@@ -242,7 +323,8 @@ namespace FantasyWord.GameCore.Tests
             Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
                 m_testCell,
                 out TerrainSurfaceSample sample));
-            Assert.AreEqual(ETerrainSurfaceKind.Grass, sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.EffectiveSurface);
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.EffectiveSurfaceCover);
             Assert.AreEqual(
                 ETerrainRuntimeSurfaceState.None,
                 sample.RuntimeState);
@@ -330,6 +412,8 @@ namespace FantasyWord.GameCore.Tests
                 EWorldElementKind elementKind,
                 int priority,
                 ETerrainSurfaceKind? requireEffectiveSurface,
+                ETerrainSurfaceCoverKind? requireSurfaceCover,
+                ETerrainSurfaceCoverTraits requiredSurfaceCoverTraits,
                 ETerrainRuntimeSurfaceState requiredStates,
                 params ElementReactionOperation[] operations)
         {
@@ -356,6 +440,19 @@ namespace FantasyWord.GameCore.Tests
                     requireEffectiveSurface.Value);
             }
 
+            if (requireSurfaceCover.HasValue)
+            {
+                SetPrivateField(definition, "m_requireSurfaceCover", true);
+                SetPrivateField(
+                    definition,
+                    "m_surfaceCover",
+                    requireSurfaceCover.Value);
+            }
+
+            SetPrivateField(
+                definition,
+                "m_requiredSurfaceCoverTraits",
+                requiredSurfaceCoverTraits);
             return (stableId, definition);
         }
 
@@ -363,7 +460,7 @@ namespace FantasyWord.GameCore.Tests
             CreateExpirationReaction(
                 string stableId,
                 ETerrainElementStateKind expiredStateKind,
-                ETerrainSurfaceKind baseSurface,
+                ETerrainSurfaceCoverKind surfaceCover,
                 params ElementReactionOperation[] operations)
         {
             ElementReactionDefinition definition =
@@ -377,8 +474,8 @@ namespace FantasyWord.GameCore.Tests
                 definition,
                 "m_expiredStateKind",
                 expiredStateKind);
-            SetPrivateField(definition, "m_requireBaseSurface", true);
-            SetPrivateField(definition, "m_baseSurface", baseSurface);
+            SetPrivateField(definition, "m_requireSurfaceCover", true);
+            SetPrivateField(definition, "m_surfaceCover", surfaceCover);
             SetPrivateField(definition, "m_priority", 10);
             SetPrivateField(definition, "m_operations", operations);
             return (stableId, definition);
@@ -390,6 +487,8 @@ namespace FantasyWord.GameCore.Tests
                 ETerrainElementStateKind.None,
             float durationOverride = 0.0f,
             ETerrainSurfaceKind surfaceKind = ETerrainSurfaceKind.None,
+            ETerrainSurfaceCoverKind surfaceCoverKind =
+                ETerrainSurfaceCoverKind.None,
             EElementPresentationSignal presentationSignal =
                 EElementPresentationSignal.None)
         {
@@ -401,6 +500,7 @@ namespace FantasyWord.GameCore.Tests
                 "m_durationOverride",
                 durationOverride);
             SetPrivateField(operation, "m_surfaceKind", surfaceKind);
+            SetPrivateField(operation, "m_surfaceCoverKind", surfaceCoverKind);
             SetPrivateField(
                 operation,
                 "m_presentationSignal",

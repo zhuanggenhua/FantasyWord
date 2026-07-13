@@ -42,9 +42,9 @@
 
 | 当前职责 | 参考来源与固定版本 | 证据等级/许可证 | 本次吸收什么 | 当前 Unity 落点 | 本次明确不吸收什么 | 验证入口 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 元素/状态组合反应表 | [Mindustry `439799ce`](https://github.com/Anuken/Mindustry/tree/439799ce8ff1480d1d169c5ba7ff3def422999de)：`core/src/mindustry/content/StatusEffects.java`、`core/src/mindustry/type/StatusEffect.java` | 成熟开源项目；GPL-3.0；只读设计参考 | 状态定义拥有 `affinity`、`opposite` 和 transition handler；`Wet + Shocked`、`Burning + Tarred` 等组合说明反应关系可以集中声明，而不是写进施加技能 | `ElementReactionDefinition` 与 `ElementReactionSystem` 的规则匹配/结果执行 | 不复制 GPL 代码；不把单位状态模型当作地表格模型；不采用其帧时间、伤害值或互斥算法 | 规则合同测试覆盖水灭火、潮湿导电、油助燃和焦土不可复燃 |
+| 元素/状态组合反应表 | [Mindustry `439799ce`](https://github.com/Anuken/Mindustry/tree/439799ce8ff1480d1d169c5ba7ff3def422999de)：`core/src/mindustry/content/StatusEffects.java`、`core/src/mindustry/type/StatusEffect.java` | 成熟开源项目；GPL-3.0；只读设计参考 | 状态定义拥有 `affinity`、`opposite` 和 transition handler；`Wet + Shocked`、`Burning + Tarred` 等组合说明反应关系可以集中声明，而不是写进施加技能 | `ElementReactionDefinition` 与 `ElementReactionSystem` 的规则匹配/结果执行 | 不复制 GPL 代码；不把单位状态模型当作地表格模型；不采用其帧时间、伤害值或互斥算法 | 规则合同测试覆盖水灭火、潮湿导电、油助燃和无草覆盖土壤不可复燃 |
 | 单格场状态、强度、年龄、来源和独立推进 | [Cataclysm: DDA `df58de99`](https://github.com/CleverRaven/Cataclysm-DDA/tree/df58de992d1a7d279a37cbd5aaf6cb8bd87741d9)：`src/field.h`、`src/field_type.h`、`src/map_field.cpp`、`data/json/field_type.json` | 成熟开源项目；项目代码声明 CC BY-SA 3.0 Unported；只读设计参考 | `field_entry` 保存类型、强度、年龄、来源和存活状态；`field_type` 将静态类型语义与运行时实例分离；地图处理器独立推进场状态 | `TerrainElementStateDefinition`、`TerrainCellRuntimeState`、只推进计时格的派生活跃索引，以及未来可选传播处理器 | 不复制 ShareAlike 代码/JSON；不照搬回合制年龄、气体扩散、风向、天气和随机概率算法；第一期不实现传播 | 状态快照、活跃格调度、到期转化、来源追踪与固定步长确定性测试 |
-| 地形格火焰寿命、可燃性、燃料和地图消费 | [OpenXcom `630130c5`](https://github.com/OpenXcom/OpenXcom/tree/630130c5c9ac236b9e1d8496005fb23e84e397ca)：`src/Savegame/Tile.h/.cpp`、`src/Battlescape/TileEngine.h/.cpp` | 成熟开源项目；GPL-3.0；只读设计参考 | `Tile` 明确保存 fire/smoke 剩余回合并读取 flammability/fuel；地图逻辑负责点燃、伤害、照明与视线消费，证明“格状态”和“消费该状态的系统”可以分开 | `TerrainElementStateDefinition` 保存 Burning 静态代价语义，`TerrainCellRuntimeState` 保存动态强度/剩余时间；导航与表现作为状态消费者 | 不复制 GPL 代码；不采用其回合制数值、地形部件结构、存档格式、爆炸传播或单位伤害实现 | 燃烧持续、代价精确恢复、表现刷新、到期焦土和场景重载恢复测试 |
+| 地形格火焰寿命、可燃性、燃料和地图消费 | [OpenXcom `630130c5`](https://github.com/OpenXcom/OpenXcom/tree/630130c5c9ac236b9e1d8496005fb23e84e397ca)：`src/Savegame/Tile.h/.cpp`、`src/Battlescape/TileEngine.h/.cpp` | 成熟开源项目；GPL-3.0；只读设计参考 | `Tile` 明确保存 fire/smoke 剩余回合并读取 flammability/fuel；地图逻辑负责点燃、伤害、照明与视线消费，证明“格状态”和“消费该状态的系统”可以分开 | `TerrainElementStateDefinition` 保存 Burning 静态代价语义，`TerrainCellRuntimeState` 保存动态强度/剩余时间；导航与表现作为状态消费者 | 不复制 GPL 代码；不采用其回合制数值、地形部件结构、存档格式、爆炸传播或单位伤害实现 | 燃烧持续、代价精确恢复、表现刷新、到期露出 Dirt和场景重载恢复测试 |
 | Unity/C# 地表管理器直接样本 | [qdnd `b4f963a5`](https://github.com/Interzoneism/qdnd/blob/b4f963a57b3a0265beac871fbf23dbd09e13cf65/Combat/Environment/SurfaceManager.cs) | 低可信补充样本；0 stars；仓库未声明许可证 | 只用于反例检查：确认 C# 项目中常见 surface definition、duration、cell geometry、事件转化和移动代价职责容易被塞进一个大管理器 | 不进入正式 owner；仅用于审查 `ElementReactionSystem` 是否过度膨胀 | 无许可证，不复制任何代码；不以其字符串表、Godot 类型、默认反应表或单体管理器为基线 | 设计审查确认规则、状态存储、区域解析、表现和技能接入没有重新集中成 God object |
 
 ## Tutorial Verdict
@@ -57,7 +57,7 @@
 
 ## Gameplay Inspiration Boundary
 
-Fire、Water、Oil、Wet、Burning、Electrified 和焦土等反应语义与《神界：原罪》系列等系统性交互游戏存在体验相似性，但当前没有把任何商业游戏作为代码或数据结构基线：
+Fire、Water、Oil、Wet、Burning、Electrified 和露土等反应语义与《神界：原罪》系列等系统性交互游戏存在体验相似性，但当前没有把任何商业游戏作为代码或数据结构基线：
 
 - 没有取得其可核验的正式源码。
 - 没有取得能证明内部 owner、数据结构、Tick、存档或导航接入方式的官方技术文档。

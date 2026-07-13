@@ -189,7 +189,7 @@ namespace GAS.Runtime
 
                 foreach (cfg.TaskClip taskClip in track.TaskClips)
                 {
-                    if (taskClip.Task is cfg.TaskDoCost or cfg.TaskApplyEffects)
+                    if (taskClip.Task is cfg.TaskDoCost or cfg.TaskApplyEffects or cfg.TaskApplyWorldElement)
                     {
                         firstFrame = Mathf.Min(firstFrame, taskClip.StartTime);
                     }

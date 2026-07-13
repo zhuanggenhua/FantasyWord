@@ -357,7 +357,7 @@ public class AnimationTypeAutoRegister : AssetPostprocessor
         Debug.Log(
             $"[AnimationTypeAutoRegister] MiniFantasy 动作类型同步完成：确认 {actionNames.Count} 个玩家动作键，"
             + $"新建 {created} 个，注册 {registered} 个，清理误注册 {removed} 个。"
-            + "换装工作台只展示玩家人形动作；其它角色通过覆盖控制器复用同一组动作键。");
+            + "换装工作台只展示玩家人形动作；所有角色通过 SpriteLibrary 复用同一组动作键和共享时序。");
     }
 
     /// <summary>

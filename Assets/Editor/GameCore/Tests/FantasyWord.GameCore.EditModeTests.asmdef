@@ -4,6 +4,7 @@
   "references": [
     "FantasyWord.GameCore",
     "FantasyWord.GameCore.Editor",
+    "ContextSteering2D.Runtime",
     "com.exhard.exgas.runtime",
     "Unity.Collections",
     "Unity.Entities",

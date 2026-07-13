@@ -364,11 +364,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationController
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
-  directionNames:
-  - SE
-  - SW
-  - NE
-  - NW
   _debugCurrentState: 
   _debugAnimatorPath: 
 --- !u!114 &7667983027141764858
@@ -403,11 +398,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5faca898f745042a9e5380d141a605, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimatorEquipmentSync
-  rowParameterName: Direction
-  xParameterName: X
-  yParameterName: Y
-  animationController: {fileID: 5038573517113386918}
+  m_EditorClassIdentifier: Assembly-CSharp::DirectionalAnimationVariantDriver
+  spriteLibrary: {fileID: 0}
+  spriteResolver: {fileID: 0}
+  equipmentRenderer: {fileID: 7667983027141764858}
+  movable: {fileID: 0}
 --- !u!4 &6227734980916943357 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4941899184047235797, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}

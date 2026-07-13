@@ -54,7 +54,10 @@ namespace FantasyWord.GameCore
         RemoveState,
         SetEffectiveSurface,
         ClearEffectiveSurface,
-        EmitPresentationSignal
+        EmitPresentationSignal,
+        RemoveSurfaceCover,
+        SetSurfaceCover,
+        ClearSurfaceCoverOverride
     }
 
     public enum EElementPresentationSignal

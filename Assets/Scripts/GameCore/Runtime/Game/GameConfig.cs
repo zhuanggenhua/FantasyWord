@@ -30,6 +30,9 @@ namespace FantasyWord.GameCore
         [SerializeField, FormerlySerializedAs("visibilityContactFilter")]
         private ContactFilter2D m_visibilityContactFilter;
 
+        [Tooltip("ContextSteering2D 用于识别其他角色和可选目标的过滤条件。必须与墙体/地形阻挡过滤分开配置。")]
+        [SerializeField] private ContactFilter2D m_steeringNeighbourContactFilter;
+
         [Header("Visual Settings")]
         [SerializeField, FormerlySerializedAs("cameraShakeSources")]
         private ECameraShakeSources m_cameraShakeSources = ECameraShakeSources.None;
@@ -77,6 +80,7 @@ namespace FantasyWord.GameCore
         public float maxTeleportDistanceWhenStuckInWall => m_maxTeleportDistanceWhenStuckInWall;
         public ContactFilter2D collisionContactFilter => m_collisionContactFilter;
         public ContactFilter2D visibilityContactFilter => m_visibilityContactFilter;
+        public ContactFilter2D steeringNeighbourContactFilter => m_steeringNeighbourContactFilter;
         public ECameraShakeSources cameraShakeSources => m_cameraShakeSources;
         public CraftingStation onTheGoCraftingStation => m_onTheGoCraftingStation;
         public int maxEquippableAbilities => m_maxEquippableAbilities;

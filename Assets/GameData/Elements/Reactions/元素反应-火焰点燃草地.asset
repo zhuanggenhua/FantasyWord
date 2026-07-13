@@ -18,8 +18,12 @@ MonoBehaviour:
   m_minimumIntensity: 0.05
   m_requireBaseSurface: 0
   m_baseSurface: 0
-  m_requireEffectiveSurface: 1
-  m_effectiveSurface: 1
+  m_requireEffectiveSurface: 0
+  m_effectiveSurface: 0
+  m_requireSurfaceCover: 1
+  m_surfaceCover: 1
+  m_requiredSurfaceCoverTraits: 1
+  m_forbiddenSurfaceCoverTraits: 0
   m_requiredStates: 0
   m_forbiddenStates: 4
   m_priority: 50
@@ -29,4 +33,5 @@ MonoBehaviour:
     m_intensityMultiplier: 1
     m_durationOverride: 5
     m_surfaceKind: 0
+    m_surfaceCoverKind: 0
     m_presentationSignal: 0

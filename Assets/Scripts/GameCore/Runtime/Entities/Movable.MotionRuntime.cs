@@ -21,6 +21,8 @@ namespace FantasyWord.GameCore
             private Vector2 m_smoothedMovementInput = Vector2.zero;
             private float m_accelerationAmount = 0.0f;
             private Vector2 m_lastSuccessfulMovement = Vector2.zero;
+            private float m_steeringSpeedScale = 1.0f;
+            private Vector2 m_steeringCorrection = Vector2.zero;
             private MoveOrder? m_moveOrder = null;
             private PushOrder? m_pushOrder = null;
 
@@ -139,15 +141,29 @@ namespace FantasyWord.GameCore
                 m_owner.m_movementDirection = direction;
             }
 
+            public void SetSteeringMotion(float speedScale, Vector2 correctionDisplacement)
+            {
+                m_steeringSpeedScale = Mathf.Clamp01(speedScale);
+                m_steeringCorrection = correctionDisplacement;
+            }
+
             public void HandleMovement()
             {
-                if (m_moveOrder.HasValue)
+                try
                 {
-                    ExecuteMoveOrder();
+                    if (m_moveOrder.HasValue)
+                    {
+                        ExecuteMoveOrder();
+                    }
+                    else
+                    {
+                        MoveInDirection(m_owner.m_movementDirection, m_owner.CalculateMoveSpeed(), false, true);
+                    }
                 }
-                else
+                finally
                 {
-                    MoveInDirection(m_owner.m_movementDirection, m_owner.CalculateMoveSpeed(), false, true);
+                    m_steeringSpeedScale = 1.0f;
+                    m_steeringCorrection = Vector2.zero;
                 }
             }
 
@@ -404,9 +420,17 @@ namespace FantasyWord.GameCore
                 Vector2 resolvedDirection = applyInputHandling ? ResolveMovementInput(direction) : direction.normalized;
                 bool canApplyMovement = force || m_owner.CanMove();
 
-                if (canApplyMovement && moveSpeed > 0.0f && resolvedDirection.magnitude > 0.0f)
+                if (canApplyMovement && moveSpeed > 0.0f && (resolvedDirection.sqrMagnitude > 0.0f || m_steeringCorrection.sqrMagnitude > 0.0f))
                 {
-                    float resolvedSpeed = moveSpeed * m_owner.CalculateMovementSpeedMultiplier();
+                    float resolvedSpeed = moveSpeed * m_owner.CalculateMovementSpeedMultiplier() * m_steeringSpeedScale;
+                    Vector2 targetVelocity = resolvedDirection * resolvedSpeed;
+                    if (Time.fixedDeltaTime > 0.0f && m_steeringCorrection.sqrMagnitude > 0.0f)
+                    {
+                        targetVelocity += m_steeringCorrection / Time.fixedDeltaTime;
+                    }
+
+                    resolvedDirection = targetVelocity.normalized;
+                    resolvedSpeed = targetVelocity.magnitude;
 
                     if (!TryMove(resolvedDirection, resolvedSpeed))
                     {

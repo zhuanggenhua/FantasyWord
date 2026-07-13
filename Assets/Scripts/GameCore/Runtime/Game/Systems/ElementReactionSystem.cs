@@ -289,7 +289,17 @@ namespace FantasyWord.GameCore
                         if (operation.SurfaceKind == ETerrainSurfaceKind.None)
                         {
                             Debug.LogError(
-                                $"元素反应 '{candidate.StableId}' 的地表覆盖操作未指定地表。",
+                                $"元素反应 '{candidate.StableId}' 的有效底层地表操作未指定地表。",
+                                candidate.Definition);
+                            valid = false;
+                        }
+
+                        break;
+                    case EElementReactionOperationKind.SetSurfaceCover:
+                        if (operation.SurfaceCoverKind == ETerrainSurfaceCoverKind.None)
+                        {
+                            Debug.LogError(
+                                $"元素反应 '{candidate.StableId}' 的上层地表设置操作未指定覆盖类型。",
                                 candidate.Definition);
                             valid = false;
                         }
@@ -391,6 +401,8 @@ namespace FantasyWord.GameCore
                 ETerrainElementStateKind.None,
                 previousSample.BaseSurface,
                 previousSample.EffectiveSurface,
+                previousSample.EffectiveSurfaceCover,
+                previousSample.SurfaceCoverTraits,
                 previousSample.RuntimeState);
             ElementReactionResolver.CollectMatches(
                 m_reactionCandidates,
@@ -476,6 +488,16 @@ namespace FantasyWord.GameCore
                         case EElementReactionOperationKind.EmitPresentationSignal:
                             presentationSignal = operation.PresentationSignal;
                             break;
+                        case EElementReactionOperationKind.RemoveSurfaceCover:
+                            changed |= runtimeState.RemoveSurfaceCover();
+                            break;
+                        case EElementReactionOperationKind.SetSurfaceCover:
+                            changed |= runtimeState.SetSurfaceCover(
+                                operation.SurfaceCoverKind);
+                            break;
+                        case EElementReactionOperationKind.ClearSurfaceCoverOverride:
+                            changed |= runtimeState.ClearSurfaceCoverOverride();
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -551,6 +573,8 @@ namespace FantasyWord.GameCore
                         expiredStateKind,
                         currentSample.BaseSurface,
                         currentSample.EffectiveSurface,
+                        currentSample.EffectiveSurfaceCover,
+                        currentSample.SurfaceCoverTraits,
                         currentSample.RuntimeState);
                     ElementReactionResolver.CollectMatches(
                         m_reactionCandidates,

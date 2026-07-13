@@ -9,6 +9,11 @@ namespace FantasyWord.GameCore
 
         private GameObject m_uiInstance = null;
 
+        public override void OnSystemStart()
+        {
+            ShowUI();
+        }
+
         // Called after gameplay has been initialized properly.
         // We do this to make sure the UI, when it's created, is created after the gameplay has been initialized.
         // As the UI might depend on some gameplay data.

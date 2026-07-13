@@ -283,6 +283,11 @@ namespace FantasyWord.GameCore
             return cappedMultiplier * motionRuntime.GetContextSpeedMultiplier();
         }
 
+        public float GetResolvedMoveSpeed()
+        {
+            return Mathf.Max(CalculateMoveSpeed() * CalculateMovementSpeedMultiplier(), 0.0f);
+        }
+
         protected float GetContextMovementSpeedMultiplier() => motionRuntime.GetContextSpeedMultiplier();
 
         /// <summary>
@@ -378,6 +383,11 @@ namespace FantasyWord.GameCore
             motionRuntime.SetMovementDirection(direction);
         }
 
+        public void SetSteeringMotion(float speedScale, Vector2 correctionDisplacement)
+        {
+            motionRuntime.SetSteeringMotion(speedScale, correctionDisplacement);
+        }
+
         public virtual bool CanUpdateTargetDirection() => !IsMarkedAsDestroyed();
         public virtual bool CanMove() => !m_disableAllMovements && !m_movementForbidden && !IsPushed() && (!IsMarkedAsDestroyed() || m_canMoveDuringDeath);
 
@@ -469,7 +479,7 @@ namespace FantasyWord.GameCore
 
         public bool TryGetGas2DFacingDirection(out Vector2 direction)
         {
-            direction = GetTargetDirection();
+            direction = m_lookAtDirection;
             if (direction.sqrMagnitude <= 0.0001f)
             {
                 return false;

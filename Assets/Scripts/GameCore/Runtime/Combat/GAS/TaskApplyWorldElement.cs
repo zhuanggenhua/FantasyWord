@@ -13,6 +13,27 @@ namespace FantasyWord.GameCore
     /// </summary>
     public sealed class TaskApplyWorldElement : AbilityTaskBase<XParamApplyWorldElement>
     {
+#if UNITY_EDITOR
+        public static int DebugSubmitCount { get; private set; }
+        public static int DebugSuccessfulApplyCount { get; private set; }
+        public static bool DebugLastApplyReturned { get; private set; }
+        public static string DebugLastFailure { get; private set; } = string.Empty;
+        public static Vector3 DebugLastOrigin { get; private set; }
+        public static Vector2 DebugLastDirection { get; private set; }
+        public static int DebugLastSourceAbilityCode { get; private set; }
+
+        public static void ResetDebugState()
+        {
+            DebugSubmitCount = 0;
+            DebugSuccessfulApplyCount = 0;
+            DebugLastApplyReturned = false;
+            DebugLastFailure = string.Empty;
+            DebugLastOrigin = default;
+            DebugLastDirection = default;
+            DebugLastSourceAbilityCode = 0;
+        }
+#endif
+
         public TaskApplyWorldElement(AbilityLogicBase logic) : base(logic)
         {
         }
@@ -45,9 +66,12 @@ namespace FantasyWord.GameCore
 
         private bool SubmitCurrentPose()
         {
+            RecordDebugSubmit();
+
             if (Parameter == null)
             {
                 Debug.LogError("TaskApplyWorldElement 缺少参数，无法提交世界元素。");
+                RecordDebugFailure("缺少参数");
                 return false;
             }
 
@@ -55,6 +79,7 @@ namespace FantasyWord.GameCore
             if (source == null)
             {
                 Debug.LogError("TaskApplyWorldElement 缺少施法者对象，无法提交世界元素。");
+                RecordDebugFailure("缺少施法者对象");
                 return false;
             }
 
@@ -64,6 +89,7 @@ namespace FantasyWord.GameCore
                 Debug.LogError(
                     "TaskApplyWorldElement 要求施法者挂载 Movable，以读取执行帧的正式 2D 朝向。",
                     source);
+                RecordDebugFailure("施法者缺少 Movable");
                 return false;
             }
 
@@ -72,6 +98,7 @@ namespace FantasyWord.GameCore
                 Debug.LogError(
                     "TaskApplyWorldElement 无法取得施法者在执行帧的正式 2D 朝向。",
                     source);
+                RecordDebugFailure("无法取得正式 2D 朝向");
                 return false;
             }
 
@@ -82,6 +109,7 @@ namespace FantasyWord.GameCore
                 Debug.LogError(
                     "TaskApplyWorldElement 无法取得 ElementReactionSystem，本次世界元素未生效。",
                     source);
+                RecordDebugFailure("无法取得 ElementReactionSystem");
                 return false;
             }
 
@@ -96,7 +124,43 @@ namespace FantasyWord.GameCore
                 direction,
                 source,
                 Spec?.Code ?? 0);
-            return reactionSystem.Apply(application);
+            bool applyReturned = reactionSystem.Apply(application);
+            RecordDebugApply(application, applyReturned);
+            return applyReturned;
+        }
+
+        private static void RecordDebugSubmit()
+        {
+#if UNITY_EDITOR
+            ++DebugSubmitCount;
+            DebugLastApplyReturned = false;
+            DebugLastFailure = string.Empty;
+#endif
+        }
+
+        private static void RecordDebugFailure(string failure)
+        {
+#if UNITY_EDITOR
+            DebugLastFailure = failure;
+            DebugLastApplyReturned = false;
+#endif
+        }
+
+        private static void RecordDebugApply(
+            in ElementApplication application,
+            bool applyReturned)
+        {
+#if UNITY_EDITOR
+            DebugLastApplyReturned = applyReturned;
+            DebugLastFailure = applyReturned ? string.Empty : "ElementReactionSystem.Apply 返回 false";
+            DebugLastOrigin = application.Origin;
+            DebugLastDirection = application.Direction;
+            DebugLastSourceAbilityCode = application.SourceAbilityCode;
+            if (applyReturned)
+            {
+                ++DebugSuccessfulApplyCount;
+            }
+#endif
         }
     }
 

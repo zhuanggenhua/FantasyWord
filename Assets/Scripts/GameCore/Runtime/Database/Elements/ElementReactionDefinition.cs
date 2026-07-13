@@ -17,6 +17,8 @@ namespace FantasyWord.GameCore
         [SerializeField] private float m_durationOverride = 0.0f;
         [SerializeField] private ETerrainSurfaceKind m_surfaceKind =
             ETerrainSurfaceKind.None;
+        [SerializeField] private ETerrainSurfaceCoverKind m_surfaceCoverKind =
+            ETerrainSurfaceCoverKind.None;
         [SerializeField] private EElementPresentationSignal m_presentationSignal =
             EElementPresentationSignal.None;
 
@@ -25,6 +27,7 @@ namespace FantasyWord.GameCore
         public float IntensityMultiplier => Mathf.Max(0.0f, m_intensityMultiplier);
         public float DurationOverride => m_durationOverride;
         public ETerrainSurfaceKind SurfaceKind => m_surfaceKind;
+        public ETerrainSurfaceCoverKind SurfaceCoverKind => m_surfaceCoverKind;
         public EElementPresentationSignal PresentationSignal => m_presentationSignal;
     }
 
@@ -47,6 +50,15 @@ namespace FantasyWord.GameCore
         [SerializeField] private ETerrainSurfaceKind m_baseSurface = ETerrainSurfaceKind.None;
         [SerializeField] private bool m_requireEffectiveSurface = false;
         [SerializeField] private ETerrainSurfaceKind m_effectiveSurface = ETerrainSurfaceKind.None;
+
+        [Header("上层地表条件")]
+        [SerializeField] private bool m_requireSurfaceCover = false;
+        [SerializeField] private ETerrainSurfaceCoverKind m_surfaceCover =
+            ETerrainSurfaceCoverKind.None;
+        [SerializeField] private ETerrainSurfaceCoverTraits m_requiredSurfaceCoverTraits =
+            ETerrainSurfaceCoverTraits.None;
+        [SerializeField] private ETerrainSurfaceCoverTraits m_forbiddenSurfaceCoverTraits =
+            ETerrainSurfaceCoverTraits.None;
 
         [Header("状态条件")]
         [SerializeField] private ETerrainRuntimeSurfaceState m_requiredStates =
@@ -92,6 +104,14 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
+            if (m_requireSurfaceCover && m_surfaceCover != context.SurfaceCover ||
+                (context.SurfaceCoverTraits & m_requiredSurfaceCoverTraits) !=
+                m_requiredSurfaceCoverTraits ||
+                (context.SurfaceCoverTraits & m_forbiddenSurfaceCoverTraits) != 0)
+            {
+                return false;
+            }
+
             if ((context.RuntimeStates & m_requiredStates) != m_requiredStates ||
                 (context.RuntimeStates & m_forbiddenStates) != 0)
             {
@@ -123,6 +143,12 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
+            if ((m_requiredSurfaceCoverTraits & m_forbiddenSurfaceCoverTraits) != 0)
+            {
+                error = "同一种上层地表属性不能同时出现在 Required 和 Forbidden 条件中。";
+                return false;
+            }
+
             if (m_operations == null || m_operations.Length == 0)
             {
                 error = "反应规则必须至少包含一个结果操作。";
@@ -142,6 +168,8 @@ namespace FantasyWord.GameCore
             ETerrainElementStateKind expiredStateKind,
             ETerrainSurfaceKind baseSurface,
             ETerrainSurfaceKind effectiveSurface,
+            ETerrainSurfaceCoverKind surfaceCover,
+            ETerrainSurfaceCoverTraits surfaceCoverTraits,
             ETerrainRuntimeSurfaceState runtimeStates)
         {
             Trigger = trigger;
@@ -149,7 +177,28 @@ namespace FantasyWord.GameCore
             ExpiredStateKind = expiredStateKind;
             BaseSurface = baseSurface;
             EffectiveSurface = effectiveSurface;
+            SurfaceCover = surfaceCover;
+            SurfaceCoverTraits = surfaceCoverTraits;
             RuntimeStates = runtimeStates;
+        }
+
+        public ElementReactionContext(
+            EElementReactionTrigger trigger,
+            in ElementApplication application,
+            ETerrainElementStateKind expiredStateKind,
+            ETerrainSurfaceKind baseSurface,
+            ETerrainSurfaceKind effectiveSurface,
+            ETerrainRuntimeSurfaceState runtimeStates)
+            : this(
+                trigger,
+                application,
+                expiredStateKind,
+                baseSurface,
+                effectiveSurface,
+                ETerrainSurfaceCoverKind.None,
+                ETerrainSurfaceCoverTraits.None,
+                runtimeStates)
+        {
         }
 
         public EElementReactionTrigger Trigger { get; }
@@ -157,6 +206,8 @@ namespace FantasyWord.GameCore
         public ETerrainElementStateKind ExpiredStateKind { get; }
         public ETerrainSurfaceKind BaseSurface { get; }
         public ETerrainSurfaceKind EffectiveSurface { get; }
+        public ETerrainSurfaceCoverKind SurfaceCover { get; }
+        public ETerrainSurfaceCoverTraits SurfaceCoverTraits { get; }
         public ETerrainRuntimeSurfaceState RuntimeStates { get; }
     }
 }

@@ -19,6 +19,9 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     [SerializeField]
     AnimationController animationController;
 
+    [SerializeField]
+    DirectionalAnimationVariantDriver directionDriver;
+
     bool _initialized;
     int _currentCharacterIndex = -1;
     EquipmentType _currentCategory;
@@ -41,11 +44,12 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     public EquipmentWorkbenchCatalog Catalog => catalog;
     public EquipmentRenderer Renderer => equipmentRenderer;
     public AnimationController AnimationController => animationController;
+    public DirectionalAnimationVariantDriver DirectionDriver => directionDriver;
     public int CurrentCharacterIndex => _currentCharacterIndex;
     public int CurrentAppearanceIndex { get; private set; } = -1;
     public EquipmentType CurrentCategory => _currentCategory;
     public int CurrentAnimationIndex => animationController != null ? animationController.CurrentAnimationIndex : 0;
-    public int CurrentDirectionIndex => animationController != null ? animationController.CurrentDirectionIndex : 0;
+    public int CurrentDirectionIndex => directionDriver != null ? directionDriver.CurrentDirectionIndex : 0;
     public EquipmentWorkbenchCharacterOption CurrentCharacter =>
         catalog != null
         && _currentCharacterIndex >= 0
@@ -60,11 +64,13 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     public void Configure(
         EquipmentWorkbenchCatalog newCatalog,
         EquipmentRenderer newRenderer,
-        AnimationController newAnimationController)
+        AnimationController newAnimationController,
+        DirectionalAnimationVariantDriver newDirectionDriver)
     {
         catalog = newCatalog;
         equipmentRenderer = newRenderer;
         animationController = newAnimationController;
+        directionDriver = newDirectionDriver;
         _initialized = false;
     }
 
@@ -77,8 +83,10 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
             equipmentRenderer = GetComponent<EquipmentRenderer>();
         if (animationController == null)
             animationController = GetComponent<AnimationController>();
+        if (directionDriver == null)
+            directionDriver = GetComponent<DirectionalAnimationVariantDriver>();
 
-        if (catalog == null || equipmentRenderer == null || animationController == null)
+        if (catalog == null || equipmentRenderer == null || animationController == null || directionDriver == null)
             return;
 
         IReadOnlyList<EquipmentType> categories = catalog.GetAvailableCategories();
@@ -200,11 +208,10 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     public void SelectDirection(int index)
     {
         InitializeIfNeeded();
-        if (animationController == null)
+        if (directionDriver == null)
             return;
 
-        animationController.SetDirection(index);
-        equipmentRenderer.SetPreviewDirection(index);
+        directionDriver.SetDirection(index);
         NotifyStateChanged();
     }
 
@@ -246,7 +253,8 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
             || index < 0
             || index >= catalog.Characters.Count
             || equipmentRenderer == null
-            || animationController == null)
+            || animationController == null
+            || directionDriver == null)
         {
             return;
         }
@@ -257,11 +265,10 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
 
         _currentCharacterIndex = index;
 
-        if (character.AnimatorController != null)
-            animationController.SetRuntimeAnimatorController(character.AnimatorController, true);
-
         animationController.SetAnimationDatabase(character.FrameData.animDatabase, true);
         equipmentRenderer.SetFrameData(character.FrameData, false);
+        if (!directionDriver.SetFrameData(character.FrameData, true))
+            return;
         equipmentRenderer.SetAppearance(character.Appearance, false);
         SyncCurrentAppearanceFromCharacter(false);
         equipmentRenderer.UnequipAll();
@@ -302,8 +309,7 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
 
         return ContainsIgnoreCase(character.DisplayName, "人类")
             || ContainsIgnoreCase(character.DisplayName, "Human")
-            || ContainsIgnoreCase(character.FrameData != null ? character.FrameData.name : null, "Human")
-            || ContainsIgnoreCase(character.AnimatorController != null ? character.AnimatorController.name : null, "Human");
+            || ContainsIgnoreCase(character.FrameData != null ? character.FrameData.name : null, "Human");
     }
 
     static bool ContainsIgnoreCase(string value, string marker)

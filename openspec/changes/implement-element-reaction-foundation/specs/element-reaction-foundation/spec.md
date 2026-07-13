@@ -8,7 +8,7 @@
 
 - **WHEN** an EX-GAS flamethrower Timeline reaches its world-element task interval
 - **THEN** the task submits a Fire `ElementApplication` with intensity, range and source context
-- **AND** the task does not directly change Grass, Burning, ScorchedDirt, Tile assets or path costs
+- **AND** the task does not directly change Grass, Burning, Dirt, Tile assets or path costs
 - **AND** `ElementReactionSystem` is the only formal owner that resolves the world reaction
 
 #### Scenario: A non-skill source applies an element
@@ -38,9 +38,9 @@
 
 `FantasyWord` MUST store element reaction conditions and outcomes in auditable `ElementReactionDefinition` data rather than hardcoding terrain transformations inside abilities, cues or presentation scripts.
 
-#### Scenario: Fire reaches grass
+#### Scenario: Fire reaches grass cover
 
-- **WHEN** Fire is applied to a terrain cell whose effective surface matches Grass
+- **WHEN** Fire is applied to a terrain cell whose current cover state contains living grass
 - **THEN** a configured reaction can add or refresh Burning
 - **AND** the flamethrower task does not contain a Grass-specific branch
 
@@ -50,23 +50,23 @@
 - **THEN** the system resolves them using explicit priority and stable rule identity
 - **AND** the result does not depend on asset load order or dictionary iteration order
 
-### Requirement: Terrain Runtime State MUST Preserve Authored Terrain Truth
+### Requirement: Terrain Runtime State MUST Preserve Authored Terrain Template Truth
 
-`FantasyWord` MUST keep authored rule Tile assets immutable while storing rich per-cell runtime state separately.
+`FantasyWord` MUST keep authored rule Tile assets immutable as the initial terrain template while storing rich per-cell runtime state separately. This MUST NOT imply that player-caused world changes are temporary in the final open-world product.
 
-#### Scenario: A grass cell begins burning
+#### Scenario: A grass cover cell begins burning
 
-- **WHEN** a Grass rule cell enters Burning
+- **WHEN** a cell with living grass cover enters Burning
 - **THEN** its runtime state records Burning intensity, remaining duration and source context
 - **AND** the shared `TerrainNavigationTile` asset remains unchanged
-- **AND** the runtime state can expose both BaseSurface = Grass and EffectiveSurface = Grass
+- **AND** the runtime state can expose stable ground data separately from the current grass cover state
 
-#### Scenario: Burning grass becomes scorched
+#### Scenario: Burning grass cover is consumed
 
-- **WHEN** the configured Burning state expires on eligible Grass
-- **THEN** the cell runtime state sets EffectiveSurface = ScorchedDirt
-- **AND** BaseSurface remains Grass as the authored truth
-- **AND** ScorchedDirt no longer matches the Grass fire reaction
+- **WHEN** the configured Burning state expires on eligible grass cover
+- **THEN** the cell records that the grass cover was removed and may start regrowth
+- **AND** the underlying soil remains the ground surface
+- **AND** a cell without grass cover no longer matches the grass-cover fire reaction
 
 ### Requirement: Terrain Runtime State MUST Use Layer-Aware Node Identity
 
@@ -153,14 +153,14 @@
 
 ### Requirement: Temporary Effects And Terrain Results MUST Use Separate Presentation Layers
 
-`FantasyWord` MUST visually separate temporary element effects from lasting runtime terrain-result overrides.
+`FantasyWord` MUST visually separate temporary element effects from lasting world terrain/cover mutations.
 
-#### Scenario: Burning grass finishes
+#### Scenario: Burning grass cover finishes
 
-- **WHEN** Burning ends and the cell becomes ScorchedDirt
+- **WHEN** Burning ends and the cell removes its grass cover
 - **THEN** the temporary fire overlay is cleared
-- **AND** the scorched terrain-result overlay remains
-- **AND** clearing the temporary layer does not restore the visual Grass result
+- **AND** the grass cover remains hidden until the world cover state regrows it
+- **AND** clearing the temporary layer does not restore grass cover by itself
 
 #### Scenario: A presentation mapping is missing
 
@@ -172,9 +172,54 @@
 #### Scenario: Runtime presentation ownership is migrated
 
 - **WHEN** `TerrainSurfacePresentation` is installed
-- **THEN** it owns the temporary-effect and result-overlay Tilemap references
+- **THEN** it owns the temporary-effect Tilemap reference
 - **AND** `TerrainNavigationMap` no longer writes, refreshes or clears presentation Tilemaps
 - **AND** there is only one runtime presentation owner
+
+### Requirement: Authored Terrain MUST Separate Ground, Cover, Detail And Rules
+
+Terrain scenes that support destructible surface cover MUST keep persistent ground, removable cover, visual details and hidden terrain rules in separate Tilemap responsibilities. Cover behavior MUST be selected from tile data rather than from a dedicated burnable-layer name.
+
+#### Scenario: ClickMoveTest lowland grass is authored as removable cover
+
+- **WHEN** the ClickMoveTest terrain Grid is inspected
+- **THEN** its authored layout is compared against `Demo - Forgotten Plains (Rule + Animated Tiles).unity` as the formal source scene
+- **THEN** all 617 lowland-grass rule cells contain authored Dirt in `基础地面`
+- **AND** the 547 cells that visibly contained grass before migration contain those exact visual Tile references at the same coordinates in the generic `地表覆盖` Tilemap
+- **AND** the 70 cells that visibly contained Dirt before migration remain bare Dirt without surface cover
+- **AND** the migration does not infer cover from the lowland rule name, replace cells with a uniform generic Grass Tile, or change the authored map layout
+- **AND** all 267 occupied source `GroundDecoration` cells remain unchanged in `地表装饰`
+- **AND** duplicate or stale YAML records are not counted as occupied map cells
+- **AND** both `TerrainNavigationMap` and `TerrainSurfacePresentation` reference `地表覆盖`
+- **AND** the hidden `地形规则` Tilemap remains the navigation and elevation truth source
+
+#### Scenario: Composite highland art cannot expose an authored soil layer
+
+- **WHEN** a highland top is still represented by a combined cliff-and-grass Tile
+- **THEN** that highland remains permanent structural Grass terrain rather than removable surface cover
+- **AND** it does not match reactions that require authored Dirt with living Grass cover
+- **AND** no generated or placeholder soil/grass asset may be substituted for the missing formal split assets
+
+### Requirement: Element Surface Acceptance MUST Verify World-State Outcomes
+
+`FantasyWord` MUST treat screenshots as supplemental evidence for element terrain tests. Acceptance MUST be based on runtime world-state, terrain-cover lifecycle, actor damage and navigation-cost observations.
+
+#### Scenario: A burning grass-cover vertical slice is accepted
+
+- **WHEN** ClickMoveTest or an equivalent terrain test validates Fire applied to grass cover
+- **THEN** the recorded runtime sample before Fire shows authored Dirt ground with living Grass cover
+- **AND** the reaction is applied through `ElementReactionSystem` from a world element input
+- **AND** Burning is observed with a temporary fire visual and increased traversal cost
+- **AND** a damageable actor standing on the Burning cell takes damage through the formal damage path
+- **AND** after Burning expires the current cover is `None`, the cover lifecycle records removal, and the ground remains Dirt
+- **AND** no Dirt or scorched-result Tile is written to a result override layer
+- **AND** screenshots may be attached only as human-readable visual evidence after these state checks pass
+
+#### Scenario: A screenshot exists but state evidence is missing
+
+- **WHEN** a fire or exposed-soil screenshot exists without runtime state evidence
+- **THEN** the implementation MUST NOT claim the element reaction slice passed
+- **AND** it must report the missing state, damage, cost, or lifecycle evidence explicitly
 
 ### Requirement: GameplayCue MUST Not Own World Reactions
 
@@ -184,7 +229,7 @@
 
 - **WHEN** the flamethrower Timeline activates its cue
 - **THEN** the cue may play the spray animation, fire stream, audio and feedback
-- **AND** per-cell Burning and ScorchedDirt remain driven by terrain runtime state
+- **AND** per-cell Burning and grass-cover removal remain driven by terrain runtime state
 - **AND** the cue does not call terrain state or Tile mutation APIs
 
 #### Scenario: The flamethrower audio cue is consumed
@@ -238,13 +283,21 @@
 - **THEN** its traversal multiplier is no longer present in the derived cost
 - **AND** the cell cost returns exactly to the value implied by the remaining states and authored base Tile
 
-### Requirement: The First Terrain Reaction Slice MUST Be Transient
+### Requirement: The First Terrain Reaction Slice MUST Explicitly Defer Persistence
 
-`FantasyWord` MUST reset the first terrain reaction slice when the map scene reloads until a separate persistence change defines save semantics.
+`FantasyWord` MAY reset the first terrain reaction slice when the map scene reloads only because this change does not yet implement world terrain persistence. The project MUST NOT treat reload reset as the final open-world behavior; player-caused terrain mutations such as burned grass cover removal and regrowth MUST be handled by a separate persistence change.
 
-#### Scenario: A scorched area is reloaded
+#### Scenario: A burned grass-cover area is reloaded
 
-- **WHEN** the scene containing runtime ScorchedDirt is unloaded and loaded again
-- **THEN** transient terrain runtime state is cleared
-- **AND** the rule Tilemap restores the authored Grass result
+- **WHEN** the scene containing removed grass cover is unloaded and loaded again before terrain persistence exists
+- **THEN** the current transient terrain runtime state may be cleared
+- **AND** the authored template may restore the original grass cover
+- **AND** this result is recorded as a missing persistence feature, not as final product behavior
+
+#### Scenario: Persistent terrain mutation is implemented later
+
+- **WHEN** a future world terrain persistence change is active
+- **THEN** burned grass cover removal and regrowth progress are saved as player-caused terrain mutations
+- **AND** loading the same world restores the removed or regrowing grass cover state
+- **AND** presentation layers only display the saved world cell state and do not own the save data
 - **AND** the implementation does not claim terrain persistence is complete

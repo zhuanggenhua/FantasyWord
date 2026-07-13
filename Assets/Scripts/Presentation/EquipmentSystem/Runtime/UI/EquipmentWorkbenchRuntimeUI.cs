@@ -323,7 +323,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             _directionChips,
             directionGrid,
             chipButtonPrefab,
-            _controller.AnimationController != null ? _controller.AnimationController.GetDirectionNames().Length : 0);
+            _controller.DirectionDriver != null ? _controller.DirectionDriver.GetDirectionNames().Length : 0);
         changed |= EnsureChipCount(
             _categoryChips,
             categoryGrid,
@@ -525,8 +525,8 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
 
     void UpdateDirectionButtons()
     {
-        string[] directions = _controller.AnimationController != null
-            ? _controller.AnimationController.GetDirectionNames()
+        string[] directions = _controller.DirectionDriver != null
+            ? _controller.DirectionDriver.GetDirectionNames()
             : Array.Empty<string>();
 
         for (int i = 0; i < directions.Length; i++)
@@ -775,7 +775,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         int animationCount = Mathf.Max(1, GetAnimationOptionCount());
         int directionCount = Mathf.Max(
             1,
-            _controller.AnimationController != null ? _controller.AnimationController.GetDirectionNames().Length : 0);
+            _controller.DirectionDriver != null ? _controller.DirectionDriver.GetDirectionNames().Length : 0);
         int categoryCount = Mathf.Max(1, GetCategoryChipCount());
         int rightListCount = Mathf.Max(1, GetRightListSlotCount());
         int signature = CalculateLayoutSignature(
@@ -841,7 +841,9 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         if (character == null)
             return false;
 
-        return character.FrameData != null && character.AnimatorController != null;
+        return character.FrameData != null
+            && character.FrameData.animationSpriteLibraries != null
+            && character.FrameData.animationSpriteLibraries.IsComplete;
     }
 
     static bool ContainsWorkbenchMarker(string value, string marker)
@@ -1147,8 +1149,8 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
 
     string GetCurrentDirectionName()
     {
-        string[] directions = _controller.AnimationController != null
-            ? _controller.AnimationController.GetDirectionNames()
+        string[] directions = _controller.DirectionDriver != null
+            ? _controller.DirectionDriver.GetDirectionNames()
             : Array.Empty<string>();
         int index = _controller.CurrentDirectionIndex;
         if (index < 0 || index >= directions.Length)

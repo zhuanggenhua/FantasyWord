@@ -1,6 +1,7 @@
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 using UnityEngine.Tilemaps;
 
 namespace FantasyWord.GameCore.Tests
@@ -86,6 +87,34 @@ namespace FantasyWord.GameCore.Tests
             Assert.AreEqual(
                 (Vector2)m_tilemap.GetCellCenterWorld(lowGroundCell),
                 reversePath[3]);
+        }
+
+        [Test]
+        public void BuildWorldPathWithoutDebug_PreservesLastVisiblePlayerPath()
+        {
+            TerrainNavigationTile ground = CreateTile(0, ETerrainTransitionKind.Ground);
+            Vector3Int startCell = new(0, 0);
+            Vector3Int playerGoalCell = new(1, 0);
+            Vector3Int aiGoalCell = new(2, 0);
+            m_tilemap.SetTile(startCell, ground);
+            m_tilemap.SetTile(playerGoalCell, ground);
+            m_tilemap.SetTile(aiGoalCell, ground);
+            m_navigationMap.RefreshNavigationData();
+
+            Vector2 start = m_tilemap.GetCellCenterWorld(startCell);
+            Vector2 playerGoal = m_tilemap.GetCellCenterWorld(playerGoalCell);
+            Vector2 aiGoal = m_tilemap.GetCellCenterWorld(aiGoalCell);
+            Assert.IsTrue(m_navigationMap.TryBuildWorldPath(start, playerGoal, out Vector2[] playerPath));
+
+            Assert.IsTrue(m_navigationMap.TryBuildWorldPathWithoutDebug(start, aiGoal, out Vector2[] aiPath));
+
+            Assert.That(aiPath[^1], Is.EqualTo(aiGoal));
+            Assert.That(GetPrivateField<Vector2>(m_navigationMap, "m_lastDebugDestination"), Is.EqualTo(playerGoal));
+            CollectionAssert.AreEqual(
+                playerPath,
+                GetPrivateField<Vector2[]>(m_navigationMap, "m_lastDebugWorldPath"));
+            Assert.That(GetPrivateField<bool>(m_navigationMap, "m_hasDebugPathRequest"), Is.True);
+            Assert.That(GetPrivateField<bool>(m_navigationMap, "m_lastDebugPathSucceeded"), Is.True);
         }
 
         [Test]
@@ -372,6 +401,53 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
+        public void RuntimeState_NonDefaultLayerWithSource_CanBeCreatedAndSampled()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int cell = new(0, 0);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, cell);
+                m_tilemap.SetTile(cell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(cell, CreateTile(1, ETerrainTransitionKind.Ground, ETerrainRampDirection.None, ETerrainSurfaceKind.Stone));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId, m_tilemap),
+                        CreateLayerSource(bridgeNode.LayerId, bridgeTilemap)
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                    bridgeNode,
+                    out TerrainSurfaceSample sample));
+                Assert.AreEqual(bridgeNode, sample.NodeKey);
+                Assert.AreEqual(1, sample.Elevation);
+                Assert.AreEqual(ETerrainSurfaceKind.Stone, sample.BaseSurface);
+
+                Assert.IsTrue(TryGetOrCreateRuntimeNodeState(
+                    bridgeNode,
+                    out TerrainCellRuntimeState runtimeState));
+                Assert.IsTrue(runtimeState.SetEffectiveSurface(ETerrainSurfaceKind.Dirt));
+                Assert.IsTrue(CommitRuntimeNodeState(bridgeNode, sample, 2.0f));
+
+                Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                    bridgeNode,
+                    out TerrainSurfaceSample scorchedSample));
+                Assert.AreEqual(ETerrainSurfaceKind.Dirt, scorchedSample.EffectiveSurface);
+                Assert.AreEqual(2.0f, scorchedSample.EffectiveTraversalCost);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
         public void RuntimeState_Vector3IntCompatibility_UsesDefaultLayerState()
         {
             TerrainNavigationTile grass = CreateTile(0, ETerrainTransitionKind.Ground);
@@ -452,6 +528,512 @@ namespace FantasyWord.GameCore.Tests
             }
         }
 
+        [Test]
+        public void RefreshNavigationData_DuplicateLayerId_InvalidatesNavigation()
+        {
+            TerrainNavigationLayerSource firstSource = CreateLayerSource(
+                TerrainNodeKey.DefaultLayerId,
+                m_tilemap);
+            TerrainNavigationLayerSource secondSource = CreateLayerSource(
+                TerrainNodeKey.DefaultLayerId,
+                m_tilemap);
+            SetPrivateField(
+                m_navigationMap,
+                "m_layerSources",
+                new[] { firstSource, secondSource });
+
+            LogAssert.Expect(
+                LogType.Error,
+                $"地形导航组件 '{m_navigationMap.name}' 存在重复地形层 ID：{TerrainNodeKey.DefaultLayerId}。请确保每个规则层来源使用唯一 LayerId。");
+
+            m_navigationMap.RefreshNavigationData();
+
+            Assert.IsNull(GetPrivateField<TerrainNavigationTile[,]>(
+                m_navigationMap,
+                "m_cachedTiles"));
+            Assert.IsNull(GetPrivateField<float[,]>(
+                m_navigationMap,
+                "m_cachedCostMap"));
+        }
+
+        [Test]
+        public void RefreshNavigationData_OverlappingCellsOnDifferentLayers_KeepDistinctNodes()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int cell = new(0, 0);
+                m_tilemap.SetTile(cell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(cell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId, m_tilemap),
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId + 1, bridgeTilemap)
+                    });
+
+                m_navigationMap.RefreshNavigationData();
+
+                Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                    cell,
+                    out TerrainSurfaceSample sample));
+                Assert.AreEqual(TerrainNodeKey.Default(cell), sample.NodeKey);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void NavigationGraph_LegacyDefaultLayer_BuildsSameLayerEdges()
+        {
+            Vector3Int startCell = new(0, 0);
+            Vector3Int middleCell = new(1, 0);
+            Vector3Int goalCell = new(2, 0);
+            m_tilemap.SetTile(startCell, CreateTile(0, ETerrainTransitionKind.Ground));
+            m_tilemap.SetTile(middleCell, CreateTile(0, ETerrainTransitionKind.Ground));
+            m_tilemap.SetTile(goalCell, CreateTile(0, ETerrainTransitionKind.Ground));
+            m_navigationMap.RefreshNavigationData();
+
+            TerrainNodeKey startNode = TerrainNodeKey.Default(startCell);
+            TerrainNodeKey middleNode = TerrainNodeKey.Default(middleCell);
+            TerrainNodeKey goalNode = TerrainNodeKey.Default(goalCell);
+            System.Collections.Generic.List<TerrainNodeKey> nodePath = new();
+
+            Assert.AreEqual(3, m_navigationMap.NavigationGraphNodeCount);
+            Assert.IsTrue(m_navigationMap.HasNavigationGraphNode(startNode));
+            Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(startNode, middleNode));
+            Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(middleNode, goalNode));
+            Assert.IsTrue(m_navigationMap.TryBuildNodePath(startNode, goalNode, nodePath));
+            CollectionAssert.AreEqual(
+                new[] { startNode, middleNode, goalNode },
+                nodePath);
+        }
+
+        [Test]
+        public void NavigationGraph_OverlappingLayers_DoNotAutoConnect()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int cell = new(0, 0);
+                TerrainNodeKey groundNode = TerrainNodeKey.Default(cell);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, cell);
+                m_tilemap.SetTile(cell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(cell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId, m_tilemap),
+                        CreateLayerSource(bridgeNode.LayerId, bridgeTilemap)
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                System.Collections.Generic.List<TerrainNodeKey> nodePath = new();
+
+                Assert.AreEqual(2, m_navigationMap.NavigationGraphNodeCount);
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphNode(groundNode));
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphNode(bridgeNode));
+                Assert.IsFalse(m_navigationMap.HasNavigationGraphEdge(groundNode, bridgeNode));
+                Assert.IsFalse(m_navigationMap.HasNavigationGraphEdge(bridgeNode, groundNode));
+                Assert.IsFalse(m_navigationMap.TryBuildNodePath(groundNode, bridgeNode, nodePath));
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void NavigationGraph_ExplicitTransitionLink_ConnectsLayers()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int cell = new(0, 0);
+                TerrainNodeKey groundNode = TerrainNodeKey.Default(cell);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, cell);
+                m_tilemap.SetTile(cell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(cell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId, m_tilemap),
+                        CreateLayerSource(bridgeNode.LayerId, bridgeTilemap)
+                    });
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_transitionLinks",
+                    new[]
+                    {
+                        CreateTransitionLink(
+                            groundNode,
+                            bridgeNode,
+                            ETerrainTransitionLinkKind.Ramp,
+                            bidirectional: true)
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                System.Collections.Generic.List<TerrainNodeKey> nodePath = new();
+
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(groundNode, bridgeNode));
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(bridgeNode, groundNode));
+                Assert.IsTrue(m_navigationMap.TryBuildNodePath(groundNode, bridgeNode, nodePath));
+                CollectionAssert.AreEqual(new[] { groundNode, bridgeNode }, nodePath);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void NavigationGraph_OneWayTransitionLink_DoesNotConnectReverse()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int cell = new(0, 0);
+                TerrainNodeKey groundNode = TerrainNodeKey.Default(cell);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, cell);
+                m_tilemap.SetTile(cell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(cell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId, m_tilemap),
+                        CreateLayerSource(bridgeNode.LayerId, bridgeTilemap)
+                    });
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_transitionLinks",
+                    new[]
+                    {
+                        CreateTransitionLink(
+                            groundNode,
+                            bridgeNode,
+                            ETerrainTransitionLinkKind.Drop,
+                            bidirectional: false)
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                System.Collections.Generic.List<TerrainNodeKey> nodePath = new();
+
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(groundNode, bridgeNode));
+                Assert.IsFalse(m_navigationMap.HasNavigationGraphEdge(bridgeNode, groundNode));
+                Assert.IsTrue(m_navigationMap.TryBuildNodePath(groundNode, bridgeNode, nodePath));
+                Assert.IsFalse(m_navigationMap.TryBuildNodePath(bridgeNode, groundNode, nodePath));
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void NavigationGraph_TransitionMissingEndpoint_ReportsAndSkipsLink()
+        {
+            TerrainNodeKey groundNode = TerrainNodeKey.Default(new Vector3Int(0, 0));
+            TerrainNodeKey missingBridgeNode = new(
+                TerrainNodeKey.DefaultLayerId + 1,
+                new Vector3Int(0, 0));
+            m_tilemap.SetTile(groundNode.Cell, CreateTile(0, ETerrainTransitionKind.Ground));
+            SetPrivateField(
+                m_navigationMap,
+                "m_transitionLinks",
+                new[]
+                {
+                    CreateTransitionLink(
+                        groundNode,
+                        missingBridgeNode,
+                        ETerrainTransitionLinkKind.Ramp,
+                        bidirectional: true)
+                });
+
+            LogAssert.Expect(
+                LogType.Error,
+                $"地形导航组件 '{m_navigationMap.name}' 的跨层连接端点不存在：{groundNode} -> {missingBridgeNode}。");
+
+            m_navigationMap.RefreshNavigationData();
+
+            Assert.IsFalse(m_navigationMap.HasNavigationGraphEdge(groundNode, missingBridgeNode));
+        }
+
+        [Test]
+        public void NavigationGraph_DuplicateTransition_ReportsAndKeepsSingleConnection()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int cell = new(0, 0);
+                TerrainNodeKey groundNode = TerrainNodeKey.Default(cell);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, cell);
+                m_tilemap.SetTile(cell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(cell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(TerrainNodeKey.DefaultLayerId, m_tilemap),
+                        CreateLayerSource(bridgeNode.LayerId, bridgeTilemap)
+                    });
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_transitionLinks",
+                    new[]
+                    {
+                        CreateTransitionLink(
+                            groundNode,
+                            bridgeNode,
+                            ETerrainTransitionLinkKind.Ramp,
+                            bidirectional: true),
+                        CreateTransitionLink(
+                            groundNode,
+                            bridgeNode,
+                            ETerrainTransitionLinkKind.Ramp,
+                            bidirectional: true)
+                    });
+
+                LogAssert.Expect(
+                    LogType.Error,
+                    $"地形导航组件 '{m_navigationMap.name}' 的跨层连接重复或被已有边占用：{groundNode} -> {bridgeNode}。");
+
+                m_navigationMap.RefreshNavigationData();
+
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(groundNode, bridgeNode));
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphEdge(bridgeNode, groundNode));
+                Assert.AreEqual(2, m_navigationMap.NavigationGraphEdgeCount);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void NavigationGraph_NonDefaultSource_KeepsLegacyDefaultGraph()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int groundCell = new(0, 0);
+                Vector3Int bridgeCell = new(1, 0);
+                TerrainNodeKey groundNode = TerrainNodeKey.Default(groundCell);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, bridgeCell);
+                m_tilemap.SetTile(groundCell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(bridgeCell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[] { CreateLayerSource(bridgeNode.LayerId, bridgeTilemap) });
+                m_navigationMap.RefreshNavigationData();
+
+                Assert.AreEqual(2, m_navigationMap.NavigationGraphNodeCount);
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphNode(groundNode));
+                Assert.IsTrue(m_navigationMap.HasNavigationGraphNode(bridgeNode));
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void BuildWorldPath_ExplicitTransition_UsesGraphWaypointsAndResolvesTargetLayer()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int groundCell = new(0, 0);
+                Vector3Int bridgeCell = new(1, 0);
+                TerrainNodeKey groundNode = TerrainNodeKey.Default(groundCell);
+                TerrainNodeKey bridgeNode = new(TerrainNodeKey.DefaultLayerId + 1, bridgeCell);
+                m_tilemap.SetTile(groundCell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(bridgeCell, CreateTile(1, ETerrainTransitionKind.Ground));
+
+                Vector2 groundCenter = m_tilemap.GetCellCenterWorld(groundCell);
+                Vector2 bridgeCenter = bridgeTilemap.GetCellCenterWorld(bridgeCell);
+                Vector2 transitionCenter = (groundCenter + bridgeCenter) * 0.5f;
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(groundNode.LayerId, m_tilemap),
+                        CreateLayerSource(bridgeNode.LayerId, bridgeTilemap)
+                    });
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_transitionLinks",
+                    new[]
+                    {
+                        CreateTransitionLink(
+                            groundNode,
+                            bridgeNode,
+                            ETerrainTransitionLinkKind.Ramp,
+                            bidirectional: true,
+                            new[] { groundCenter, transitionCenter, bridgeCenter })
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                bool found = m_navigationMap.TryBuildWorldPath(
+                    groundCenter,
+                    groundNode.LayerId,
+                    bridgeCenter,
+                    out Vector2[] path,
+                    out TerrainNodeKey destinationNode);
+
+                Assert.IsTrue(found);
+                Assert.AreEqual(bridgeNode, destinationNode);
+                CollectionAssert.AreEqual(
+                    new[] { transitionCenter, bridgeCenter },
+                    path);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void BuildWorldPath_OverlappingReachableTargets_PrefersCurrentLayer()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int startCell = new(-1, 0);
+                Vector3Int goalCell = new(0, 0);
+                TerrainNodeKey startNode = TerrainNodeKey.Default(startCell);
+                TerrainNodeKey groundGoal = TerrainNodeKey.Default(goalCell);
+                TerrainNodeKey bridgeGoal = new(TerrainNodeKey.DefaultLayerId + 1, goalCell);
+                m_tilemap.SetTile(startCell, CreateTile(0, ETerrainTransitionKind.Ground));
+                m_tilemap.SetTile(goalCell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(goalCell, CreateTile(1, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(startNode.LayerId, m_tilemap),
+                        CreateLayerSource(bridgeGoal.LayerId, bridgeTilemap)
+                    });
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_transitionLinks",
+                    new[]
+                    {
+                        CreateTransitionLink(
+                            startNode,
+                            bridgeGoal,
+                            ETerrainTransitionLinkKind.Stairs,
+                            bidirectional: true)
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                bool found = m_navigationMap.TryBuildWorldPath(
+                    m_tilemap.GetCellCenterWorld(startCell),
+                    startNode.LayerId,
+                    m_tilemap.GetCellCenterWorld(goalCell),
+                    out _,
+                    out TerrainNodeKey destinationNode);
+
+                Assert.IsTrue(found);
+                Assert.AreEqual(groundGoal, destinationNode);
+            }
+            finally
+            {
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
+        [Test]
+        public void BuildWorldPath_MultipleReachableTargetLayersWithoutCurrentLayer_RejectsAmbiguity()
+        {
+            GameObject bridgeTilemapObject = new("桥面规则", typeof(Tilemap), typeof(TilemapRenderer));
+            GameObject upperTilemapObject = new("高层规则", typeof(Tilemap), typeof(TilemapRenderer));
+            bridgeTilemapObject.transform.SetParent(m_gridObject.transform);
+            upperTilemapObject.transform.SetParent(m_gridObject.transform);
+            Tilemap bridgeTilemap = bridgeTilemapObject.GetComponent<Tilemap>();
+            Tilemap upperTilemap = upperTilemapObject.GetComponent<Tilemap>();
+            try
+            {
+                Vector3Int startCell = new(-1, 0);
+                Vector3Int goalCell = new(0, 0);
+                TerrainNodeKey startNode = TerrainNodeKey.Default(startCell);
+                TerrainNodeKey bridgeGoal = new(TerrainNodeKey.DefaultLayerId + 1, goalCell);
+                TerrainNodeKey upperGoal = new(TerrainNodeKey.DefaultLayerId + 2, goalCell);
+                m_tilemap.SetTile(startCell, CreateTile(0, ETerrainTransitionKind.Ground));
+                bridgeTilemap.SetTile(goalCell, CreateTile(1, ETerrainTransitionKind.Ground));
+                upperTilemap.SetTile(goalCell, CreateTile(2, ETerrainTransitionKind.Ground));
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_layerSources",
+                    new[]
+                    {
+                        CreateLayerSource(startNode.LayerId, m_tilemap),
+                        CreateLayerSource(bridgeGoal.LayerId, bridgeTilemap),
+                        CreateLayerSource(upperGoal.LayerId, upperTilemap)
+                    });
+                SetPrivateField(
+                    m_navigationMap,
+                    "m_transitionLinks",
+                    new[]
+                    {
+                        CreateTransitionLink(
+                            startNode,
+                            bridgeGoal,
+                            ETerrainTransitionLinkKind.Ramp,
+                            bidirectional: true),
+                        CreateTransitionLink(
+                            startNode,
+                            upperGoal,
+                            ETerrainTransitionLinkKind.Stairs,
+                            bidirectional: true)
+                    });
+                m_navigationMap.RefreshNavigationData();
+
+                bool found = m_navigationMap.TryBuildWorldPath(
+                    m_tilemap.GetCellCenterWorld(startCell),
+                    startNode.LayerId,
+                    bridgeTilemap.GetCellCenterWorld(goalCell),
+                    out _,
+                    out _);
+
+                Assert.IsFalse(found);
+            }
+            finally
+            {
+                Object.DestroyImmediate(upperTilemapObject);
+                Object.DestroyImmediate(bridgeTilemapObject);
+            }
+        }
+
         private static void AssertAxisAligned(Vector2 start, Vector2[] path)
         {
             Vector2 previous = start;
@@ -488,6 +1070,42 @@ namespace FantasyWord.GameCore.Tests
                 BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(field, $"找不到字段：{target.GetType().Name}.{fieldName}");
             field.SetValue(target, value);
+        }
+
+        private static T GetPrivateField<T>(object target, string fieldName)
+        {
+            FieldInfo field = target.GetType().GetField(
+                fieldName,
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(field, $"找不到字段：{target.GetType().Name}.{fieldName}");
+            return (T)field.GetValue(target);
+        }
+
+        private static TerrainNavigationLayerSource CreateLayerSource(
+            int layerId,
+            Tilemap tilemap)
+        {
+            TerrainNavigationLayerSource source = new();
+            SetPrivateField(source, "m_layerId", layerId);
+            SetPrivateField(source, "m_ruleTilemap", tilemap);
+            return source;
+        }
+
+        private static TerrainTransitionLink CreateTransitionLink(
+            TerrainNodeKey fromNode,
+            TerrainNodeKey toNode,
+            ETerrainTransitionLinkKind kind,
+            bool bidirectional,
+            Vector2[] worldWaypoints = null)
+        {
+            return new TerrainTransitionLink(
+                fromNode,
+                toNode,
+                kind,
+                bidirectional,
+                1.0f,
+                worldWaypoints ?? new[] { Vector2.zero },
+                Vector2.zero);
         }
 
         private TerrainCellRuntimeState GetOrCreateRuntimeState(Vector3Int cell)
@@ -534,6 +1152,25 @@ namespace FantasyWord.GameCore.Tests
             };
             bool result = (bool)method.Invoke(m_navigationMap, arguments);
             Assert.IsTrue(result);
+        }
+
+        private bool CommitRuntimeNodeState(
+            TerrainNodeKey nodeKey,
+            TerrainSurfaceSample previousSample,
+            float traversalCostMultiplier)
+        {
+            MethodInfo method = typeof(TerrainNavigationMap).GetMethod(
+                "CommitRuntimeNodeState",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+            object[] arguments =
+            {
+                nodeKey,
+                previousSample,
+                traversalCostMultiplier,
+                EElementPresentationSignal.None
+            };
+            return (bool)method.Invoke(m_navigationMap, arguments);
         }
     }
 }

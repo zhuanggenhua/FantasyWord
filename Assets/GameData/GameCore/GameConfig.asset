@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a555819e0c41430cbaf70c9f3a093d6d, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.GameConfig
-  databaseRegistry: {fileID: 11400000, guid: 22e4581d16f747d58f89ef7b435a9e9e, type: 2}
-  mainMenuSceneName: Main Menu
-  interactionLayer: Interaction
-  hitboxLayer: Hitbox
-  maxTeleportDistanceWhenStuckInWall: 5
-  collisionContactFilter:
+  m_databaseRegistry: {fileID: 11400000, guid: 22e4581d16f747d58f89ef7b435a9e9e, type: 2}
+  m_mainMenuSceneName: Main Menu
+  m_interactionLayer: Interaction
+  m_hitboxLayer: Hitbox
+  m_maxTeleportDistanceWhenStuckInWall: 5
+  m_collisionContactFilter:
     useTriggers: 0
     useLayerMask: 1
     useDepth: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  visibilityContactFilter:
+  m_visibilityContactFilter:
     useTriggers: 0
     useLayerMask: 1
     useDepth: 0
@@ -45,4 +45,64 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-
+  m_steeringNeighbourContactFilter:
+    useTriggers: 0
+    useLayerMask: 1
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 256
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
+  m_cameraShakeSources: 0
+  m_onTheGoCraftingStation: {fileID: 0}
+  m_maxEquippableAbilities: 5
+  m_canCriticalHit: 1
+  m_canMissHit: 1
+  m_allowPushOnRegularHit: 1
+  m_allowPushOnCriticalHit: 1
+  m_allowPushOnMissedHit: 1
+  m_allowPushOnSilentHit: 0
+  m_navigationSelectSound: {fileID: 0}
+  m_pointerSelectSound: {fileID: 0}
+  m_submitSound: {fileID: 0}
+  m_playtestSaveFile: {fileID: 0}
+  m_toExecuteOnPlayerDeath:
+    rid: -2
+  m_persistentIdentifierMappings:
+    m_keys: []
+    m_values: []
+  m_gameTerms:
+    m_keys: []
+    m_values: []
+  m_statTermsBinding:
+    m_keys:
+    m_values: []
+  m_statIncreaseTermsBinding:
+    m_keys:
+    m_values: []
+  m_statDecreaseTermsBinding:
+    m_keys:
+    m_values: []
+  m_itemCategoryTermsBinding:
+    m_keys:
+    m_values: []
+  m_damageTypesBinding:
+    m_keys:
+    m_values: []
+  m_controlTypesBinding:
+    m_keys:
+    m_values: []
+  m_abilityTypesBinding:
+    m_keys:
+    m_values: []
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }

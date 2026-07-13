@@ -94,7 +94,7 @@ namespace FantasyWord.GameCore
 
             if (DidReachZeroHealth(safePreviousStats))
             {
-                Kill();
+                RequestDeathAfterFormalCurrentValueMutation();
             }
         }
 

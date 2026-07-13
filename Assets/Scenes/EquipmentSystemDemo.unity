@@ -290,26 +290,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &640815391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640815386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
-  m_IgnoreLayout: 1
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!21 &733572587
 Material:
   serializedVersion: 8
@@ -480,6 +460,8 @@ GameObject:
   - component: {fileID: 1664361581}
   - component: {fileID: 1664361588}
   - component: {fileID: 1664361587}
+  - component: {fileID: 1664361590}
+  - component: {fileID: 1664361589}
   m_Layer: 0
   m_Name: EquipmentSystemDemoCharacter
   m_TagString: Untagged
@@ -498,11 +480,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5faca898f745042a9e5380d141a605, type: 3}
   m_Name:
-  m_EditorClassIdentifier: ::AnimatorEquipmentSync
-  rowParameterName: Direction
-  xParameterName: X
-  yParameterName: Y
-  animationController: {fileID: 1664361586}
+  m_EditorClassIdentifier: ::DirectionalAnimationVariantDriver
+  spriteLibrary: {fileID: 1664361590}
+  spriteResolver: {fileID: 1664361589}
+  equipmentRenderer: {fileID: 1664361582}
+  movable: {fileID: 0}
 --- !u!114 &1664361582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,7 +578,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 6888730292685393127, guid: e6fab22aef7d698438d748d9e2dc5eb8, type: 3}
+  m_Sprite: {fileID: 68588491950155249, guid: e85e5167d1ce52440bb46cc98af5f571, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -634,12 +616,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: ::AnimationController
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
-  directionNames:
-  - SE
-  - SW
-  - NE
-  - NW
-  _debugCurrentState: Attack_SE
+  _debugCurrentState: Attack
   _debugAnimatorPath: EquipmentSystemDemoCharacter
 --- !u!114 &1664361587
 MonoBehaviour:
@@ -656,6 +633,7 @@ MonoBehaviour:
   catalog: {fileID: 11400000, guid: 633a7617fb681b54fa2c0cc4f2aa511e, type: 2}
   equipmentRenderer: {fileID: 1664361582}
   animationController: {fileID: 1664361586}
+  directionDriver: {fileID: 1664361581}
 --- !u!114 &1664361588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,29 +649,40 @@ MonoBehaviour:
   catalog: {fileID: 11400000, guid: 633a7617fb681b54fa2c0cc4f2aa511e, type: 2}
   equipmentRenderer: {fileID: 1664361582}
   animationController: {fileID: 1664361586}
+  directionDriver: {fileID: 1664361581}
   controller: {fileID: 1664361587}
-  runtimeUi: {fileID: 774949986}
+  runtimeUi: {fileID: 0}
   runtimeUiPrefab: {fileID: 6896072316335800963, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
---- !u!114 &1926025619
+--- !u!114 &1664361589
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1926025614}
+  m_GameObject: {fileID: 1664361580}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name:
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.LayoutElement
-  m_IgnoreLayout: 1
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
+  m_CategoryHash: 0.009161512
+  m_labelHash: 0.00000040954276
+  m_SpriteKey: 0
+  m_SpriteHash: 288431053
+--- !u!114 &1664361590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664361580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteLibrary
+  m_Library: []
+  m_SpriteLibraryAsset: {fileID: 11400000, guid: 62c4a52ab213438419c93cc2d8427623, type: 2}
 --- !u!1001 &7485334568632295890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -820,6 +809,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1587854411892869902, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1587854411892869902, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1587854411892869902, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1587854411892869902, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1587854411892869902, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
@@ -1501,14 +1502,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4817382105209465440, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1926025619}
-    - targetCorrespondingSourceObject: {fileID: 7870073963605914198, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 640815391}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

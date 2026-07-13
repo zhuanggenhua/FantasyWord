@@ -82,6 +82,50 @@ namespace FantasyWord.GameCore
         ScorchedDirt
     }
 
+    public enum ETerrainSurfaceCoverKind
+    {
+        None,
+        Grass,
+        Snow,
+        Moss,
+        Leaves,
+        Flowers,
+        RoadCover
+    }
+
+    [Flags]
+    public enum ETerrainSurfaceCoverTraits
+    {
+        None = 0,
+        Flammable = 1 << 0,
+        Destructible = 1 << 1,
+        Regrowable = 1 << 2
+    }
+
+    public enum ETerrainSurfaceCoverLifecycle
+    {
+        None,
+        Alive,
+        Burning,
+        Removed,
+        Regrowing
+    }
+
+    [Serializable]
+    public sealed class TerrainSurfaceCoverTileMapping
+    {
+        [SerializeField] private TileBase m_tile = null;
+        [SerializeField] private ETerrainSurfaceCoverKind m_coverKind =
+            ETerrainSurfaceCoverKind.None;
+        [SerializeField] private ETerrainSurfaceCoverTraits m_traits =
+            ETerrainSurfaceCoverTraits.None;
+
+        public TileBase Tile => m_tile;
+        public ETerrainSurfaceCoverKind CoverKind => m_coverKind;
+        public ETerrainSurfaceCoverTraits Traits => m_traits;
+        public bool IsValid => m_tile != null && m_coverKind != ETerrainSurfaceCoverKind.None;
+    }
+
     [Flags]
     public enum ETerrainRuntimeSurfaceState
     {
@@ -103,6 +147,10 @@ namespace FantasyWord.GameCore
             int elevation,
             ETerrainSurfaceKind baseSurface,
             ETerrainSurfaceKind effectiveSurface,
+            ETerrainSurfaceCoverKind baseSurfaceCover,
+            ETerrainSurfaceCoverKind effectiveSurfaceCover,
+            ETerrainSurfaceCoverTraits surfaceCoverTraits,
+            ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle,
             float baseTraversalCost,
             float effectiveTraversalCost,
             in TerrainCellRuntimeStateSnapshot runtimeStateSnapshot)
@@ -111,6 +159,10 @@ namespace FantasyWord.GameCore
                 elevation,
                 baseSurface,
                 effectiveSurface,
+                baseSurfaceCover,
+                effectiveSurfaceCover,
+                surfaceCoverTraits,
+                surfaceCoverLifecycle,
                 baseTraversalCost,
                 effectiveTraversalCost,
                 runtimeStateSnapshot)
@@ -122,6 +174,10 @@ namespace FantasyWord.GameCore
             int elevation,
             ETerrainSurfaceKind baseSurface,
             ETerrainSurfaceKind effectiveSurface,
+            ETerrainSurfaceCoverKind baseSurfaceCover,
+            ETerrainSurfaceCoverKind effectiveSurfaceCover,
+            ETerrainSurfaceCoverTraits surfaceCoverTraits,
+            ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle,
             float baseTraversalCost,
             float effectiveTraversalCost,
             in TerrainCellRuntimeStateSnapshot runtimeStateSnapshot)
@@ -130,6 +186,10 @@ namespace FantasyWord.GameCore
             Elevation = elevation;
             BaseSurface = baseSurface;
             EffectiveSurface = effectiveSurface;
+            BaseSurfaceCover = baseSurfaceCover;
+            EffectiveSurfaceCover = effectiveSurfaceCover;
+            SurfaceCoverTraits = surfaceCoverTraits;
+            SurfaceCoverLifecycle = surfaceCoverLifecycle;
             BaseTraversalCost = baseTraversalCost;
             EffectiveTraversalCost = effectiveTraversalCost;
             RuntimeStateSnapshot = runtimeStateSnapshot;
@@ -140,11 +200,19 @@ namespace FantasyWord.GameCore
         public int Elevation { get; }
         public ETerrainSurfaceKind BaseSurface { get; }
         public ETerrainSurfaceKind EffectiveSurface { get; }
+        public ETerrainSurfaceCoverKind BaseSurfaceCover { get; }
+        public ETerrainSurfaceCoverKind EffectiveSurfaceCover { get; }
+        public ETerrainSurfaceCoverTraits SurfaceCoverTraits { get; }
+        public ETerrainSurfaceCoverLifecycle SurfaceCoverLifecycle { get; }
         public float BaseTraversalCost { get; }
         public float EffectiveTraversalCost { get; }
         public TerrainCellRuntimeStateSnapshot RuntimeStateSnapshot { get; }
 
         public float TraversalCost => EffectiveTraversalCost;
+        public bool HasSurfaceCover =>
+            EffectiveSurfaceCover != ETerrainSurfaceCoverKind.None;
+        public bool IsSurfaceCoverFlammable =>
+            (SurfaceCoverTraits & ETerrainSurfaceCoverTraits.Flammable) != 0;
         public ETerrainRuntimeSurfaceState RuntimeState => RuntimeStateSnapshot.RuntimeStateFlags;
         public IReadOnlyList<TerrainElementStateSnapshot> ActiveStates =>
             RuntimeStateSnapshot.ActiveStates;
