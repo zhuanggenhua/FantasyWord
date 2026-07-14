@@ -46,13 +46,33 @@ function Convert-ToProjectRelativePath {
     return $FullPath.Replace('\', '/')
 }
 
+function Test-CompleteDirectionalSpriteLibrarySetBlock {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Block,
+        [Parameter(Mandatory = $true)]
+        [string]$HeaderName
+    )
+
+    $complete = $Block -match ("(?m)^\s*{0}:\s*\r?$" -f [regex]::Escape($HeaderName))
+    foreach ($field in @('southEast', 'southWest', 'northEast', 'northWest')) {
+        $complete = $complete -and
+            $Block -match ("(?m)^\s*{0}:\s*\{{fileID:\s*(?!0(?:,|\}}))" -f $field)
+    }
+
+    return [bool]$complete
+}
+
 $projectRoot = Get-ProjectRoot
 $equipmentDataRoot = Join-Path $projectRoot "Assets/GameData/EquipmentSystem"
 $animationRoot = Join-Path $equipmentDataRoot "Animations"
 $sharedClipRoot = Join-Path $animationRoot "SharedClips"
 $spriteLibraryRoot = Join-Path $animationRoot "SpriteLibraries"
+$legacyAnimationVariantSetRoot = Join-Path $animationRoot "CharacterAnimationVariants"
 $controllerPath = Join-Path $animationRoot "换装共享动画状态机.controller"
 $frameDataRoot = Join-Path $equipmentDataRoot "FrameData"
+$workbenchCatalogPath = Join-Path $equipmentDataRoot "Data/Workbench/换装工作台目录.asset"
+$baseCharacterPrefabPath = Join-Path $projectRoot "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 $legacyGeneratedClipRoot = Join-Path $animationRoot "GeneratedClips"
 $legacyOverrideRoot = Join-Path $animationRoot "Overrides"
 $demoScenePath = Join-Path $projectRoot "Assets/Scenes/EquipmentSystemDemo.unity"
@@ -82,7 +102,11 @@ $directionalSpriteLibraryCategoryFiles = New-Object System.Collections.Generic.L
 $directionStateRuntimeFiles = New-Object System.Collections.Generic.List[string]
 $directionalControllerStateFiles = New-Object System.Collections.Generic.List[string]
 $incompleteDirectionalLibrarySets = New-Object System.Collections.Generic.List[string]
-$incompleteFrameDataLibraryFiles = New-Object System.Collections.Generic.List[string]
+$legacyAnimationVariantSetFiles = New-Object System.Collections.Generic.List[string]
+$legacyAnimationVariantSourceFiles = New-Object System.Collections.Generic.List[string]
+$frameDataAnimationLibraryOwnerFiles = New-Object System.Collections.Generic.List[string]
+$workbenchCatalogMissingAnimationLibraryEntries = New-Object System.Collections.Generic.List[string]
+$prefabMissingAnimationLibraryEntries = New-Object System.Collections.Generic.List[string]
 $architectureContractViolations = New-Object System.Collections.Generic.List[string]
 
 Get-ChildItem -LiteralPath $equipmentDataRoot -Recurse -File -Filter *.asset | ForEach-Object {
@@ -95,6 +119,12 @@ Get-ChildItem -LiteralPath $equipmentDataRoot -Recurse -File -Filter *.asset | F
 
     if ($content -match 'm_EditorClassIdentifier:\s*(EquipmentSystem|FantasyWord\.Presentation\.EquipmentSystem)::') {
         [void]$businessAssemblyIdentifierFiles.Add($relativePath)
+    }
+
+    if ($content -match 'm_EditorClassIdentifier:\s*::CharacterAnimationVariantSet|(?m)^\s*animationVariants:\s*') {
+        if (-not $legacyAnimationVariantSetFiles.Contains($relativePath)) {
+            [void]$legacyAnimationVariantSetFiles.Add($relativePath)
+        }
     }
 }
 
@@ -160,6 +190,15 @@ if (Test-Path -LiteralPath $spriteLibraryRoot) {
     }
 }
 
+if (Test-Path -LiteralPath $legacyAnimationVariantSetRoot) {
+    Get-ChildItem -LiteralPath $legacyAnimationVariantSetRoot -Recurse -File | ForEach-Object {
+        $relativePath = Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $_.FullName
+        if (-not $legacyAnimationVariantSetFiles.Contains($relativePath)) {
+            [void]$legacyAnimationVariantSetFiles.Add($relativePath)
+        }
+    }
+}
+
 if (Test-Path -LiteralPath $frameDataRoot) {
     Get-ChildItem -LiteralPath $frameDataRoot -File -Filter *.asset | ForEach-Object {
         $content = Get-FileContent -Path $_.FullName
@@ -167,17 +206,50 @@ if (Test-Path -LiteralPath $frameDataRoot) {
             return
         }
 
-        $complete = $content -match '(?m)^\s*animationSpriteLibraries:\s*\r?$'
-        foreach ($field in @('southEast', 'southWest', 'northEast', 'northWest')) {
-            $complete = $complete -and
-                $content -match ("(?m)^\s*{0}:\s*\{{fileID:\s*(?!0(?:,|\}}))" -f $field)
-        }
-
-        if (-not $complete) {
-            [void]$incompleteFrameDataLibraryFiles.Add(
+        if ($content -match '(?m)^\s*animationSpriteLibraries:\s*\r?$') {
+            [void]$frameDataAnimationLibraryOwnerFiles.Add(
                 (Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $_.FullName))
         }
     }
+}
+
+if (Test-Path -LiteralPath $workbenchCatalogPath) {
+    $catalogContent = Get-FileContent -Path $workbenchCatalogPath
+    $charactersSection = $catalogContent
+    $charactersMatch = [regex]::Match(
+        $catalogContent,
+        '(?ms)^\s*characters:\s*\r?\n(?<Characters>.*?)(?=^\s*equipments:|\z)')
+    if ($charactersMatch.Success) {
+        $charactersSection = $charactersMatch.Groups["Characters"].Value
+    }
+
+    $characterEntries = [regex]::Matches(
+        $charactersSection,
+        '(?ms)^\s*-\s+displayName:\s*(?<Name>.+?)\r?\n(?<Block>.*?)(?=^\s*-\s+displayName:|\z)')
+
+    foreach ($entry in $characterEntries) {
+        $block = $entry.Groups["Block"].Value
+        if (-not (Test-CompleteDirectionalSpriteLibrarySetBlock -Block $block -HeaderName "animationLibraries")) {
+            [void]$workbenchCatalogMissingAnimationLibraryEntries.Add(
+                $entry.Groups["Name"].Value.Trim())
+        }
+    }
+}
+else {
+    [void]$workbenchCatalogMissingAnimationLibraryEntries.Add(
+        (Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $workbenchCatalogPath))
+}
+
+if (Test-Path -LiteralPath $baseCharacterPrefabPath) {
+    $prefabContent = Get-FileContent -Path $baseCharacterPrefabPath
+    if (-not (Test-CompleteDirectionalSpriteLibrarySetBlock -Block $prefabContent -HeaderName "defaultAnimationLibraries")) {
+        [void]$prefabMissingAnimationLibraryEntries.Add(
+            (Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $baseCharacterPrefabPath))
+    }
+}
+else {
+    [void]$prefabMissingAnimationLibraryEntries.Add(
+        (Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $baseCharacterPrefabPath))
 }
 
 Get-ChildItem -LiteralPath (Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem") -Recurse -File -Filter *.cs | ForEach-Object {
@@ -185,6 +257,9 @@ Get-ChildItem -LiteralPath (Join-Path $projectRoot "Assets/Scripts/Presentation/
     $content = Get-FileContent -Path $_.FullName
     if ($content -match 'DirectionStateSuffixes|AnimatorEquipmentSync') {
         [void]$directionStateRuntimeFiles.Add($relativePath)
+    }
+    if ($content -match 'CharacterAnimationVariantSet|animationVariants|defaultAnimationVariants|SetAnimationVariants|CharacterAnimationVariants') {
+        [void]$legacyAnimationVariantSourceFiles.Add($relativePath)
     }
 }
 
@@ -240,7 +315,11 @@ $report = [ordered]@{
     DirectionStateRuntimeFileCount = $directionStateRuntimeFiles.Count
     DirectionalControllerStateFileCount = $directionalControllerStateFiles.Count
     IncompleteDirectionalLibrarySetCount = $incompleteDirectionalLibrarySets.Count
-    IncompleteFrameDataLibraryFileCount = $incompleteFrameDataLibraryFiles.Count
+    LegacyAnimationVariantSetFileCount = $legacyAnimationVariantSetFiles.Count
+    LegacyAnimationVariantSourceFileCount = $legacyAnimationVariantSourceFiles.Count
+    FrameDataAnimationLibraryOwnerFileCount = $frameDataAnimationLibraryOwnerFiles.Count
+    WorkbenchCatalogMissingAnimationLibraryEntryCount = $workbenchCatalogMissingAnimationLibraryEntries.Count
+    BasePrefabMissingAnimationLibraryEntryCount = $prefabMissingAnimationLibraryEntries.Count
     ArchitectureContractViolationCount = $architectureContractViolations.Count
     LegacyRuntimeFiles = @($legacyRuntimeFiles)
     LegacyIdentifierFiles = @($legacyIdentifierFiles)
@@ -255,7 +334,11 @@ $report = [ordered]@{
     DirectionStateRuntimeFiles = @($directionStateRuntimeFiles)
     DirectionalControllerStateFiles = @($directionalControllerStateFiles)
     IncompleteDirectionalLibrarySets = @($incompleteDirectionalLibrarySets)
-    IncompleteFrameDataLibraryFiles = @($incompleteFrameDataLibraryFiles)
+    LegacyAnimationVariantSetFiles = @($legacyAnimationVariantSetFiles)
+    LegacyAnimationVariantSourceFiles = @($legacyAnimationVariantSourceFiles)
+    FrameDataAnimationLibraryOwnerFiles = @($frameDataAnimationLibraryOwnerFiles)
+    WorkbenchCatalogMissingAnimationLibraryEntries = @($workbenchCatalogMissingAnimationLibraryEntries)
+    BasePrefabMissingAnimationLibraryEntries = @($prefabMissingAnimationLibraryEntries)
     ArchitectureContractViolations = @($architectureContractViolations)
 }
 
@@ -275,7 +358,11 @@ $hasFailures = $report.LegacyRuntimeDirectoryExists -or
     $report.DirectionStateRuntimeFileCount -gt 0 -or
     $report.DirectionalControllerStateFileCount -gt 0 -or
     $report.IncompleteDirectionalLibrarySetCount -gt 0 -or
-    $report.IncompleteFrameDataLibraryFileCount -gt 0 -or
+    $report.LegacyAnimationVariantSetFileCount -gt 0 -or
+    $report.LegacyAnimationVariantSourceFileCount -gt 0 -or
+    $report.FrameDataAnimationLibraryOwnerFileCount -gt 0 -or
+    $report.WorkbenchCatalogMissingAnimationLibraryEntryCount -gt 0 -or
+    $report.BasePrefabMissingAnimationLibraryEntryCount -gt 0 -or
     $report.ArchitectureContractViolationCount -gt 0
 
 if ($AsJson) {
@@ -320,7 +407,11 @@ Write-Host ("Directional SpriteLibrary categories: {0}" -f $report.DirectionalSp
 Write-Host ("Legacy direction-state runtime files: {0}" -f $report.DirectionStateRuntimeFileCount)
 Write-Host ("Directional Animator controller states: {0}" -f $report.DirectionalControllerStateFileCount)
 Write-Host ("Incomplete four-direction library sets: {0}" -f $report.IncompleteDirectionalLibrarySetCount)
-Write-Host ("Frame data missing four direction libraries: {0}" -f $report.IncompleteFrameDataLibraryFileCount)
+Write-Host ("Legacy animation variant set files: {0}" -f $report.LegacyAnimationVariantSetFileCount)
+Write-Host ("Legacy animation variant source files: {0}" -f $report.LegacyAnimationVariantSourceFileCount)
+Write-Host ("Frame data incorrectly owns animation libraries: {0}" -f $report.FrameDataAnimationLibraryOwnerFileCount)
+Write-Host ("Workbench characters missing animation libraries: {0}" -f $report.WorkbenchCatalogMissingAnimationLibraryEntryCount)
+Write-Host ("Base prefab missing default animation libraries: {0}" -f $report.BasePrefabMissingAnimationLibraryEntryCount)
 Write-Host ("Animation architecture contract violations: {0}" -f $report.ArchitectureContractViolationCount)
 
 if ($hasFailures) {

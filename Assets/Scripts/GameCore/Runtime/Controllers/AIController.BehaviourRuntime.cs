@@ -12,8 +12,10 @@ namespace FantasyWord.GameCore
         /// </summary>
         private sealed class BehaviourRuntime
         {
+            private const float MinimumNavigationWaypointTolerance = 0.3f;
+
             private readonly AIController m_owner;
-            private CharacterSteeringAdapter2D m_steeringAdapter = null;
+            private CharacterSteeringRuntime2D m_steeringAdapter = null;
             private readonly CharacterSteeringPathCursor2D m_pathCursor = new();
             private Vector2 m_steeringAverageOutput = Vector2.zero;
             private Vector2 m_targetPosition = Vector2.zero;
@@ -33,7 +35,7 @@ namespace FantasyWord.GameCore
                     throw new InvalidOperationException("AIController can only be attached to a CharacterBase.");
                 }
 
-                m_steeringAdapter = new CharacterSteeringAdapter2D(character, m_owner.m_steeringProfile);
+                m_steeringAdapter = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);
                 ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId, "中间路线");
                 ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId, "移动目标追击");
             }
@@ -216,7 +218,7 @@ namespace FantasyWord.GameCore
                 Vector2 currentPosition = m_owner.transform.position;
                 float distanceToDestination = Vector2.Distance(currentPosition, m_targetPosition);
                 float finalApproachDistance = soughtDistance +
-                    Mathf.Max(m_owner.m_navigationWaypointTolerance, 0.05f);
+                    ResolveNavigationWaypointTolerance();
 
                 if (distanceToDestination <= finalApproachDistance)
                 {
@@ -335,7 +337,7 @@ namespace FantasyWord.GameCore
 
                 if (!m_pathCursor.TryGetTarget(
                         currentPosition,
-                        Mathf.Max(m_owner.m_navigationWaypointTolerance, 0.05f),
+                        ResolveNavigationWaypointTolerance(),
                         out steeringTarget,
                         out isFinalTarget))
                 {
@@ -348,6 +350,17 @@ namespace FantasyWord.GameCore
                         : m_owner.m_steeringProfile.DefaultGroupIdValue)
                     : m_owner.m_transitSteeringGroupId;
                 return true;
+            }
+
+            private float ResolveNavigationWaypointTolerance()
+            {
+                float profileAgentRadius = m_owner.m_steeringProfile != null
+                    ? m_owner.m_steeringProfile.AgentRadius
+                    : 0.0f;
+                return Mathf.Max(
+                    m_owner.m_navigationWaypointTolerance,
+                    profileAgentRadius,
+                    MinimumNavigationWaypointTolerance);
             }
 
             private void ValidateSteeringGroupMapping(string groupId, string usage)

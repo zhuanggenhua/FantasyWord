@@ -75,8 +75,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
                 character,
                 actionSpecs,
                 desiredLibraryPaths);
-            character.FrameData.animationSpriteLibraries = libraries;
-            EditorUtility.SetDirty(character.FrameData);
+            character.SetAnimationLibraries(libraries);
         }
 
         HashSet<string> desiredClipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -385,16 +384,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
     static void ReserializeCatalog(EquipmentWorkbenchCatalog catalog)
     {
         EditorUtility.SetDirty(catalog);
-        List<string> paths = new List<string> { WorkbenchCatalogPath };
-        for (int i = 0; i < catalog.Characters.Count; i++)
-        {
-            CharacterFrameData frameData = catalog.Characters[i]?.FrameData;
-            string path = AssetDatabase.GetAssetPath(frameData);
-            if (!string.IsNullOrWhiteSpace(path))
-                paths.Add(path);
-        }
-
-        AssetDatabase.ForceReserializeAssets(paths);
+        AssetDatabase.ForceReserializeAssets(new[] { WorkbenchCatalogPath });
     }
 
     static void EnsureFolder(string path)

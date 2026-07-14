@@ -210,6 +210,80 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
+        public void ApplyFireToMappedDecorationLayer_AddsBurning()
+        {
+            Vector3Int decorationCell = new(2, 0, 0);
+            TerrainNavigationTile dirtTile =
+                ScriptableObject.CreateInstance<TerrainNavigationTile>();
+            m_createdObjects.Add(dirtTile);
+            SetPrivateField(dirtTile, "m_walkable", true);
+            SetPrivateField(dirtTile, "m_surfaceKind", ETerrainSurfaceKind.Dirt);
+            SetPrivateField(dirtTile, "m_traversalCost", 1.0f);
+            m_tilemap.SetTile(decorationCell, dirtTile);
+
+            GameObject decorationObject = new(
+                "地表装饰",
+                typeof(Tilemap),
+                typeof(TilemapRenderer));
+            decorationObject.transform.SetParent(m_gridObject.transform);
+            Tilemap decorationTilemap = decorationObject.GetComponent<Tilemap>();
+            Tile decorationGrassTile = ScriptableObject.CreateInstance<Tile>();
+            m_createdObjects.Add(decorationGrassTile);
+            decorationTilemap.SetTile(decorationCell, decorationGrassTile);
+
+            TerrainSurfaceCoverTileMapping decorationGrassMapping = new();
+            SetPrivateField(
+                decorationGrassMapping,
+                "m_tile",
+                decorationGrassTile);
+            SetPrivateField(
+                decorationGrassMapping,
+                "m_coverKind",
+                ETerrainSurfaceCoverKind.Grass);
+            SetPrivateField(
+                decorationGrassMapping,
+                "m_traits",
+                ETerrainSurfaceCoverTraits.Flammable |
+                ETerrainSurfaceCoverTraits.Destructible);
+
+            TerrainSurfaceLayerSource decorationSource = new();
+            SetPrivateField(decorationSource, "m_sourceId", 10);
+            SetPrivateField(
+                decorationSource,
+                "m_role",
+                ETerrainSurfaceLayerRole.Decoration);
+            SetPrivateField(decorationSource, "m_tilemap", decorationTilemap);
+            SetPrivateField(decorationSource, "m_priority", 0);
+            SetPrivateField(
+                decorationSource,
+                "m_surfaceCoverTileMappings",
+                new[] { decorationGrassMapping });
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceLayerSources",
+                new[] { decorationSource });
+            m_navigationMap.RefreshNavigationData();
+
+            bool changed = m_reactionSystem.Apply(
+                CreateApplication(
+                    EWorldElementKind.Fire,
+                    0.6f,
+                    decorationCell));
+
+            Assert.IsTrue(changed);
+            Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                decorationCell,
+                out TerrainSurfaceSample sample));
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.BaseSurfaceCover);
+            Assert.AreEqual(ETerrainSurfaceLayerRole.Decoration, sample.SurfaceCoverSource.Role);
+            Assert.AreEqual(10, sample.SurfaceCoverSource.SourceId);
+            Assert.IsTrue(sample.IsSurfaceCoverFlammable);
+            Assert.AreEqual(
+                ETerrainRuntimeSurfaceState.Burning,
+                sample.RuntimeState);
+        }
+
+        [Test]
         public void OilFireWaterAndElectricity_ResolveThroughConfiguredRules()
         {
             Assert.IsTrue(m_reactionSystem.Apply(
@@ -334,12 +408,20 @@ namespace FantasyWord.GameCore.Tests
             EWorldElementKind elementKind,
             float intensity)
         {
+            return CreateApplication(elementKind, intensity, m_testCell);
+        }
+
+        private ElementApplication CreateApplication(
+            EWorldElementKind elementKind,
+            float intensity,
+            Vector3Int cell)
+        {
             return new ElementApplication(
                 elementKind,
                 intensity,
                 0.1f,
                 ElementArea.Cone(1.0f, 45.0f),
-                m_tilemap.GetCellCenterWorld(m_testCell),
+                m_tilemap.GetCellCenterWorld(cell),
                 Vector2.right,
                 sourceAbilityCode: 9001);
         }

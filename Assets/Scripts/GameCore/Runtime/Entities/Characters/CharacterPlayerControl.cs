@@ -107,7 +107,7 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            if (!movement.TryUpdatePointerTargetDirection())
+            if (!movement.TryUpdateIdlePointerTargetDirection())
             {
                 m_character.ResetTargetDirection();
             }

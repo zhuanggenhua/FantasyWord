@@ -29,7 +29,7 @@ metadata:
 |---|---|---|
 | 装备规则、背包、穿脱、属性 | `Assets/Scripts/GameCore/...` | 这些是玩法真相，后续要进存档、战斗、Mod 和联机边界。 |
 | 换装渲染、UV、Shader、工作台预览 | `Assets/Scripts/Presentation/EquipmentSystem` | 当前代码职责就是表现层；直接挪到顶层 `EquipmentSystem` 会把“表现模块”误解成“完整装备系统”。 |
-| 换装共享控制器、共享动画片段和角色精灵库 | `Assets/GameData/EquipmentSystem/Animations` | `SharedClips` 只按动作分类动画 `SpriteResolver.m_SpriteKey`；每个角色的 SE/SW/NE/NW 库使用相同分类和帧标签，只保存方向对应的具体 Sprite。 |
+| 换装共享控制器、共享动画片段和角色四向精灵库 | `Assets/GameData/EquipmentSystem/Animations` | `SharedClips` 只按动作分类动画 `SpriteResolver.m_SpriteKey`；每个角色的 SE/SW/NE/NW 库使用相同分类和帧标签，只保存方向对应的具体 Sprite；工作台角色选项和运行时方向驱动直接持有四个原生 `SpriteLibraryAsset` 引用，不再额外生成动画变体包装资产。 |
 | 帧数据、装备表现数据、外观数据 | `Assets/GameData/EquipmentSystem/...` | 这些是换装表现配置，继续保留 `.meta` 和引用闭包。 |
 
 ## SpriteLibrary 评估
@@ -43,14 +43,15 @@ metadata:
 换装动画正式职责边界：
 
 - `AnimationController`：只负责动作选择、动作锁和 Animator 动作状态，不读取或保存方向。
-- `DirectionalAnimationVariantDriver`：只负责方向选择、四向 `SpriteLibraryAsset` 切换及换装渲染方向同步；切方向不重播动作。
+- `DirectionalAnimationVariantDriver`：只负责方向选择、消费四向 `SpriteLibraryAsset` 引用、切换当前 `SpriteLibraryAsset` 及同步换装渲染方向；切方向不重播动作。
+- `CharacterFrameData`：只负责 UV、锚点、帧作者数据和装备合成帧，不持有派生 SpriteLibrary 方向库引用。
 - SpriteLibrary：负责基础角色库、整套外观覆盖、方向/种族切换；每个角色固定四个真实方向库，不使用 `flipX`。
 - EquipmentSystem UV/Shader：负责衣服、头盔、披风、背包、武器前后遮挡、肤色和像素描边。
 - Animator Controller：只有一个共享动作状态清单，动作状态名和共享片段名不含方向。
 
 `GeneratedClips`、`Animations/Overrides`、角色级 `AnimatorOverrideController`、方向化 Animator 状态/片段/分类和直接动画 `SpriteRenderer.m_Sprite` 均由 `scripts/Invoke-EquipmentSystemStaticGate.ps1` 阻止回流。
 
-动画资源构建器只维护派生动画资产和 `CharacterFrameData` 的四向库引用，不负责场景或 Prefab 组合，避免重建资源时覆盖正在编辑的场景。
+动画资源构建器只维护派生动画资产，并把每个角色的四向 `SpriteLibraryAsset` 引用回写到工作台目录；它不负责场景或 Prefab 组合，避免重建资源时覆盖正在编辑的场景。独立 `CharacterAnimationVariantSet` 包装层已作为过度抽象移除，静态门禁会阻止其回流。
 
 ## 当前不建议做的事
 

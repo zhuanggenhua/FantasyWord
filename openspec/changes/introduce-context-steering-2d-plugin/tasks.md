@@ -73,7 +73,7 @@
 - [x] 将 `AIController.BehaviourRuntime` 的直接 solver/scheduler 调用替换为正式 adapter。
 - [x] 将 AI 的最终目标先交给 `TerrainNavigationMap` 生成全局路线，再把当前航点提交给 adapter；steering 不得直接穿越悬崖、坡道边界或桥洞层级。
 - [x] 为全局路线增加 `path-follow` 行为组：中间航点不启用 Arrive，最终目标切回带 Arrive 的组。
-  - [ ] 运行态验证转折点不停车且不会切角穿越阻挡格。
+  - [x] 运行态验证转折点不停车且不会切角穿越阻挡格。
   - [ ] NPC 接入自身 `TerrainLayerState` 后再验收桥洞与跨层追逐；当前默认层调用不能冒充完整多层 NPC 导航。
 - [x] GameCore 只保留目标选择、阵营过滤、攻击触发、身体参数和移动执行。
 - [x] 目标选择、攻击预检、steering、局部避让在可行范围内复用同一份 tick frame；无法复用的视线查询需显式记录。
@@ -95,8 +95,10 @@
 
 ### 2026-07-13 Runtime, Screenshot And Performance Evidence
 
-- `ContextSteering2DEditModeTests` 当前 26 个唯一用例全部通过，包含 per-intent Arrive 停止半径、即时 debug snapshot 发布、瞬时 push 峰值保留、RVO2、PBD、空间索引、真实速度和角色碰撞 owner 合同。
-- `Temp/UnityBridge/results/clickmove-context-steering-runtime.json` 的 strict fresh run 通过：2 个 Agent、2 个 Probe、邻居数 1、首对快照距离 0.25、最大穿透 0.45，并观察到 `transit`、`predictive-target`、Arrive、preferred velocity、safe velocity、RVO 修正、Separation 和 PBD push。
+- `ContextSteering2DEditModeTests` 当前专项过滤通过，包含 per-intent Arrive 停止半径、即时 debug snapshot 发布、瞬时 push 峰值保留、RVO2、PBD、空间索引、真实速度和角色碰撞 owner 合同；2026-07-14 重新跑 class-only 专项过滤结果 `test-results/context-steering-2d-plugin/2026-07-14/context-steering-editmode-classonly-20260714.json` 为 `Passed`、`failedTests=0`、失败明细为空。该结果只作为 `ContextSteering2DEditModeTests` 专项通过证据，不冒充完整 GameCore 全量测试。
+- `Temp/UnityBridge/results/clickmove-context-steering-runtime.json` 的 strict fresh run 通过：2026-07-13 20:13 从 clean 的 `ClickMoveTest` 通过 `StartFromEditMode()` 进入 PlayMode，1872 帧内观察到 2 个 Agent、2 个 Probe、2 个 Probe 均有快照、邻居数 1、语义 Collider 2、最大位移 0.638，并观察到 `transit`、`predictive-target`、Arrive、preferred velocity、safe velocity、RVO 修正、Separation 和 PBD push。
+- `Assets/Editor/GameCore/Bridge/ClickMoveTestContextSteeringWaypointValidator.cs` 的航点转折 fresh run 通过，证据为 `test-results/context-steering-2d-plugin/2026-07-14/clickmove-context-steering-waypoint-runtime-20260714.json`：2026-07-14 从 clean 的 `ClickMoveTest` 进入 PlayMode 后 2112 帧 / 31.81 秒完成，路线源为 `fallback:(-10, -10, 0)->(-7, -8, 0)`，正式路线 `(-9.5,-9.5) -> (-8.5,-9.5) -> (-8.5,-7.5)`；观察到 `transit`、转角附近 `transit`、最终 `predictive-target`、preferred velocity 和 safe velocity，转角附近最小 transit 速度 3.986，静态地形切角、真实碰撞体 clearance 和运行轨迹切角违规均为 0，实际最大位移 0.504 大于所需 0.500。
+- 航点转折验收器已修正为同时检查真实 `Physics2D` 阻挡碰撞体，并以真实秒数窗口和转角观察区衡量覆盖：只排除角色自身碰撞体，静态 Tilemap/CompositeCollider 仍计为阻挡，避免把“导航格可走但真实碰撞体不可走”的路线当作有效验收路线，也避免 Editor 帧数过快导致误判超时。
 - `ClickMoveTest` 的两个训练假人场景实例启用 `Persistable.m_forceNoPersistence`，避免旧存档位置覆盖测试场景作者坐标；Prefab 与其他场景对象保持原持久化规则。
 - `Assets/Screenshots/context-steering-final-sceneview-v7.png` 是最终 SceneView 验收图：选中真实 NPC，显示 Context Map、目标/邻居、Preferred、Safe、行为图例；PureRef 已打开给用户，预览站已发布到 `http://8.148.71.102:18080/#/fantasyword/context-steering-2d-plugin`。
 - `Temp/UnityBridge/results/context-steering-performance-benchmark.json` 使用真实 `GameObject + Rigidbody2D + CircleCollider2D + AgentHandle` 密集阵型测得：100 Agent 平均 5.47ms / P95 5.78ms，500 Agent 平均 29.51ms / P95 31.22ms，1000 Agent 平均 64.19ms / P95 71.06ms；采样阶段托管分配均为 0 B。

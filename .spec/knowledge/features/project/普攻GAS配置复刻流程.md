@@ -388,7 +388,7 @@ EX_GAS_Config/ProjectConfigTable/exgas_config/Datas/#exgas.abilityGameCore.xlsx
 | `MaximumBufferDuration` | `0.25` | 缓冲 0.25 秒 |
 | `DelayBeforeUseReleaseInterruption` | `true` | 前摇松开可中断输入门控 |
 | `TimeBetweenUsesReleaseInterruption` | `true` | 后摇松开可结束本地输入门控 |
-| `UpdateLookAtDirectionOnFire` | `true` | 出手时刷新朝向 |
+| `UpdateLookAtDirectionOnFire` | `false` | 出手时不刷新朝向，按角色当前朝向执行 |
 
 操作：
 

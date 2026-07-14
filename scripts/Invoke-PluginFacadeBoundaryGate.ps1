@@ -46,7 +46,9 @@ $allowedEquipmentPrefixes = @(
 )
 
 $allowedEquipmentPaths = @(
-    "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAnimator.cs"
+    "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAnimator.cs",
+    "Assets\Scripts\Presentation\WaterReflection\Runtime\WaterReflectionCaster2D.cs",
+    "Assets\Scripts\Presentation\WaterReflection\Editor\ClickMoveTestWaterReflectionInstaller.cs"
 )
 
 $allowedCombatPrefixes = @()
@@ -70,6 +72,7 @@ $allowedCombatPaths = @(
     "Assets\Editor\GameCore\Tests\FormalDamagePipelineEditModeTests.cs",
     "Assets\Editor\GameCore\Tests\GasEditModeTestHelper.cs",
     "Assets\Editor\GameCore\Tests\MeleeAttackAbilityEditModeTests.cs",
+    "Assets\Editor\GameCore\Tests\TerrainSurfaceDamageSystemEditModeTests.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Effects\Temporal\ITemporalEffect.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Effects\Temporal\ATemporalEffect.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Effects\Temporal\FormalTemporalPeriodicDamageBuilder.cs",
@@ -85,7 +88,9 @@ $allowedCombatPaths = @(
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAudio.cs",
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreFeedback.cs",
     "Assets\Editor\GameCore\GAS\GasTimelineHitboxSceneHandle.cs",
-    "Assets\Editor\GameCore\Bridge\CompositeRuntimeSmokeValidator.cs"
+    "Assets\Editor\GameCore\Bridge\CompositeRuntimeSmokeValidator.cs",
+    "Assets\Editor\GameCore\Bridge\ClickMoveTestElementSurfaceVisualValidator.cs",
+    "Assets\Editor\GameCore\Bridge\ClickMoveTestGasBasicAttackValidator.cs"
 )
 
 $allowedPresentationPrefixes = @(

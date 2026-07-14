@@ -513,7 +513,9 @@ namespace FantasyWord.GameCore
 
         internal bool ShouldLockTargetDirectionDuringInputGateForRuntime()
         {
-            if (!ShouldUpdateLookAtDirectionOnFireForRuntime())
+            bool hasRequestedAimDirection = m_fireActivationContext != null &&
+                m_fireActivationContext.TryGetAimDirection(out _);
+            if (!ShouldUpdateLookAtDirectionOnFireForRuntime() && !hasRequestedAimDirection)
             {
                 return false;
             }

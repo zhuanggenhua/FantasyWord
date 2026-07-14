@@ -12,22 +12,27 @@ namespace FantasyWord.GameCore
     [DisallowMultipleComponent]
     public sealed class TerrainNavigationMap : MonoBehaviour
     {
-        [Header("规则入口")]
-        [InspectorName("兼容默认规则 Tilemap")]
-        [Tooltip("旧单层地图的兼容入口。多层地图应改用下方规则层来源列表。")]
+        [Header("寻路规则层")]
+        [InspectorName("兼容默认寻路规则 Tilemap")]
+        [Tooltip("旧单层地图的兼容入口。它是寻路真相源，不是视觉层，也不是 Unity 物理碰撞层。多层地图应改用下方规则层来源列表。")]
         [SerializeField] private Tilemap m_ruleTilemap = null;
 
-        [InspectorName("规则层来源")]
-        [Tooltip("同一个地形导航入口管理的多个逻辑规则层。为空时自动使用兼容默认规则 Tilemap。")]
+        [InspectorName("寻路规则层来源")]
+        [Tooltip("同一个地形导航入口管理的多个逻辑寻路层。为空时自动使用兼容默认寻路规则 Tilemap。")]
         [SerializeField] private TerrainNavigationLayerSource[] m_layerSources = Array.Empty<TerrainNavigationLayerSource>();
 
-        [Header("上层地表")]
-        [InspectorName("上层地表 Tilemap")]
-        [Tooltip("第二层地表覆盖，例如草、雪、苔藓、落叶和道路覆盖。为空时表示当前地图尚未配置覆盖层。")]
+        [Header("地表语义来源")]
+        [InspectorName("地表语义来源层")]
+        [Tooltip("多个作者/表现 Tilemap 到玩法地表语义的显式映射。用于让地表覆盖、装饰等来源都能参与元素反应；不负责寻路和物理碰撞。")]
+        [SerializeField] private TerrainSurfaceLayerSource[] m_surfaceLayerSources =
+            Array.Empty<TerrainSurfaceLayerSource>();
+
+        [InspectorName("兼容上层地表 Tilemap")]
+        [Tooltip("旧版单地表覆盖兼容入口。新地图应优先使用“地表语义来源层”。")]
         [SerializeField] private Tilemap m_surfaceCoverTilemap = null;
 
-        [InspectorName("上层地表 Tile 映射")]
-        [Tooltip("显式声明 Tile 对应的覆盖类型和属性，不从 Sprite 名称推断规则。")]
+        [InspectorName("兼容上层地表 Tile 映射")]
+        [Tooltip("旧版单覆盖层 Tile 映射。新地图应把映射配置到对应“地表语义来源层”上。")]
         [SerializeField] private TerrainSurfaceCoverTileMapping[] m_surfaceCoverTileMappings =
             Array.Empty<TerrainSurfaceCoverTileMapping>();
 
@@ -101,7 +106,9 @@ namespace FantasyWord.GameCore
         private readonly HashSet<Vector3Int> m_areaVisitedCells = new();
         private readonly List<TerrainNodeKey> m_areaNodeScratch = new();
         private readonly List<TerrainNavigationLayerSource> m_activeLayerSources = new();
+        private readonly List<TerrainSurfaceLayerSource> m_activeSurfaceLayerSources = new();
         private readonly HashSet<int> m_layerIdScratch = new();
+        private readonly HashSet<int> m_surfaceSourceIdScratch = new();
         private readonly HashSet<TerrainNodeKey> m_layerNodeScratch = new();
         private readonly HashSet<int> m_destinationLayerScratch = new();
         private readonly List<TerrainNodeKey> m_nodePathScratch = new();
@@ -139,6 +146,8 @@ namespace FantasyWord.GameCore
 
         public Tilemap RuleTilemap => ActiveRuleTilemap;
         public IReadOnlyList<TerrainNavigationLayerSource> LayerSources => m_layerSources;
+        public IReadOnlyList<TerrainSurfaceLayerSource> SurfaceLayerSources =>
+            m_surfaceLayerSources;
         public IReadOnlyList<TerrainTransitionLink> TransitionLinks => m_transitionLinks;
         public int RuntimeStateCount => m_runtimeSurfaceStates.Count;
         public bool ShowEditorNavigationPreview => m_showEditorNavigationPreview;
@@ -199,6 +208,12 @@ namespace FantasyWord.GameCore
         public void RefreshNavigationData()
         {
             if (!TryRefreshLayerSources(out Tilemap activeRuleTilemap))
+            {
+                ClearNavigationCache();
+                return;
+            }
+
+            if (!TryRefreshSurfaceLayerSources())
             {
                 ClearNavigationCache();
                 return;
@@ -471,7 +486,10 @@ namespace FantasyWord.GameCore
             TerrainCellRuntimeStateSnapshot runtimeStateSnapshot;
             ETerrainSurfaceKind effectiveSurface;
             ETerrainSurfaceCoverKind baseSurfaceCover =
-                ResolveBaseSurfaceCover(nodeKey, out ETerrainSurfaceCoverTraits coverTraits);
+                ResolveBaseSurfaceCover(
+                    nodeKey,
+                    out ETerrainSurfaceCoverTraits coverTraits,
+                    out TerrainSurfaceCoverSourceReference coverSource);
             ETerrainSurfaceCoverKind effectiveSurfaceCover;
             ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle;
             if (m_runtimeSurfaceStates.TryGetValue(
@@ -510,6 +528,7 @@ namespace FantasyWord.GameCore
                 baseSurfaceCover,
                 effectiveSurfaceCover,
                 effectiveCoverTraits,
+                coverSource,
                 surfaceCoverLifecycle,
                 tile.TraversalCost,
                 effectiveTraversalCost,
@@ -1044,6 +1063,48 @@ namespace FantasyWord.GameCore
             return activeRuleTilemap != null;
         }
 
+        private bool TryRefreshSurfaceLayerSources()
+        {
+            m_activeSurfaceLayerSources.Clear();
+            m_surfaceSourceIdScratch.Clear();
+
+            if (m_surfaceLayerSources == null || m_surfaceLayerSources.Length == 0)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < m_surfaceLayerSources.Length; i++)
+            {
+                TerrainSurfaceLayerSource source = m_surfaceLayerSources[i];
+                if (source == null || !source.IsValid)
+                {
+                    continue;
+                }
+
+                if (source.SourceId < 0)
+                {
+                    Debug.LogError(
+                        $"地形导航组件 '{name}' 的地表语义来源 ID 不能为负数：{source.SourceId}。",
+                        this);
+                    return false;
+                }
+
+                if (!m_surfaceSourceIdScratch.Add(source.SourceId))
+                {
+                    Debug.LogError(
+                        $"地形导航组件 '{name}' 存在重复地表语义来源 ID：{source.SourceId}。请确保每个来源层使用唯一 SourceId。",
+                        this);
+                    return false;
+                }
+
+                m_activeSurfaceLayerSources.Add(source);
+            }
+
+            m_activeSurfaceLayerSources.Sort(
+                (left, right) => left.Priority.CompareTo(right.Priority));
+            return true;
+        }
+
         private bool TryRegisterLayerNodes(TerrainNavigationLayerSource source)
         {
             BoundsInt bounds = source.RuleTilemap.cellBounds;
@@ -1497,6 +1558,38 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        public bool TryGetSurfaceCoverTilemap(
+            in TerrainSurfaceCoverSourceReference sourceReference,
+            out Tilemap tilemap)
+        {
+            if (!sourceReference.IsValid)
+            {
+                tilemap = null;
+                return false;
+            }
+
+            for (int i = 0; i < m_activeSurfaceLayerSources.Count; i++)
+            {
+                TerrainSurfaceLayerSource source = m_activeSurfaceLayerSources[i];
+                if (source.SourceId == sourceReference.SourceId &&
+                    source.IsValid)
+                {
+                    tilemap = source.Tilemap;
+                    return tilemap != null;
+                }
+            }
+
+            if (sourceReference.SourceId ==
+                TerrainSurfaceCoverSourceReference.LegacySurfaceCoverSourceId)
+            {
+                tilemap = m_surfaceCoverTilemap;
+                return tilemap != null;
+            }
+
+            tilemap = null;
+            return false;
+        }
+
         private bool TryGetNodeWorldCenter(
             in TerrainNodeKey nodeKey,
             out Vector2 worldCenter)
@@ -1527,9 +1620,39 @@ namespace FantasyWord.GameCore
 
         private ETerrainSurfaceCoverKind ResolveBaseSurfaceCover(
             in TerrainNodeKey nodeKey,
-            out ETerrainSurfaceCoverTraits traits)
+            out ETerrainSurfaceCoverTraits traits,
+            out TerrainSurfaceCoverSourceReference sourceReference)
         {
             traits = ETerrainSurfaceCoverTraits.None;
+            sourceReference = TerrainSurfaceCoverSourceReference.None;
+            for (int i = 0; i < m_activeSurfaceLayerSources.Count; i++)
+            {
+                TerrainSurfaceLayerSource source = m_activeSurfaceLayerSources[i];
+                if (!source.TryResolveSurfaceCover(
+                        nodeKey.Cell,
+                        out ETerrainSurfaceCoverKind coverKind,
+                        out ETerrainSurfaceCoverTraits sourceTraits))
+                {
+                    continue;
+                }
+
+                traits = sourceTraits;
+                sourceReference = new TerrainSurfaceCoverSourceReference(
+                    source.SourceId,
+                    source.Role);
+                return coverKind;
+            }
+
+            return ResolveLegacyBaseSurfaceCover(nodeKey, out traits, out sourceReference);
+        }
+
+        private ETerrainSurfaceCoverKind ResolveLegacyBaseSurfaceCover(
+            in TerrainNodeKey nodeKey,
+            out ETerrainSurfaceCoverTraits traits,
+            out TerrainSurfaceCoverSourceReference sourceReference)
+        {
+            traits = ETerrainSurfaceCoverTraits.None;
+            sourceReference = TerrainSurfaceCoverSourceReference.None;
             if (m_surfaceCoverTilemap == null)
             {
                 return ETerrainSurfaceCoverKind.None;
@@ -1557,6 +1680,7 @@ namespace FantasyWord.GameCore
                 }
 
                 traits = mapping.Traits;
+                sourceReference = TerrainSurfaceCoverSourceReference.LegacySurfaceCover;
                 return mapping.CoverKind;
             }
 
@@ -1856,15 +1980,16 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            Vector2 entrance = ActiveRuleTilemap.GetCellCenterWorld(startCell);
-            Vector2 exit = ActiveRuleTilemap.GetCellCenterWorld(endCell);
-            AppendWorldPoint(sampledPoints, preservedPoints, entrance, preserve: true);
-            AppendWorldPoint(
-                sampledPoints,
-                preservedPoints,
-                (entrance + exit) * 0.5f,
-                preserve: true);
-            AppendWorldPoint(sampledPoints, preservedPoints, exit, preserve: true);
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                Vector3Int rampCell = IndexToCell(gridPath[i].x, gridPath[i].y);
+                AppendWorldPoint(
+                    sampledPoints,
+                    preservedPoints,
+                    ActiveRuleTilemap.GetCellCenterWorld(rampCell),
+                    preserve: true);
+            }
+
             nextPathIndex = endIndex + 1;
             return true;
         }

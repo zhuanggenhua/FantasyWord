@@ -6,7 +6,7 @@
 
 核心特点：
 
-- **SpriteLibrary 动画变体**：所有角色共用纯动作 Animator 状态机和动作时序；角色与方向差异由 `CharacterFrameData.animationSpriteLibraries` 的 SE/SW/NE/NW 四向库提供，共享动画片段只驱动不含方向的 `SpriteResolver.m_SpriteKey`。
+- **SpriteLibrary 动画变体**：所有角色共用纯动作 Animator 状态机和动作时序；角色与方向差异由工作台角色选项或运行时驱动直接持有的 SE/SW/NE/NW 四向 `SpriteLibraryAsset` 提供，共享动画片段只驱动不含方向的 `SpriteResolver.m_SpriteKey`。
 - **双层 UV Map 换装**：身体层 / 头部层分离，通过 UV Map 在 Shader 中重定向采样位置。
 - **双武器管线**：主手 + 副手两把武器，支持双持、双手武器、手在前/武器在前等深度规则。
 - **像素级脚底阴影**：基于 `groundPixelY + 脚部像素` 实时计算阴影模式和形状。
@@ -42,7 +42,7 @@
 
 动画变体只有一条正式链路：`AnimationController(动作) + DirectionalAnimationVariantDriver(方向) -> 共享 Animator Controller -> SpriteResolver -> 角色四向 SpriteLibraryAsset`。Animator 状态和共享片段只使用 `Idle/Walk/Attack` 等动作名；切换角色或方向只替换 SpriteLibraryAsset，不切换 Controller、不重播动作，也不使用左右镜像。`CharacterFrameData` 继续拥有 UV、锚点和装备合成帧数据，四向 SpriteLibrary 只拥有基础角色动画帧。
 
-派生动画资源通过 `Tools/Equipment System/Rebuild SpriteLibrary Animation Framework` 重建；该工具只写共享 Controller、动作片段、四向 SpriteLibrary 和帧数据引用，不加载、保存或改写 Scene/Prefab。`GeneratedClips`、`Overrides`、直接动画 `SpriteRenderer.m_Sprite` 和角色级 `AnimatorOverrideController` 均不是受支持入口。
+派生动画资源通过 `Tools/Equipment System/Rebuild SpriteLibrary Animation Framework` 重建；该工具只写共享 Controller、动作片段、四向 SpriteLibrary，并回写工作台目录中每个角色的四向库引用，不加载、保存或改写 Scene/Prefab。旧的独立动画变体资产包装层不是受支持入口；`GeneratedClips`、`Overrides`、直接动画 `SpriteRenderer.m_Sprite` 和角色级 `AnimatorOverrideController` 均不是受支持入口。
 
 ```
 EquipmentSystem/

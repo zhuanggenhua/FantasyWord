@@ -1765,10 +1765,10 @@ $aiControllerDisallowedPatterns = Test-ContainsAny -Content $aiControllerContent
 
 $aiControllerBehaviourRuntimeMissingPatterns = Test-ContainsAll -Content $aiControllerBehaviourRuntimeContent -Patterns @(
     "private sealed class BehaviourRuntime",
-    "private CharacterSteeringAdapter2D m_steeringAdapter = null;",
+    "private CharacterSteeringRuntime2D m_steeringAdapter = null;",
     "private readonly CharacterSteeringPathCursor2D m_pathCursor = new();",
     "public void Initialize()",
-    "m_steeringAdapter = new CharacterSteeringAdapter2D(character, m_owner.m_steeringProfile);",
+    "m_steeringAdapter = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);",
     "ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId,",
     "ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId,",
     "public void TryHandleProvoked(CharacterBase source)",

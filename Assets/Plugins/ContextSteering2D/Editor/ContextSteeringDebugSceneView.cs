@@ -25,17 +25,44 @@ namespace ContextSteering2D.Editor
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-            GameObject selected = Selection.activeGameObject;
-            if (selected == null) return;
+            ContextSteeringDebugProbe2D selectedProbe = ResolveSelectedProbe();
+            ContextSteeringDebugProbe2D[] probes = UnityEngine.Object.FindObjectsByType<ContextSteeringDebugProbe2D>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
 
-            ContextSteeringDebugProbe2D probe = selected.GetComponentInParent<ContextSteeringDebugProbe2D>();
-            if (probe == null || !probe.DrawSceneView || probe.Snapshot == null) return;
-
-            DrawWorld(probe, probe.Snapshot);
-            if (probe.DrawOverlay)
+            for (int i = 0; i < probes.Length; i++)
             {
-                DrawOverlay(sceneView, probe, probe.Snapshot);
+                ContextSteeringDebugProbe2D probe = probes[i];
+                if (!CanDraw(probe))
+                {
+                    continue;
+                }
+
+                if (probe != selectedProbe && !probe.DrawWhenNotSelected)
+                {
+                    continue;
+                }
+
+                DrawWorld(probe, probe.Snapshot);
             }
+
+            if (selectedProbe != null && CanDraw(selectedProbe) && selectedProbe.DrawOverlay)
+            {
+                DrawOverlay(sceneView, selectedProbe, selectedProbe.Snapshot);
+            }
+        }
+
+        private static ContextSteeringDebugProbe2D ResolveSelectedProbe()
+        {
+            GameObject selected = Selection.activeGameObject;
+            return selected != null
+                ? selected.GetComponentInParent<ContextSteeringDebugProbe2D>()
+                : null;
+        }
+
+        private static bool CanDraw(ContextSteeringDebugProbe2D probe)
+        {
+            return probe != null && probe.DrawSceneView && probe.Snapshot != null;
         }
 
         private static void DrawWorld(ContextSteeringDebugProbe2D probe, SteeringDebugSnapshot2D snapshot)

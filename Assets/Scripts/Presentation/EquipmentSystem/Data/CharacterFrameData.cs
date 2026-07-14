@@ -1,44 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D.Animation;
-
-[Serializable]
-public sealed class DirectionalSpriteLibrarySet
-{
-    public SpriteLibraryAsset southEast;
-    public SpriteLibraryAsset southWest;
-    public SpriteLibraryAsset northEast;
-    public SpriteLibraryAsset northWest;
-
-    public bool IsComplete => southEast != null
-        && southWest != null
-        && northEast != null
-        && northWest != null;
-
-    public SpriteLibraryAsset Get(int directionIndex)
-    {
-        switch (directionIndex)
-        {
-            case 0: return southEast;
-            case 1: return southWest;
-            case 2: return northEast;
-            case 3: return northWest;
-            default: return null;
-        }
-    }
-
-    public void Set(int directionIndex, SpriteLibraryAsset asset)
-    {
-        switch (directionIndex)
-        {
-            case 0: southEast = asset; break;
-            case 1: southWest = asset; break;
-            case 2: northEast = asset; break;
-            case 3: northWest = asset; break;
-        }
-    }
-}
 
 #region 枚举
 
@@ -642,9 +604,6 @@ public class CharacterFrameData : ScriptableObject
     [Header("编辑器配置")]
     [Tooltip("动画类型数据库")]
     public AnimationTypeDatabase animDatabase;
-
-    [Tooltip("由换装动画构建工具生成的 SE/SW/NE/NW 四向精灵库。Animator 只保存动作状态。")]
-    public DirectionalSpriteLibrarySet animationSpriteLibraries = new DirectionalSpriteLibrarySet();
 
     [Tooltip("UV 画板参考底图")]
     public Sprite paletteRefSprite;

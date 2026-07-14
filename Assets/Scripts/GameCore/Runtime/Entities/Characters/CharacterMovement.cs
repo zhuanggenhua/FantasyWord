@@ -17,10 +17,11 @@ namespace FantasyWord.GameCore
 
         private Transform directionPivot => m_directionPivot != null ? m_directionPivot : m_character.transform;
 
-        public bool TryUpdatePointerTargetDirection()
+        public bool TryUpdateIdlePointerTargetDirection()
         {
             if (!m_character ||
                 !m_castAbilitiesInPointerDirection ||
+                m_character.HasActiveMovementIntent() ||
                 !GameManager.InputSystem.IsPointerActive(EActionMap.Gameplay))
             {
                 return false;
@@ -34,8 +35,13 @@ namespace FantasyWord.GameCore
 
             Vector2 pointerPosition = GameManager.InputSystem.ReadPointerScreenPosition(EActionMap.Gameplay);
             Vector2 pointerWorldPosition = camera.ScreenToWorldPoint(pointerPosition);
-            Vector2 characterToPointerDirection = (pointerWorldPosition - (Vector2)directionPivot.position).normalized;
-            m_character.SetTargetDirection(characterToPointerDirection);
+            Vector2 characterToPointerDirection = pointerWorldPosition - (Vector2)directionPivot.position;
+            if (characterToPointerDirection.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            m_character.SetTargetDirection(characterToPointerDirection.normalized);
             return true;
         }
 

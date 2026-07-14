@@ -403,6 +403,11 @@ MonoBehaviour:
   spriteResolver: {fileID: 0}
   equipmentRenderer: {fileID: 7667983027141764858}
   movable: {fileID: 0}
+  defaultAnimationLibraries:
+    southEast: {fileID: 11400000, guid: 62c4a52ab213438419c93cc2d8427623, type: 2}
+    southWest: {fileID: 11400000, guid: 0602b79d46e41504a8117d1fdcc863b2, type: 2}
+    northEast: {fileID: 11400000, guid: aaefe509e84579b4782b521a1d156e71, type: 2}
+    northWest: {fileID: 11400000, guid: 9ea72d0165623924d891e3222ac25d48, type: 2}
 --- !u!4 &6227734980916943357 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4941899184047235797, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}

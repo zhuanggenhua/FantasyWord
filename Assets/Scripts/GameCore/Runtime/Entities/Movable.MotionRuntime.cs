@@ -109,6 +109,15 @@ namespace FantasyWord.GameCore
                 return m_moveOrder.HasValue;
             }
 
+            public bool HasActiveMovementIntent()
+            {
+                float idleThresholdSquared = m_owner.m_idleThreshold * m_owner.m_idleThreshold;
+                return m_owner.m_movementDirection.sqrMagnitude > idleThresholdSquared ||
+                    m_moveOrder.HasValue ||
+                    m_pushOrder.HasValue ||
+                    m_lastSuccessfulMovement.sqrMagnitude > 0.0001f;
+            }
+
             public void HandleWallCollision()
             {
                 if (!IsInWall())
@@ -442,7 +451,10 @@ namespace FantasyWord.GameCore
 
                     if (m_owner.m_lookAtDirectionUpdateStrategy == ELookAtDirectionUpdateStrategy.MovementBased)
                     {
-                        m_owner.SetLookAtDirection(resolvedDirection);
+                        Vector2 facingDirection = m_lastSuccessfulMovement.sqrMagnitude > 0.0001f
+                            ? m_lastSuccessfulMovement.normalized
+                            : resolvedDirection;
+                        m_owner.SetLookAtDirection(facingDirection);
                     }
                 }
 

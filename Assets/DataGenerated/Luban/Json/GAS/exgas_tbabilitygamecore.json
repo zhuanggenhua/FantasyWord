@@ -12,7 +12,7 @@
     "MaximumBufferDuration": 0.25,
     "DelayBeforeUseReleaseInterruption": true,
     "TimeBetweenUsesReleaseInterruption": true,
-    "UpdateLookAtDirectionOnFire": true
+    "UpdateLookAtDirectionOnFire": false
   },
   {
     "ID": 20002,

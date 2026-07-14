@@ -3610,7 +3610,6 @@ MonoBehaviour:
   m_navigationMap: {fileID: 1148507052}
   m_config: {fileID: 11400000, guid: f274b7d282ae4e5a8ce16c8a2b3fa301, type: 2}
   m_temporaryEffectTilemap: {fileID: 1655698545}
-  m_surfaceCoverTilemap: {fileID: 1835126662}
 --- !u!114 &204002012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29015,6 +29014,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.TerrainNavigationMap
   m_ruleTilemap: {fileID: 1361196487}
   m_layerSources: []
+  m_surfaceLayerSources:
+  - m_sourceId: 0
+    m_role: 2
+    m_tilemap: {fileID: 1835126662}
+    m_priority: 0
+    m_surfaceCoverTileMappings:
+    - m_tile: {fileID: 11400000, guid: ee44f04c19e463d48a8796f568a766fa, type: 2}
+      m_coverKind: 1
+      m_traits: 7
+  - m_sourceId: 10
+    m_role: 3
+    m_tilemap: {fileID: 453769794}
+    m_priority: 10
+    m_surfaceCoverTileMappings:
+    - m_tile: {fileID: 11400000, guid: e41387fb62d13cf40aa1d24ec147cee0, type: 2}
+      m_coverKind: 1
+      m_traits: 3
   m_surfaceCoverTilemap: {fileID: 1835126662}
   m_surfaceCoverTileMappings:
   - m_tile: {fileID: 11400000, guid: ee44f04c19e463d48a8796f568a766fa, type: 2}

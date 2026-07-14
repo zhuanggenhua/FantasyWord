@@ -93,6 +93,19 @@ namespace FantasyWord.GameCore
         RoadCover
     }
 
+    public enum ETerrainSurfaceLayerRole
+    {
+        None,
+        BaseGround,
+        SurfaceCover,
+        Decoration,
+        Water,
+        Blocking,
+        Shadow,
+        RuntimeTemporaryEffect,
+        RuntimeResultOverride
+    }
+
     [Flags]
     public enum ETerrainSurfaceCoverTraits
     {
@@ -126,6 +139,30 @@ namespace FantasyWord.GameCore
         public bool IsValid => m_tile != null && m_coverKind != ETerrainSurfaceCoverKind.None;
     }
 
+    public readonly struct TerrainSurfaceCoverSourceReference
+    {
+        public const int DefaultSurfaceLayerSourceId = 0;
+        public const int LegacySurfaceCoverSourceId = -1000;
+
+        public TerrainSurfaceCoverSourceReference(
+            int sourceId,
+            ETerrainSurfaceLayerRole role)
+        {
+            SourceId = sourceId;
+            Role = role;
+        }
+
+        public int SourceId { get; }
+        public ETerrainSurfaceLayerRole Role { get; }
+        public bool IsValid => Role != ETerrainSurfaceLayerRole.None;
+
+        public static TerrainSurfaceCoverSourceReference None =>
+            new(-1, ETerrainSurfaceLayerRole.None);
+
+        public static TerrainSurfaceCoverSourceReference LegacySurfaceCover =>
+            new(LegacySurfaceCoverSourceId, ETerrainSurfaceLayerRole.SurfaceCover);
+    }
+
     [Flags]
     public enum ETerrainRuntimeSurfaceState
     {
@@ -150,6 +187,7 @@ namespace FantasyWord.GameCore
             ETerrainSurfaceCoverKind baseSurfaceCover,
             ETerrainSurfaceCoverKind effectiveSurfaceCover,
             ETerrainSurfaceCoverTraits surfaceCoverTraits,
+            TerrainSurfaceCoverSourceReference surfaceCoverSource,
             ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle,
             float baseTraversalCost,
             float effectiveTraversalCost,
@@ -162,6 +200,7 @@ namespace FantasyWord.GameCore
                 baseSurfaceCover,
                 effectiveSurfaceCover,
                 surfaceCoverTraits,
+                surfaceCoverSource,
                 surfaceCoverLifecycle,
                 baseTraversalCost,
                 effectiveTraversalCost,
@@ -177,6 +216,7 @@ namespace FantasyWord.GameCore
             ETerrainSurfaceCoverKind baseSurfaceCover,
             ETerrainSurfaceCoverKind effectiveSurfaceCover,
             ETerrainSurfaceCoverTraits surfaceCoverTraits,
+            TerrainSurfaceCoverSourceReference surfaceCoverSource,
             ETerrainSurfaceCoverLifecycle surfaceCoverLifecycle,
             float baseTraversalCost,
             float effectiveTraversalCost,
@@ -189,6 +229,7 @@ namespace FantasyWord.GameCore
             BaseSurfaceCover = baseSurfaceCover;
             EffectiveSurfaceCover = effectiveSurfaceCover;
             SurfaceCoverTraits = surfaceCoverTraits;
+            SurfaceCoverSource = surfaceCoverSource;
             SurfaceCoverLifecycle = surfaceCoverLifecycle;
             BaseTraversalCost = baseTraversalCost;
             EffectiveTraversalCost = effectiveTraversalCost;
@@ -203,6 +244,7 @@ namespace FantasyWord.GameCore
         public ETerrainSurfaceCoverKind BaseSurfaceCover { get; }
         public ETerrainSurfaceCoverKind EffectiveSurfaceCover { get; }
         public ETerrainSurfaceCoverTraits SurfaceCoverTraits { get; }
+        public TerrainSurfaceCoverSourceReference SurfaceCoverSource { get; }
         public ETerrainSurfaceCoverLifecycle SurfaceCoverLifecycle { get; }
         public float BaseTraversalCost { get; }
         public float EffectiveTraversalCost { get; }

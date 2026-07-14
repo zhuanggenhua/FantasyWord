@@ -14,11 +14,11 @@ namespace FantasyWord.GameCore
 
         [Header("表现层")]
         [SerializeField] private Tilemap m_temporaryEffectTilemap = null;
-        [SerializeField] private Tilemap m_surfaceCoverTilemap = null;
 
         private readonly List<Vector3Int> m_runtimeCells = new();
         private readonly Dictionary<Vector3Int, Coroutine> m_signalCoroutines = new();
-        private readonly HashSet<Vector3Int> m_hiddenSurfaceCoverCells = new();
+        private readonly Dictionary<int, HiddenSurfaceCoverSource> m_hiddenSurfaceCoverSources =
+            new();
         private readonly HashSet<string> m_reportedMissingMappings = new();
 
         private void OnEnable()
@@ -133,9 +133,17 @@ namespace FantasyWord.GameCore
 
         private void RefreshSurfaceCoverCell(in TerrainSurfaceSample sample)
         {
-            if (m_surfaceCoverTilemap == null ||
-                sample.BaseSurfaceCover == ETerrainSurfaceCoverKind.None)
+            if (sample.BaseSurfaceCover == ETerrainSurfaceCoverKind.None ||
+                !sample.SurfaceCoverSource.IsValid)
             {
+                return;
+            }
+
+            if (!m_navigationMap.TryGetSurfaceCoverTilemap(
+                    sample.SurfaceCoverSource,
+                    out Tilemap surfaceTilemap))
+            {
+                ReportMissingMappingOnce($"surface-source:{sample.SurfaceCoverSource.SourceId}");
                 return;
             }
 
@@ -144,58 +152,92 @@ namespace FantasyWord.GameCore
                 sample.SurfaceCoverLifecycle == ETerrainSurfaceCoverLifecycle.Removed;
             if (shouldHide)
             {
-                HideSurfaceCoverCell(sample.Cell);
+                HideSurfaceCoverCell(
+                    sample.SurfaceCoverSource,
+                    surfaceTilemap,
+                    sample.Cell);
             }
             else
             {
-                RestoreSurfaceCoverCell(sample.Cell);
+                RestoreSurfaceCoverCell(
+                    sample.SurfaceCoverSource,
+                    surfaceTilemap,
+                    sample.Cell);
             }
         }
 
-        private void HideSurfaceCoverCell(Vector3Int cell)
+        private void HideSurfaceCoverCell(
+            in TerrainSurfaceCoverSourceReference sourceReference,
+            Tilemap surfaceTilemap,
+            Vector3Int cell)
         {
-            if (m_hiddenSurfaceCoverCells.Add(cell))
+            if (!m_hiddenSurfaceCoverSources.TryGetValue(
+                    sourceReference.SourceId,
+                    out HiddenSurfaceCoverSource hiddenSource))
             {
-                m_surfaceCoverTilemap.SetTileFlags(cell, TileFlags.None);
+                hiddenSource = new HiddenSurfaceCoverSource(sourceReference);
+                m_hiddenSurfaceCoverSources.Add(sourceReference.SourceId, hiddenSource);
             }
 
-            Color color = m_surfaceCoverTilemap.GetColor(cell);
+            if (hiddenSource.Cells.Add(cell))
+            {
+                surfaceTilemap.SetTileFlags(cell, TileFlags.None);
+            }
+
+            Color color = surfaceTilemap.GetColor(cell);
             if (!Mathf.Approximately(color.a, 0.0f))
             {
                 color.a = 0.0f;
-                m_surfaceCoverTilemap.SetColor(cell, color);
+                surfaceTilemap.SetColor(cell, color);
             }
         }
 
-        private void RestoreSurfaceCoverCell(Vector3Int cell)
+        private void RestoreSurfaceCoverCell(
+            in TerrainSurfaceCoverSourceReference sourceReference,
+            Tilemap surfaceTilemap,
+            Vector3Int cell)
         {
-            if (!m_hiddenSurfaceCoverCells.Remove(cell) ||
-                m_surfaceCoverTilemap == null)
+            if (!m_hiddenSurfaceCoverSources.TryGetValue(
+                    sourceReference.SourceId,
+                    out HiddenSurfaceCoverSource hiddenSource) ||
+                !hiddenSource.Cells.Remove(cell))
             {
                 return;
             }
 
-            Color color = m_surfaceCoverTilemap.GetColor(cell);
+            Color color = surfaceTilemap.GetColor(cell);
             if (!Mathf.Approximately(color.a, 1.0f))
             {
                 color.a = 1.0f;
-                m_surfaceCoverTilemap.SetColor(cell, color);
+                surfaceTilemap.SetColor(cell, color);
+            }
+
+            if (hiddenSource.Cells.Count == 0)
+            {
+                m_hiddenSurfaceCoverSources.Remove(sourceReference.SourceId);
             }
         }
 
         private void RestoreAllSurfaceCoverCells()
         {
-            if (m_surfaceCoverTilemap != null)
+            foreach (HiddenSurfaceCoverSource hiddenSource in m_hiddenSurfaceCoverSources.Values)
             {
-                foreach (Vector3Int cell in m_hiddenSurfaceCoverCells)
+                if (!m_navigationMap.TryGetSurfaceCoverTilemap(
+                        hiddenSource.SourceReference,
+                        out Tilemap surfaceTilemap))
                 {
-                    Color color = m_surfaceCoverTilemap.GetColor(cell);
+                    continue;
+                }
+
+                foreach (Vector3Int cell in hiddenSource.Cells)
+                {
+                    Color color = surfaceTilemap.GetColor(cell);
                     color.a = 1.0f;
-                    m_surfaceCoverTilemap.SetColor(cell, color);
+                    surfaceTilemap.SetColor(cell, color);
                 }
             }
 
-            m_hiddenSurfaceCoverCells.Clear();
+            m_hiddenSurfaceCoverSources.Clear();
         }
 
         private void PlaySignal(
@@ -260,6 +302,18 @@ namespace FantasyWord.GameCore
                     $"地表元素状态有效，但表现配置缺少映射：{key}。",
                     this);
             }
+        }
+
+        private sealed class HiddenSurfaceCoverSource
+        {
+            public HiddenSurfaceCoverSource(
+                in TerrainSurfaceCoverSourceReference sourceReference)
+            {
+                SourceReference = sourceReference;
+            }
+
+            public TerrainSurfaceCoverSourceReference SourceReference { get; }
+            public HashSet<Vector3Int> Cells { get; } = new();
         }
     }
 }

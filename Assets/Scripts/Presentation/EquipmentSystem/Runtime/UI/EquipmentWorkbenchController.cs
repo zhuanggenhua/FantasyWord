@@ -260,14 +260,14 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         }
 
         EquipmentWorkbenchCharacterOption character = catalog.Characters[index];
-        if (character == null || character.FrameData == null)
+        if (character == null || character.FrameData == null || character.AnimationLibraries == null)
             return;
 
         _currentCharacterIndex = index;
 
         animationController.SetAnimationDatabase(character.FrameData.animDatabase, true);
         equipmentRenderer.SetFrameData(character.FrameData, false);
-        if (!directionDriver.SetFrameData(character.FrameData, true))
+        if (!directionDriver.SetAnimationLibraries(character.AnimationLibraries, true))
             return;
         equipmentRenderer.SetAppearance(character.Appearance, false);
         SyncCurrentAppearanceFromCharacter(false);

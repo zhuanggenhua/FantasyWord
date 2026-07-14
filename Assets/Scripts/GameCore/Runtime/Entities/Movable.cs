@@ -362,6 +362,7 @@ namespace FantasyWord.GameCore
         /// 当前是否存在 MoveTo 指令。能力权限可用它阻断需要玩家完全自由控制的能力。
         /// </summary>
         public bool HasMoveOrder() => motionRuntime.HasMoveOrder();
+        public bool HasActiveMovementIntent() => motionRuntime.HasActiveMovementIntent();
 
         protected virtual void FixedUpdate()
         {
@@ -469,7 +470,17 @@ namespace FantasyWord.GameCore
 
         public void ResetTargetDirection()
         {
+            if (!m_targetDirectionOverride.HasValue)
+            {
+                return;
+            }
+
             m_targetDirectionOverride = null;
+            if (m_lookAtDirection.sqrMagnitude > 0.0001f)
+            {
+                m_targetDirectionChangedEvent.Invoke(m_lookAtDirection);
+                m_animationStrategy?.SetTargetDirection(m_lookAtDirection);
+            }
         }
 
         public Vector2 GetTargetDirection()

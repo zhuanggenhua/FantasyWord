@@ -32,9 +32,9 @@ metadata:
 - 不把开发审计入口写成策划作者流。
 - `scene-list-opened` 发现正式场景 `isDirty:true` 时，先判断来源：若 dirty 的就是本轮已锁定目标场景，且改动可证明来自本轮自动化、验证、截图、修复、PlayMode 或同一条恢复链，默认由 AI 在保存前后各取证一次并自行保存，然后继续；不要再向用户追问是否保存。
 - 若 dirty 的不是当前目标场景，或无法证明改动来源属于本轮同一链路，才立即降级成只读取证；不得保存、丢弃、切场景、切 PlayMode、改对象或发送写操作型 `script-execute`。
-- 唯一例外：`scene-open` 且目标是 `Single` 切场景时，`bridge.py` 现在会先显式保存当前已打开的 dirty 正式场景，再继续切场景，用来避免 Unity 的保存弹窗把自动化卡住。
-- 另一个明确例外：如果当前命令已经显式持有 `scene lock`，并且 dirty 的正是这条自动化流程正在修改的正式场景，`bridge.py` 现在会先自动保存当前正式场景，再继续执行后续受保护命令；不要再把这种情况抛回给用户做人肉确认。
-- `bridge.py` 在发出写操作型 Unity 命令前，先用只读的 `scene-list-opened` 检查正式场景 dirty；命中本轮已锁定且来源明确的目标场景时按上述规则保存，命中未知来源或非目标场景时拒绝后续写命令。
+- 唯一例外：`scene-open` 且目标是 `Single` 切场景时，自动化桥接层应先显式保存当前已打开的 dirty 正式场景，再继续切场景，用来避免 Unity 的保存弹窗把自动化卡住。
+- 另一个明确例外：如果当前命令已经显式持有 `scene lock`，并且 dirty 的正是这条自动化流程正在修改的正式场景，自动化桥接层应先自动保存当前正式场景，再继续执行后续受保护命令；不要再把这种情况抛回给用户做人肉确认。
+- 自动化桥接层在发出写操作型 Unity 命令前，先用只读的 `scene-list-opened` 检查正式场景 dirty；命中本轮已锁定且来源明确的目标场景时按上述规则保存，命中未知来源或非目标场景时拒绝后续写命令。
 - 即使某条多步流程显式传了 `bridgeSceneDirtyPolicy:"ignore"`，它也不能跨过普通脏场景继续写；`ignore` 只允许临时保留“已知生成/恢复残留”的收尾窗口，不是绕过正式场景 dirty 保护的后门。
 
 ## 恢复场景弹窗
@@ -45,6 +45,63 @@ metadata:
 - 不要把删除 `Temp/__Backupscenes` 当默认恢复动作；AIBridge 暂时连不上不等于可以直接清理恢复备份。
 - 只有恢复按钮不可用、用户明确同意清理，或确认只是自动化生成且无保留价值的临时恢复残留时，才允许清理项目 `Temp/__Backupscenes`。
 - 这条规则只覆盖项目 `Temp/__Backupscenes`；不得自动处理正式场景、用户手工备份目录或未知恢复目录。
+
+## 外部修改弹窗
+
+- Unity 出现“打开场景已在外部被修改”或语义等价弹窗时，默认点击 `重新加载 / Reload`，从磁盘重新加载当前已锁定目标场景；不得把这个选择再次抛给用户。
+- 当前已知触发源：Unity 保存 `ClickMoveTest.unity` 后，外部 PowerShell 清理 YAML 尾随空白，Unity 会认为场景文件被外部修改并弹出 `重新加载` 弹窗。
+- 如果 AIBridge、Puerts HTTP 或文件桥调用被模态弹窗卡住，先用 Windows Win32 自动点击，不先重启 Unity：
+  - 枚举 Unity 进程顶层窗口；
+  - 查找 class 为 `#32770`，或标题含 `外部被修改`、`modified`、`Reload` 的对话框；
+  - 枚举 `Button` 子窗口；
+  - 优先点击文本匹配 `重新加载|Reload|重载|载入|Load` 的按钮；
+  - 执行 `SetForegroundWindow(dialogHwnd)` 后发送 `BM_CLICK`。
+- 点击 `重新加载` 后必须复查：
+  - `editor-application-get-state`：确认 `isPlaying=false`、`isCompiling=false`、`isUpdating=false`；
+  - `scene-list-opened`：确认目标场景仍打开，且本轮收口时 `isDirty=false`；
+  - Console：确认没有本轮新增编译错误。
+- 如果 Puerts HTTP 端点 `127.0.0.1:18990` 因弹窗或重载掉线，先走 `Temp/UnityBridge` 文件桥恢复端点，不把重启 Editor 当第一步。
+
+### 文件桥恢复 Puerts 端点
+
+项目文件桥目录：
+
+```powershell
+Temp\UnityBridge\commands
+Temp\UnityBridge\results
+```
+
+命令 JSON 格式：
+
+```json
+{ "id": "<unique-id>", "tool": "script-execute", "params": { "csharpCode": "<code>" } }
+```
+
+恢复 Puerts HTTP 端点的编辑器 C#：
+
+```csharp
+using System;
+using System.Reflection;
+
+public class Script
+{
+    public static object Main()
+    {
+        var type = Type.GetType("PuertsUnityMcp.Editor.UnityMcpEditorBootstrap, PuertsUnityMcp.Editor");
+        if (type == null)
+        {
+            return new { TypeFound = false, Started = false, IsRunning = false };
+        }
+
+        var start = type.GetMethod("StartEndpoint", BindingFlags.Public | BindingFlags.Static);
+        start?.Invoke(null, null);
+        var isRunning = (bool)(type.GetProperty("IsRunning", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) ?? false);
+        return new { TypeFound = true, Started = start != null, IsRunning = isRunning };
+    }
+}
+```
+
+验收口径：返回 `TypeFound=true`、`Started=true`、`IsRunning=true` 后，再用 `editor.state` 或文件桥状态命令确认 Editor 可响应。
 
 ## 正式场景保护
 
@@ -59,10 +116,23 @@ metadata:
 ## 当前常用命令
 
 ```powershell
-python .codex/skills/aibridge/bridge.py editor-application-get-state
-python .codex/skills/aibridge/bridge.py assets-refresh "{\"options\":\"ForceSynchronousImport\"}"
-python .codex/skills/aibridge/bridge.py console-get-logs "{\"maxEntries\":80,\"includeStackTrace\":true}"
-python .codex/skills/aibridge/bridge.py scene-list-opened
+function Invoke-UnityBridgeCommand($tool, $params = @{}, $timeoutSec = 60) {
+  $id = 'codex-' + [guid]::NewGuid().ToString('N')
+  $cmdPath = Join-Path 'Temp\UnityBridge\commands' ($id + '.json')
+  $resPath = Join-Path 'Temp\UnityBridge\results' ($id + '.json')
+  @{ id=$id; tool=$tool; params=$params } | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $cmdPath -Encoding UTF8
+  $deadline = (Get-Date).AddSeconds($timeoutSec)
+  do {
+    if (Test-Path $resPath) { return Get-Content -Raw $resPath | ConvertFrom-Json }
+    Start-Sleep -Milliseconds 250
+  } while ((Get-Date) -lt $deadline)
+  throw "Timeout waiting for $tool result $id"
+}
+
+Invoke-UnityBridgeCommand 'editor-application-get-state'
+Invoke-UnityBridgeCommand 'assets-refresh' @{ options='ForceSynchronousImport' }
+Invoke-UnityBridgeCommand 'console-get-logs' @{ maxEntries=80; includeStackTrace=$true }
+Invoke-UnityBridgeCommand 'scene-list-opened'
 ```
 
 ## 当前技能线正式自动化入口
@@ -79,7 +149,10 @@ python .codex/skills/aibridge/bridge.py scene-list-opened
 #### 最小调用示例
 
 ```powershell
-python .codex/skills/aibridge/bridge.py script-execute "{\"csharpCode\":\"public class Script { public static object Main() { return FantasyWord.GameCore.FormalAbilityAssetValidation.InspectAllAbilitySheets(); } }\",\"bridgeSceneDirtyPolicy\":\"discard-generated\"}"
+Invoke-UnityBridgeCommand 'script-execute' @{
+  csharpCode='public class Script { public static object Main() { return FantasyWord.GameCore.FormalAbilityAssetValidation.InspectAllAbilitySheets(); } }'
+  bridgeSceneDirtyPolicy='discard-generated'
+}
 ```
 
 #### 结果解读

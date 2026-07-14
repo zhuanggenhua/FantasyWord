@@ -570,18 +570,26 @@ namespace FantasyWord.GameCore
 
             if (triggerAbilityCheckResult == EAbilityFireCheckResult.Valid)
             {
+                bool hasRequestedDirection = false;
+                Vector2 requestedDirection = Vector2.zero;
+                if (activationContext != null &&
+                    activationContext.TryGetAimDirection(out Vector3 aimDirection))
+                {
+                    requestedDirection = new Vector2(aimDirection.x, aimDirection.y);
+                    if (requestedDirection.sqrMagnitude > 0.0001f)
+                    {
+                        hasRequestedDirection = true;
+                        requestedDirection.Normalize();
+                        m_character.SetTargetDirection(requestedDirection);
+                    }
+                }
+
                 if (ability.ShouldUpdateLookAtDirectionOnFireForRuntime())
                 {
                     Vector2 targetDirection = m_character.GetTargetDirection();
-                    if (activationContext != null &&
-                        activationContext.TryGetAimDirection(out Vector3 aimDirection))
+                    if (hasRequestedDirection)
                     {
-                        Vector2 requestedDirection = new(aimDirection.x, aimDirection.y);
-                        if (requestedDirection.sqrMagnitude > 0.0001f)
-                        {
-                            targetDirection = requestedDirection.normalized;
-                            m_character.SetTargetDirection(targetDirection);
-                        }
+                        targetDirection = requestedDirection;
                     }
 
                     if (targetDirection.sqrMagnitude > 0.0001f)

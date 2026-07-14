@@ -15,6 +15,11 @@ MonoBehaviour:
   characters:
   - displayName: "\u4EBA\u7C7B"
     frameData: {fileID: 11400000, guid: 720d2b3b0c58d5b4295a6468bd84a86c, type: 2}
+    animationLibraries:
+      southEast: {fileID: 11400000, guid: 62c4a52ab213438419c93cc2d8427623, type: 2}
+      southWest: {fileID: 11400000, guid: 0602b79d46e41504a8117d1fdcc863b2, type: 2}
+      northEast: {fileID: 11400000, guid: aaefe509e84579b4782b521a1d156e71, type: 2}
+      northWest: {fileID: 11400000, guid: 9ea72d0165623924d891e3222ac25d48, type: 2}
     appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
     baseStats:
       values:
@@ -32,6 +37,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u77EE\u4EBA"
     frameData: {fileID: 11400000, guid: 81eb04687dcfd354e887de2494386233, type: 2}
+    animationLibraries:
+      southEast: {fileID: 11400000, guid: c7109ab4f8519674baa32e4fd450993c, type: 2}
+      southWest: {fileID: 11400000, guid: dfae2cc9e7a52bc4596e8a26359963ea, type: 2}
+      northEast: {fileID: 11400000, guid: 11f3cfa3a81ef7747a47a53ba670a82e, type: 2}
+      northWest: {fileID: 11400000, guid: 75ac46f701530144e9af4309f57abb66, type: 2}
     appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
     baseStats:
       values:
@@ -49,6 +59,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u7CBE\u7075"
     frameData: {fileID: 11400000, guid: 83c7e080e4852844fb3bb0b6a05751d1, type: 2}
+    animationLibraries:
+      southEast: {fileID: 11400000, guid: 34b1764ac4de91641a0331289ceefc02, type: 2}
+      southWest: {fileID: 11400000, guid: 33090d16176b16e44a439cd635eec8aa, type: 2}
+      northEast: {fileID: 11400000, guid: 0b93288332de75b4cbec15231d0cb97f, type: 2}
+      northWest: {fileID: 11400000, guid: 5dc77209eba3388449b05cbf79d843d6, type: 2}
     appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
     baseStats:
       values:
@@ -66,6 +81,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u5730\u7CBE"
     frameData: {fileID: 11400000, guid: 34387288a2911e34a9a651f287eb7ccd, type: 2}
+    animationLibraries:
+      southEast: {fileID: 11400000, guid: de3d7bfbd3dfb4244a1a93777e58c894, type: 2}
+      southWest: {fileID: 11400000, guid: 4443fc4f89dde75428d6aa6f0f408f76, type: 2}
+      northEast: {fileID: 11400000, guid: ab10284faf3924e46963a9b03a570e42, type: 2}
+      northWest: {fileID: 11400000, guid: b81cf063d9012ad4687897a308c6c13c, type: 2}
     appearance: {fileID: 11400000, guid: 93a168d1740358645a13d2fcd4450383, type: 2}
     baseStats:
       values:
@@ -83,6 +103,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 736999a148e3ca14e8d9072ce5224e4b, type: 2}
   - displayName: "\u517D\u4EBA"
     frameData: {fileID: 11400000, guid: 2f355237f57507f48baac5069f5d7cd0, type: 2}
+    animationLibraries:
+      southEast: {fileID: 11400000, guid: cb32be214171b89429ce89974840ca6f, type: 2}
+      southWest: {fileID: 11400000, guid: 15c442897c8ac1c41bce86fa5f3d24f8, type: 2}
+      northEast: {fileID: 11400000, guid: b08f0320fc47abc4d940db308698f968, type: 2}
+      northWest: {fileID: 11400000, guid: b270d93a6cbd4944f810c675286bcec8, type: 2}
     appearance: {fileID: 11400000, guid: 93a168d1740358645a13d2fcd4450383, type: 2}
     baseStats:
       values:

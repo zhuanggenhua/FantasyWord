@@ -842,8 +842,8 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             return false;
 
         return character.FrameData != null
-            && character.FrameData.animationSpriteLibraries != null
-            && character.FrameData.animationSpriteLibraries.IsComplete;
+            && character.AnimationLibraries != null
+            && character.AnimationLibraries.IsComplete;
     }
 
     static bool ContainsWorkbenchMarker(string value, string marker)

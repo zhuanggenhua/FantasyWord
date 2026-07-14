@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 一个逻辑地形层的作者来源。当前阶段先承载规则 Tilemap，
-    /// 后续会继续扩展碰撞带、表现带和点击选择遮罩。
+    /// 一个逻辑寻路层的作者来源。
+    /// 这里承载可走、代价、高低差和坡道规则；Unity 物理碰撞仍由场景里的视觉/阻挡 Tilemap Collider 负责。
     /// </summary>
     [Serializable]
     public sealed class TerrainNavigationLayerSource
@@ -15,16 +15,16 @@ namespace FantasyWord.GameCore
         [Tooltip("逻辑地形层稳定 ID。0 是旧地图兼容的默认层。")]
         [SerializeField] private int m_layerId = TerrainNodeKey.DefaultLayerId;
 
-        [InspectorName("规则 Tilemap")]
-        [Tooltip("该逻辑层的可行走、地表、层级和通行代价作者数据。")]
+        [InspectorName("寻路规则 Tilemap")]
+        [Tooltip("该逻辑层的可行走、基础地表、高低差、坡道和通行代价作者数据。不是 Unity 物理碰撞层。")]
         [SerializeField] private Tilemap m_ruleTilemap = null;
 
         [InspectorName("玩法高度")]
         [Tooltip("该层相对玩法高度，用于多层调试和过渡校验。")]
         [SerializeField] private int m_elevation = 0;
 
-        [InspectorName("碰撞带")]
-        [Tooltip("少量可复用地形碰撞带编号。首期只登记数据，不直接切换物理层。")]
+        [InspectorName("物理碰撞带")]
+        [Tooltip("少量可复用物理碰撞分组编号。当前只登记语义，真实 Collider 仍挂在墙体、水体、悬崖等 Tilemap 上。")]
         [Min(0)]
         [SerializeField] private int m_collisionBand = 0;
 

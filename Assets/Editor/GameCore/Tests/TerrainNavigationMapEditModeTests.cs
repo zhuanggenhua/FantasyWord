@@ -31,7 +31,7 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
-        public void BuildWorldPath_UsesSameNorthWestRampCenterLineInBothDirections()
+        public void BuildWorldPath_UsesSameNorthWestRampTileCentersInBothDirections()
         {
             TerrainNavigationTile lowGround = CreateTile(0, ETerrainTransitionKind.Ground);
             TerrainNavigationTile lowRamp = CreateTile(
@@ -67,13 +67,13 @@ namespace FantasyWord.GameCore.Tests
                 out Vector2[] reversePath);
 
             Vector2 lowEntrance = m_tilemap.GetCellCenterWorld(lowRampCell);
+            Vector2 highCorner = m_tilemap.GetCellCenterWorld(highRampCornerCell);
             Vector2 highExit = m_tilemap.GetCellCenterWorld(highRampExitCell);
-            Vector2 rampCenter = (lowEntrance + highExit) * 0.5f;
 
             Assert.IsTrue(foundForward);
             Assert.AreEqual(4, forwardPath.Length);
             Assert.AreEqual(lowEntrance, forwardPath[0]);
-            Assert.AreEqual(rampCenter, forwardPath[1]);
+            Assert.AreEqual(highCorner, forwardPath[1]);
             Assert.AreEqual(highExit, forwardPath[2]);
             Assert.AreEqual(
                 (Vector2)m_tilemap.GetCellCenterWorld(highGroundCell),
@@ -82,7 +82,7 @@ namespace FantasyWord.GameCore.Tests
             Assert.IsTrue(foundReverse);
             Assert.AreEqual(4, reversePath.Length);
             Assert.AreEqual(highExit, reversePath[0]);
-            Assert.AreEqual(rampCenter, reversePath[1]);
+            Assert.AreEqual(highCorner, reversePath[1]);
             Assert.AreEqual(lowEntrance, reversePath[2]);
             Assert.AreEqual(
                 (Vector2)m_tilemap.GetCellCenterWorld(lowGroundCell),
@@ -150,12 +150,13 @@ namespace FantasyWord.GameCore.Tests
                 out Vector2[] path);
 
             Vector2 lowEntrance = m_tilemap.GetCellCenterWorld(lowRampCell);
+            Vector2 highCorner = m_tilemap.GetCellCenterWorld(highRampCornerCell);
             Vector2 highExit = m_tilemap.GetCellCenterWorld(highRampExitCell);
 
             Assert.IsTrue(found);
             Assert.AreEqual(4, path.Length);
             Assert.AreEqual(lowEntrance, path[0]);
-            Assert.AreEqual((lowEntrance + highExit) * 0.5f, path[1]);
+            Assert.AreEqual(highCorner, path[1]);
             Assert.AreEqual(highExit, path[2]);
             Assert.AreEqual(
                 (Vector2)m_tilemap.GetCellCenterWorld(highGroundCell),

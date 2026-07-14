@@ -41,13 +41,21 @@ metadata:
 
 ## 条目
 
+### 多参考源设计必须先定裁决标准再实施
+- 日期：2026-07-13
+- 现象：参考 2DRPGEngine 的 SpriteLibrary 方向变体设计时，先纠正了 Animator 方向状态问题，但随后新增了独立 `CharacterAnimationVariantSet` 包装层；该层虽然能运行，却不是对 Unity 原生能力和参考工程职责内核的最薄落地。
+- 根因：只把“方向由 SpriteLibraryAsset 承担”这个中间结论转成实现，没有先稳定比较原生能力、参考工程职责、当前项目 owner、数据生命周期和最少抽象，导致参考后仍可能引入不必要结构。
+- 规避：多参考源或“参考某工程后重构”的任务，必须先写出裁决标准：原生能力优先、职责内核优先于表面结构、最薄可行抽象、单一真相源、当前项目约束和证据覆盖边界；无法按标准排优先级时，只能停在方案比较。当前换装方向库已改为由既有 owner 直接持有四个原生 `SpriteLibraryAsset` 引用，旧 `CharacterAnimationVariantSet` 包装层由静态门禁禁止回流。
+- 来源：用户纠偏。
+- 状态：已升格 -> `.spec/knowledge/standards/workflow.md`、`.spec/skills/before-you-code/SKILL.md`、`.spec/skills/brainstorming/SKILL.md`
+
 ### Unity 阻塞弹窗必须按既定默认动作继续任务
 - 日期：2026-07-10
 - 现象：场景恢复、外部修改和普通确认弹窗多次让自动化停下，并重复向用户询问已经明确过的选择。
 - 根因：弹窗处理口径只覆盖恢复备份，没有统一覆盖外部修改场景和其它普通模态确认。
 - 规避：外部修改场景直接选择 `重新加载 / Reload`；其它普通阻塞弹窗点击默认或主按钮继续。涉及删除本地数据或覆盖未知未保存内容时，仍按既有安全红线先取证。
 - 来源：用户纠偏。
-- 状态：已升格 -> `.spec/knowledge/features/project/开发与验收规范.md`、`.codex/skills/aibridge/SKILL.md`
+- 状态：已升格 -> `.spec/knowledge/features/project/开发与验收规范.md`、`.spec/knowledge/features/project/AIBridge常用命令.md`、`D:\codex-home\skills\aibridge\SKILL.md`
 
 ### 视觉测试层不得越权改正式生成器和配置资产
 - 日期：2026-07-10

@@ -8,6 +8,7 @@ namespace ContextSteering2D
     {
         [Header("Scene View")]
         [SerializeField] private bool m_drawSceneView = true;
+        [SerializeField] private bool m_drawWhenNotSelected = true;
         [SerializeField] private bool m_drawTarget = true;
         [SerializeField] private bool m_drawDetection = true;
 
@@ -29,6 +30,11 @@ namespace ContextSteering2D
             set => m_drawSceneView = value;
         }
 
+        public bool DrawWhenNotSelected
+        {
+            get => m_drawWhenNotSelected;
+            set => m_drawWhenNotSelected = value;
+        }
         public bool DrawTarget => m_drawTarget;
         public bool DrawDetection => m_drawDetection;
         public bool DrawContributions => m_drawContributions;

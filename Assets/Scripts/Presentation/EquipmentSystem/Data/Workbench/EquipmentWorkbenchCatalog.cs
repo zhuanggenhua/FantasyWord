@@ -12,6 +12,9 @@ public sealed class EquipmentWorkbenchCharacterOption
     CharacterFrameData frameData;
 
     [SerializeField]
+    DirectionalSpriteLibrarySet animationLibraries = new DirectionalSpriteLibrarySet();
+
+    [SerializeField]
     CharacterAppearance appearance;
 
     [SerializeField]
@@ -25,9 +28,17 @@ public sealed class EquipmentWorkbenchCharacterOption
         : displayName;
 
     public CharacterFrameData FrameData => frameData;
+    public DirectionalSpriteLibrarySet AnimationLibraries => animationLibraries;
     public CharacterAppearance Appearance => appearance;
     public WorkbenchStatBlock BaseStats => baseStats;
     public IReadOnlyList<EquipmentRenderData> DefaultEquipment => defaultEquipment;
+
+#if UNITY_EDITOR
+    public void SetAnimationLibraries(DirectionalSpriteLibrarySet libraries)
+    {
+        animationLibraries = libraries;
+    }
+#endif
 }
 
 [Serializable]

@@ -31,6 +31,9 @@ public sealed class DirectionalAnimationVariantDriver : MonoBehaviour
     [SerializeField]
     Movable movable;
 
+    [SerializeField]
+    DirectionalSpriteLibrarySet defaultAnimationLibraries = new DirectionalSpriteLibrarySet();
+
     DirectionalSpriteLibrarySet _libraries;
     int _currentDirectionIndex;
 
@@ -45,8 +48,8 @@ public sealed class DirectionalAnimationVariantDriver : MonoBehaviour
     {
         ResolveDependencies();
 
-        if (equipmentRenderer != null && equipmentRenderer.frameData != null)
-            SetFrameData(equipmentRenderer.frameData, false);
+        if (_libraries == null && defaultAnimationLibraries != null && defaultAnimationLibraries.IsComplete)
+            SetAnimationLibraries(defaultAnimationLibraries, false);
 
         if (movable != null)
         {
@@ -77,20 +80,19 @@ public sealed class DirectionalAnimationVariantDriver : MonoBehaviour
             : DirectionValues[0];
     }
 
-    public bool SetFrameData(CharacterFrameData frameData, bool resetDirection)
+    public bool SetAnimationLibraries(DirectionalSpriteLibrarySet libraries, bool resetDirection)
     {
-        if (frameData == null)
+        if (libraries == null)
         {
-            Debug.LogError("[DirectionalAnimationVariantDriver] 缺少角色帧数据，无法选择方向精灵库。", this);
+            Debug.LogError("[DirectionalAnimationVariantDriver] 缺少四向动画精灵库配置，无法选择方向精灵库。", this);
             return false;
         }
 
-        DirectionalSpriteLibrarySet libraries = frameData.animationSpriteLibraries;
-        if (libraries == null || !libraries.IsComplete)
+        if (!libraries.IsComplete)
         {
             Debug.LogError(
-                $"[DirectionalAnimationVariantDriver] {frameData.name} 缺少完整的 SE/SW/NE/NW 动画精灵库。",
-                frameData);
+                "[DirectionalAnimationVariantDriver] 缺少完整的 SE/SW/NE/NW 动画精灵库。",
+                this);
             return false;
         }
 
