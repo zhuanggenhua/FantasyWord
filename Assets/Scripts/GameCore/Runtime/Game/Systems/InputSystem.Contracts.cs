@@ -34,6 +34,10 @@ namespace FantasyWord.GameCore
         public InputAction point;
     }
 
+    /// <summary>
+    /// 正式输入动作图。
+    /// 用于在 Gameplay、UI 和 None 三种输入上下文之间切换。
+    /// </summary>
     public enum EActionMap
     {
         Gameplay,
@@ -41,6 +45,10 @@ namespace FantasyWord.GameCore
         None
     }
 
+    /// <summary>
+    /// Gameplay 动作图中的动作键。
+    /// 这里保持与 InputSystem_Actions.inputactions 的正式动作名对齐。
+    /// </summary>
     public enum EGameplayInputAction
     {
         Move,
@@ -56,6 +64,9 @@ namespace FantasyWord.GameCore
         ToggleMovementControlMode
     }
 
+    /// <summary>
+    /// UI 动作图中的动作键。
+    /// </summary>
     public enum EUIInputAction
     {
         Submit,
@@ -65,6 +76,21 @@ namespace FantasyWord.GameCore
         Point
     }
 
+    /// <summary>
+    /// UI 按键提示需要展示的输入设备图标族。
+    /// 设备识别归正式输入系统所有，UI 只消费这个归类结果。
+    /// </summary>
+    public enum EInputControlDisplayType
+    {
+        Keyboard,
+        XBOX,
+        Playstation
+    }
+
+    /// <summary>
+    /// 输入动作阶段。
+    /// 统一封装 Unity Input System 的 started/performed/canceled 三态。
+    /// </summary>
     public enum EInputActionPhase
     {
         Started,

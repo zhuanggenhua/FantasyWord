@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 动画状态消息的传播模式；当前正式运行时只允许显式接收者合同。
+    /// </summary>
     public enum EMessagePropagationMode
     {
         /// <summary>
@@ -12,18 +15,37 @@ namespace FantasyWord.GameCore
         RequireExplicitReceiver = 3
     }
 
+    /// <summary>
+    /// Animator 状态进入或退出时要派发的消息配置。
+    /// </summary>
     [Serializable]
     public struct MessageData
     {
+        [InspectorName("消息名")]
+        [Tooltip("必须命中 AnimationStateMessageNames 中登记的正式消息名。")]
         public string message;
+
+        [InspectorName("传播模式")]
+        [Tooltip("当前只支持显式接收者模式，旧字符串传播模式不会在正式运行时兜底。")]
         public EMessagePropagationMode propagationMode;
 
+        /// <summary>
+        /// 只有配置了非空消息名才会尝试派发。
+        /// </summary>
         public bool IsValid() => !string.IsNullOrWhiteSpace(message);
     }
 
+    /// <summary>
+    /// Animator 状态机消息派发器，把动画状态进入/退出事件转成明确的接收者接口调用。
+    /// </summary>
     public class StateMessageDispatcher : StateMachineBehaviour
     {
+        [InspectorName("进入状态消息")]
+        [Tooltip("Animator 进入该状态时派发的消息。为空则不派发。")]
         public MessageData animationStartMessage;
+
+        [InspectorName("退出状态消息")]
+        [Tooltip("Animator 退出该状态时派发的消息。为空则不派发。")]
         public MessageData animationEndMessage;
 
 

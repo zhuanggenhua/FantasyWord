@@ -51,6 +51,10 @@ namespace FantasyWord.GameCore
         public float TraversalCost => Mathf.Max(0.01f, m_traversalCost);
     }
 
+    /// <summary>
+    /// 单格地形的基础过渡语义。
+    /// 它决定同层移动和坡道连接是否允许，不自动生成物理碰撞。
+    /// </summary>
     public enum ETerrainTransitionKind
     {
         Ground,
@@ -71,6 +75,10 @@ namespace FantasyWord.GameCore
         SouthWest = 4
     }
 
+    /// <summary>
+    /// 规则 Tile 提供的基础地表类型。
+    /// 元素反应、脚步声和通行代价从这里读取，不从视觉 Tile 名称推断。
+    /// </summary>
     public enum ETerrainSurfaceKind
     {
         None,
@@ -82,6 +90,10 @@ namespace FantasyWord.GameCore
         ScorchedDirt
     }
 
+    /// <summary>
+    /// 覆盖在基础地表上的作者/表现层语义。
+    /// 例如草、雪和花可以被元素反应移除或改变，但不会改写基础地表。
+    /// </summary>
     public enum ETerrainSurfaceCoverKind
     {
         None,
@@ -93,6 +105,10 @@ namespace FantasyWord.GameCore
         RoadCover
     }
 
+    /// <summary>
+    /// 一个 Tilemap 作者层在地表系统中的职责。
+    /// Role 只描述语义来源，不代表 Unity SortingLayer 或物理层。
+    /// </summary>
     public enum ETerrainSurfaceLayerRole
     {
         None,
@@ -106,6 +122,10 @@ namespace FantasyWord.GameCore
         RuntimeResultOverride
     }
 
+    /// <summary>
+    /// 上层地表覆盖的可反应属性。
+    /// 元素规则用这些标记判断是否可燃、可销毁或可再生。
+    /// </summary>
     [Flags]
     public enum ETerrainSurfaceCoverTraits
     {
@@ -115,6 +135,10 @@ namespace FantasyWord.GameCore
         Regrowable = 1 << 2
     }
 
+    /// <summary>
+    /// 上层地表覆盖的运行时生命周期。
+    /// 例如草从 Alive 进入 Burning，再变成 Removed 后由表现层隐藏原覆盖 Tile。
+    /// </summary>
     public enum ETerrainSurfaceCoverLifecycle
     {
         None,
@@ -124,12 +148,24 @@ namespace FantasyWord.GameCore
         Regrowing
     }
 
+    /// <summary>
+    /// 作者/表现 Tile 到上层地表语义的显式映射。
+    /// 未列入映射的 Tile 只保留视觉职责，不参与元素反应。
+    /// </summary>
     [Serializable]
     public sealed class TerrainSurfaceCoverTileMapping
     {
+        [InspectorName("来源 Tile")]
+        [Tooltip("作者/表现 Tilemap 上的具体 Tile。只有显式列在这里的 Tile 才会产生上层地表语义。")]
         [SerializeField] private TileBase m_tile = null;
+
+        [InspectorName("覆盖类型")]
+        [Tooltip("该 Tile 对应的上层地表覆盖类型，例如 Grass/Snow/Moss。")]
         [SerializeField] private ETerrainSurfaceCoverKind m_coverKind =
             ETerrainSurfaceCoverKind.None;
+
+        [InspectorName("覆盖属性")]
+        [Tooltip("元素反应可读取的属性，例如可燃、可销毁或可再生。")]
         [SerializeField] private ETerrainSurfaceCoverTraits m_traits =
             ETerrainSurfaceCoverTraits.None;
 
@@ -139,6 +175,10 @@ namespace FantasyWord.GameCore
         public bool IsValid => m_tile != null && m_coverKind != ETerrainSurfaceCoverKind.None;
     }
 
+    /// <summary>
+    /// 上层地表覆盖来源的稳定引用。
+    /// SourceId 区分不同作者层，Role 说明该层承担的 Tilemap 职责。
+    /// </summary>
     public readonly struct TerrainSurfaceCoverSourceReference
     {
         public const int DefaultSurfaceLayerSourceId = 0;
@@ -163,6 +203,10 @@ namespace FantasyWord.GameCore
             new(LegacySurfaceCoverSourceId, ETerrainSurfaceLayerRole.SurfaceCover);
     }
 
+    /// <summary>
+    /// 地形格当前活动状态的位标记快照。
+    /// 它用于快速匹配规则条件，详细来源仍在 TerrainElementStateSnapshot 中。
+    /// </summary>
     [Flags]
     public enum ETerrainRuntimeSurfaceState
     {

@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 点击目标解析失败的可诊断原因。
+    /// 调用方用它生成玩家/调试可读的失败状态，而不是默默回退成直线移动。
+    /// </summary>
     internal enum ETerrainDestinationResolutionFailure
     {
         None = 0,
@@ -13,6 +17,10 @@ namespace FantasyWord.GameCore
         Ambiguous = 4
     }
 
+    /// <summary>
+    /// 一次点击目标对应的候选导航节点。
+    /// WorldPosition 保留最终落点，可与节点中心不同，用于“格子可达但目标点需吸附”的情况。
+    /// </summary>
     internal readonly struct TerrainDestinationCandidate
     {
         public TerrainDestinationCandidate(
@@ -30,6 +38,10 @@ namespace FantasyWord.GameCore
         public bool WasSnapped { get; }
     }
 
+    /// <summary>
+    /// 从世界点击点解析唯一可达导航目标。
+    /// 它只做候选筛选和歧义判断，实际图数据与路径搜索仍由 TerrainNavigationMap 提供。
+    /// </summary>
     internal sealed class TerrainDestinationResolver
     {
         private readonly List<TerrainDestinationCandidate> m_candidates = new();
@@ -73,6 +85,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
+            // 多层同格点击可能命中多个候选；优先当前层，其次只接受唯一可达目标，避免误跨层。
             int reachableCount = 0;
             TerrainDestinationCandidate uniqueReachable = default;
             bool hasReachableCurrentLayer = false;

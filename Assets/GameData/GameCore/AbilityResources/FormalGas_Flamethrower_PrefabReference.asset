@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0faf6e0086534a70a04835779b059f7d, type: 3}
+  m_Name: FormalGas_Flamethrower_PrefabReference
+  m_EditorClassIdentifier: FantasyWord.GameCore::FantasyWord.GameCore.PrefabReference
+  m_prefab: {fileID: 63870561309765338, guid: a146750504c64be4a948e93b1a20e117, type: 3}

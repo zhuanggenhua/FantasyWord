@@ -3,23 +3,46 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 移速持续修正效果的存档快照，保存倍率和可选曲线配置。
+    /// </summary>
     [Serializable]
     public class TemporalSpeedModifierEffectPersistedState : TemporalEffectPersistedState
     {
+        /// <summary>
+        /// 目标移动速度倍率；1 表示不变，小于 1 为减速，大于 1 为加速。
+        /// </summary>
         public float factor;
+
+        /// <summary>
+        /// 可选的恢复曲线，用于让倍率随持续时间逐渐回到 1。
+        /// </summary>
         public AnimationCurve customCurve;
     }
 
+    /// <summary>
+    /// 在持续时间内向目标角色登记移动速度规则，可选按曲线逐步回到正常速度。
+    /// </summary>
     [Serializable]
     public class TemporalSpeedModifierEffect : ATemporalEffect, ITemporalEffectRuntimeStateCarrier
     {
+        /// <summary>
+        /// 移速修正的配置数据；曲线存在时运行时需要 tick 回调刷新当前倍率。
+        /// </summary>
         [Serializable]
         public struct SpeedModifierData
         {
+            [InspectorName("移动速度倍率")]
+            [Tooltip("持续期间应用到目标移动速度上的倍率；1 表示不变，小于 1 减速，大于 1 加速。")]
             public float factor;
+
+            [InspectorName("恢复曲线")]
+            [Tooltip("可选曲线。存在两个以上关键帧时，会按持续进度把倍率插值回 1。")]
             public AnimationCurve customCurve;
         }
 
+        [InspectorName("移速修正配置")]
+        [Tooltip("配置持续期间目标移动速度倍率，以及是否随时间恢复正常速度。")]
         [SerializeField] private SpeedModifierData m_speedModifierData;
 
         public override TemporalEffectRuntimeTraits GetRuntimeTraits()
@@ -122,16 +145,17 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        public void RestorePersistedState(TemporalEffectPersistedState persistedState)
+        public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)
         {
             if (persistedState is not TemporalSpeedModifierEffectPersistedState state)
             {
-                return;
+                return false;
             }
 
             state.RestoreSharedStateTo(this);
             m_speedModifierData.factor = state.factor;
             m_speedModifierData.customCurve = state.customCurve;
+            return true;
         }
 
         private float GetResolvedSpeedFactor()

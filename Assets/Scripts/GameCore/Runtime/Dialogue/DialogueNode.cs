@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 对话消息类型。
+    /// 固定类型用于常见选择，自定义消息用于剧情脚本之间传递更细的状态。
+    /// </summary>
     public enum EDialogueMessageType
     {
         None,
@@ -13,6 +17,10 @@ namespace FantasyWord.GameCore
         Decline
     }
 
+    /// <summary>
+    /// 对话过程中已经产生的消息集合。
+    /// 条件和命令可用它判断玩家是否选择过某个选项。
+    /// </summary>
     [System.Serializable]
     public class DialogueMessageFeed
     {
@@ -47,6 +55,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 对话选项或节点产生的一条消息。
+    /// ToString 统一成小写字符串，便于 HashSet 去重和条件匹配。
+    /// </summary>
     [System.Serializable]
     public struct DialogueMessage
     {
@@ -80,6 +92,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 对话节点上的一个可选分支。
+    /// name 是玩家看到的选项名，node 是下一节点，message 是选择后写入的消息。
+    /// </summary>
     [System.Serializable]
     public struct DialogueNodeOption
     {
@@ -88,11 +104,19 @@ namespace FantasyWord.GameCore
         public DialogueMessage message;
     }
 
+    /// <summary>
+    /// 单个对话节点。
+    /// 节点只保存文本、说话人、选项和生命周期命令，不直接持有 UI 面板。
+    /// </summary>
     public class DialogueNode
     {
+        [InspectorName("开始命令")]
+        [Tooltip("进入该节点时执行的命令。为空时不执行额外逻辑。")]
         [SerializeReference, SubclassSelector]
         private ICommand m_toExecuteOnStart;
 
+        [InspectorName("完成命令")]
+        [Tooltip("离开该节点或完成该节点时执行的命令。为空时不执行额外逻辑。")]
         [SerializeReference, SubclassSelector]
         private ICommand m_toExecuteOnCompletion;
 
@@ -168,7 +192,7 @@ namespace FantasyWord.GameCore
 
         internal void ExecuteStartCommand(GameCommandContext context)
         {
-            m_toExecuteOnStart.Execute(context);
+            m_toExecuteOnStart.ExecuteFireAndReport(context, nameof(DialogueNode));
         }
 
         internal void ExecuteCompletionCommand()
@@ -178,7 +202,7 @@ namespace FantasyWord.GameCore
 
         internal void ExecuteCompletionCommand(GameCommandContext context)
         {
-            m_toExecuteOnCompletion.Execute(context);
+            m_toExecuteOnCompletion.ExecuteFireAndReport(context, nameof(DialogueNode));
         }
     }
 }

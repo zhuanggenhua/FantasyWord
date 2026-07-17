@@ -14,18 +14,28 @@ namespace FantasyWord.GameCore
         private Dictionary<UIControllerButtonManager.EButtonState, Sprite> m_sprites;
         private Func<bool> m_isPressed = null;
         private UIControllerButtonManager m_manager = null;
+        private bool m_registered = false;
 
         public UIControllerButtonManager.EAction action => m_action;
 
+        private void OnEnable()
+        {
+            RegisterWithManagerIfReady();
+        }
+
         private void Start()
         {
-            m_manager = ResolveManager();
-            m_manager?.RegisterButton(this);
+            RegisterWithManagerIfReady();
+        }
+
+        private void OnDisable()
+        {
+            UnregisterFromManager();
         }
 
         private void OnDestroy()
         {
-            m_manager?.UnregisterButton(this);
+            UnregisterFromManager();
         }
 
         private void Update()
@@ -61,8 +71,36 @@ namespace FantasyWord.GameCore
         public void SetAction(UIControllerButtonManager.EAction action)
         {
             m_action = action;
-            m_manager ??= ResolveManager();
+            RegisterWithManagerIfReady();
             m_manager?.ForceUpdateButton(this);
+        }
+
+        private void RegisterWithManagerIfReady()
+        {
+            if (m_registered)
+            {
+                return;
+            }
+
+            m_manager = ResolveManager();
+            if (m_manager == null)
+            {
+                return;
+            }
+
+            m_manager.RegisterButton(this);
+            m_registered = true;
+        }
+
+        private void UnregisterFromManager()
+        {
+            if (!m_registered)
+            {
+                return;
+            }
+
+            m_manager?.UnregisterButton(this);
+            m_registered = false;
         }
 
         private UIControllerButtonManager ResolveManager()

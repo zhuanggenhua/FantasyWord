@@ -1,0 +1,24 @@
+# 0065-能力持续效果读档恢复校验边界
+
+- 日期：2026-07-17
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 的持续效果只有成功应用后才进入角色持续效果列表，保存恢复的是已登记的运行时效果。
+  - FantasyWord 的能力型持续效果已经改为 Formal GAS 技能编号，正常 `Apply()` 入口已由 0064 校验编号和空配置。
+  - 读档恢复入口此前直接还原 persisted state 后登记 effect，可能绕过 `Apply()` 校验，把坏保存记录恢复成“没有能力变化但仍登记”的持续效果。
+  - FantasyWord 不再像参考工程那样直接保存 live effect 对象；最小 runtime state 重建后必须重新绑定当前角色，否则恢复回调只持有持久引用，在 EditMode 或坏登记环境中可能解析不到 live owner。
+- 决策：
+  - `ITemporalEffectRuntimeStateCarrier` 的恢复入口必须是可失败合同：`TryRestorePersistedState(...)`。
+  - 三类 Formal GAS 能力持续效果读档时必须校验保存记录中的技能编号；小于等于 0 或空能力列表只跳过该持续效果。
+  - 坏保存记录属于读档容错，不得中断其它保存记录恢复；但运行时作者配置错误仍由 0064 的 `Apply()` 入口抛出异常。
+  - 只有 `TryRestorePersistedState(...)` 成功的 effect 才能进入角色持续效果注册表并执行 `RestoreRuntimeState(...)`。
+  - `RestoreRuntimeState(owner)` 和 `BindRuntimeOwner(owner)` 必须绑定当前角色的 live target 引用，不能只写可持久化 target 引用。
+- 影响：
+  - 正常有效保存记录仍会恢复能力来源、压制来源和持续效果登记。
+  - 坏保存记录不会授予/压制能力，也不会留下空持续效果壳。
+  - 动作锁、移速规则、能力授予/压制这类依赖目标角色的恢复回调，会拿到当前角色 live owner，不依赖持久引用反查成功。
+  - Foundation 门禁检查持续效果恢复入口必须走可失败合同，并检查能力型恢复入口复用编号校验。
+  - EditMode 测试覆盖有效保存记录恢复和坏保存记录跳过。
+- 替代关系：
+  - 补充 0064；0064 约束运行时应用入口，本决策约束读档恢复入口。
+  - 延续 0062；不恢复旧 `AbilitySheet` 持续效果主链，也不放开旧规则型持续效果作为正式作者入口。

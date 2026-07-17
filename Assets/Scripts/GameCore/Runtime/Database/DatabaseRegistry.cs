@@ -30,17 +30,45 @@ namespace FantasyWord.GameCore
 
         public DatabaseEntryReference<T> CreateReference<T>(T entry) where T : DatabaseEntry
         {
+            if (TryCreateReference(entry, out DatabaseEntryReference<T> reference))
+            {
+                return reference;
+            }
+
+            throw new InvalidOperationException(
+                $"[{nameof(DatabaseRegistry)}] 数据库资产 {entry?.name ?? "<null>"} 未登记，不能创建稳定引用。");
+        }
+
+        public bool TryCreateReference<T>(T entry, out DatabaseEntryReference<T> reference) where T : DatabaseEntry
+        {
+            reference = null;
             string guid = DatabaseEntryToGUID(entry);
-            return new(guid);
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                return false;
+            }
+
+            reference = new DatabaseEntryReference<T>(guid);
+            return true;
         }
 
         public T LoadFromReference<T>(DatabaseEntryReference<T> reference) where T : DatabaseEntry
         {
+            if (reference == null || string.IsNullOrWhiteSpace(reference.guid))
+            {
+                return null;
+            }
+
             return GUIDToDatabaseEntry<T>(reference.guid);
         }
 
         public T GUIDToDatabaseEntry<T>(string guid) where T : DatabaseEntry
         {
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                return null;
+            }
+
             EnsureCollectionsInitialized();
             HashSet<string> visited = new();
 
@@ -63,19 +91,40 @@ namespace FantasyWord.GameCore
         public string DatabaseEntryToGUID<T>(T instance) where T : DatabaseEntry
         {
             EnsureCollectionsInitialized();
+            if (!instance)
+            {
+                Debug.LogError($"[{nameof(DatabaseRegistry)}] 不能为缺失的数据库资产创建引用。");
+                return string.Empty;
+            }
+
             string guid = m_entries.FirstOrDefault(entry => entry.Value == instance).Key;
-            Debug.Assert(!string.IsNullOrEmpty(guid), $"Database entry {instance} does not exist in the registry.");
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                Debug.LogError($"[{nameof(DatabaseRegistry)}] 数据库资产 {instance.name} 未登记，不能创建稳定引用。", instance);
+                return string.Empty;
+            }
+
             return guid;
         }
 
         public bool HasGUID(string guid)
         {
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                return false;
+            }
+
             EnsureCollectionsInitialized();
             return m_entries.ContainsKey(guid);
         }
 
         public bool HasGUIDConversion(string guid)
         {
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                return false;
+            }
+
             EnsureCollectionsInitialized();
             return m_GUIDConversionMap.ContainsKey(guid);
         }

@@ -1,0 +1,22 @@
+# 0042-GameManager 系统注册表查询失败语义边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - `GameManager + AGameSystem` 是从 2DRPGEngine 吸收的正式系统宿主，`GameManager.XxxSystem / GetSystem<T>()` 快捷入口本身不是违规项。
+  - `HasSystem<T>()` 和 `TryGetSystem<T>()` 只负责表达“系统宿主或系统字典尚未就绪时是否可查询”的 API 失败语义；它们不是调用点默认迁移方向。
+  - 旧实现直接访问 `_instance.m_systems`，导致系统查询 API 在 GameManager 尚未存在或系统字典尚未建立时仍可能抛空引用。
+- 决策：
+  - `HasSystem<T>()` 必须在 GameManager 实例或系统字典缺失时返回 false。
+  - `TryGetSystem<T>(out T system)` 必须先把输出置空；GameManager 实例或系统字典缺失时返回 false。
+  - `GetSystem<T>()` 必须复用 `TryGetSystem<T>()` 的同一条查询路径；若正式系统缺失，必须抛出带系统类型的异常，而不是只打断言后继续返回 null。
+  - `FindSystems()` 发现同类型系统重复时必须抛出异常，不能只 `Debug.Assert` 后覆盖或继续启动。
+  - GameManager 运行时静态门禁必须覆盖系统查询、缺失系统异常和重复系统异常合同。
+- 影响：
+  - 确实允许“系统未就绪时不改变正式结果”的流程可以使用 `TryGetSystem`，而不是每处重复 `_instance` 前置保护。
+  - 仍不改变静态快捷属性的语义：`GameManager.AudioSystem`、`PlayerSystem` 等代表正式系统入口；缺失时继续通过 `GetSystem<T>()` 暴露并中断配置错误。
+  - 调用点审计必须继续按 0046/0050 比较参考同职责流程，不得把本决策解释成“改成 TryGetSystem 更规范”或“单例快捷入口违规”。
+  - 不引入第二套服务定位器或生命周期框架。
+- 替代关系：
+  - 本决策补强 `0004-音频运行时 owner 边界`、`0040-MovementZone 玩家系统就绪边界` 和 `0041-命令上下文玩家系统就绪边界` 依赖的系统就绪查询基础。
+  - 本决策的调用点解释已由 `0046-参考流程优先的 GameManager 系统访问审计边界` 和 `0050-参考流程审计结论纠偏边界` 收紧。

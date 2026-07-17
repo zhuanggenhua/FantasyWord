@@ -17,6 +17,8 @@ public sealed class EquipmentWorkbenchIconSlotView : MonoBehaviour
     [SerializeField] Image badgeBackground;
     [SerializeField] TextMeshProUGUI badgeLabel;
 
+    UnityAction currentClickListener;
+
     const float IconFrameSidePadding = 10f;
     const float IconFrameNameReserve = 28f;
     const float IconImageInset = 0f;
@@ -121,9 +123,29 @@ public sealed class EquipmentWorkbenchIconSlotView : MonoBehaviour
         }
 
         button.interactable = interactable;
-        button.onClick.RemoveAllListeners();
+        ClearClickListener();
         if (interactable && onClick != null)
-            button.onClick.AddListener(onClick);
+        {
+            currentClickListener = onClick;
+            button.onClick.AddListener(currentClickListener);
+        }
+    }
+
+    void OnDisable()
+    {
+        ClearClickListener();
+    }
+
+    void OnDestroy()
+    {
+        ClearClickListener();
+    }
+
+    void ClearClickListener()
+    {
+        if (button != null && currentClickListener != null)
+            button.onClick.RemoveListener(currentClickListener);
+        currentClickListener = null;
     }
 
     void EnsureReferences()

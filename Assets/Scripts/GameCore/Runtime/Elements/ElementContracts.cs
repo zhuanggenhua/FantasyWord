@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 能施加到世界地表上的元素类型。
+    /// 该枚举描述规则语义，不等于 GAS 技能编号或视觉特效名称。
+    /// </summary>
     public enum EWorldElementKind
     {
         None,
@@ -12,6 +16,10 @@ namespace FantasyWord.GameCore
         Oil
     }
 
+    /// <summary>
+    /// 一次元素施加的空间范围。
+    /// Cone 需要方向，Circle 和 Point 不依赖方向。
+    /// </summary>
     public enum EElementAreaKind
     {
         Point,
@@ -19,6 +27,10 @@ namespace FantasyWord.GameCore
         Cone
     }
 
+    /// <summary>
+    /// 地表上可随时间变化的运行时状态。
+    /// 状态存在于地图实例中，不会改写作者规则 Tile 资产。
+    /// </summary>
     public enum ETerrainElementStateKind
     {
         None,
@@ -28,6 +40,9 @@ namespace FantasyWord.GameCore
         Electrified
     }
 
+    /// <summary>
+    /// 同一种运行时状态重复施加时的合并策略。
+    /// </summary>
     public enum ETerrainStateMergePolicy
     {
         RefreshDuration,
@@ -36,18 +51,28 @@ namespace FantasyWord.GameCore
         Reject
     }
 
+    /// <summary>
+    /// 运行时地表变化是否需要进入后续持久化链路。
+    /// 当前首期主要使用瞬时状态，持久化仍由世界地形变更流程收口。
+    /// </summary>
     public enum ETerrainRuntimePersistencePolicy
     {
         Transient,
         Persistent
     }
 
+    /// <summary>
+    /// 元素反应规则的触发时机。
+    /// </summary>
     public enum EElementReactionTrigger
     {
         OnElementApplied,
         OnStateExpired
     }
 
+    /// <summary>
+    /// 元素反应命中后允许执行的结果操作类型。
+    /// </summary>
     public enum EElementReactionOperationKind
     {
         AddOrRefreshState,
@@ -60,12 +85,19 @@ namespace FantasyWord.GameCore
         ClearSurfaceCoverOverride
     }
 
+    /// <summary>
+    /// 不改变规则状态的一次性表现信号。
+    /// </summary>
     public enum EElementPresentationSignal
     {
         None,
         Steam
     }
 
+    /// <summary>
+    /// 元素施加范围的值对象。
+    /// 它不持有场景引用，便于 GAS、测试和地图系统复用同一套规则输入。
+    /// </summary>
     [Serializable]
     public readonly struct ElementArea
     {
@@ -138,6 +170,10 @@ namespace FantasyWord.GameCore
             (Area.Kind != EElementAreaKind.Cone || Direction.sqrMagnitude > 0.0f);
     }
 
+    /// <summary>
+    /// 地表状态来源标识。
+    /// 用于诊断和后续持久化归因，不参与反应规则排序。
+    /// </summary>
     public readonly struct TerrainElementStateSource
     {
         public TerrainElementStateSource(UnityEngine.Object sourceEntity, int sourceAbilityCode)
@@ -150,6 +186,10 @@ namespace FantasyWord.GameCore
         public int SourceAbilityCode { get; }
     }
 
+    /// <summary>
+    /// 地表状态枚举到位标记的转换入口。
+    /// 集中放在这里，避免各运行时系统各自维护一份映射。
+    /// </summary>
     public static class TerrainElementStateKindExtensions
     {
         public static ETerrainRuntimeSurfaceState ToRuntimeFlag(this ETerrainElementStateKind stateKind)

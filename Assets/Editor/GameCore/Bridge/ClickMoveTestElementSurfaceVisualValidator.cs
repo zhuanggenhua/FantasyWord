@@ -32,7 +32,7 @@ namespace FantasyWord.GameCore
         private const int FireOriginCellOffsetX = -2;
         private const int FireOriginCellOffsetY = 0;
         private const int QAbilitySlotIndex = 1;
-        private const int FlamethrowerAbilityCode = FormalGasAbilityCodes.Flamethrower;
+        private const int FlamethrowerAbilityCode = XAbility.ABILITY_Flamethrower;
         private const string ResultRelativePath =
             "Temp/UnityBridge/results/clickmove-element-surface-q-wide-visual-runtime.json";
         private const string BurningScreenshotRelativePath =
@@ -66,7 +66,6 @@ namespace FantasyWord.GameCore
         private static readonly List<Vector3Int> s_targetCells = new();
         private static readonly List<TerrainNodeKey> s_targetNodeScratch = new();
         private static Tilemap[] s_visualBlockerTilemaps = Array.Empty<Tilemap>();
-        private static SpriteRenderer[] s_visualBlockerSpriteRenderers = Array.Empty<SpriteRenderer>();
         private static Vector3 s_playerOriginalPosition;
         private static Vector3 s_cameraOriginalPosition;
         private static float s_cameraOriginalOrthographicSize;
@@ -76,7 +75,6 @@ namespace FantasyWord.GameCore
         private static readonly List<Behaviour> s_disabledCameraBehaviours = new();
         private static readonly List<Canvas> s_disabledUiCanvases = new();
         private static readonly List<SpriteRenderer> s_disabledPlayerRenderers = new();
-        private static readonly List<SpriteRenderer> s_disabledSceneRenderers = new();
 
         public static string ResultPath => Path.GetFullPath(ResultRelativePath);
         public static string BurningScreenshotPath => Path.GetFullPath(BurningScreenshotRelativePath);
@@ -126,7 +124,6 @@ namespace FantasyWord.GameCore
             s_targetCells.Clear();
             s_targetNodeScratch.Clear();
             s_visualBlockerTilemaps = Array.Empty<Tilemap>();
-            s_visualBlockerSpriteRenderers = Array.Empty<SpriteRenderer>();
             s_playerOriginalPosition = default;
             s_cameraOriginalPosition = default;
             s_cameraOriginalOrthographicSize = 0.0f;
@@ -136,7 +133,6 @@ namespace FantasyWord.GameCore
             s_disabledCameraBehaviours.Clear();
             s_disabledUiCanvases.Clear();
             s_disabledPlayerRenderers.Clear();
-            s_disabledSceneRenderers.Clear();
 
             EditorApplication.update -= Tick;
             EditorApplication.update += Tick;
@@ -327,9 +323,8 @@ namespace FantasyWord.GameCore
                     temp != null;
                 result.TemporaryEffectTilemapName = temp != null ? temp.name : "null";
 
-                result.HasSurfaceCoverTilemap =
-                    TryGetPrivateField(s_presentation, "m_surfaceCoverTilemap", out Tilemap? cover) &&
-                    cover != null;
+                Tilemap? cover = ResolvePrimarySurfaceCoverTilemap();
+                result.HasSurfaceCoverTilemap = cover != null;
                 result.SurfaceCoverTilemapName = cover != null ? cover.name : "null";
                 result.SurfaceCoverSortingOrder = GetTilemapSortingOrder(cover);
             }
@@ -639,6 +634,7 @@ namespace FantasyWord.GameCore
             int clearedCells = 0;
             int removedGrassCells = 0;
             int visuallyRevealedDirtCells = 0;
+            int visibleMappedSurfaceCoverSources = 0;
             int remainingTemporaryTiles = 0;
             int resultOverrideTiles = 0;
             TerrainSurfaceSample sample = default;
@@ -684,6 +680,9 @@ namespace FantasyWord.GameCore
                         out bool hasSurfaceCoverTile);
                     bool coverHidden = hasSurfaceCoverTile && surfaceCoverAlpha <= 0.01f;
                     bool baseDirtStillVisibleSource = hasBaseVisualTile;
+                    bool anyMappedCoverStillVisible = HasVisibleMappedSurfaceCoverSource(
+                        cell,
+                        out string visibleMappedCoverSources);
 
                     removedGrassCells++;
                     result.RuntimeStateAfterExpiration = sample.RuntimeState.ToString();
@@ -700,10 +699,19 @@ namespace FantasyWord.GameCore
                     result.HasBaseVisualTileAfterExpiration = hasBaseVisualTile;
                     result.HasSurfaceCoverTileAfterExpiration = hasSurfaceCoverTile;
                     result.SurfaceCoverHiddenAfterExpiration = coverHidden;
+                    if (anyMappedCoverStillVisible)
+                    {
+                        visibleMappedSurfaceCoverSources++;
+                        if (string.IsNullOrEmpty(result.VisibleMappedSurfaceCoverSourcesAfterExpiration))
+                        {
+                            result.VisibleMappedSurfaceCoverSourcesAfterExpiration = visibleMappedCoverSources;
+                        }
+                    }
 
                     if (baseDirtStillVisibleSource &&
                         IsDirtVisualTileName(baseVisualTileName) &&
-                        coverHidden)
+                        coverHidden &&
+                        !anyMappedCoverStillVisible)
                     {
                         visuallyRevealedDirtCells++;
                     }
@@ -713,6 +721,8 @@ namespace FantasyWord.GameCore
             result.BurningClearedCellCount = clearedCells;
             result.GrassCoverRemovedCellCount = removedGrassCells;
             result.GrassCoverVisuallyRemovedCellCount = visuallyRevealedDirtCells;
+            result.VisibleMappedSurfaceCoverSourceCountAfterExpiration =
+                visibleMappedSurfaceCoverSources;
             result.TemporaryTileCountAfterExpiration = remainingTemporaryTiles;
             result.ResultOverrideTileCountAfterExpiration = resultOverrideTiles;
 
@@ -735,7 +745,7 @@ namespace FantasyWord.GameCore
                 result.GrassCoverRemovedAndDirtRevealed = true;
                 result.GrassCoverRemovedFrame = Time.frameCount;
                 result.Trace.Add(
-                    $"frame={Time.frameCount}, wide visual grass cover hidden and base tile remains visible, cells={visuallyRevealedDirtCells}");
+                    $"frame={Time.frameCount}, wide visual grass cover hidden across mapped sources and base tile remains visible, cells={visuallyRevealedDirtCells}");
             }
 
             RefreshVisibilityFacts(result);
@@ -771,9 +781,6 @@ namespace FantasyWord.GameCore
             }
             result.TemporaryEffectSortingOrder = GetTilemapSortingOrder(temporaryEffectTilemap);
             s_visualBlockerTilemaps = UnityEngine.Object.FindObjectsByType<Tilemap>(
-                FindObjectsInactive.Exclude,
-                FindObjectsSortMode.InstanceID);
-            s_visualBlockerSpriteRenderers = UnityEngine.Object.FindObjectsByType<SpriteRenderer>(
                 FindObjectsInactive.Exclude,
                 FindObjectsSortMode.InstanceID);
 
@@ -1043,11 +1050,6 @@ namespace FantasyWord.GameCore
             return blockers.Count == 0;
         }
 
-        private static bool IsPlayerRenderer(SpriteRenderer renderer)
-        {
-            return s_player != null && renderer.transform.IsChildOf(s_player.transform);
-        }
-
         private static int GetTilemapSortingOrder(Tilemap? tilemap)
         {
             if (tilemap == null)
@@ -1123,56 +1125,8 @@ namespace FantasyWord.GameCore
                 result.RuntimeNavigationPathHidden = true;
             }
 
-            HideTargetSpriteBlockersForCapture(result);
             DisableCameraDriversForVisualCapture(result);
             DisableScreenUiForVisualCapture(result);
-        }
-
-        private static void HideTargetSpriteBlockersForCapture(ValidationResult result)
-        {
-            s_disabledSceneRenderers.Clear();
-            if (s_navigationMap == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < s_visualBlockerSpriteRenderers.Length; i++)
-            {
-                SpriteRenderer renderer = s_visualBlockerSpriteRenderers[i];
-                if (renderer == null ||
-                    !renderer.enabled ||
-                    renderer.sprite == null ||
-                    !renderer.gameObject.activeInHierarchy ||
-                    IsPlayerRenderer(renderer))
-                {
-                    continue;
-                }
-
-                Bounds bounds = renderer.bounds;
-                bool overlapsTarget = false;
-                for (int cellIndex = 0; cellIndex < s_targetCells.Count; cellIndex++)
-                {
-                    Vector3 world = s_navigationMap.RuleTilemap.GetCellCenterWorld(s_targetCells[cellIndex]);
-                    if (world.x >= bounds.min.x &&
-                        world.x <= bounds.max.x &&
-                        world.y >= bounds.min.y &&
-                        world.y <= bounds.max.y)
-                    {
-                        overlapsTarget = true;
-                        break;
-                    }
-                }
-
-                if (!overlapsTarget)
-                {
-                    continue;
-                }
-
-                renderer.enabled = false;
-                s_disabledSceneRenderers.Add(renderer);
-            }
-
-            result.TargetSpriteBlockerDisabledCount = s_disabledSceneRenderers.Count;
         }
 
         private static void DisableCameraDriversForVisualCapture(ValidationResult result)
@@ -1369,8 +1323,9 @@ namespace FantasyWord.GameCore
                 baseVisualTileName = baseTile != null ? baseTile.name : "null";
             }
 
-            if (s_presentation == null ||
-                !TryGetPrivateField(s_presentation, "m_surfaceCoverTilemap", out Tilemap? cover) ||
+            if (s_navigationMap == null ||
+                !s_navigationMap.TryGetSurfaceSample(cell, out TerrainSurfaceSample sample) ||
+                !TryResolveSurfaceCoverTilemap(sample, out Tilemap? cover) ||
                 cover == null)
             {
                 return;
@@ -1380,6 +1335,92 @@ namespace FantasyWord.GameCore
             hasSurfaceCoverTile = coverTile != null;
             surfaceCoverTileName = coverTile != null ? coverTile.name : "null";
             surfaceCoverAlpha = cover.GetColor(cell).a;
+        }
+
+        private static Tilemap? ResolvePrimarySurfaceCoverTilemap()
+        {
+            if (s_navigationMap == null)
+            {
+                return null;
+            }
+
+            IReadOnlyList<TerrainSurfaceLayerSource> sources = s_navigationMap.SurfaceLayerSources;
+            for (int i = 0; i < sources.Count; i++)
+            {
+                TerrainSurfaceLayerSource source = sources[i];
+                if (source != null &&
+                    source.Role == ETerrainSurfaceLayerRole.SurfaceCover &&
+                    source.Tilemap != null)
+                {
+                    return source.Tilemap;
+                }
+            }
+
+            TerrainSurfaceCoverSourceReference legacyReference =
+                TerrainSurfaceCoverSourceReference.LegacySurfaceCover;
+            return s_navigationMap.TryGetSurfaceCoverTilemap(
+                    legacyReference,
+                    out Tilemap? legacyTilemap)
+                ? legacyTilemap
+                : null;
+        }
+
+        private static bool TryResolveSurfaceCoverTilemap(
+            in TerrainSurfaceSample sample,
+            out Tilemap? tilemap)
+        {
+            tilemap = null;
+            if (s_navigationMap == null || !sample.SurfaceCoverSource.IsValid)
+            {
+                return false;
+            }
+
+            return s_navigationMap.TryGetSurfaceCoverTilemap(
+                sample.SurfaceCoverSource,
+                out tilemap);
+        }
+
+        private static bool HasVisibleMappedSurfaceCoverSource(
+            Vector3Int cell,
+            out string visibleSources)
+        {
+            visibleSources = string.Empty;
+            if (s_navigationMap == null)
+            {
+                return false;
+            }
+
+            List<string> sources = new();
+            IReadOnlyList<TerrainSurfaceLayerSource> layerSources =
+                s_navigationMap.SurfaceLayerSources;
+            for (int i = 0; i < layerSources.Count; i++)
+            {
+                TerrainSurfaceLayerSource source = layerSources[i];
+                if (source == null ||
+                    !source.IsValid ||
+                    !source.TryResolveSurfaceCover(
+                        cell,
+                        out ETerrainSurfaceCoverKind coverKind,
+                        out _) ||
+                    coverKind == ETerrainSurfaceCoverKind.None)
+                {
+                    continue;
+                }
+
+                Tilemap tilemap = source.Tilemap;
+                TileBase tile = tilemap.GetTile(cell);
+                if (tile == null ||
+                    tilemap.GetColor(cell).a <= 0.01f)
+                {
+                    continue;
+                }
+
+                sources.Add(
+                    $"{source.SourceId}:{source.Role}:{tilemap.name}:{tile.name}");
+            }
+
+            visibleSources = string.Join("; ", sources);
+            return sources.Count > 0;
         }
 
         private static Tilemap? ResolveBaseGroundTilemap()
@@ -1533,6 +1574,7 @@ namespace FantasyWord.GameCore
             Require(result.GrassCoverRemovedAndDirtRevealed, "Grass 覆盖燃尽后没有大范围移除并露出底层 Dirt。", failures);
             Require(result.GrassCoverRemovedCellCount >= MinimumWideTargetCellCount, $"草覆盖层移除格子少于 {MinimumWideTargetCellCount} 格，截图不能证明大范围露土。", failures);
             Require(result.GrassCoverVisuallyRemovedCellCount >= MinimumWideTargetCellCount, $"草覆盖层真实视觉隐藏格子少于 {MinimumWideTargetCellCount} 格，不能证明画面露出底层土壤。", failures);
+            Require(result.VisibleMappedSurfaceCoverSourceCountAfterExpiration == 0, $"燃尽后仍有映射为地表覆盖语义的可见来源层残留：{result.VisibleMappedSurfaceCoverSourcesAfterExpiration}。", failures);
             Require(result.HasBaseVisualTileAfterExpiration, "燃尽后目标格没有保留真实底层 Tile。", failures);
             Require(result.BaseVisualTileAfterExpirationIsDirt, $"燃尽后露出的真实底层 Tile 不是土壤 Tile：{result.BaseVisualTileAfterExpiration}。", failures);
             Require(result.HasSurfaceCoverTileAfterExpiration, "燃尽后目标格没有可核验的草覆盖 Tile。", failures);
@@ -1599,16 +1641,6 @@ namespace FantasyWord.GameCore
             }
 
             s_disabledPlayerRenderers.Clear();
-
-            for (int i = 0; i < s_disabledSceneRenderers.Count; i++)
-            {
-                if (s_disabledSceneRenderers[i] != null)
-                {
-                    s_disabledSceneRenderers[i].enabled = true;
-                }
-            }
-
-            s_disabledSceneRenderers.Clear();
 
             if (s_camera != null && s_cameraOriginalOrthographicSize > 0.0f)
             {
@@ -1777,7 +1809,6 @@ namespace FantasyWord.GameCore
             public bool TargetVisuallyUnobstructed;
             public string TargetVisualBlockers = string.Empty;
             public int VisualCandidateRejectedByBlockers;
-            public int TargetSpriteBlockerDisabledCount;
             public string BaseSurfaceBefore = string.Empty;
             public string EffectiveSurfaceBefore = string.Empty;
             public string BaseSurfaceCoverBefore = string.Empty;
@@ -1832,6 +1863,8 @@ namespace FantasyWord.GameCore
             public int GrassCoverRemovedFrame;
             public int GrassCoverRemovedCellCount;
             public int GrassCoverVisuallyRemovedCellCount;
+            public int VisibleMappedSurfaceCoverSourceCountAfterExpiration;
+            public string VisibleMappedSurfaceCoverSourcesAfterExpiration = string.Empty;
             public string RuntimeStateAfterExpiration = string.Empty;
             public string EffectiveSurfaceAfterExpiration = string.Empty;
             public string EffectiveSurfaceCoverAfterExpiration = string.Empty;

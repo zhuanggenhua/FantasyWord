@@ -158,11 +158,6 @@ namespace FantasyWord.GameCore
                 ? new List<CharacterAbilitySlotData>(quickAbilitySlots).ToArray()
                 : Array.Empty<CharacterAbilitySlotData>();
 
-            if (slotDataSnapshot.Length == 0)
-            {
-                return false;
-            }
-
             Array.Clear(m_slots, 0, m_slots.Length);
 
             foreach (CharacterAbilitySlotData slotData in slotDataSnapshot)

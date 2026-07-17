@@ -1,0 +1,22 @@
+# 0011-换装表现资源 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 用户指出当前业务里仍有大量硬编码和资源路径问题，并要求按 2DRPGEngine、Yoki 和当前项目规范统一判断。
+  - 2DRPGEngine 的运行时视觉链路主要通过序列化资产引用持有 `SpriteLibraryAsset` 等资源；路径扫描集中在 Editor 工具层。
+  - FantasyWord 换装表现层仍有工作台字体和 HQ4x LUT 通过 `Resources.Load` 字符串路径兜底，这会让运行时资源 owner 隐藏在代码字符串里，也绕开 Yoki/Addressables/序列化引用的清晰边界。
+- 决策：
+  - 换装表现运行时代码不得用 `Resources.Load` 字符串路径加载字体、UI 预制体、LUT、Shader 辅助资源或其它正式资源。
+  - 已在场景、预制体、RendererFeature 或配置资产中可序列化持有的资源，必须通过显式引用提供；缺失时报告可定位错误，不自动按路径猜。
+  - Yoki/Addressables 只在需要运行时动态加载、热更或包管理时成为资源加载 owner；已有稳定 Unity 资产引用不得为了“统一”降级成字符串 key。
+  - Editor 生成器、门禁和资产审计可以使用 `AssetDatabase` 或项目路径，但这些路径不能流入玩家运行时资源加载。
+- 影响：
+  - `EquipmentWorkbenchBootstrap` 不再解析字体路径，只把显式字体覆盖传给 Runtime UI；为空时由 Runtime UI 预制体自身的字体引用兜底。
+  - `EquipmentWorkbenchRuntimeUI` 新增显式 `workbenchFont` 字段，运行时缺字体时报告配置错误，不再从 `Resources/Fonts` 查找。
+  - `HQ4xRendererFeature` 不再从 `Resources/hq4x` 查找 LUT；LUT 必须由 `Renderer2D.asset` 上的 Feature 显式绑定。
+  - `UIEquipmentWorkbench.prefab` 已绑定现有 Silver TMP 字体资源；`Renderer2D.asset` 已有 HQ4x LUT 显式引用。
+  - 新增 `scripts/Invoke-EquipmentPresentationResourceStaticGate.ps1`，覆盖换装表现运行时 `Resources.Load` 回流、工作台字体未绑定、HQ4x LUT 未绑定。
+- 替代关系：
+  - 本决策继承 2DRPGEngine“运行时资源靠资产引用，不靠路径查找”的职责内核。
+  - 本决策不要求把换装资源全面迁到 Yoki；只有动态加载需求成立时，Yoki 才进入换装运行时资源链。

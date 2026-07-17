@@ -42,19 +42,19 @@ public sealed partial class abilityGameCore : Luban.BeanBase
     /// </summary>
     public readonly int ID;
     /// <summary>
-    /// GameCore ability prefab GUID
+    /// GameCore PrefabReference database GUID
     /// </summary>
     public readonly string PrefabGuid;
     /// <summary>
-    /// GameCore ability prefab runtime path/address
+    /// Optional ResourceSystem/Addressables runtime address; empty when PrefabGuid resolves through DatabaseRegistry
     /// </summary>
     public readonly string PrefabPath;
     /// <summary>
-    /// GameCore ability icon GUID
+    /// GameCore SpriteReference database GUID
     /// </summary>
     public readonly string IconGuid;
     /// <summary>
-    /// GameCore ability icon runtime path/address
+    /// Optional ResourceSystem/Addressables runtime address; empty when IconGuid resolves through DatabaseRegistry
     /// </summary>
     public readonly string IconPath;
     /// <summary>

@@ -4,9 +4,14 @@ using UObject = UnityEngine.Object;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 软资源引用的非泛型基类，保存 Addressables 地址和编辑器锁定信息。
+    /// </summary>
     [Serializable]
     public class SoftAssetReferenceBase
     {
+        [InspectorName("资源地址")]
+        [Tooltip("Addressables 资源地址。为空时该引用无效。")]
         public string Address;
 
 #if UNITY_EDITOR
@@ -30,7 +35,7 @@ namespace FantasyWord.GameCore
     /// 它只适合引用 Addressables 资源地址，不替代存档和玩法数据使用的 DatabaseEntryReference。
     /// </summary>
     [Serializable]
-    public class SoftAssetReference<T> : SoftAssetReferenceBase where T : UObject
+    public class SoftAssetReference<T> : SoftAssetReferenceBase, IDisposable where T : UObject
     {
         private ResourceHandle<T> m_resourceHandle;
 
@@ -55,6 +60,22 @@ namespace FantasyWord.GameCore
             }
 
             return m_resourceHandle = ResourceSystem.LoadAssetAsync<T>(Address);
+        }
+
+        public void Release()
+        {
+            if (!m_resourceHandle.IsValid())
+            {
+                return;
+            }
+
+            ResourceSystem.ReleaseAsset(m_resourceHandle);
+            m_resourceHandle = default;
+        }
+
+        public void Dispose()
+        {
+            Release();
         }
 
         public static implicit operator SoftAssetReference<T>(string address)
@@ -87,8 +108,11 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 非泛型软资源引用，按 UnityEngine.Object 加载 Addressables 资源。
+    /// </summary>
     [Serializable]
-    public class SoftAssetReference : SoftAssetReferenceBase
+    public class SoftAssetReference : SoftAssetReferenceBase, IDisposable
     {
         private ResourceHandle m_resourceHandle;
 
@@ -113,6 +137,22 @@ namespace FantasyWord.GameCore
             }
 
             return m_resourceHandle = ResourceSystem.LoadAssetAsync<UObject>(Address);
+        }
+
+        public void Release()
+        {
+            if (!m_resourceHandle.IsValid())
+            {
+                return;
+            }
+
+            ResourceSystem.ReleaseAsset(m_resourceHandle);
+            m_resourceHandle = default;
+        }
+
+        public void Dispose()
+        {
+            Release();
         }
 
         public static implicit operator SoftAssetReference(string address)

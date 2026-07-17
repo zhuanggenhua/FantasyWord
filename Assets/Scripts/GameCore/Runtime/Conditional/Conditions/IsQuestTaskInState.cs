@@ -4,6 +4,9 @@ using YokiFrame;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 单个任务子目标的状态掩码，允许同时匹配进行中和已完成。
+    /// </summary>
     [Flags]
     public enum EQuestTaskStateFlags
     {
@@ -13,10 +16,18 @@ namespace FantasyWord.GameCore
         [HideInInspector] All = ~None
     }
 
+    /// <summary>
+    /// 判断指定任务子目标是否处于目标状态集合中。
+    /// </summary>
     [Serializable]
     public class IsQuestTaskInState : ABaseCondition
     {
+        [InspectorName("目标子任务")]
+        [Tooltip("要查询状态的任务子目标资产。")]
         [SerializeField] private QuestTask m_task = null;
+
+        [InspectorName("目标状态")]
+        [Tooltip("条件可接受的子任务状态集合。")]
         [SerializeField] private EQuestTaskStateFlags m_stateFlags = EQuestTaskStateFlags.None;
 
         public override bool Evaluate()

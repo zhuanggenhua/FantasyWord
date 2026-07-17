@@ -2,7 +2,7 @@
 
 ## Locked Premises
 
-- 问题对象：当前 `Assets/Plugins/FantasyWordSteering`、已新增但未验证的 `Assets/Plugins/ContextSteering2D` 草稿，以及 `AIController.BehaviourRuntime` 中仍待迁移的项目侧移动求解逻辑。
+- 问题对象：当前 `Assets/Plugins/FantasyWordSteering`、已迁入自有插件目录的 `Assets/ProjectPlugins/ContextSteering2D` 草稿，以及 `AIController.BehaviourRuntime` 中仍待迁移的项目侧移动求解逻辑。
 - 真相来源：当前项目代码；UnitySteer 与 unity-movement-ai 行为源码；friedforfun、SunnyValley、AkiSteer context steering 核心源码；N:ORCA、N:Beacon.ORCA、pk1234 ORCA、RVO2-CS simulation 核心源码；用户给定 duolafashi 的 tsbuild 模块清单、source map 路径和可读编译 JS 业务实现。
 - 目标入口/环境：Unity 6000.3.10f1，URP 2D，单机优先，GameCore 作为游戏语义接入方，`ContextSteering2D` 作为通用 steering/local avoidance 插件 owner。
 - 验收口径：已确认没有单一现成免费插件完整胜出；正式进入“整合最佳实践”的通用 `ContextSteering2D` 设计与实现。不能在未对齐 UnitySteer 行为基线、context steering 调试结构和 ORCA/RVO 后端边界的情况下继续扩展劣化自研草稿。

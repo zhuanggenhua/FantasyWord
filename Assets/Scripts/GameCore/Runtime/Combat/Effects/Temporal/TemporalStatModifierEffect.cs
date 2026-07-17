@@ -3,23 +3,46 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 属性持续修正效果的存档快照，保存被修改的属性和修改量。
+    /// </summary>
     [Serializable]
     public class TemporalStatModifierEffectPersistedState : TemporalEffectPersistedState
     {
+        /// <summary>
+        /// 效果生效时施加到属性上的增量；效果结束时按相反方向撤销。
+        /// </summary>
         public int amount;
+
+        /// <summary>
+        /// 被临时修改的角色属性。
+        /// </summary>
         public EStat stat;
     }
 
+    /// <summary>
+    /// 在持续时间内临时修改目标角色属性，结束时撤销同等增量并保留生命值下限约束。
+    /// </summary>
     [Serializable]
     public class TemporalStatModifierEffect : ATemporalEffect, ITemporalEffectRuntimeStateCarrier
     {
+        /// <summary>
+        /// 属性修正配置；正数表示增益，负数表示减益。
+        /// </summary>
         [Serializable]
         internal struct StatBoostEffect
         {
+            [InspectorName("属性增量")]
+            [Tooltip("持续期间施加到目标属性上的增量；负数表示降低属性。")]
             public int amount;
+
+            [InspectorName("目标属性")]
+            [Tooltip("要临时修改的角色属性。生命值和法力值会走当前资源的专用裁剪逻辑。")]
             public EStat stat;
         }
 
+        [InspectorName("属性修正配置")]
+        [Tooltip("配置要临时修改的属性和增量，效果结束时会按同一规则撤销。")]
         [SerializeField] private StatBoostEffect m_statBoostData;
 
         public override TemporalEffectRuntimeTraits GetRuntimeTraits() =>
@@ -50,7 +73,7 @@ namespace FantasyWord.GameCore
 
         protected override void OnCompleted()
         {
-            // If the target is dead, we can't remove stats, so we skip this step
+            // 目标死亡后属性归还没有稳定承载对象，避免在死亡流程里再次改写角色状态。
             if (targetCharacter == null || targetCharacter.dead)
             {
                 return;
@@ -130,16 +153,17 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        public void RestorePersistedState(TemporalEffectPersistedState persistedState)
+        public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)
         {
             if (persistedState is not TemporalStatModifierEffectPersistedState state)
             {
-                return;
+                return false;
             }
 
             state.RestoreSharedStateTo(this);
             m_statBoostData.amount = state.amount;
             m_statBoostData.stat = state.stat;
+            return true;
         }
     }
 }

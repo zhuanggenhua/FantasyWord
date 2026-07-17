@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 同类持续效果首次叠加时的处理方式。
+    /// stackableEffectId 相同才会进入这些策略。
+    /// </summary>
     public enum EInitialStackBehavior
     {
         None,
@@ -13,9 +17,17 @@ namespace FantasyWord.GameCore
         Interrupt
     }
 
+    /// <summary>
+    /// 持续效果基类。
+    /// 它统一持续时间、叠加、运行时 key、展示投影和最小存档共享字段。
+    /// </summary>
     [Serializable]
     public abstract class ATemporalEffect : AEffect, ITemporalEffect
     {
+        /// <summary>
+        /// 持续效果共享配置和运行时计时数据。
+        /// runtimeKey 用来成对移除角色上的临时规则。
+        /// </summary>
         [Serializable]
         protected struct TemporalData
         {
@@ -84,13 +96,13 @@ namespace FantasyWord.GameCore
         /// </summary>
         public void RestoreRuntimeState(CharacterBase owner)
         {
-            m_effectData.target = owner;
+            BindRuntimeTarget(owner);
             OnRuntimeStateRestored();
         }
 
         public void BindRuntimeOwner(CharacterBase owner)
         {
-            m_effectData.target = owner;
+            BindRuntimeTarget(owner);
         }
 
         public virtual bool TryStack(ITemporalEffect effect)

@@ -38,6 +38,7 @@
 - 创造性或设计性任务：先做设计共识，再写计划，再实施；如果用户明确要求“先不执行”，只能停在方案或计划。
 - 大设计或方向不清的任务：先用 `.spec/skills/brainstorming` 收敛方案，不直接进入实现。
 - Bug、测试失败、异常行为：先用 `.spec/skills/systematic-debugging` 找根因；没有锁定原始症状和真相源前不得修。
+- 装备换装、帧编辑器、Body/Head UV、Idle/Walk/Attack 换装错位或截图验收：先用 `.spec/skills/equipment-system-workflow` 锁定对象、配置流程和端到端证据。
 - 多步骤或多模块任务：用 `.spec/skills/task-breakdown` 拆任务；同一文件集重叠的任务必须串行。
 - 需要子 agent 执行时：用 `.spec/skills/subagent-driven-development`，并显式要求 `gpt-5.4` + `high`。
 - 收口前：用 `.spec/skills/verification-before-completion`，必须有新鲜验证证据，不能只说“应该好了”。

@@ -13,7 +13,7 @@ namespace FantasyWord.GameCore
     public static class ContextSteering2DPerformanceBenchmark
     {
         private const string ProfilePath =
-            "Assets/Plugins/ContextSteering2D/Runtime/Defaults/DefaultContextSteeringProfile2D.asset";
+            "Assets/ProjectPlugins/ContextSteering2D/Runtime/Defaults/DefaultContextSteeringProfile2D.asset";
         private const string ResultPath =
             "Temp/UnityBridge/results/context-steering-performance-benchmark.json";
 

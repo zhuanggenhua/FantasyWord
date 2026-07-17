@@ -4,22 +4,51 @@ namespace FantasyWord.GameCore
 {
     public partial class CharacterActor
     {
-        protected virtual void Start()
+        private bool m_questStatusListening = false;
+
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            StartQuestStatusListening();
+            UpdateFloatingIcon();
+        }
+
+        protected override void OnDisable()
+        {
+            StopQuestStatusListening();
+            base.OnDisable();
+        }
+
+        protected override void OnDestroy()
+        {
+            StopQuestStatusListening();
+            base.OnDestroy();
+        }
+
+        private void StartQuestStatusListening()
+        {
+            if (m_questStatusListening)
+            {
+                return;
+            }
+
+            m_questStatusListening = true;
             EventKit.Type.Register<QuestUnlockedEvent>(OnQuestUnlocked);
             EventKit.Type.Register<QuestAvailabilityChangedEvent>(OnQuestAvailabilityChanged);
             EventKit.Type.Register<QuestCompletedEvent>(OnQuestCompleted);
             EventKit.Type.Register<QuestFullfilledEvent>(OnQuestFullfilled);
             EventKit.Type.Register<QuestProgressionUpdatedEvent>(OnQuestProgressionUpdated);
             EventKit.Type.Register<QuestStartedEvent>(OnQuestStarted);
-
-            UpdateFloatingIcon();
         }
 
-        protected override void OnDestroy()
+        private void StopQuestStatusListening()
         {
-            base.OnDestroy();
+            if (!m_questStatusListening)
+            {
+                return;
+            }
 
+            m_questStatusListening = false;
             EventKit.Type.UnRegister<QuestUnlockedEvent>(OnQuestUnlocked);
             EventKit.Type.UnRegister<QuestAvailabilityChangedEvent>(OnQuestAvailabilityChanged);
             EventKit.Type.UnRegister<QuestCompletedEvent>(OnQuestCompleted);
@@ -37,6 +66,11 @@ namespace FantasyWord.GameCore
 
         private void UpdateFloatingIcon()
         {
+            if (!GameManager.Exists() || !GameManager.HasSystem<JournalSystem>())
+            {
+                return;
+            }
+
             if (GameManager.JournalSystem.GetQuestToComplete(this) != null)
             {
                 SetFloatingIcon(EFloatingIcon.QuestCompleted);

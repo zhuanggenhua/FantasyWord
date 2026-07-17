@@ -8,7 +8,6 @@ namespace FantasyWord.GameCore
         protected UIAbilityBarEntry[] m_abilities = null;
         private CharacterBase m_currentCharacter = null;
         private bool m_isInitialized = false;
-        private bool m_followCurrentControlledCharacter = true;
 
         public void Init()
         {
@@ -24,23 +23,17 @@ namespace FantasyWord.GameCore
                 m_abilities[i].SetAbility(default(CharacterEquippedAbilitySlotView), i);
             }
 
-            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
             m_isInitialized = true;
         }
 
         private void OnDestroy()
         {
-            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
-            {
-                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            }
-
             BindCharacter(null);
         }
 
         public void SelectFirstElement()
         {
+            Init();
             if (m_abilities.Length > 0)
             {
                 m_abilities[0].ForceSelection();
@@ -49,6 +42,7 @@ namespace FantasyWord.GameCore
 
         public void UpdateUI()
         {
+            Init();
             if (m_currentCharacter != null)
             {
                 FillAbilityBar(m_currentCharacter.GetEquippedAbilitySlotViewSnapshots());
@@ -59,24 +53,10 @@ namespace FantasyWord.GameCore
             }
         }
 
-        public void FollowCurrentControlledCharacter()
-        {
-            m_followCurrentControlledCharacter = true;
-            BindCharacter(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
-        }
-
         public void PresentCharacter(CharacterBase character)
         {
-            m_followCurrentControlledCharacter = false;
+            Init();
             BindCharacter(character);
-        }
-
-        private void OnCurrentControlledCharacterChanged(CharacterBase character)
-        {
-            if (m_followCurrentControlledCharacter)
-            {
-                BindCharacter(character);
-            }
         }
 
         private void BindCharacter(CharacterBase character)
@@ -106,7 +86,15 @@ namespace FantasyWord.GameCore
 
         private void FillAbilityBar(CharacterEquippedAbilitySlotView[] abilities)
         {
-            for (int i = 0; i < math.min(m_abilities.Length, GameManager.Config.maxEquippableAbilities); ++i)
+            if (m_abilities == null)
+            {
+                return;
+            }
+
+            int maxEquippableAbilities = GameManager.Exists()
+                ? GameManager.Config.maxEquippableAbilities
+                : m_abilities.Length;
+            for (int i = 0; i < math.min(m_abilities.Length, maxEquippableAbilities); ++i)
             {
                 if (abilities.Length > i)
                 {

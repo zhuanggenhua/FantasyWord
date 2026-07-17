@@ -11,8 +11,7 @@ namespace FantasyWord.GameCore
 
         public override bool Evaluate()
         {
-            CharacterBase currentCharacter = GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance();
-            if (currentCharacter == null)
+            if (!TryGetCurrentControlledCharacter(out CharacterBase currentCharacter))
             {
                 return false;
             }
@@ -29,9 +28,9 @@ namespace FantasyWord.GameCore
         {
             EventKit.Type.Register<CharacterAbilityAddedEvent>(OnAbilityAdded);
             EventKit.Type.Register<CharacterAbilityRemovedEvent>(OnAbilityRemoved);
-            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            if (TryGetPlayerSystem(out PlayerSystem playerSystem))
             {
-                GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+                playerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             }
         }
 
@@ -39,9 +38,9 @@ namespace FantasyWord.GameCore
         {
             EventKit.Type.UnRegister<CharacterAbilityAddedEvent>(OnAbilityAdded);
             EventKit.Type.UnRegister<CharacterAbilityRemovedEvent>(OnAbilityRemoved);
-            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            if (TryGetPlayerSystem(out PlayerSystem playerSystem))
             {
-                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+                playerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             }
         }
 
@@ -76,10 +75,25 @@ namespace FantasyWord.GameCore
 
             return character != null &&
                 formalGasAbilityCode == m_formalGasAbilityCode &&
-                GameManager.Exists() &&
-                GameManager.HasSystem<PlayerSystem>() &&
-                character == GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+                TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter) &&
+                character == currentControlledCharacter;
         }
 
+        private static bool TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter)
+        {
+            currentControlledCharacter = null;
+            if (!TryGetPlayerSystem(out PlayerSystem playerSystem))
+            {
+                return false;
+            }
+
+            currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+            return currentControlledCharacter != null;
+        }
+
+        private static bool TryGetPlayerSystem(out PlayerSystem playerSystem)
+        {
+            return GameManager.TryGetSystem(out playerSystem);
+        }
     }
 }

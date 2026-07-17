@@ -6,16 +6,29 @@ using UnityEngine.Serialization;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 可刷出的角色及其权重配置。
+    /// 所有条目的 Rate 总和必须为 100。
+    /// </summary>
     [Serializable]
     public struct CharacterSpawn
     {
+        [InspectorName("角色 Prefab")]
+        [Tooltip("要通过 PersistenceSystem 实例化的正式 CharacterActor Prefab。")]
         [SerializeField] private GameObject m_prefab;
+
+        [InspectorName("权重")]
+        [Tooltip("刷出概率权重；同一刷怪器下所有条目之和必须为 100。")]
         [SerializeField] private int m_rate;
 
         public GameObject Prefab => m_prefab;
         public int Rate => m_rate;
     }
 
+    /// <summary>
+    /// 角色刷怪器存档数据。
+    /// FormerlySerializedAs 保留旧 monster 字段兼容，当前语义已经统一为 character。
+    /// </summary>
     [Serializable]
     public class CharacterSpawnerDataBlock : PersistableDataBlock
     {
@@ -31,30 +44,46 @@ namespace FantasyWord.GameCore
         public int totalSpawnedCharacterCount;
     }
 
+    /// <summary>
+    /// 刷怪器当前已生成角色的运行时记录。
+    /// Index 指回 m_characters，便于存档后按原配置恢复。
+    /// </summary>
     internal struct SpawnedCharacter
     {
         public CharacterActor Character { get; set; }
         public int Index { get; set; }
     }
 
+    /// <summary>
+    /// 角色刷怪器基类。
+    /// 子类只负责提供刷出位置；本类负责权重、数量限制、存档恢复和死亡后移出活体计数。
+    /// </summary>
     public abstract class ACharacterSpawner : Persistable
     {
-        [Header("General Settings")]
+        [Header("通用设置")]
+        [InspectorName("角色池")]
         [FormerlySerializedAs("m_monsters")]
         [SerializeField] private CharacterSpawn[] m_characters = Array.Empty<CharacterSpawn>();
+        [InspectorName("最小等级")]
         [SerializeField, Range(Constants.MinLevel, Constants.MaxLevel)] private int m_minLevel = Constants.MinLevel;
+        [InspectorName("最大等级")]
         [SerializeField, Range(Constants.MinLevel, Constants.MaxLevel)] private int m_maxLevel = Constants.MaxLevel;
 
-        [Header("Spawn Settings")]
+        [Header("刷出设置")]
+        [InspectorName("刷出冷却")]
         [SerializeField] private float m_spawnCooldown = 5.0f;
+        [InspectorName("预刷角色数")]
         [FormerlySerializedAs("m_monstersToPrespawn")]
         [SerializeField] private int m_charactersToPrespawn = 4;
+        [InspectorName("最大同时存活数")]
         [FormerlySerializedAs("m_maxSimulatenousMonsterCount")]
         [SerializeField] private int m_maxSimultaneousCharacterCount = 4;
 
-        [Header("Spawn Limitations")]
+        [Header("刷出限制")]
+        [InspectorName("限制总刷出数量")]
         [FormerlySerializedAs("m_limitMonsterCount")]
         [SerializeField] private bool m_limitCharacterCount = false;
+        [InspectorName("最大总刷出数量")]
         [FormerlySerializedAs("m_maxMonsterCount")]
         [SerializeField, Min(1)] private int m_maxCharacterCount = 1;
 

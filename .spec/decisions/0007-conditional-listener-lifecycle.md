@@ -1,0 +1,21 @@
+# 0007-条件监听生命周期 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - FantasyWord 的条件系统来自 2DRPGEngine：条件对象负责判断当前状态，条件状态机根据条件变化启用或停用目标对象，条件交互在条件满足时执行内部交互。
+  - 参考工程使用 `Start()` 开始监听、`OnDestroy()` 停止监听；禁用对象期间仍可能继续收到事件，且重复启停会触发断言或重复注册。
+  - 组合条件的子条件数组可能为空或未配置，原实现会在判断或监听时空引用；条件交互缺少内部交互时也会空引用。
+- 决策：
+  - 条件监听的外部 owner 是使用它的状态机或组合条件；监听必须跟随 `OnEnable/OnDisable` 或显式 `StartListening/StopListening`，并且重复调用必须安全。
+  - `ABaseCondition.StartListening()` 替换回调前先停止旧监听；`StopListening()` 必须幂等；停止后收到事件只能被忽略，不能空引用。
+  - `AreConditionMet` 把空子条件数组当成空集合处理：`All` 为空时成立，`Any` 为空时不成立；停止监听时先停子条件，再停自身。
+  - `ConditionalInteraction` 条件满足但缺少内部交互时必须报错并返回失败，不能用 `NullReferenceException` 作为配置反馈。
+- 影响：
+  - `AConditionalStateMachine` 已从 `Start/OnDestroy` 改为 `OnEnable/OnDisable` 启停条件监听，并保留 `OnDestroy` 作为兜底停止。
+  - `ABaseCondition` 已移除 `Debug.Assert` 生命周期约束，新增监听状态位和空安全通知。
+  - `AreConditionMet` 已对空子条件列表安全，并明确组合条件空列表语义。
+  - 新增 `scripts/Invoke-ConditionalRuntimeStaticGate.ps1`，覆盖非幂等停止、停止后空引用、状态机只在 `Start` 绑定、组合条件空数组和条件交互缺引用。
+- 替代关系：
+  - 本决策保留 2DRPGEngine 的条件系统职责划分，不引入新规则引擎。
+  - 本决策取代参考工程中“条件监听只绑定到对象创建/销毁”的实现细节；FantasyWord 的正式运行路径以启用状态和显式监听 owner 为准。

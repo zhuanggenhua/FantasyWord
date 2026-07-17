@@ -25,6 +25,7 @@ namespace FantasyWord.GameCore
         public Task PlayNow(DialogueTree dialogue) => MainChannel.PlayNow(dialogue);
         public Task PlayQueue() => MainChannel.PlayQueue();
         public bool IsPlaying() => MainChannel.IsPlaying();
+        public bool TryGetCurrentState(out DialogueTree dialogue, out DialogueNode node) => MainChannel.TryGetCurrentState(out dialogue, out node);
         public bool TrySkipping() => MainChannel.TrySkipping();
         public void Next(int option = 0) => MainChannel.Next(option);
     }

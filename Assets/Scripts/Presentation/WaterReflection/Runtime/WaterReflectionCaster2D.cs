@@ -18,14 +18,11 @@ namespace FantasyWord.Presentation
         private static readonly int ReflectionLengthScaleId = Shader.PropertyToID("_WaterReflectionLengthScale");
 
         [Header("反射来源")]
-        [Tooltip("没有换装渲染器时使用的正式 SpriteRenderer。留空可在自身层级内初始化一次。")]
+        [Tooltip("没有换装渲染器时使用的正式 SpriteRenderer。必须显式配置，运行时不自动扫描子级。")]
         [SerializeField] private SpriteRenderer[] m_sourceRenderers = System.Array.Empty<SpriteRenderer>();
 
         [Tooltip("可选的换装表现入口。配置后会包含角色主体和当前启用的武器 Renderer。")]
         [SerializeField] private EquipmentRenderer m_equipmentRenderer;
-
-        [Tooltip("没有手工配置来源时，在当前对象子层级内初始化一次 SpriteRenderer。")]
-        [SerializeField] private bool m_collectChildRenderersOnAwake = true;
 
         [Header("45 度倒影")]
         [Tooltip("反射绕该锚点生成；通常放在角色脚底或物体接地点。")]
@@ -75,6 +72,10 @@ namespace FantasyWord.Presentation
         private void Awake()
         {
             ResolveLocalReferences();
+            if (!ValidateSourceConfiguration())
+            {
+                enabled = false;
+            }
         }
 
         private void OnEnable()
@@ -188,22 +189,35 @@ namespace FantasyWord.Presentation
 
         private void ResolveLocalReferences()
         {
-            if (m_equipmentRenderer == null)
-            {
-                m_equipmentRenderer = GetComponentInChildren<EquipmentRenderer>(true);
-            }
-
-            if ((m_sourceRenderers == null || m_sourceRenderers.Length == 0) &&
-                m_equipmentRenderer == null &&
-                m_collectChildRenderersOnAwake)
-            {
-                m_sourceRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-            }
-
             if (m_reflectionAnchor == null)
             {
                 m_reflectionAnchor = transform;
             }
+        }
+
+        private bool ValidateSourceConfiguration()
+        {
+            if (m_equipmentRenderer != null)
+            {
+                return true;
+            }
+
+            if (m_sourceRenderers != null)
+            {
+                for (int i = 0; i < m_sourceRenderers.Length; i++)
+                {
+                    SpriteRenderer source = m_sourceRenderers[i];
+                    if (source != null && !IsReflectionProxy(source))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            Debug.LogError(
+                "水面倒影投射器缺少正式反射来源。请显式绑定 EquipmentRenderer，或至少绑定一个 SpriteRenderer。",
+                this);
+            return false;
         }
 
         private void TryRegister()

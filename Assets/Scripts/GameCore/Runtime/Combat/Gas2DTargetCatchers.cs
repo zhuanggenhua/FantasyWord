@@ -10,6 +10,10 @@ using UnityEditor;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// EX-GAS 2D 命中范围的运行时调试绘制工具。
+    /// 只在编辑器或开发构建中生成短生命周期线框，不参与正式目标筛选结果。
+    /// </summary>
     internal static class Gas2DTargetCatcherRuntimeDebug
     {
         private static readonly Color HitRangeColor = new(0.0f, 1.0f, 0.15f, 0.85f);
@@ -141,6 +145,10 @@ namespace FantasyWord.GameCore
 #endif
     }
 
+    /// <summary>
+    /// 从施法者解析 2D 命中方向的统一入口。
+    /// 运行时必须读取 Movable 的命中帧朝向；编辑器预览才允许退回 Transform 方向。
+    /// </summary>
     internal static class Gas2DTargetCatcherDirectionResolver
     {
         private const float DirectionEpsilon = 0.0001f;
@@ -203,6 +211,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// EX-GAS 的 2D 矩形目标捕获器。
+    /// 支持世界坐标和相对施法者朝向两种模式，命中结果统一返回 AbilitySystemCell。
+    /// </summary>
     public sealed class CatchAreaBox2D : TargetCatcherBase<XParamCatchAreaBox2D>
     {
         private static readonly Collider2D[] Colliders = new Collider2D[64];
@@ -364,6 +376,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// EX-GAS 的 2D 圆形目标捕获器。
+    /// 用于范围技能和以施法者朝向偏移的圆形命中区。
+    /// </summary>
     public sealed class CatchAreaCircle2D : TargetCatcherBase<XParamCatchAreaCircle2D>
     {
         private static readonly Collider2D[] Colliders = new Collider2D[64];
@@ -506,6 +522,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// EX-GAS 的 2D 多边形目标捕获器。
+    /// 用于火焰、扇形或不规则命中区，运行时先用包围盒粗筛再做多边形相交判断。
+    /// </summary>
     public sealed class CatchAreaPolygon2D : TargetCatcherBase<XParamCatchAreaPolygon2D>
     {
         private static readonly Collider2D[] Colliders = new Collider2D[64];
@@ -871,6 +891,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 矩形 2D 目标捕获参数。
+    /// 字段通过 EX-GAS BeanField 暴露给配置表和编辑器，不直接由项目代码任意改写。
+    /// </summary>
     [Serializable]
     public sealed class XParamCatchAreaBox2D : XParam
     {
@@ -961,6 +985,9 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 圆形 2D 目标捕获参数。
+    /// </summary>
     [Serializable]
     public sealed class XParamCatchAreaCircle2D : XParam
     {
@@ -1026,6 +1053,10 @@ namespace FantasyWord.GameCore
 #endif
     }
 
+    /// <summary>
+    /// 多边形 2D 目标捕获参数。
+    /// points 是 Luban/Excel 的保存格式，编辑器侧会维护同步的顶点列表。
+    /// </summary>
     [Serializable]
     public sealed class XParamCatchAreaPolygon2D : XParam
     {

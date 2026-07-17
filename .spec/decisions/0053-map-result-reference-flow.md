@@ -1,0 +1,23 @@
+# 0053-地图结果链必需配置参考流程边界
+
+- 日期：2026-07-16
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 同职责地图流程中，`SaveCheckpoint`、`TeleportTo`、`RespawnPlayer` 和读档首次进入都会直接使用正式检查点、正式玩家和正式地图过场入口；这些流程不是“系统未就绪时可以跳过”的被动查询。
+  - FantasyWord 在吸收 2DRPGEngine 地图真相后，又增加了 TopDown 风格的初始出生点、检查点顺序、重生延迟和 TransitionSystem 委托过场。这些是当前项目必要适配，但不改变地图结果链的失败语义。
+  - 上一版 `MapSystem` 对缺检查点、缺玩家穿越角色、缺初始出生点或缺 TransitionSystem 只 `Debug.Assert` 后 `return`，会在正式构建或非断言环境中把保存检查点、传送、重生、读档位置恢复和地图过场吞成静默 no-op。
+- 决策：
+  - 地图结果链的必需配置缺失必须抛出可定位异常，不能用 `return` 或只靠 `Debug.Assert` 结束。
+  - `LoadDataBlock` 必须要求有效地图存档块；缺少地图存档块是保存数据/加载流程错误，不是可继续的空地图状态。
+  - `SaveCheckpoint`、`TeleportTo`、`TeleportToInitialSpawnPosition`、`TeleportToPlaytestStartPosition`、`RespawnPlayer` 和读档后的非法落点恢复，都必须要求有效检查点。
+  - `TeleportTo`、初始出生点传送、Playtest 出生点传送、读档非法落点恢复和重生，都必须要求 `PlayerSystem` 提供主穿越角色。
+  - `RequestTransition` 必须要求一个启用的 `TransitionSystem`，因为直接地图切换回退已经移除。
+  - `MapInfo` 启用/禁用时向 `MapSystem` 注册仍可使用 `TryGetSystem`，因为这是生命周期探测，不是正式地图结果写入。
+  - 该结论不是因为 `GameManager.MapSystem` 或 `GameManager.TransitionSystem` 是单例，也不是因为 `TryGetSystem` 更规范；问题只在于同职责地图结果流程不能吞掉必需配置错误。
+- 影响：
+  - 地图配置漏接会更早暴露到调用方和 Console，不再表现为检查点未保存、传送没发生、重生没发生或读档位置没恢复但流程看似成功。
+  - `scripts/Invoke-MapRuntimeStaticGate.ps1` 增加具体合同检查：地图读档必须要求地图存档块，地图结果链必须要求有效检查点、启用的 TransitionSystem 和主穿越角色；门禁不检查“必须 Try 查询”或“禁止 GameManager 快捷入口”。
+  - 保留 0032 的复活协程生命周期合同；本决策只收紧地图结果链失败语义。
+- 替代关系：
+  - 延续 0050 的参考流程优先原则。
+  - 补充 0032：0032 解决复活延迟协程 owner，本决策解决复活/传送/检查点/过场结果不能静默跳过。

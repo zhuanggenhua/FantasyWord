@@ -1,0 +1,21 @@
+# 0012-UI 控制器按键提示生命周期 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 的 `UIControllerButtonManager` 用静态单例收集按钮，并在 `Start/OnDestroy` 订阅输入设备变化。
+  - FantasyWord 已经移除了静态单例，按钮会在当前 Canvas 根内解析自己的管理器，但管理器和按钮仍保留 `Start/OnDestroy` 作为主要注册生命周期。
+  - UI 面板、HUD 和提示对象会被禁用、复用或随菜单栈切换；禁用对象继续留在管理器集合里，会让设备切换或状态刷新访问不可见对象。
+- 决策：
+  - UI 控制器按键提示的注册 owner 是对象启用状态，不是创建/销毁状态。
+  - `UIControllerButton` 必须在 `OnEnable` 注册、`OnDisable` 注销，并用幂等标记避免重复注册。
+  - `UIControllerButtonManager` 必须在启用时订阅输入设备变化，禁用时退订；若 GameManager/InputSystem 还未就绪，`Start` 只作为同帧稍后的重试，不作为唯一生命周期。
+  - 控制器图标库缺失时必须报告配置错误并让按钮停留在无图标状态，不得通过字典索引抛不可定位异常。
+- 影响：
+  - `UIControllerButtonManager` 新增输入监听幂等状态，启停时注册/注销 `InputSystem` 控制器变化事件。
+  - `UIControllerButton` 新增注册幂等状态，禁用即从管理器移除。
+  - 控制器类型到 `SpriteLibraryAsset` 的读取改为 `TryGetValue`，缺配置会写 Console 错误并中断该按钮刷新。
+  - `scripts/Invoke-UIRuntimeStaticGate.ps1` 已扩展检查 UI 按键提示生命周期、输入监听幂等和缺库保护。
+- 替代关系：
+  - 本决策保留 2DRPGEngine“按控制器类型切 UI SpriteLibrary”的数据模型。
+  - 本决策取代参考工程中“静态单例 + Start/OnDestroy 注册”的实现细节；FantasyWord 的正式 UI 提示以 Canvas 内显式管理器和启用状态为准。

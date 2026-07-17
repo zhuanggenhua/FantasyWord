@@ -8,6 +8,10 @@ using MackySoft.SerializeReferenceExtensions;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 基础四方向枚举。
+    /// 主要用于旧配置和简单朝向判断，正式移动仍使用 Vector2。
+    /// </summary>
     public enum EDirection
     {
         Left,
@@ -18,12 +22,20 @@ namespace FantasyWord.GameCore
         Default = Right
     }
 
+    /// <summary>
+    /// 角色朝向更新策略。
+    /// MovementBased 跟随实际移动，TargetBased 跟随技能或交互目标方向。
+    /// </summary>
     public enum ELookAtDirectionUpdateStrategy
     {
         MovementBased,
         TargetBased
     }
 
+    /// <summary>
+    /// 移动输入方向限制模式。
+    /// 吸收 TopDownEngine 的方向模式语义，但不接入它的输入管理器。
+    /// </summary>
     public enum EMovementInputMode
     {
         Free,
@@ -33,6 +45,10 @@ namespace FantasyWord.GameCore
         Strict8Directions
     }
 
+    /// <summary>
+    /// 可移动实体的存档数据块。
+    /// 只保存朝向和控制器状态；物理速度和临时移动命令不进入存档。
+    /// </summary>
     [Serializable]
     public class MovableDataBlock : EntityDataBlock
     {
@@ -40,39 +56,69 @@ namespace FantasyWord.GameCore
         [SerializeReference, SubclassSelector] public IControllerDataBlock controllerData;
     }
 
+    /// <summary>
+    /// 可移动实体基类。
+    /// 它统一控制器生命周期、Rigidbody2D 移动、朝向、推力和动画同步，不承担角色属性或战斗结算。
+    /// </summary>
     public abstract partial class Movable : Entity, ICharacterAnimationStateReceiver
     {
-        [Header("References")]
+        [Header("引用")]
+        [InspectorName("刚体")]
+        [Tooltip("正式 2D 移动和碰撞检测使用的 Rigidbody2D。不能为空。")]
         [SerializeField] private Rigidbody2D m_rigidbody = null;
 
-        [Header("Movement Settings")]
+        [Header("移动设置")]
+        [InspectorName("基础移动速度")]
+        [Tooltip("动作执行层的基础移动速度；角色属性倍率会在 CharacterBase 中叠加。")]
         [SerializeField] private float m_moveSpeed = 4.0f;
+        [InspectorName("输入方向模式")]
         [Tooltip("移动输入方向限制。吸收 TopDown CharacterMovement 的方向模式，但不接入它的 InputManager。")]
         [SerializeField] private EMovementInputMode m_movementInputMode = EMovementInputMode.Free;
+        [InspectorName("使用模拟输入强度")]
         [Tooltip("启用后保留摇杆输入强度；关闭后只使用归一化方向，键盘和摇杆速度一致。")]
         [SerializeField] private bool m_useAnalogMovementInput = false;
+        [InspectorName("加速度")]
         [Tooltip("输入从静止过渡到目标速度的响应速度。0 表示立即达到目标速度。")]
         [SerializeField] private float m_acceleration = 10.0f;
+        [InspectorName("减速度")]
         [Tooltip("输入松开后回到静止的响应速度。0 表示立即停止。")]
         [SerializeField] private float m_deceleration = 10.0f;
+        [InspectorName("静止阈值")]
         [Tooltip("低于该强度时视为静止，避免摇杆漂移或浮点误差让角色抖动。")]
         [SerializeField] private float m_idleThreshold = 0.05f;
+        [InspectorName("移动速度倍率")]
         [Tooltip("动作执行层的常规速度倍率；RPG 属性、装备和状态修正仍在 CharacterBase 中处理。")]
         [SerializeField] private float m_movementSpeedMultiplier = 1.0f;
+        [InspectorName("移动速度倍率上限")]
         [Tooltip("限制动作执行层速度倍率上限，避免区域、Buff 和临时效果叠乘后失控。")]
         [SerializeField] private float m_movementSpeedMaxMultiplier = float.MaxValue;
+        [InspectorName("禁止普通移动")]
         [Tooltip("禁用玩家输入和 AI 驱动的普通移动；强制位移和推力仍按各自规则处理。")]
         [SerializeField] private bool m_movementForbidden = false;
+        [InspectorName("推力强度倍率")]
+        [Tooltip("受击或技能推力的强度倍率。0 表示不可被推动。")]
         [SerializeField] private float m_pushIntensityScale = 1.0f;
+        [InspectorName("推力阻力倍率")]
+        [Tooltip("推力衰减速度倍率，越高越快停下。")]
         [SerializeField] private float m_pushResistanceScale = 1.0f;
+        [InspectorName("禁用所有移动")]
+        [Tooltip("完全关闭移动、卡墙修正和推力处理，通常只用于特殊静态对象。")]
         [SerializeField] private bool m_disableAllMovements = false;
+        [InspectorName("死亡期间可移动")]
+        [Tooltip("允许死亡状态继续执行普通移动。默认关闭。")]
         [SerializeField] private bool m_canMoveDuringDeath = false;
+        [InspectorName("朝向更新策略")]
+        [Tooltip("决定朝向跟随移动方向还是目标方向。")]
         [SerializeField] protected ELookAtDirectionUpdateStrategy m_lookAtDirectionUpdateStrategy = ELookAtDirectionUpdateStrategy.MovementBased;
 
-        [Header("Controller Settings")]
+        [Header("控制器设置")]
+        [InspectorName("默认控制器")]
+        [Tooltip("玩家、AI 或脚本控制器。运行时可临时切换 active controller，但默认控制器仍是生命周期入口。")]
         [SerializeReference, SubclassSelector] protected IController m_controller = null;
 
-        [Header("Animation Settings")]
+        [Header("动画设置")]
+        [InspectorName("动画策略")]
+        [Tooltip("把移动、朝向、受击和死亡状态转成具体动画表现。")]
         [SerializeReference, SubclassSelector] protected IAnimationStrategy m_animationStrategy = null;
 
         protected bool m_destroyOnDeath = true;
@@ -368,9 +414,7 @@ namespace FantasyWord.GameCore
         {
             activeController?.FixedUpdate();
 
-            // Convenient if we want to disable all movements/physics for a character
-            // For instance, a character that is not supposed to move or be pushed,
-            // and is positioned on top of a suposedly collidable object.
+            // 部分场景对象需要挂 Movable 复用控制器/动画合同，但不应参与物理移动或卡墙修正。
             if (!m_disableAllMovements)
             {
                 motionRuntime.HandleWallCollision();

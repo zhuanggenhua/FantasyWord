@@ -4,9 +4,14 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 打开指定商店菜单并等待菜单关闭的命令。
+    /// </summary>
     [Serializable]
     public class OpenShopMenu : IContextualCommand
     {
+        [InspectorName("商店")]
+        [Tooltip("要打开的商店资产。")]
         [SerializeField] private Shop m_shop = null;
 
         public async Task Execute()

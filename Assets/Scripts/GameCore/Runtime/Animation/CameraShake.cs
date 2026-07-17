@@ -26,50 +26,88 @@ namespace FantasyWord.GameCore
         private void OnDisable()
         {
             EventKit.Type.UnRegister<DamageTakenPresentationEvent>(OnDamageTakenPresentation);
+            StopActiveShake();
         }
 
-        private bool IsCameraAllowedToShake()
+        private bool TryGetCameraShakeSources(out ECameraShakeSources cameraShakeSources)
         {
-            return GameManager.Config.cameraShakeSources != ECameraShakeSources.None;
+            cameraShakeSources = ECameraShakeSources.None;
+            if (!GameManager.Exists() || GameManager.Config == null)
+            {
+                return false;
+            }
+
+            cameraShakeSources = GameManager.Config.cameraShakeSources;
+            return cameraShakeSources != ECameraShakeSources.None;
         }
 
-        private bool IsValidShakeSource(DamageTakenFeedbackContext context)
+        private static bool TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter)
         {
-            CharacterBase currentControlledCharacter = GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+            currentControlledCharacter = null;
+            if (!GameManager.Exists() || !GameManager.TryGetSystem(out PlayerSystem playerSystem))
+            {
+                return false;
+            }
+
+            currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+            return currentControlledCharacter != null;
+        }
+
+        private bool IsValidShakeSource(
+            DamageTakenFeedbackContext context,
+            ECameraShakeSources cameraShakeSources)
+        {
+            if (!TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter))
+            {
+                return false;
+            }
 
             return !context.damageInput.silent && (
                 (
-                    GameManager.Config.cameraShakeSources.HasFlag(ECameraShakeSources.PlayerReceiveDamage) &&
+                    cameraShakeSources.HasFlag(ECameraShakeSources.PlayerReceiveDamage) &&
                     context.target == currentControlledCharacter
                 )
                 ||
                 (
-                    GameManager.Config.cameraShakeSources.HasFlag(ECameraShakeSources.AnyCharacterReceiveDamageFromPlayer) &&
+                    cameraShakeSources.HasFlag(ECameraShakeSources.AnyCharacterReceiveDamageFromPlayer) &&
                     context.sourceCharacter == currentControlledCharacter
                 ));
         }
 
+        private void StopActiveShake()
+        {
+            if (!m_shakeHandler.HasValue)
+            {
+                return;
+            }
+
+            TransformShaker.InterruptShakeIfInProgress(m_shakeHandler.Value);
+            m_shakeHandler = null;
+        }
         private void OnDamageTakenPresentation(DamageTakenPresentationEvent presentationEvent)
         {
             DamageTakenFeedbackContext context = presentationEvent.Context;
 
-            if (IsCameraAllowedToShake() && IsValidShakeSource(context) && !context.visualFlags.HasFlag(EEffectVisualFlags.NoCameraShake))
+            if (TryGetCameraShakeSources(out ECameraShakeSources cameraShakeSources) &&
+                IsValidShakeSource(context, cameraShakeSources) &&
+                !context.visualFlags.HasFlag(EEffectVisualFlags.NoCameraShake))
             {
                 if (!context.damageInput.IsMissed)
                 {
                     if (m_shakeHandler.HasValue)
                     {
-                        TransformShaker.InterruptShakeIfInProgress(m_shakeHandler.Value);
-                        m_shakeHandler = null;
+                        StopActiveShake();
                     }
 
                     bool isCriticalHit = context.damageInput.IsCriticalHit;
                     float amplitude = isCriticalHit ? m_amplitude * m_criticalHitAmplitudeModifier : m_amplitude;
                     transform.localPosition = new Vector3(0.0f, 0.0f, transform.localPosition.z);
-                    m_shakeHandler = TransformShaker.Shake(transform, amplitude, m_frequency, m_duration);
+                    m_shakeHandler = TransformShaker.Shake(this, transform, amplitude, m_frequency, m_duration);
                 }
             }
         }
     }
 }
+
+
 

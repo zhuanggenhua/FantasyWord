@@ -1,21 +1,32 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using MackySoft.SerializeReferenceExtensions;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 多个条件的组合方式。
+    /// </summary>
     public enum EGameConditionOperation
     {
         All,
         Any
     }
 
+    /// <summary>
+    /// 组合条件，按“全部满足”或“任一满足”的方式聚合多个子条件。
+    /// </summary>
     [Serializable]
     public class AreConditionMet : ABaseCondition
     {
+        [InspectorName("组合方式")]
+        [Tooltip("All 表示所有子条件都满足才成立；Any 表示任意一个条件满足即可成立。")]
         [SerializeField]
         private EGameConditionOperation m_operator = EGameConditionOperation.All;
 
+        [InspectorName("子条件")]
+        [Tooltip("需要聚合判断的条件列表。空列表在 All 下视为满足，在 Any 下视为不满足。")]
         [SerializeReference, SubclassSelector]
         private ICondition[] m_conditions = null;
 
@@ -32,7 +43,7 @@ namespace FantasyWord.GameCore
 
         private bool CheckAnd()
         {
-            foreach (ICondition condition in m_conditions)
+            foreach (ICondition condition in GetConditions())
             {
                 if (!(condition?.Evaluate() ?? true))
                 {
@@ -45,7 +56,7 @@ namespace FantasyWord.GameCore
 
         private bool CheckOr()
         {
-            foreach (ICondition condition in m_conditions)
+            foreach (ICondition condition in GetConditions())
             {
                 if (condition?.Evaluate() ?? true)
                 {
@@ -60,7 +71,7 @@ namespace FantasyWord.GameCore
         {
             base.StartListening(action);
 
-            foreach (ICondition condition in m_conditions)
+            foreach (ICondition condition in GetConditions())
             {
                 condition?.StartListening(action);
             }
@@ -68,13 +79,17 @@ namespace FantasyWord.GameCore
 
         public override void StopListening()
         {
-            base.StopListening();
-
-            foreach (ICondition condition in m_conditions)
+            foreach (ICondition condition in GetConditions())
             {
                 condition?.StopListening();
             }
+
+            base.StopListening();
+        }
+
+        private IEnumerable<ICondition> GetConditions()
+        {
+            return m_conditions ?? Array.Empty<ICondition>();
         }
     }
 }
-

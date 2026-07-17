@@ -15,7 +15,7 @@ namespace FantasyWord.GameCore.EditorTools
         private const string WindowTitle = "转向调试";
         private const string MenuPath = "Tools/转向调试面板";
         private const string DefaultProfilePath =
-            "Assets/Plugins/ContextSteering2D/Runtime/Defaults/DefaultContextSteeringProfile2D.asset";
+            "Assets/ProjectPlugins/ContextSteering2D/Runtime/Defaults/DefaultContextSteeringProfile2D.asset";
 
         private static readonly Color BackgroundColor = new(0.16f, 0.16f, 0.17f);
         private static readonly Color PanelColor = new(0.21f, 0.21f, 0.23f);

@@ -14,6 +14,7 @@ namespace FantasyWord.GameCore
         public const string InventoryTransferActorNotParticipant = "I can't move {0} from there.";
         public const string InventoryTransferActionLocked = "I can't handle {0} right now.";
         public const string InventoryUseActionLocked = "I can't use {0} right now.";
+        public const string InventoryUseMissingItem = "I don't have {0} anymore.";
         public const string ShopCannotBuy = "This {0} is too expensive for me at the moment!";
         public const string ShopCannotSell = "{0} could be really useful, I shouldn't sell it!";
     }

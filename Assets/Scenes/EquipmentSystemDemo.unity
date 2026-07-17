@@ -480,7 +480,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5faca898f745042a9e5380d141a605, type: 3}
   m_Name:
-  m_EditorClassIdentifier: ::DirectionalAnimationVariantDriver
+  m_EditorClassIdentifier: ::DirectionalSpriteLibraryDriver
   spriteLibrary: {fileID: 1664361590}
   spriteResolver: {fileID: 1664361589}
   equipmentRenderer: {fileID: 1664361582}
@@ -614,7 +614,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dd33f42c60aaa64a85bf7d063c4965e, type: 3}
   m_Name:
-  m_EditorClassIdentifier: ::AnimationController
+  m_EditorClassIdentifier: ::CharacterActionAnimatorDriver
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
   _debugCurrentState: Attack
   _debugAnimatorPath: EquipmentSystemDemoCharacter
@@ -653,6 +653,9 @@ MonoBehaviour:
   controller: {fileID: 1664361587}
   runtimeUi: {fileID: 0}
   runtimeUiPrefab: {fileID: 6896072316335800963, guid: c0112f739e9e71241b1b93728f1c422f, type: 3}
+  eventSystem: {fileID: 258719728}
+  inputModule: {fileID: 258719727}
+  workbenchFont: {fileID: 0}
 --- !u!114 &1664361589
 MonoBehaviour:
   m_ObjectHideFlags: 0

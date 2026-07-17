@@ -1,0 +1,21 @@
+# 0062-旧规则型持续效果边界
+
+- 日期：2026-07-17
+- 状态：已采纳
+- 背景：
+  - `2DRPGEngine` 的旧效果链由 `EffectDispatcher.Apply(...)` 统一应用 `IEffect[]`；技能、投射物和命令可以直接挂旧即时效果和旧持续效果。
+  - 参考旧持续效果中的持续伤害、治疗、回蓝、属性修饰、移速修饰和控制效果会直接改写角色生命、法力、属性、移动速度和动作锁。
+  - FantasyWord 当前已把主动能力身份、命中、伤害和表现主链迁到 EX-GAS Ability / Timeline / GameplayEffect / Cue；旧 `EffectDispatcher`、旧即时效果和旧具体 AbilitySheet 已清退。
+  - 当前代码仍保留 `ITemporalEffect/ATemporalEffect`、角色持续效果运行时注册表、持续效果展示快照、Cleanse、读档反射恢复和三类 Formal 能力授予/压制/替换壳。
+  - 本轮资产搜索没有发现正式资产、Prefab、场景或动画资产引用旧规则型持续效果类。
+- 决策：
+  - 不直接删除整条 `ITemporalEffect/ATemporalEffect`，因为它仍承担旧存档恢复、UI 展示快照、Cleanse 和三类 Formal 能力持续壳的迁移期职责。
+  - 旧规则型持续效果类 `TemporalDamageEffect`、`TemporalHealEffect`、`TemporalRestoreManaEffect`、`TemporalStatModifierEffect`、`TemporalSpeedModifierEffect`、`TemporalControlEffect` 不再作为正式作者入口。
+  - 正式资产、Prefab、场景和动画资产不得引用上述旧规则型持续效果；新增持续伤害、治疗、回蓝、属性修饰、速度或控制规则必须走 EX-GAS GameplayEffect/Timeline，或另建经过同职责流程对照裁决的正式状态规则。
+  - `TemporalAbilityGrantEffect`、`TemporalAbilitySuppressionEffect`、`TemporalAbilityReplacementEffect` 只允许作为 Formal GAS 能力来源/压制的迁移期壳存在；它们不得恢复旧 `AbilitySheet` 引用。
+- 影响：
+  - `scripts/Invoke-AbilityRuntimeStaticGate.ps1` 新增正式资产扫描，发现旧规则型持续效果类型引用时失败。
+  - `reference-flow-comparison-audit.md` 把旧规则型持续效果从待复核项改为“迁移期兼容壳需收窄”。
+  - 这不是删除旧存档兼容能力，也不是把参考旧效果主链搬回 FantasyWord。
+- 替代关系：
+  - 补充 `0050` 的参考流程审计纠偏和 `0060` 之后的能力/效果主链收口：参考旧效果链的职责内核已被 EX-GAS 主轴替代，旧规则型效果只能保留为受门禁约束的兼容残留。

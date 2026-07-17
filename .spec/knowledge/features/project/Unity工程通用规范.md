@@ -97,6 +97,7 @@ metadata:
 - Addressables 当前已经成为本地 Mod 外部 catalog 加载的最小方案；但资源包格式、依赖解析、平台限制、内容校验和官方资源是否整体迁入 Addressables 仍需专项设计，不能把“能加载 catalog”误报为完整 Mod 工作流。
 - 场景、Prefab、Inspector 负责对象层级、组件挂载、静态引用关系、视觉配置和初始显示状态。
 - 脚本负责运行时状态推进、交互路由、规则与行为逻辑。
+- 新增或改写 `[SerializeField]`、Inspector 开关、组名、引用字段时，不得假设 C# 字段初始化值会自动回填已有场景、Prefab 或嵌套序列化控制器；必须检查目标实例的真实序列化值，或提供明确迁移、旧数据默认解析、`OnValidate` 修复和原场景运行验收。
 - 修改 Prefab、场景层级或组件挂载后，要回读核对重复组件、同职责副本和 prefab override。
 - 正式资产迁移默认保留 `.meta`，避免无意改变 GUID。
 
@@ -115,6 +116,6 @@ metadata:
 - 注释不能缺，但也不能灌水。必须说明职责、调用契约、边界、为什么这样做、错误配置会怎样；禁止把“给变量赋值”“遍历列表”这类代码表面行为翻译成中文。
 - 当代码吸收 `2DRPGEngine`、`TopDownEngine` 或 `YokiFrame` 的能力时，关键类型或正式入口要在注释或文档中说明来源边界和当前项目真相源，避免以后误以为还存在兼容层或双轨实现。
 - 新增系统、工具、编辑器窗口、验证脚本、ScriptableObject 和 Inspector 暴露字段时，默认同步补中文注释、中文 `Tooltip` / `Header`；当前不得假设 NaughtyAttributes 已接入。如果后续重新接入对应插件，才允许使用其中文标签能力。
-- 需要新增、改写或审查源码注释时，先读 `.agents/skills/code-comments/SKILL.md`。
+- 需要新增、改写或审查源码注释时，先读全局 `D:\codex-home\skills\code-comments\SKILL.md`；本项目当前没有 `.agents/skills/code-comments/SKILL.md`。
 - Inspector 暴露字段应显示中文名称和必要说明；若后续重新接入 NaughtyAttributes 或同类 Inspector 辅助插件，先在插件清单登记落点和用途，再使用 `[Label("中文名")]`、`[BoxGroup("中文分组")]` 等插件能力。
 - 不为简单赋值和自说明代码堆空话注释。

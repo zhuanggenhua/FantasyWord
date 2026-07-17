@@ -1,4 +1,4 @@
-﻿using Unity.Mathematics;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -27,6 +27,16 @@ namespace FantasyWord.GameCore
         protected override void OnPanelShown(UIKitMenuOpenData openData)
         {
             UpdateUI();
+        }
+
+        private void OnDestroy()
+        {
+            m_masterVolume.UnregisterCallbacks();
+
+            foreach (UISettingsChannelVolume channelVolume in m_channelVolumes)
+            {
+                channelVolume.UnregisterCallbacks();
+            }
         }
 
         protected override GameObject ResolveDefaultFocusTarget()
@@ -94,4 +104,5 @@ namespace FantasyWord.GameCore
         }
     }
 }
+
 

@@ -5,20 +5,34 @@ using UnityEngine.Tilemaps;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 地表元素运行时表现桥接器。
+    /// 它只同步临时火焰/蒸汽 Tile 和草覆盖层显隐，不修改规则 Tilemap，也不把燃尽结果写成新的作者地形。
+    /// </summary>
     [DisallowMultipleComponent]
     public sealed class TerrainSurfacePresentation : MonoBehaviour
     {
         [Header("状态来源")]
+        [InspectorName("地形导航地图")]
+        [Tooltip("地表运行时状态的真相源。这里订阅它的格子状态变化，不直接扫描视觉 Tilemap 推断玩法。")]
         [SerializeField] private TerrainNavigationMap m_navigationMap = null;
+
+        [InspectorName("地表表现配置")]
+        [Tooltip("运行时状态、一次性表现信号到 Tile 的映射表。缺映射时会报警，不会静默用占位 Tile 顶替。")]
         [SerializeField] private TerrainSurfacePresentationConfig m_config = null;
 
         [Header("表现层")]
+        [InspectorName("临时效果 Tilemap")]
+        [Tooltip("只承载燃烧、蒸汽等短期元素效果。永久地貌变化必须回到世界地形变更链路。")]
         [SerializeField] private Tilemap m_temporaryEffectTilemap = null;
 
         private readonly List<Vector3Int> m_runtimeCells = new();
         private readonly Dictionary<Vector3Int, Coroutine> m_signalCoroutines = new();
+
+        // 覆盖层被燃尽时只临时隐藏原 Tile，保留作者 Tile 数据，便于退出 PlayMode 或状态清空时恢复。
         private readonly Dictionary<int, HiddenSurfaceCoverSource> m_hiddenSurfaceCoverSources =
             new();
+
         private readonly HashSet<string> m_reportedMissingMappings = new();
 
         private void OnEnable()
@@ -152,17 +166,65 @@ namespace FantasyWord.GameCore
                 sample.SurfaceCoverLifecycle == ETerrainSurfaceCoverLifecycle.Removed;
             if (shouldHide)
             {
-                HideSurfaceCoverCell(
-                    sample.SurfaceCoverSource,
-                    surfaceTilemap,
-                    sample.Cell);
+                HideMappedSurfaceCoverCells(sample.Cell);
             }
             else
             {
+                RestoreMappedSurfaceCoverCells(sample.Cell);
+            }
+        }
+
+        private void HideMappedSurfaceCoverCells(Vector3Int cell)
+        {
+            IReadOnlyList<TerrainSurfaceLayerSource> sources =
+                m_navigationMap.SurfaceLayerSources;
+            for (int i = 0; i < sources.Count; i++)
+            {
+                TerrainSurfaceLayerSource source = sources[i];
+                if (source == null ||
+                    !source.IsValid ||
+                    !source.TryResolveSurfaceCover(
+                        cell,
+                        out ETerrainSurfaceCoverKind coverKind,
+                        out _) ||
+                    coverKind == ETerrainSurfaceCoverKind.None)
+                {
+                    continue;
+                }
+
+                HideSurfaceCoverCell(
+                    new TerrainSurfaceCoverSourceReference(
+                        source.SourceId,
+                        source.Role),
+                    source.Tilemap,
+                    cell);
+            }
+        }
+
+        private void RestoreMappedSurfaceCoverCells(Vector3Int cell)
+        {
+            IReadOnlyList<TerrainSurfaceLayerSource> sources =
+                m_navigationMap.SurfaceLayerSources;
+            for (int i = 0; i < sources.Count; i++)
+            {
+                TerrainSurfaceLayerSource source = sources[i];
+                if (source == null ||
+                    !source.IsValid ||
+                    !source.TryResolveSurfaceCover(
+                        cell,
+                        out ETerrainSurfaceCoverKind coverKind,
+                        out _) ||
+                    coverKind == ETerrainSurfaceCoverKind.None)
+                {
+                    continue;
+                }
+
                 RestoreSurfaceCoverCell(
-                    sample.SurfaceCoverSource,
-                    surfaceTilemap,
-                    sample.Cell);
+                    new TerrainSurfaceCoverSourceReference(
+                        source.SourceId,
+                        source.Role),
+                    source.Tilemap,
+                    cell);
             }
         }
 
@@ -184,6 +246,7 @@ namespace FantasyWord.GameCore
                 surfaceTilemap.SetTileFlags(cell, TileFlags.None);
             }
 
+            // 用透明度隐藏覆盖层，而不是 SetTile(null)，这样作者原 Tile、GUID 和 Palette 来源仍可恢复。
             Color color = surfaceTilemap.GetColor(cell);
             if (!Mathf.Approximately(color.a, 0.0f))
             {
@@ -265,6 +328,10 @@ namespace FantasyWord.GameCore
                 RestoreTemporaryStateAfterSignal(cell, duration));
         }
 
+        /// <summary>
+        /// 一次性表现信号结束后回到当前运行时状态，而不是盲目清空 Tile。
+        /// 这样同一格仍在 Burning 等状态中时，不会被 Steam 之类的瞬时信号误清。
+        /// </summary>
         private IEnumerator RestoreTemporaryStateAfterSignal(
             Vector3Int cell,
             float duration)

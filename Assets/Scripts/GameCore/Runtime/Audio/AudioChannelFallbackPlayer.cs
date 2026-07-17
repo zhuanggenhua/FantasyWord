@@ -94,6 +94,21 @@ namespace FantasyWord.GameCore
 
         public void StopPlayback()
         {
+            StopPlaybackInternal(deactivate: true);
+        }
+
+        private void OnDisable()
+        {
+            StopPlaybackInternal(deactivate: false);
+        }
+
+        private void OnDestroy()
+        {
+            StopPlaybackInternal(deactivate: false);
+        }
+
+        private void StopPlaybackInternal(bool deactivate)
+        {
             if (m_playbackCoroutine != null)
             {
                 StopCoroutine(m_playbackCoroutine);
@@ -110,7 +125,11 @@ namespace FantasyWord.GameCore
             m_onCompleted = null;
             m_remainingDuration = 0f;
             m_isPaused = false;
-            gameObject.SetActive(false);
+
+            if (deactivate && gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         private IEnumerator TrackPlayback()

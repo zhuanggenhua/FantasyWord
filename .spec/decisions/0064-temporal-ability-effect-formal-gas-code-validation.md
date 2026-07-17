@@ -1,0 +1,21 @@
+# 0064-能力持续效果 Formal GAS 编号校验边界
+
+- 日期：2026-07-17
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 的旧持续效果可以改变角色能力集合；作者数据使用真实 `AbilitySheet` 资产引用，持续效果只有应用成功后才登记到角色持续效果列表。
+  - FantasyWord 已把能力身份迁移为 Formal GAS 技能编号，三类能力持续效果仍暂时挂在旧 `ATemporalEffect` 生命周期壳上。
+  - 因此 Formal GAS 编号数组承担了旧能力资产引用的作者配置职责；坏编号不能被过滤成“没有能力变化”。
+- 决策：
+  - `TemporalAbilityGrantEffect`、`TemporalAbilitySuppressionEffect`、`TemporalAbilityReplacementEffect` 在应用前必须先校验 Formal GAS 技能编号配置。
+  - 授予或压制数组为空表示该能力持续效果没有可应用的能力变化，`OnApply()` 必须返回 `false`，不得登记成成功持续效果。
+  - 数组中出现小于等于 0 的编号时，视为作者配置错误并抛出可定位异常；不得继续执行授予、压制或持续效果登记。
+  - 替换效果必须先同时校验授予数组和压制数组，再写入任何角色能力状态，避免半完成授予或压制。
+- 影响：
+  - `TemporalAbilityEffectSupport` 提供共享配置校验和空配置判断。
+  - 三类能力持续效果的正式运行入口只在配置有效且存在能力变化时返回成功。
+  - 新增 EditMode 合同测试覆盖坏编号、空配置和替换效果半完成风险。
+  - Foundation 静态门禁检查该合同，防止回退成静默过滤或成功 no-op。
+- 替代关系：
+  - 补充 0050 的“参考流程优先”审计口径。
+  - 补充 0062；本决策只约束 Formal GAS 能力持续效果壳，不恢复旧 `AbilitySheet` 主链，也不放开旧规则型持续效果作为正式作者入口。

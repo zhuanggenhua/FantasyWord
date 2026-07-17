@@ -4,6 +4,10 @@ using UnityEngine;
 namespace FantasyWord.GameCore
 {
 
+    /// <summary>
+    /// 持续效果展示分类。
+    /// 当前只区分正面和负面，具体名称/图标由展示信息补充。
+    /// </summary>
     public enum EEffectType
     {
         Buff,
@@ -69,6 +73,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 所有持续效果共享的最小持久化字段。
+    /// 具体效果私有状态由各自 PersistedState 子类追加。
+    /// </summary>
     internal readonly struct TemporalEffectSharedPersistedFields
     {
         public TemporalEffectSharedPersistedFields(
@@ -177,9 +185,13 @@ namespace FantasyWord.GameCore
     {
         bool TryCapturePersistedState(out TemporalEffectPersistedState persistedState);
 
-        void RestorePersistedState(TemporalEffectPersistedState persistedState);
+        bool TryRestorePersistedState(TemporalEffectPersistedState persistedState);
     }
 
+    /// <summary>
+    /// 持续效果合同。
+    /// 角色效果容器通过它推进寿命、叠加、完成和恢复运行时所有权。
+    /// </summary>
     public interface ITemporalEffect : IEffect
     {
         public bool completed { get; }

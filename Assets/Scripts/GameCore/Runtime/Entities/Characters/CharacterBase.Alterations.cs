@@ -21,6 +21,8 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
+            alterationRule.EnsureFormalGasAbilityCodeConfiguration();
+
             if (m_activeAlterationRules.TryGetValue(alterationRule, out int currentStackCount) &&
                 alterationRule.stackingPolicy != ECharacterAlterationStackingPolicy.Stackable)
             {
@@ -106,11 +108,22 @@ namespace FantasyWord.GameCore
                 return System.Array.Empty<DatabaseEntryReference<CharacterAlterationRule>>();
             }
 
-            return m_activeAlterationRules
-                .Where(entry => entry.Key != null && entry.Value > 0)
-                .SelectMany(entry => Enumerable.Repeat(entry.Key, entry.Value))
-                .Select(rule => GameManager.Database.CreateReference(rule))
-                .ToArray();
+            List<DatabaseEntryReference<CharacterAlterationRule>> snapshots = new();
+            foreach ((CharacterAlterationRule rule, int stackCount) in m_activeAlterationRules)
+            {
+                if (!rule || stackCount <= 0)
+                {
+                    throw new System.InvalidOperationException(
+                        $"[{nameof(CharacterBase)}] 当前角色存在无效变身/感染规则状态，不能把运行时状态保存成部分存档。");
+                }
+
+                for (int i = 0; i < stackCount; i++)
+                {
+                    snapshots.Add(GameManager.Database.CreateReference(rule));
+                }
+            }
+
+            return snapshots.ToArray();
         }
 
         internal void RestoreActiveAlterationRules(DatabaseEntryReference<CharacterAlterationRule>[] activeAlterationRules)
@@ -140,7 +153,10 @@ namespace FantasyWord.GameCore
                     alterationRule.ApplyNonAbilityChanges(this, GameManager.Database);
                     m_activeAlterationRules.TryGetValue(alterationRule, out int currentStackCount);
                     m_activeAlterationRules[alterationRule] = currentStackCount + 1;
+                    continue;
                 }
+
+                UnityEngine.Debug.LogError($"[{nameof(CharacterBase)}] 存档中的变身/感染规则 GUID 无法解析，已跳过：{alterationRuleReference.guid}", this);
             }
 
             RevalidatePlayerControlEligibility();
@@ -187,12 +203,7 @@ namespace FantasyWord.GameCore
 
         private void RevalidatePlayerControlEligibility()
         {
-            if (!GameManager.Exists() || !GameManager.TryGetSystem<PlayerSystem>(out PlayerSystem playerSystem))
-            {
-                return;
-            }
-
-            playerSystem.RevalidateCurrentControlledCharacter();
+            GameManager.PlayerSystem.RevalidateCurrentControlledCharacter();
         }
     }
 }

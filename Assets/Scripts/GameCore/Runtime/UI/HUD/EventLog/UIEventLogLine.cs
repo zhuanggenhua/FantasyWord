@@ -18,12 +18,20 @@ namespace FantasyWord.GameCore
             m_text = GetComponent<TextMeshProUGUI>();
         }
 
+        private void OnDisable()
+        {
+            StopAnimation();
+            ResetLine();
+        }
+
+        private void OnDestroy()
+        {
+            StopAnimation();
+        }
+
         public void Show(Color color, string text, float characterAnimationDuration, float displayDuration)
         {
-            if (m_animationCoroutine != null)
-            {
-                StopCoroutine(m_animationCoroutine);
-            }
+            StopAnimation();
 
             gameObject.SetActive(true);
             m_text.color = color;
@@ -56,7 +64,27 @@ namespace FantasyWord.GameCore
 
             yield return new WaitForSecondsRealtime(math.max(displayDuration - durationOffset, 0.0f));
 
+            m_animationCoroutine = null;
             gameObject.SetActive(false);
+        }
+
+        private void StopAnimation()
+        {
+            if (m_animationCoroutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(m_animationCoroutine);
+            m_animationCoroutine = null;
+        }
+
+        private void ResetLine()
+        {
+            if (m_text != null)
+            {
+                m_text.text = string.Empty;
+            }
         }
     }
 }

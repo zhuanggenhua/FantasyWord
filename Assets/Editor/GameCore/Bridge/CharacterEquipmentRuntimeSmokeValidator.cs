@@ -22,7 +22,7 @@ namespace FantasyWord.GameCore
         private const string SmokeHeadEquipmentAssetPath = "Assets/Editor/GameCore/Bridge/CharacterEquipmentRuntimeSmoke_Head.asset";
         private const string SmokeAbilityEquipmentAssetPath = "Assets/Editor/GameCore/Bridge/CharacterEquipmentRuntimeSmoke_TorsoAbility.asset";
         private const string SmokeSuppressionSourceId = "character-equipment-runtime-smoke-suppression";
-        private const int SmokeEquipmentAbilityCode = FormalGasAbilityCodes.BasicAttack;
+        private const int SmokeEquipmentAbilityCode = GAS.Runtime.XAbility.ABILITY_Attack;
 
         private static CharacterActor? s_characterAlpha;
         private static CharacterActor? s_characterBeta;
@@ -595,12 +595,18 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 启动命令返回给外部桥接层的最小结果，只暴露最终 JSON 证据路径。
+        /// </summary>
         [Serializable]
         public sealed class StartResult
         {
             public string ResultPath = string.Empty;
         }
 
+        /// <summary>
+        /// CharacterEquipment 运行态 smoke 的完整证据对象，用于记录装备、能力、压制和尸体转移链路。
+        /// </summary>
         [Serializable]
         public sealed class ValidationResult
         {

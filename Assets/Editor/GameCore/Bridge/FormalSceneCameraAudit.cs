@@ -133,6 +133,9 @@ namespace FantasyWord.GameCore
             File.WriteAllText(fullPath, JsonUtility.ToJson(result, true));
         }
 
+        /// <summary>
+        /// 正式场景相机审计汇总结果。
+        /// </summary>
         [Serializable]
         public sealed class AuditResult
         {
@@ -140,6 +143,9 @@ namespace FantasyWord.GameCore
             public SceneCameraReport[] SceneReports = Array.Empty<SceneCameraReport>();
         }
 
+        /// <summary>
+        /// 单个场景的相机和启动黑屏配置审计结果。
+        /// </summary>
         [Serializable]
         public sealed class SceneCameraReport
         {

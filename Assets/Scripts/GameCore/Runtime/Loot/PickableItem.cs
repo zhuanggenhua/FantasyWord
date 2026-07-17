@@ -1,4 +1,6 @@
-using System.Collections;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -108,7 +110,7 @@ namespace FantasyWord.GameCore
                 }
                 else
                 {
-                    StartCoroutine(DisableSelfAfterDelay());
+                    DisableSelfAfterDelayAsync(m_disableDelay, destroyCancellationToken).Forget(LogAsyncException);
                 }
             }
 
@@ -120,7 +122,10 @@ namespace FantasyWord.GameCore
                 }
                 else
                 {
-                    StartCoroutine(DisableTargetAfterDelay());
+                    DisableTargetAfterDelayAsync(
+                        m_targetObjectDisableDelay,
+                        m_targetObjectToDisable,
+                        destroyCancellationToken).Forget(LogAsyncException);
                 }
             }
         }
@@ -158,16 +163,39 @@ namespace FantasyWord.GameCore
             return null;
         }
 
-        private IEnumerator DisableSelfAfterDelay()
+        private async UniTask DisableSelfAfterDelayAsync(float delay, CancellationToken cancellationToken)
         {
-            yield return new WaitForSeconds(m_disableDelay);
+            await UniTask.WaitForSeconds(Mathf.Max(0f, delay), cancellationToken: cancellationToken);
+            if (cancellationToken.IsCancellationRequested || this == null)
+            {
+                return;
+            }
+
             gameObject.SetActive(false);
         }
 
-        private IEnumerator DisableTargetAfterDelay()
+        private static async UniTask DisableTargetAfterDelayAsync(
+            float delay,
+            GameObject targetObject,
+            CancellationToken cancellationToken)
         {
-            yield return new WaitForSeconds(m_targetObjectDisableDelay);
-            m_targetObjectToDisable.SetActive(false);
+            await UniTask.WaitForSeconds(Mathf.Max(0f, delay), cancellationToken: cancellationToken);
+            if (cancellationToken.IsCancellationRequested || targetObject == null)
+            {
+                return;
+            }
+
+            targetObject.SetActive(false);
+        }
+
+        private void LogAsyncException(Exception exception)
+        {
+            if (exception is OperationCanceledException)
+            {
+                return;
+            }
+
+            Debug.LogException(exception, this);
         }
     }
 }

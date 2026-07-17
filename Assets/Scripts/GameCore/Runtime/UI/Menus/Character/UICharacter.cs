@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -16,6 +16,7 @@ namespace FantasyWord.GameCore
 
         private CharacterActor m_currentCharacter = null;
         private CharacterMenuContext m_context = CharacterMenuContext.CurrentControlledCharacter();
+        private bool m_currentControlledCharacterListening = false;
 
         private Stats m_tempStats;
         private int m_availablePoints = 0;
@@ -23,9 +24,6 @@ namespace FantasyWord.GameCore
 
         protected override void OnPanelInit()
         {
-            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            BindCharacter(m_context.ResolveActor() as CharacterActor);
-
             foreach (UICharacterStat stat in m_stats)
             {
                 stat.RegisterCallbacks(OnRemoveButtonPressed, OnAddButtonPressed);
@@ -34,9 +32,10 @@ namespace FantasyWord.GameCore
 
         private void OnDestroy()
         {
-            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            StopCurrentControlledCharacterListening();
+            foreach (UICharacterStat stat in m_stats)
             {
-                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+                stat.UnregisterCallbacks();
             }
         }
 
@@ -49,11 +48,18 @@ namespace FantasyWord.GameCore
 
         protected override void OnPanelShown(UIKitMenuOpenData openData)
         {
+            BindCurrentControlledCharacterListenerForContext();
             BindCharacter(m_context.ResolveActor() as CharacterActor);
             m_tempStats = new();
             m_availablePoints = m_currentCharacter != null ? m_currentCharacter.availablePoints : 0;
             m_totalAvailablePoints = m_availablePoints;
             UpdateUI();
+        }
+
+        protected override void OnPanelHidden()
+        {
+            StopCurrentControlledCharacterListening();
+            ClearPanelState();
         }
 
         public void Apply()
@@ -136,6 +142,48 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private void BindCurrentControlledCharacterListenerForContext()
+        {
+            if (m_context.FollowsCurrentControlledCharacter)
+            {
+                StartCurrentControlledCharacterListeningIfReady();
+            }
+            else
+            {
+                StopCurrentControlledCharacterListening();
+            }
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+        }
+
+        private void StopCurrentControlledCharacterListening()
+        {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
+            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            {
+                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            }
+        }
+
         private void BindCharacter(CharacterActor character)
         {
             if (ReferenceEquals(m_currentCharacter, character))
@@ -157,6 +205,14 @@ namespace FantasyWord.GameCore
             UpdateUI();
         }
 
+        private void ClearPanelState()
+        {
+            m_currentCharacter = null;
+            m_tempStats = new Stats();
+            m_availablePoints = 0;
+            m_totalAvailablePoints = 0;
+        }
+
         private static bool TryResolveCharacterMenuContext(UIKitMenuOpenData openData, out CharacterMenuContext context)
         {
             context = CharacterMenuContext.CurrentControlledCharacter();
@@ -169,4 +225,5 @@ namespace FantasyWord.GameCore
         }
     }
 }
+
 

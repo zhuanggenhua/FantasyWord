@@ -568,33 +568,42 @@ namespace FantasyWord.GameCore
             if ((actions.HasFlag(EActionFlags.Move) ||
                  actions.HasFlag(EActionFlags.UseAbility) ||
                  actions.HasFlag(EActionFlags.UpdateTargetDirection)) &&
-                abilitySystemComponent.HasTag(FormalGameplayTagCatalog.AttackingEvent.TagCode))
+                HasFormalGameplayTag(abilitySystemComponent, FormalGameplayTagCatalog.AttackingEvent))
             {
                 return true;
             }
 
             // 控制效果的禁用语义现在优先看 formal GameplayTag，而不是再让执行壳长期镜像一份动作锁。
             if (actions.HasFlag(EActionFlags.Move) &&
-                (abilitySystemComponent.HasTag(FormalGameplayTagCatalog.StunControlEffect.TagCode) ||
-                 abilitySystemComponent.HasTag(FormalGameplayTagCatalog.RootControlEffect.TagCode)))
+                (HasFormalGameplayTag(abilitySystemComponent, FormalGameplayTagCatalog.StunControlEffect) ||
+                 HasFormalGameplayTag(abilitySystemComponent, FormalGameplayTagCatalog.RootControlEffect)))
             {
                 return true;
             }
 
             if (actions.HasFlag(EActionFlags.UseAbility) &&
-                (abilitySystemComponent.HasTag(FormalGameplayTagCatalog.StunControlEffect.TagCode) ||
-                 abilitySystemComponent.HasTag(FormalGameplayTagCatalog.SilenceControlEffect.TagCode)))
+                (HasFormalGameplayTag(abilitySystemComponent, FormalGameplayTagCatalog.StunControlEffect) ||
+                 HasFormalGameplayTag(abilitySystemComponent, FormalGameplayTagCatalog.SilenceControlEffect)))
             {
                 return true;
             }
 
             if (actions.HasFlag(EActionFlags.UpdateTargetDirection) &&
-                abilitySystemComponent.HasTag(FormalGameplayTagCatalog.StunControlEffect.TagCode))
+                HasFormalGameplayTag(abilitySystemComponent, FormalGameplayTagCatalog.StunControlEffect))
             {
                 return true;
             }
 
             return false;
+        }
+
+        private static bool HasFormalGameplayTag(
+            AbilitySystemComponent abilitySystemComponent,
+            FormalGameplayTagDefinition tagDefinition)
+        {
+            return abilitySystemComponent != null &&
+                   tagDefinition.TagCode > 0 &&
+                   abilitySystemComponent.HasTag(tagDefinition.TagCode);
         }
 
         public void FlagAsSummoned()

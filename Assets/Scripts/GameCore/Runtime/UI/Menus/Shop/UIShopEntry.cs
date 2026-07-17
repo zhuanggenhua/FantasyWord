@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -21,6 +21,13 @@ namespace FantasyWord.GameCore
             m_button.onClick.AddListener(OnSlotClicked);
         }
 
+        private void OnDestroy()
+        {
+            if (m_button)
+            {
+                m_button.onClick.RemoveListener(OnSlotClicked);
+            }
+        }
         public void OnPointerEnter(PointerEventData eventData)
         {
             m_button.Select();
@@ -76,4 +83,5 @@ namespace FantasyWord.GameCore
         }
     }
 }
+
 

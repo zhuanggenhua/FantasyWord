@@ -33,13 +33,19 @@ namespace FantasyWord.GameCore
             if (!m_cacheMap.TryGetValue(address, out TAsset asset))
             {
                 m_loadingRef++;
-                if (AddressSafeCheck)
+                try
                 {
-                    await ResourceSystem.EnsureAssetExistsAsync<TAsset>(address);
-                }
+                    if (AddressSafeCheck)
+                    {
+                        await ResourceSystem.EnsureAssetExistsAsync<TAsset>(address);
+                    }
 
-                asset = await LoadNewAssetAsync(address).ToUniTask();
-                m_loadingRef--;
+                    asset = await LoadNewAssetAsync(address).ToUniTask();
+                }
+                finally
+                {
+                    m_loadingRef--;
+                }
             }
 
             return asset;

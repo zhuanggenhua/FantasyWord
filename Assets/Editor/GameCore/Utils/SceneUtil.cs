@@ -5,10 +5,16 @@ using UnityEditor;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 编辑器场景查询工具，统一从 Build Settings 和 AssetDatabase 生成场景快照。
+    /// </summary>
     public static class SceneUtil
     {
         private static readonly string[] SceneSearchRoots = { "Assets/Scenes" };
 
+        /// <summary>
+        /// 单个场景资产的编辑器快照，记录路径和是否进入 Build Settings。
+        /// </summary>
         public readonly struct SceneEntry
         {
             public SceneEntry(string path, bool isInBuildSettings)

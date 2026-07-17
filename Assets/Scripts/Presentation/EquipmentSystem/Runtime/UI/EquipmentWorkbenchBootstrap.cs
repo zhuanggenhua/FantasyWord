@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 /// <summary>
 /// 场景启动入口：把 catalog、渲染器、动画控制器和预览 UI 绑定起来。
@@ -11,8 +10,6 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
 {
-    static TMP_FontAsset _cachedSilverFont;
-
     [SerializeField]
     [FormerlySerializedAs("configuration")]
     EquipmentWorkbenchCatalog catalog;
@@ -21,10 +18,10 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
     EquipmentRenderer equipmentRenderer;
 
     [SerializeField]
-    AnimationController animationController;
+    CharacterActionAnimatorDriver animationController;
 
     [SerializeField]
-    DirectionalAnimationVariantDriver directionDriver;
+    DirectionalSpriteLibraryDriver directionDriver;
 
     [SerializeField]
     EquipmentWorkbenchController controller;
@@ -35,7 +32,15 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
     [SerializeField]
     EquipmentWorkbenchRuntimeUI runtimeUiPrefab;
 
-    const string DefaultWorkbenchUiResourcePath = "Art/UIPrefab/UIEquipmentWorkbench";
+    [SerializeField]
+    EventSystem eventSystem;
+
+    [SerializeField]
+    InputSystemUIInputModule inputModule;
+
+    [SerializeField]
+    [Tooltip("工作台 UI 字体。为空时使用 Runtime UI 预制体上绑定的字体。")]
+    TMP_FontAsset workbenchFont;
 
     public void SetCatalog(EquipmentWorkbenchCatalog newCatalog)
     {
@@ -45,8 +50,8 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
     void Reset()
     {
         equipmentRenderer = GetComponent<EquipmentRenderer>();
-        animationController = GetComponent<AnimationController>();
-        directionDriver = GetComponent<DirectionalAnimationVariantDriver>();
+        animationController = GetComponent<CharacterActionAnimatorDriver>();
+        directionDriver = GetComponent<DirectionalSpriteLibraryDriver>();
         controller = GetComponent<EquipmentWorkbenchController>();
     }
 
@@ -55,7 +60,7 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
         if (!Application.isPlaying)
             return;
 
-        EnsureControllerBinding();
+        ValidateControllerBinding();
     }
 
     void OnEnable()
@@ -79,135 +84,98 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
         if (!Application.isPlaying)
             return;
 
-        EnsureControllerBinding();
-        if (controller == null)
+        if (!ValidateControllerBinding())
             return;
 
         controller.InitializeIfNeeded();
-        EnsureEventSystem();
+        if (!EnsureEventSystem())
+            return;
+
         EnsureRuntimeUi();
     }
 
-    void EnsureControllerBinding()
+    bool ValidateControllerBinding()
     {
+        if (controller == null)
+        {
+            Debug.LogError("未绑定 EquipmentWorkbenchController。工作台启动器不再运行时自动添加控制器。", this);
+            return false;
+        }
+
+        if (catalog == null)
+        {
+            Debug.LogError("未绑定 EquipmentWorkbenchCatalog。", this);
+            return false;
+        }
+
         if (equipmentRenderer == null)
-            equipmentRenderer = GetComponent<EquipmentRenderer>();
+        {
+            Debug.LogError("未绑定 EquipmentRenderer。", this);
+            return false;
+        }
+
         if (animationController == null)
-            animationController = GetComponent<AnimationController>();
+        {
+            Debug.LogError("未绑定 CharacterActionAnimatorDriver。", this);
+            return false;
+        }
+
         if (directionDriver == null)
-            directionDriver = GetComponent<DirectionalAnimationVariantDriver>();
-        if (controller == null)
-            controller = GetComponent<EquipmentWorkbenchController>();
-        if (controller == null)
-            controller = gameObject.AddComponent<EquipmentWorkbenchController>();
+        {
+            Debug.LogError("未绑定 DirectionalSpriteLibraryDriver。", this);
+            return false;
+        }
 
         controller.Configure(catalog, equipmentRenderer, animationController, directionDriver);
+        return true;
     }
 
-    void EnsureEventSystem()
+    bool EnsureEventSystem()
     {
-        EventSystem reusable = null;
-        EventSystem[] existingEventSystems = FindObjectsByType<EventSystem>(
-            FindObjectsInactive.Include,
-            FindObjectsSortMode.None);
-        for (int i = 0; i < existingEventSystems.Length; i++)
+        if (eventSystem == null)
         {
-            EventSystem existing = existingEventSystems[i];
-            if (existing == null || !existing.gameObject.scene.IsValid())
-                continue;
-
-            bool temporaryWorkbenchEventSystem = existing.gameObject.name == "EquipmentWorkbenchEventSystem"
-                && (existing.gameObject.hideFlags & HideFlags.DontSaveInEditor) != 0;
-            if (temporaryWorkbenchEventSystem)
-            {
-                DestroyWorkbenchEventSystem(existing.gameObject);
-                continue;
-            }
-
-            if (reusable == null)
-                reusable = existing;
+            Debug.LogError("未绑定工作台 EventSystem。请在场景里显式配置 EventSystem 引用。", this);
+            return false;
         }
 
-        if (reusable != null)
+        if (inputModule == null)
         {
-            EnsureInputModule(reusable);
-            EventSystem.current = reusable;
-            return;
+            Debug.LogError("未绑定工作台 InputSystemUIInputModule。请在场景里显式配置输入模块引用。", this);
+            return false;
         }
 
-        if (EventSystem.current != null)
-            return;
+        if (!eventSystem.isActiveAndEnabled)
+        {
+            Debug.LogError("工作台 EventSystem 未启用。", eventSystem);
+            return false;
+        }
 
-        GameObject eventSystemGo = new GameObject("EquipmentWorkbenchEventSystem");
-        eventSystemGo.hideFlags = HideFlags.DontSaveInEditor;
-        eventSystemGo.AddComponent<EventSystem>();
-        eventSystemGo.AddComponent<InputSystemUIInputModule>();
-    }
+        if (!inputModule.isActiveAndEnabled)
+        {
+            Debug.LogError("工作台 InputSystemUIInputModule 未启用。", inputModule);
+            return false;
+        }
 
-    static void EnsureInputModule(EventSystem eventSystem)
-    {
-        if (eventSystem == null || eventSystem.GetComponent<BaseInputModule>() != null)
-            return;
-
-        eventSystem.gameObject.AddComponent<InputSystemUIInputModule>();
-    }
-
-    static void DestroyWorkbenchEventSystem(GameObject eventSystemGo)
-    {
-        if (eventSystemGo == null)
-            return;
-
-        if (Application.isPlaying)
-            Destroy(eventSystemGo);
-        else
-            DestroyImmediate(eventSystemGo);
+        EventSystem.current = eventSystem;
+        return true;
     }
 
     void EnsureRuntimeUi()
     {
         if (runtimeUi == null)
-            runtimeUi = FindFirstObjectByType<EquipmentWorkbenchRuntimeUI>();
-
-        if (runtimeUi == null)
         {
-            EquipmentWorkbenchRuntimeUI prefab = runtimeUiPrefab != null
-                ? runtimeUiPrefab
-                : Resources.Load<EquipmentWorkbenchRuntimeUI>(DefaultWorkbenchUiResourcePath);
-
-            if (prefab == null)
+            if (runtimeUiPrefab == null)
             {
                 Debug.LogError(
-                    $"未找到正式换装工作台 UI 预制体。请检查 {DefaultWorkbenchUiResourcePath}.prefab 或场景显式绑定。",
+                    "未绑定正式换装工作台 UI。请在 EquipmentWorkbenchBootstrap 上显式配置 runtimeUi 或 runtimeUiPrefab。",
                     this);
                 return;
             }
 
-            runtimeUi = Instantiate(prefab);
+            runtimeUi = Instantiate(runtimeUiPrefab);
             runtimeUi.name = "EquipmentWorkbenchUIRoot";
         }
 
-        runtimeUi.Bind(controller, ResolveFont());
-    }
-
-    static TMP_FontAsset ResolveFont()
-    {
-        TMP_FontAsset silver = Resources.Load<TMP_FontAsset>("Fonts/Silver SDF");
-        if (silver != null)
-            return silver;
-
-        if (_cachedSilverFont != null)
-            return _cachedSilverFont;
-
-        Font silverFont = Resources.Load<Font>("Fonts/Silver");
-        if (silverFont != null)
-        {
-            _cachedSilverFont = TMP_FontAsset.CreateFontAsset(silverFont);
-            return _cachedSilverFont;
-        }
-
-        if (TMP_Settings.defaultFontAsset != null)
-            return TMP_Settings.defaultFontAsset;
-
-        return Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        runtimeUi.Bind(controller, workbenchFont);
     }
 }

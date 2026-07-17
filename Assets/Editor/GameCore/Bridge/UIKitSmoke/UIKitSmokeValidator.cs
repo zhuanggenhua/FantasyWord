@@ -14,6 +14,9 @@ namespace FantasyWord.GameCore
         private const string SmokeStackName = "fw_uikit_smoke";
         private const string SmokeTag = "fw-uikit-smoke";
 
+        /// <summary>
+        /// UIKit smoke 的完整验证结果，记录资源、栈深度、焦点和清理状态，供桥接脚本写入 JSON 证据。
+        /// </summary>
         [Serializable]
         public sealed class UIKitSmokeValidationResult
         {
@@ -35,6 +38,9 @@ namespace FantasyWord.GameCore
             public string[] Failures = Array.Empty<string>();
         }
 
+        /// <summary>
+        /// UIKit smoke 运行前需要存在的 Resources 资产证据。
+        /// </summary>
         [Serializable]
         public sealed class UIKitSmokeResourceEvidence
         {
@@ -43,6 +49,9 @@ namespace FantasyWord.GameCore
             public bool SecondaryPanelPrefabFound;
         }
 
+        /// <summary>
+        /// 单个 smoke 面板在某个时点的 UIKit 查询结果和生命周期快照。
+        /// </summary>
         [Serializable]
         public sealed class UIKitSmokePanelEvidence
         {

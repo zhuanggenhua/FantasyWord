@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
@@ -22,6 +23,98 @@ namespace FantasyWord.GameCore
             List<int> codes = new();
             AddFormalGasAbilityCodes(codes, formalGasAbilityCodes);
             return codes.ToArray();
+        }
+
+        public static bool HasConfiguredFormalGasAbilityCodes(params int[][] formalGasAbilityCodeGroups)
+        {
+            if (formalGasAbilityCodeGroups == null)
+            {
+                return false;
+            }
+
+            foreach (int[] formalGasAbilityCodes in formalGasAbilityCodeGroups)
+            {
+                if (formalGasAbilityCodes != null && formalGasAbilityCodes.Length > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static void EnsureFormalGasAbilityCodeConfiguration(
+            string ownerName,
+            string fieldName,
+            int[] formalGasAbilityCodes)
+        {
+            if (!TryValidateFormalGasAbilityCodeConfiguration(
+                    ownerName,
+                    fieldName,
+                    formalGasAbilityCodes,
+                    out string errorMessage))
+            {
+                throw new InvalidOperationException(errorMessage);
+            }
+        }
+
+        public static bool TryValidateFormalGasAbilityCodeConfiguration(
+            string ownerName,
+            string fieldName,
+            int[] formalGasAbilityCodes,
+            out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            if (formalGasAbilityCodes == null)
+            {
+                return true;
+            }
+
+            for (int index = 0; index < formalGasAbilityCodes.Length; index++)
+            {
+                if (formalGasAbilityCodes[index] > 0)
+                {
+                    continue;
+                }
+
+                errorMessage =
+                    $"[{ownerName}] {fieldName}[{index}] 必须大于 0，不能把坏 Formal GAS 技能编号过滤成成功状态效果。";
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryValidateRestoredFormalGasAbilityCodeConfiguration(
+            string ownerName,
+            string fieldName,
+            int[] formalGasAbilityCodes)
+        {
+            if (TryValidateFormalGasAbilityCodeConfiguration(
+                    ownerName,
+                    fieldName,
+                    formalGasAbilityCodes,
+                    out string errorMessage))
+            {
+                return true;
+            }
+
+            Debug.LogWarning(errorMessage);
+            return false;
+        }
+
+        public static bool TryHasRestoredFormalGasAbilityCodes(
+            string ownerName,
+            params int[][] formalGasAbilityCodeGroups)
+        {
+            if (HasConfiguredFormalGasAbilityCodes(formalGasAbilityCodeGroups))
+            {
+                return true;
+            }
+
+            Debug.LogWarning(
+                $"[{ownerName}] 存档中的 Formal GAS 能力型持续效果没有任何技能编号，已跳过恢复，避免登记成功 no-op 状态效果。");
+            return false;
         }
 
         public static string CreateAbilityListDetails(int[] formalGasAbilityCodes)

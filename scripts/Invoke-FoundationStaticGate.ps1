@@ -608,8 +608,11 @@ $playerSystemPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Game
 $questInteractionPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Interactions/QuestInteraction.cs"
 $journalSystemPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Game/Systems/JournalSystem.cs"
 $questPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Database/Quest/Quest.cs"
+$questProgressPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Quest/QuestProgress.cs"
+$questTaskProgressPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Quest/QuestTaskProgress.cs"
 $addExperienceCommandPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Commands/AddExperience.cs"
 $addOrRemoveAbilityCommandPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Commands/AddOrRemoveAbility.cs"
+$addOrRemoveItemCommandPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Commands/AddOrRemoveItem.cs"
 $addOrRemoveManaCommandPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Commands/AddOrRemoveMana.cs"
 $healOrDamagePlayerCommandPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Commands/HealOrDamagePlayer.cs"
 $revivePlayerCommandPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Commands/RevivePlayer.cs"
@@ -634,6 +637,7 @@ $temporalEffectBasePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtim
 $formalTemporalPeriodicCurrentResourceBuilderPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/FormalTemporalPeriodicCurrentResourceBuilder.cs"
 $formalTemporalPeriodicSpecBuilderPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/FormalTemporalPeriodicSpecBuilder.cs"
 $formalTemporalPeriodicDamageBuilderPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/FormalTemporalPeriodicDamageBuilder.cs"
+$temporalAbilityEffectSupportPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilityEffectSupport.cs"
 $temporalAbilityGrantEffectPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilityGrantEffect.cs"
 $temporalAbilitySuppressionEffectPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilitySuppressionEffect.cs"
 $temporalAbilityReplacementEffectPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilityReplacementEffect.cs"
@@ -777,6 +781,8 @@ $requiredFiles = @(
     "Assets/Scripts/GameCore/Runtime/Interactions/QuestInteraction.cs",
     "Assets/Scripts/GameCore/Runtime/Game/Systems/JournalSystem.cs",
     "Assets/Scripts/GameCore/Runtime/Database/Quest/Quest.cs",
+    "Assets/Scripts/GameCore/Runtime/Quest/QuestProgress.cs",
+    "Assets/Scripts/GameCore/Runtime/Quest/QuestTaskProgress.cs",
     "Assets/Scripts/GameCore/Runtime/Commands/AddExperience.cs",
     "Assets/Scripts/GameCore/Runtime/Commands/AddOrRemoveAbility.cs",
     "Assets/Scripts/GameCore/Runtime/Commands/AddOrRemoveMana.cs",
@@ -807,6 +813,7 @@ $requiredFiles = @(
     "Assets/Scripts/GameCore/Runtime/Database/Characters/CharacterAlterationRule.cs",
     "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/ITemporalEffect.cs",
     "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/ATemporalEffect.cs",
+    "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilityEffectSupport.cs",
     "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilityGrantEffect.cs",
     "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilitySuppressionEffect.cs",
     "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/TemporalAbilityReplacementEffect.cs",
@@ -941,7 +948,7 @@ $disallowedLegacyFiles = @(
     "Assets/Scripts/GameCore/Runtime/Miscellaneous/CoroutineHelpers.cs.meta"
 )
 
-$allowedGameManagerSystemShortcuts = @(
+$baselineGameManagerSystemShortcuts = @(
     "AudioSystem",
     "DialogueSystem",
     "GameFlagSystem",
@@ -1030,8 +1037,11 @@ $playerSystemContent = Get-FileContent -Path $playerSystemPath
 $questInteractionContent = Get-FileContent -Path $questInteractionPath
 $journalSystemContent = Get-FileContent -Path $journalSystemPath
 $questContent = Get-FileContent -Path $questPath
+$questProgressContent = Get-FileContent -Path $questProgressPath
+$questTaskProgressContent = Get-FileContent -Path $questTaskProgressPath
 $addExperienceCommandContent = Get-FileContent -Path $addExperienceCommandPath
 $addOrRemoveAbilityCommandContent = Get-FileContent -Path $addOrRemoveAbilityCommandPath
+$addOrRemoveItemCommandContent = Get-FileContent -Path $addOrRemoveItemCommandPath
 $addOrRemoveManaCommandContent = Get-FileContent -Path $addOrRemoveManaCommandPath
 $healOrDamagePlayerCommandContent = Get-FileContent -Path $healOrDamagePlayerCommandPath
 $revivePlayerCommandContent = Get-FileContent -Path $revivePlayerCommandPath
@@ -1051,6 +1061,7 @@ $formalAttributeCatalogContent = Get-FileContent -Path $formalAttributeCatalogPa
 $characterAlterationRuleContent = Get-FileContent -Path $characterAlterationRulePath
 $temporalEffectInterfaceContent = Get-FileContent -Path $temporalEffectInterfacePath
 $temporalEffectBaseContent = Get-FileContent -Path $temporalEffectBasePath
+$temporalAbilityEffectSupportContent = Get-FileContent -Path $temporalAbilityEffectSupportPath
 $temporalAbilityGrantEffectContent = Get-FileContent -Path $temporalAbilityGrantEffectPath
 $temporalAbilitySuppressionEffectContent = Get-FileContent -Path $temporalAbilitySuppressionEffectPath
 $temporalAbilityReplacementEffectContent = Get-FileContent -Path $temporalAbilityReplacementEffectPath
@@ -1276,7 +1287,7 @@ $gameConfigPersistenceMissingPatterns = Test-ContainsAll -Content $gameConfigPer
     "private SerializableDictionary<string, string> m_persistentIdentifierMappings = new();",
     "public bool hasPlayerDeathAction => m_toExecuteOnPlayerDeath != null;",
     "public void ExecutePlayerDeathAction(GameCommandContext context)",
-    "m_toExecuteOnPlayerDeath.Execute(context);",
+    "m_toExecuteOnPlayerDeath.ExecuteFireAndReport(context, nameof(GameConfig), this);",
     "public SaveDataBlock CreatePlaytestSaveDataSnapshot()",
     "public bool TryGetPersistentIdentifierMapping(string identifier, out string actualIdentifier)",
     "public string GetActualPersistentIdentifier(string identifier)"
@@ -1325,7 +1336,7 @@ $audioChannelMissingPatterns = Test-ContainsAll -Content $audioChannelContent -P
     "private FallbackPoolRuntime fallbackPoolRuntime => m_fallbackPoolRuntime ??= new FallbackPoolRuntime(this);",
     "private PlaybackRuntime playbackRuntime => m_playbackRuntime ??= new PlaybackRuntime(this);",
     "fallbackPoolRuntime.Initialize();",
-    "fallbackPoolRuntime.Dispose();",
+    "m_fallbackPoolRuntime?.Dispose();",
     "playbackRuntime.PlayBroAudio(soundId, position, followTarget, onCompleted);",
     "playbackRuntime.PlayExclusiveClip(audioClip, onCompleted);",
     "playbackRuntime.PlayFallbackClip(audioClip, position, followTarget, onCompleted);"
@@ -1406,6 +1417,24 @@ $persistableDataBlocksMissingPatterns = Test-ContainsAll -Content $persistableDa
     "public PersistableDataBlock DataBlock { get; }",
     "public bool IsPreInstanced => OwnershipKind == EPersistableOwnershipKind.PreInstanced;",
     "public bool IsRuntimeInstanced => OwnershipKind == EPersistableOwnershipKind.RuntimeInstanced;"
+)
+
+$persistableDestroyPersistenceSystemMissingPatterns = @(
+    Test-MethodContainsAll -Content $persistableContent -MethodName "private void NotifyPersistenceSystemAboutDestruction()" -Patterns @(
+        "PersistableDataBlock dataBlock = IsPersistent() ? CreateDataBlock() : null;",
+        "GameManager.PersistenceSystem.NotifyPersistableDestroyed(",
+        "GetPersistentIdentifier(),",
+        "GetOwnershipKind(),",
+        "IsAutomaticallyPersisted()));"
+    )
+)
+
+$persistableDestroyPersistenceSystemDisallowedPatterns = @(
+    Test-MethodContainsAny -Content $persistableContent -MethodName "private void NotifyPersistenceSystemAboutDestruction()" -Patterns @(
+        "GameManager.Exists()",
+        "TryGetSystem",
+        "return;"
+    )
 )
 
 $formalDataAssetCacheMissingPatterns = Test-ContainsAll -Content $formalDataAssetCacheContent -Patterns @(
@@ -1651,7 +1680,8 @@ $playerOrderRequestMissingPatterns = Test-ContainsAll -Content $playerOrderReque
 $gameCommandContextMissingPatterns = Test-ContainsAll -Content $gameCommandContextContent -Patterns @(
     "public static GameCommandContext Recreate(EGameCommandIssuerKind issuerKind, CharacterBase actor = null, string issuerId = null)",
     "public static GameCommandContext ResolveForActor(CharacterBase actor)",
-    "GameManager.PlayerSystem.IsCurrentControlledMember(actor)",
+    "TryGetPlayerSystem(out PlayerSystem playerSystem)",
+    "playerSystem.IsCurrentControlledMember(actor)",
     "actor.IsControllerActive<AIController>()",
     "return AI(actor);",
     "return Unknown(actor);"
@@ -1687,6 +1717,14 @@ $characterPlayerControlMissingPatterns = Test-ContainsAll -Content $characterPla
     "m_character.CanBePlayerControlled()",
     "EPlayerCommandFailureReason.ControlLocked",
     "PlayerCommandResult.Failed("
+)
+
+$characterPlayerInputTargetMissingPatterns = Test-ContainsAll -Content $characterBaseContent -Patterns @(
+    "public bool TryResolvePlayerInputTarget(out IPlayerInputTarget inputTarget)",
+    "!HasConfiguredPlayerInputTarget(out CharacterPlayerControl playerControl)",
+    "public bool HasConfiguredPlayerInputTarget(out CharacterPlayerControl playerControl)",
+    "!playerControl.AcceptsPlayerInput",
+    "!playerControl.isActiveAndEnabled"
 )
 
 $characterPlayerControlDisallowedPatterns = Test-ContainsAny -Content $characterPlayerControlContent -Patterns @(
@@ -1791,6 +1829,10 @@ $playerSystemDisallowedPatterns = Test-ContainsAny -Content $playerSystemContent
 
 $playerSystemPlayerControlMissingPatterns = Test-ContainsAll -Content $playerSystemContent -Patterns @(
     "private readonly List<CharacterBase> m_boundControlledCharacters = new();",
+    "EnsurePrimaryPlayerInputTargetConfigured(nameof(OnSystemStart));",
+    "EnsurePrimaryPlayerInputTargetConfigured(nameof(LoadDataBlock));",
+    "private void EnsurePrimaryPlayerInputTargetConfigured(string operationName)",
+    "m_primaryPlayerCharacter.HasConfiguredPlayerInputTarget(out CharacterPlayerControl _)",
     "public void SetCurrentControlGroup(params CharacterBase[] characters)",
     "public bool TryAddCurrentControlGroupMember(CharacterBase character, bool makePrimary = false)",
     "public bool TryRemoveCurrentControlGroupMember(CharacterBase character)",
@@ -1821,8 +1863,8 @@ $playerControlLifecycleMissingPatterns = @(
         "NotifyPlayerSystemAboutRevive();",
         "private void NotifyPlayerSystemAboutDeath()",
         "private void NotifyPlayerSystemAboutRevive()",
-        "playerSystem.NotifyCharacterDied(this);",
-        "playerSystem.NotifyCharacterRevived(this);"
+        "GameManager.PlayerSystem.NotifyCharacterDied(this);",
+        "GameManager.PlayerSystem.NotifyCharacterRevived(this);"
     )
 )
 
@@ -1836,8 +1878,10 @@ $currentControlledCharacterUiMissingPatterns = @(
         "m_boundCharacter.TryGetActiveAbilityCooldownSnapshot(m_abilitySlot, out CharacterAbilityCooldownSnapshot cooldownSnapshot)"
     )
     Test-ContainsAll -Content $uiAbilityBarContent -Patterns @(
-        "GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance()",
-        "AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged)"
+        "public void PresentCharacter(CharacterBase character)",
+        "BindCharacter(character);",
+        "m_currentCharacter.AddEquippedAbilitiesChangedListener(FillAbilityBar);",
+        "m_currentCharacter.RemoveEquippedAbilitiesChangedListener(FillAbilityBar);"
     )
     Test-ContainsAll -Content $uiAbilitiesContent -Patterns @(
         "BindCharacter(m_context.ResolveActor());",
@@ -1877,38 +1921,50 @@ $currentControlledCharacterUiDisallowedPatterns = @(
 )
 
 $commandCurrentControlledTargetMissingPatterns = @(
+    Test-ContainsAll -Content $gameCommandContextContent -Patterns @(
+        "public CharacterBase ResolveActorOrCurrentControlledCharacter()",
+        "public CharacterBase ResolveRequiredActorOrCurrentControlledCharacter(string commandName)",
+        "GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance()",
+        "throw new InvalidOperationException"
+    )
     Test-ContainsAll -Content $addExperienceCommandContent -Patterns @(
-        "CharacterActor target = null;",
-        "if (context.Actor is CharacterActor actor)",
-        "GameManager.PlayerSystem.TryGetCurrentControlledCharacter(out CharacterBase currentCharacter);",
-        "target = currentCharacter as CharacterActor;"
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(AddExperience));",
+        "target.AddExperience(m_experience);"
     )
     Test-ContainsAll -Content $addOrRemoveAbilityCommandContent -Patterns @(
-        "CharacterBase target = context.ResolveActorOrCurrentControlledCharacter();"
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(AddOrRemoveAbility));"
+    )
+    Test-ContainsAll -Content $addOrRemoveItemCommandContent -Patterns @(
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(AddOrRemoveItem));"
     )
     Test-ContainsAll -Content $addOrRemoveManaCommandContent -Patterns @(
-        "CharacterBase target = context.ResolveActorOrCurrentControlledCharacter();"
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(AddOrRemoveMana));"
     )
     Test-ContainsAll -Content $healOrDamagePlayerCommandContent -Patterns @(
-        "CharacterBase target = context.ResolveActorOrCurrentControlledCharacter();"
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(HealOrDamagePlayer));"
     )
     Test-ContainsAll -Content $revivePlayerCommandContent -Patterns @(
-        "CharacterBase target = context.ResolveActorOrCurrentControlledCharacter();"
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(RevivePlayer));",
+        "target.Revive();"
     )
     Test-ContainsAll -Content $movePlayerCommandContent -Patterns @(
         "protected override CharacterBase ResolveTargetCharacter(GameCommandContext context)",
         "return context.ResolveActorOrCurrentControlledCharacter();"
     )
     Test-ContainsAll -Content $executeCommandListContent -Patterns @(
-        "CharacterBase actionLockTarget = context.ResolveActorOrCurrentControlledCharacter();",
+        "m_disabledActions == EActionFlags.None",
+        "context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(ExecuteCommandList));",
         "actionLockTarget?.DisableActions(m_disabledActions);",
         "actionLockTarget?.EnableActions(m_disabledActions);"
     )
     Test-ContainsAll -Content $isAbilityUnlockedConditionContent -Patterns @(
-        "CharacterBase currentCharacter = GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance();",
+        "if (!TryGetCurrentControlledCharacter(out CharacterBase currentCharacter))",
         "return currentCharacter.HasFormalGasAbility(m_formalGasAbilityCode);",
-        "GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);",
-        "GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);",
+        "playerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);",
+        "playerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);",
+        "private static bool TryGetPlayerSystem(out PlayerSystem playerSystem)",
+        "if (!TryGetPlayerSystem(out PlayerSystem playerSystem))",
+        "currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();",
         "private void OnCurrentControlledCharacterChanged(CharacterBase character) => NotifyStateChange();"
     )
 )
@@ -1916,24 +1972,33 @@ $commandCurrentControlledTargetMissingPatterns = @(
 $commandCurrentControlledTargetDisallowedPatterns = @(
     Test-ContainsAny -Content $addExperienceCommandContent -Patterns @(
         "ResolveHeroOrCurrentControlledHero();",
-        "GameManager.PlayerSystem.GetPlayerInstance();"
+        "GameManager.PlayerSystem.GetPlayerInstance();",
+        "target?.AddExperience(m_experience);"
     )
     Test-ContainsAny -Content $addOrRemoveAbilityCommandContent -Patterns @(
-        "GameManager.PlayerSystem.GetPlayerInstance();"
+        "GameManager.PlayerSystem.GetPlayerInstance();",
+        "if (target == null)"
+    )
+    Test-ContainsAny -Content $addOrRemoveItemCommandContent -Patterns @(
+        "if (inventoryOwner == null)"
     )
     Test-ContainsAny -Content $addOrRemoveManaCommandContent -Patterns @(
-        "GameManager.PlayerSystem.GetPlayerInstance();"
+        "GameManager.PlayerSystem.GetPlayerInstance();",
+        "if (target == null)"
     )
     Test-ContainsAny -Content $healOrDamagePlayerCommandContent -Patterns @(
-        "GameManager.PlayerSystem.GetPlayerInstance();"
+        "GameManager.PlayerSystem.GetPlayerInstance();",
+        "if (target == null)"
     )
     Test-ContainsAny -Content $revivePlayerCommandContent -Patterns @(
-        "GameManager.PlayerSystem.GetPlayerInstance();"
+        "GameManager.PlayerSystem.GetPlayerInstance();",
+        "target?.Revive();"
     )
     Test-ContainsAny -Content $executeCommandListContent -Patterns @(
         "Hero playerInstance = GameManager.PlayerSystem.GetPlayerInstance();",
         "playerInstance.DisableActions(m_disabledActions);",
-        "playerInstance.EnableActions(m_disabledActions);"
+        "playerInstance.EnableActions(m_disabledActions);",
+        "CharacterBase actionLockTarget = context.ResolveActorOrCurrentControlledCharacter();"
     )
     Test-ContainsAny -Content $isAbilityUnlockedConditionContent -Patterns @(
         "GameManager.PlayerSystem.GetPlayerInstance().HasAbility(m_ability);"
@@ -1943,7 +2008,7 @@ $commandCurrentControlledTargetDisallowedPatterns = @(
 $characterDeathCommandContextMissingPatterns = @(
     Test-ContainsAll -Content $characterSheetContent -Patterns @(
         "public void ExecuteOnDeath(GameCommandContext context)",
-        "m_executeOnDeath?.Execute(context);"
+        "m_executeOnDeath.ExecuteFireAndReport(context, nameof(CharacterSheet), this);"
     )
     Test-ContainsAll -Content $characterActorRewardsContent -Patterns @(
         "m_sheet.ExecuteOnDeath(",
@@ -1964,7 +2029,7 @@ $characterDeathCommandContextDisallowedPatterns = @(
 $playerDeathCommandContextMissingPatterns = @(
     Test-ContainsAll -Content $gameConfigPersistenceContent -Patterns @(
         "public void ExecutePlayerDeathAction(GameCommandContext context)",
-        "m_toExecuteOnPlayerDeath.Execute(context);"
+        "m_toExecuteOnPlayerDeath.ExecuteFireAndReport(context, nameof(GameConfig), this);"
     )
     Test-ContainsAll -Content $playerSystemContent -Patterns @(
         "GameManager.Config.ExecutePlayerDeathAction(GameCommandContext.LocalPlayer(character));"
@@ -1989,11 +2054,11 @@ $questCompletionCommandContextMissingPatterns = @(
         "return GameCommandContext.ResolveForActor(source);"
     )
     Test-ContainsAll -Content $journalSystemContent -Patterns @(
-        "public void CompleteQuest(Quest quest, GameCommandContext context)",
+        "public async Task CompleteQuest(Quest quest, GameCommandContext context)",
         "quest.ExecuteOnQuestCompletion(context);"
     )
     Test-ContainsAll -Content $questContent -Patterns @(
-        "public void ExecuteOnQuestCompletion(GameCommandContext context)",
+        "public Task ExecuteOnQuestCompletion(GameCommandContext context)",
         "m_toExecuteOnQuestCompletion.Execute(context);"
     )
 )
@@ -2053,11 +2118,12 @@ $questStartCommandContextDisallowedPatterns = @(
 $persistableDestroyCommandContextMissingPatterns = @(
     Test-ContainsAll -Content $persistableContent -Patterns @(
         "public virtual void Destroy(GameCommandContext context)",
-        "m_executeOnDeath.Execute(context);"
+        "m_executeOnDeath.ExecuteFireAndReport(context, nameof(Persistable), this);"
     )
     Test-ContainsAll -Content $destroyEntityCommandContent -Patterns @(
         "public Task Execute(GameCommandContext context)",
-        "m_toDestroy?.Destroy(context);"
+        "throw new InvalidOperationException",
+        "m_toDestroy.Destroy(context);"
     )
 )
 
@@ -2066,7 +2132,8 @@ $persistableDestroyCommandContextDisallowedPatterns = @(
         "m_executeOnDeath.Execute(GameCommandContext.Script())"
     )
     Test-ContainsAny -Content $destroyEntityCommandContent -Patterns @(
-        "m_toDestroy?.Destroy();"
+        "m_toDestroy?.Destroy();",
+        "m_toDestroy?.Destroy(context);"
     )
 )
 
@@ -2151,8 +2218,11 @@ $gameStateSystemDisallowedPatterns = Test-ContainsAny -Content $gameStateSystemC
 $mapSystemMissingPatterns = Test-ContainsAll -Content $mapSystemContent -Patterns @(
     "Debug.Assert(",
     "private Coroutine m_respawnCoroutine;",
-    "GameManager.TransitionSystem != null && GameManager.TransitionSystem.isActiveAndEnabled",
-    "The direct MapSystem transition fallback has been removed.",
+    "EnsureTransitionSystemReady();",
+    "private void EnsureTransitionSystemReady()",
+    "private static void EnsureValidCheckpoint(ICheckpoint checkpoint, string operationName)",
+    "private CharacterActor GetRequiredTraversalCharacter(string operationName)",
+    "Loading a save file requires a map data block.",
     "GameRuntimeEvents.NotifyMapTransitionDelegationRequested(new MapLoadingDelegationParams",
     "private IEnumerator RespawnPlayerCoroutine()",
     "private void DelegateTransition(string map, Action onMapUnloaded = null, Action onMapLoaded = null, Action onCompletion = null)"
@@ -2206,10 +2276,13 @@ $persistenceSystemInstantiationRuntimeMissingPatterns = Test-ContainsAll -Conten
     "internal TPersistable InstantiateRuntime<TPersistable>(PrefabReference instance, Vector3 position, Quaternion rotation, Transform parent = null, string identifier = null) where TPersistable : Persistable",
     "internal TPersistable InstantiateCustom<TPersistable>(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null, string identifier = null) where TPersistable : Persistable",
     "internal InstanstiationResult InstantiateInternal(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null, string identifier = null)",
-    "identifier ??= Guid.NewGuid().ToString();",
-    "result.persistable.MakeRuntimeInstanced(instance, result.identifier);",
-    "result.persistable.MakeCustomInstanced(result.identifier);",
-    "internal void RegisterCustomInstancedPersistable(Persistable persistable, string identifier = null)"
+    "identifier = ResolvePersistenceIdentifier(identifier);",
+    "TPersistable persistable = RequireInstantiatedPersistable<TPersistable>(result, instance.prefab);",
+    "TPersistable persistable = RequireInstantiatedPersistable<TPersistable>(result, prefab);",
+    "internal void RegisterCustomInstancedPersistable(Persistable persistable, string identifier = null)",
+    "private TPersistable RequireInstantiatedPersistable<TPersistable>(InstanstiationResult result, GameObject prefab)",
+    "m_persistables.Remove(result.identifier);",
+    "private static string ResolvePersistenceIdentifier(string identifier)"
 )
 
 $sceneUtilMissingPatterns = Test-ContainsAll -Content $sceneUtilContent -Patterns @(
@@ -2325,6 +2398,10 @@ $characterAlterationRuleMissingPatterns = Test-ContainsAll -Content $characterAl
     "public bool overridesAlignment => m_overrideAlignment;",
     "public EAlignment alignmentOverride => m_alignmentOverride;",
     "public bool TryCreateAbilitySourceKey(DatabaseRegistry database, out CharacterAbilitySourceKey source)",
+    "public void EnsureFormalGasAbilityCodeConfiguration()",
+    "public bool TryValidateFormalGasAbilityCodeConfiguration(out string errorMessage)",
+    "TryCreateInvalidFormalGasAbilityCodeMessage(",
+    "formalGasAbilityCodes[index] > 0",
     "private bool TryResolveRegisteredSourceId(DatabaseRegistry database, out string sourceId)",
     "foreach (var entry in database.GetEntries())",
     "source = new CharacterAbilitySourceKey(MapSourceKind(m_ruleKind), sourceId);",
@@ -2363,7 +2440,7 @@ $temporalEffectInterfaceMissingPatterns = Test-ContainsAll -Content $temporalEff
     "public void AdvanceRuntimeLifetime(float deltaTime);",
     "public interface ITemporalEffectRuntimeStateCarrier",
     "bool TryCapturePersistedState(out TemporalEffectPersistedState persistedState);",
-    "void RestorePersistedState(TemporalEffectPersistedState persistedState);"
+    "bool TryRestorePersistedState(TemporalEffectPersistedState persistedState);"
 )
 
 $temporalEffectInterfaceDisallowedPatterns = Test-ContainsAny -Content $temporalEffectInterfaceContent -Patterns @(
@@ -2398,15 +2475,22 @@ $temporalAbilityGrantEffectMissingPatterns = Test-ContainsAll -Content $temporal
     "public class TemporalAbilityGrantEffect : ATemporalEffect, ITemporalEffectRuntimeStateCarrier",
     "public int[] formalGasAbilityCodes;",
     "protected override bool OnApply()",
+    "EnsureFormalGasAbilityCodeConfiguration();",
+    "TemporalAbilityEffectSupport.HasConfiguredFormalGasAbilityCodes(",
+    "return false;",
     "protected override void OnRuntimeStateRestored()",
     "protected override void OnCompleted()",
     "TryCreateStatusEffectAbilitySource(out CharacterAbilitySourceKey source)",
     "targetCharacter.RemoveAllStatusEffectAbilities(source);",
     "targetCharacter.AddStatusEffectFormalGasAbility(formalGasAbilityCode, source);",
     "public bool TryCapturePersistedState(out TemporalEffectPersistedState persistedState)",
-    "public void RestorePersistedState(TemporalEffectPersistedState persistedState)",
+    "public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)",
+    "TemporalAbilityEffectSupport.TryValidateRestoredFormalGasAbilityCodeConfiguration(",
+    "TemporalAbilityEffectSupport.TryHasRestoredFormalGasAbilityCodes(",
     "TemporalAbilityEffectSupport.CreateFormalGasAbilityCodes(",
-    "TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes("
+    "TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes(",
+    "private void EnsureFormalGasAbilityCodeConfiguration()",
+    "TemporalAbilityEffectSupport.EnsureFormalGasAbilityCodeConfiguration("
 )
 
 $temporalAbilitySuppressionEffectMissingPatterns = Test-ContainsAll -Content $temporalAbilitySuppressionEffectContent -Patterns @(
@@ -2414,15 +2498,22 @@ $temporalAbilitySuppressionEffectMissingPatterns = Test-ContainsAll -Content $te
     "public class TemporalAbilitySuppressionEffect : ATemporalEffect, ITemporalEffectRuntimeStateCarrier",
     "public int[] formalGasAbilityCodes;",
     "protected override bool OnApply()",
+    "EnsureFormalGasAbilityCodeConfiguration();",
+    "TemporalAbilityEffectSupport.HasConfiguredFormalGasAbilityCodes(",
+    "return false;",
     "protected override void OnRuntimeStateRestored()",
     "protected override void OnCompleted()",
     "TryCreateStatusEffectAbilitySource(out CharacterAbilitySourceKey source)",
     "targetCharacter.RemoveAllStatusEffectAbilitySuppressions(source);",
     "targetCharacter.AddStatusEffectFormalGasAbilitySuppression(formalGasAbilityCode, source);",
     "public bool TryCapturePersistedState(out TemporalEffectPersistedState persistedState)",
-    "public void RestorePersistedState(TemporalEffectPersistedState persistedState)",
+    "public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)",
+    "TemporalAbilityEffectSupport.TryValidateRestoredFormalGasAbilityCodeConfiguration(",
+    "TemporalAbilityEffectSupport.TryHasRestoredFormalGasAbilityCodes(",
     "TemporalAbilityEffectSupport.CreateFormalGasAbilityCodes(",
-    "TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes("
+    "TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes(",
+    "private void EnsureFormalGasAbilityCodeConfiguration()",
+    "TemporalAbilityEffectSupport.EnsureFormalGasAbilityCodeConfiguration("
 )
 
 $temporalAbilityReplacementEffectMissingPatterns = Test-ContainsAll -Content $temporalAbilityReplacementEffectContent -Patterns @(
@@ -2431,6 +2522,9 @@ $temporalAbilityReplacementEffectMissingPatterns = Test-ContainsAll -Content $te
     "public int[] grantedFormalGasAbilityCodes;",
     "public int[] suppressedFormalGasAbilityCodes;",
     "protected override bool OnApply()",
+    "EnsureFormalGasAbilityCodeConfiguration();",
+    "TemporalAbilityEffectSupport.HasConfiguredFormalGasAbilityCodes(",
+    "return false;",
     "protected override void OnRuntimeStateRestored()",
     "protected override void OnCompleted()",
     "TryCreateStatusEffectAbilitySource(out CharacterAbilitySourceKey source)",
@@ -2439,9 +2533,23 @@ $temporalAbilityReplacementEffectMissingPatterns = Test-ContainsAll -Content $te
     "targetCharacter.AddStatusEffectFormalGasAbility(formalGasAbilityCode, source);",
     "targetCharacter.AddStatusEffectFormalGasAbilitySuppression(formalGasAbilityCode, source);",
     "public bool TryCapturePersistedState(out TemporalEffectPersistedState persistedState)",
-    "public void RestorePersistedState(TemporalEffectPersistedState persistedState)",
+    "public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)",
+    "TemporalAbilityEffectSupport.TryValidateRestoredFormalGasAbilityCodeConfiguration(",
+    "TemporalAbilityEffectSupport.TryHasRestoredFormalGasAbilityCodes(",
     "TemporalAbilityEffectSupport.CreateFormalGasAbilityCodes(",
-    "TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes("
+    "TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes(",
+    "private void EnsureFormalGasAbilityCodeConfiguration()",
+    "TemporalAbilityEffectSupport.EnsureFormalGasAbilityCodeConfiguration("
+)
+
+$temporalAbilityEffectSupportMissingPatterns = Test-ContainsAll -Content $temporalAbilityEffectSupportContent -Patterns @(
+    "public static bool HasConfiguredFormalGasAbilityCodes(params int[][] formalGasAbilityCodeGroups)",
+    "public static void EnsureFormalGasAbilityCodeConfiguration(",
+    "public static bool TryValidateFormalGasAbilityCodeConfiguration(",
+    "public static bool TryValidateRestoredFormalGasAbilityCodeConfiguration(",
+    "public static bool TryHasRestoredFormalGasAbilityCodes(",
+    "formalGasAbilityCodes[index] > 0",
+    "throw new InvalidOperationException(errorMessage);"
 )
 
 $temporalStatModifierEffectMissingPatterns = @(
@@ -2451,7 +2559,7 @@ $temporalStatModifierEffectMissingPatterns = @(
         "public override TemporalEffectRuntimeTraits GetRuntimeTraits() =>",
         "TemporalEffectRuntimeTraits.NeedsLocalLifetimeAdvance;",
         "public bool TryCapturePersistedState(out TemporalEffectPersistedState persistedState)",
-        "public void RestorePersistedState(TemporalEffectPersistedState persistedState)"
+        "public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)"
     ))
     (Test-MethodContainsAll -Content $temporalStatModifierEffectContent -MethodName "OnApply" -Patterns @(
         "switch (m_statBoostData.stat)",
@@ -2534,7 +2642,8 @@ $characterBaseContractsMissingPatterns = Test-ContainsAll -Content $characterBas
     "public CharacterAbilitySourceData[] abilitySuppressions;",
     "public CharacterTemporalEffectRuntimeStateData[] temporalEffectRuntimeStates;",
     "public class CharacterAbilityRuntimeStateData",
-    "public class CharacterTemporalEffectRuntimeStateData"
+    "public class CharacterTemporalEffectRuntimeStateData",
+    "runtimeStateCarrier.TryRestorePersistedState(runtimeState)"
 )
 $characterBaseContractsDisallowedPatterns = Test-ContainsAny -Content $characterBaseContractsContent -Patterns @(
     "legacyAbilityDataBlocks",
@@ -2610,6 +2719,7 @@ $characterBaseAlterationsMissingPatterns = Test-ContainsAll -Content $characterB
     "private readonly Dictionary<CharacterAlterationRule, int> m_activeAlterationRules = new();",
     "public bool ApplyCharacterAlterationRule(CharacterAlterationRule alterationRule)",
     "public bool ApplyCharacterAlterationRule(CharacterAlterationRule alterationRule, DatabaseRegistry database)",
+    "alterationRule.EnsureFormalGasAbilityCodeConfiguration();",
     "alterationRule.stackingPolicy != ECharacterAlterationStackingPolicy.Stackable",
     "TryRemoveLowerPriorityExclusiveAlterationRules(alterationRule, database)",
     "CharacterAlterationAbilityChangeResult result = alterationRule.ApplyAbilityChanges(this, database);",
@@ -2625,8 +2735,9 @@ $characterBaseAlterationsMissingPatterns = Test-ContainsAll -Content $characterB
     "CharacterAlterationAbilityChangeResult result = alterationRule.RemoveAbilityChangeStack(this, database);",
     "alterationRule.RemoveNonAbilityChangeStack(this, database);",
     "internal DatabaseEntryReference<CharacterAlterationRule>[] CreateActiveAlterationRuleSnapshots()",
-    ".SelectMany(entry => Enumerable.Repeat(entry.Key, entry.Value))",
-    "GameManager.Database.CreateReference(rule)",
+    "if (!rule || stackCount <= 0)",
+    "throw new System.InvalidOperationException(",
+    "snapshots.Add(GameManager.Database.CreateReference(rule));",
     "internal void RestoreActiveAlterationRules(DatabaseEntryReference<CharacterAlterationRule>[] activeAlterationRules)",
     "GameManager.Database.LoadFromReference(alterationRuleReference)",
     "ClearAlterationActionLockRules();",
@@ -2641,7 +2752,7 @@ $characterBaseAlterationsMissingPatterns = Test-ContainsAll -Content $characterB
     "RemoveCharacterAlterationRule(conflictingRule, database);",
     "internal void ClearActiveAlterationRules()",
     "private void RevalidatePlayerControlEligibility()",
-    "playerSystem.RevalidateCurrentControlledCharacter();"
+    "GameManager.PlayerSystem.RevalidateCurrentControlledCharacter();"
 )
 $characterBaseActionStateRuntimeMissingPatterns = Test-ContainsAll -Content $characterBaseActionStateRuntimeContent -Patterns @(
     "public abstract partial class CharacterBase",
@@ -2974,6 +3085,43 @@ $characterActorMissingPatterns = Test-ContainsAll -Content $characterActorConten
     "internal void LoadActorRuntimeState(CharacterActorRuntimeStateData runtimeState)"
 )
 
+$characterPlayerSystemNotificationMissingPatterns = @(
+    Test-MethodContainsAll -Content $characterBaseContent -MethodName "private void NotifyPlayerSystemAboutDeath()" -Patterns @(
+        "GameManager.PlayerSystem.NotifyCharacterDied(this);"
+    )
+    Test-MethodContainsAll -Content $characterBaseContent -MethodName "private void NotifyPlayerSystemAboutRevive()" -Patterns @(
+        "GameManager.PlayerSystem.NotifyCharacterRevived(this);"
+    )
+    Test-MethodContainsAll -Content $characterBaseAlterationsContent -MethodName "private void RevalidatePlayerControlEligibility()" -Patterns @(
+        "GameManager.PlayerSystem.RevalidateCurrentControlledCharacter();"
+    )
+    Test-MethodContainsAll -Content $characterActorContent -MethodName "protected override void OnDeath()" -Patterns @(
+        "GameManager.PlayerSystem.NotifyCharacterKilled(this);"
+    )
+)
+
+$characterPlayerSystemNotificationDisallowedPatterns = @(
+    Test-MethodContainsAny -Content $characterBaseContent -MethodName "private void NotifyPlayerSystemAboutDeath()" -Patterns @(
+        "GameManager.Exists()",
+        "TryGetSystem",
+        "return;"
+    )
+    Test-MethodContainsAny -Content $characterBaseContent -MethodName "private void NotifyPlayerSystemAboutRevive()" -Patterns @(
+        "GameManager.Exists()",
+        "TryGetSystem",
+        "return;"
+    )
+    Test-MethodContainsAny -Content $characterBaseAlterationsContent -MethodName "private void RevalidatePlayerControlEligibility()" -Patterns @(
+        "GameManager.Exists()",
+        "TryGetSystem",
+        "return;"
+    )
+    Test-MethodContainsAny -Content $characterActorContent -MethodName "protected override void OnDeath()" -Patterns @(
+        "GameManager.Exists()",
+        "TryGetSystem"
+    )
+)
+
 $inventoryActionLockMissingPatterns = Test-ContainsAll -Content (
     $inventorySystemContent + $inventoryTransferRequestContent + $itemContent + $itemEquipOrUnequipContent + $uiInventoryContent + $menuFeedbackPromptsContent
 ) -Patterns @(
@@ -3011,6 +3159,30 @@ $inventoryCorpseOwnershipMissingPatterns = @(
     )
     Test-MethodContainsAll -Content $characterBaseContent -MethodName "public override void Revive()" -Patterns @(
         "TransferCorpseInventoryToOwnedInventory();"
+    )
+    Test-MethodContainsAll -Content $characterBaseContent -MethodName "private void TransferOwnedInventoryToCorpseOwner()" -Patterns @(
+        "GameManager.InventorySystem.TransferCharacterInventoryToCorpse(this);"
+    )
+    Test-MethodContainsAll -Content $characterBaseContent -MethodName "private void TransferOwnedEquipmentToCorpseOwner()" -Patterns @(
+        "GameManager.InventorySystem.TransferCharacterEquipmentToCorpse(this);"
+    )
+    Test-MethodContainsAll -Content $characterBaseContent -MethodName "private void TransferCorpseInventoryToOwnedInventory()" -Patterns @(
+        "GameManager.InventorySystem.TransferCorpseInventoryToCharacter(this);"
+    )
+    Test-MethodContainsAny -Content $characterBaseContent -MethodName "private void TransferOwnedInventoryToCorpseOwner()" -Patterns @(
+        "TryGetSystem",
+        "GameManager.Exists()",
+        "return;"
+    )
+    Test-MethodContainsAny -Content $characterBaseContent -MethodName "private void TransferOwnedEquipmentToCorpseOwner()" -Patterns @(
+        "TryGetSystem",
+        "GameManager.Exists()",
+        "return;"
+    )
+    Test-MethodContainsAny -Content $characterBaseContent -MethodName "private void TransferCorpseInventoryToOwnedInventory()" -Patterns @(
+        "TryGetSystem",
+        "GameManager.Exists()",
+        "return;"
     )
     Test-MethodContainsAll -Content $characterActorRewardsContent -MethodName "public override void Kill()" -Patterns @(
         "if (IsMarkedAsDestroyed())"
@@ -3145,6 +3317,123 @@ $characterEquippedAbilityLoadoutMissingPatterns = Test-ContainsAll -Content $cha
     "Entry.FromFormalGasAbilityCode(formalGasAbilityCode)"
 )
 
+$saveReferenceRequiredMissingPatterns = @(
+    Test-MethodContainsAll -Content $databaseRegistryCodeContent -MethodName "public DatabaseEntryReference<T> CreateReference<T>(T entry) where T : DatabaseEntry" -Patterns @(
+        "if (TryCreateReference(entry, out DatabaseEntryReference<T> reference))",
+        "return reference;",
+        "throw new InvalidOperationException("
+    )
+    Test-MethodContainsAll -Content $databaseRegistryCodeContent -MethodName "public bool TryCreateReference<T>(T entry, out DatabaseEntryReference<T> reference) where T : DatabaseEntry" -Patterns @(
+        "reference = null;",
+        "string guid = DatabaseEntryToGUID(entry);",
+        "if (string.IsNullOrWhiteSpace(guid))",
+        "reference = new DatabaseEntryReference<T>(guid);"
+    )
+    Test-MethodContainsAll -Content $inventorySystemContent -MethodName "private InventoryOwnerDataBlock[] CreateOwnerDataBlocks()" -Patterns @(
+        "if (!owner.IsValid)",
+        "throw new InvalidOperationException(",
+        "items = CreateItemDataBlock(owner, inventory)"
+    )
+    Test-MethodContainsAll -Content $inventorySystemContent -MethodName "private static SerializableDictionary<DatabaseEntryReference<Item>, int> CreateItemDataBlock(" -Patterns @(
+        "if (!item || quantity <= 0)",
+        "throw new InvalidOperationException(",
+        "if (!GameManager.Database.TryCreateReference(item, out DatabaseEntryReference<Item> itemReference))",
+        "Debug.LogError(",
+        "continue;",
+        "items.Add(itemReference, quantity);"
+    )
+    Test-MethodContainsAll -Content $journalSystemContent -MethodName "private static DatabaseEntryReference<Quest>[] CreateQuestReferences(" -Patterns @(
+        "if (!database.TryCreateReference(quest, out DatabaseEntryReference<Quest> reference))",
+        "Debug.LogError(",
+        "continue;",
+        "references.Add(reference);"
+    )
+    Test-MethodContainsAll -Content $journalSystemContent -MethodName "private static QuestProgressDataBlock[] CreateActiveQuestDataBlocks(IEnumerable<QuestProgress> progresses)" -Patterns @(
+        "if (progress == null || !progress.IsValid())",
+        "throw new InvalidOperationException(",
+        "QuestProgressDataBlock block = progress.CreateDataBlock();",
+        "if (block?.quest == null || string.IsNullOrWhiteSpace(block.quest.guid))"
+    )
+    Test-MethodContainsAll -Content $questProgressContent -MethodName "public QuestProgressDataBlock CreateDataBlock()" -Patterns @(
+        "if (!GameManager.Database.TryCreateReference(m_quest, out DatabaseEntryReference<Quest> questReference))",
+        "throw new InvalidOperationException(",
+        "quest = questReference",
+        "completedTasks = CreateTaskProgressDataBlocks(",
+        "currentTasks = CreateTaskProgressDataBlocks(",
+        "nextTasks = CreateQuestTaskReferences(m_nextTasks)"
+    )
+    Test-MethodContainsAll -Content $questProgressContent -MethodName "private static QuestTaskProgressDataBlock[] CreateTaskProgressDataBlocks(" -Patterns @(
+        "if (progress == null)",
+        "throw new InvalidOperationException(",
+        "QuestTaskProgressDataBlock block = progress.CreateDataBlock();",
+        "if (block?.task == null || string.IsNullOrWhiteSpace(block.task.guid))"
+    )
+    Test-MethodContainsAll -Content $questProgressContent -MethodName "private static DatabaseEntryReference<QuestTask>[] CreateQuestTaskReferences(IEnumerable<QuestTask> tasks)" -Patterns @(
+        "if (!GameManager.Database.TryCreateReference(task, out DatabaseEntryReference<QuestTask> reference))",
+        "Debug.LogError(",
+        "continue;",
+        "references.Add(reference);"
+    )
+    Test-MethodContainsAll -Content $questTaskProgressContent -MethodName "public virtual T CreateDataBlock()" -Patterns @(
+        "if (!GameManager.Database.TryCreateReference(m_task, out DatabaseEntryReference<QuestTask> taskReference))",
+        "throw new InvalidOperationException(",
+        "task = taskReference"
+    )
+    Test-MethodContainsAll -Content $characterEquippedItemLoadoutContent -MethodName "public CharacterEquipmentSlotData[] CreateSlotDataSnapshot(DatabaseRegistry databaseRegistry)" -Patterns @(
+        "if (databaseRegistry == null)",
+        "throw new System.InvalidOperationException(",
+        "equipment = databaseRegistry.CreateReference(equipment)"
+    )
+    Test-MethodContainsAll -Content $characterBaseAlterationsContent -MethodName "internal DatabaseEntryReference<CharacterAlterationRule>[] CreateActiveAlterationRuleSnapshots()" -Patterns @(
+        "if (!rule || stackCount <= 0)",
+        "throw new System.InvalidOperationException(",
+        "snapshots.Add(GameManager.Database.CreateReference(rule));"
+    )
+) | ForEach-Object { $_ }
+
+$saveReferenceRequiredDisallowedPatterns = @(
+    Test-MethodContainsAny -Content $inventorySystemContent -MethodName "private InventoryOwnerDataBlock[] CreateOwnerDataBlocks()" -Patterns @(
+        "TryCreateReference",
+        "存档时已跳过",
+        "continue;"
+    )
+    Test-MethodContainsAny -Content $inventorySystemContent -MethodName "private static SerializableDictionary<DatabaseEntryReference<Item>, int> CreateItemDataBlock(" -Patterns @(
+        "GameManager.Database.CreateReference(item)"
+    )
+    Test-MethodContainsAny -Content $journalSystemContent -MethodName "private static DatabaseEntryReference<Quest>[] CreateQuestReferences(" -Patterns @(
+        "database.CreateReference(quest)"
+    )
+    Test-MethodContainsAny -Content $journalSystemContent -MethodName "private static QuestProgressDataBlock[] CreateActiveQuestDataBlocks(IEnumerable<QuestProgress> progresses)" -Patterns @(
+        "TryCreateReference",
+        "存档时已跳过",
+        "continue;"
+    )
+    Test-MethodContainsAny -Content $questProgressContent -MethodName "public QuestProgressDataBlock CreateDataBlock()" -Patterns @(
+        "GameManager.Database.CreateReference(m_quest)"
+    )
+    Test-MethodContainsAny -Content $questProgressContent -MethodName "private static QuestTaskProgressDataBlock[] CreateTaskProgressDataBlocks(" -Patterns @(
+        "TryCreateReference",
+        "存档时已跳过",
+        "continue;"
+    )
+    Test-MethodContainsAny -Content $questProgressContent -MethodName "private static DatabaseEntryReference<QuestTask>[] CreateQuestTaskReferences(IEnumerable<QuestTask> tasks)" -Patterns @(
+        "GameManager.Database.CreateReference(task)"
+    )
+    Test-MethodContainsAny -Content $questTaskProgressContent -MethodName "public virtual T CreateDataBlock()" -Patterns @(
+        "GameManager.Database.CreateReference(m_task)"
+    )
+    Test-MethodContainsAny -Content $characterEquippedItemLoadoutContent -MethodName "public CharacterEquipmentSlotData[] CreateSlotDataSnapshot(DatabaseRegistry databaseRegistry)" -Patterns @(
+        "TryCreateReference",
+        "存档时已跳过",
+        "continue;"
+    )
+    Test-MethodContainsAny -Content $characterBaseAlterationsContent -MethodName "internal DatabaseEntryReference<CharacterAlterationRule>[] CreateActiveAlterationRuleSnapshots()" -Patterns @(
+        "TryCreateReference",
+        "存档时已跳过",
+        "continue;"
+    )
+) | ForEach-Object { $_ }
+
 $uiMenuRuntimeLegacyReferencePatterns = Test-ContainsAny -Content $uiPrefabContent -Patterns @(
     "guid: 09c4b7d41153b614e808226069cdb04f",
     "m_registeredMenus: []",
@@ -3161,9 +3450,8 @@ $uiManagerDisallowedPatterns = Test-ContainsAny -Content $uiManagerContent -Patt
 $uiControllerButtonMissingPatterns = Test-ContainsAll -Content $uiControllerButtonContent -Patterns @(
     "private UIControllerButtonManager m_manager = null;",
     "m_manager = ResolveManager();",
-    "m_manager?.RegisterButton(this);",
+    "m_manager.RegisterButton(this);",
     "m_manager?.UnregisterButton(this);",
-    "m_manager ??= ResolveManager();",
     "Canvas canvasRoot = GetComponentInParent<Canvas>(true);",
     "return canvasRoot.GetComponentInChildren<UIControllerButtonManager>(true);"
 )
@@ -3425,7 +3713,7 @@ $uiListPoolingDisallowedPatterns = @(
 ) | ForEach-Object { $_ }
 
 $gameManagerSystemShortcuts = @(Get-GameManagerSystemShortcutNames -Content $gameManagerContent)
-$disallowedGameManagerSystemShortcuts = @($gameManagerSystemShortcuts | Where-Object { $allowedGameManagerSystemShortcuts -notcontains $_ })
+$nonBaselineNewGameManagerSystemShortcuts = @($gameManagerSystemShortcuts | Where-Object { $baselineGameManagerSystemShortcuts -notcontains $_ })
 
 $notificationLegacyReferenceHits = Test-FilesContainAny -Roots @(
     (Join-Path $projectRoot "Assets/Scripts"),
@@ -3807,9 +4095,9 @@ $dialogueLifecycleCommandContextMissingPatterns = @(
     )
     Test-ContainsAll -Content $dialogueNodeContent -Patterns @(
         "internal void ExecuteStartCommand(GameCommandContext context)",
-        "m_toExecuteOnStart.Execute(context);",
+        "m_toExecuteOnStart.ExecuteFireAndReport(context, nameof(DialogueNode));",
         "internal void ExecuteCompletionCommand(GameCommandContext context)",
-        "m_toExecuteOnCompletion.Execute(context);"
+        "m_toExecuteOnCompletion.ExecuteFireAndReport(context, nameof(DialogueNode));"
     )
     Test-ContainsAll -Content $dialogueSequenceContent -Patterns @(
         "public DialogueTree ToDialogueTree(string speaker, GameCommandContext commandContext, params string[] args)"
@@ -3843,7 +4131,8 @@ $dialogueLifecycleCommandContextMissingPatterns = @(
     )
     Test-ContainsAll -Content $questInteractionContent -Patterns @(
         "await character.Say(taskProgress.talkToCharacterTask.dialogue, source);",
-        "await character.Say(quest.questCompletedDialogue, source, (actionFeed) =>",
+        "await character.Say(quest.questCompletedDialogue, source);",
+        "await GameManager.JournalSystem.CompleteQuest(quest, ResolveQuestCompletionCommandContext(source));",
         "await character.Say(dialogue, source);",
         "await character.Say(quest.questOfferDialogue, source, (messages) =>"
     )
@@ -4084,6 +4373,8 @@ $report = [ordered]@{
     QuestInteractionPath = $questInteractionPath
     JournalSystemPath = $journalSystemPath
     QuestPath = $questPath
+    QuestProgressPath = $questProgressPath
+    QuestTaskProgressPath = $questTaskProgressPath
     OpenShopMenuCommandPath = $openShopMenuCommandPath
     OpenCraftMenuCommandPath = $openCraftMenuCommandPath
     ItemStartQuestEffectPath = $itemStartQuestEffectPath
@@ -4147,6 +4438,8 @@ $report = [ordered]@{
     PersistableDisallowedPatterns = @($persistableDisallowedPatterns)
     PersistableContractsMissingPatterns = @($persistableContractsMissingPatterns)
     PersistableDataBlocksMissingPatterns = @($persistableDataBlocksMissingPatterns)
+    PersistableDestroyPersistenceSystemMissingPatterns = @($persistableDestroyPersistenceSystemMissingPatterns)
+    PersistableDestroyPersistenceSystemDisallowedPatterns = @($persistableDestroyPersistenceSystemDisallowedPatterns)
     FormalDataAssetCacheMissingPatterns = @($formalDataAssetCacheMissingPatterns)
     FormalDataAssetCacheDisallowedPatterns = @($formalDataAssetCacheDisallowedPatterns)
     ManifestMissingPatterns = @($manifestMissingPatterns)
@@ -4165,6 +4458,7 @@ $report = [ordered]@{
     PlayerControlGroupMissingPatterns = @($playerControlGroupMissingPatterns)
     PlayerControlGroupDisallowedPatterns = @($playerControlGroupDisallowedPatterns)
     CharacterPlayerControlMissingPatterns = @($characterPlayerControlMissingPatterns)
+    CharacterPlayerInputTargetMissingPatterns = @($characterPlayerInputTargetMissingPatterns)
     CharacterPlayerControlDisallowedPatterns = @($characterPlayerControlDisallowedPatterns)
     AIControllerMissingPatterns = @($aiControllerMissingPatterns)
     AIControllerDisallowedPatterns = @($aiControllerDisallowedPatterns)
@@ -4218,6 +4512,7 @@ $report = [ordered]@{
     TemporalEffectInterfaceDisallowedPatterns = @($temporalEffectInterfaceDisallowedPatterns)
     TemporalEffectBaseMissingPatterns = @($temporalEffectBaseMissingPatterns)
     TemporalEffectBaseDisallowedPatterns = @($temporalEffectBaseDisallowedPatterns)
+    TemporalAbilityEffectSupportMissingPatterns = @($temporalAbilityEffectSupportMissingPatterns)
     TemporalAbilityGrantEffectMissingPatterns = @($temporalAbilityGrantEffectMissingPatterns)
     TemporalAbilitySuppressionEffectMissingPatterns = @($temporalAbilitySuppressionEffectMissingPatterns)
     TemporalAbilityReplacementEffectMissingPatterns = @($temporalAbilityReplacementEffectMissingPatterns)
@@ -4259,6 +4554,8 @@ $report = [ordered]@{
     CharacterBasePersistenceMissingPatterns = @($characterBasePersistenceMissingPatterns)
     CharacterBasePersistenceDisallowedPatterns = @($characterBasePersistenceDisallowedPatterns)
     CharacterActorMissingPatterns = @($characterActorMissingPatterns)
+    CharacterPlayerSystemNotificationMissingPatterns = @($characterPlayerSystemNotificationMissingPatterns)
+    CharacterPlayerSystemNotificationDisallowedPatterns = @($characterPlayerSystemNotificationDisallowedPatterns)
     InventoryActionLockMissingPatterns = @($inventoryActionLockMissingPatterns)
     InventoryCorpseOwnershipMissingPatterns = @($inventoryCorpseOwnershipMissingPatterns)
     InventoryCorpseLootInteractionMissingPatterns = @($inventoryCorpseLootInteractionMissingPatterns)
@@ -4268,6 +4565,8 @@ $report = [ordered]@{
     ShopCraftMenuContextDisallowedPatterns = @($shopCraftMenuContextDisallowedPatterns)
     CharacterEquippedItemLoadoutMissingPatterns = @($characterEquippedItemLoadoutMissingPatterns)
     CharacterEquippedAbilityLoadoutMissingPatterns = @($characterEquippedAbilityLoadoutMissingPatterns)
+    SaveReferenceRequiredMissingPatterns = @($saveReferenceRequiredMissingPatterns)
+    SaveReferenceRequiredDisallowedPatterns = @($saveReferenceRequiredDisallowedPatterns)
     UIMenuRuntimeLegacyReferencePatterns = @($uiMenuRuntimeLegacyReferencePatterns)
     UIManagerDisallowedPatterns = @($uiManagerDisallowedPatterns)
     UIControllerButtonMissingPatterns = @($uiControllerButtonMissingPatterns)
@@ -4285,8 +4584,8 @@ $report = [ordered]@{
     UIDialogueMessageBoxDisallowedPatterns = @($uiDialogueMessageBoxDisallowedPatterns)
     UIListPoolingMissingPatterns = @($uiListPoolingMissingPatterns)
     UIListPoolingDisallowedPatterns = @($uiListPoolingDisallowedPatterns)
-    GameManagerSystemShortcuts = @($gameManagerSystemShortcuts)
-    DisallowedGameManagerSystemShortcuts = @($disallowedGameManagerSystemShortcuts)
+    GameManagerBaselineSystemShortcuts = @($gameManagerSystemShortcuts)
+    NonBaselineNewGameManagerSystemShortcuts = @($nonBaselineNewGameManagerSystemShortcuts)
     NotificationLegacyReferenceHits = @($notificationLegacyReferenceHits)
     LegacySceneReferenceHits = @($legacySceneReferenceHits)
     LegacyBusinessAssetHits = @($legacyBusinessAssetHits)
@@ -4337,6 +4636,8 @@ $report = [ordered]@{
     PersistableDisallowedPatternCount = @($persistableDisallowedPatterns).Count
     PersistableContractsMissingPatternCount = @($persistableContractsMissingPatterns).Count
     PersistableDataBlocksMissingPatternCount = @($persistableDataBlocksMissingPatterns).Count
+    PersistableDestroyPersistenceSystemMissingPatternCount = @($persistableDestroyPersistenceSystemMissingPatterns).Count
+    PersistableDestroyPersistenceSystemDisallowedPatternCount = @($persistableDestroyPersistenceSystemDisallowedPatterns).Count
     FormalDataAssetCacheMissingPatternCount = @($formalDataAssetCacheMissingPatterns).Count
     FormalDataAssetCacheDisallowedPatternCount = @($formalDataAssetCacheDisallowedPatterns).Count
     ManifestMissingPatternCount = @($manifestMissingPatterns).Count
@@ -4355,6 +4656,7 @@ $report = [ordered]@{
     PlayerControlGroupMissingPatternCount = @($playerControlGroupMissingPatterns).Count
     PlayerControlGroupDisallowedPatternCount = @($playerControlGroupDisallowedPatterns).Count
     CharacterPlayerControlMissingPatternCount = @($characterPlayerControlMissingPatterns).Count
+    CharacterPlayerInputTargetMissingPatternCount = @($characterPlayerInputTargetMissingPatterns).Count
     CharacterPlayerControlDisallowedPatternCount = @($characterPlayerControlDisallowedPatterns).Count
     AIControllerMissingPatternCount = @($aiControllerMissingPatterns).Count
     AIControllerDisallowedPatternCount = @($aiControllerDisallowedPatterns).Count
@@ -4408,6 +4710,7 @@ $report = [ordered]@{
     TemporalEffectInterfaceDisallowedPatternCount = @($temporalEffectInterfaceDisallowedPatterns).Count
     TemporalEffectBaseMissingPatternCount = @($temporalEffectBaseMissingPatterns).Count
     TemporalEffectBaseDisallowedPatternCount = @($temporalEffectBaseDisallowedPatterns).Count
+    TemporalAbilityEffectSupportMissingPatternCount = @($temporalAbilityEffectSupportMissingPatterns).Count
     TemporalAbilityGrantEffectMissingPatternCount = @($temporalAbilityGrantEffectMissingPatterns).Count
     TemporalAbilitySuppressionEffectMissingPatternCount = @($temporalAbilitySuppressionEffectMissingPatterns).Count
     TemporalAbilityReplacementEffectMissingPatternCount = @($temporalAbilityReplacementEffectMissingPatterns).Count
@@ -4448,6 +4751,8 @@ $report = [ordered]@{
     CharacterBasePersistenceMissingPatternCount = @($characterBasePersistenceMissingPatterns).Count
     CharacterBasePersistenceDisallowedPatternCount = @($characterBasePersistenceDisallowedPatterns).Count
     CharacterActorMissingPatternCount = @($characterActorMissingPatterns).Count
+    CharacterPlayerSystemNotificationMissingPatternCount = @($characterPlayerSystemNotificationMissingPatterns).Count
+    CharacterPlayerSystemNotificationDisallowedPatternCount = @($characterPlayerSystemNotificationDisallowedPatterns).Count
     InventoryActionLockMissingPatternCount = @($inventoryActionLockMissingPatterns).Count
     InventoryCorpseOwnershipMissingPatternCount = @($inventoryCorpseOwnershipMissingPatterns).Count
     InventoryCorpseLootInteractionMissingPatternCount = @($inventoryCorpseLootInteractionMissingPatterns).Count
@@ -4457,6 +4762,8 @@ $report = [ordered]@{
     ShopCraftMenuContextDisallowedPatternCount = @($shopCraftMenuContextDisallowedPatterns).Count
     CharacterEquippedItemLoadoutMissingPatternCount = @($characterEquippedItemLoadoutMissingPatterns).Count
     CharacterEquippedAbilityLoadoutMissingPatternCount = @($characterEquippedAbilityLoadoutMissingPatterns).Count
+    SaveReferenceRequiredMissingPatternCount = @($saveReferenceRequiredMissingPatterns).Count
+    SaveReferenceRequiredDisallowedPatternCount = @($saveReferenceRequiredDisallowedPatterns).Count
     UIMenuRuntimeLegacyReferencePatternCount = @($uiMenuRuntimeLegacyReferencePatterns).Count
     UIManagerDisallowedPatternCount = @($uiManagerDisallowedPatterns).Count
     UIControllerButtonMissingPatternCount = @($uiControllerButtonMissingPatterns).Count
@@ -4474,8 +4781,8 @@ $report = [ordered]@{
     UIDialogueMessageBoxDisallowedPatternCount = @($uiDialogueMessageBoxDisallowedPatterns).Count
     UIListPoolingMissingPatternCount = @($uiListPoolingMissingPatterns).Count
     UIListPoolingDisallowedPatternCount = @($uiListPoolingDisallowedPatterns).Count
-    GameManagerSystemShortcutCount = @($gameManagerSystemShortcuts).Count
-    DisallowedGameManagerSystemShortcutCount = @($disallowedGameManagerSystemShortcuts).Count
+    GameManagerBaselineSystemShortcutCount = @($gameManagerSystemShortcuts).Count
+    NonBaselineNewGameManagerSystemShortcutCount = @($nonBaselineNewGameManagerSystemShortcuts).Count
     NotificationLegacyReferenceHitCount = @($notificationLegacyReferenceHits).Count
     LegacySceneReferenceHitCount = @($legacySceneReferenceHits).Count
     LegacyBusinessAssetHitCount = @($legacyBusinessAssetHits).Count
@@ -4504,12 +4811,11 @@ $report = [ordered]@{
 }
 
 $informationalCountNames = @(
-    "GameManagerSystemShortcutCount"
+    "GameManagerBaselineSystemShortcutCount"
 )
 
 $expectedNonFailureCountValues = @{
     ActiveAbilityBaseMissingPatternCount = 2
-    CharacterAlterationRuleMissingPatternCount = 6
     CharacterBaseAbilitiesMissingPatternCount = 22
     CharacterBaseAbilitySetRuntimeMissingPatternCount = 8
     CharacterBaseResourcesMissingPatternCount = 1
@@ -4522,9 +4828,6 @@ $expectedNonFailureCountValues = @{
     GameCoreGasRuntimeReferenceHitCount = 3
     CharacterActorMissingPatternCount = 4
     PlayerSystemPlayerControlMissingPatternCount = 6
-    TemporalAbilityGrantEffectMissingPatternCount = 4
-    TemporalAbilityReplacementEffectMissingPatternCount = 6
-    TemporalAbilitySuppressionEffectMissingPatternCount = 4
 }
 
 $gateFailureCountNames = @(
@@ -4687,6 +4990,16 @@ foreach ($pattern in $report.PersistableDataBlocksMissingPatterns) {
     Write-Host ("  [persistable-data-blocks-missing] {0}" -f $pattern)
 }
 
+Write-Host ("Persistable destroy persistence system missing patterns: {0}" -f $report.PersistableDestroyPersistenceSystemMissingPatternCount)
+foreach ($pattern in $report.PersistableDestroyPersistenceSystemMissingPatterns) {
+    Write-Host ("  [persistable-destroy-persistence-system-missing] {0}" -f $pattern)
+}
+
+Write-Host ("Persistable destroy persistence system disallowed patterns: {0}" -f $report.PersistableDestroyPersistenceSystemDisallowedPatternCount)
+foreach ($pattern in $report.PersistableDestroyPersistenceSystemDisallowedPatterns) {
+    Write-Host ("  [persistable-destroy-persistence-system-disallowed] {0}" -f $pattern)
+}
+
 Write-Host ("FormalDataAssetCache missing patterns: {0}" -f $report.FormalDataAssetCacheMissingPatternCount)
 foreach ($pattern in $report.FormalDataAssetCacheMissingPatterns) {
     Write-Host ("  [formal-data-asset-cache-missing] {0}" -f $pattern)
@@ -4775,6 +5088,11 @@ foreach ($pattern in $report.PlayerControlGroupDisallowedPatterns) {
 Write-Host ("CharacterPlayerControl missing patterns: {0}" -f $report.CharacterPlayerControlMissingPatternCount)
 foreach ($pattern in $report.CharacterPlayerControlMissingPatterns) {
     Write-Host ("  [character-player-control-missing] {0}" -f $pattern)
+}
+
+Write-Host ("Character player input target missing patterns: {0}" -f $report.CharacterPlayerInputTargetMissingPatternCount)
+foreach ($pattern in $report.CharacterPlayerInputTargetMissingPatterns) {
+    Write-Host ("  [character-player-input-target-missing] {0}" -f $pattern)
 }
 
 Write-Host ("CharacterPlayerControl disallowed patterns: {0}" -f $report.CharacterPlayerControlDisallowedPatternCount)
@@ -5047,6 +5365,11 @@ foreach ($pattern in $report.TemporalAbilityGrantEffectMissingPatterns) {
     Write-Host ("  [temporal-ability-grant-effect-missing] {0}" -f $pattern)
 }
 
+Write-Host ("TemporalAbilityEffectSupport formal GAS guard missing patterns: {0}" -f $report.TemporalAbilityEffectSupportMissingPatternCount)
+foreach ($pattern in $report.TemporalAbilityEffectSupportMissingPatterns) {
+    Write-Host ("  [temporal-ability-effect-support-missing] {0}" -f $pattern)
+}
+
 Write-Host ("TemporalAbilitySuppressionEffect formal GAS missing patterns: {0}" -f $report.TemporalAbilitySuppressionEffectMissingPatternCount)
 foreach ($pattern in $report.TemporalAbilitySuppressionEffectMissingPatterns) {
     Write-Host ("  [temporal-ability-suppression-effect-missing] {0}" -f $pattern)
@@ -5242,6 +5565,16 @@ foreach ($pattern in $report.CharacterActorMissingPatterns) {
     Write-Host ("  [character-actor-missing] {0}" -f $pattern)
 }
 
+Write-Host ("Character PlayerSystem notification missing patterns: {0}" -f $report.CharacterPlayerSystemNotificationMissingPatternCount)
+foreach ($pattern in $report.CharacterPlayerSystemNotificationMissingPatterns) {
+    Write-Host ("  [character-player-system-notification-missing] {0}" -f $pattern)
+}
+
+Write-Host ("Character PlayerSystem notification disallowed patterns: {0}" -f $report.CharacterPlayerSystemNotificationDisallowedPatternCount)
+foreach ($pattern in $report.CharacterPlayerSystemNotificationDisallowedPatterns) {
+    Write-Host ("  [character-player-system-notification-disallowed] {0}" -f $pattern)
+}
+
 Write-Host ("Inventory action lock missing patterns: {0}" -f $report.InventoryActionLockMissingPatternCount)
 foreach ($pattern in $report.InventoryActionLockMissingPatterns) {
     Write-Host ("  [inventory-action-lock-missing] {0}" -f $pattern)
@@ -5285,6 +5618,16 @@ foreach ($pattern in $report.CharacterEquippedItemLoadoutMissingPatterns) {
 Write-Host ("Character equipped ability loadout missing patterns: {0}" -f $report.CharacterEquippedAbilityLoadoutMissingPatternCount)
 foreach ($pattern in $report.CharacterEquippedAbilityLoadoutMissingPatterns) {
     Write-Host ("  [character-equipped-ability-loadout-missing] {0}" -f $pattern)
+}
+
+Write-Host ("Save current state required reference missing patterns: {0}" -f $report.SaveReferenceRequiredMissingPatternCount)
+foreach ($pattern in $report.SaveReferenceRequiredMissingPatterns) {
+    Write-Host ("  [save-reference-required-missing] {0}" -f $pattern)
+}
+
+Write-Host ("Save current state required reference disallowed patterns: {0}" -f $report.SaveReferenceRequiredDisallowedPatternCount)
+foreach ($pattern in $report.SaveReferenceRequiredDisallowedPatterns) {
+    Write-Host ("  [save-reference-required-disallowed] {0}" -f $pattern)
 }
 
 Write-Host ("UI menu runtime legacy reference patterns: {0}" -f $report.UIMenuRuntimeLegacyReferencePatternCount)
@@ -5372,14 +5715,14 @@ foreach ($pattern in $report.UIListPoolingDisallowedPatterns) {
     Write-Host ("  [ui-list-pooling-disallowed] {0}" -f $pattern)
 }
 
-Write-Host ("GameManager system shortcuts: {0}" -f $report.GameManagerSystemShortcutCount)
-foreach ($shortcut in $report.GameManagerSystemShortcuts) {
-    Write-Host ("  [game-manager-system-shortcut] {0}" -f $shortcut)
+Write-Host ("GameManager baseline system shortcuts: {0}" -f $report.GameManagerBaselineSystemShortcutCount)
+foreach ($shortcut in $report.GameManagerBaselineSystemShortcuts) {
+    Write-Host ("  [game-manager-baseline-system-shortcut] {0}" -f $shortcut)
 }
 
-Write-Host ("Disallowed GameManager system shortcuts: {0}" -f $report.DisallowedGameManagerSystemShortcutCount)
-foreach ($shortcut in $report.DisallowedGameManagerSystemShortcuts) {
-    Write-Host ("  [game-manager-system-shortcut-disallowed] {0}" -f $shortcut)
+Write-Host ("Non-baseline new GameManager system shortcuts: {0}" -f $report.NonBaselineNewGameManagerSystemShortcutCount)
+foreach ($shortcut in $report.NonBaselineNewGameManagerSystemShortcuts) {
+    Write-Host ("  [game-manager-non-baseline-new-system-shortcut] {0}" -f $shortcut)
 }
 
 Write-Host ("Notification legacy code references: {0}" -f $report.NotificationLegacyReferenceHitCount)

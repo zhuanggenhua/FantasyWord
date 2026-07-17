@@ -38,6 +38,10 @@ namespace FantasyWord.GameCore
                 m_steeringAdapter = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);
                 ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId, "中间路线");
                 ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId, "移动目标追击");
+                if (m_owner.ShouldUseTargetOrbitSteeringAtSoughtDistance)
+                {
+                    ValidateSteeringGroupMapping(m_owner.TargetOrbitSteeringGroupIdValue, "近身环绕");
+                }
             }
 
             public void Stop()
@@ -222,9 +226,14 @@ namespace FantasyWord.GameCore
 
                 if (distanceToDestination <= finalApproachDistance)
                 {
-                    string finalGroupId = m_owner.m_target
-                        ? m_owner.m_targetPursuitSteeringGroupId
-                        : m_owner.m_steeringProfile.DefaultGroupIdValue;
+                    bool useTargetOrbit =
+                        m_owner.m_target &&
+                        m_owner.ShouldUseTargetOrbitSteeringAtSoughtDistance;
+                    string finalGroupId = useTargetOrbit
+                        ? m_owner.TargetOrbitSteeringGroupIdValue
+                        : (m_owner.m_target
+                            ? m_owner.m_targetPursuitSteeringGroupId
+                            : m_owner.m_steeringProfile.DefaultGroupIdValue);
                     Vector2 targetVelocity = Vector2.zero;
                     if (m_owner.m_target &&
                         m_owner.m_target.TryGetComponent(out Rigidbody2D targetBody))

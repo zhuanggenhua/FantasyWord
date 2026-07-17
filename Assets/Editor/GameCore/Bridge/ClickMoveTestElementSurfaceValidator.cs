@@ -813,6 +813,9 @@ namespace FantasyWord.GameCore
                 float.Parse(parts[2]));
         }
 
+        /// <summary>
+        /// 元素地表防复燃探针结果，用于确认草覆盖移除后再次施火不会重新燃烧。
+        /// </summary>
         [Serializable]
         public sealed class ReapplyProbeResult
         {
@@ -835,6 +838,9 @@ namespace FantasyWord.GameCore
             public string AfterSurfaceCoverLifecycle = string.Empty;
         }
 
+        /// <summary>
+        /// 元素地表 PlayMode 验证结果，记录火焰施加、燃烧、伤害、燃尽和截图证据。
+        /// </summary>
         [Serializable]
         public sealed class ValidationResult
         {

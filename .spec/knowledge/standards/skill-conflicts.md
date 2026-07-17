@@ -32,9 +32,9 @@ metadata:
 |------------|------|------|
 | `.codex/skills/aibridge` | 保留 | 项目 Unity Editor 自动化专项流程，LumioAgent 无同类能力。 |
 | `.codex/skills/gas-ability-authoring` | 保留 | FantasyWord EX-GAS 制作和排查专项流程，强项目绑定。 |
-| `.codex/skills/safe-image-reading` | 保留 | 已包含本地图片上下文预算门禁，是全局红线的项目执行版。 |
+| `.codex/skills/safe-image-reading` | 暂停 | 2026-07-14 按用户要求停用 AI 看图前压缩/上下文预算门禁；原文已备份到 `.spec/backups/safe-image-reading-disabled-20260714-224319/`。 |
 | `.codex/skills/unity-tilemap-2d` | 保留 | 项目 2D Tilemap 专项流程，已接入新导航。 |
-| `.agents/skills/code-comments` | 保留 | 中文注释和 Unity Inspector 说明专项能力。 |
+| `D:\codex-home\skills\code-comments` | 保留 | 中文注释和 Unity Inspector 说明专项能力；本项目当前没有 `.agents/skills/code-comments`。 |
 | `.agents/skills/unity-ui-development` | 保留 | UGUI / UI Toolkit 专项能力，仍由项目文档路由。 |
 | `D:\codex-home\skills\unity-skills` | 保留 | UnitySkills 插件的配套 AI 调用说明，不被 `.spec` skill 替代。 |
 | `D:\codex-home\skills\planning-with-files` | 保留为长期计划真相源 | 用户已明确“长期计划”指向该 skill。 |

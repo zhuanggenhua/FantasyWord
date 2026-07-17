@@ -88,10 +88,5 @@ public sealed class CharacterEquipmentPresentation : MonoBehaviour
         {
             characterEquipment = GetComponent<CharacterEquipment>();
         }
-
-        if (equipmentRenderer == null)
-        {
-            equipmentRenderer = GetComponentInChildren<EquipmentRenderer>(true);
-        }
     }
 }

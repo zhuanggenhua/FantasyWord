@@ -9,7 +9,11 @@ namespace FantasyWord.GameCore
         bool TryPlayAnimation(string animationKey);
         bool TryLockAnimation(string animationKey);
         void ClearAnimationLock();
+        bool TryPlayDefaultAnimation();
+        bool TryPlayDamageAnimation();
+        bool TryLockDeathAnimation();
         bool TryRestoreAnimation(string expectedAnimationKey, string fallbackAnimationKey);
+        bool TryRestoreDefaultAnimation(string expectedAnimationKey);
         bool TryPreviewAnimation(string animationKey, float normalizedTime);
     }
 }

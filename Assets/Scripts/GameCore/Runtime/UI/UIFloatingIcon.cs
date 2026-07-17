@@ -3,6 +3,9 @@ using UnityEngine.U2D.Animation;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 实体头顶可显示的短状态图标。
+    /// </summary>
     public enum EFloatingIcon
     {
         None,
@@ -15,8 +18,13 @@ namespace FantasyWord.GameCore
         Exclamation
     }
 
+    /// <summary>
+    /// 实体悬浮图标组件，通过 SpriteResolver 切换图标分类和标签，可选定时清除。
+    /// </summary>
     public class UIFloatingIcon : MonoBehaviour
     {
+        [InspectorName("Sprite Resolver")]
+        [Tooltip("用于按分类和标签切换悬浮图标 Sprite。")]
         [SerializeField] private SpriteResolver m_spriteResolver = null;
 
         private float? m_timer = null;
@@ -40,6 +48,9 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 设置悬浮图标；传入 duration 时到期后会自动清回 None。
+        /// </summary>
         public void SetIcon(EFloatingIcon icon, float? duration = null)
         {
             m_timer = duration;

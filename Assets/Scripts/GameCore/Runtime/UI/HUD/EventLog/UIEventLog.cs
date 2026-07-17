@@ -4,25 +4,52 @@ using YokiFrame;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 单类事件日志的显示配置。
+    /// </summary>
     [System.Serializable]
     public struct UIEventSettings
     {
+        [InspectorName("启用")]
+        [Tooltip("是否显示这类事件日志。")]
         public bool enabled;
+
+        [InspectorName("文本模板")]
+        [Tooltip("事件日志文本模板，参数由对应事件处理函数传入。")]
         public string text;
+
+        [InspectorName("颜色")]
+        [Tooltip("这类事件日志显示时使用的文本颜色。")]
         public Color color;
     }
 
+    /// <summary>
+    /// HUD 事件日志面板，监听经验、背包、能力和任务事件并复用日志行展示短提示。
+    /// </summary>
     public class UIEventLog : MonoBehaviour
     {
-        // Inspector Settings
-        [Header("Global Parameters")]
+        [Header("全局参数")]
+        [InspectorName("日志停留时长")]
+        [Tooltip("单条日志完整显示后的停留秒数。")]
         [SerializeField] private float m_logDuration = 3.0f;
+
+        [InspectorName("单字打字时长")]
+        [Tooltip("日志逐字出现时，每个字符的显示间隔秒数。")]
         [SerializeField] private float m_characterTypingDuration = 0.025f;
+
+        [InspectorName("日志行池大小")]
+        [Tooltip("事件日志最多同时保留的行数，超出后复用最早一行。")]
         [SerializeField] private int m_linePoolSize = 5;
+
+        [InspectorName("日志行预制体")]
+        [Tooltip("对象池使用的日志行预制体，必须包含 UIEventLogLine。")]
         [SerializeField] private GameObject m_linePrefab = null;
+
+        [InspectorName("记录的物品转移类型")]
+        [Tooltip("只有这些物品转移类型会显示为物品获得/移除日志。")]
         [SerializeField] private SerializableHashSet<EItemTransferType> m_itemTransferTypesToLog = null;
 
-        [Header("Event Settings")]
+        [Header("事件设置")]
         [SerializeField] private UIEventSettings m_experienceAdded;
         [SerializeField] private UIEventSettings m_levelUp;
         [SerializeField] private UIEventSettings m_moneyAdded;

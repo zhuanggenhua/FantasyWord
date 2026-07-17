@@ -1,0 +1,27 @@
+# 0052-显式目标与策略命令必需配置边界
+
+- 日期：2026-07-16
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 同职责命令中，`DestroyEntity` 直接调用配置实体的 `Destroy()`；若目标实体没配，会暴露配置错误，而不是把销毁结果当成成功执行。
+  - `ToggleController` 同样要求配置目标角色；参考流程只对目标角色的 controller 本身使用空安全调用，表示“角色可能没有控制器”，而不是表示“目标角色可以为空”。
+  - 参考工程中的 `MoveCharacterBase`、`MoveCamera`、`PlayDialogueSequence` 和 `CommandHandler` 也直接访问配置好的目标角色、镜头移动策略、对话序列或命令资产；缺配置会暴露错误。
+  - 参考工程中的 `ExecuteCommandList` 直接遍历 `m_commands` 并执行子命令；缺子命令数组或数组元素为空会暴露配置错误，而不是把命令组合当成成功无操作。
+  - FantasyWord 上一版把这些显式目标/策略/命令资产写成 `m_toDestroy?.Destroy(context)`、`m_character?.StartController()` / `StopController()`、目标角色缺失后 `return`、镜头策略为空时 `Task.CompletedTask`、对话序列为空时 `Task.CompletedTask`、命令资产为空时 `Task.CompletedTask`，会把命令资产或场景接线缺失静默吞掉。
+- 决策：
+  - 显式配置目标、策略或命令资产的结果型命令，目标/策略/命令字段为空时必须抛出可定位异常。
+  - `DestroyEntity` 缺目标实体时抛错；目标存在时必须继续调用 `Destroy(GameCommandContext)`，保留 FantasyWord 对死亡/销毁命令上下文的合理增强。
+  - `ToggleController` 缺目标角色时抛错；角色存在后调用角色自身 `StartController()` / `StopController()`，不在命令里复制控制器存在性判断。
+  - `MoveCharacterBase` 缺目标角色时抛错；`MovePlayer` 的上下文回退仍由 `GameCommandContext` 负责，但最终移动目标不能为空。
+  - `MoveCamera` 缺镜头移动策略时抛错；正式相机是否存在继续由镜头移动策略内部按当前项目相机 owner 处理。
+  - `PlayDialogueSequence` 缺对话序列资产时抛错；对话系统入口继续使用当前项目的上下文增强。
+  - `ExecuteCommandHandler` 缺命令资产时抛错；`CommandHandler` 资产缺内部命令时抛错。
+  - `ExecuteCommandList` 缺子命令数组或子命令元素为空时抛错；显式空数组仍可表示“有意无操作”。
+  - 该结论不是因为空安全写法本身违规，而是因为同职责参考流程和当前结果语义都要求“目标配置缺失不能被当成成功”。
+- 影响：
+  - 命令资产或场景引用漏配会更早暴露到 Console/调用方，不再造成销毁、控制器开关、角色移动、镜头移动、对话播放、命令转发或命令组合静默 no-op。
+  - 命令运行时门禁检查显式目标/策略/命令资产不得回退到 `?.Destroy`、`?.StartController`、`?.StopController`、空目标 `return`、空策略 `Task.CompletedTask`、空对话序列 `Task.CompletedTask`、空命令资产 `Task.CompletedTask` 或空命令列表直接成功。
+  - Foundation 门禁同步检查 `DestroyEntity` 的销毁上下文入口仍然走正式 `Destroy(context)`。
+- 替代关系：
+  - 延续 0050 的参考流程优先原则。
+  - 补充 0008 和 0051：异步命令异常必须上报，玩家/角色结果命令和显式配置命令都不得把缺目标或缺内部命令当作成功。

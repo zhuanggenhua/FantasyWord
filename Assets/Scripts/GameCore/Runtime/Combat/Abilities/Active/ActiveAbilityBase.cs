@@ -6,6 +6,10 @@ using UnityEngine.Events;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 主动能力启动检查结果。
+    /// 用于输入层和 UI 区分冷却、资源不足、失能和未知配置错误。
+    /// </summary>
     public enum EAbilityFireCheckResult
     {
         Valid,
@@ -15,6 +19,10 @@ namespace FantasyWord.GameCore
         Unknown
     }
 
+    /// <summary>
+    /// 可由角色主动触发的能力合同。
+    /// 输入门、冷却和正式 EX-GAS 规则由实现类负责闭合。
+    /// </summary>
     public interface ITriggerableAbility
     {
         public void Fire(
@@ -28,11 +36,14 @@ namespace FantasyWord.GameCore
         public void PermitAbility(bool abilityPermitted);
     }
 
+    /// <summary>
+    /// 主动能力基类。
+    /// 它统一正式 EX-GAS 输入门、冷却、消耗提交和角色能力账本生命周期。
+    /// </summary>
     public abstract class ActiveAbilityBase : AbilityBase, ITriggerableAbility
     {
         private UnityAction m_onAbilityEndedCallback = null;
         private FormalAbilityInputGateRuntime m_inputGate = null;
-        private Animator m_characterAnimator = null;
         private CharacterHandleWeapon m_characterHandleWeapon = null;
         private CharacterAbilitySet m_characterAbilitySet = null;
         private bool m_casting = false;
@@ -525,19 +536,6 @@ namespace FantasyWord.GameCore
                 inputGateState == EFormalAbilityInputGateState.Use;
         }
 
-        protected Animator ResolveCharacterAnimator()
-        {
-            Animator animator = m_characterAnimator;
-            if (animator == null)
-            {
-                animator = m_character != null ? m_character.GetComponentInChildren<Animator>(true) : null;
-                m_characterAnimator = animator;
-            }
-
-            Debug.Assert(animator, ErrorMessages.InspectorMissingComponentReference<Animator>());
-            return animator;
-        }
-
         protected CharacterHandleWeapon ResolveCharacterHandleWeapon()
         {
             CharacterHandleWeapon handleWeapon = m_characterHandleWeapon;
@@ -552,29 +550,6 @@ namespace FantasyWord.GameCore
             }
 
             return handleWeapon;
-        }
-
-        protected void TrySetCharacterAnimatorTrigger(string animatorContextLabel, string triggerName)
-        {
-            TrySetAnimatorTrigger(ResolveCharacterAnimator(), triggerName);
-        }
-
-        protected static void TrySetAnimatorTrigger(Animator animator, string triggerName)
-        {
-            if (animator == null || animator.runtimeAnimatorController == null || string.IsNullOrWhiteSpace(triggerName))
-            {
-                return;
-            }
-
-            foreach (AnimatorControllerParameter parameter in animator.parameters)
-            {
-                if (parameter.type == AnimatorControllerParameterType.Trigger &&
-                    parameter.name == triggerName)
-                {
-                    animator.SetTrigger(triggerName);
-                    return;
-                }
-            }
         }
 
         private bool TryGetFormalCooldownState(out float remainingCooldownValue, out float cooldownDuration)

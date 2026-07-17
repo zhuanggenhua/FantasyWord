@@ -362,8 +362,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dd33f42c60aaa64a85bf7d063c4965e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AnimationController
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterActionAnimatorDriver
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
+  characterAnimator: {fileID: 7513719263223177368}
+  shadowObject: {fileID: 3065105728528942565, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}
   _debugCurrentState: 
   _debugAnimatorPath: 
 --- !u!114 &7667983027141764858
@@ -382,6 +384,8 @@ MonoBehaviour:
   appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
   initialEquipments: []
   overrideShader: {fileID: 0}
+  animationController: {fileID: 5038573517113386918}
+  characterAnimator: {fileID: 7513719263223177368}
   _debugCurrentAnim: 
   _debugAnimatorState: 
   _debugHasBodyUVMap: 0
@@ -398,11 +402,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5faca898f745042a9e5380d141a605, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DirectionalAnimationVariantDriver
-  spriteLibrary: {fileID: 0}
-  spriteResolver: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::DirectionalSpriteLibraryDriver
+  spriteLibrary: {fileID: 1000657716828344336, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}
+  spriteResolver: {fileID: 8000241243821908510, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}
   equipmentRenderer: {fileID: 7667983027141764858}
-  movable: {fileID: 0}
+  movable: {fileID: 4255740038471591478}
   defaultAnimationLibraries:
     southEast: {fileID: 11400000, guid: 62c4a52ab213438419c93cc2d8427623, type: 2}
     southWest: {fileID: 11400000, guid: 0602b79d46e41504a8117d1fdcc863b2, type: 2}

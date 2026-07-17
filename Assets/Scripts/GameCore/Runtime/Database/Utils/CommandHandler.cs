@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System;
 using UnityEngine;
 using MackySoft.SerializeReferenceExtensions;
 
@@ -17,6 +18,11 @@ namespace FantasyWord.GameCore
 
         public Task Execute(GameCommandContext context)
         {
+            if (m_command == null)
+            {
+                throw new InvalidOperationException($"{nameof(CommandHandler)} '{name}' 缺少要执行的命令。");
+            }
+
             return m_command.Execute(context);
         }
     }

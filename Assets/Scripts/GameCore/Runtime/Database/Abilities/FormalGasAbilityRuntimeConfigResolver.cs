@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 正式 EX-GAS 能力根节点模式。
+    /// 用于运行时实例化后选择静态、四方向或横向表现根。
+    /// </summary>
     public enum EFormalGasAbilityRootMode
     {
         Static,
@@ -10,6 +14,11 @@ namespace FantasyWord.GameCore
         Horizontal
     }
 
+    /// <summary>
+    /// 正式 EX-GAS 能力运行时资源配置。
+    /// GUID 优先指向 GameCore 数据库引用资产；资源地址只在后续接入 ResourceSystem/Addressables 后使用。
+    /// 以 Assets/ 开头的项目路径只允许作为编辑器证据，不是玩家构建可用的运行时地址。
+    /// </summary>
     public readonly struct FormalGasAbilityRuntimeConfig
     {
         public FormalGasAbilityRuntimeConfig(
@@ -37,7 +46,13 @@ namespace FantasyWord.GameCore
 
         public bool TryLoadPrefab(out GameObject prefab)
         {
-            prefab = FormalGasAbilityResourceLoader.LoadSync<GameObject>(PrefabPath);
+            prefab = LoadDatabaseEntry<PrefabReference>(PrefabGuid)?.prefab;
+            if (prefab != null)
+            {
+                return true;
+            }
+
+            prefab = FormalGasAbilityResourceLoader.LoadRuntimeAddressSync<GameObject>(PrefabPath);
             if (prefab != null)
             {
                 return true;
@@ -53,7 +68,13 @@ namespace FantasyWord.GameCore
 
         public bool TryLoadIcon(out Sprite icon)
         {
-            icon = FormalGasAbilityResourceLoader.LoadSync<Sprite>(IconPath);
+            icon = LoadDatabaseEntry<SpriteReference>(IconGuid)?.sprite;
+            if (icon != null)
+            {
+                return true;
+            }
+
+            icon = FormalGasAbilityResourceLoader.LoadRuntimeAddressSync<Sprite>(IconPath);
             if (icon != null)
             {
                 return true;
@@ -82,10 +103,43 @@ namespace FantasyWord.GameCore
                 : UnityEditor.AssetDatabase.LoadAssetAtPath<T>(assetPath);
         }
 #endif
+
+        private static T LoadDatabaseEntry<T>(string guid)
+            where T : DatabaseEntry
+        {
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                return null;
+            }
+
+            if (GameManager.Exists() && GameManager.Database != null)
+            {
+                return GameManager.Database.GUIDToDatabaseEntry<T>(guid);
+            }
+
+#if UNITY_EDITOR
+            GameConfig config = UnityEditor.AssetDatabase.LoadAssetAtPath<GameConfig>(GameConfig.DefaultAssetPath);
+            if (config != null)
+            {
+                UnityEditor.SerializedObject serializedConfig = new(config);
+                DatabaseRegistry database = serializedConfig.FindProperty("m_databaseRegistry")?.objectReferenceValue as DatabaseRegistry;
+                return database == null ? null : database.GUIDToDatabaseEntry<T>(guid);
+            }
+#endif
+
+            return null;
+        }
     }
 
+    /// <summary>
+    /// 正式 EX-GAS 能力运行时配置解析门面。
+    /// 具体数据来源由启动流程注册，调用方只按能力编号查询。
+    /// </summary>
     public static class FormalGasAbilityRuntimeConfigResolver
     {
+        /// <summary>
+        /// 能力编号到运行时配置的解析回调。
+        /// </summary>
         public delegate bool TryResolveRuntimeConfigHandler(
             int abilityCode,
             out FormalGasAbilityRuntimeConfig config);
@@ -111,8 +165,29 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 正式 GAS 资源加载门面。
+    /// 正式运行时只接受 ResourceSystem / Addressables 地址；编辑器 Assets 路径只能用于诊断和兜底。
+    /// </summary>
     public static class FormalGasAbilityResourceLoader
     {
+        public static bool IsEditorAssetPath(string path)
+        {
+            return !string.IsNullOrWhiteSpace(path) &&
+                   path.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static T LoadRuntimeAddressSync<T>(string address)
+            where T : UnityEngine.Object
+        {
+            if (string.IsNullOrWhiteSpace(address) || IsEditorAssetPath(address))
+            {
+                return null;
+            }
+
+            return LoadResourceSystemSync<T>(address);
+        }
+
         public static T LoadSync<T>(string path)
             where T : UnityEngine.Object
         {
@@ -121,25 +196,90 @@ namespace FantasyWord.GameCore
                 return null;
             }
 
+            T databaseAsset = LoadDatabaseAssetSync<T>(path);
+            if (databaseAsset != null)
+            {
+                return databaseAsset;
+            }
+
 #if UNITY_EDITOR
-            if (path.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase))
+            if (IsEditorAssetPath(path))
             {
                 return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
             }
 #endif
 
+            if (IsEditorAssetPath(path))
+            {
+                Debug.LogError(
+                    $"GameCore 正式 GAS 资源地址不能使用编辑器项目路径：{path}。请改为 ResourceSystem / Addressables 地址。");
+                return null;
+            }
+
+            return LoadResourceSystemSync<T>(path);
+        }
+
+        private static T LoadResourceSystemSync<T>(string address)
+            where T : UnityEngine.Object
+        {
             try
             {
-                ResourceHandle<T> handle = ResourceSystem.LoadAssetAsync<T>(path);
+                ResourceHandle<T> handle = ResourceSystem.LoadAssetAsync<T>(address);
                 return handle.WaitForCompletion();
             }
             catch (Exception exception)
             {
 #if UNITY_EDITOR
-                Debug.LogWarning($"GameCore 正式 GAS 资源加载失败：{path}。{exception.Message}");
+                Debug.LogWarning($"GameCore 正式 GAS 资源加载失败：{address}。{exception.Message}");
 #endif
                 return null;
             }
+        }
+
+        private static T LoadDatabaseAssetSync<T>(string guid)
+            where T : UnityEngine.Object
+        {
+            if (string.IsNullOrWhiteSpace(guid))
+            {
+                return null;
+            }
+
+            DatabaseRegistry database = ResolveDatabase();
+            if (database == null)
+            {
+                return null;
+            }
+
+            if (typeof(T) == typeof(GameObject))
+            {
+                return database.GUIDToDatabaseEntry<PrefabReference>(guid)?.prefab as T;
+            }
+
+            if (typeof(T) == typeof(Sprite))
+            {
+                return database.GUIDToDatabaseEntry<SpriteReference>(guid)?.sprite as T;
+            }
+
+            return null;
+        }
+
+        private static DatabaseRegistry ResolveDatabase()
+        {
+            if (GameManager.Exists() && GameManager.Database != null)
+            {
+                return GameManager.Database;
+            }
+
+#if UNITY_EDITOR
+            GameConfig config = UnityEditor.AssetDatabase.LoadAssetAtPath<GameConfig>(GameConfig.DefaultAssetPath);
+            if (config != null)
+            {
+                UnityEditor.SerializedObject serializedConfig = new(config);
+                return serializedConfig.FindProperty("m_databaseRegistry")?.objectReferenceValue as DatabaseRegistry;
+            }
+#endif
+
+            return null;
         }
 
         public static UnityEngine.Object LoadSync(string path, Type type)

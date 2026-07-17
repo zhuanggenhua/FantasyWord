@@ -2,6 +2,9 @@ using System;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// Formal GAS 时间轴执行节奏配置，限制使用前延迟和连续使用间隔不得为负数。
+    /// </summary>
     public readonly struct FormalGasTimelineExecutionSettings
     {
         public FormalGasTimelineExecutionSettings(float delayBeforeUse, float timeBetweenUses)
@@ -14,6 +17,9 @@ namespace FantasyWord.GameCore
         public readonly float timeBetweenUses;
     }
 
+    /// <summary>
+    /// Formal GAS 技能时间轴执行设置解析门面，由数据层注册按技能编码查询的处理器。
+    /// </summary>
     public static class FormalGasAbilityTimelineExecutionResolver
     {
         public delegate bool TryResolveTimelineExecutionSettingsHandler(

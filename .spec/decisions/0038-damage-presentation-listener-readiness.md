@@ -1,0 +1,21 @@
+# 0038-受击表现监听者系统就绪边界
+
+- 日期：2026-07-15
+- 状态：已采纳（访问形式表述已由 0046 取代）
+- 2026-07-16 状态说明：
+  - 本文保留“表现监听者在系统未就绪时跳过本次表现”的失败语义。
+  - 文中关于直读 `GameManager` 或必须换成查询 API 的表述，不再作为独立审计标准；当前以 `0046-参考流程优先的 GameManager 系统访问审计边界` 为准。
+- 背景：
+  - `CameraShake` 与 `DamageScreenFlash` 都只消费正式受击表现事件，不承担伤害结算。
+  - 旧实现收到表现事件后直接读取 `GameManager.Config` 或 `GameManager.PlayerSystem`。
+  - 在编辑器预览、对象启用早于系统注册、或 GameManager 正在停止/切换期间，表现事件监听者不应因为系统未就绪而抛空引用。
+- 决策：
+  - 受击表现监听者读取当前受控角色前，必须先确认 `GameManager.Exists()` 且 `PlayerSystem` 可解析。
+  - 镜头震动读取相机震动配置前，必须先确认 `GameManager.Exists()` 且 `GameManager.Config` 非空。
+  - 系统未就绪时，表现监听者直接跳过本次表现，不做兜底查找、不创建替代系统、不改变伤害或角色状态。
+  - 动画运行时门禁新增 `DamagePresentationListenersGuardGameManager`，防止表现监听者重新直读未保护的系统快捷入口。
+- 影响：
+  - 受击表现事件在系统未就绪时更安全；正常 PlayMode 中系统就绪后的镜头震动和屏幕闪屏规则不变。
+  - 本轮不改变 `GameplayFeedbackSet` 的派发时机、受击上下文内容、浮字显示或正式伤害结算。
+- 替代关系：
+  - 本决策补强既有“表现层只消费 GameRuntimeEvents，不回读旧通知中心”的边界；它只增加系统就绪保护，不改变表现事件 owner。

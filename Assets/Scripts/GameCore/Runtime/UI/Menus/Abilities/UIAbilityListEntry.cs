@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -30,6 +30,13 @@ namespace FantasyWord.GameCore
             m_button.onClick.AddListener(OnSlotClicked);
         }
 
+        private void OnDestroy()
+        {
+            if (m_button)
+            {
+                m_button.onClick.RemoveListener(OnSlotClicked);
+            }
+        }
         private void ResolveReceiver()
         {
             m_receiver = GetComponentInParent<IAbilityMenuEventReceiver>();
@@ -68,4 +75,5 @@ namespace FantasyWord.GameCore
         }
     }
 }
+
 

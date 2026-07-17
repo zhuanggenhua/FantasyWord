@@ -31,6 +31,21 @@ namespace FantasyWord.GameCore
             RefreshActiveMapInfoFromRegisteredInfos();
         }
 
+        public override void OnSystemStop()
+        {
+            StopRespawnCoroutine();
+        }
+
+        private void OnDisable()
+        {
+            StopRespawnCoroutine();
+        }
+
+        private void OnDestroy()
+        {
+            StopRespawnCoroutine();
+        }
+
         public override void OnMapLoaded()
         {
             RefreshActiveMapInfoFromRegisteredInfos();
@@ -99,11 +114,7 @@ namespace FantasyWord.GameCore
         /// </summary>
         public void SaveCheckpoint(ICheckpoint checkpoint, int checkpointOrder, bool forceAssignation = false)
         {
-            Debug.Assert(checkpoint != null && checkpoint.IsValid(), "Invalid checkpoint data! The checkpoint will not be saved.");
-            if (checkpoint == null || !checkpoint.IsValid())
-            {
-                return;
-            }
+            EnsureValidCheckpoint(checkpoint, nameof(SaveCheckpoint));
 
             if (!forceAssignation && m_hasOrderedCheckpoint && checkpointOrder < m_currentCheckpointOrder)
             {
@@ -131,9 +142,7 @@ namespace FantasyWord.GameCore
         public void RequestTransition(string map, Action onMapUnloaded = null, Action onMapLoaded = null, Action onCompletion = null)
         {
             GameRuntimeEvents.NotifyMapTransitionStarted();
-            Debug.Assert(
-                GameManager.TransitionSystem != null && GameManager.TransitionSystem.isActiveAndEnabled,
-                "Map transitions require an active TransitionSystem. The direct MapSystem transition fallback has been removed.");
+            EnsureTransitionSystemReady();
             DelegateTransition(map, onMapUnloaded, onMapLoaded, onCompletion);
         }
 
@@ -145,6 +154,17 @@ namespace FantasyWord.GameCore
             }
 
             m_respawnCoroutine = StartCoroutine(RespawnPlayerCoroutine());
+        }
+
+        private void StopRespawnCoroutine()
+        {
+            if (m_respawnCoroutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(m_respawnCoroutine);
+            m_respawnCoroutine = null;
         }
 
         internal ICheckpoint FindValidCheckpoint()
@@ -168,10 +188,24 @@ namespace FantasyWord.GameCore
         internal ICheckpoint FindPlaytestCheckpoint()
         {
             MapInfo mapInfo = ResolveActiveMapInfo();
-            ICheckpoint checkpoint = null;
-            Debug.Assert(mapInfo != null, "No MapInfo object found in the scene! Did you forget to add one?");
-            Debug.Assert(mapInfo != null && mapInfo.TryGetPlaytestCheckpoint(out checkpoint), "Invalid playtest checkpoint data! Did you forget to set it?");
-            Debug.Assert(checkpoint != null && string.IsNullOrEmpty(checkpoint.map), "Playtest checkpoint should not have a map set, as the current map should be used!");
+            if (mapInfo == null)
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] Playtest spawn requires an active {nameof(MapInfo)} registered for the current map.");
+            }
+
+            if (!mapInfo.TryGetPlaytestCheckpoint(out ICheckpoint checkpoint))
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] Playtest spawn requires a valid playtest checkpoint on the active {nameof(MapInfo)}.");
+            }
+
+            if (!string.IsNullOrEmpty(checkpoint.map))
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] Playtest checkpoint must leave its map empty so the current map can be used.");
+            }
+
             return checkpoint;
         }
 
@@ -241,24 +275,14 @@ namespace FantasyWord.GameCore
         /// </summary>
         internal void EnsureTraversalCharacterValidSpawnOnActiveMap()
         {
-            CharacterActor traversalCharacter = GetTraversalCharacter();
-            if (traversalCharacter == null)
-            {
-                return;
-            }
+            CharacterActor traversalCharacter = GetRequiredTraversalCharacter(nameof(EnsureTraversalCharacterValidSpawnOnActiveMap));
 
             if (traversalCharacter.IsValidSpawnPoint(traversalCharacter.transform.position))
             {
                 return;
             }
 
-            ICheckpoint checkpoint = FindInitialSpawnCheckpoint();
-            Debug.Assert(checkpoint != null && checkpoint.IsValid(), "Saved player position is invalid, but the active MapInfo has no valid initial spawn checkpoint.");
-            if (checkpoint == null || !checkpoint.IsValid())
-            {
-                Debug.LogWarning("Saved player position is invalid and no valid initial spawn checkpoint is configured on the active MapInfo.");
-                return;
-            }
+            ICheckpoint checkpoint = FindRequiredInitialSpawnCheckpoint(nameof(EnsureTraversalCharacterValidSpawnOnActiveMap));
 
             SaveCheckpoint(checkpoint);
             traversalCharacter.TeleportTo(checkpoint.position);
@@ -275,18 +299,9 @@ namespace FantasyWord.GameCore
 
         public void TeleportTo(ICheckpoint checkpoint, Action onMapLoaded = null, Action onCompletion = null)
         {
-            Debug.Assert(checkpoint != null && checkpoint.IsValid(), "Invalid checkpoint data!");
-            if (checkpoint == null || !checkpoint.IsValid())
-            {
-                return;
-            }
+            EnsureValidCheckpoint(checkpoint, nameof(TeleportTo));
 
-            CharacterActor traversalCharacter = GetTraversalCharacter();
-            Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before teleporting.");
-            if (traversalCharacter == null)
-            {
-                return;
-            }
+            CharacterActor traversalCharacter = GetRequiredTraversalCharacter(nameof(TeleportTo));
 
             RequestTransition(checkpoint.map, null, () =>
             {
@@ -299,19 +314,8 @@ namespace FantasyWord.GameCore
         {
             RequestTransition(map, null, () =>
             {
-                ICheckpoint checkpoint = FindInitialSpawnCheckpoint();
-                Debug.Assert(checkpoint != null && checkpoint.IsValid(), "No valid initial spawn checkpoint found in the active MapInfo.");
-                if (checkpoint == null || !checkpoint.IsValid())
-                {
-                    return;
-                }
-
-                CharacterActor traversalCharacter = GetTraversalCharacter();
-                Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before teleporting.");
-                if (traversalCharacter == null)
-                {
-                    return;
-                }
+                ICheckpoint checkpoint = FindRequiredInitialSpawnCheckpoint(nameof(TeleportToInitialSpawnPosition));
+                CharacterActor traversalCharacter = GetRequiredTraversalCharacter(nameof(TeleportToInitialSpawnPosition));
 
                 SaveCheckpoint(checkpoint);
                 traversalCharacter.TeleportTo(checkpoint.position);
@@ -323,12 +327,7 @@ namespace FantasyWord.GameCore
             RequestTransition(map, null, () =>
             {
                 ICheckpoint checkpoint = FindPlaytestCheckpoint();
-                CharacterActor traversalCharacter = GetTraversalCharacter();
-                Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before teleporting.");
-                if (traversalCharacter == null)
-                {
-                    return;
-                }
+                CharacterActor traversalCharacter = GetRequiredTraversalCharacter(nameof(TeleportToPlaytestStartPosition));
 
                 SaveCheckpoint(checkpoint);
                 traversalCharacter.TeleportTo(checkpoint.position);
@@ -348,11 +347,17 @@ namespace FantasyWord.GameCore
 
         public void LoadDataBlock(MapDataBlock block)
         {
-            ICheckpoint[] checkpoints = block?.checkpoints ?? Array.Empty<ICheckpoint>();
+            if (block == null)
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] Loading a save file requires a map data block.");
+            }
+
+            ICheckpoint[] checkpoints = block.checkpoints ?? Array.Empty<ICheckpoint>();
             m_checkpointStack = new Stack<ICheckpoint>(checkpoints.Reverse());
-            m_hasOrderedCheckpoint = block?.hasOrderedCheckpoint ?? false;
+            m_hasOrderedCheckpoint = block.hasOrderedCheckpoint;
             m_currentCheckpointOrder = m_hasOrderedCheckpoint ? block.currentCheckpointOrder : int.MinValue;
-            m_currentMap = block?.currentMap ?? string.Empty;
+            m_currentMap = block.currentMap ?? string.Empty;
 
             if (block.playtest)
             {
@@ -377,30 +382,23 @@ namespace FantasyWord.GameCore
 
         private IEnumerator RespawnPlayerCoroutine()
         {
-            ICheckpoint checkpoint = FindValidCheckpoint();
-            Debug.Assert(checkpoint != null && checkpoint.IsValid(), "No valid checkpoint found! The player cannot respawn.");
-            if (checkpoint == null || !checkpoint.IsValid())
+            try
+            {
+                ICheckpoint checkpoint = FindRequiredRespawnCheckpoint();
+
+                float delay = GetRespawnDelay();
+                if (delay > 0f)
+                {
+                    yield return new WaitForSeconds(delay);
+                }
+
+                CharacterActor traversalCharacter = GetRequiredTraversalCharacter(nameof(RespawnPlayer));
+                TeleportTo(checkpoint, traversalCharacter.Revive);
+            }
+            finally
             {
                 m_respawnCoroutine = null;
-                yield break;
             }
-
-            float delay = GetRespawnDelay();
-            if (delay > 0f)
-            {
-                yield return new WaitForSeconds(delay);
-            }
-
-            CharacterActor traversalCharacter = GetTraversalCharacter();
-            Debug.Assert(traversalCharacter != null, "No traversal character is configured. PlayerSystem requires a primary player character before respawning.");
-            if (traversalCharacter == null)
-            {
-                m_respawnCoroutine = null;
-                yield break;
-            }
-
-            TeleportTo(checkpoint, traversalCharacter.Revive);
-            m_respawnCoroutine = null;
         }
 
         private void DelegateTransition(string map, Action onMapUnloaded = null, Action onMapLoaded = null, Action onCompletion = null)
@@ -490,6 +488,51 @@ namespace FantasyWord.GameCore
         {
             GameRuntimeEvents.NotifyMapTransitionCompleted();
             onCompletion?.Invoke();
+        }
+
+        private void EnsureTransitionSystemReady()
+        {
+            TransitionSystem transitionSystem = GameManager.TransitionSystem;
+            if (transitionSystem == null || !transitionSystem.isActiveAndEnabled)
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] Map transitions require one active {nameof(TransitionSystem)}. The direct transition fallback has been removed.");
+            }
+        }
+
+        private static void EnsureValidCheckpoint(ICheckpoint checkpoint, string operationName)
+        {
+            if (checkpoint == null || !checkpoint.IsValid())
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] {operationName} requires a valid checkpoint and cannot silently skip the map result.");
+            }
+        }
+
+        private ICheckpoint FindRequiredInitialSpawnCheckpoint(string operationName)
+        {
+            ICheckpoint checkpoint = FindInitialSpawnCheckpoint();
+            EnsureValidCheckpoint(checkpoint, operationName);
+            return checkpoint;
+        }
+
+        private ICheckpoint FindRequiredRespawnCheckpoint()
+        {
+            ICheckpoint checkpoint = FindValidCheckpoint();
+            EnsureValidCheckpoint(checkpoint, nameof(RespawnPlayer));
+            return checkpoint;
+        }
+
+        private CharacterActor GetRequiredTraversalCharacter(string operationName)
+        {
+            CharacterActor traversalCharacter = GetTraversalCharacter();
+            if (traversalCharacter == null)
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(MapSystem)}] {operationName} requires {nameof(PlayerSystem)} to provide a primary traversal character.");
+            }
+
+            return traversalCharacter;
         }
     }
 }

@@ -7,6 +7,9 @@ using UEntity = Unity.Entities.Entity;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// Formal 规则专用的 EX-GAS 空逻辑代理，只让 AbilitySpec 能承载成本、冷却和标签规则。
+    /// </summary>
     [Serializable]
     public sealed class FormalAbilityRuleProxyLogic : AbilityLogicBase<XParamNone>
     {
@@ -31,6 +34,9 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// CharacterAbilitySet 的 Formal GAS 规则桥接部分，负责注册能力规则、评估成本/冷却并同步项目侧冷却状态。
+    /// </summary>
     public sealed partial class CharacterAbilitySet
     {
         private readonly Dictionary<int, FormalAbilityRuleBinding> m_formalRuleBindings = new();

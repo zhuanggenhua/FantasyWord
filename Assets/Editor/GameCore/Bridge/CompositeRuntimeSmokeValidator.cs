@@ -19,8 +19,8 @@ namespace FantasyWord.GameCore
     {
         private const string ResultRelativePath = "Temp/UnityBridge/results/composite-runtime-smoke.json";
         private const string SmokeTransformationId = "composite-runtime-smoke-transformation";
-        private const int SmokeBaselineAbilityCode = FormalGasAbilityCodes.BasicAttack;
-        private const int SmokeReplacementAbilityCode = 20002;
+        private const int SmokeBaselineAbilityCode = XAbility.ABILITY_Attack;
+        private const int SmokeReplacementAbilityCode = XAbility.ABILITY_TransformReplaceSmoke;
         private const string SmokeContainerName = "Composite runtime smoke container";
         private const string SmokeItemName = "Composite runtime smoke item";
         private const int MinimumObservationFrames = 1;
@@ -1005,12 +1005,18 @@ namespace FantasyWord.GameCore
                 float.TryParse(parts[1].Trim(), out float y) ? y : 0.0f);
         }
 
+        /// <summary>
+        /// 启动命令返回给外部桥接层的最小结果，只暴露最终 JSON 证据路径。
+        /// </summary>
         [Serializable]
         public sealed class StartResult
         {
             public string ResultPath = string.Empty;
         }
 
+        /// <summary>
+        /// Composite runtime smoke 的完整证据对象，覆盖控制组、订单、背包、能力替换和清理结果。
+        /// </summary>
         [Serializable]
         public sealed class ValidationResult
         {

@@ -189,16 +189,19 @@ namespace FantasyWord.GameCore
 
         private void ClearSlots() => ReturnShopEntries();
 
-        public async void HandleShopSlotClicked(Item item)
+        public void HandleShopSlotClicked(Item item)
+        {
+            RunPanelTaskAndReport(HandleShopSlotClickedAsync(item), nameof(HandleShopSlotClicked));
+        }
+
+        private async System.Threading.Tasks.Task HandleShopSlotClickedAsync(Item item)
         {
             CharacterBase inventoryOwner = ResolveInventoryOwner();
             InventoryOwnerHandle ownerHandle = GameManager.InventorySystem.GetOwner(inventoryOwner);
-            int itemPrice = m_shop.GetPrice(item, ETransactionType.Buy);
+            InventoryOperationResult result = GameManager.InventorySystem.ExecuteShopPurchase(ownerHandle, m_shop, item);
 
-            if (GameManager.InventorySystem.money >= itemPrice)
+            if (result.Succeeded)
             {
-                GameManager.InventorySystem.RemoveMoney(itemPrice);
-                GameManager.InventorySystem.AddToBag(ownerHandle, item, 1, EItemTransferType.Trading);
                 GameRuntimeEvents.RequestAudioPlayback(m_buySellAudio);
                 m_inventoryBag.SetCategory(item.category); // Navigate to the category of the purchased item for better UX
                 UpdateUI(true);
@@ -209,21 +212,25 @@ namespace FantasyWord.GameCore
             }
         }
 
-        public async void HandleBagItemClicked(Item item)
+        public void HandleBagItemClicked(Item item)
         {
-            if (item.sellable)
+            RunPanelTaskAndReport(HandleBagItemClickedAsync(item), nameof(HandleBagItemClicked));
+        }
+
+        private async System.Threading.Tasks.Task HandleBagItemClickedAsync(Item item)
+        {
+            CharacterBase inventoryOwner = ResolveInventoryOwner();
+            InventoryOwnerHandle ownerHandle = GameManager.InventorySystem.GetOwner(inventoryOwner);
+            InventoryOperationResult result = GameManager.InventorySystem.ExecuteShopSale(ownerHandle, m_shop, item);
+            if (result.Succeeded)
             {
-                CharacterBase inventoryOwner = ResolveInventoryOwner();
-                InventoryOwnerHandle ownerHandle = GameManager.InventorySystem.GetOwner(inventoryOwner);
-                int sellingPrice = m_shop.GetPrice(item, ETransactionType.Sell);
-                GameManager.InventorySystem.RemoveFromBag(ownerHandle, item, 1, EItemTransferType.Trading);
-                GameManager.InventorySystem.AddMoney(sellingPrice);
                 GameRuntimeEvents.RequestAudioPlayback(m_buySellAudio);
                 UpdateUI();
             }
             else
             {
                 await GameManager.DialogueSystem.PlayNow(MenuFeedbackPrompts.ShopCannotSell, item.displayName);
+                UpdateUI();
             }
         }
 

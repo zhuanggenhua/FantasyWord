@@ -44,15 +44,14 @@ namespace FantasyWord.GameCore
 
         public int CalculateCraftCapacity(CharacterBase owner)
         {
+            EnsureCraftConfiguration();
+
             int maxCapacity = int.MaxValue;
             InventoryOwnerHandle ownerHandle = GameManager.InventorySystem.GetOwner(owner);
 
             foreach (var ingredient in GetIngredients())
             {
-                if (IsValidIngredient(ingredient))
-                {
-                    maxCapacity = math.min(maxCapacity, GameManager.InventorySystem.GetItemCount(ownerHandle, ingredient.Key) / ingredient.Value);
-                }
+                maxCapacity = math.min(maxCapacity, GameManager.InventorySystem.GetItemCount(ownerHandle, ingredient.Key) / ingredient.Value);
             }
 
             return maxCapacity;
@@ -65,6 +64,8 @@ namespace FantasyWord.GameCore
 
         public virtual bool CanCraft(CharacterBase owner, out bool hasMoney, out bool hasIngredients, int flatPrice = 0, float craftPriceMultiplier = 1.0f)
         {
+            EnsureCraftConfiguration();
+
             int craftCost = CalculateCraftCost(flatPrice, craftPriceMultiplier);
 
             hasMoney = GameManager.InventorySystem.HasSufficientFunds(craftCost);
@@ -73,7 +74,7 @@ namespace FantasyWord.GameCore
 
             foreach (var ingredient in GetIngredients())
             {
-                if (IsValidIngredient(ingredient) && !HasIngredient(owner, ingredient))
+                if (!HasIngredient(owner, ingredient))
                 {
                     hasIngredients = false;
                 }
@@ -116,9 +117,47 @@ namespace FantasyWord.GameCore
             return GameManager.InventorySystem.HasItemInBag(ownerHandle, ingredient.Key, ingredient.Value);
         }
 
+        public void EnsureCraftConfiguration()
+        {
+            if (!m_item)
+            {
+                throw new System.InvalidOperationException(
+                    $"[{nameof(Recipe)}] 配方 {name} 缺少产物，不能把空物品当成制作成功结果。");
+            }
+
+            if (m_quantity <= 0)
+            {
+                throw new System.InvalidOperationException(
+                    $"[{nameof(Recipe)}] 配方 {name} 的产物数量无效，当前数量={m_quantity}。");
+            }
+
+            foreach (var ingredient in GetIngredients())
+            {
+                if (!IsValidIngredient(ingredient))
+                {
+                    throw new System.InvalidOperationException(
+                        $"[{nameof(Recipe)}] 配方 {name} 存在无效材料，材料必须非空且数量为正。");
+                }
+            }
+
+            foreach (var output in GetAdditionalOutput())
+            {
+                if (!IsValidOutput(output))
+                {
+                    throw new System.InvalidOperationException(
+                        $"[{nameof(Recipe)}] 配方 {name} 存在无效额外产物，产物必须非空且数量为正。");
+                }
+            }
+        }
+
         public bool IsValidIngredient(KeyValuePair<Item, int> ingredient)
         {
             return ingredient.Key != null && ingredient.Value > 0;
+        }
+
+        private static bool IsValidOutput(KeyValuePair<Item, int> output)
+        {
+            return output.Key != null && output.Value > 0;
         }
     }
 }

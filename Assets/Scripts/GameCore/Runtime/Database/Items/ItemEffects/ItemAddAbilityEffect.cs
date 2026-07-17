@@ -12,8 +12,13 @@ namespace FantasyWord.GameCore
         {
             if (m_formalGasAbilityCode > 0)
             {
+                if (!TryCreateItemUseAbilitySource(item, out CharacterAbilitySourceKey source))
+                {
+                    return new ItemUsageResult { success = false };
+                }
+
                 if (!target.HasFormalGasAbility(m_formalGasAbilityCode) &&
-                    target.AddBonusFormalGasAbility(m_formalGasAbilityCode, CreateItemUseAbilitySource(item)))
+                    target.AddBonusFormalGasAbility(m_formalGasAbilityCode, source))
                 {
                     return new()
                     {
@@ -27,13 +32,23 @@ namespace FantasyWord.GameCore
 
             return new ItemUsageResult { success = false };
         }
-        private static CharacterAbilitySourceKey CreateItemUseAbilitySource(Item item)
-        {
-            string sourceId = item
-                ? GameManager.Database.CreateReference(item).guid
-                : "unknown-item";
 
-            return new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.ItemUse, sourceId);
+        private static bool TryCreateItemUseAbilitySource(Item item, out CharacterAbilitySourceKey source)
+        {
+            source = default;
+            if (!item)
+            {
+                return false;
+            }
+
+            if (!GameManager.Database.TryCreateReference(item, out DatabaseEntryReference<Item> reference))
+            {
+                Debug.LogError($"[{nameof(ItemAddAbilityEffect)}] 物品 {item.name} 未登记到 DatabaseRegistry，不能作为能力来源。", item);
+                return false;
+            }
+
+            source = new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.ItemUse, reference.guid);
+            return true;
         }
     }
 }

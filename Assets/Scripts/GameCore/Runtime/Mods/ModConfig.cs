@@ -63,45 +63,59 @@ namespace FantasyWord.GameCore
         {
             if (TryGetModState(modInfo, out ModState modStateInfo))
             {
-                if (modStateInfo.status == ModStatus.Delete)
-                {
-                    States.Remove(modStateInfo);
-                }
-
                 return modStateInfo.status;
             }
 
-            States.Add(new ModState
+            return ModStatus.Enabled;
+        }
+
+        public ModState EnsureModState(ModInfo modInfo)
+        {
+            if (TryGetModState(modInfo, out ModState modState))
+            {
+                return modState;
+            }
+
+            ModState created = new()
             {
                 fullName = modInfo.FullName,
                 status = ModStatus.Enabled
-            });
-            return ModStatus.Enabled;
+            };
+            States.Add(created);
+            return created;
         }
 
         public void DeleteMod(ModInfo modInfo, bool force = false)
         {
-            if (!TryGetModState(modInfo, out ModState modStateInfo))
-            {
-                return;
-            }
-
             if (force)
             {
-                States.Remove(modStateInfo);
+                if (TryGetModState(modInfo, out ModState modStateInfo))
+                {
+                    States.Remove(modStateInfo);
+                }
             }
             else
             {
+                ModState modStateInfo = EnsureModState(modInfo);
                 modStateInfo.status = ModStatus.Delete;
             }
         }
 
         public void SetModEnabled(ModInfo modInfo, bool isEnabled)
         {
-            if (TryGetModState(modInfo, out ModState modStateInfo))
+            ModState modStateInfo = EnsureModState(modInfo);
+            modStateInfo.status = isEnabled ? ModStatus.Enabled : ModStatus.Disabled;
+        }
+
+        public bool ConsumeDeletedModState(ModInfo modInfo)
+        {
+            if (!TryGetModState(modInfo, out ModState modStateInfo) || modStateInfo.status != ModStatus.Delete)
             {
-                modStateInfo.status = isEnabled ? ModStatus.Enabled : ModStatus.Disabled;
+                return false;
             }
+
+            States.Remove(modStateInfo);
+            return true;
         }
 
         public bool TryGetModState(ModInfo modInfo, out ModState modState)

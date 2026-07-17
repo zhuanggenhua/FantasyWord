@@ -1,0 +1,22 @@
+# 0008-命令异步执行 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - FantasyWord 的命令与交互系统来源于 2DRPGEngine：命令是可序列化动作，任务、对话、触发器、死亡收口和菜单都能挂命令。
+  - 参考工程的 `ICommand.Execute()` 已返回 `Task`，但多处调用方仍按同步命令使用，直接丢弃返回任务；这会吞掉等待语义和异步异常。
+  - FantasyWord 已新增 `GameCommandContext`，命令现在承载真实发起者、玩家或脚本来源；因此不能继续把所有命令调用都当成无上下文 fire-and-forget。
+- 决策：
+  - 任务完成奖励是任务完成流程的一部分，必须返回并等待 `Task`。`Quest.ExecuteOnQuestCompletion()` 和 `JournalSystem.CompleteQuest()` 都必须可等待。
+  - 对话节点生命周期命令、场景触发器命令、对象死亡收口命令和玩家死亡收口命令属于事件入口；这些入口本身无法等待时，必须使用显式后台执行 helper，并把异常写入 Unity Console。
+  - 裸调用命令的 `Execute(context)` 不允许作为后台执行方式；后台执行必须通过 `ExecuteFireAndReport()` 表达意图。
+  - 交互入口如果必须从同步 Unity 回调启动异步流程，必须有本地异常报告包装，不能直接 `_ = ExecuteInteraction(...)`。
+- 影响：
+  - `CommandExecutionExtensions` 新增 `ExecuteFireAndReport()`，用于事件式入口的命令后台执行和异常上报。
+  - `Quest.ExecuteOnQuestCompletion()`、`JournalSystem.CompleteQuest()` 已改为 `Task`；`QuestInteraction` 在任务完成对话结束后等待任务完成命令。
+  - `DialogueNode`、`CommandTrigger`、`Persistable`、`CharacterSheet` 和 `GameConfig` 的事件式命令入口已改为显式后台执行。
+  - `Entity.OnInteract()` 的异步交互启动已加异常报告包装，避免交互命令异常变成未观察任务。
+  - 新增 `scripts/Invoke-CommandRuntimeStaticGate.ps1`，覆盖任务完成链等待、事件入口后台执行 helper、裸 `Execute(context)` 任务丢弃和交互 fire-and-forget 异常报告。
+- 替代关系：
+  - 本决策保留 2DRPGEngine 的命令/交互职责划分，不引入第二套命令总线或任务调度器。
+  - 本决策取代参考工程中“调用方直接丢弃命令 Task”的实现细节；FantasyWord 的正式运行路径以可等待流程和显式后台执行边界为准。

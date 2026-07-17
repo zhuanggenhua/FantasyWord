@@ -14,6 +14,7 @@ namespace FantasyWord.GameCore
     /// 正式音频通道入口。
     /// 这里只负责选择播放路径、维护通道级状态与对外 API；具体播放执行和 fallback 池化都收进内部运行时模块。
     /// </summary>
+    [RequireComponent(typeof(AudioSource))]
     public partial class AudioChannel : MonoBehaviour
     {
         private static Func<SoundID, IAudioPlayer> sBroAudioPlay = soundId => BroAudio.Play(soundId);
@@ -41,7 +42,12 @@ namespace FantasyWord.GameCore
 
         private void Awake()
         {
-            EnsureAudioSource();
+            if (!EnsureAudioSource())
+            {
+                enabled = false;
+                return;
+            }
+
             fallbackPoolRuntime.Initialize();
         }
 
@@ -52,8 +58,14 @@ namespace FantasyWord.GameCore
 
         private void OnDestroy()
         {
-            Stop();
-            fallbackPoolRuntime.Dispose();
+            m_playbackRuntime?.Stop();
+            m_fallbackPoolRuntime?.Dispose();
+        }
+
+        private void OnDisable()
+        {
+            m_isPaused = false;
+            m_playbackRuntime?.Stop();
         }
 
         public void Play(AudioClipResolver audioClipResolver, Action onCompleted = null)
@@ -145,11 +157,17 @@ namespace FantasyWord.GameCore
             return m_audioChannelMode == EAudioChannelMode.Exclusive && !position.HasValue && followTarget == null;
         }
 
-        private void EnsureAudioSource()
+        private bool EnsureAudioSource()
         {
             m_audioSource ??= GetComponent<AudioSource>();
-            m_audioSource ??= gameObject.AddComponent<AudioSource>();
+            if (m_audioSource == null)
+            {
+                Debug.LogError($"[{nameof(AudioChannel)}] 音频通道缺少必需的 AudioSource，无法作为正式播放通道。", this);
+                return false;
+            }
+
             m_audioSource.volume = m_volumeScale;
+            return true;
         }
 
         private void DestroyOwnedObject(UnityEngine.Object obj)

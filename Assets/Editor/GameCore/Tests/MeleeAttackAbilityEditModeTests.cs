@@ -20,9 +20,9 @@ namespace FantasyWord.GameCore.Tests
     public sealed class MeleeAttackAbilityEditModeTests
     {
         private const string GameConfigAssetPath = "Assets/GameData/GameCore/GameConfig.asset";
-        private const int BasicAttackAbilityCode = 20001;
-        private const int TransformReplaceAbilityCode = 20002;
-        private const int ChargedAttackReleaseAbilityCode = 20004;
+        private const int BasicAttackAbilityCode = XAbility.ABILITY_Attack;
+        private const int TransformReplaceAbilityCode = XAbility.ABILITY_TransformReplaceSmoke;
+        private const int ChargedAttackReleaseAbilityCode = XAbility.ABILITY_ChargedAttackRelease;
         private const float EditModeTickDeltaTime = 1.0f / 30.0f;
 
         [Serializable]
@@ -138,6 +138,28 @@ namespace FantasyWord.GameCore.Tests
             Assert.AreEqual("Attack", slots[0].DisplayName, "按 EX-GAS Ability Code 装槽后仍应从 EX-GAS Ability 表读取显示名。");
         }
 
+        [Test]
+        public void CharacterActorRuntimeLoad_MissingQuickSlots_ClearsExistingQuickSlot()
+        {
+            CharacterActor owner = CreateCharacter("quick-slot-restore-owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+            Assert.IsTrue(owner.TryEquipFormalGasAbilityCodeToSlot(BasicAttackAbilityCode, 0), "测试前必须先构造一个读档前残留快捷槽。");
+
+            CharacterActorRuntimeStateData runtimeState = owner.CreateActorRuntimeState();
+            runtimeState.quickAbilitySlots = null;
+
+            RegisterPlayerSystemForAlterationTest(owner);
+            owner.LoadActorRuntimeState(runtimeState);
+
+            CharacterEquippedAbilitySlotView[] slots = owner.GetEquippedAbilitySlotViewSnapshots();
+            Assert.IsNotEmpty(slots, "角色快捷槽视图数量应保持配置长度。");
+            Assert.AreEqual(
+                0,
+                slots[0].FormalGasAbilityCode,
+                "存档没有快捷槽数据时，读档结果必须清空读档前槽位，不能沿用旧运行时状态。");
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "读档只应清空快捷槽布局，不能移除角色仍然拥有的正式能力。");
+        }
+
 
         [Test]
         public void FormalGasQuickSlotCooldownSnapshot_UsesGasCodeWithoutLegacySheetReference()
@@ -206,6 +228,111 @@ namespace FantasyWord.GameCore.Tests
             Assert.IsNull(
                 typeof(CharacterAlterationRule).GetField("m_legacySuppressedAbilities", BindingFlags.Instance | BindingFlags.NonPublic),
                 "变形/感染规则压制能力应只保存 EX-GAS code，不应继续保留旧 旧能力表 压制字段。");
+        }
+
+        [Test]
+        public void CharacterAlterationRule_InvalidFormalGasAbilityCode_ThrowsBeforeStateChange()
+        {
+            CharacterActor owner = CreateCharacter("alteration-invalid-code-owner", Vector2.zero, CreateStats(health: 30));
+            CharacterAlterationRule rule = CreateRegisteredCharacterAlterationRule(
+                "invalid-formal-gas-alteration",
+                "test-invalid-formal-gas-alteration");
+            SetInstanceField(rule, "m_grantedFormalGasAbilityCodes", new[] { 0 });
+            SetInstanceField(rule, "m_lockedActions", EActionFlags.Move);
+
+            Assert.IsTrue(owner.Can(EActionFlags.Move), "测试前角色必须仍可移动。");
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+                () => owner.ApplyCharacterAlterationRule(rule, GameManager.Database),
+                "变形/感染规则里真实填出的 Formal GAS 技能编号小于等于 0 时，不能被过滤成成功状态变化。");
+
+            Assert.That(exception.Message, Does.Contain("必须大于 0"));
+            Assert.IsTrue(
+                owner.Can(EActionFlags.Move),
+                "坏能力编号必须在动作锁等非能力状态改变前被拦住。");
+        }
+
+        [Test]
+        public void CharacterAlterationRule_EmptyFormalGasAbilityLists_AllowNonAbilityStateRule()
+        {
+            CharacterActor owner = CreateCharacter("alteration-empty-ability-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(owner);
+            CharacterAlterationRule rule = CreateRegisteredCharacterAlterationRule(
+                "empty-formal-gas-alteration",
+                "test-empty-formal-gas-alteration");
+            SetInstanceField(rule, "m_grantedFormalGasAbilityCodes", Array.Empty<int>());
+            SetInstanceField(rule, "m_suppressedFormalGasAbilityCodes", Array.Empty<int>());
+            SetInstanceField(rule, "m_lockedActions", EActionFlags.Move);
+
+            Assert.IsTrue(
+                owner.ApplyCharacterAlterationRule(rule, GameManager.Database),
+                "空能力列表表示该规则不改能力，仍应允许动作锁、AI 接管、阵营覆盖等非能力状态生效。");
+            Assert.IsFalse(owner.Can(EActionFlags.Move), "非能力状态规则应成功锁定移动。");
+
+            Assert.IsTrue(owner.RemoveCharacterAlterationRule(rule, GameManager.Database));
+            Assert.IsTrue(owner.Can(EActionFlags.Move), "撤回规则后移动动作锁应解除。");
+        }
+
+        [Test]
+        public void CharacterAlterationRuleRuntimeLoad_RestoresNonAbilityStateAndCanRevoke()
+        {
+            const string ruleKey = "test-non-ability-alteration-runtime-restore";
+            CharacterActor owner = CreateCharacter("alteration-non-ability-save-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(owner);
+            CharacterAlterationRule rule = CreateRegisteredCharacterAlterationRule(
+                "non-ability-alteration-runtime-restore",
+                ruleKey);
+            SetInstanceField(rule, "m_grantedFormalGasAbilityCodes", Array.Empty<int>());
+            SetInstanceField(rule, "m_suppressedFormalGasAbilityCodes", Array.Empty<int>());
+            SetInstanceField(rule, "m_lockedActions", EActionFlags.Move);
+            SetInstanceField(rule, "m_lockPlayerControl", true);
+
+            Assert.IsTrue(owner.ApplyCharacterAlterationRule(rule, GameManager.Database));
+            CharacterActorRuntimeStateData runtimeState = owner.CreateActorRuntimeState();
+            Assert.AreEqual(1, runtimeState.activeAlterationRules.Length, "活跃变形/感染规则必须保存数据库稳定引用。");
+            Assert.AreEqual(0, CountRuntimeAbilitySourceStacks(runtimeState, BasicAttackAbilityCode, ECharacterAbilitySourceKind.Transformation, ruleKey), "纯非能力规则不应伪造能力来源。");
+
+            CharacterActor loadedOwner = CreateCharacter("alteration-non-ability-load-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(loadedOwner);
+            loadedOwner.LoadActorRuntimeState(runtimeState);
+
+            Assert.IsFalse(loadedOwner.Can(EActionFlags.Move), "读档必须恢复变形/感染规则带来的非能力动作锁。");
+            Assert.IsFalse(loadedOwner.CanBePlayerControlled(), "读档必须恢复变形/感染规则带来的玩家控制锁。");
+
+            Assert.IsTrue(loadedOwner.RemoveCharacterAlterationRule(rule, GameManager.Database));
+            Assert.IsTrue(loadedOwner.Can(EActionFlags.Move), "撤回读档恢复的规则后，非能力动作锁必须解除。");
+            Assert.IsTrue(loadedOwner.CanBePlayerControlled(), "撤回读档恢复的规则后，玩家控制锁必须解除。");
+        }
+
+        [Test]
+        public void CharacterAlterationRuleRuntimeLoad_DoesNotDuplicateAbilitySourceAndCanRevoke()
+        {
+            const string ruleKey = "test-ability-alteration-runtime-restore";
+            CharacterActor owner = CreateCharacter("alteration-ability-save-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(owner);
+            CharacterAlterationRule rule = CreateRegisteredCharacterAlterationRule(
+                "ability-alteration-runtime-restore",
+                ruleKey);
+            SetInstanceField(rule, "m_grantedFormalGasAbilityCodes", new[] { BasicAttackAbilityCode });
+            SetInstanceField(rule, "m_lockedActions", EActionFlags.Move);
+
+            Assert.IsTrue(owner.ApplyCharacterAlterationRule(rule, GameManager.Database));
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "测试前规则必须授予 EX-GAS 能力。");
+            CharacterActorRuntimeStateData runtimeState = owner.CreateActorRuntimeState();
+            Assert.AreEqual(1, CountRuntimeAbilitySourceStacks(runtimeState, BasicAttackAbilityCode, ECharacterAbilitySourceKind.Transformation, ruleKey), "保存时能力来源应只有规则本身一层。");
+
+            CharacterActor loadedOwner = CreateCharacter("alteration-ability-load-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(loadedOwner);
+            loadedOwner.LoadActorRuntimeState(runtimeState);
+
+            Assert.IsTrue(loadedOwner.HasFormalGasAbility(BasicAttackAbilityCode), "读档必须从能力来源记录恢复规则授予的 EX-GAS 能力。");
+            Assert.IsFalse(loadedOwner.Can(EActionFlags.Move), "读档必须同时恢复规则的非能力状态。");
+            CharacterActorRuntimeStateData restoredState = loadedOwner.CreateActorRuntimeState();
+            Assert.AreEqual(1, CountRuntimeAbilitySourceStacks(restoredState, BasicAttackAbilityCode, ECharacterAbilitySourceKind.Transformation, ruleKey), "读档恢复 activeAlterationRules 只能恢复非能力状态，不能把能力来源重复叠一层。");
+
+            Assert.IsTrue(loadedOwner.RemoveCharacterAlterationRule(rule, GameManager.Database));
+            Assert.IsFalse(loadedOwner.HasFormalGasAbility(BasicAttackAbilityCode), "撤回读档恢复的规则后，规则授予的 EX-GAS 能力必须移除。");
+            Assert.IsTrue(loadedOwner.Can(EActionFlags.Move), "撤回读档恢复的规则后，非能力动作锁必须解除。");
         }
 
 
@@ -298,8 +425,9 @@ namespace FantasyWord.GameCore.Tests
             ItemAddAbilityEffect effect = new();
             SetInstanceField(effect, "m_formalGasAbilityCode", BasicAttackAbilityCode);
             Assert.IsNull(FindInstanceField(typeof(ItemAddAbilityEffect), "m_ability"), "道具授予能力效果不应再保留旧能力表字段。");
+            Item item = CreateRegisteredItem("formal-gas-ability-item", "test-formal-gas-ability-item");
 
-            ItemUsageResult result = InvokeItemAddAbilityEffect(effect, null, owner, owner, EItemLocation.Bag);
+            ItemUsageResult result = InvokeItemAddAbilityEffect(effect, item, owner, owner, EItemLocation.Bag);
 
             Assert.IsTrue(result.success, "道具授予能力入口应能只凭 EX-GAS Ability Code 授予基础攻击。");
             Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "道具授予后角色应持有对应 EX-GAS Ability。");
@@ -335,6 +463,38 @@ namespace FantasyWord.GameCore.Tests
                     source.formalGasAbilityCode == BasicAttackAbilityCode),
                 "装备授予的已迁移能力保存时必须写 EX-GAS Ability Code，不能再同时写旧 旧能力表 引用。");
             Assert.IsNull(typeof(CharacterAbilitySourceData).GetField("ability"), "装备授予能力来源保存模型不应继续保留旧 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void CharacterActorRuntimeLoad_MissingEquipmentSlots_ClearsExistingEquipment()
+        {
+            CharacterActor owner = CreateCharacter("equipment-restore-owner", Vector2.zero, CreateStats(health: 30));
+            CharacterEquipment characterEquipment = owner.gameObject.AddComponent<CharacterEquipment>();
+            SetInstanceField(characterEquipment, "m_character", owner);
+            InvokeLifecycle(characterEquipment, "Awake");
+
+            Equipment equipment = ScriptableObject.CreateInstance<Equipment>();
+            equipment.name = "restore-cleared-equipment";
+            m_createdObjects.Add(equipment);
+            SetInstanceField(equipment, "m_type", EEquipmentType.Weapon);
+            RegisterRuntimeDatabaseEntry(equipment, "test-restore-cleared-equipment");
+            Assert.AreEqual(
+                EEquipmentOperationResult.Valid,
+                characterEquipment.TryEquip(equipment, out _),
+                "测试前必须先构造一个读档前残留装备。");
+            Assert.IsTrue(characterEquipment.TryGetEquipment(EEquipmentType.Weapon, out _), "测试前武器槽必须已穿装备。");
+
+            CharacterActorRuntimeStateData runtimeState = owner.CreateActorRuntimeState();
+            runtimeState.equipmentSlots = null;
+            runtimeState.abilitySources = Array.Empty<CharacterAbilitySourceData>();
+            runtimeState.abilitySuppressions = Array.Empty<CharacterAbilitySourceData>();
+
+            RegisterPlayerSystemForAlterationTest(owner);
+            owner.LoadActorRuntimeState(runtimeState);
+
+            Assert.IsFalse(
+                characterEquipment.TryGetEquipment(EEquipmentType.Weapon, out _),
+                "存档没有装备槽数据时，读档结果必须清空读档前装备，不能沿用 Prefab 或旧运行时槽位。");
         }
 
 
@@ -419,6 +579,87 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
+        public void TemporalAbilityGrantEffect_InvalidFormalGasAbilityCode_ThrowsBeforeRuntimeRegistration()
+        {
+            CharacterActor owner = CreateCharacter("invalid-temporal-grant-owner", Vector2.zero, CreateStats(health: 30));
+            TemporalAbilityGrantEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilityGrantData",
+                CreateTemporalAbilityGrantData(new[] { 0 }));
+
+            effect.Init(owner);
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+                () => effect.Apply(owner),
+                "状态效果授予里填出的 Formal GAS 技能编号小于等于 0 时，不能被过滤成成功持续效果。");
+
+            Assert.That(exception.Message, Does.Contain("必须大于 0"));
+            Assert.IsFalse(owner.HasFormalGasAbility(BasicAttackAbilityCode), "坏授予编号不能给角色新增任何能力。");
+            AssertNoTemporalEffectsRegistered(owner);
+        }
+
+        [Test]
+        public void TemporalAbilityGrantEffect_EmptyFormalGasAbilityCodes_ReturnsFalseWithoutRuntimeRegistration()
+        {
+            CharacterActor owner = CreateCharacter("empty-temporal-grant-owner", Vector2.zero, CreateStats(health: 30));
+            TemporalAbilityGrantEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilityGrantData",
+                CreateTemporalAbilityGrantData(Array.Empty<int>()));
+
+            effect.Init(owner);
+
+            Assert.IsFalse(
+                effect.Apply(owner),
+                "空授予列表表示该状态效果没有能力变化，不能登记成成功持续效果。");
+            AssertNoTemporalEffectsRegistered(owner);
+        }
+
+        [Test]
+        public void TemporalAbilityGrantEffect_ValidPersistedState_RestoresAbilityAndRuntimeRegistration()
+        {
+            CharacterActor owner = CreateCharacter("valid-temporal-grant-load-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(owner);
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            runtimeState.temporalEffectRuntimeStates = new[]
+            {
+                CreateTemporalEffectRuntimeState(
+                    typeof(TemporalAbilityGrantEffect),
+                    CreateTemporalAbilityGrantPersistedState(new[] { BasicAttackAbilityCode }))
+            };
+
+            owner.LoadRuntimeState(runtimeState);
+
+            Assert.IsTrue(owner.HasFormalGasAbility(BasicAttackAbilityCode), "有效保存记录读档后应恢复状态效果授予的 EX-GAS Ability。");
+            CharacterRuntimeStateData restoredRuntimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                Array.Exists(restoredRuntimeState.temporalEffectRuntimeStates, state =>
+                    state?.runtimeState is TemporalAbilityGrantEffectPersistedState grantState &&
+                    Array.Exists(grantState.formalGasAbilityCodes, code => code == BasicAttackAbilityCode)),
+                "有效保存记录读档后仍应保留对应持续效果运行时记录。");
+        }
+
+        [Test]
+        public void TemporalAbilityGrantEffect_InvalidPersistedState_IsSkippedOnLoad()
+        {
+            CharacterActor owner = CreateCharacter("invalid-temporal-grant-load-owner", Vector2.zero, CreateStats(health: 30));
+            RegisterPlayerSystemForAlterationTest(owner);
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            runtimeState.temporalEffectRuntimeStates = new[]
+            {
+                CreateTemporalEffectRuntimeState(
+                    typeof(TemporalAbilityGrantEffect),
+                    CreateTemporalAbilityGrantPersistedState(new[] { 0 }))
+            };
+
+            owner.LoadRuntimeState(runtimeState);
+
+            Assert.IsFalse(owner.HasFormalGasAbility(BasicAttackAbilityCode), "坏保存记录不能恢复出任何状态效果授予能力。");
+            AssertNoTemporalEffectsRegistered(owner);
+        }
+
+        [Test]
         public void TemporalAbilitySuppressionEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
             CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
@@ -448,6 +689,27 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
+        public void TemporalAbilitySuppressionEffect_InvalidFormalGasAbilityCode_ThrowsBeforeRuntimeRegistration()
+        {
+            CharacterActor owner = CreateCharacter("invalid-temporal-suppression-owner", Vector2.zero, CreateStats(health: 30));
+            GrantBasicAttack(owner);
+            TemporalAbilitySuppressionEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilitySuppressionData",
+                CreateTemporalAbilitySuppressionData(new[] { 0 }));
+
+            effect.Init(owner);
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+                () => effect.Apply(owner),
+                "状态效果压制里填出的 Formal GAS 技能编号小于等于 0 时，不能被过滤成成功持续效果。");
+
+            Assert.That(exception.Message, Does.Contain("必须大于 0"));
+            Assert.IsFalse(owner.IsFormalGasAbilitySuppressed(BasicAttackAbilityCode), "坏压制编号不能改变已有能力压制状态。");
+            AssertNoTemporalEffectsRegistered(owner);
+        }
+
+        [Test]
         public void TemporalAbilityReplacementEffect_UsesFormalGasAbilityCodeWithoutLegacySheetReference()
         {
             CharacterActor owner = CreateCharacter("owner", Vector2.zero, CreateStats(health: 30));
@@ -468,6 +730,48 @@ namespace FantasyWord.GameCore.Tests
             Assert.Contains(BasicAttackAbilityCode, replacementState.grantedFormalGasAbilityCodes, "状态效果替换保存状态必须记录授予的 EX-GAS Ability Code。");
             Assert.IsNull(typeof(TemporalAbilityReplacementEffectPersistedState).GetField("legacyGrantedAbilities"), "状态效果替换保存状态不应继续保留旧授予 旧能力表 引用字段。");
             Assert.IsNull(typeof(TemporalAbilityReplacementEffectPersistedState).GetField("legacySuppressedAbilities"), "状态效果替换保存状态不应继续保留旧压制 旧能力表 引用字段。");
+        }
+
+        [Test]
+        public void TemporalAbilityReplacementEffect_InvalidSuppressedCode_ThrowsBeforePartialGrant()
+        {
+            CharacterActor owner = CreateCharacter("invalid-temporal-replacement-owner", Vector2.zero, CreateStats(health: 30));
+            TemporalAbilityReplacementEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilityReplacementData",
+                CreateTemporalAbilityReplacementData(
+                    new[] { BasicAttackAbilityCode },
+                    new[] { 0 }));
+
+            effect.Init(owner);
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
+                () => effect.Apply(owner),
+                "状态效果替换必须先校验授予和压制两边的 Formal GAS 编号，不能先授予再发现压制配置坏。");
+
+            Assert.That(exception.Message, Does.Contain("必须大于 0"));
+            Assert.IsFalse(owner.HasFormalGasAbility(BasicAttackAbilityCode), "替换效果坏压制配置不能留下半完成授予能力。");
+            AssertNoTemporalEffectsRegistered(owner);
+        }
+
+        [Test]
+        public void TemporalAbilityReplacementEffect_EmptyFormalGasAbilityCodes_ReturnsFalseWithoutRuntimeRegistration()
+        {
+            CharacterActor owner = CreateCharacter("empty-temporal-replacement-owner", Vector2.zero, CreateStats(health: 30));
+            TemporalAbilityReplacementEffect effect = new();
+            SetInstanceField(
+                effect,
+                "m_abilityReplacementData",
+                CreateTemporalAbilityReplacementData(
+                    Array.Empty<int>(),
+                    Array.Empty<int>()));
+
+            effect.Init(owner);
+
+            Assert.IsFalse(
+                effect.Apply(owner),
+                "替换效果授予和压制列表都为空时没有能力变化，不能登记成成功持续效果。");
+            AssertNoTemporalEffectsRegistered(owner);
         }
 
 
@@ -536,17 +840,17 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
-        public void FormalGasAttackValidation_RequiresResolvableMountPrefabPath()
+        public void FormalGasAttackValidation_RequiresResolvableMountPrefabResourceKey()
         {
-            const string validPrefabPath = "Assets/Prefabs/Abilities/Melee/测试-基础攻击.prefab";
+            const string validPrefabReferenceGuid = "5b38e7a9c3224e3dbaa98c2b0dd07e05";
             string validCueJson =
-                $"{{\"$type\":\"CueMountPrefab\",\"Param\":{{\"PrefabPath\":\"{validPrefabPath}\"}}}}";
+                $"{{\"$type\":\"CueMountPrefab\",\"Param\":{{\"PrefabPath\":\"{validPrefabReferenceGuid}\"}}}}";
             string missingCueJson =
                 "{\"$type\":\"CueMountPrefab\",\"Param\":{\"PrefabPath\":\"Assets/Prefabs/Missing/NoSuchPrefab.prefab\"}}";
             string emptyCueJson =
                 "{\"$type\":\"CueMountPrefab\",\"Param\":{\"PrefabPath\":\"\"}}";
 
-            Assert.IsTrue(ContainsResolvableMountPrefabCueForTest(validCueJson), "校验器应只在 PrefabPath 能加载到真实 Prefab 时认可 CueMountPrefab。");
+            Assert.IsTrue(ContainsResolvableMountPrefabCueForTest(validCueJson), "校验器应只在 PrefabPath 能通过 GameCore PrefabReference GUID 解析到真实 Prefab 时认可 CueMountPrefab。");
             Assert.IsFalse(ContainsResolvableMountPrefabCueForTest(missingCueJson), "校验器不能把失效 PrefabPath 误判为正式特效入口已完成。");
             Assert.IsFalse(ContainsResolvableMountPrefabCueForTest(emptyCueJson), "校验器不能把空 PrefabPath 误判为正式特效入口已完成。");
         }
@@ -975,8 +1279,8 @@ AssertFormalAttackAbilityReady(attacker);
 
             Assert.AreEqual(
                 ChargedAttackReleaseAbilityCode,
-                FormalGasAbilityCodes.ChargedAttackRelease,
-                "蓄力释放必须有独立项目侧 GAS Ability Code 常量，不能覆盖基础攻击或变形替换 smoke。");
+                XAbility.ABILITY_ChargedAttackRelease,
+                "蓄力释放必须使用 EX-GAS 生成的 Ability Code，不能覆盖基础攻击或变形替换 smoke。");
             Assert.IsTrue(
                 FormalGasAbilityRuntimeConfigResolver.TryResolveRuntimeConfig(
                     ChargedAttackReleaseAbilityCode,
@@ -1622,6 +1926,19 @@ GrantBasicAttack(attacker);
             systems[typeof(PlayerSystem)] = playerSystem;
         }
 
+        private void RegisterPlayerSystemForAlterationTest(CharacterActor player)
+        {
+            Assert.IsTrue(GameManager.Exists(), "注册测试 PlayerSystem 前必须已有 GameManager。");
+            GameObject playerSystemObject = new("EditModeAlterationPlayerSystem");
+            m_createdObjects.Add(playerSystemObject);
+            PlayerSystem playerSystem = playerSystemObject.AddComponent<PlayerSystem>();
+            SetInstanceField(playerSystem, "m_primaryPlayerCharacter", player);
+
+            IDictionary systems = GetInstanceFieldValue(GameManager.Instance, "m_systems") as IDictionary;
+            Assert.IsNotNull(systems, "测试 GameManager.m_systems 未初始化或类型不兼容。");
+            systems[typeof(PlayerSystem)] = playerSystem;
+        }
+
         private CharacterActor CreateCharacter(string name, Vector2 position, Stats baseStats, bool initializeAbilities = true)
         {
             GameObject characterObject = new(name)
@@ -1750,6 +2067,50 @@ GrantBasicAttack(attacker);
             IDictionary entries = GetInstanceFieldValue(database, "m_entries") as IDictionary;
             Assert.IsNotNull(entries, "DatabaseRegistry.m_entries 未初始化或类型不兼容。");
             entries[key] = entry;
+        }
+
+        private CharacterAlterationRule CreateRegisteredCharacterAlterationRule(string name, string key)
+        {
+            CharacterAlterationRule rule = ScriptableObject.CreateInstance<CharacterAlterationRule>();
+            rule.name = name;
+            m_createdObjects.Add(rule);
+            RegisterRuntimeDatabaseEntry(rule, key);
+            return rule;
+        }
+
+        private static int CountRuntimeAbilitySourceStacks(
+            CharacterRuntimeStateData runtimeState,
+            int formalGasAbilityCode,
+            ECharacterAbilitySourceKind sourceKind,
+            string sourceId)
+        {
+            if (runtimeState?.abilitySources == null)
+            {
+                return 0;
+            }
+
+            int totalStacks = 0;
+            foreach (CharacterAbilitySourceData sourceData in runtimeState.abilitySources)
+            {
+                if (sourceData != null &&
+                    sourceData.formalGasAbilityCode == formalGasAbilityCode &&
+                    sourceData.sourceKind == sourceKind &&
+                    string.Equals(sourceData.sourceId, sourceId, StringComparison.Ordinal))
+                {
+                    totalStacks += sourceData.stackCount;
+                }
+            }
+
+            return totalStacks;
+        }
+
+        private Item CreateRegisteredItem(string name, string key)
+        {
+            Item item = ScriptableObject.CreateInstance<Item>();
+            item.name = name;
+            m_createdObjects.Add(item);
+            RegisterRuntimeDatabaseEntry(item, key);
+            return item;
         }
 
         private static void SetCharacterFormalGasAbilityUnlock(CharacterSheet sheet, int formalGasAbilityCode, int level)
@@ -2270,6 +2631,47 @@ GrantBasicAttack(attacker);
             Assert.IsTrue(carrier.TryCapturePersistedState(out TemporalEffectPersistedState persistedState), "状态效果应能保存运行时状态。");
             Assert.IsInstanceOf<TState>(persistedState);
             return (TState)persistedState;
+        }
+
+        private static void AssertNoTemporalEffectsRegistered(CharacterActor owner)
+        {
+            CharacterRuntimeStateData runtimeState = owner.CreateRuntimeState();
+            Assert.IsTrue(
+                runtimeState.temporalEffectRuntimeStates == null ||
+                runtimeState.temporalEffectRuntimeStates.Length == 0,
+                "失败或空配置的能力型持续效果不能登记到角色持续效果运行时。");
+        }
+
+        private static CharacterTemporalEffectRuntimeStateData CreateTemporalEffectRuntimeState(
+            Type effectType,
+            TemporalEffectPersistedState persistedState)
+        {
+            return new CharacterTemporalEffectRuntimeStateData
+            {
+                effectTypeName = effectType.AssemblyQualifiedName,
+                runtimeState = persistedState
+            };
+        }
+
+        private static TemporalAbilityGrantEffectPersistedState CreateTemporalAbilityGrantPersistedState(
+            int[] formalGasAbilityCodes)
+        {
+            TemporalAbilityGrantEffectPersistedState state = new()
+            {
+                formalGasAbilityCodes = formalGasAbilityCodes
+            };
+
+            ApplyTemporalPersistedSharedFields(state);
+            return state;
+        }
+
+        private static void ApplyTemporalPersistedSharedFields(
+            TemporalEffectPersistedState state,
+            int runtimeKey = 9001)
+        {
+            state.runtimeKey = runtimeKey;
+            state.duration = 10.0f;
+            state.remainingDuration = 5.0f;
         }
 
         private static object CreateTemporalAbilityGrantData(int[] formalGasAbilityCodes)

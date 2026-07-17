@@ -7,26 +7,60 @@ using YokiFrame;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 能力菜单中的能力分类。
+    /// </summary>
     public enum EAbilityType
     {
         Passive,
         Active
     }
 
+    /// <summary>
+    /// 能力菜单面板，展示角色主动能力、装备槽位和能力说明，并处理能力装备流程。
+    /// </summary>
     public class UIAbilities : UIKitMenuPanelBase, IAbilityMenuEventReceiver
     {
-        [Header("References")]
+        [Header("引用")]
+        [InspectorName("能力条目预制体")]
+        [Tooltip("能力列表条目对象池使用的预制体。")]
         [SerializeField] private GameObject m_abilityBarEntryPrefab = null;
+
+        [InspectorName("能力列表根节点")]
+        [Tooltip("能力列表条目实例挂载的父节点。")]
         [SerializeField] private GameObject m_abilityListRoot = null;
+
+        [InspectorName("列表 CanvasGroup")]
+        [Tooltip("进入装备模式时会临时禁用列表交互。")]
         [SerializeField] private CanvasGroup m_listCanvasGroup = null;
+
+        [InspectorName("能力描述")]
+        [Tooltip("显示当前悬停能力或分类说明的文本。")]
         [SerializeField] private TextMeshProUGUI m_description = null;
+
+        [InspectorName("能力栏")]
+        [Tooltip("显示和修改角色已装备能力槽位的 UIAbilityBar。")]
         [SerializeField] private UIAbilityBar m_abilityBar = null;
+
+        [InspectorName("能力分类")]
+        [Tooltip("能力分类按钮映射，键为分类类型，值为对应 UI 分类控件。")]
         [SerializeField] private SerializableDictionary<EAbilityType, UIAbilityCategory> m_categories = null;
+
+        [InspectorName("装备模式显示对象")]
+        [Tooltip("进入能力装备模式时启用、退出时关闭的辅助 UI 对象。")]
         [SerializeField] private List<GameObject> m_toEnableWhenEquippingAnAbility = null;
+
+        [InspectorName("能力条目池大小")]
+        [Tooltip("能力列表条目对象池容量。")]
         [SerializeField] private int m_abilityListEntryPoolSize = 16;
 
-        [Header("Settings")]
+        [Header("设置")]
+        [InspectorName("主动能力说明")]
+        [Tooltip("悬停主动能力分类时显示的说明文本。")]
         [SerializeField][TextArea] private string m_activeAbilityDescription;
+
+        [InspectorName("被动能力说明")]
+        [Tooltip("悬停被动能力分类时显示的说明文本。")]
         [SerializeField][TextArea] private string m_passiveAbilityDescription;
 
         private UIAbilityListEntry[] m_entries = System.Array.Empty<UIAbilityListEntry>();
@@ -35,6 +69,7 @@ namespace FantasyWord.GameCore
         private CharacterMenuContext m_context = CharacterMenuContext.CurrentControlledCharacter();
         private EAbilityType m_selectedCategory = EAbilityType.Active;
         private readonly List<GameObject> m_activeAbilityEntries = new();
+        private bool m_currentControlledCharacterListening = false;
 
         protected override bool HandleBackRequested()
         {
@@ -50,17 +85,12 @@ namespace FantasyWord.GameCore
         protected override void OnPanelInit()
         {
             ConfigureAbilityEntryPool();
-            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            BindCharacter(m_context.ResolveActor());
         }
 
         private void OnDestroy()
         {
-            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
-            {
-                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            }
-
+            StopCurrentControlledCharacterListening();
+            m_abilityBar.PresentCharacter(null);
             ReturnAbilityEntries();
         }
 
@@ -96,15 +126,8 @@ namespace FantasyWord.GameCore
                 ? context
                 : CharacterMenuContext.CurrentControlledCharacter();
             m_abilityBar.Init();
+            BindCurrentControlledCharacterListenerForContext();
             BindCharacter(m_context.ResolveActor());
-            if (m_context.FollowsCurrentControlledCharacter)
-            {
-                m_abilityBar.FollowCurrentControlledCharacter();
-            }
-            else
-            {
-                m_abilityBar.PresentCharacter(m_currentCharacter);
-            }
             m_abilityBar.UpdateUI();
             SelectCategory(m_selectedCategory);
             UpdateUI();
@@ -112,7 +135,11 @@ namespace FantasyWord.GameCore
 
         protected override void OnPanelHidden()
         {
+            StopCurrentControlledCharacterListening();
             ExitEquipMode();
+            m_abilityBar.PresentCharacter(null);
+            m_currentCharacter = null;
+            ReturnAbilityEntries();
         }
 
         private void UpdateUI()
@@ -294,6 +321,48 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private void BindCurrentControlledCharacterListenerForContext()
+        {
+            if (m_context.FollowsCurrentControlledCharacter)
+            {
+                StartCurrentControlledCharacterListeningIfReady();
+            }
+            else
+            {
+                StopCurrentControlledCharacterListening();
+            }
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+        }
+
+        private void StopCurrentControlledCharacterListening()
+        {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
+            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            {
+                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            }
+        }
+
         private void BindCharacter(CharacterBase character)
         {
             if (ReferenceEquals(m_currentCharacter, character))
@@ -302,6 +371,7 @@ namespace FantasyWord.GameCore
             }
 
             m_currentCharacter = character;
+            m_abilityBar.PresentCharacter(m_currentCharacter);
 
             if (!gameObject.activeInHierarchy)
             {

@@ -20,6 +20,7 @@ namespace FantasyWord.GameCore
             typeof(AudioClipResolver),
             typeof(SaveFile),
             typeof(PrefabReference),
+            typeof(SpriteReference),
             typeof(CommandHandler),
             typeof(NavigationCursorStyle),
             typeof(GameConfig),

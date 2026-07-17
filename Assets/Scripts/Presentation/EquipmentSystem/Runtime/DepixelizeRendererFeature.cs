@@ -17,12 +17,19 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
+    /// <summary>
+    /// URP 全屏 Depixelize 后处理入口，把像素画放大后的边缘重建为更平滑的曲线。
+    /// </summary>
     public class DepixelizeRendererFeature : ScriptableRendererFeature
     {
+        /// <summary>
+        /// Depixelize 后处理的可调参数。
+        /// </summary>
         [System.Serializable]
         public class DepixelizeSettings
         {
-            [Tooltip("Depixelize Filter Shader")]
+            [InspectorName("滤镜 Shader")]
+            [Tooltip("执行 Depixelize 滤镜的 Shader。")]
             public Shader shader;
             
             [Tooltip("渲染时机")]
@@ -72,6 +79,8 @@ using UnityEngine.Rendering.Universal;
             public int debugMode = 0;
         }
         
+        [InspectorName("Depixelize 设置")]
+        [Tooltip("控制 Depixelize 后处理开关、阈值、权重和调试模式。")]
         public DepixelizeSettings settings = new DepixelizeSettings();
         
         private DepixelizeRenderPass _renderPass;

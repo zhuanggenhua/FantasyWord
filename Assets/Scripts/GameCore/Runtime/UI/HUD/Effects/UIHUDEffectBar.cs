@@ -17,37 +17,84 @@ namespace FantasyWord.GameCore
 
         private readonly Dictionary<int, UIEffectIcon> m_effectIcons = new();
         private bool m_followCurrentControlledCharacter = false;
+        private CharacterBase m_configuredCharacter = null;
+        private bool m_currentControlledCharacterListening = false;
 
         private void Awake()
         {
             ConfigureEffectIconPool();
             m_followCurrentControlledCharacter = m_character == null;
+            if (!m_followCurrentControlledCharacter)
+            {
+                m_configuredCharacter = m_character;
+                m_character = null;
+            }
+        }
+
+        private void OnEnable()
+        {
+            BindInitialCharacterIfReady();
         }
 
         private void Start()
         {
-            if (m_followCurrentControlledCharacter)
-            {
-                GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-                OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
-            }
-            else
-            {
-                CharacterBase configuredCharacter = m_character;
-                m_character = null;
-                BindCharacter(configuredCharacter);
-            }
+            BindInitialCharacterIfReady();
+        }
+
+        private void OnDisable()
+        {
+            StopCurrentControlledCharacterListening();
+            UnbindCharacter();
         }
 
         private void OnDestroy()
         {
-            if (m_followCurrentControlledCharacter && GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            StopCurrentControlledCharacterListening();
+            UnbindCharacter();
+            ReturnAllEffectIcons();
+        }
+
+        private void BindInitialCharacterIfReady()
+        {
+            if (m_followCurrentControlledCharacter)
+            {
+                StartCurrentControlledCharacterListeningIfReady();
+            }
+            else
+            {
+                BindCharacter(m_configuredCharacter);
+            }
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
+        }
+
+        private void StopCurrentControlledCharacterListening()
+        {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
+            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
             {
                 GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             }
-
-            UnbindCharacter();
-            ReturnAllEffectIcons();
         }
 
         private void OnCurrentControlledCharacterChanged(CharacterBase character)
@@ -123,6 +170,7 @@ namespace FantasyWord.GameCore
                 m_character.RemoveTemporalEffectPresentationRemovedListener(OnTemporalEffectRemoved);
             }
 
+            m_character = null;
             ReturnAllEffectIcons();
         }
 

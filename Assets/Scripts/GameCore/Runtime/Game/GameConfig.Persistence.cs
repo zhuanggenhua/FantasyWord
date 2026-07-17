@@ -26,7 +26,7 @@ namespace FantasyWord.GameCore
         /// </summary>
         public void ExecutePlayerDeathAction(GameCommandContext context)
         {
-            m_toExecuteOnPlayerDeath.Execute(context);
+            m_toExecuteOnPlayerDeath.ExecuteFireAndReport(context, nameof(GameConfig), this);
         }
 
         /// <summary>

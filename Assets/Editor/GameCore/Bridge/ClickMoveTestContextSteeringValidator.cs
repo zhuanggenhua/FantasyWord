@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// ClickMoveTest 的 Context Steering PlayMode 验证入口，采集移动、避障、转向和调试快照证据。
+    /// </summary>
     [InitializeOnLoad]
     public static class ClickMoveTestContextSteeringValidator
     {
@@ -18,6 +21,7 @@ namespace FantasyWord.GameCore
         private const float RequiredMoveDistance = 0.05f;
         private const string TransitGroupId = "transit";
         private const string PredictiveTargetGroupId = "predictive-target";
+        private const string OrbitGroupId = "orbit";
         private const string PendingSessionKey =
             "FantasyWord.ClickMoveTestContextSteeringValidator.Pending";
         private const string ResultRelativePath =
@@ -195,6 +199,19 @@ namespace FantasyWord.GameCore
                 result.ObservedArriveSlowdown |= snapshot.BehaviourGroupId == PredictiveTargetGroupId &&
                     snapshot.Result.SpeedScale > 0.0f &&
                     snapshot.Result.SpeedScale < 0.99f;
+                if (snapshot.BehaviourGroupId == OrbitGroupId)
+                {
+                    result.ObservedOrbit = true;
+                    result.ObservedOrbitPreferredVelocity |=
+                        snapshot.Result.PreferredVelocity.sqrMagnitude > VectorThreshold;
+                    result.ObservedOrbitSafeVelocity |=
+                        snapshot.Result.SafeVelocity.sqrMagnitude > VectorThreshold;
+                    result.ObservedOrbitOutput |= snapshot.Result.HasOutput;
+                    result.MaximumOrbitSafeSpeed = Mathf.Max(
+                        result.MaximumOrbitSafeSpeed,
+                        snapshot.Result.SafeVelocity.magnitude);
+                }
+
                 result.ObservedPreferredVelocity |= snapshot.Result.PreferredVelocity.sqrMagnitude > VectorThreshold;
                 result.ObservedSafeVelocity |= snapshot.Result.SafeVelocity.sqrMagnitude > VectorThreshold;
                 result.ObservedAvoidanceCorrection |=
@@ -270,8 +287,18 @@ namespace FantasyWord.GameCore
             Require(result.ProbeCount >= 2, "场景缺少两个转向调试探针。", failures);
             Require(result.SnapshotProbeCount >= 2, "两个 NPC 没有都发布调试快照。", failures);
             Require(result.ObservedPathFollow, "没有观察到中间航点 transit 行为组。", failures);
-            Require(result.ObservedPursuit, "没有观察到最终追逐 predictive-target 行为组。", failures);
-            Require(result.ObservedArriveSlowdown, "最终追逐没有观察到 Arrive 降速。", failures);
+            Require(
+                result.ObservedPursuit || result.ObservedOrbit,
+                "没有观察到最终追逐 predictive-target 或近身 orbit 行为组。",
+                failures);
+            Require(
+                result.ObservedArriveSlowdown || result.ObservedOrbit,
+                "最终阶段既没有观察到 Arrive 降速，也没有进入近身 orbit。",
+                failures);
+            Require(result.ObservedOrbit, "目标进入保持距离后没有切到近身 orbit 行为组。", failures);
+            Require(result.ObservedOrbitPreferredVelocity, "近身 orbit 没有生成 preferred velocity。", failures);
+            Require(result.ObservedOrbitSafeVelocity, "近身 orbit 没有生成 safe velocity。", failures);
+            Require(result.ObservedOrbitOutput, "近身 orbit 没有产生非零转向输出。", failures);
             Require(result.ObservedPreferredVelocity, "没有生成 preferred velocity。", failures);
             Require(result.ObservedSafeVelocity, "RVO2 没有生成 safe velocity。", failures);
             Require(result.ObservedAvoidanceCorrection, "没有观察到 RVO2 对 preferred velocity 的修正。", failures);
@@ -297,8 +324,12 @@ namespace FantasyWord.GameCore
                 result.ProbeCount >= 2 &&
                 result.SnapshotProbeCount >= 2 &&
                 result.ObservedPathFollow &&
-                result.ObservedPursuit &&
-                result.ObservedArriveSlowdown &&
+                (result.ObservedPursuit || result.ObservedOrbit) &&
+                (result.ObservedArriveSlowdown || result.ObservedOrbit) &&
+                result.ObservedOrbit &&
+                result.ObservedOrbitPreferredVelocity &&
+                result.ObservedOrbitSafeVelocity &&
+                result.ObservedOrbitOutput &&
                 result.ObservedPreferredVelocity &&
                 result.ObservedSafeVelocity &&
                 result.ObservedAvoidanceCorrection &&
@@ -373,6 +404,9 @@ namespace FantasyWord.GameCore
             StartPositions.Clear();
         }
 
+        /// <summary>
+        /// Context Steering 运行验收的 JSON 结果对象。
+        /// </summary>
         [Serializable]
         public sealed class ValidationResult
         {
@@ -395,6 +429,7 @@ namespace FantasyWord.GameCore
             public int MaximumObstacleCount;
             public int MaximumSemanticColliderCount;
             public float MaximumMoveDistance;
+            public float MaximumOrbitSafeSpeed;
             public float InitialProbeDistance;
             public bool CapturedFirstSnapshotPair;
             public float FirstSnapshotProbeDistance;
@@ -403,6 +438,10 @@ namespace FantasyWord.GameCore
             public bool ObservedPathFollow;
             public bool ObservedPursuit;
             public bool ObservedArriveSlowdown;
+            public bool ObservedOrbit;
+            public bool ObservedOrbitPreferredVelocity;
+            public bool ObservedOrbitSafeVelocity;
+            public bool ObservedOrbitOutput;
             public bool ObservedPreferredVelocity;
             public bool ObservedSafeVelocity;
             public bool ObservedAvoidanceCorrection;

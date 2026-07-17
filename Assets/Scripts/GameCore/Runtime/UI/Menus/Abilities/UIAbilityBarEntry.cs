@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -22,6 +22,13 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private void OnDestroy()
+        {
+            if (m_button)
+            {
+                m_button.onClick.RemoveListener(OnClick);
+            }
+        }
         private void OnClick()
         {
             m_receiver?.HandleAbilitySlotClicked(m_abilityIndex);
@@ -56,4 +63,5 @@ namespace FantasyWord.GameCore
         }
     }
 }
+
 

@@ -1,11 +1,19 @@
-using System.Collections;
-using UnityEngine;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using MackySoft.SerializeReferenceExtensions;
+using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 按生命周期、碰撞、交互或条件变化触发命令的场景组件。
+    /// </summary>
     public class CommandTrigger : MonoBehaviour, IMovableCollisionReceiver, IInteractionReceiver
     {
+        /// <summary>
+        /// CommandTrigger 支持监听的触发时机。
+        /// </summary>
         public enum EActivationEvent
         {
             OnStart,
@@ -20,14 +28,23 @@ namespace FantasyWord.GameCore
             OnConditionStateChanged
         }
 
-        [Header("Requirements")]
+        [Header("条件")]
+        [InspectorName("触发时机")]
+        [Tooltip("组件在何种事件发生时尝试执行命令。")]
         [SerializeField] private EActivationEvent m_activationEvent;
+
+        [InspectorName("执行条件")]
+        [Tooltip("命令执行前需要满足的条件。为空时视为满足。")]
         [SerializeReference, SubclassSelector] private ICondition m_condition;
 
-        [Header("Actions")]
+        [Header("动作")]
+        [InspectorName("执行命令")]
+        [Tooltip("触发时执行的命令，支持上下文命令接收当前玩家或脚本上下文。")]
         [SerializeReference, SubclassSelector] private ICommand m_toExecute;
 
-        [Header("Settings")]
+        [Header("设置")]
+        [InspectorName("延迟帧数")]
+        [Tooltip("触发后延迟多少帧再执行命令；0 表示立即执行。")]
         [SerializeField] private int m_frameDelay = 0;
 
         private void OnEnable()
@@ -90,7 +107,10 @@ namespace FantasyWord.GameCore
                     }
                     else
                     {
-                        StartCoroutine(ExecuteAfterFrameDelay(m_frameDelay, commandContext));
+                        ExecuteAfterFrameDelayAsync(
+                            m_frameDelay,
+                            commandContext,
+                            destroyCancellationToken).Forget(LogAsyncException);
                     }
                 }
             }
@@ -111,17 +131,35 @@ namespace FantasyWord.GameCore
 
         private void Execute(GameCommandContext context)
         {
-            m_toExecute.Execute(context);
+            m_toExecute.ExecuteFireAndReport(context, nameof(CommandTrigger), this);
         }
 
-        private IEnumerator ExecuteAfterFrameDelay(int frames, GameCommandContext context)
+        private async UniTask ExecuteAfterFrameDelayAsync(
+            int frames,
+            GameCommandContext context,
+            CancellationToken cancellationToken)
         {
             for (int i = 0; i < frames; ++i)
             {
-                yield return null;
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
+            }
+
+            if (cancellationToken.IsCancellationRequested || this == null)
+            {
+                return;
             }
 
             Execute(context);
+        }
+
+        private void LogAsyncException(Exception exception)
+        {
+            if (exception is OperationCanceledException)
+            {
+                return;
+            }
+
+            Debug.LogException(exception, this);
         }
 
         private void Start() => AttemptExecution(EActivationEvent.OnStart);

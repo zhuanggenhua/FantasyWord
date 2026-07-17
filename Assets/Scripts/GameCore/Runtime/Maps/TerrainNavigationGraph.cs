@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// A* 图中的单个可行走地形节点。
+    /// 节点只缓存规则 Tile 的导航语义，不引用 Tilemap 或场景对象。
+    /// </summary>
     internal readonly struct TerrainNavigationGraphNode
     {
         public TerrainNavigationGraphNode(
@@ -24,6 +28,10 @@ namespace FantasyWord.GameCore
         public float TraversalCost { get; }
     }
 
+    /// <summary>
+    /// 两个地形节点之间的有向边。
+    /// 同层移动和楼梯/坡道等显式跨层连接都统一进入这张图。
+    /// </summary>
     internal readonly struct TerrainNavigationGraphEdge
     {
         public TerrainNavigationGraphEdge(
@@ -45,10 +53,16 @@ namespace FantasyWord.GameCore
         public bool IsTransition => TransitionLink != null;
     }
 
+    /// <summary>
+    /// 地形导航的轻量 A* 图。
+    /// TerrainNavigationMap 负责把 Tilemap 投影成节点和边，本类型只负责确定性寻路。
+    /// </summary>
     internal sealed class TerrainNavigationGraph
     {
         private readonly Dictionary<TerrainNodeKey, TerrainNavigationGraphNode> m_nodes = new();
         private readonly Dictionary<TerrainNodeKey, List<TerrainNavigationGraphEdge>> m_edges = new();
+
+        // A* 的临时容器复用，避免每次点击移动都分配一批短生命周期集合。
         private readonly List<TerrainNodeKey> m_openSet = new();
         private readonly HashSet<TerrainNodeKey> m_closedSet = new();
         private readonly Dictionary<TerrainNodeKey, TerrainNodeKey> m_cameFrom = new();
@@ -287,6 +301,7 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        // 地图规模较小，线性扫描 open set 比引入额外堆结构更直接，也便于保持路径选择稳定。
         private TerrainNodeKey TakeBestOpenNode()
         {
             int bestIndex = 0;

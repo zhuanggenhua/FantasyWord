@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using MackySoft.SerializeReferenceExtensions;
 using azixMcAze.SerializableDictionary;
@@ -53,8 +54,8 @@ namespace FantasyWord.GameCore
                 && m_questHintDialogueOverrides.TryGetValue(task, out dialogue);
         }
 
-        public void ExecuteOnQuestCompletion() => ExecuteOnQuestCompletion(GameCommandContext.Script());
+        public Task ExecuteOnQuestCompletion() => ExecuteOnQuestCompletion(GameCommandContext.Script());
 
-        public void ExecuteOnQuestCompletion(GameCommandContext context) => m_toExecuteOnQuestCompletion.Execute(context);
+        public Task ExecuteOnQuestCompletion(GameCommandContext context) => m_toExecuteOnQuestCompletion.Execute(context);
     }
 }

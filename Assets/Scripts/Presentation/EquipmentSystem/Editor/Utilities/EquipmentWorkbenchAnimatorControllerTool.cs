@@ -13,26 +13,6 @@ using UnityEngine.U2D.Animation;
 /// </summary>
 public static class EquipmentWorkbenchAnimatorControllerTool
 {
-    const string AnimationDatabasePath =
-        "Assets/GameData/EquipmentSystem/AnimationType/AnimationTypeDatabase.asset";
-    const string WorkbenchCatalogPath =
-        "Assets/GameData/EquipmentSystem/Data/Workbench/换装工作台目录.asset";
-    const string AnimationRoot = "Assets/GameData/EquipmentSystem/Animations";
-    const string ControllerPath = AnimationRoot + "/换装共享动画状态机.controller";
-    const string SharedClipRoot = AnimationRoot + "/SharedClips";
-    const string SpriteLibraryRoot = AnimationRoot + "/SpriteLibraries";
-    const float FrameRate = 8f;
-
-    static readonly string[] DirectionSuffixes = { "SE", "SW", "NE", "NW" };
-
-    static readonly HashSet<string> LoopingActions = new HashSet<string>(
-        new[]
-        {
-            "Idle", "Wait", "Walk", "Run", "AnvilWorking", "Chopping", "Harvest",
-            "JewelryWorkshopWorking", "LaboratoryWorking", "Mining", "WoodworkBenchWorking"
-        },
-        StringComparer.OrdinalIgnoreCase);
-
     static readonly MethodInfo SpriteKeyMethod = typeof(SpriteLibrary).GetMethod(
         "GetHashForCategoryAndEntry",
         BindingFlags.Static | BindingFlags.NonPublic);
@@ -46,19 +26,20 @@ public static class EquipmentWorkbenchAnimatorControllerTool
     [MenuItem("Tools/Equipment System/Rebuild SpriteLibrary Animation Framework")]
     public static void Rebuild()
     {
+        EquipmentSystemGenerationSettings settings = LoadSettings();
         EquipmentWorkbenchCatalog catalog =
-            AssetDatabase.LoadAssetAtPath<EquipmentWorkbenchCatalog>(WorkbenchCatalogPath);
+            AssetDatabase.LoadAssetAtPath<EquipmentWorkbenchCatalog>(settings.WorkbenchCatalogPath);
         AnimationTypeDatabase animationDatabase =
-            AssetDatabase.LoadAssetAtPath<AnimationTypeDatabase>(AnimationDatabasePath);
+            AssetDatabase.LoadAssetAtPath<AnimationTypeDatabase>(settings.AnimationDatabasePath);
 
         if (catalog == null)
-            throw new InvalidOperationException($"找不到换装工作台目录：{WorkbenchCatalogPath}");
+            throw new InvalidOperationException($"找不到换装工作台目录：{settings.WorkbenchCatalogPath}");
         if (animationDatabase == null)
-            throw new InvalidOperationException($"找不到动画类型数据库：{AnimationDatabasePath}");
+            throw new InvalidOperationException($"找不到动画类型数据库：{settings.AnimationDatabasePath}");
 
-        EnsureFolder(AnimationRoot);
-        EnsureFolder(SharedClipRoot);
-        EnsureFolder(SpriteLibraryRoot);
+        EnsureFolder(settings.AnimationRoot);
+        EnsureFolder(settings.SharedClipRoot);
+        EnsureFolder(settings.SpriteLibraryRoot);
 
         List<ActionSpec> actionSpecs = BuildActionSpecs(catalog, animationDatabase);
         if (actionSpecs.Count == 0)
@@ -72,6 +53,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
                 throw new InvalidOperationException($"角色选项 {i} 缺少 CharacterFrameData。");
 
             DirectionalSpriteLibrarySet libraries = BuildCharacterLibraries(
+                settings,
                 character,
                 actionSpecs,
                 desiredLibraryPaths);
@@ -79,15 +61,96 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         }
 
         HashSet<string> desiredClipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        BuildSharedController(actionSpecs, desiredClipPaths);
-        PruneGeneratedAssets(desiredClipPaths, desiredLibraryPaths);
-        ReserializeCatalog(catalog);
+        BuildSharedController(settings, actionSpecs, desiredClipPaths);
+        PruneGeneratedAssets(settings, desiredClipPaths, desiredLibraryPaths);
+        ReserializeCatalog(settings, catalog);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         Debug.Log(
             $"[EquipmentWorkbenchAnimatorControllerTool] SpriteLibrary 动画框架重建完成："
-            + $"{actionSpecs.Count} 个动作片段，{catalog.Characters.Count * DirectionSuffixes.Length} 个方向库。 ");
+            + $"{actionSpecs.Count} 个动作片段，{catalog.Characters.Count * CharacterAnimationDirections.Count} 个方向库。 ");
+    }
+
+    [MenuItem("Tools/Equipment System/Create Animation Generation Settings")]
+    public static void CreateSettingsAsset()
+    {
+        string defaultPath = EquipmentSystemGenerationSettings.DefaultSettingsAssetPath;
+        string[] duplicatePaths = FindGenerationSettingsPaths()
+            .Where(path => !string.Equals(path, defaultPath, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+        if (duplicatePaths.Length > 0)
+        {
+            throw new InvalidOperationException(
+                "换装动画生成设置必须只有一个正式 owner："
+                + defaultPath
+                + "。创建默认设置前，请先迁移或删除这些非默认设置资产："
+                + string.Join(", ", duplicatePaths));
+        }
+
+        EquipmentSystemGenerationSettings existing =
+            AssetDatabase.LoadAssetAtPath<EquipmentSystemGenerationSettings>(
+                defaultPath);
+        if (existing != null)
+        {
+            Selection.activeObject = existing;
+            return;
+        }
+
+        string folder = Path.GetDirectoryName(defaultPath)
+            ?.Replace('\\', '/');
+        if (!string.IsNullOrEmpty(folder))
+            EnsureFolder(folder);
+
+        EquipmentSystemGenerationSettings settings =
+            ScriptableObject.CreateInstance<EquipmentSystemGenerationSettings>();
+        AssetDatabase.CreateAsset(settings, defaultPath);
+        AssetDatabase.SaveAssets();
+        Selection.activeObject = settings;
+    }
+
+    static EquipmentSystemGenerationSettings LoadSettings()
+    {
+        string defaultPath = EquipmentSystemGenerationSettings.DefaultSettingsAssetPath;
+        string[] settingPaths = FindGenerationSettingsPaths();
+        EquipmentSystemGenerationSettings settings =
+            AssetDatabase.LoadAssetAtPath<EquipmentSystemGenerationSettings>(defaultPath);
+
+        string[] duplicatePaths = settingPaths
+            .Where(path => !string.Equals(path, defaultPath, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        if (settings == null)
+        {
+            string foundSettings = settingPaths.Length > 0
+                ? " 当前找到的非默认设置资产：" + string.Join(", ", settingPaths)
+                : string.Empty;
+            throw new InvalidOperationException(
+                "找不到正式换装动画生成设置："
+                + defaultPath
+                + "。请通过 Tools/Equipment System/Create Animation Generation Settings 创建或迁移。"
+                + foundSettings);
+        }
+
+        if (duplicatePaths.Length > 0)
+        {
+            throw new InvalidOperationException(
+                "找到多个 EquipmentSystemGenerationSettings。换装动画生成设置必须只有一个正式 owner："
+                + defaultPath
+                + "。请删除或迁移这些重复设置资产："
+                + string.Join(", ", duplicatePaths));
+        }
+
+        return settings;
+    }
+
+    static string[] FindGenerationSettingsPaths()
+    {
+        return AssetDatabase.FindAssets("t:EquipmentSystemGenerationSettings")
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
     }
 
     static List<ActionSpec> BuildActionSpecs(
@@ -105,7 +168,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
             {
                 CharacterFrameData frameData = catalog.Characters[characterIndex]?.FrameData;
                 AnimationData animation = frameData != null ? frameData.GetAnimationByKey(item.name) : null;
-                for (int direction = 0; direction < DirectionSuffixes.Length; direction++)
+                for (int direction = 0; direction < CharacterAnimationDirections.Count; direction++)
                     maxFrameCount = Mathf.Max(maxFrameCount, BuildSprites(animation, direction).Length);
             }
 
@@ -117,16 +180,17 @@ public static class EquipmentWorkbenchAnimatorControllerTool
     }
 
     static DirectionalSpriteLibrarySet BuildCharacterLibraries(
+        EquipmentSystemGenerationSettings settings,
         EquipmentWorkbenchCharacterOption character,
         IReadOnlyList<ActionSpec> actionSpecs,
         ISet<string> desiredPaths)
     {
         DirectionalSpriteLibrarySet libraries = new DirectionalSpriteLibrarySet();
-        for (int direction = 0; direction < DirectionSuffixes.Length; direction++)
+        for (int direction = 0; direction < CharacterAnimationDirections.Count; direction++)
         {
             string assetName = SanitizeAssetName(character.DisplayName)
-                + "_" + DirectionSuffixes[direction] + "动画精灵库";
-            string assetPath = $"{SpriteLibraryRoot}/{assetName}.asset";
+                + "_" + CharacterAnimationDirections.GetName(direction) + "动画精灵库";
+            string assetPath = $"{settings.SpriteLibraryRoot}/{assetName}.asset";
             desiredPaths.Add(assetPath);
 
             SpriteLibraryAsset library = AssetDatabase.LoadAssetAtPath<SpriteLibraryAsset>(assetPath);
@@ -138,7 +202,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
             }
 
             ClearLibrary(library);
-            PopulateDirectionLibrary(character.FrameData, direction, actionSpecs, library);
+            PopulateDirectionLibrary(settings, character.FrameData, direction, actionSpecs, library);
             libraries.Set(direction, library);
             EditorUtility.SetDirty(library);
         }
@@ -147,6 +211,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
     }
 
     static void PopulateDirectionLibrary(
+        EquipmentSystemGenerationSettings settings,
         CharacterFrameData frameData,
         int direction,
         IReadOnlyList<ActionSpec> actionSpecs,
@@ -157,7 +222,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
             ActionSpec spec = actionSpecs[i];
             AnimationData animation = frameData.GetAnimationByKey(spec.Action);
             Sprite[] sprites = BuildSprites(animation, direction);
-            if (sprites.Length == 0)
+            if (sprites.Length == 0 && settings.FallbackMissingDirectionsToFirstAvailable)
                 sprites = BuildFirstAvailableDirection(animation);
             if (sprites.Length == 0)
                 continue;
@@ -172,7 +237,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
 
     static Sprite[] BuildFirstAvailableDirection(AnimationData animation)
     {
-        for (int direction = 0; direction < DirectionSuffixes.Length; direction++)
+        for (int direction = 0; direction < CharacterAnimationDirections.Count; direction++)
         {
             Sprite[] sprites = BuildSprites(animation, direction);
             if (sprites.Length > 0)
@@ -195,12 +260,13 @@ public static class EquipmentWorkbenchAnimatorControllerTool
     }
 
     static AnimatorController BuildSharedController(
+        EquipmentSystemGenerationSettings settings,
         IReadOnlyList<ActionSpec> actionSpecs,
         ISet<string> desiredClipPaths)
     {
-        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);
+        AnimatorController controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(settings.ControllerPath);
         if (controller == null)
-            controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
+            controller = AnimatorController.CreateAnimatorControllerAtPath(settings.ControllerPath);
 
         while (controller.parameters.Length > 0)
             controller.RemoveParameter(controller.parameters[0]);
@@ -221,7 +287,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         for (int i = 0; i < actionSpecs.Count; i++)
         {
             ActionSpec spec = actionSpecs[i];
-            AnimationClip clip = BuildResolverClip(spec, desiredClipPaths);
+            AnimationClip clip = BuildResolverClip(settings, spec, desiredClipPaths);
             AnimatorState state = stateMachine.AddState(
                 spec.Action,
                 new Vector3((i % 6) * 220f, (i / 6) * 70f));
@@ -237,9 +303,12 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         return controller;
     }
 
-    static AnimationClip BuildResolverClip(ActionSpec spec, ISet<string> desiredPaths)
+    static AnimationClip BuildResolverClip(
+        EquipmentSystemGenerationSettings settings,
+        ActionSpec spec,
+        ISet<string> desiredPaths)
     {
-        string clipPath = $"{SharedClipRoot}/{SanitizeAssetName(spec.Action)}.anim";
+        string clipPath = $"{settings.SharedClipRoot}/{SanitizeAssetName(spec.Action)}.anim";
         desiredPaths.Add(clipPath);
         AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
         if (clip == null)
@@ -249,7 +318,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         }
 
         clip.name = spec.Action;
-        clip.frameRate = FrameRate;
+        clip.frameRate = settings.FrameRate;
         EditorCurveBinding resolverBinding = new EditorCurveBinding
         {
             path = string.Empty,
@@ -261,7 +330,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         for (int frame = 0; frame < spec.FrameCount; frame++)
         {
             keys[frame] = new Keyframe(
-                frame / FrameRate,
+                frame / settings.FrameRate,
                 GetSpriteKeyAsFloat(spec.Action, frame.ToString()),
                 float.PositiveInfinity,
                 float.PositiveInfinity);
@@ -285,9 +354,9 @@ public static class EquipmentWorkbenchAnimatorControllerTool
             },
             null);
 
-        AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(clip);
-        settings.loopTime = LoopingActions.Contains(spec.Action);
-        AnimationUtility.SetAnimationClipSettings(clip, settings);
+        AnimationClipSettings clipSettings = AnimationUtility.GetAnimationClipSettings(clip);
+        clipSettings.loopTime = settings.IsLoopingAction(spec.Action);
+        AnimationUtility.SetAnimationClipSettings(clip, clipSettings);
         EditorUtility.SetDirty(clip);
         return clip;
     }
@@ -350,11 +419,12 @@ public static class EquipmentWorkbenchAnimatorControllerTool
     }
 
     static void PruneGeneratedAssets(
+        EquipmentSystemGenerationSettings settings,
         ISet<string> desiredClipPaths,
         ISet<string> desiredLibraryPaths)
     {
-        PruneFolderFiles(SharedClipRoot, new[] { ".anim" }, desiredClipPaths);
-        PruneFolderFiles(SpriteLibraryRoot, new[] { ".asset", ".spriteLib" }, desiredLibraryPaths);
+        PruneFolderFiles(settings.SharedClipRoot, new[] { ".anim" }, desiredClipPaths);
+        PruneFolderFiles(settings.SpriteLibraryRoot, new[] { ".asset", ".spriteLib" }, desiredLibraryPaths);
     }
 
     static void PruneFolderFiles(string folder, IReadOnlyCollection<string> extensions, ISet<string> desiredPaths)
@@ -381,10 +451,12 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         }
     }
 
-    static void ReserializeCatalog(EquipmentWorkbenchCatalog catalog)
+    static void ReserializeCatalog(
+        EquipmentSystemGenerationSettings settings,
+        EquipmentWorkbenchCatalog catalog)
     {
         EditorUtility.SetDirty(catalog);
-        AssetDatabase.ForceReserializeAssets(new[] { WorkbenchCatalogPath });
+        AssetDatabase.ForceReserializeAssets(new[] { settings.WorkbenchCatalogPath });
     }
 
     static void EnsureFolder(string path)

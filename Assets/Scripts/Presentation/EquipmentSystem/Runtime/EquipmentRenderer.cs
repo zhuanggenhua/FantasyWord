@@ -23,6 +23,15 @@ public class EquipmentRenderer : MonoBehaviour
     [Header("调试")]
     public Shader overrideShader;
 
+    [Header("运行时依赖")]
+    [SerializeField]
+    [Tooltip("动作控制入口。正式 Prefab 应显式绑定；未绑定时只允许使用同对象 CharacterActionAnimatorDriver。")]
+    CharacterActionAnimatorDriver animationController;
+
+    [SerializeField]
+    [Tooltip("角色动作 Animator。正式 Prefab 应显式绑定；未绑定时只允许使用动作控制器暴露的 Animator 或同对象 Animator。")]
+    Animator characterAnimator;
+
     [Header("运行时状态 (只读)")]
     [SerializeField]
     string _debugCurrentAnim = "";
@@ -77,7 +86,7 @@ public class EquipmentRenderer : MonoBehaviour
 
     // 动画同步
     Animator _animator;
-    AnimationController _animationController;
+    CharacterActionAnimatorDriver _animationController;
     string _currentAnimName;
     List<string> _validAnimParams;
     bool _animParamsCached;
@@ -252,8 +261,7 @@ public class EquipmentRenderer : MonoBehaviour
         if (frameData == null)
             return;
 
-        if (_animationController == null)
-            _animationController = GetComponentInParent<AnimationController>();
+        EnsureCharacterActionAnimatorDriverReference();
 
         string codeDrivenKey = _animationController != null
             ? _animationController.CurrentAnimationKey
@@ -267,7 +275,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
 
         if (_animator == null)
-            _animator = ResolveCharacterAnimator();
+            CacheAnimatorReference();
 
         if (_animator == null)
             return;
@@ -297,74 +305,32 @@ public class EquipmentRenderer : MonoBehaviour
         ApplyAnimationKey(activeParam);
     }
 
-    Animator ResolveCharacterAnimator()
+    void EnsureCharacterActionAnimatorDriverReference()
     {
-        if (_animationController == null)
-            _animationController = GetComponentInParent<AnimationController>();
+        if (_animationController != null)
+            return;
 
-        Animator controllerAnimator = _animationController != null
-            ? _animationController.Animator
-            : null;
-        if (IsCharacterAnimator(controllerAnimator))
-        {
-            _debugAnimatorPath = GetTransformPath(controllerAnimator.transform);
-            return controllerAnimator;
-        }
-
-        Animator selfAnimator = GetComponent<Animator>();
-        if (IsCharacterAnimator(selfAnimator))
-        {
-            _debugAnimatorPath = GetTransformPath(selfAnimator.transform);
-            return selfAnimator;
-        }
-
-        Animator[] animators = GetComponentsInChildren<Animator>(true);
-        for (int i = 0; i < animators.Length; i++)
-        {
-            Animator candidate = animators[i];
-            if (IsCharacterAnimator(candidate))
-            {
-                _debugAnimatorPath = GetTransformPath(candidate.transform);
-                return candidate;
-            }
-        }
-
-        _debugAnimatorPath = "(未找到角色 Animator)";
-        return null;
+        _animationController = animationController != null
+            ? animationController
+            : GetComponent<CharacterActionAnimatorDriver>();
     }
 
-    static bool IsCharacterAnimator(Animator animator)
+    void CacheAnimatorReference()
     {
-        if (animator == null)
-            return false;
+        EnsureCharacterActionAnimatorDriverReference();
+        _animator = characterAnimator != null
+            ? characterAnimator
+            : _animationController != null && _animationController.Animator != null
+                ? _animationController.Animator
+                : GetComponent<Animator>();
 
-        if (animator.GetComponentInParent<Canvas>() != null
-            || animator.GetComponentInParent<RectTransform>() != null)
+        if (_animator != null)
         {
-            return false;
+            _debugAnimatorPath = GetTransformPath(_animator.transform);
+            return;
         }
 
-        Transform current = animator.transform;
-        while (current != null)
-        {
-            string objectName = current.name;
-            if (ContainsIgnoreCase(objectName, "Canvas")
-                || ContainsIgnoreCase(objectName, "Dialogue")
-                || ContainsIgnoreCase(objectName, "Dialog")
-                || ContainsIgnoreCase(objectName, "Bubble")
-                || ContainsIgnoreCase(objectName, "Speech")
-                || ContainsIgnoreCase(objectName, "Floating"))
-            {
-                return false;
-            }
-
-            current = current.parent;
-        }
-
-        return animator.GetComponent<SpriteRenderer>() != null
-            || animator.GetComponent<EquipmentRenderer>() != null
-            || animator.GetComponentInChildren<SpriteRenderer>(true) != null
-            || animator.GetComponentInChildren<EquipmentRenderer>(true) != null;
+        _debugAnimatorPath = "(未配置角色 Animator)";
     }
 
     void ApplyAnimationKey(string animationKey)
@@ -532,11 +498,10 @@ public class EquipmentRenderer : MonoBehaviour
         if (_charRenderer == null)
             _charRenderer = GetComponent<SpriteRenderer>();
 
-        if (_animationController == null)
-            _animationController = GetComponentInParent<AnimationController>();
+        EnsureCharacterActionAnimatorDriverReference();
 
         if (_animator == null)
-            _animator = ResolveCharacterAnimator();
+            CacheAnimatorReference();
 
         if (_shaderMaterial == null)
             InitMaterial();
@@ -775,8 +740,7 @@ public class EquipmentRenderer : MonoBehaviour
         if (frameData == null || animationType == null)
             return false;
 
-        if (_animationController == null)
-            _animationController = GetComponentInParent<AnimationController>();
+        EnsureCharacterActionAnimatorDriverReference();
 
         AnimationData animationData = frameData.GetAnimationByKey(animationType.name);
         if (!IsStandaloneBodyAnimation(animationData))

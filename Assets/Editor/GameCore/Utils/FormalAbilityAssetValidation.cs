@@ -7,8 +7,15 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 正式 EX-GAS 能力资产审计工具。
+    /// 它检查能力 Prefab、图标、Timeline 和 Cue 是否来自正式数据链路，不回退旧能力表。
+    /// </summary>
     public static class FormalAbilityAssetValidation
     {
+        /// <summary>
+        /// 编辑器 UI 可直接展示的一条验证问题。
+        /// </summary>
         [Serializable]
         public sealed class ValidationIssue
         {
@@ -16,6 +23,10 @@ namespace FantasyWord.GameCore
             public MessageType Severity { get; set; } = MessageType.Error;
         }
 
+        /// <summary>
+        /// 批量审计输出结果。
+        /// 用于自动化验证写 JSON 和编辑器窗口展示。
+        /// </summary>
         [Serializable]
         public sealed class AuditResult
         {
@@ -24,6 +35,10 @@ namespace FantasyWord.GameCore
             public AuditIssue[] Issues = Array.Empty<AuditIssue>();
         }
 
+        /// <summary>
+        /// 单条能力审计问题。
+        /// 字段保持字符串化，方便 Unity JsonUtility 和外部脚本读取。
+        /// </summary>
         [Serializable]
         public sealed class AuditIssue
         {
@@ -60,6 +75,8 @@ namespace FantasyWord.GameCore
                 return;
             }
 
+            CollectRuntimeResourceIdentityIssues(formalGasAbilityCode, config, issues);
+
             if (!config.TryLoadPrefab(out GameObject prefab) || prefab == null)
             {
                 issues.Add(CreateIssue(
@@ -73,13 +90,13 @@ namespace FantasyWord.GameCore
                 issues.Add(CreateIssue(
                     $"EX-GAS Ability {formalGasAbilityCode} 的正式 Ability Prefab 根节点缺少 {nameof(AbilityBase)} 组件。"));
             }
-            else if (formalGasAbilityCode == FormalGasAbilityCodes.BasicAttack && abilityBase is not MeleeAttackAbility)
+            else if (formalGasAbilityCode == GAS.Runtime.XAbility.ABILITY_Attack && abilityBase is not MeleeAttackAbility)
             {
                 issues.Add(CreateIssue(
                     $"EX-GAS Ability {formalGasAbilityCode} 的正式 Ability Prefab 类型不匹配。基础攻击需要 {nameof(MeleeAttackAbility)}，当前却是 {abilityBase.GetType().Name}。"));
             }
 
-            if (formalGasAbilityCode == FormalGasAbilityCodes.BasicAttack)
+            if (formalGasAbilityCode == GAS.Runtime.XAbility.ABILITY_Attack)
             {
                 if (!config.TryLoadIcon(out Sprite icon) || icon == null)
                 {
@@ -88,6 +105,38 @@ namespace FantasyWord.GameCore
                 }
 
                 CollectBasicAttackCueIssues(formalGasAbilityCode, issues);
+            }
+        }
+
+        private static void CollectRuntimeResourceIdentityIssues(
+            int formalGasAbilityCode,
+            FormalGasAbilityRuntimeConfig config,
+            List<ValidationIssue> issues)
+        {
+            if (FormalGasAbilityResourceLoader.IsEditorAssetPath(config.PrefabPath))
+            {
+                issues.Add(CreateWarning(
+                    $"EX-GAS Ability {formalGasAbilityCode} 的 PrefabPath 仍是编辑器项目路径：{config.PrefabPath}。它只能作为编辑器证据，正式运行时应改为 GameCore 数据库 PrefabReference GUID 或 ResourceSystem / Addressables 地址。"));
+            }
+            else if (string.IsNullOrWhiteSpace(config.PrefabPath) &&
+                     ResolveDatabaseEntry<PrefabReference>(config.PrefabGuid) == null)
+            {
+                issues.Add(CreateWarning(
+                    $"EX-GAS Ability {formalGasAbilityCode} 缺少正式 Prefab 资源引用。PrefabGuid 必须指向 DatabaseRegistry 中的 PrefabReference，或 PrefabPath 必须是玩家构建可解析的资源地址。"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(config.IconPath) &&
+                FormalGasAbilityResourceLoader.IsEditorAssetPath(config.IconPath))
+            {
+                issues.Add(CreateWarning(
+                    $"EX-GAS Ability {formalGasAbilityCode} 的 IconPath 仍是编辑器项目路径：{config.IconPath}。图标正式运行时应改为 GameCore 数据库 SpriteReference GUID 或 ResourceSystem / Addressables 地址。"));
+            }
+            else if (string.IsNullOrWhiteSpace(config.IconPath) &&
+                     !string.IsNullOrWhiteSpace(config.IconGuid) &&
+                     ResolveDatabaseEntry<SpriteReference>(config.IconGuid) == null)
+            {
+                issues.Add(CreateWarning(
+                    $"EX-GAS Ability {formalGasAbilityCode} 的 IconGuid 未指向 DatabaseRegistry 中的 SpriteReference。"));
             }
         }
 
@@ -124,7 +173,7 @@ namespace FantasyWord.GameCore
         {
             int[] abilityCodes = formalGasAbilityCodes is { Length: > 0 }
                 ? formalGasAbilityCodes
-                : new[] { FormalGasAbilityCodes.BasicAttack };
+                : new[] { GAS.Runtime.XAbility.ABILITY_Attack };
 
             List<AuditIssue> issues = new();
             foreach (int abilityCode in abilityCodes)
@@ -155,7 +204,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            return abilityCode == FormalGasAbilityCodes.BasicAttack
+            return abilityCode == GAS.Runtime.XAbility.ABILITY_Attack
                 ? timelineJson.Contains("\"ID\": 101", StringComparison.Ordinal)
                 : timelineJson.Contains($"\"ID\": {abilityCode}", StringComparison.Ordinal);
         }
@@ -198,7 +247,7 @@ namespace FantasyWord.GameCore
             }
             catch (JsonException)
             {
-                string fallback = abilityCode == FormalGasAbilityCodes.BasicAttack ? "\"ID\": 101" : $"\"ID\": {abilityCode}";
+                string fallback = abilityCode == GAS.Runtime.XAbility.ABILITY_Attack ? "\"ID\": 101" : $"\"ID\": {abilityCode}";
                 if (timelineJson.Contains(fallback, StringComparison.Ordinal))
                 {
                     timelineCueIds.Add(0);
@@ -214,7 +263,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            return abilityCode == FormalGasAbilityCodes.BasicAttack ? timelineId == 101 : timelineId == abilityCode;
+            return abilityCode == GAS.Runtime.XAbility.ABILITY_Attack ? timelineId == 101 : timelineId == abilityCode;
         }
 
         private static void CollectCueEvidenceFromTracks(
@@ -432,8 +481,13 @@ namespace FantasyWord.GameCore
 
             foreach (string prefabPath in ExtractMountPrefabPaths(abilityCueJson))
             {
-                if (!string.IsNullOrWhiteSpace(prefabPath) &&
-                    AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
+                if (string.IsNullOrWhiteSpace(prefabPath))
+                {
+                    continue;
+                }
+
+                if (AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null ||
+                    ResolveDatabaseEntry<PrefabReference>(prefabPath)?.prefab != null)
                 {
                     return true;
                 }
@@ -592,6 +646,12 @@ namespace FantasyWord.GameCore
 
         private static AudioClipResolver ResolveAudioClipResolver(string audioResolverGuid)
         {
+            return ResolveDatabaseEntry<AudioClipResolver>(audioResolverGuid);
+        }
+
+        private static T ResolveDatabaseEntry<T>(string guid)
+            where T : DatabaseEntry
+        {
             GameConfig config = AssetDatabase.LoadAssetAtPath<GameConfig>("Assets/GameData/GameCore/GameConfig.asset");
             DatabaseRegistry database = null;
             if (config != null)
@@ -600,7 +660,7 @@ namespace FantasyWord.GameCore
                 database = serializedConfig.FindProperty("m_databaseRegistry")?.objectReferenceValue as DatabaseRegistry;
             }
 
-            return database == null ? null : database.GUIDToDatabaseEntry<AudioClipResolver>(audioResolverGuid);
+            return database == null ? null : database.GUIDToDatabaseEntry<T>(guid);
         }
 
         private static string ExtractCueJsonById(string gameplayCueJson, int cueId)

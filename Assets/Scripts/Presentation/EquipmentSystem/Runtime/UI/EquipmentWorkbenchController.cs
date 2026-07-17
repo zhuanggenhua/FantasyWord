@@ -17,10 +17,10 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     EquipmentRenderer equipmentRenderer;
 
     [SerializeField]
-    AnimationController animationController;
+    CharacterActionAnimatorDriver animationController;
 
     [SerializeField]
-    DirectionalAnimationVariantDriver directionDriver;
+    DirectionalSpriteLibraryDriver directionDriver;
 
     bool _initialized;
     int _currentCharacterIndex = -1;
@@ -43,8 +43,8 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
 
     public EquipmentWorkbenchCatalog Catalog => catalog;
     public EquipmentRenderer Renderer => equipmentRenderer;
-    public AnimationController AnimationController => animationController;
-    public DirectionalAnimationVariantDriver DirectionDriver => directionDriver;
+    public CharacterActionAnimatorDriver CharacterActionAnimatorDriver => animationController;
+    public DirectionalSpriteLibraryDriver DirectionDriver => directionDriver;
     public int CurrentCharacterIndex => _currentCharacterIndex;
     public int CurrentAppearanceIndex { get; private set; } = -1;
     public EquipmentType CurrentCategory => _currentCategory;
@@ -64,12 +64,12 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     public void Configure(
         EquipmentWorkbenchCatalog newCatalog,
         EquipmentRenderer newRenderer,
-        AnimationController newAnimationController,
-        DirectionalAnimationVariantDriver newDirectionDriver)
+        CharacterActionAnimatorDriver newCharacterActionAnimatorDriver,
+        DirectionalSpriteLibraryDriver newDirectionDriver)
     {
         catalog = newCatalog;
         equipmentRenderer = newRenderer;
-        animationController = newAnimationController;
+        animationController = newCharacterActionAnimatorDriver;
         directionDriver = newDirectionDriver;
         _initialized = false;
     }
@@ -82,9 +82,9 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         if (equipmentRenderer == null)
             equipmentRenderer = GetComponent<EquipmentRenderer>();
         if (animationController == null)
-            animationController = GetComponent<AnimationController>();
+            animationController = GetComponent<CharacterActionAnimatorDriver>();
         if (directionDriver == null)
-            directionDriver = GetComponent<DirectionalAnimationVariantDriver>();
+            directionDriver = GetComponent<DirectionalSpriteLibraryDriver>();
 
         if (catalog == null || equipmentRenderer == null || animationController == null || directionDriver == null)
             return;

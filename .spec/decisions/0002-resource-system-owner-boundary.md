@@ -1,0 +1,24 @@
+# 0002-ResourceSystem 资源 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 当前工程已有 `ResourceSystem`、`SoftAssetReference`、`ModAPI / ModLoader`、YokiFrame ResKit、YooAsset 集成代码和 `FWRes/FWScene/FWText` 生成文件。
+  - 当前工程没有 `Assets/AddressableAssetsData`，`FWRes.g.cs` 仍为空资源索引，`Assets/StreamingAssets` 中也没有 YooAsset 正式包配置或构建产物。
+  - `2DRPGEngine` 的正式装备、物品、能力和保存链路使用数据库稳定引用或 Unity 序列化对象引用闭合；它没有把 `Assets/...` 字符串、空强类型索引或第三方插件存在本身当作运行时资源身份。
+  - Chris/Yoki 资源层的价值是外部内容包、Mod catalog 和按需加载，不是替代 FantasyWord 当前官方数据库主线。
+- 决策：
+  - 官方内容的正式资源 owner 继续是 `DatabaseRegistry`、`DatabaseEntryReference`、Unity 序列化资产引用或由它们派生出的项目稳定资源身份。
+  - `ResourceSystem` 是 Addressables 动态加载和外部 Mod catalog 的入口；它可以服务 Mod、后续 DLC、热更和按需资源，不接管官方数据库条目的真相。
+  - `SoftAssetReference` 只表示 Addressables 地址引用，不能用于存档、官方玩法数据或数据库条目的长期身份。
+  - `FWRes` 只有在真实 Addressables/YooAsset 配置存在、生成索引非空且门禁验证通过后，才能被视为正式资源 key；空索引不能替换数据库引用。
+  - `YokiFrame ResKit / YooAsset` 是候选工具层，不因为插件源码存在就自动成为 FantasyWord 官方资源 owner。
+  - `Assets/...` 项目路径只允许在编辑器工具、审计、生成器或迁移证据中出现；玩家运行时正式资源身份不得依赖它。
+- 影响：
+  - 正式 GameCore 运行时代码不得绕过数据库主线直接调用 `ResourceSystem.LoadAssetAsync`、`ResourceSystem.InstantiateAsync`、`ResourceSystem.LoadAssetsAsync`、`FWRes.*` 或 `SoftAssetReference<T>`。
+  - 例外范围只包括资源系统自身、Mod catalog 层和已经显式声明为资源桥的 `FormalGasAbilityResourceLoader`。
+  - `ResourceSystem` 自身必须遵守 Addressables 句柄生命周期：加载、查询和 catalog 操作产生的 handle 必须释放；临时改写 JSON catalog 时必须恢复原文件。
+  - 新门禁 `scripts/Invoke-ResourceOwnerStaticGate.ps1` 用于报告当前 Addressables/YooAsset/FWRes 成立情况，并阻止正式运行时代码把未成立资源工具层冒充正式 owner。
+- 替代关系：
+  - 本决策细化 `0001-EX-GAS 资源身份 owner` 对 EX-GAS 以外模块的通用资源 owner 边界。
+  - 本决策不取代后续 Mod 数据合同；当 Mod 需要新增物品、任务、音频、Prefab 或地图时，应另建 Mod 数据合并与冲突策略决策。

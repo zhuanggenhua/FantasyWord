@@ -40,7 +40,7 @@
 
 ## 系统架构
 
-动画变体只有一条正式链路：`AnimationController(动作) + DirectionalAnimationVariantDriver(方向) -> 共享 Animator Controller -> SpriteResolver -> 角色四向 SpriteLibraryAsset`。Animator 状态和共享片段只使用 `Idle/Walk/Attack` 等动作名；切换角色或方向只替换 SpriteLibraryAsset，不切换 Controller、不重播动作，也不使用左右镜像。`CharacterFrameData` 继续拥有 UV、锚点和装备合成帧数据，四向 SpriteLibrary 只拥有基础角色动画帧。
+动画变体只有一条正式链路：`CharacterActionAnimatorDriver(动作) + DirectionalSpriteLibraryDriver(方向) -> 共享 Animator Controller -> SpriteResolver -> 角色四向 SpriteLibraryAsset`。Animator 状态和共享片段只使用 `Idle/Walk/Attack` 等动作名；切换角色或方向只替换 SpriteLibraryAsset，不切换 Controller、不重播动作，也不使用左右镜像。`CharacterFrameData` 继续拥有 UV、锚点和装备合成帧数据，四向 SpriteLibrary 只拥有基础角色动画帧。
 
 派生动画资源通过 `Tools/Equipment System/Rebuild SpriteLibrary Animation Framework` 重建；该工具只写共享 Controller、动作片段、四向 SpriteLibrary，并回写工作台目录中每个角色的四向库引用，不加载、保存或改写 Scene/Prefab。旧的独立动画变体资产包装层不是受支持入口；`GeneratedClips`、`Overrides`、直接动画 `SpriteRenderer.m_Sprite` 和角色级 `AnimatorOverrideController` 均不是受支持入口。
 
@@ -59,7 +59,7 @@ EquipmentSystem/
 │   └── EquipmentAnimSequenceEditor.cs # 装备动画序列编辑器窗口
 ├── Runtime/                     # 运行时组件
 │   ├── EquipmentRenderer.cs         # 装备渲染器（配置驱动）
-│   └── AnimationController.cs       # 动画控制器
+│   └── CharacterActionAnimatorDriver.cs       # 角色动作 Animator 驱动
 └── Shaders/                     # Shader
     └── EquipmentUV.shader           # 装备渲染 Shader（双武器 + 像素阴影 + 眼部装饰）
 ```
@@ -366,7 +366,7 @@ BodyPartRegion
    equipmentRenderer.Refresh();
    ```
 
-> 旧的 `EquipmentDemoExtension` IMGUI 测试面板和兼容占位都已从正式树移除。换装模块正式入口只保留 `EquipmentRenderer`、`AnimationController` 与编辑器工具。
+> 旧的 `EquipmentDemoExtension` IMGUI 测试面板和兼容占位都已从正式树移除。换装模块正式入口只保留 `EquipmentRenderer`、`CharacterActionAnimatorDriver` 与编辑器工具。
 
 ### 阴影（当前实现）
 

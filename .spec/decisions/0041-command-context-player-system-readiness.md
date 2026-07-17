@@ -1,0 +1,22 @@
+# 0041-命令上下文玩家系统就绪边界
+
+- 日期：2026-07-15
+- 状态：已采纳（系统访问形式判定已由 0046 取代）
+- 2026-07-16 状态说明：
+  - 本文保留“命令上下文 fallback 需要明确未就绪失败语义”的合同。
+  - 文中关于 `MovePlayer` 不得直读 `GameManager.PlayerSystem`、必须改成 `TryGetSystem` 的访问形式结论已被 0046 取代；`MovePlayer` 当前应保持参考同职责玩家入口的项目适配版。
+- 背景：
+  - `GameCommandContext` 是命令链识别本地玩家、脚本、AI 和实际执行角色的公共入口。
+  - 多个旧命令允许在上下文没有明确角色时回退到当前受控角色；这个回退规则应由 `PlayerSystem` 正式 API 承担，但入口必须先确认系统存在。
+  - 旧审计把“先查询再读取”误解成固定访问形式要求；实际要保留的是命令上下文 fallback 的可失败语义，而不是要求所有命令改成 `TryGetSystem`。
+- 决策：
+  - `GameCommandContext.ResolveForActor()` 和 `ResolveActorOrCurrentControlledCharacter()` 是兼容旧命令、预览、菜单和脚本上下文的可失败解析入口；系统或角色不可解析时可以返回未知上下文或空目标。
+  - `GameCommandContext.ResolveRequiredActorOrCurrentControlledCharacter(...)` 是正式结果型命令的必需目标入口；缺目标时必须暴露配置错误，不能静默 no-op。
+  - `MovePlayer` 必须匹配参考同职责玩家入口的项目适配版：原版通过正式玩家入口取得玩家，FantasyWord 通过 `GameManager.PlayerSystem.GetPrimaryPlayerCharacter()` 取得主玩家目标；不得把参考中的正式玩家命令改成空目标静默跳过。
+  - 命令运行时静态门禁必须覆盖 `GameCommandContext` 的可失败上下文解析合同，以及 `MovePlayer` 的参考玩家入口合同；门禁不得仅因 `GameManager.XxxSystem` 或 `TryGetSystem<T>()` 访问形式判定通过/失败。
+- 影响：
+  - 命令上下文的可失败入口在系统未就绪时不抛全局空引用；结果型命令通过必需目标入口暴露缺目标错误。
+  - 命令上下文的回退语义保持不变：有上下文角色优先，无角色才尝试当前受控角色或主玩家。
+  - 不新增第二套玩家身份、命令 owner 或输入路由。
+- 替代关系：
+  - 本决策已由 `0046`、`0050` 和 `0051` 收紧解释：正文只能按“命令目标解析失败语义”理解，不再作为访问形式迁移依据。

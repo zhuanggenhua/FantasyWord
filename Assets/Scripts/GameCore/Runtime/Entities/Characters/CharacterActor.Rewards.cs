@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace FantasyWord.GameCore
 {
     public partial class CharacterActor
@@ -46,31 +48,32 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            bool rewardGranted = GrantLoot(receiver, inventorySystem);
+            InventoryOwnerHandle receiverOwner = inventorySystem.GetOwner(receiver);
+            List<Loot> grantedLoot = ResolveGrantedLoot(receiver);
             int experienceReward = m_sheet.GetExperienceRewardAtLevel(m_level);
             int moneyReward = m_sheet.GetMoneyRewardAtLevel(m_level);
+
+            inventorySystem.ExecuteLootReward(
+                receiverOwner,
+                grantedLoot,
+                moneyReward,
+                EItemTransferType.CharacterDrop);
 
             if (receiver is CharacterActor actor && experienceReward > 0)
             {
                 actor.AddExperience(experienceReward);
             }
 
-            if (moneyReward > 0)
+            if (grantedLoot.Count > 0 || moneyReward > 0)
             {
-                inventorySystem.AddMoney(moneyReward);
-            }
-
-            if (rewardGranted || moneyReward > 0)
-            {
-                PlayRewardPresentation(receiver, rewardGranted, moneyReward);
+                PlayRewardPresentation(receiver, grantedLoot.Count > 0, moneyReward);
             }
 
         }
 
-        private bool GrantLoot(CharacterBase receiver, InventorySystem inventorySystem)
+        private List<Loot> ResolveGrantedLoot(CharacterBase receiver)
         {
-            bool rewardGranted = false;
-            InventoryOwnerHandle receiverOwner = inventorySystem.GetOwner(receiver);
+            List<Loot> grantedLoot = new();
 
             foreach (Loot loot in m_sheet.GetPotentialLoot())
             {
@@ -79,11 +82,10 @@ namespace FantasyWord.GameCore
                     continue;
                 }
 
-                inventorySystem.AddToBag(receiverOwner, loot.item, loot.quantity, EItemTransferType.CharacterDrop);
-                rewardGranted = true;
+                grantedLoot.Add(loot);
             }
 
-            return rewardGranted;
+            return grantedLoot;
         }
 
         private bool CanGrantLoot(Loot loot, CharacterBase receiver)

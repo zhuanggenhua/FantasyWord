@@ -13,7 +13,10 @@ namespace FantasyWord.GameCore
         [SerializeField] protected TextMeshProUGUI m_message = null;
 
         [Header("Animation Settings")]
+        [Min(0.0f)]
         [SerializeField] protected float m_delayBeforeFadeOut = 1.5f;
+
+        [Min(0.0f)]
         [SerializeField] protected float m_fadeOutDuration = 0.5f;
 
         [Header("Message Settings")]
@@ -23,7 +26,7 @@ namespace FantasyWord.GameCore
 
         private void Awake()
         {
-            m_message.enabled = false;
+            ResetVisualState();
         }
 
         /// <summary>
@@ -39,6 +42,11 @@ namespace FantasyWord.GameCore
         {
             EventKit.Type.UnRegister<PlayerAbilityFireFailedEvent>(OnPlayerAbilityFireFailed);
             EventKit.Type.UnRegister<LocalPlayerCommandFailedEvent>(OnLocalPlayerCommandFailed);
+            Hide();
+        }
+
+        private void OnDestroy()
+        {
             Hide();
         }
 
@@ -147,10 +155,15 @@ namespace FantasyWord.GameCore
             m_message.enabled = true;
             m_message.alpha = 1.0f;
 
-            m_hideCoroutine = StartCoroutine(FadeOutAfterDelay(m_delayBeforeFadeOut));
+            m_hideCoroutine = StartCoroutine(FadeOutAfterDelay(Mathf.Max(0.0f, m_delayBeforeFadeOut)));
         }
 
         private void InterruptPreviousMessage()
+        {
+            StopHideCoroutine();
+        }
+
+        private void StopHideCoroutine()
         {
             if (m_hideCoroutine != null)
             {
@@ -162,8 +175,10 @@ namespace FantasyWord.GameCore
         private IEnumerator FadeOutAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay);
-            yield return StartCoroutine(FadeOut(m_fadeOutDuration));
-            Hide();
+            yield return FadeOut(Mathf.Max(0.0f, m_fadeOutDuration));
+
+            m_hideCoroutine = null;
+            ResetVisualState();
         }
 
         private IEnumerator FadeOut(float duration)
@@ -182,7 +197,19 @@ namespace FantasyWord.GameCore
 
         private void Hide()
         {
-            InterruptPreviousMessage();
+            StopHideCoroutine();
+            ResetVisualState();
+        }
+
+        private void ResetVisualState()
+        {
+            if (m_message == null)
+            {
+                return;
+            }
+
+            m_message.text = string.Empty;
+            m_message.alpha = 0.0f;
             m_message.enabled = false;
         }
     }

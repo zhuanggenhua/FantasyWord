@@ -1,0 +1,21 @@
+# 0044-AddExperience 命令目标解析边界
+
+- 日期：2026-07-15
+- 状态：已采纳（系统访问形式判定已由 0046 取代）
+- 2026-07-16 状态说明：
+  - 本文保留“AddExperience 不复制角色 fallback 规则，目标由命令上下文解析”的 owner 合同。
+  - 文中关于直读 `GameManager.PlayerSystem` 的访问形式表述，不再作为独立审计标准；当前以 `0046-参考流程优先的 GameManager 系统访问审计边界` 为准。
+- 背景：
+  - `AddExperience` 是命令链中的角色成长命令，目标应来自命令上下文；没有明确上下文角色时，才允许按兼容规则回退当前受控角色。
+  - 旧实现自己判断 GameManager 和 PlayerSystem，然后直接读取 `GameManager.PlayerSystem`。
+  - 2026-07-16 参考流程复核后确认：经验奖励是正式结果写入链，缺目标时不能使用可失败解析吞掉结果；单个命令也不应复制 PlayerSystem 查询逻辑。
+- 决策：
+  - `AddExperience` 必须通过 `GameCommandContext.ResolveRequiredActorOrCurrentControlledCharacter(nameof(AddExperience))` 解析必需目标。
+  - 解析结果不是 `CharacterActor` 时必须暴露配置错误；不得静默跳过经验增加，也不得做全局查找或替代目标兜底。
+  - 命令运行时静态门禁必须禁止 `AddExperience` 重新复制一套玩家/当前控制角色 fallback 规则；它只能通过 `GameCommandContext` 的必需目标入口取得目标。门禁不得仅因 `GameManager.XxxSystem` 或 `TryGetSystem<T>()` 访问形式判定通过/失败。
+- 影响：
+  - 经验命令和其它结果型上下文命令共享同一条必需目标解析路径。
+  - 系统未就绪或上下文角色为空时会暴露正式命令缺目标错误，不再冒充执行成功。
+  - 不改变经验增加规则本身。
+- 替代关系：
+  - 本决策已由 `0051-玩家结果型命令必需目标边界` 收紧解释；旧的可失败目标解析结论作废。

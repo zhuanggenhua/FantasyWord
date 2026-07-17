@@ -164,6 +164,42 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
+        public void ResolveRampMovementDirection_TargetsNextRampTileCenterForManualDownhillInput()
+        {
+            TerrainNavigationTile lowRamp = CreateTile(
+                0,
+                ETerrainTransitionKind.Ramp,
+                ETerrainRampDirection.NorthWest);
+            TerrainNavigationTile highRamp = CreateTile(
+                1,
+                ETerrainTransitionKind.Ramp,
+                ETerrainRampDirection.NorthWest);
+
+            Vector3Int lowRampCell = new(1, 0);
+            Vector3Int highRampCornerCell = new(1, 1);
+            Vector3Int highRampExitCell = new(0, 1);
+            m_tilemap.SetTile(lowRampCell, lowRamp);
+            m_tilemap.SetTile(highRampCornerCell, highRamp);
+            m_tilemap.SetTile(highRampExitCell, highRamp);
+            m_navigationMap.RefreshNavigationData();
+
+            Vector2 currentWorld =
+                (Vector2)m_tilemap.GetCellCenterWorld(highRampExitCell) +
+                new Vector2(0.0f, -0.25f);
+            Vector2 expectedDirection =
+                ((Vector2)m_tilemap.GetCellCenterWorld(highRampCornerCell) - currentWorld).normalized;
+
+            bool resolved = m_navigationMap.TryResolveRampMovementDirection(
+                currentWorld,
+                Vector2.right,
+                out Vector2 resolvedDirection);
+
+            Assert.IsTrue(resolved);
+            Assert.That(Vector2.Dot(resolvedDirection, expectedDirection), Is.GreaterThan(0.999f));
+            Assert.That(resolvedDirection.y, Is.GreaterThan(0.0f));
+        }
+
+        [Test]
         public void BuildWorldPath_RejectsElevationChangeAgainstRampDirection()
         {
             TerrainNavigationTile lowRamp = CreateTile(

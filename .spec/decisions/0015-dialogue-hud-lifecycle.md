@@ -1,0 +1,24 @@
+# 0015-对话 HUD 监听生命周期 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - `DialogueSystem` / `DialogueChannel` 是对话播放状态的真相源，负责当前对话树、当前节点、队列和开始/结束/节点变化事件。
+  - `UIDialogue` 是 HUD 呈现和跳过输入的 owner，原先在 `Start()` 注册对话事件和 UI 输入事件，只在 `OnDestroy()` 注销。
+  - 这种创建/销毁生命周期会让禁用后的对话 HUD 仍继续消费 Submit、Cancel、Click 输入，也无法在重新启用时从正在播放的对话恢复当前节点。
+  - `UIDialogue` 同时会压入和移除 `EGameState.Dialogue` 状态层，因此它必须明确记录自己是否已经压入该层，避免重复压入或禁用后遗留状态层。
+- 决策：
+  - 对话 HUD 监听的 owner 是 `UIDialogue` 的启用状态，而不是对象创建/销毁状态。
+  - `UIDialogue` 必须在 `OnEnable` 尝试注册对话事件和跳过输入，`Start` 只作为 GameManager / 系统稍后就绪的重试入口。
+  - `UIDialogue` 必须在 `OnDisable` 和 `OnDestroy` 退订对话事件与 UI 输入事件，清空跳过输入防穿透门禁，并隐藏当前 HUD 呈现。
+  - `DialogueSystem` 必须提供只读当前播放状态查询，让新启用的 HUD 能同步当前对话树和当前节点；UI 不直接持有底层 `DialogueChannel`。
+  - `UIDialogue` 只移除自己确认压入的 `EGameState.Dialogue` 层，并且只在该层是当前栈顶时移除，避免破坏菜单等其它状态层。
+- 影响：
+  - `DialogueChannel` 新增 `TryGetCurrentState(out DialogueTree, out DialogueNode)`，只读暴露当前播放状态。
+  - `DialogueSystem` 转发当前播放状态查询，继续隐藏底层通道对象。
+  - `UIDialogue` 改为启用/禁用生命周期监听，并在启用时同步正在播放的对话。
+  - `UIDialogue` 禁用或销毁时会停止继续消费 UI 跳过输入，并清理自己压入的对话状态层。
+  - `scripts/Invoke-UIRuntimeStaticGate.ps1` 已扩展检查对话 HUD 生命周期和当前播放状态同步合同。
+- 替代关系：
+  - 本决策不改变 `DialogueSystem` 作为对话播放真相源。
+  - 本决策取代 `UIDialogue` 中“Start 注册、OnDestroy 注销”的隐式生命周期；后续若把 `EGameState.Dialogue` owner 上移到 `DialogueSystem`，必须新建决策取代本条的状态层 owner 部分。

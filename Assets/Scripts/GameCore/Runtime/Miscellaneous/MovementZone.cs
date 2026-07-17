@@ -104,15 +104,26 @@ namespace FantasyWord.GameCore
 
             if (m_requirePlayerType)
             {
-                PlayerSystem playerSystem = GameManager.PlayerSystem;
-                CharacterBase currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();
-                if (movable != currentControlledCharacter)
+                if (!TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter) ||
+                    movable != currentControlledCharacter)
                 {
                     return false;
                 }
             }
 
             return true;
+        }
+
+        private static bool TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter)
+        {
+            currentControlledCharacter = null;
+            if (!GameManager.Exists() || !GameManager.TryGetSystem(out PlayerSystem playerSystem))
+            {
+                return false;
+            }
+
+            currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+            return currentControlledCharacter != null;
         }
 
         private void ClearAppliedMovables()

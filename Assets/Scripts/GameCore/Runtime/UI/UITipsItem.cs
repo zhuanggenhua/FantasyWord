@@ -25,6 +25,17 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private void OnDisable()
+        {
+            StopShowRoutine();
+            ResetVisualState();
+        }
+
+        private void OnDestroy()
+        {
+            StopShowRoutine();
+        }
+
         public void Show(string text)
         {
             if (m_text != null)
@@ -32,10 +43,7 @@ namespace FantasyWord.GameCore
                 m_text.text = text ?? string.Empty;
             }
 
-            if (m_showCoroutine != null)
-            {
-                StopCoroutine(m_showCoroutine);
-            }
+            StopShowRoutine();
 
             gameObject.SetActive(true);
             m_showCoroutine = StartCoroutine(ShowRoutine());
@@ -54,6 +62,30 @@ namespace FantasyWord.GameCore
             if (!GameObjectPoolService.Return(gameObject))
             {
                 gameObject.SetActive(false);
+            }
+        }
+
+        private void StopShowRoutine()
+        {
+            if (m_showCoroutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(m_showCoroutine);
+            m_showCoroutine = null;
+        }
+
+        private void ResetVisualState()
+        {
+            if (m_canvasGroup != null)
+            {
+                m_canvasGroup.alpha = 0f;
+            }
+
+            if (m_text != null)
+            {
+                m_text.text = string.Empty;
             }
         }
 

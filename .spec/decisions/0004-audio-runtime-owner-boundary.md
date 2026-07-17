@@ -1,0 +1,23 @@
+# 0004-音频运行时 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 的音频链路是 `AudioClipResolver -> NotificationSystem.audioPlaybackRequested -> AudioSystem -> AudioChannel`，对象和 UI 只配置 resolver，不直接播放通道。
+  - FantasyWord 保留这个主链，并把通知系统替换为 `GameRuntimeEvents.RequestAudioPlayback()`；同时在 `AudioChannel` 内增加 BroAudio SoundID 播放和 Unity AudioClip fallback 池。
+  - 当前正式场景只配置了 4 个音频通道，`Miscellaneous` 暂未接通；不能假设所有枚举通道都已经存在。
+- 决策：
+  - `AudioClipResolver` 是项目内音频播放请求的正式资源身份，允许同时持有 BroAudio `SoundID` 和传统 `AudioClip[]` fallback。
+  - `AudioSystem` 是通道选择、音量持久化和播放请求分发 owner；其它运行时代码只发布 `GameRuntimeEvents.RequestAudioPlayback()` 或持有 resolver 引用。
+  - `AudioChannel` 是唯一允许直接调用 `BroAudio.Play` 的 GameCore 运行时入口；BroAudio 只是通道内部执行层，不成为 gameplay、UI、技能或地图的直接依赖。
+  - `AudioSource` 是 `AudioChannel` 的必需组件，必须由场景/Prefab 显式配置或同对象组件提供；运行时不得自动 `AddComponent<AudioSource>()` 来掩盖缺失接线。
+  - Resolver 指向未配置通道时必须报错并中止该次播放，不能静默丢音；但不强制所有 `EAudioChannel` 枚举都预先配置。
+  - `AudioRegion` 必须先验证 resolver，再读取目标通道和缓存前一首音频，避免缺配置时空引用。
+- 影响：
+  - `AudioClipResolver` 的 PingPong 策略已修复单个 AudioClip 时的索引下溢问题；该问题参考工程中也存在，本项目不继续继承。
+  - `AudioChannel` 增加 `RequireComponent(typeof(AudioSource))`，并移除运行时自动添加 AudioSource 的兜底。
+  - `AudioSystem` 对缺失/空通道给出带请求来源和通道名的错误。
+  - `scripts/Invoke-AudioRuntimeStaticGate.ps1` 覆盖 BroAudio 绕过、AudioSource 自动补组件、缺 resolver 验证和 PingPong 单片段保护。
+- 替代关系：
+  - 本决策不新增音频素材，不改变共享/generated registry，也不改变现有 AudioClipResolver 资产绑定。
+  - 后续若正式采用 YooAsset/Addressables 管理音频文件，应另建资源加载决策；它只能替换 resolver 内部资源加载方式，不能绕过 AudioSystem 通道 owner。

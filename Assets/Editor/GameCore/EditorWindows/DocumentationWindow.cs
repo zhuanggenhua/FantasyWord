@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 文档窗口可展示和编辑的文档合同，隐藏 Markdown 文件来源和缓存细节。
+    /// </summary>
     public interface IDocument
     {
         string Title { get; }
@@ -23,6 +26,9 @@ namespace FantasyWord.GameCore
         void Reload();
     }
 
+    /// <summary>
+    /// FantasyWord 编辑器文档窗口，支持搜索、预览、编辑和创建项目 Markdown 文档。
+    /// </summary>
     public class DocumentationWindow : EditorWindow
     {
         private static IDocument[] m_documents = null;

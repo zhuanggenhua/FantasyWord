@@ -13,11 +13,11 @@ FantasyWord 的长期目标是玩家行为能对开放世界产生持久影响�
   - `TerrainNavigationMap` 当前基础规则 Tilemap 查询。
   - `TerrainCellRuntimeState` 当前临时状态和旧有效地表覆盖；后续需要拆出草覆盖层状态，避免继续用有效地表占位表达草层销毁。
   - `ElementReactionSystem` 当前元素反应裁决。
-  - `TerrainSurfacePresentation` 当前临时效果层；结果覆盖层不得再作为露土真相。
+  - `TerrainSurfacePresentation` 当前临时效果层和独立覆盖道具显隐；结果覆盖层不得再作为露土真相。
   - `ClickMoveTest` 中喷火烧草的可运行竖切。
 - **目标入口/环境**：
   - 作者底层地表/规则 Tilemap 是初始世界模板，土壤层本来存在。
-  - 草覆盖/植被层是可被元素和工具销毁、可再生、可保存的世界层。
+  - 草覆盖/植被层是可被元素和工具销毁、可再生、可保存的世界层；它既可能来自 Tilemap 来源，也可能来自花、长草等独立 `SpriteRenderer` 场景道具。
   - 世界地形变更层保存玩家对覆盖层和地表层的改写，不直接破坏作者模板。
   - 运行时查询得到“底层地表 + 草覆盖层当前状态 + 已保存玩家改写”的当前世界格状态。
   - 表现层只消费当前世界格状态，不拥有保存数据。
@@ -43,16 +43,23 @@ FantasyWord 的长期目标是玩家行为能对开放世界产生持久影响�
 
 ## Design Direction
 
-采用“作者模板 + 玩家改写层”的结构：
+采用“作者模板 + 玩家改写层”的结构。当前 Tilemap 分层先按职责拆清楚，不按 Fire/Wet/Electricity 等元素反应类型继续开新 Tilemap：
 
 | 层级 | 说明 |
 |------|------|
-| 作者模板 | 规则 Tilemap 定义初始底层地表、层级、坡道、阻挡、基础通行代价和初始草覆盖。 |
-| 玩家改写层 | 保存按 `TerrainNodeKey` 记录的地表改写、草覆盖层移除/再生状态、必要来源和版本。 |
-| 当前世界格状态 | 运行时由底层地表、草覆盖层和玩家改写层合成，供元素反应、导航、脚步声和表现查询。 |
-| 表现层 | 根据当前有效地貌刷新 Tilemap；不保存、不裁决。 |
+| 寻路规则层 | `地形规则` / `TerrainNavigationTile` 定义可行走、层级、坡道、基础地表和基础通行代价；它不负责视觉，也不负责 Unity 物理碰撞。 |
+| 物理碰撞/阻挡层 | 当前沿用作者场景做法：墙体、水体、悬崖等视觉 Tilemap 自带 `TilemapCollider2D + CompositeCollider2D + Rigidbody2D`；暂不新增独立 Collision Tilemap，除非后续阻挡语义需要脱离视觉 Tile。 |
+| 基础视觉层 | `基础地面`、水、墙体、悬崖等作者绘制 Tilemap 负责初始画面和排序；不能从 Sprite 名称反推可燃、可挖或可再生语义。 |
+| 地表语义来源层 | `TerrainSurfaceLayerSource` 把多个作者/表现 Tilemap 的特定 Tile 映射为草、花、苔藓、道路覆盖等玩法覆盖语义；花、长草等植被必须先进入统一 Tilemap / Palette 作者入口，再由映射决定是否参与元素反应，不走散落 `SpriteRenderer` 特例。 |
+| 玩家改写层 | 保存按 `TerrainNodeKey`、来源 ID 记录的地表改写、覆盖层移除/再生状态、必要来源和版本；不直接破坏作者模板 Tilemap，也不能遗漏统一植被 Tilemap 来源。 |
+| 当前世界格状态 | 运行时由底层地表、地表语义来源和玩家改写层合成，供元素反应、导航、脚步声和表现查询。 |
+| 运行时表现层 | 临时火焰、蒸汽等只消费当前状态刷新 Tilemap；不保存、不裁决，也不靠结果覆盖 Tile 冒充露土。 |
 
 首个竖切只要求“火烧毁草覆盖层、露出底层土壤、草层可再生”可持久化。后续再扩展 Mud/FrozenWater/建造铺地等结果。
+
+当前 `ClickMoveTest` 已接线五条 Tilemap 地表语义来源：`sourceId=0` 的 `地表覆盖` 映射 547 格低地 Grass 覆盖；`sourceId=10` 的 `地表装饰` 映射纯 `Rule Tiles/Grass.asset` 和标准 `Grass19_Minifantasy_ForgottenPlainsTiles_3.asset`；`sourceId=20` 的 `悬崖顶部装饰` 映射纯 `Rule Tiles/Grass.asset`；`sourceId=30` 的 `地表植被覆盖` 映射花和长草 Tile；`sourceId=31` 的 `地表植被阴影` 映射对应阴影 Tile，使燃尽隐藏时同格阴影也一起退场。`CobblestoneGrass Combo`、`LakeGrass`、`CliffGrass` 等复合 Tile 暂不接入可烧，因为整块隐藏会同时烧掉石路、水岸或崖草这类复合视觉内容。
+
+`2026-07-14` 的 `cover-props-fix` 证据已因临时独立道具通道废弃而降为历史背景，不能作为最终设计验收。`2026-07-15` 正向重构后，花和长草已回到统一 Tilemap 作者入口；同日 q-wide E2E 已证明正式 Q/EX-GAS 喷火仍能让目标 Grass 覆盖格进入 Burning，燃尽后隐藏所有映射为地表覆盖语义的真实来源层并露出底层 Dirt，二次 Q 不让已移除目标格复燃。这仍不是保存/加载闭环；本 change 的首要任务是把上述“覆盖层被移除”写入玩家世界改写层，并覆盖所有 Tilemap 地表语义来源。
 
 ## Acceptance
 

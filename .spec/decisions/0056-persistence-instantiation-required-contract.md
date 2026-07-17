@@ -1,0 +1,21 @@
+# 0056-持久化实例化必需配置参考流程边界
+
+- 日期：2026-07-16
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 同职责流程中，运行时对象、玩家对象和自定义对象都必须通过 `PersistenceSystem.InstantiateRuntime/InstantiateCustom/RegisterCustomInstancedPersistable` 进入持久化字典；调用方不直接拥有持久化登记结果。
+  - 参考实现对坏 prefab、缺 `Persistable`、错误类型主要使用 `Debug.Assert`，但这些都不是“可失败查询”或“允许跳过”的流程，而是配置错误。
+  - FantasyWord 当前已经把正式结果链的失败语义收紧为“缺必需配置要中断并说明现实对象”，不能继续让刷怪、玩家登记或运行时恢复在断言后写入空持久化对象、错误类型对象或空标识符。
+- 决策：
+  - `PersistenceSystem` 的运行时/自定义实例化入口必须显式校验 prefab、`Persistable` 组件、目标持久化类型和持久化标识符。
+  - prefab 为空、prefab 缺 `Persistable`、实例化结果不是调用方要求的 `TPersistable`、注册对象为空或显式传入空白 identifier 时，必须抛出可定位异常。
+  - 实例化后发现类型不匹配时，必须移除已登记的错误条目并销毁已创建对象，避免坏对象残留在场景或持久化字典中。
+  - 坏存档中的运行时 prefab GUID 无法解析仍按 0005 的读档容错处理：报错并跳过该坏记录，不把它误登记为有效运行时对象。
+  - 本决策不改变 `GameManager.PersistenceSystem` 作为正式系统入口的合理性，也不要求调用点改成 `TryGetSystem`。
+- 影响：
+  - `PersistenceSystem.InstantiationRuntime.cs` 不再只靠 `Debug.Assert` 验证实例化结果；正式运行时会在配置错误处直接失败。
+  - `ACharacterSpawner`、`PlayerSystem` 和存档恢复链继续通过 `PersistenceSystem` 统一进入持久化登记，不新增第二套实例 owner。
+  - `scripts/Invoke-PersistenceRuntimeStaticGate.ps1` 和 `scripts/Invoke-FoundationStaticGate.ps1` 覆盖该合同，防止回退到断言后继续登记。
+- 替代关系：
+  - 补充 0005 的“存档与数据库稳定身份边界”。
+  - 受 0046、0050 约束：本决策按参考同职责流程和失败语义判断，不按 `TryGetSystem`、单例或访问形式判定。

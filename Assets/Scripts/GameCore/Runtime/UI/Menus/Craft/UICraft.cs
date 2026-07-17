@@ -216,28 +216,37 @@ namespace FantasyWord.GameCore
 
         public void HandleRecipeEntryDeselected(Recipe recipe) => UpdateUI(recipe, true);
 
-        public async void HandleRecipeEntryClicked(Recipe recipe)
+        public void HandleRecipeEntryClicked(Recipe recipe)
+        {
+            RunPanelTaskAndReport(HandleRecipeEntryClickedAsync(recipe), nameof(HandleRecipeEntryClicked));
+        }
+
+        private async System.Threading.Tasks.Task HandleRecipeEntryClickedAsync(Recipe recipe)
         {
             CharacterBase inventoryOwner = ResolveInventoryOwner();
-
-            if (m_craftingStation.CanCraft(inventoryOwner, recipe, out bool hasMoney, out bool hasIngredients))
+            InventoryOperationResult result = m_craftingStation.TryCraft(inventoryOwner, recipe);
+            if (result.Succeeded)
             {
                 await GameManager.DialogueSystem.PlayNow(MenuFeedbackPrompts.CraftSucceeded, recipe.displayName);
-                m_craftingStation.Craft(inventoryOwner, recipe);
                 GameRuntimeEvents.RequestAudioPlayback(m_craftAudio);
                 UpdateUI(recipe, true);
             }
-            else if (!hasIngredients)
+            else if (result.FailureReason == EInventoryOperationFailureReason.InsufficientIngredients)
             {
                 await GameManager.DialogueSystem.PlayNow(MenuFeedbackPrompts.CraftMissingIngredients, recipe.displayName);
             }
-            else if (!hasMoney)
+            else if (result.FailureReason == EInventoryOperationFailureReason.InsufficientFunds)
             {
                 await GameManager.DialogueSystem.PlayNow(MenuFeedbackPrompts.CraftMissingMoney, recipe.displayName);
             }
         }
 
-        public async void HandleBagItemClicked(Item item)
+        public void HandleBagItemClicked(Item item)
+        {
+            RunPanelTaskAndReport(HandleBagItemClickedAsync(item), nameof(HandleBagItemClicked));
+        }
+
+        private async System.Threading.Tasks.Task HandleBagItemClickedAsync(Item item)
         {
             await GameManager.DialogueSystem.PlayNow(MenuFeedbackPrompts.CraftCannotUseItem, item.displayName);
         }

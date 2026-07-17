@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [switch]$AsJson
 )
@@ -46,6 +46,123 @@ function Convert-ToProjectRelativePath {
     return $FullPath.Replace('\', '/')
 }
 
+function Convert-AssetPathToFullPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectRoot,
+        [Parameter(Mandatory = $true)]
+        [string]$AssetPath
+    )
+
+    $normalized = $AssetPath.Replace('/', '\').TrimStart('\')
+    return [System.IO.Path]::GetFullPath((Join-Path $ProjectRoot $normalized))
+}
+
+function ConvertFrom-YamlScalar {
+    param(
+        [AllowEmptyString()]
+        [string]$Value
+    )
+
+    $trimmed = ([string]$Value).Trim()
+    if ($trimmed.Length -ge 2 -and $trimmed.StartsWith('"') -and $trimmed.EndsWith('"')) {
+        $unquoted = $trimmed.Substring(1, $trimmed.Length - 2)
+        return [regex]::Unescape($unquoted)
+    }
+
+    return $trimmed
+}
+
+function ConvertFrom-EscapedUnicode {
+    param(
+        [AllowEmptyString()]
+        [string]$Value
+    )
+
+    return [regex]::Unescape(([string]$Value))
+}
+
+function Get-YamlScalarValue {
+    param(
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [string]$Content,
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+        [Parameter(Mandatory = $true)]
+        [string]$DefaultValue
+    )
+
+    $match = [regex]::Match(
+        $Content,
+        ("(?m)^\s*{0}:\s*(?<Value>.*?)\s*$" -f [regex]::Escape($Name)))
+    if (-not $match.Success) {
+        return $DefaultValue
+    }
+
+    $value = ConvertFrom-YamlScalar -Value $match.Groups["Value"].Value
+    if ([string]::IsNullOrWhiteSpace($value)) {
+        return $DefaultValue
+    }
+
+    return $value
+}
+
+function Join-AssetPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Root,
+        [Parameter(Mandatory = $true)]
+        [string]$Leaf
+    )
+
+    return $Root.TrimEnd('/').Replace('\', '/') + "/" + $Leaf.Trim('/').Replace('\', '/')
+}
+
+function Get-EquipmentGenerationSettings {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectRoot
+    )
+
+    $defaultSettingsAssetPath = ConvertFrom-EscapedUnicode -Value "Assets/GameData/EquipmentSystem/Data/Workbench/\u6362\u88C5\u52A8\u753B\u751F\u6210\u8BBE\u7F6E.asset"
+    $defaultAnimationRoot = "Assets/GameData/EquipmentSystem/Animations"
+    $defaultControllerFileName = ConvertFrom-EscapedUnicode -Value "\u6362\u88C5\u5171\u4EAB\u52A8\u753B\u72B6\u6001\u673A.controller"
+    $defaultSharedClipFolderName = "SharedClips"
+    $defaultSpriteLibraryFolderName = "SpriteLibraries"
+    $defaultWorkbenchCatalogPath = ConvertFrom-EscapedUnicode -Value "Assets/GameData/EquipmentSystem/Data/Workbench/\u6362\u88C5\u5DE5\u4F5C\u53F0\u76EE\u5F55.asset"
+
+    $settingsFullPath = Convert-AssetPathToFullPath -ProjectRoot $ProjectRoot -AssetPath $defaultSettingsAssetPath
+    $settingsMissing = -not (Test-Path -LiteralPath $settingsFullPath)
+    $content = if ($settingsMissing) { "" } else { Get-FileContent -Path $settingsFullPath }
+
+    $animationRootAssetPath = Get-YamlScalarValue -Content $content -Name "animationRoot" -DefaultValue $defaultAnimationRoot
+    $controllerFileName = Get-YamlScalarValue -Content $content -Name "controllerFileName" -DefaultValue $defaultControllerFileName
+    $sharedClipFolderName = Get-YamlScalarValue -Content $content -Name "sharedClipFolderName" -DefaultValue $defaultSharedClipFolderName
+    $spriteLibraryFolderName = Get-YamlScalarValue -Content $content -Name "spriteLibraryFolderName" -DefaultValue $defaultSpriteLibraryFolderName
+    $workbenchCatalogAssetPath = Get-YamlScalarValue -Content $content -Name "workbenchCatalogPath" -DefaultValue $defaultWorkbenchCatalogPath
+
+    $sharedClipAssetPath = Join-AssetPath -Root $animationRootAssetPath -Leaf $sharedClipFolderName
+    $spriteLibraryAssetPath = Join-AssetPath -Root $animationRootAssetPath -Leaf $spriteLibraryFolderName
+    $controllerAssetPath = Join-AssetPath -Root $animationRootAssetPath -Leaf $controllerFileName
+
+    return [pscustomobject]@{
+        SettingsAssetPath = $defaultSettingsAssetPath
+        SettingsFullPath = $settingsFullPath
+        SettingsMissing = $settingsMissing
+        AnimationRootAssetPath = $animationRootAssetPath
+        AnimationRootFullPath = Convert-AssetPathToFullPath -ProjectRoot $ProjectRoot -AssetPath $animationRootAssetPath
+        SharedClipAssetPath = $sharedClipAssetPath
+        SharedClipFullPath = Convert-AssetPathToFullPath -ProjectRoot $ProjectRoot -AssetPath $sharedClipAssetPath
+        SpriteLibraryAssetPath = $spriteLibraryAssetPath
+        SpriteLibraryFullPath = Convert-AssetPathToFullPath -ProjectRoot $ProjectRoot -AssetPath $spriteLibraryAssetPath
+        ControllerAssetPath = $controllerAssetPath
+        ControllerFullPath = Convert-AssetPathToFullPath -ProjectRoot $ProjectRoot -AssetPath $controllerAssetPath
+        WorkbenchCatalogAssetPath = $workbenchCatalogAssetPath
+        WorkbenchCatalogFullPath = Convert-AssetPathToFullPath -ProjectRoot $ProjectRoot -AssetPath $workbenchCatalogAssetPath
+    }
+}
+
 function Test-CompleteDirectionalSpriteLibrarySetBlock {
     param(
         [Parameter(Mandatory = $true)]
@@ -64,14 +181,21 @@ function Test-CompleteDirectionalSpriteLibrarySetBlock {
 }
 
 $projectRoot = Get-ProjectRoot
+$generationSettings = Get-EquipmentGenerationSettings -ProjectRoot $projectRoot
 $equipmentDataRoot = Join-Path $projectRoot "Assets/GameData/EquipmentSystem"
-$animationRoot = Join-Path $equipmentDataRoot "Animations"
-$sharedClipRoot = Join-Path $animationRoot "SharedClips"
-$spriteLibraryRoot = Join-Path $animationRoot "SpriteLibraries"
+$animationRoot = $generationSettings.AnimationRootFullPath
+$sharedClipRoot = $generationSettings.SharedClipFullPath
+$spriteLibraryRoot = $generationSettings.SpriteLibraryFullPath
+$spriteLibrarySuffix = ConvertFrom-EscapedUnicode -Value "\u52A8\u753B\u7CBE\u7075\u5E93"
+$spriteLibrarySuffixPattern = [regex]::Escape($spriteLibrarySuffix)
+$directionalSpriteLibraryNamePattern = '^(?<Character>.+)_(?<Direction>SE|SW|NE|NW)' + $spriteLibrarySuffixPattern + '$'
+$directionalSpriteLibraryDirectionPattern = '_(SE|SW|NE|NW)' + $spriteLibrarySuffixPattern + '$'
+$transientDefaultGenerationSettingsPattern = [regex]::Escape(
+    (ConvertFrom-EscapedUnicode -Value "\u4F7F\u7528\u5185\u7F6E\u9ED8\u8BA4\u751F\u6210\u8BBE\u7F6E"))
 $legacyAnimationVariantSetRoot = Join-Path $animationRoot "CharacterAnimationVariants"
-$controllerPath = Join-Path $animationRoot "换装共享动画状态机.controller"
+$controllerPath = $generationSettings.ControllerFullPath
 $frameDataRoot = Join-Path $equipmentDataRoot "FrameData"
-$workbenchCatalogPath = Join-Path $equipmentDataRoot "Data/Workbench/换装工作台目录.asset"
+$workbenchCatalogPath = $generationSettings.WorkbenchCatalogFullPath
 $baseCharacterPrefabPath = Join-Path $projectRoot "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 $legacyGeneratedClipRoot = Join-Path $animationRoot "GeneratedClips"
 $legacyOverrideRoot = Join-Path $animationRoot "Overrides"
@@ -108,6 +232,12 @@ $frameDataAnimationLibraryOwnerFiles = New-Object System.Collections.Generic.Lis
 $workbenchCatalogMissingAnimationLibraryEntries = New-Object System.Collections.Generic.List[string]
 $prefabMissingAnimationLibraryEntries = New-Object System.Collections.Generic.List[string]
 $architectureContractViolations = New-Object System.Collections.Generic.List[string]
+$generationSettingsViolations = New-Object System.Collections.Generic.List[string]
+
+if ($generationSettings.SettingsMissing) {
+    [void]$generationSettingsViolations.Add(
+        ("Missing formal EquipmentSystemGenerationSettings asset: {0}" -f $generationSettings.SettingsAssetPath))
+}
 
 Get-ChildItem -LiteralPath $equipmentDataRoot -Recurse -File -Filter *.asset | ForEach-Object {
     $relativePath = Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $_.FullName
@@ -173,7 +303,7 @@ if (Test-Path -LiteralPath $spriteLibraryRoot) {
     }
 
     $libraryGroups = $libraryAssets | Group-Object {
-        if ($_.BaseName -match '^(?<Character>.+)_(?<Direction>SE|SW|NE|NW)动画精灵库$') {
+        if ($_.BaseName -match $directionalSpriteLibraryNamePattern) {
             return $Matches.Character
         }
 
@@ -181,7 +311,7 @@ if (Test-Path -LiteralPath $spriteLibraryRoot) {
     }
     foreach ($group in $libraryGroups) {
         $directions = @($group.Group | ForEach-Object {
-            if ($_.BaseName -match '_(SE|SW|NE|NW)动画精灵库$') { $Matches[1] }
+            if ($_.BaseName -match $directionalSpriteLibraryDirectionPattern) { $Matches[1] }
         } | Sort-Object -Unique)
         if ($directions.Count -ne 4) {
             [void]$incompleteDirectionalLibrarySets.Add(
@@ -246,6 +376,43 @@ if (Test-Path -LiteralPath $baseCharacterPrefabPath) {
         [void]$prefabMissingAnimationLibraryEntries.Add(
             (Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $baseCharacterPrefabPath))
     }
+
+    if ($prefabContent -notmatch 'm_EditorClassIdentifier:\s*Assembly-CSharp::CharacterEquipmentPresentation(?s).*?equipmentRenderer:\s*\{fileID:\s*(?!0(?:,|\}))') {
+        [void]$prefabMissingAnimationLibraryEntries.Add(
+            "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab: CharacterEquipmentPresentation.equipmentRenderer explicit binding")
+    }
+
+    $animationControllerPrefabMatch = [regex]::Match(
+        $prefabContent,
+        'm_EditorClassIdentifier:\s*Assembly-CSharp::CharacterActionAnimatorDriver(?s).*?(?=\n--- !u!|\z)')
+    if (-not $animationControllerPrefabMatch.Success) {
+        [void]$architectureContractViolations.Add("Base character prefab is missing CharacterActionAnimatorDriver component")
+    }
+    else {
+        $animationControllerPrefabBlock = $animationControllerPrefabMatch.Value
+        if ($animationControllerPrefabBlock -notmatch '(?m)^\s*characterAnimator:\s*\{fileID:\s*(?!0(?:,|\}))') {
+            [void]$architectureContractViolations.Add("Base character prefab must explicitly bind CharacterActionAnimatorDriver.characterAnimator")
+        }
+        if ($animationControllerPrefabBlock -notmatch '(?m)^\s*shadowObject:\s*\{fileID:\s*(?!0(?:,|\}))') {
+            [void]$architectureContractViolations.Add("Base character prefab must explicitly bind CharacterActionAnimatorDriver.shadowObject")
+        }
+    }
+
+    $equipmentRendererPrefabMatch = [regex]::Match(
+        $prefabContent,
+        'm_EditorClassIdentifier:\s*Assembly-CSharp::EquipmentRenderer(?s).*?(?=\n--- !u!|\z)')
+    if (-not $equipmentRendererPrefabMatch.Success) {
+        [void]$architectureContractViolations.Add("Base character prefab is missing EquipmentRenderer component")
+    }
+    else {
+        $equipmentRendererPrefabBlock = $equipmentRendererPrefabMatch.Value
+        if ($equipmentRendererPrefabBlock -notmatch '(?m)^\s*animationController:\s*\{fileID:\s*(?!0(?:,|\}))') {
+            [void]$architectureContractViolations.Add("Base character prefab must explicitly bind EquipmentRenderer.animationController")
+        }
+        if ($equipmentRendererPrefabBlock -notmatch '(?m)^\s*characterAnimator:\s*\{fileID:\s*(?!0(?:,|\}))') {
+            [void]$architectureContractViolations.Add("Base character prefab must explicitly bind EquipmentRenderer.characterAnimator")
+        }
+    }
 }
 else {
     [void]$prefabMissingAnimationLibraryEntries.Add(
@@ -263,29 +430,109 @@ Get-ChildItem -LiteralPath (Join-Path $projectRoot "Assets/Scripts/Presentation/
     }
 }
 
-$actionControllerPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/AnimationController.cs"
-$directionDriverPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/DirectionalAnimationVariantDriver.cs"
+$actionControllerPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/CharacterActionAnimatorDriver.cs"
+$directionDriverPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/DirectionalSpriteLibraryDriver.cs"
 $animationBuilderPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Editor/Utilities/EquipmentWorkbenchAnimatorControllerTool.cs"
+$generationSettingsPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Data/Workbench/EquipmentSystemGenerationSettings.cs"
+$workbenchBootstrapPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/UI/EquipmentWorkbenchBootstrap.cs"
+$workbenchIconSlotViewPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/UI/EquipmentWorkbenchIconSlotView.cs"
+$workbenchChipButtonViewPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/UI/EquipmentWorkbenchChipButtonView.cs"
+$gameCoreAnimatorCuePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Presentation/CuePlayGameCoreAnimator.cs"
+$characterEquipmentPresentationPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/CharacterEquipmentPresentation.cs"
+$equipmentRendererPath = Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime/EquipmentRenderer.cs"
+$characterActorPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Entities/Characters/CharacterActor.cs"
 $actionControllerContent = Get-FileContent -Path $actionControllerPath
 $directionDriverContent = Get-FileContent -Path $directionDriverPath
 $animationBuilderContent = Get-FileContent -Path $animationBuilderPath
+$generationSettingsContent = Get-FileContent -Path $generationSettingsPath
+$workbenchBootstrapContent = Get-FileContent -Path $workbenchBootstrapPath
+$workbenchIconSlotViewContent = Get-FileContent -Path $workbenchIconSlotViewPath
+$workbenchChipButtonViewContent = Get-FileContent -Path $workbenchChipButtonViewPath
+$gameCoreAnimatorCueContent = Get-FileContent -Path $gameCoreAnimatorCuePath
+$characterEquipmentPresentationContent = Get-FileContent -Path $characterEquipmentPresentationPath
+$equipmentRendererContent = Get-FileContent -Path $equipmentRendererPath
+$characterActorContent = Get-FileContent -Path $characterActorPath
 if ($actionControllerContent -match 'using\s+UnityEngine\.U2D\.Animation|SpriteLibraryAsset|SpriteLibrary\s+[_a-zA-Z]|CurrentDirection|SetDirection\s*\(|SetFacingDirection\s*\(') {
-    [void]$architectureContractViolations.Add("AnimationController owns direction or SpriteLibrary")
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver owns direction or SpriteLibrary")
 }
 if ($directionDriverContent -match 'Animator\.Play|GetComponent(?:InParent|InChildren)?<Animator>|\bAnimator\s+[_a-zA-Z]') {
-    [void]$architectureContractViolations.Add("DirectionalAnimationVariantDriver drives Animator")
+    [void]$architectureContractViolations.Add("DirectionalSpriteLibraryDriver drives Animator")
 }
 if ($animationBuilderContent -match 'EditorSceneManager|SceneManager|PrefabUtility') {
     [void]$architectureContractViolations.Add("Animation asset builder writes scenes or prefabs")
+}
+if ($animationBuilderContent -match ('CreateTransientDefault|HideAndDontSave|' + $transientDefaultGenerationSettingsPattern) -or
+    $generationSettingsContent -match 'CreateTransientDefault|HideAndDontSave') {
+    [void]$architectureContractViolations.Add("Animation asset builder falls back to transient generation settings")
+}
+if ($workbenchBootstrapContent -match 'FindFirstObjectByType<EquipmentWorkbenchRuntimeUI>|FindObject.*EquipmentWorkbenchRuntimeUI') {
+    [void]$architectureContractViolations.Add("Workbench bootstrap searches hidden scene UI owner")
+}
+if ($workbenchBootstrapContent -match 'Resources\.Load<EquipmentWorkbenchRuntimeUI>|DefaultWorkbenchUiResourcePath') {
+    [void]$architectureContractViolations.Add("Workbench bootstrap loads UI prefab by Resources path")
+}
+if ($actionControllerContent -match 'const\s+string\s+(DamageAnimationKey|DefaultFallbackAnimationKey)') {
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver hardcodes action policy constants")
+}
+if ($actionControllerContent -notmatch 'Animator\s+characterAnimator\s*;' -or
+    $actionControllerContent -notmatch 'GameObject\s+shadowObject\s*;') {
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver must expose explicit Animator and shadow references")
+}
+if ($actionControllerContent -match 'GetComponentsInChildren<Animator>\s*\(') {
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver searches child Animator owner")
+}
+if ($actionControllerContent -match 'GetComponentInChildren<(?:SpriteRenderer|EquipmentRenderer)>\s*\(') {
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver infers Animator from child presentation components")
+}
+if ($actionControllerContent -match 'transform\.Find\s*\(\s*"Shadow"\s*\)') {
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver finds shadow object by hardcoded child name")
+}
+if ($actionControllerContent -match 'IsCharacterAnimator|ContainsIgnoreCase\s*\(objectName|"(?:Canvas|Dialogue|Dialog|Bubble|Speech|Floating)"') {
+    [void]$architectureContractViolations.Add("CharacterActionAnimatorDriver filters candidate Animator by UI object names")
+}
+if ($gameCoreAnimatorCueContent -match 'TryRestoreAnimation\s*\([^,\r\n]+,\s*"') {
+    [void]$architectureContractViolations.Add("GameCore animation cue owns fallback action key")
+}
+if ($characterEquipmentPresentationContent -match 'GetComponentInChildren<EquipmentRenderer>') {
+    [void]$architectureContractViolations.Add("CharacterEquipmentPresentation searches hidden child EquipmentRenderer owner")
+}
+if ($equipmentRendererContent -notmatch 'CharacterActionAnimatorDriver\s+animationController\s*;' -or
+    $equipmentRendererContent -notmatch 'Animator\s+characterAnimator\s*;') {
+    [void]$architectureContractViolations.Add("EquipmentRenderer must expose explicit CharacterActionAnimatorDriver and Animator references")
+}
+if ($equipmentRendererContent -match 'GetComponentInParent<CharacterActionAnimatorDriver>') {
+    [void]$architectureContractViolations.Add("EquipmentRenderer searches parent CharacterActionAnimatorDriver owner")
+}
+if ($equipmentRendererContent -match 'ResolveCharacterAnimator|IsCharacterAnimator|GetComponentsInChildren<Animator>\s*\(') {
+    [void]$architectureContractViolations.Add("EquipmentRenderer searches or infers child Animator owner")
+}
+if ($equipmentRendererContent -match 'GetComponentInChildren<(?:SpriteRenderer|EquipmentRenderer)>\s*\(') {
+    [void]$architectureContractViolations.Add("EquipmentRenderer infers Animator from child presentation components")
+}
+if ($equipmentRendererContent -match 'ContainsIgnoreCase\s*\(objectName|"(?:Canvas|Dialogue|Dialog|Bubble|Speech|Floating)"') {
+    [void]$architectureContractViolations.Add("EquipmentRenderer filters candidate Animator by UI object names")
+}
+if ($characterActorContent -match 'Try(?:Play|Lock)Animation\s*\(\s*"(?:Idle|Dmg|SpinDie)"') {
+    [void]$architectureContractViolations.Add("CharacterActor owns concrete formal action key")
+}
+if ($workbenchIconSlotViewContent -match 'RemoveAllListeners\s*\(' -or
+    $workbenchChipButtonViewContent -match 'RemoveAllListeners\s*\(') {
+    [void]$architectureContractViolations.Add("Workbench button views clear external click listeners")
+}
+if (($workbenchIconSlotViewContent -match 'onClick\.AddListener\s*\(' -and
+        $workbenchIconSlotViewContent -notmatch 'onClick\.RemoveListener\s*\(\s*currentClickListener\s*\)') -or
+    ($workbenchChipButtonViewContent -match 'onClick\.AddListener\s*\(' -and
+        $workbenchChipButtonViewContent -notmatch 'onClick\.RemoveListener\s*\(\s*currentClickListener\s*\)')) {
+    [void]$architectureContractViolations.Add("Workbench button views must remove only their own stored click listener")
 }
 
 $demoSceneContent = Get-FileContent -Path $demoScenePath
 $demoSceneMissingPatterns = New-Object System.Collections.Generic.List[string]
 foreach ($pattern in @(
     "m_Name: EquipmentSystemDemoCharacter",
-    "m_EditorClassIdentifier: ::DirectionalAnimationVariantDriver",
+    "m_EditorClassIdentifier: ::DirectionalSpriteLibraryDriver",
     "m_EditorClassIdentifier: ::EquipmentRenderer",
-    "m_EditorClassIdentifier: ::AnimationController",
+    "m_EditorClassIdentifier: ::CharacterActionAnimatorDriver",
     "UnityEngine.U2D.Animation.SpriteResolver",
     "UnityEngine.U2D.Animation.SpriteLibrary",
     "m_Controller:"
@@ -294,13 +541,24 @@ foreach ($pattern in @(
         [void]$demoSceneMissingPatterns.Add($pattern)
     }
 }
+if ($demoSceneContent -notmatch '(?m)^\s*runtimeUiPrefab:\s*\{fileID:\s*(?!0(?:,|\}))') {
+    [void]$demoSceneMissingPatterns.Add("EquipmentWorkbenchBootstrap.runtimeUiPrefab explicit binding")
+}
 
 $report = [ordered]@{
     ProjectRoot = $projectRoot
     EquipmentDataRoot = $equipmentDataRoot
+    GenerationSettingsPath = $generationSettings.SettingsAssetPath
+    GenerationSettingsMissing = $generationSettings.SettingsMissing
+    AnimationRoot = $generationSettings.AnimationRootAssetPath
+    SharedClipRoot = $generationSettings.SharedClipAssetPath
+    SpriteLibraryRoot = $generationSettings.SpriteLibraryAssetPath
+    ControllerPath = $generationSettings.ControllerAssetPath
+    WorkbenchCatalogPath = $generationSettings.WorkbenchCatalogAssetPath
     DemoScenePath = $demoScenePath
     LegacyRuntimeDirectoryExists = $legacyRuntimeDirectoryExists
     LegacyRuntimeFileCount = @($legacyRuntimeFiles).Count
+    GenerationSettingsViolationCount = $generationSettingsViolations.Count
     LegacyIdentifierFileCount = $legacyIdentifierFiles.Count
     BusinessAssemblyIdentifierFileCount = $businessAssemblyIdentifierFiles.Count
     DemoSceneMissingPatternCount = $demoSceneMissingPatterns.Count
@@ -321,6 +579,7 @@ $report = [ordered]@{
     WorkbenchCatalogMissingAnimationLibraryEntryCount = $workbenchCatalogMissingAnimationLibraryEntries.Count
     BasePrefabMissingAnimationLibraryEntryCount = $prefabMissingAnimationLibraryEntries.Count
     ArchitectureContractViolationCount = $architectureContractViolations.Count
+    GenerationSettingsViolations = @($generationSettingsViolations)
     LegacyRuntimeFiles = @($legacyRuntimeFiles)
     LegacyIdentifierFiles = @($legacyIdentifierFiles)
     BusinessAssemblyIdentifierFiles = @($businessAssemblyIdentifierFiles)
@@ -344,6 +603,7 @@ $report = [ordered]@{
 
 $hasFailures = $report.LegacyRuntimeDirectoryExists -or
     $report.LegacyRuntimeFileCount -gt 0 -or
+    $report.GenerationSettingsViolationCount -gt 0 -or
     $report.LegacyIdentifierFileCount -gt 0 -or
     $report.BusinessAssemblyIdentifierFileCount -gt 0 -or
     $report.DemoSceneMissingPatternCount -gt 0 -or
@@ -374,7 +634,17 @@ if ($AsJson) {
 Write-Host "FantasyWord equipment-system static gate"
 Write-Host ("ProjectRoot: {0}" -f $report.ProjectRoot)
 Write-Host ("Equipment data root: {0}" -f $report.EquipmentDataRoot)
+Write-Host ("Generation settings: {0}" -f $report.GenerationSettingsPath)
+Write-Host ("Animation root: {0}" -f $report.AnimationRoot)
+Write-Host ("Shared clip root: {0}" -f $report.SharedClipRoot)
+Write-Host ("SpriteLibrary root: {0}" -f $report.SpriteLibraryRoot)
+Write-Host ("Controller path: {0}" -f $report.ControllerPath)
+Write-Host ("Workbench catalog path: {0}" -f $report.WorkbenchCatalogPath)
 Write-Host ("Demo scene: {0}" -f $report.DemoScenePath)
+Write-Host ("Generation settings violations: {0}" -f $report.GenerationSettingsViolationCount)
+foreach ($violation in $report.GenerationSettingsViolations) {
+    Write-Host ("  [generation-settings] {0}" -f $violation)
+}
 Write-Host ("Legacy runtime directory exists: {0}" -f $report.LegacyRuntimeDirectoryExists)
 Write-Host ("Legacy runtime files: {0}" -f $report.LegacyRuntimeFileCount)
 foreach ($path in $report.LegacyRuntimeFiles) {

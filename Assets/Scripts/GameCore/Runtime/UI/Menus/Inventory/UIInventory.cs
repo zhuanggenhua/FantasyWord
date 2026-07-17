@@ -9,19 +9,16 @@ namespace FantasyWord.GameCore
         [SerializeField] private UIInventoryStats m_stats = null;
 
         private InventoryMenuContext m_context = InventoryMenuContext.CurrentControlledCharacter();
+        private bool m_currentControlledCharacterListening = false;
 
         protected override void OnPanelInit()
         {
-            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             m_bag.Init();
         }
 
         private void OnDestroy()
         {
-            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
-            {
-                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            }
+            StopCurrentControlledCharacterListening();
         }
 
         protected override void OnPanelOpened(UIKitMenuOpenData openData)
@@ -33,7 +30,13 @@ namespace FantasyWord.GameCore
 
         protected override void OnPanelShown(UIKitMenuOpenData openData)
         {
+            BindCurrentControlledCharacterListenerForContext();
             UpdateUI();
+        }
+
+        protected override void OnPanelHidden()
+        {
+            StopCurrentControlledCharacterListening();
         }
 
         protected override GameObject ResolveDefaultFocusTarget()
@@ -68,7 +71,12 @@ namespace FantasyWord.GameCore
             m_stats.UpdateUI(actor);
         }
 
-        private async void OnItemClicked(Item item, EItemLocation location)
+        private void OnItemClicked(Item item, EItemLocation location)
+        {
+            RunPanelTaskAndReport(OnItemClickedAsync(item, location), nameof(OnItemClicked));
+        }
+
+        private async System.Threading.Tasks.Task OnItemClickedAsync(Item item, EItemLocation location)
         {
             CharacterBase actor = m_context.ResolveActor();
             if (actor == null)
@@ -120,6 +128,48 @@ namespace FantasyWord.GameCore
             if (m_context.FollowsCurrentControlledCharacter && gameObject.activeInHierarchy)
             {
                 UpdateUI();
+            }
+        }
+
+        private void BindCurrentControlledCharacterListenerForContext()
+        {
+            if (m_context.FollowsCurrentControlledCharacter)
+            {
+                StartCurrentControlledCharacterListeningIfReady();
+            }
+            else
+            {
+                StopCurrentControlledCharacterListening();
+            }
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+        }
+
+        private void StopCurrentControlledCharacterListening()
+        {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
+            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            {
+                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             }
         }
 

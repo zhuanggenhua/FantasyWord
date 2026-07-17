@@ -43,15 +43,31 @@ namespace FantasyWord.GameCore
             foreach (AGameSystem system in systems)
             {
                 Type type = system.GetType();
-                Debug.Assert(!m_systems.ContainsKey(type), $"Game System {type.Name} already registered");
+                if (m_systems.ContainsKey(type))
+                {
+                    throw new InvalidOperationException(
+                        $"Game System {type.Name} already registered. Only one {type.Name} can be owned by the active GameManager.");
+                }
+
                 m_systems[type] = system;
             }
         }
 
-        public static bool HasSystem<T>() where T : AGameSystem => _instance.m_systems.ContainsKey(typeof(T));
+        public static bool HasSystem<T>() where T : AGameSystem
+        {
+            return _instance != null &&
+                _instance.m_systems != null &&
+                _instance.m_systems.ContainsKey(typeof(T));
+        }
 
         public static bool TryGetSystem<T>(out T system) where T : AGameSystem
         {
+            system = null;
+            if (_instance == null || _instance.m_systems == null)
+            {
+                return false;
+            }
+
             bool systemFound = _instance.m_systems.TryGetValue(typeof(T), out AGameSystem gameSystem);
             system = systemFound ? (T)gameSystem : null;
             return systemFound;
@@ -59,9 +75,13 @@ namespace FantasyWord.GameCore
 
         public static T GetSystem<T>() where T : AGameSystem
         {
-            bool systemFound = _instance.m_systems.TryGetValue(typeof(T), out AGameSystem system);
-            Debug.Assert(systemFound, $"Game System {typeof(T).Name} could not be found");
-            return (T)system;
+            if (TryGetSystem(out T system))
+            {
+                return system;
+            }
+
+            throw new InvalidOperationException(
+                $"Game System {typeof(T).Name} could not be found. Add exactly one {typeof(T).Name} under the active GameManager scene hierarchy before using GameManager.{typeof(T).Name}.");
         }
     }
 }

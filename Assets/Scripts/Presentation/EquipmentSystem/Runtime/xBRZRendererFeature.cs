@@ -15,12 +15,19 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
+    /// <summary>
+    /// URP 全屏 xBRZ-like 后处理入口，用于平滑像素画边缘。
+    /// </summary>
     public class xBRZRendererFeature : ScriptableRendererFeature
     {
+        /// <summary>
+        /// xBRZ 后处理的可调参数。
+        /// </summary>
         [System.Serializable]
         public class xBRZSettings
         {
-            [Tooltip("xBRZ Filter Shader")]
+            [InspectorName("滤镜 Shader")]
+            [Tooltip("执行 xBRZ 滤镜的 Shader。")]
             public Shader shader;
             
             [Tooltip("渲染时机")]
@@ -36,6 +43,8 @@ using UnityEngine.Rendering.Universal;
             public bool enabled = true;
         }
         
+        [InspectorName("xBRZ 设置")]
+        [Tooltip("控制 xBRZ 后处理的 Shader、渲染时机和缩放倍率。")]
         public xBRZSettings xbrzSettings = new xBRZSettings();
         
         private xBRZRenderPass _renderPass;

@@ -26,6 +26,7 @@ namespace FantasyWord.GameCore
 
         public bool CanCraft(CharacterBase owner, Recipe recipe, out bool hasMoney, out bool hasIngredients)
         {
+            EnsureValidRecipe(recipe, nameof(CanCraft));
             return recipe.CanCraft(owner, out hasMoney, out hasIngredients, m_flatPrice, m_priceMultiplier);
         }
 
@@ -36,22 +37,31 @@ namespace FantasyWord.GameCore
 
         public void Craft(CharacterBase owner, Recipe recipe)
         {
+            InventoryOperationResult result = TryCraft(owner, recipe);
+            if (!result.Succeeded)
+            {
+                throw new System.InvalidOperationException(
+                    $"[{nameof(CraftingStation)}] 无法制作配方 {recipe.name}，失败原因={result.FailureReason}。");
+            }
+        }
+
+        public InventoryOperationResult TryCraft(CharacterBase owner, Recipe recipe)
+        {
+            EnsureValidRecipe(recipe, nameof(TryCraft));
             int craftCost = recipe.CalculateCraftCost(m_flatPrice, m_priceMultiplier);
             InventoryOwnerHandle ownerHandle = GameManager.InventorySystem.GetOwner(owner);
-            GameManager.InventorySystem.RemoveMoney(craftCost);
+            return GameManager.InventorySystem.ExecuteCraftRecipe(ownerHandle, recipe, craftCost);
+        }
 
-            foreach (var requirement in recipe.GetIngredients())
+        private static void EnsureValidRecipe(Recipe recipe, string operationName)
+        {
+            if (!recipe)
             {
-                GameManager.InventorySystem.RemoveFromBag(ownerHandle, requirement.Key, requirement.Value, EItemTransferType.Crafting);
+                throw new System.InvalidOperationException(
+                    $"[{nameof(CraftingStation)}] {operationName} 需要有效配方，不能把空配方当成制作结果。");
             }
 
-            GameManager.InventorySystem.AddToBag(ownerHandle, recipe.item, recipe.quantity, EItemTransferType.Crafting);
-
-            foreach (var entry in recipe.GetAdditionalOutput())
-            {
-                Debug.Assert(entry.Value > 0, $"Invalid provided quantity ({entry.Value}). Expected quantity > 0");
-                GameManager.InventorySystem.AddToBag(ownerHandle, entry.Key, entry.Value, EItemTransferType.Crafting);
-            }
+            recipe.EnsureCraftConfiguration();
         }
     }
 }

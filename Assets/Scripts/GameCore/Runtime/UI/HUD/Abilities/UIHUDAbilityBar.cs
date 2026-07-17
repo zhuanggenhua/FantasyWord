@@ -7,10 +7,44 @@ namespace FantasyWord.GameCore
     {
         protected UIHUDAbilityBarEntry[] m_abilities = null;
         private CharacterBase m_currentCharacter = null;
+        private bool m_isInitialized = false;
+        private bool m_currentControlledCharacterListening = false;
+
+        private void Awake()
+        {
+            InitializeEntriesIfNeeded();
+        }
+
+        private void OnEnable()
+        {
+            InitializeEntriesIfNeeded();
+            StartCurrentControlledCharacterListeningIfReady();
+        }
 
         private void Start()
         {
-            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            StartCurrentControlledCharacterListeningIfReady();
+        }
+
+        private void OnDisable()
+        {
+            StopCurrentControlledCharacterListening();
+            BindCharacter(null);
+        }
+
+        private void OnDestroy()
+        {
+            StopCurrentControlledCharacterListening();
+            BindCharacter(null);
+        }
+
+        private void InitializeEntriesIfNeeded()
+        {
+            if (m_isInitialized)
+            {
+                return;
+            }
+
             m_abilities = GetComponentsInChildren<UIHUDAbilityBarEntry>();
 
             for (int i = 0; i < m_abilities.Length; ++i)
@@ -18,17 +52,38 @@ namespace FantasyWord.GameCore
                 m_abilities[i].SetAbility(default(CharacterEquippedAbilitySlotView), i);
             }
 
+            m_isInitialized = true;
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
         }
 
-        private void OnDestroy()
+        private void StopCurrentControlledCharacterListening()
         {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
             if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
             {
                 GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
             }
-
-            BindCharacter(null);
         }
 
         private void OnCurrentControlledCharacterChanged(CharacterBase character) => BindCharacter(character);
@@ -46,7 +101,7 @@ namespace FantasyWord.GameCore
             }
 
             m_currentCharacter = character;
-            foreach (UIHUDAbilityBarEntry abilityEntry in m_abilities)
+            foreach (UIHUDAbilityBarEntry abilityEntry in m_abilities ?? System.Array.Empty<UIHUDAbilityBarEntry>())
             {
                 abilityEntry.SetBoundCharacter(m_currentCharacter);
             }
@@ -64,7 +119,15 @@ namespace FantasyWord.GameCore
 
         private void OnEquippedAbilitiesChanged(CharacterEquippedAbilitySlotView[] abilities)
         {
-            for (int i = 0; i < math.min(m_abilities.Length, GameManager.Config.maxEquippableAbilities); ++i)
+            if (m_abilities == null)
+            {
+                return;
+            }
+
+            int maxEquippableAbilities = GameManager.Exists()
+                ? GameManager.Config.maxEquippableAbilities
+                : m_abilities.Length;
+            for (int i = 0; i < math.min(m_abilities.Length, maxEquippableAbilities); ++i)
             {
                 if (abilities.Length > i)
                 {

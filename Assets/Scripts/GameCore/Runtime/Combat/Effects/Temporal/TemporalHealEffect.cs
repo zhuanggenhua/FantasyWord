@@ -4,27 +4,65 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 持续治疗效果的存档快照，记录治疗数值、tick 间隔和当前计时器。
+    /// </summary>
     [Serializable]
     public class TemporalHealEffectPersistedState : TemporalEffectPersistedState
     {
+        /// <summary>
+        /// 每次 tick 恢复的生命值。
+        /// </summary>
         public int amount;
+
+        /// <summary>
+        /// 两次治疗 tick 之间的间隔秒数。
+        /// </summary>
         public float interval;
+
+        /// <summary>
+        /// 是否在效果首次生效后等待一个完整间隔再治疗。
+        /// </summary>
         public bool delayFirstTick;
+
+        /// <summary>
+        /// 当前距离下一次治疗 tick 的剩余秒数。
+        /// </summary>
         public float timer;
     }
 
+    /// <summary>
+    /// 按固定间隔恢复目标生命值的持续效果，读档时会保留当前 tick 计时进度。
+    /// </summary>
     [Serializable]
     public class TemporalHealEffect : ATemporalEffect, ITemporalEffectRuntimeStateCarrier
     {
+        /// <summary>
+        /// 持续治疗的设计时和运行时数据；timer 是运行期状态，不应由策划直接编辑。
+        /// </summary>
         [Serializable]
         internal struct HealData
         {
+            [InspectorName("治疗量")]
+            [Tooltip("每次治疗 tick 恢复的生命值。")]
             public int amount;
+
+            [InspectorName("触发间隔")]
+            [Tooltip("两次治疗 tick 之间的秒数；为 0 时会每帧触发，通常不应这样配置。")]
             public float interval;
+
+            [InspectorName("延迟首次触发")]
+            [Tooltip("开启后，效果生效时不会立刻治疗，而是等待一个完整触发间隔。")]
             public bool delayFirstTick;
+
+            /// <summary>
+            /// 距离下一次治疗 tick 的剩余秒数，由持续效果运行时维护。
+            /// </summary>
             [HideInInspector] public float timer;
         }
 
+        [InspectorName("持续治疗配置")]
+        [Tooltip("配置持续恢复生命值的数值、触发间隔和首次触发策略。")]
         [SerializeField] private HealData m_healData;
 
         protected override void OnInit()
@@ -90,11 +128,11 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        public void RestorePersistedState(TemporalEffectPersistedState persistedState)
+        public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)
         {
             if (persistedState is not TemporalHealEffectPersistedState state)
             {
-                return;
+                return false;
             }
 
             state.RestoreSharedStateTo(this);
@@ -102,6 +140,7 @@ namespace FantasyWord.GameCore
             m_healData.interval = state.interval;
             m_healData.delayFirstTick = state.delayFirstTick;
             m_healData.timer = state.timer;
+            return true;
         }
     }
 }

@@ -52,12 +52,12 @@ namespace FantasyWord.GameCore
             base.OnRemove(time);
             if (m_animationDriver != null
                 && !string.IsNullOrWhiteSpace(m_activeAnimationKey)
-                && !m_animationDriver.TryRestoreAnimation(m_activeAnimationKey, "Idle")
+                && !m_animationDriver.TryRestoreDefaultAnimation(m_activeAnimationKey)
                 && Application.isPlaying)
             {
                 Debug.LogError(
-                    $"EX-GAS 动画 Cue 结束后无法从动作“{m_activeAnimationKey}”恢复 Idle。"
-                    + "请检查角色动画数据库与 Animator 的 Idle 状态。",
+                    $"EX-GAS 动画 Cue 结束后无法从动作“{m_activeAnimationKey}”恢复默认动作。"
+                    + "请检查角色动画驱动、动作数据库与 Animator 状态。",
                     _abilitySystemCell?.GameObject);
             }
 
@@ -92,15 +92,7 @@ namespace FantasyWord.GameCore
                 return null;
             }
 
-            Transform root = string.IsNullOrWhiteSpace(Parameter?.AnimatorNodePath)
-                ? target.transform
-                : target.transform.Find(Parameter.AnimatorNodePath);
-            if (root == null)
-            {
-                return null;
-            }
-
-            MonoBehaviour[] behaviours = root.GetComponentsInChildren<MonoBehaviour>(true);
+            MonoBehaviour[] behaviours = target.GetComponentsInChildren<MonoBehaviour>(true);
             for (int i = 0; i < behaviours.Length; i++)
             {
                 if (behaviours[i] is ICharacterAnimationDriver driver)

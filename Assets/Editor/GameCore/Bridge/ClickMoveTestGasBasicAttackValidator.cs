@@ -12,11 +12,11 @@ namespace FantasyWord.GameCore
 {
     /// <summary>
     /// ClickMoveTest 的 EX-GAS 普攻 PlayMode 验证入口。
-    /// 只验证 Ability 20001 经由 GAS Timeline / TaskApplyEffects / GameplayEffect 伤害训练假人。
+    /// 只验证 EX-GAS 生成的基础攻击能力经由 GAS Timeline / TaskApplyEffects / GameplayEffect 伤害训练假人。
     /// </summary>
     public static class ClickMoveTestGasBasicAttackValidator
     {
-        private const int BasicAttackAbilityCode = 20001;
+        private const int BasicAttackAbilityCode = GAS.Runtime.XAbility.ABILITY_Attack;
         private const int MaxStartupFrames = 120;
         private const int FramesBetweenAttacks = 90;
         private const int MaxAttackAttempts = 40;
@@ -34,8 +34,8 @@ namespace FantasyWord.GameCore
         private static int s_attackAttempts;
         private static int s_healthDropCount;
         private static int s_previousTargetHealth;
-        private static MonoBehaviour? s_playerAnimationController;
-        private static MonoBehaviour? s_targetAnimationController;
+        private static MonoBehaviour? s_playerCharacterActionAnimatorDriver;
+        private static MonoBehaviour? s_targetCharacterActionAnimatorDriver;
         private static SpriteRenderer? s_playerBodySprite;
         private static SpriteRenderer? s_targetBodySprite;
         private static int s_initialFloatingTextCount;
@@ -66,8 +66,8 @@ namespace FantasyWord.GameCore
             s_attackAttempts = 0;
             s_healthDropCount = 0;
             s_previousTargetHealth = -1;
-            s_playerAnimationController = null;
-            s_targetAnimationController = null;
+            s_playerCharacterActionAnimatorDriver = null;
+            s_targetCharacterActionAnimatorDriver = null;
             s_playerBodySprite = null;
             s_targetBodySprite = null;
             s_initialFloatingTextCount = 0;
@@ -191,13 +191,13 @@ namespace FantasyWord.GameCore
             s_initialFloatingTextCount = CountMonoBehavioursByTypeName("FloatingText", activeOnly: false);
             result.InitialFloatingTextCount = s_initialFloatingTextCount;
 
-            s_playerAnimationController = FindMonoBehaviourByTypeName(s_player.gameObject, "AnimationController");
-            s_targetAnimationController = FindMonoBehaviourByTypeName(s_target.gameObject, "AnimationController");
+            s_playerCharacterActionAnimatorDriver = FindMonoBehaviourByTypeName(s_player.gameObject, "CharacterActionAnimatorDriver");
+            s_targetCharacterActionAnimatorDriver = FindMonoBehaviourByTypeName(s_target.gameObject, "CharacterActionAnimatorDriver");
             s_playerBodySprite = FindBodySpriteRenderer(s_player.gameObject);
             s_targetBodySprite = FindBodySpriteRenderer(s_target.gameObject);
-            result.InitialPlayerAnimationKey = GetCurrentAnimationKey(s_playerAnimationController);
+            result.InitialPlayerAnimationKey = GetCurrentAnimationKey(s_playerCharacterActionAnimatorDriver);
             result.InitialPlayerSpriteName = GetSpriteName(s_playerBodySprite);
-            result.InitialTargetAnimationKey = GetCurrentAnimationKey(s_targetAnimationController);
+            result.InitialTargetAnimationKey = GetCurrentAnimationKey(s_targetCharacterActionAnimatorDriver);
             result.InitialTargetSpriteName = GetSpriteName(s_targetBodySprite);
 
             PlacePlayerInsideBasicAttackRange(result);
@@ -215,7 +215,7 @@ namespace FantasyWord.GameCore
 
             if (!result.PlayerHasBasicAttackAfterEquip)
             {
-                FinalizeResult(result, "玩家运行态没有持有 EX-GAS 普攻 Ability 20001。");
+                FinalizeResult(result, $"玩家运行态没有持有 EX-GAS 普攻 Ability {BasicAttackAbilityCode}。");
                 return;
             }
 
@@ -307,9 +307,9 @@ namespace FantasyWord.GameCore
 
         private static void ObserveVisibleFeedback(ValidationResult result)
         {
-            string currentAnimationKey = GetCurrentAnimationKey(s_playerAnimationController);
+            string currentAnimationKey = GetCurrentAnimationKey(s_playerCharacterActionAnimatorDriver);
             string currentSpriteName = GetSpriteName(s_playerBodySprite);
-            string currentTargetAnimationKey = GetCurrentAnimationKey(s_targetAnimationController);
+            string currentTargetAnimationKey = GetCurrentAnimationKey(s_targetCharacterActionAnimatorDriver);
             string currentTargetSpriteName = GetSpriteName(s_targetBodySprite);
             int activeFloatingTextCount = CountMonoBehavioursByTypeName("FloatingText", activeOnly: true);
             s_lastActiveFloatingTextCount = activeFloatingTextCount;
@@ -486,9 +486,9 @@ namespace FantasyWord.GameCore
             result.TargetDead = s_target != null && s_target.dead;
             result.PlayerPositionAfter = s_player != null ? Format(s_player.transform.position) : "null";
             result.TargetPositionAfter = s_target != null ? Format(s_target.transform.position) : "null";
-            result.FinalPlayerAnimationKey = GetCurrentAnimationKey(s_playerAnimationController);
+            result.FinalPlayerAnimationKey = GetCurrentAnimationKey(s_playerCharacterActionAnimatorDriver);
             result.FinalPlayerSpriteName = GetSpriteName(s_playerBodySprite);
-            result.FinalTargetAnimationKey = GetCurrentAnimationKey(s_targetAnimationController);
+            result.FinalTargetAnimationKey = GetCurrentAnimationKey(s_targetCharacterActionAnimatorDriver);
             result.FinalTargetSpriteName = GetSpriteName(s_targetBodySprite);
             result.FinalFloatingTextCount = CountMonoBehavioursByTypeName("FloatingText", activeOnly: false);
             result.ActiveFloatingTextCount = s_lastActiveFloatingTextCount;
@@ -501,19 +501,19 @@ namespace FantasyWord.GameCore
                 failures.Add(failure);
             }
 
-            Require(result.PlayerHasBasicAttackAfterEquip, "玩家没有持有或无法装备 EX-GAS 普攻 Ability 20001。", failures);
+            Require(result.PlayerHasBasicAttackAfterEquip, $"玩家没有持有或无法装备 EX-GAS 普攻 Ability {BasicAttackAbilityCode}。", failures);
             Require(result.TargetHasGas, "训练假人不是正式 GAS 目标。", failures);
             Require(result.InitialTargetHealth > 0, "训练假人初始生命值必须大于 0。", failures);
-            Require(result.HealthDropCount > 0, "Ability 20001 没有让训练假人发生生命下降。", failures);
+            Require(result.HealthDropCount > 0, $"Ability {BasicAttackAbilityCode} 没有让训练假人发生生命下降。", failures);
             Require(result.ActiveCombatTextDisplayCount > 0, "ClickMoveTest 没有启用正式伤害数字入口 CombatTextDisplay。", failures);
             Require(result.ActiveFloatingTextPoolCount > 0, "ClickMoveTest 没有启用正式伤害数字对象池 FloatingTextPool。", failures);
             Require(result.EventSystemCount == 1, $"ClickMoveTest 运行时必须只有一个正式 EventSystem，当前数量：{result.EventSystemCount}。", failures);
-            Require(result.PlayerAttackAnimationObserved || result.PlayerAttackSpriteObserved, "Ability 20001 没有产生可见攻击动作。", failures);
-            Require(result.TargetDamageAnimationObserved || result.TargetDamageSpriteObserved, "Ability 20001 没有让训练假人产生可见受伤动作。", failures);
+            Require(result.PlayerAttackAnimationObserved || result.PlayerAttackSpriteObserved, $"Ability {BasicAttackAbilityCode} 没有产生可见攻击动作。", failures);
+            Require(result.TargetDamageAnimationObserved || result.TargetDamageSpriteObserved, $"Ability {BasicAttackAbilityCode} 没有让训练假人产生可见受伤动作。", failures);
             Require(!string.IsNullOrWhiteSpace(result.DamageFrameScreenshotPath) && File.Exists(result.DamageFrameScreenshotPath),
-                "Ability 20001 没有在训练假人受伤动作帧生成验收截图。", failures);
-            Require(result.FloatingDamageTextObserved, "Ability 20001 扣血后没有出现可见伤害数字反馈。", failures);
-            Require(result.TargetDead, "Ability 20001 没有在限定次数内击杀训练假人。", failures);
+                $"Ability {BasicAttackAbilityCode} 没有在训练假人受伤动作帧生成验收截图。", failures);
+            Require(result.FloatingDamageTextObserved, $"Ability {BasicAttackAbilityCode} 扣血后没有出现可见伤害数字反馈。", failures);
+            Require(result.TargetDead, $"Ability {BasicAttackAbilityCode} 没有在限定次数内击杀训练假人。", failures);
             Require(IsCharacterLayer(result.PlayerLayerAfterPlacement), "玩家运行时根对象没有在 Character 层，不能证明俯视角角色身体碰撞参与移动阻挡。", failures);
             Require(IsCharacterLayer(result.TargetLayerAfterPlacement), "训练假人运行时根对象没有在 Character 层，不能证明俯视角角色身体碰撞参与移动阻挡。", failures);
             Require(IsCharacterLayer(result.PlayerLayerFinal), "玩家验证结束时根对象没有保持在 Character 层。", failures);
@@ -529,7 +529,7 @@ namespace FantasyWord.GameCore
             result.Success = failures.Count == 0;
             result.Failures = failures.ToArray();
             result.Message = result.Success
-                ? "ClickMoveTest GAS 普攻验证通过：Ability 20001 通过正式 GAS 链路反复命中、显示攻击动作、训练假人受伤动作和伤害数字，并击杀训练假人；玩家与训练假人的正式实体碰撞和身体图像中心距离均未判定为重叠。"
+                ? $"ClickMoveTest GAS 普攻验证通过：Ability {BasicAttackAbilityCode} 通过正式 GAS 链路反复命中、显示攻击动作、训练假人受伤动作和伤害数字，并击杀训练假人；玩家与训练假人的正式实体碰撞和身体图像中心距离均未判定为重叠。"
                 : string.Join(" | ", failures);
             WriteResult(result);
             StopTicking();

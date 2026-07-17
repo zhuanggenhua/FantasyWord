@@ -44,10 +44,11 @@ metadata:
 ### 多参考源设计必须先定裁决标准再实施
 - 日期：2026-07-13
 - 现象：参考 2DRPGEngine 的 SpriteLibrary 方向变体设计时，先纠正了 Animator 方向状态问题，但随后新增了独立 `CharacterAnimationVariantSet` 包装层；该层虽然能运行，却不是对 Unity 原生能力和参考工程职责内核的最薄落地。
+- 复发补充：2026-07-16 审计 `GameManager` 系统访问时，把“改成 `TryGetSystem` 安全查询”和“必需/可选依赖分类”当成主结论，忽略了 2DRPGEngine 同职责流程本来就大量使用 `GameManager.XSystem / GetSystem<T>()`，导致把单例快捷入口误判成架构违规。
 - 根因：只把“方向由 SpriteLibraryAsset 承担”这个中间结论转成实现，没有先稳定比较原生能力、参考工程职责、当前项目 owner、数据生命周期和最少抽象，导致参考后仍可能引入不必要结构。
-- 规避：多参考源或“参考某工程后重构”的任务，必须先写出裁决标准：原生能力优先、职责内核优先于表面结构、最薄可行抽象、单一真相源、当前项目约束和证据覆盖边界；无法按标准排优先级时，只能停在方案比较。当前换装方向库已改为由既有 owner 直接持有四个原生 `SpriteLibraryAsset` 引用，旧 `CharacterAnimationVariantSet` 包装层由静态门禁禁止回流。
+- 规避：多参考源或“参考某工程后重构”的任务，必须先写出参考同职责流程与当前流程的逐步对照，再使用裁决标准：原生能力优先、职责内核优先于表面结构、偏离必须举证、最薄可行抽象、单一真相源、当前项目约束和证据覆盖边界；无法按标准排优先级时，只能停在方案比较。当前换装方向库已改为由既有 owner 直接持有四个原生 `SpriteLibraryAsset` 引用，旧 `CharacterAnimationVariantSet` 包装层由静态门禁禁止回流；GameManager 审计已改为参考流程优先，不再以访问形式本身定性。
 - 来源：用户纠偏。
-- 状态：已升格 -> `.spec/knowledge/standards/workflow.md`、`.spec/skills/before-you-code/SKILL.md`、`.spec/skills/brainstorming/SKILL.md`
+- 状态：已升格 -> `.spec/rules/system.md`、`.spec/knowledge/standards/workflow.md`、`.spec/skills/before-you-code/SKILL.md`、`.spec/skills/brainstorming/SKILL.md`
 
 ### Unity 阻塞弹窗必须按既定默认动作继续任务
 - 日期：2026-07-10
@@ -73,3 +74,11 @@ metadata:
 - 规避：用户给出本地路径、外部参考工程、仓库、网页、文档或资源目录时，必须先读取或验证该精确来源，并锁定原设计入口、关键实现、数据/资源来源和适用边界；未读到前只能查证或拒绝实施，不得先做通用版、插件级或架构级改动。
 - 来源：用户纠偏。
 - 状态：已升格 -> `.spec/rules/system.md`、`.spec/skills/before-you-code/SKILL.md`、`.spec/knowledge/standards/workflow.md`
+
+### Unity 当前场景不得替代用户原始位点
+- 日期：2026-07-14
+- 现象：排查“敌人运行后根本不动”时，把自动化当前读到的 `EquipmentSystemDemo` 空角色状态当成结论，偏离了用户语义上指向的应生效场景 `ClickMoveTest`。2026-07-15 继续排查 `ClickMoveTest` 中 NPC 攻击后静止、玩家受击帧卡住时，用户再次明确纠偏：这类问题不能转去木桩、训练替代物或其它演示场景。
+- 根因：把“工具当前挂在哪个场景”误当成“用户要排查的场景”，没有在发现当前场景与原始位点不一致时先判定自动化环境跑偏。
+- 规避：Unity 运行态 bug 排查必须以用户指定或语义明确的原始场景/入口为目标；当前打开场景、最近日志和最近选中对象只能作为环境证据。若它们不一致，先回到原始位点复现，不得用错误场景的空对象或空日志回答原始 bug。用户问 `ClickMoveTest` 的 NPC、玩家、受击、攻击、转向行为时，默认回到 `Assets/Scenes/ClickMoveTest.unity` 的真实玩家和真实 NPC；木桩、训练替代物、示例场景或不可达的人工摆位只能作为额外诊断，不得冒充原症状验收。
+- 来源：用户纠偏。
+- 状态：已升格 -> `.spec/rules/system.md`

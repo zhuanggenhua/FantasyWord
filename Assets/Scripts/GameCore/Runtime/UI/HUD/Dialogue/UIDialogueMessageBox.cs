@@ -52,6 +52,16 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private void OnDisable()
+        {
+            AbortTextAnimation();
+        }
+
+        private void OnDestroy()
+        {
+            AbortTextAnimation();
+        }
+
         public void SetText(string speaker, string text, bool showArrow)
         {
             AbortTextAnimation();

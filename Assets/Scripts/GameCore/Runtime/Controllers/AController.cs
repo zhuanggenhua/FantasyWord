@@ -3,12 +3,18 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 控制器默认存档块；没有额外运行状态的控制器可直接使用。
+    /// </summary>
     [Serializable]
     public class ControllerDataBlock : IControllerDataBlock
     {
 
     }
 
+    /// <summary>
+    /// 控制器基类，统一 Movable 主体绑定、启停生命周期、帧更新和存档回调。
+    /// </summary>
     public abstract class AController<T> : IController where T : Movable
     {
         protected T m_subject = null;

@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 多层地形图中的稳定节点键。
+    /// LayerId 区分逻辑地形层，Cell 保持 Tilemap 格坐标，二者共同作为寻路和运行时状态索引。
+    /// </summary>
     public readonly struct TerrainNodeKey : IEquatable<TerrainNodeKey>
     {
         public const int DefaultLayerId = 0;
@@ -57,6 +61,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 单个地表运行时状态的只读快照。
+    /// 它保留来源和规则 ID，方便 UI、存档和自动化验证追踪状态从哪条元素反应产生。
+    /// </summary>
     public readonly struct TerrainElementStateSnapshot
     {
         public TerrainElementStateSnapshot(TerrainElementStateInstance state)
@@ -79,6 +87,10 @@ namespace FantasyWord.GameCore
         public string AppliedRuleId { get; }
     }
 
+    /// <summary>
+    /// 一个地形格当前运行时覆盖结果的只读快照。
+    /// 基础地表仍来自规则 Tile；这里只表达运行时有效地表、上层覆盖和临时状态。
+    /// </summary>
     public readonly struct TerrainCellRuntimeStateSnapshot
     {
         public TerrainCellRuntimeStateSnapshot(
@@ -137,6 +149,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 地形格运行时状态变化事件。
+    /// 表现层通过它刷新 Tile，不需要重新扫描整张地图。
+    /// </summary>
     public readonly struct TerrainCellStateChange
     {
         public TerrainCellStateChange(
@@ -161,15 +177,39 @@ namespace FantasyWord.GameCore
         public EElementPresentationSignal PresentationSignal { get; }
     }
 
+    /// <summary>
+    /// 一个正在地图格上生效的元素状态实例。
+    /// 它保存剩余时长和来源，不直接修改地形作者数据。
+    /// </summary>
     [Serializable]
     public sealed class TerrainElementStateInstance
     {
+        [InspectorName("状态类型")]
+        [Tooltip("当前运行时状态类型，例如 Burning/Wet。")]
         [SerializeField] private ETerrainElementStateKind m_stateKind;
+
+        [InspectorName("状态定义 ID")]
+        [Tooltip("产生该状态时使用的状态配置稳定 ID，用于诊断和恢复。")]
         [SerializeField] private string m_stateDefinitionId;
+
+        [InspectorName("强度")]
+        [Tooltip("状态强度，运行时会限制在 0 到 1。")]
         [SerializeField] private float m_intensity;
+
+        [InspectorName("剩余时间")]
+        [Tooltip("状态剩余秒数。0 表示没有计时移除，由其它规则处理。")]
         [SerializeField] private float m_remainingDuration;
+
+        [InspectorName("来源对象")]
+        [Tooltip("触发该状态的对象引用，仅用于诊断和后续归因。")]
         [SerializeField] private UnityEngine.Object m_sourceEntity;
+
+        [InspectorName("来源能力编号")]
+        [Tooltip("触发该状态的正式 EX-GAS 能力编号。0 表示非能力来源或未知。")]
         [SerializeField] private int m_sourceAbilityCode;
+
+        [InspectorName("命中规则 ID")]
+        [Tooltip("产生该状态的元素反应规则稳定 ID。")]
         [SerializeField] private string m_appliedRuleId;
 
         public TerrainElementStateInstance(
@@ -260,19 +300,38 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 单个地形格的可变运行时状态容器。
+    /// 它负责合并状态、推进持续时间和维护 revision；外部读取应优先使用快照。
+    /// </summary>
     [Serializable]
     public sealed class TerrainCellRuntimeState
     {
+        [InspectorName("有效地表是否覆盖")]
         [SerializeField] private bool m_hasEffectiveSurfaceOverride;
+
+        [InspectorName("有效地表覆盖值")]
         [SerializeField] private ETerrainSurfaceKind m_effectiveSurfaceOverride;
+
+        [InspectorName("上层覆盖是否覆盖")]
         [SerializeField] private bool m_hasSurfaceCoverOverride;
+
+        [InspectorName("上层覆盖值")]
         [SerializeField] private ETerrainSurfaceCoverKind m_surfaceCoverOverride =
             ETerrainSurfaceCoverKind.None;
+
+        [InspectorName("上层覆盖生命周期")]
         [SerializeField] private ETerrainSurfaceCoverLifecycle m_surfaceCoverLifecycle =
             ETerrainSurfaceCoverLifecycle.None;
+
+        [InspectorName("活动状态")]
         [SerializeField] private List<TerrainElementStateInstance> m_activeStates = new();
+
+        [InspectorName("持久化策略")]
         [SerializeField] private ETerrainRuntimePersistencePolicy m_persistencePolicy =
             ETerrainRuntimePersistencePolicy.Transient;
+
+        [InspectorName("修订号")]
         [SerializeField] private int m_revision;
 
         public bool HasEffectiveSurfaceOverride => m_hasEffectiveSurfaceOverride;

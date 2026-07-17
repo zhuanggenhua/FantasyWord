@@ -232,18 +232,31 @@ namespace FantasyWord.GameCore
 
         private Equipment ApplyEquipmentSlotChange(CharacterEquipmentSlotChange change, bool autoUpdateStats)
         {
-            RemoveEquipmentBonusFormalGasAbilitySuppressions(change.RemovedFormalGasAbilityCodes);
-            ApplyEquipmentBonusFormalGasAbilityCodes(
+            bool hasPreviousSource = TryPrepareEquipmentAbilitySource(
+                change.PreviousEquipment,
                 change.RemovedFormalGasAbilityCodes,
-                code => m_character.RemoveBonusFormalGasAbility(
-                    code,
-                    CreateEquipmentAbilitySource(change.PreviousEquipment)));
-            m_equipmentLoadout.Set(change.SlotType, change.NextEquipment);
-            ApplyEquipmentBonusFormalGasAbilityCodes(
+                out CharacterAbilitySourceKey previousSource);
+            bool hasNextSource = TryPrepareEquipmentAbilitySource(
+                change.NextEquipment,
                 change.AddedFormalGasAbilityCodes,
-                code => m_character.AddBonusFormalGasAbility(
-                    code,
-                    CreateEquipmentAbilitySource(change.NextEquipment)));
+                out CharacterAbilitySourceKey nextSource);
+
+            RemoveEquipmentBonusFormalGasAbilitySuppressions(change.RemovedFormalGasAbilityCodes);
+            if (hasPreviousSource)
+            {
+                ApplyEquipmentBonusFormalGasAbilityCodes(
+                    change.RemovedFormalGasAbilityCodes,
+                    code => m_character.RemoveBonusFormalGasAbility(code, previousSource));
+            }
+
+            m_equipmentLoadout.Set(change.SlotType, change.NextEquipment);
+            if (hasNextSource)
+            {
+                ApplyEquipmentBonusFormalGasAbilityCodes(
+                    change.AddedFormalGasAbilityCodes,
+                    code => m_character.AddBonusFormalGasAbility(code, nextSource));
+            }
+
             ApplyEquipmentBonusFormalGasAbilitySuppressions(change.AddedFormalGasAbilityCodes);
 
             if (autoUpdateStats)
@@ -255,13 +268,31 @@ namespace FantasyWord.GameCore
             return change.PreviousEquipment;
         }
 
-        private static CharacterAbilitySourceKey CreateEquipmentAbilitySource(Equipment equipment)
+        private static bool TryPrepareEquipmentAbilitySource(
+            Equipment equipment,
+            int[] formalGasAbilityCodes,
+            out CharacterAbilitySourceKey source)
         {
-            string sourceId = equipment
-                ? GameManager.Database.CreateReference(equipment).guid
-                : "unknown-equipment";
+            source = default;
+            if (formalGasAbilityCodes == null || formalGasAbilityCodes.Length == 0)
+            {
+                return false;
+            }
 
-            return new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.Equipment, sourceId);
+            if (!equipment)
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(CharacterEquipment)}] 装备附加能力需要有效装备来源，不能在缺少装备资产时变更能力来源。");
+            }
+
+            if (!GameManager.Database.TryCreateReference(equipment, out DatabaseEntryReference<Equipment> reference))
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(CharacterEquipment)}] 装备 {equipment.name} 未登记到 DatabaseRegistry，不能在装备状态改变后再丢失附加能力来源。");
+            }
+
+            source = new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.Equipment, reference.guid);
+            return true;
         }
 
         private static int[] GetEquipmentBonusFormalGasAbilityCodesSnapshot(Equipment equipment)

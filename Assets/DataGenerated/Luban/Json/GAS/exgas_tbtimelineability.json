@@ -276,7 +276,7 @@
                 "CueLogic": {
                   "$type": "CueMountPrefab",
                   "Param": {
-                    "PrefabPath": "Assets/Prefabs/Abilities/World/喷火-火焰表现.prefab",
+                    "PrefabPath": "addbfd0e48c6444897677b61945321ef",
                     "MountPointPath": "",
                     "FollowHost": true,
                     "LocalPosition": {

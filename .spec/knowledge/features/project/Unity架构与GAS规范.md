@@ -48,6 +48,10 @@ metadata:
 - 专项裁决前不预留项目侧 GAS 第二收口路径；若 EX-GAS 胜出，应直接接回 `GameCore` 对应正式闭包，不再额外造 `Combat/EXGAS` 包装层。
 - 技能定义必须有稳定名称、稳定资产或文本数据来源，便于 AI 批量生成和审查。
 - 玩法层不要散落直接调用 EX-GAS 细节；能力激活、效果添加、标签移除等调用应集中在正式拥有者闭包内。
+- EX-GAS 表中的运行时资源地址必须是玩家构建可解析的 `ResourceSystem / Addressables` 地址，不能把 `Assets/...` 编辑器项目路径当作正式运行时地址。`Assets/...` 路径和 GUID 只允许作为 Editor 审计、迁移定位或临时兜底证据；若当前数据仍依赖它，必须明确标为运行时资源身份债务，不得汇报成构建可用。
+- EX-GAS 能力 Prefab、图标、Cue 挂载 Prefab 这类资源身份只能有一个正式 owner：运行时加载走资源地址，编辑器定位走 GUID/序列化引用。不得让 Luban 文本路径、Unity GUID、Yoki key、Addressables address 同时互相代持并都被称为“正式路径”。
+- EX-GAS 资源身份 owner 的正式裁决见 [`0001-EX-GAS 资源身份 owner`](../../../decisions/0001-ex-gas-resource-identity-owner.md)：官方内容优先以数据库稳定引用或 Unity 序列化引用作为作者真相，玩家构建需要动态加载时再派生可验证资源地址；未配置 Addressables/Yoki 索引时，不得只改字符串名称冒充资源链已收口。
+- 当前官方 EX-GAS 能力资源已落到 GameCore 数据库引用：Ability Prefab 通过 `PrefabReference`，Ability 图标通过 `SpriteReference`，Cue 挂载 Prefab 通过 `GASResourceLoader` 解析 `PrefabReference` GUID。`CueMountPrefab.PrefabPath` 虽沿用 EX-GAS 原生字段名，但在 FantasyWord 官方数据中它表示项目资源 key，不得再填写 `Assets/...` 编辑器路径。
 - 技能执行实现必须先做证据裁决，再确定正式真相源；候选至少包含 EX-GAS 原生闭包、当前其它成熟参考闭包，以及能被证据证明更优的正式融合闭包。
 - 能力/法术/专长/物品能力这类整体规则体系的设计必须参考先行。正式顶层合同不得从单个火球、陨石、近战或某个编辑器想法倒推；必须先对照 WoW/AzerothCore/SimulationCraft 这类配置型 spell/effect/proc 数据模型、Pathfinder/D20 这类动作/目标/豁免/法抗/专长规则结构、或本地成熟源码参考，再决定项目侧合同。
 - EX-GAS 只能作为能力、属性、标签、GameplayEffect、Cost/Cooldown 和 GameplayCue 表现触发等底座候选；但当某个具体职责已经被证据证明 `EX-GAS` 原生闭包更强，例如当前的时间轴预览、Cue 预览或 TargetCatcher 体系，就应先把该职责收口到 `GAS` 主轴，再讨论剩余缺口。不得一边承认 `GAS` 在该职责更强，一边继续保留项目侧并行主轴。

@@ -59,7 +59,7 @@ namespace FantasyWord.GameCore.Tests
                 "a146750504c64be4a948e93b1a20e117",
                 AssetDatabase.AssetPathToGUID(PrefabPath),
                 "喷火 Prefab GUID 与 EX-GAS 原始表不一致。");
-            Assert.AreEqual(20010, FormalGasAbilityCodes.Flamethrower);
+            Assert.Greater(GAS.Runtime.XAbility.ABILITY_Flamethrower, 0, "喷火必须由 EX-GAS 生成正式 Ability Code。");
 
             TimelineActiveAbility ability = prefab.GetComponent<TimelineActiveAbility>();
             Assert.IsNotNull(ability, "喷火 Prefab 未挂载通用 EX-GAS Timeline 能力桥。");
@@ -134,6 +134,8 @@ namespace FantasyWord.GameCore.Tests
                 "Assets/DataGenerated/Luban/Json/GAS/exgas_tbtimelineability.json";
             const string CuePrefabPath =
                 "Assets/Prefabs/Abilities/World/喷火-火焰表现.prefab";
+            const string CuePrefabReferencePath =
+                "Assets/GameData/GameCore/AbilityResources/FormalGas_FlamethrowerCue_PrefabReference.asset";
 
             string timelineJson = File.ReadAllText(TimelinePath);
             int timelineStart = timelineJson.IndexOf("\"ID\": 20010", System.StringComparison.Ordinal);
@@ -147,8 +149,20 @@ namespace FantasyWord.GameCore.Tests
                 ? timelineJson.Substring(timelineStart, nextTimeline - timelineStart)
                 : timelineJson.Substring(timelineStart);
 
+            GameObject cuePrefab = AssetDatabase.LoadAssetAtPath<GameObject>(CuePrefabPath);
+            Assert.IsNotNull(cuePrefab, "喷火 GameplayCue 表现 Prefab 不存在。");
+            PrefabReference cuePrefabReference = AssetDatabase.LoadAssetAtPath<PrefabReference>(CuePrefabReferencePath);
+            Assert.IsNotNull(cuePrefabReference, "喷火 GameplayCue 必须通过 GameCore PrefabReference 进入 EX-GAS Timeline。");
+            Assert.AreSame(
+                cuePrefab,
+                cuePrefabReference.prefab,
+                "喷火 GameplayCue 的 PrefabReference 必须指向纯表现 Prefab。");
+            string cuePrefabReferenceGuid = AssetDatabase.AssetPathToGUID(CuePrefabReferencePath);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(cuePrefabReferenceGuid), "喷火 GameplayCue PrefabReference 必须有稳定数据库 GUID。");
+
             Assert.That(flamethrowerJson, Does.Contain("\"$type\": \"CueMountPrefab\""));
-            Assert.That(flamethrowerJson, Does.Contain(CuePrefabPath));
+            Assert.That(flamethrowerJson, Does.Contain(cuePrefabReferenceGuid));
+            Assert.That(flamethrowerJson, Does.Not.Contain(CuePrefabPath));
             Assert.That(flamethrowerJson, Does.Contain("\"DestroyOnStop\": true"));
             Assert.That(flamethrowerJson, Does.Contain("\"$type\": \"TaskApplyWorldElement\""));
             Assert.That(flamethrowerJson, Does.Not.Contain("Grass"));

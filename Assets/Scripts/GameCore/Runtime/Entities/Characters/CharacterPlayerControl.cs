@@ -14,6 +14,7 @@ namespace FantasyWord.GameCore
 
         private CharacterButtonActivation m_buttonActivation = null;
         private CharacterMovement m_movement = null;
+        private bool m_wasLocallyControlled;
 
         public CharacterBase Character => m_character;
         public bool AcceptsPlayerInput => m_acceptsPlayerInput;
@@ -90,10 +91,11 @@ namespace FantasyWord.GameCore
                 currentControlledCharacter != m_character ||
                 !m_character.CanBePlayerControlled())
             {
-                ResetLocalControlState();
+                ResetLocalControlStateIfPreviouslyControlled();
                 return;
             }
 
+            m_wasLocallyControlled = true;
             ResolveButtonActivation()?.RefreshCurrentTarget();
             CharacterMovement movement = ResolveMovement();
             if (movement == null)
@@ -137,6 +139,17 @@ namespace FantasyWord.GameCore
             }
 
             ResolveButtonActivation()?.ResetState();
+            m_wasLocallyControlled = false;
+        }
+
+        private void ResetLocalControlStateIfPreviouslyControlled()
+        {
+            if (!m_wasLocallyControlled)
+            {
+                return;
+            }
+
+            ResetLocalControlState();
         }
 
         private void EnsureReferences()

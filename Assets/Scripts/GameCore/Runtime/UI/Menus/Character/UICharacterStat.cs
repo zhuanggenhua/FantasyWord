@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -10,10 +10,31 @@ namespace FantasyWord.GameCore
         [SerializeField] private Button m_decreaseButton;
         [SerializeField] private Button m_increaseButton;
 
+        private UnityAction m_decreaseCallback;
+        private UnityAction m_increaseCallback;
+
         public void RegisterCallbacks(UnityAction<EStat> decrease, UnityAction<EStat> increase)
         {
-            m_decreaseButton.onClick.AddListener(() => decrease(m_stat));
-            m_increaseButton.onClick.AddListener(() => increase(m_stat));
+            UnregisterCallbacks();
+            m_decreaseCallback = () => decrease(m_stat);
+            m_increaseCallback = () => increase(m_stat);
+            m_decreaseButton.onClick.AddListener(m_decreaseCallback);
+            m_increaseButton.onClick.AddListener(m_increaseCallback);
+        }
+
+        public void UnregisterCallbacks()
+        {
+            if (m_decreaseCallback != null)
+            {
+                m_decreaseButton.onClick.RemoveListener(m_decreaseCallback);
+                m_decreaseCallback = null;
+            }
+
+            if (m_increaseCallback != null)
+            {
+                m_increaseButton.onClick.RemoveListener(m_increaseCallback);
+                m_increaseCallback = null;
+            }
         }
 
         public void UpdateUI(CharacterBase target, Stats tempStats)
@@ -35,4 +56,5 @@ namespace FantasyWord.GameCore
         public GameObject GetDefaultFocusTarget() => m_decreaseButton != null ? m_decreaseButton.gameObject : gameObject;
     }
 }
+
 

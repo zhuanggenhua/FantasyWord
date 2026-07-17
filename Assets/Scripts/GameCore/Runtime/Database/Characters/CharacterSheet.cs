@@ -74,7 +74,7 @@ namespace FantasyWord.GameCore
 
         public void ExecuteOnDeath(GameCommandContext context)
         {
-            m_executeOnDeath?.Execute(context);
+            m_executeOnDeath.ExecuteFireAndReport(context, nameof(CharacterSheet), this);
         }
 
         public int[] GetAvailableFormalGasAbilitiesAtLevel(int level)

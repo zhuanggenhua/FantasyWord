@@ -4,17 +4,25 @@ using UnityEngine.Scripting.APIUpdating;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 双向动画资源默认面朝方向，用于根据移动方向决定是否水平翻转。
+    /// </summary>
     public enum EBidrectionalAnimationDirection
     {
         Right,
         Left
     }
 
+    /// <summary>
+    /// 只使用左右两个朝向的动画策略，通过 SpriteRenderer.flipX 派生相反方向。
+    /// </summary>
     [MovedFrom(true, "FantasyWord.GameCore.Strategies", "FantasyWord.GameCore", null)]
     [Serializable]
     public class BidirectionalAnimationStrategy : AAnimationStrategy
     {
-        [Header("Bidirectional Animation Settings")]
+        [Header("双向动画设置")]
+        [InspectorName("默认朝向")]
+        [Tooltip("原始 Sprite 资源默认面朝方向；运行时会根据目标方向决定是否水平翻转。")]
         [SerializeField] private EBidrectionalAnimationDirection m_defaultDirection = EBidrectionalAnimationDirection.Right;
 
         public override void SetLookAtDirection(Vector2 direction)

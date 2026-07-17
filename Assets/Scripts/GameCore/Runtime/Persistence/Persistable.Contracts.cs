@@ -18,9 +18,15 @@ namespace FantasyWord.GameCore
         public string GetIdentifier();
     }
 
+    /// <summary>
+    /// 场景中预先摆放对象的持久化信息，依赖手工配置的稳定标识符。
+    /// </summary>
     [Serializable]
     public class PreInstancedPersistentDataHandler : APersistenceInfo, IIdentifiablePersistentDataHandler
     {
+        /// <summary>
+        /// 场景内预置对象的稳定标识符，必须在同一存档范围内唯一。
+        /// </summary>
         public string identifier;
 
         public string GetIdentifier() => identifier;
@@ -31,11 +37,25 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 运行时实例化对象的持久化信息，额外记录 prefab 和地图来源以便读档重建。
+    /// </summary>
     [Serializable]
     public class RuntimeInstancedPersistentDataHandler : APersistenceInfo, IIdentifiablePersistentDataHandler
     {
-        public PrefabReference prefab;
+        /// <summary>
+        /// 读档时用于重新实例化对象的 prefab 引用。
+        /// </summary>
+        public DatabaseEntryReference<PrefabReference> prefab;
+
+        /// <summary>
+        /// 对象所属地图标识，用于把运行时实例恢复到正确地图上下文。
+        /// </summary>
         public string map;
+
+        /// <summary>
+        /// 运行时实例的稳定标识符。
+        /// </summary>
         public string identifier;
 
         public string GetIdentifier() => identifier;
@@ -44,14 +64,21 @@ namespace FantasyWord.GameCore
         {
             return
                 prefab != null &&
+                !string.IsNullOrWhiteSpace(prefab.guid) &&
                 !string.IsNullOrEmpty(map) &&
                 !string.IsNullOrEmpty(identifier);
         }
     }
 
+    /// <summary>
+    /// 自定义实例化对象的持久化信息，适合由业务系统自行负责重建的对象。
+    /// </summary>
     [Serializable]
     public class CustomInstancedPersistentDataHandler : APersistenceInfo, IIdentifiablePersistentDataHandler
     {
+        /// <summary>
+        /// 自定义持久化对象的稳定标识符。
+        /// </summary>
         public string identifier;
 
         public string GetIdentifier() => identifier;
@@ -62,6 +89,9 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 可持久化对象的归属类型，决定持久化系统按哪条路径识别和恢复对象。
+    /// </summary>
     public enum EPersistableOwnershipKind
     {
         None,
@@ -70,3 +100,4 @@ namespace FantasyWord.GameCore
         CustomInstanced
     }
 }
+

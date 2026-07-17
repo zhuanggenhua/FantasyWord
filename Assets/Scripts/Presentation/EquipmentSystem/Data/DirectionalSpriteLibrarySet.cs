@@ -18,10 +18,10 @@ public sealed class DirectionalSpriteLibrarySet
     {
         switch (directionIndex)
         {
-            case 0: return southEast;
-            case 1: return southWest;
-            case 2: return northEast;
-            case 3: return northWest;
+            case CharacterAnimationDirections.SouthEast: return southEast;
+            case CharacterAnimationDirections.SouthWest: return southWest;
+            case CharacterAnimationDirections.NorthEast: return northEast;
+            case CharacterAnimationDirections.NorthWest: return northWest;
             default: return null;
         }
     }
@@ -30,10 +30,10 @@ public sealed class DirectionalSpriteLibrarySet
     {
         switch (directionIndex)
         {
-            case 0: southEast = asset; break;
-            case 1: southWest = asset; break;
-            case 2: northEast = asset; break;
-            case 3: northWest = asset; break;
+            case CharacterAnimationDirections.SouthEast: southEast = asset; break;
+            case CharacterAnimationDirections.SouthWest: southWest = asset; break;
+            case CharacterAnimationDirections.NorthEast: northEast = asset; break;
+            case CharacterAnimationDirections.NorthWest: northWest = asset; break;
         }
     }
 }

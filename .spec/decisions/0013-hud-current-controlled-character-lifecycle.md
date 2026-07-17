@@ -1,0 +1,22 @@
+# 0013-HUD 当前控制角色监听生命周期 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - FantasyWord 有多处 HUD 组件会跟随 `PlayerSystem` 的当前控制角色变化，例如交互提示、生命/法力条、状态效果栏和 HUD 能力栏。
+  - 这些组件原先多在 `Start()` 注册当前控制角色事件，并在 `OnDestroy()` 注销；对象被禁用或 HUD 被临时隐藏时仍可能继续响应角色切换。
+  - 2DRPGEngine 没有覆盖 FantasyWord 当前多控制角色和 HUD 跟随显示的完整链路；参考实现只能证明 PlayerSystem 是当前控制角色真相源，不能证明创建/销毁监听适合本项目 UI 生命周期。
+- 决策：
+  - HUD 组件跟随当前控制角色的监听 owner 是 HUD 组件启用状态。
+  - 常驻 HUD 组件必须在 `OnEnable` 尝试注册，`OnDisable` 注销并解绑当前角色；`Start` 只能作为 GameManager/PlayerSystem 稍后就绪的重试入口。
+  - 所有当前控制角色监听必须有幂等标记，并在 GameManager 或 PlayerSystem 未就绪时安全返回。
+  - 禁用或销毁 HUD 时，除了退订 PlayerSystem，还必须解绑已绑定角色上的二级事件，例如属性变化、状态效果变化、能力槽变化。
+- 影响：
+  - `UIPlayerControlFeedback` 改为启用时监听当前控制角色，禁用时退订并清空当前玩家控制引用。
+  - `UIStatBar` 改为启用时绑定固定目标或监听当前控制角色，禁用时退订并解绑角色属性事件。
+  - `UIHUDEffectBar` 改为启用时绑定固定目标或监听当前控制角色，禁用时退订、解绑状态效果事件并归还图标对象池实例。
+  - `UIHUDAbilityBar` 改为启用时监听当前控制角色，禁用时退订并解绑能力槽变化事件。
+  - `scripts/Invoke-UIRuntimeStaticGate.ps1` 已扩展检查这四个 HUD 当前控制角色监听的启用/禁用生命周期和就绪保护。
+- 替代关系：
+  - 本决策保留 `PlayerSystem` 作为当前控制角色真相源。
+  - 本决策取代 HUD 组件中“Start 注册、OnDestroy 注销”的隐式生命周期；菜单面板的当前控制角色监听应单独按 UIKit 面板显示/隐藏生命周期继续收口。

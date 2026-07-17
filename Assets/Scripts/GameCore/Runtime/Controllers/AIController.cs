@@ -4,42 +4,124 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// AI 控制器的存档状态，保留归位点、当前目标和关键冷却计时器。
+    /// </summary>
     [Serializable]
     public class AIControllerDataBlock : ControllerDataBlock
     {
+        /// <summary>
+        /// AI 启动时的初始位置，用于目标丢失后回到活动范围。
+        /// </summary>
         public Vector3 initialPosition;
+
+        /// <summary>
+        /// 当前战斗目标的持久化引用。
+        /// </summary>
         public PersistableReference<CharacterBase> target;
+
+        /// <summary>
+        /// 重新寻找目标前的剩余冷却时间。
+        /// </summary>
         public float retargetCooldownTimer;
+
+        /// <summary>
+        /// 攻击再次触发前的剩余冷却时间。
+        /// </summary>
         public float attackCooldownTimer;
+
+        /// <summary>
+        /// 距离最后一次看见目标已经经过的时间。
+        /// </summary>
         public float timeSinceTargetLastSeen;
     }
 
+    /// <summary>
+    /// 角色 AI 控制器，使用 ContextSteering2D 追踪目标、回到活动范围并触发攻击。
+    /// </summary>
     [Serializable]
     public partial class AIController : AController<CharacterBase>
     {
-        [Header("References")]
+        private const string DefaultTargetOrbitSteeringGroupId = "orbit";
+
+        [Header("引用")]
+        [InspectorName("主控实体")]
+        [Tooltip("可选的跟随或守护对象；配置后 AI 的归位点优先取该实体位置。")]
         [SerializeField] private Entity m_master = null;
 
-        [Header("Chase Settings")]
+        [Header("追踪设置")]
+        [InspectorName("发现半径")]
+        [Tooltip("AI 搜索可攻击目标的最大半径。")]
         [SerializeField, Min(1.0f)] private float m_detectionRadius = 5.0f;
+
+        [InspectorName("离初始点重置半径")]
+        [Tooltip("AI 距离初始点超过该半径后，会倾向重置或返回活动范围。")]
         [SerializeField, Min(1.0f)] private float m_resetFromInitialPositionRadius = 10.0f;
+
+        [InspectorName("离目标重置半径")]
+        [Tooltip("AI 与目标距离超过该半径后，会放弃或重新寻找目标。")]
         [SerializeField, Min(1.0f)] private float m_resetFromTargetDistanceRadius = 10.0f;
+
+        [InspectorName("越界重新选敌冷却")]
+        [Tooltip("目标离开范围后，等待该秒数再尝试重新寻找目标。")]
         [SerializeField, Min(0.5f)] private float m_targetOutOfRangeRetargetCooldown = 3.0f;
+
+        [InspectorName("距离主控目标期望距离")]
+        [Tooltip("存在主控实体时，AI 尝试保持在主控目标附近的距离。")]
         [SerializeField, Min(0.1f)] private float m_soughtDistanceFromMasterTarget = 1.0f;
+
+        [InspectorName("距离目标期望距离")]
+        [Tooltip("追击目标时希望保持的距离，用于近战或环绕行为。")]
         [SerializeField, Min(0.1f)] private float m_soughtDistanceFromTarget = 1.0f;
 
-        [Header("Steering Settings")]
+        [Header("转向设置")]
+        [InspectorName("转向配置")]
+        [Tooltip("ContextSteering2D 使用的方向评分配置。")]
         [SerializeField] private ContextSteeringProfile2D m_steeringProfile = null;
+
+        [InspectorName("通行转向组")]
+        [Tooltip("非战斗移动时使用的转向组 ID。")]
         [SerializeField] private string m_transitSteeringGroupId = "transit";
+
+        [InspectorName("追击转向组")]
+        [Tooltip("追击目标时使用的转向组 ID。")]
         [SerializeField] private string m_targetPursuitSteeringGroupId = "predictive-target";
+
+        [InspectorName("启用近身环绕")]
+        [Tooltip("目标进入保持距离后切换到近身环绕组。关闭时继续使用追击组，并由 Arrive 在攻击距离附近停住。")]
+        [SerializeField] private bool m_useTargetOrbitSteeringAtSoughtDistance = true;
+
+        [InspectorName("近身环绕转向组")]
+        [Tooltip("目标进入保持距离后使用的行为组 ID；默认 orbit，不应包含 Arrive。")]
+        [SerializeField] private string m_targetOrbitSteeringGroupId = DefaultTargetOrbitSteeringGroupId;
+
+        [InspectorName("重新寻路间隔")]
+        [Tooltip("导航目标刷新路径的最小间隔秒数。")]
         [SerializeField, Min(0.1f)] private float m_navigationRepathInterval = 0.5f;
+
+        [InspectorName("目标移动重算阈值")]
+        [Tooltip("目标移动超过该距离后触发重新规划路径。")]
         [SerializeField, Min(0.05f)] private float m_navigationTargetMoveThreshold = 0.5f;
+
+        [InspectorName("路径点容差")]
+        [Tooltip("AI 距离当前路径点小于该值时视为已到达。")]
         [SerializeField, Min(0.05f)] private float m_navigationWaypointTolerance = 0.2f;
+
+        [InspectorName("丢失目标后重置时间")]
+        [Tooltip("看不见目标持续超过该时间后，AI 会进入重置或重新选敌流程。")]
         [SerializeField, Min(0.1f)] private float m_timeBeforeResetAfterTargetSightLost = 3.0f;
+
+        [InspectorName("不可见目标重新选敌冷却")]
+        [Tooltip("目标不可见后再次尝试选敌的冷却时间。")]
         [SerializeField, Min(0.1f)] private float m_cannotSeeTargetRetargetCooldown = 1.0f;
 
-        [Header("Attack Settings")]
+        [Header("攻击设置")]
+        [InspectorName("攻击触发半径")]
+        [Tooltip("目标进入该距离后 AI 可尝试触发攻击。")]
         [SerializeField] public float m_attackTriggerRadius = 1.0f;
+
+        [InspectorName("攻击冷却")]
+        [Tooltip("两次攻击尝试之间的最小间隔秒数。")]
         [SerializeField] public float m_attackCooldown = 1.0f;
 
         private Transform transform => m_subject.transform;
@@ -48,6 +130,14 @@ namespace FantasyWord.GameCore
             m_master ?
             (Vector2)m_master.transform.position :
             m_initialPosition;
+
+        private bool ShouldUseTargetOrbitSteeringAtSoughtDistance =>
+            m_useTargetOrbitSteeringAtSoughtDistance;
+
+        private string TargetOrbitSteeringGroupIdValue =>
+            string.IsNullOrWhiteSpace(m_targetOrbitSteeringGroupId)
+                ? DefaultTargetOrbitSteeringGroupId
+                : m_targetOrbitSteeringGroupId;
 
         private CharacterBase m_target = null;
         private float m_retargetCooldownTimer = 0.0f;
@@ -76,12 +166,18 @@ namespace FantasyWord.GameCore
 
         protected override void OnTerminate() => m_behaviourRuntime?.Dispose();
 
+        /// <summary>
+        /// 设置 AI 的主控实体，并可临时覆盖跟随主控目标的期望距离。
+        /// </summary>
         public void SetMaster(Entity master, float? soughtDistanceFromMaster = null)
         {
             m_soughtDistanceFromMasterTarget = soughtDistanceFromMaster ?? m_soughtDistanceFromMasterTarget;
             m_master = master;
         }
 
+        /// <summary>
+        /// 尝试把指定角色设为战斗目标；目标必须对当前主体是合理敌对目标。
+        /// </summary>
         public bool TrySetCombatTarget(CharacterBase target)
         {
             if (!target || m_subject == null || !CombatSolver.IsJudiciousTarget(m_subject, target))

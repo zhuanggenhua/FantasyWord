@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +22,13 @@ namespace FantasyWord.GameCore
             m_button.onClick.AddListener(OnClicked);
         }
 
+        private void OnDestroy()
+        {
+            if (m_button)
+            {
+                m_button.onClick.RemoveListener(OnClicked);
+            }
+        }
         private void OnClicked()
         {
             m_receiver?.HandleDialogueOptionClicked(m_optionID);
@@ -38,4 +45,5 @@ namespace FantasyWord.GameCore
         }
     }
 }
+
 

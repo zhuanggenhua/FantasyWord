@@ -202,6 +202,29 @@
 - 完整 `FantasyWord.GameCore.EditModeTests` 当前不能称为全量通过：`gamecore-editmode-20260713-element-surface.json` 记录 `MeleeAttackAbilityEditModeTests.FormalGasAttackRuntimeInstance_UsesGasContextNotMigrationSheetFlag` 失败。该失败属于近战/GAS 朝向合同，不是元素地表 q-wide 目标格复燃失败；因此本 change 只能声明“元素相关验收通过，完整 GameCore 仍有无关失败待处理”。
 - Wet、Electrified、Steam 等其它元素表现没有正式素材时继续保持未验收，不能用占位图或旧六状态联系表宣称完成；草覆盖层再生、再生进度和保存/加载由 `implement-persistent-world-terrain-mutation` 承接。
 
+## 2026-07-14 Surface Layering Lock
+
+本轮先收口 Tilemap 分层；用户随后明确允许端到端后，已完成新分层 PlayMode E2E 验收。
+
+- 当前分层支持俯视角 Tilemap 游戏：基础视觉、Unity 物理碰撞、寻路规则、地表语义、运行时表现和未来玩家改写层分开承担职责。
+- 当前不新增独立 Collision Tilemap。原版 MiniFantasy 场景和当前 `ClickMoveTest` 都是在墙体、水体、悬崖等视觉 Tilemap 上挂 `TilemapCollider2D + CompositeCollider2D + Rigidbody2D`；Unity 官方 Tilemap Collider 2D 也支持直接从 Tilemap 生成 2D 碰撞形状。后续只有当阻挡语义需要脱离视觉 Tile 时，才另开专用碰撞层。
+- 当前寻路不靠 Collider。`地形规则` / `TerrainNavigationTile` 继续作为可行走、层级、坡道、基础地表和通行代价的玩法真相源。
+- `地表覆盖` 不再等同于“所有可烧物”。`TerrainSurfaceLayerSource` 允许多个作者/表现 Tilemap 的特定 Tile 映射为覆盖语义，所以 `地表装饰` 不被忽略，但也不会整层都被标成可烧。
+- 新来源层存在时，`TerrainNavigationMap` 不再回落到旧单覆盖字段；旧单覆盖字段只保留给没有配置 `TerrainSurfaceLayerSource` 的旧地图兼容，避免新地图同时有两套覆盖真相。
+- 当前 `ClickMoveTest` 只把纯草类来源映射为 Grass 可燃/可销毁：`地表装饰` 的 `Rule Tiles/Grass.asset`、`地表装饰` 的标准 `Grass19_Minifantasy_ForgottenPlainsTiles_3.asset`，以及 `悬崖顶部装饰` 的 `Rule Tiles/Grass.asset`；`CobblestoneGrass Combo`、`LakeGrass`、`CliffGrass` 等复合 Tile 暂不接入可烧，避免燃烧时误隐藏石路、水岸或崖草整块视觉。
+- 不按 Fire/Wet/Electrified/Steam 等元素类型开 Tilemap。元素类型属于规则和状态，Tilemap 只按作者层、语义来源和运行时表现职责拆分。
+- 新来源层相关 EditMode 覆盖已落到源码并复测通过：`test-results/evidence-runtime-validation/element-surface/editmode-ElementReactionSystemEditModeTests-20260714-surface-layer.json` 为 `Passed`，覆盖装饰层 Grass 映射、新来源层压过旧兼容字段、旧地图无新来源层时仍可走旧字段。
+- 场景审计 `test-results/evidence-runtime-validation/element-surface/clickmove-scene-surface-layer-audit-20260714.json` 确认 `ClickMoveTest` 当前为 clean，旧单覆盖字段为空，`TerrainSurfaceLayerSource` 有两条有效来源：`sourceId=0` 的 `地表覆盖` 映射 `Cliff5_Minifantasy_ForgottenPlainsTiles_239 -> Grass / Flammable, Destructible, Regrowable`；`sourceId=10` 的 `地表装饰` 映射 `Grass -> Grass / Flammable, Destructible`。临时效果层和结果覆盖层均为 0 格。
+- 用户指出 `20260714-surface-layer` 截图中燃烧格数和露土格数视觉不一致后，确认旧通过口径存在缺口：目标格同时存在 `地表覆盖` Grass 与 `地表装饰` Grass，旧表现层只隐藏一个来源层，导致装饰 Grass 仍可见。该旧证据不得再单独作为视觉露土完成证据引用。
+- 修正后新分层 PlayMode E2E 证据 `test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260714-visual-layer-fix.json` 为 `Success`：正式 Q 槽 `20010` 通过 EX-GAS `TaskApplyWorldElement` 提交 Fire，6 个目标格进入 Burning，燃烧期间临时火焰 6 格，燃尽后 6 格 Grass 覆盖隐藏、底层 Dirt 可见、结果覆盖 Tile 为 0，且 `VisibleMappedSurfaceCoverSourceCountAfterExpiration = 0`。
+- 同一 E2E 复验二次 Q：`ReapplyWorldElementTaskSubmitCountDelta = 1`、`ReapplyWorldElementTaskSuccessfulApplyCountDelta = 0`、`ReapplyBurningCellCount = 0`，证明已移除目标格不会复燃；新的红框对比图 `test-results/evidence-image-validation/clickmove-element-surface-q-wide-visual-layer-fix/target-six-cells-overlay.png` 显示左侧 6 格火焰、右侧同 6 格露出褐色 Dirt。
+- 用户追问残留花/草后，重新扫描目标区与全场景植被候选，确认目标格内的“花/草”来自 `地表装饰` 的 `Grass` RuleTile 变体，已经纳入映射；另补入两个纯草漏项：`地表装饰` 的标准 `Grass19_Minifantasy_ForgottenPlainsTiles_3.asset` 与 `悬崖顶部装饰` 的 `Rule Tiles/Grass.asset`。复扫证据 `test-results/evidence-runtime-validation/element-surface/full-scene-vegetation-mapping-audit-20260714-after-pure-grass-mapping.json` 记录纯草疑似漏映射为 0，剩余 297 个未映射疑似项均为 `LakeGrass`、`CliffGrass`、`CobblestoneGrass` 复合视觉，不应通过单条草映射整块烧掉。
+- 补映射后重跑 q-wide PlayMode E2E：`test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260714-pure-grass-mapping.json` 为 `Success`，6 个目标格 Burning、燃烧期间火焰 6 格、燃尽后 6 格 Grass 覆盖隐藏并露出 Dirt、所有映射覆盖来源残留为 0、二次 Q 不复燃；视觉核验结果为 `test-results/evidence-image-validation/clickmove-element-surface-q-wide-pure-grass-mapping/result.json`，预览相册为 `http://8.148.71.102:18080/#/fantasyword/element-surface-q-wide-pure-grass-mapping`。
+- 用户继续指出目标区仍残留一朵花后，确认旧验收范围仍缺一类真实对象：目标格 `(4, 12, 0)` 的 `Flower (6)` 是手摆 `SpriteRenderer` 场景道具，不是 Tilemap 瓦片。上一轮“独立道具隐藏”临时路线已废弃，不再作为正式方案或证据口径；本轮已将 `ClickMoveTest` 中 23 朵花和 10 处长草从手摆 `SpriteRenderer` 迁入统一 `地表植被覆盖` / `地表植被阴影` Tilemap，并通过 `TerrainSurfaceLayerSource` 明确映射为植被覆盖来源。
+- 2026-07-15 重构后最终审计 `test-results/evidence-runtime-validation/element-surface/clickmove-vegetation-tilemap-audit-20260715.txt` 确认 `地表植被覆盖=33`、`地表植被阴影=33`、手摆花草对象 0、花草 `SpriteRenderer` 0、缺脚本 0、`TerrainSurfaceLayerSource` 来源数 5，且植被覆盖/阴影排序为 -8/-7；旧的独立覆盖道具通道、单字段覆盖道具列表和截图前隐藏花草遮挡物的验证字段均不再作为代码或场景入口。
+- 2026-07-15 重构后 q-wide PlayMode E2E `test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260715-tilemap-vegetation.json` 为 `Success`：正式 Q/EX-GAS `TaskApplyWorldElement` 提交 Fire，6 个目标格进入 Burning，燃烧期间临时火焰 6 格，燃尽后 6 格 Grass 覆盖隐藏并露出 Dirt，所有映射覆盖来源可见残留为 0，二次 Q 有提交但 `ReapplyBurningCellCount = 0`；最终截图已上传到 `http://8.148.71.102:18080/#/fantasyword/element-surface-q-wide-tilemap-vegetation`。
+- 该 E2E 只证明新分层下的运行时烧草闭环；草覆盖层再生、保存/加载仍属于 `implement-persistent-world-terrain-mutation`，Wet/Electrified/Steam 等其它表现仍等待正式素材，完整 `FantasyWord.GameCore.EditModeTests` 也仍不能称为全量通过。
+
 ## Architecture Options
 
 ### Option A: 技能直接修改 Tile 或地表状态

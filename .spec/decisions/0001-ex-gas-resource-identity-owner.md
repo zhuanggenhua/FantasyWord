@@ -1,0 +1,26 @@
+# 0001-EX-GAS 资源身份 owner
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 当前 EX-GAS 能力表 `#exgas.abilityGameCore.xlsx` 和生成 JSON 里，能力 Prefab、图标、Cue 挂载 Prefab 仍用 `Assets/...` 编辑器项目路径表达。
+  - 当前工程有 `ResourceSystem`、Addressables 包和 YokiFrame 资源入口生成器，但没有 `Assets/AddressableAssetsData`，`FWRes.g.cs` 当前为空索引。
+  - 2DRPGEngine 参考工程的 Ability、Item、Equipment、PrefabReference 等正式资源通过 Unity 序列化对象引用或数据库 GUID 闭合，不把 `Assets/...` 字符串作为运行时资源身份。
+  - EX-GAS 插件本身已经提供 `GASResourceLoader.Register(...)` 扩展点；FantasyWord 已注册项目侧 `FormalGasAbilityResourceLoader`，所以缺口不是插件不能接项目资源系统，而是数据里的正式地址尚未成立。
+- 决策：
+  - 官方 EX-GAS 能力资源的正式 owner 是项目侧资源身份层，不是 Luban 表里的 Unity 编辑器项目路径。
+  - 现阶段官方内容优先采用数据库稳定引用或 Unity 序列化引用作为作者真相；玩家构建需要动态加载时，再由资源身份层派生出 `ResourceSystem / Addressables` 地址。
+  - `Assets/...` 路径只允许作为编辑器审计、定位和过渡期债务证据，不得称为玩家构建可用地址。
+  - YokiFrame 强类型资源入口只在 Addressables/YooAsset 配置真实存在且生成索引非空时作为正式资源 key；不能用一个尚未配置的 key 名称替换 `Assets/...` 后冒充收口。
+  - EX-GAS `CueMountPrefab` 继续通过插件原生 `GASResourceLoader` 入口接项目加载器，不在项目侧另造第二套 Cue 挂载实现。
+- 影响：
+  - `FormalGasAbilityResourceLoader` 必须拒绝把 `Assets/...` 当正式运行时地址加载；编辑器可以继续用 GUID 或对象引用做审计定位。
+  - `Invoke-FormalGasResourceStaticGate.ps1` 必须持续报告 EX-GAS 表中的编辑器路径债务；严格模式用于阻止新债务进入正式收口。
+  - 后续真正修完 7 个当前债务时，应先建立资源 owner：要么把能力资源登记成可验证的 Addressables/Yoki 资源入口，要么把能力资源纳入 GameCore 数据库稳定引用闭包，再让 EX-GAS 表只保存业务身份。
+  - 不手改 `Assets/DataGenerated/Luban` 生成物；资源身份字段调整必须回到 `EX_GAS_Config/ProjectConfigTable/exgas_config/Datas` 的源表和 Luban 生成链。
+- 落地状态：
+  - 2026-07-15：当前官方 EX-GAS 能力 Prefab、图标和 Cue 挂载 Prefab 已采用 GameCore 数据库引用闭包；`#exgas.abilityGameCore.xlsx` 的 Prefab/Icon GUID 指向 `PrefabReference` / `SpriteReference`，`CueMountPrefab.PrefabPath` 当前保存由 `GASResourceLoader` 解析的 `PrefabReference` GUID。
+  - 当前严格资源门禁要求：源表和生成 JSON 不出现 `Assets/...` 运行时资源身份；数据库 GUID 必须登记在 `DatabaseRegistry` 且类型正确。
+  - Addressables/Yoki 仍是后续资源包阶段候选；在 `Assets/AddressableAssetsData` 和非空 `FWRes` 成立前，不作为本轮官方能力资源 owner。
+- 替代关系：
+  - 本决策细化 `.spec/knowledge/features/project/Unity架构与GAS规范.md` 中“EX-GAS 运行时资源地址必须可由玩家构建解析”的规则。

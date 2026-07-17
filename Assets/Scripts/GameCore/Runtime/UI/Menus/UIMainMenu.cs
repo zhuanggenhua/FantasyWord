@@ -15,22 +15,29 @@ namespace FantasyWord.GameCore
         [SerializeField] private UISaveFile[] m_saveFiles = null;
         [SerializeField] private Button[] m_eraseButtons = null;
 
+        private bool m_cancelListening = false;
+
         private void Start()
         {
             m_settingsMenu.Init();
-
-            GameManager.InputSystem.AddUIActionListener(EUIInputAction.Cancel, EInputActionPhase.Performed, OnCancel);
-        }
-
-        private void OnDestroy()
-        {
-            GameManager.InputSystem.RemoveUIActionListener(EUIInputAction.Cancel, EInputActionPhase.Performed, OnCancel);
+            StartCancelListeningIfReady();
         }
 
         public void OnEnable()
         {
             UpdateUI();
             SelectDefaultButton();
+            StartCancelListeningIfReady();
+        }
+
+        private void OnDisable()
+        {
+            StopCancelListening();
+        }
+
+        private void OnDestroy()
+        {
+            StopCancelListening();
         }
 
         private void UpdateUI()
@@ -88,6 +95,42 @@ namespace FantasyWord.GameCore
             {
                 GameManager.SaveSystem.LoadFromFile(desc.filename);
             });
+        }
+
+        private void StartCancelListeningIfReady()
+        {
+            if (m_cancelListening ||
+                !GameManager.Exists() ||
+                !GameManager.HasSystem<InputSystem>())
+            {
+                return;
+            }
+
+            m_cancelListening = true;
+            GameManager.InputSystem.AddUIActionListener(
+                EUIInputAction.Cancel,
+                EInputActionPhase.Performed,
+                OnCancel);
+        }
+
+        private void StopCancelListening()
+        {
+            if (!m_cancelListening)
+            {
+                return;
+            }
+
+            m_cancelListening = false;
+            if (!GameManager.Exists() ||
+                !GameManager.HasSystem<InputSystem>())
+            {
+                return;
+            }
+
+            GameManager.InputSystem.RemoveUIActionListener(
+                EUIInputAction.Cancel,
+                EInputActionPhase.Performed,
+                OnCancel);
         }
     }
 }

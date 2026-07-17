@@ -1,0 +1,23 @@
+# 0006-任务日志进度生命周期 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - FantasyWord 的 Quest / Journal 设计来自 2DRPGEngine：任务日志系统持有进行中任务，单个 `QuestProgress` 持有当前子任务队列，具体 `QuestTaskProgress` 监听背包、击杀、游戏标记或对话入口。
+  - 参考工程和早期实现都让 `QuestTaskProgress` 通过析构函数注销事件监听；析构函数由 GC 决定，不等于任务完成、强制完成、读档覆盖或系统停止，因此不能作为玩法监听生命周期 owner。
+  - FantasyWord 已把任务进度纳入存档稳定引用边界，任务和子任务存档必须保存数据库 GUID，不能让未登记资产静默写成空引用。
+- 决策：
+  - `JournalSystem` 是任务日志生命周期 owner；读档覆盖、系统停止和任务达成迁移前，必须显式停止当前进行中任务的监听。
+  - `QuestProgress` 是子任务推进 owner；子任务完成、强制完成和任务全达成都必须走同一个显式停止追踪路径，不能只移动列表。
+  - `IQuestTaskProgress.StopTracking()` 是任务监听释放的唯一外部合同；`OnProgressTrackingStarted/Stopped` 只作为具体进度类内部 hook，不暴露给外部系统直接调用。
+  - `QuestTaskProgress` 完成时必须先停止监听，再通知 `QuestProgress`；这样即使完成回调触发任务达成、UI 通知或存档，也不会留下已完成任务继续响应事件。
+  - `JournalSystem.CreateDataBlock()` 和 `QuestProgress.CreateDataBlock()` 写入任务引用时必须使用 `DatabaseRegistry.TryCreateReference()`；未登记任务或子任务跳过并报错，不能写空 GUID。
+- 影响：
+  - `QuestTaskProgress` 已移除析构函数注销，新增幂等 `StopTracking()`。
+  - `QuestProgress` 在完成子任务、强制完成和任务达成时都会停止当前子任务监听，并对坏档中的空任务块、空子任务和无法解析 GUID 做显式跳过。
+  - `JournalSystem` 在读档清空列表前、系统停止时、任务达成迁移时停止 active quest 的监听。
+  - `JournalSystem` 的未接、已达成、已完成任务存档写入改为 `TryCreateReference()`，读档时跳过无法解析的任务 GUID 并报错。
+  - 新增 `scripts/Invoke-QuestRuntimeStaticGate.ps1`，覆盖析构注销、公开生命周期 hook、完成前未停止追踪、强制完成列表突变、Journal 读档清空前未释放监听，以及 Journal 直接 `CreateReference()`。
+- 替代关系：
+  - 本决策保留 2DRPGEngine 的任务日志职责划分，不改变任务、子任务、对话和 UI 的上层流程。
+  - 本决策取代参考工程中“靠析构函数兜底注销任务监听”的实现细节；该细节不符合 FantasyWord 当前显式生命周期和可验收规范。

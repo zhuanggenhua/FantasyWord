@@ -56,10 +56,11 @@ namespace FantasyWord.GameCore
                     continue;
                 }
 
-                ModStatus state = m_modConfigData.GetModState(modInfo);
+                ModStatus state = m_modConfigData.EnsureModState(modInfo).status;
                 if (state == ModStatus.Delete)
                 {
                     ModAPI.DeleteModFromDisk(modInfo);
+                    m_modConfigData.ConsumeDeletedModState(modInfo);
                     continue;
                 }
 
@@ -95,10 +96,11 @@ namespace FantasyWord.GameCore
                 return null;
             }
 
-            ModStatus state = configData.GetModState(modInfo);
+            ModStatus state = configData.EnsureModState(modInfo).status;
             if (state == ModStatus.Delete)
             {
                 ModAPI.DeleteModFromDisk(modInfo);
+                configData.ConsumeDeletedModState(modInfo);
                 return null;
             }
 

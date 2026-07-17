@@ -4,21 +4,43 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 元素反应命中后要执行的一条结果操作。
+    /// 它只描述规则结果，真正写入地表状态由运行时系统统一处理。
+    /// </summary>
     [Serializable]
     public sealed class ElementReactionOperation
     {
+        [InspectorName("操作类型")]
         [SerializeField] private EElementReactionOperationKind m_kind =
             EElementReactionOperationKind.AddOrRefreshState;
+
+        [InspectorName("目标状态")]
+        [Tooltip("添加、刷新或移除的地表运行时状态。仅状态类操作会读取。")]
         [SerializeField] private ETerrainElementStateKind m_stateKind =
             ETerrainElementStateKind.None;
+
+        [InspectorName("强度倍率")]
+        [Tooltip("施加元素强度会乘以该值后写入状态，低于 0 会被运行时夹到 0。")]
         [Min(0.0f)]
         [SerializeField] private float m_intensityMultiplier = 1.0f;
+
+        [InspectorName("持续时间覆盖")]
         [Tooltip("小于等于 0 时使用状态定义的默认持续时间。")]
         [SerializeField] private float m_durationOverride = 0.0f;
+
+        [InspectorName("目标基础地表")]
+        [Tooltip("用于改写有效地表的操作；不会改动作者规则 Tile。")]
         [SerializeField] private ETerrainSurfaceKind m_surfaceKind =
             ETerrainSurfaceKind.None;
+
+        [InspectorName("目标上层覆盖")]
+        [Tooltip("用于移除、设置或清除上层地表覆盖覆盖值。")]
         [SerializeField] private ETerrainSurfaceCoverKind m_surfaceCoverKind =
             ETerrainSurfaceCoverKind.None;
+
+        [InspectorName("表现信号")]
+        [Tooltip("用于触发蒸汽等瞬时表现，不直接写入持久地形数据。")]
         [SerializeField] private EElementPresentationSignal m_presentationSignal =
             EElementPresentationSignal.None;
 
@@ -31,43 +53,85 @@ namespace FantasyWord.GameCore
         public EElementPresentationSignal PresentationSignal => m_presentationSignal;
     }
 
+    /// <summary>
+    /// 一条可数据化的地表元素反应规则。
+    /// 它把“什么元素/状态命中什么地表条件”映射成结果操作，不直接负责施法、Tilemap 显示或存档。
+    /// </summary>
     [CreateAssetMenu(
         fileName = "元素反应-",
         menuName = "FantasyWord/元素/元素反应定义")]
     public sealed class ElementReactionDefinition : DatabaseEntry
     {
         [Header("触发")]
+        [InspectorName("触发时机")]
+        [Tooltip("元素刚施加时触发，或运行时状态到期时触发。")]
         [SerializeField] private EElementReactionTrigger m_trigger =
             EElementReactionTrigger.OnElementApplied;
+
+        [InspectorName("施加元素")]
+        [Tooltip("OnElementApplied 规则需要匹配的世界元素。")]
         [SerializeField] private EWorldElementKind m_elementKind = EWorldElementKind.None;
+
+        [InspectorName("到期状态")]
+        [Tooltip("OnStateExpired 规则需要匹配的到期运行时状态。")]
         [SerializeField] private ETerrainElementStateKind m_expiredStateKind =
             ETerrainElementStateKind.None;
+
+        [InspectorName("最低强度")]
+        [Tooltip("元素施加强度低于该值时不触发规则。")]
         [Range(0.0f, 1.0f)]
         [SerializeField] private float m_minimumIntensity = 0.0f;
 
         [Header("地表条件")]
+        [InspectorName("要求基础地表")]
         [SerializeField] private bool m_requireBaseSurface = false;
+
+        [InspectorName("基础地表")]
+        [Tooltip("规则 Tile 资产提供的作者地表类型。")]
         [SerializeField] private ETerrainSurfaceKind m_baseSurface = ETerrainSurfaceKind.None;
+
+        [InspectorName("要求有效地表")]
         [SerializeField] private bool m_requireEffectiveSurface = false;
+
+        [InspectorName("有效地表")]
+        [Tooltip("基础地表叠加运行时覆盖后的当前地表类型。")]
         [SerializeField] private ETerrainSurfaceKind m_effectiveSurface = ETerrainSurfaceKind.None;
 
         [Header("上层地表条件")]
+        [InspectorName("要求上层覆盖")]
         [SerializeField] private bool m_requireSurfaceCover = false;
+
+        [InspectorName("上层覆盖")]
+        [Tooltip("草、雪、苔藓等作者/表现层映射出来的上层地表覆盖。")]
         [SerializeField] private ETerrainSurfaceCoverKind m_surfaceCover =
             ETerrainSurfaceCoverKind.None;
+
+        [InspectorName("必须具备的覆盖属性")]
+        [Tooltip("例如 Flammable/Destructible。全部命中才触发。")]
         [SerializeField] private ETerrainSurfaceCoverTraits m_requiredSurfaceCoverTraits =
             ETerrainSurfaceCoverTraits.None;
+
+        [InspectorName("禁止具备的覆盖属性")]
+        [Tooltip("命中任意一个禁止属性时不触发。")]
         [SerializeField] private ETerrainSurfaceCoverTraits m_forbiddenSurfaceCoverTraits =
             ETerrainSurfaceCoverTraits.None;
 
         [Header("状态条件")]
+        [InspectorName("必须具备的运行时状态")]
         [SerializeField] private ETerrainRuntimeSurfaceState m_requiredStates =
             ETerrainRuntimeSurfaceState.None;
+
+        [InspectorName("禁止具备的运行时状态")]
         [SerializeField] private ETerrainRuntimeSurfaceState m_forbiddenStates =
             ETerrainRuntimeSurfaceState.None;
 
         [Header("结果")]
+        [InspectorName("优先级")]
+        [Tooltip("同一上下文命中多条规则时，优先级高的先执行；同优先级按稳定 ID 排序。")]
         [SerializeField] private int m_priority = 0;
+
+        [InspectorName("结果操作")]
+        [Tooltip("命中规则后按顺序执行的状态/地表/表现信号操作。至少需要一条。")]
         [SerializeField] private ElementReactionOperation[] m_operations =
             Array.Empty<ElementReactionOperation>();
 
@@ -160,6 +224,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 元素反应匹配时使用的只读上下文。
+    /// 它把元素输入、基础地表、运行时地表和上层覆盖打包，避免规则直接读取 Tilemap 或场景对象。
+    /// </summary>
     public readonly struct ElementReactionContext
     {
         public ElementReactionContext(

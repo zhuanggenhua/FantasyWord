@@ -1,0 +1,22 @@
+# 0003-UI 菜单与按钮 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 当前 GameCore 运行时 UI 已迁移到 YokiFrame UIKit 面板栈，菜单注册通过 `UIKitMenuPanelTypeReference`，打开面板通过 `UIKit.OpenPanelAsync`。
+  - UI 面板和条目仍存在两类容易回流的旧写法：按钮脚本直接执行顶层流程，以及 `Button.onClick` 只注册不注销。
+  - 参考实现的核心原则不是“按钮脚本自己做业务”，而是 UI 只表达交互意图，正式系统或领域事件 owner 执行玩法、存档、场景、资源等结果。
+- 决策：
+  - `UIManager` 是 UIKit 菜单注册、菜单请求路由、菜单栈和关闭任务的 owner。
+  - UI 条目、按钮、HUD 小组件只负责显示和发布语义请求，不直接拥有场景跳转、存档真相、背包真相、能力真相或资源加载真相。
+  - 返回主菜单由 `GameRuntimeEvents.RequestReturnToMainMenu()` 表达，执行者是 `GameStateSystem`，它负责恢复时间缩放并加载 `GameConfig.mainMenuSceneName`。
+  - `Button.onClick.AddListener` 必须在同一组件生命周期内可注销；带参数闭包必须保存包装后的 `UnityAction`，不能注册匿名闭包后无法移除。
+  - Prefab 内部的父子组件解析可以作为组合期缓存使用，但不得升级成缺失引用时的静默兜底；缺少父级 owner 时必须明确报错。
+  - 主菜单启动游戏的 `UIMainMenu -> M2DEngine` 异步加载暂时保留为启动入口职责，不代表 gameplay UI 可以直接加载任意场景。
+- 影响：
+  - `UIGameMenuEntry`、`UIKitDeathPanel` 不再直接调用 `SceneManager.LoadScene`，只发布返回主菜单请求。
+  - 菜单按钮、背包/商店/制作/能力/对话条目的 `onClick` 监听在销毁时解除；设置和角色属性的参数化回调支持显式注销。
+  - `scripts/Invoke-UIRuntimeStaticGate.ps1` 覆盖 UI runtime 的 Resources、全局查找、transform 路径查找、输入设备签名解析、FWRes 直用、同步直接 LoadScene，以及按钮监听生命周期。
+- 替代关系：
+  - 本决策不取代 UIKit 插件内部加载约定；第三方插件源码和默认 loader 不在本轮修改范围。
+  - 后续若引入正式场景流转系统或 Addressables/YooAsset 场景 key，应新建场景加载 owner 决策，并用它替代 `GameStateSystem` 对返回主菜单的临时集中执行职责。

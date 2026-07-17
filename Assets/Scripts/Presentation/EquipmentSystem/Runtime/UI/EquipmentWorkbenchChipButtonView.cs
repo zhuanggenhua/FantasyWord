@@ -11,6 +11,8 @@ public sealed class EquipmentWorkbenchChipButtonView : MonoBehaviour
     [SerializeField] Outline outline;
     [SerializeField] TextMeshProUGUI label;
 
+    UnityAction currentClickListener;
+
     public void Bind(
         string text,
         TMP_FontAsset font,
@@ -46,9 +48,29 @@ public sealed class EquipmentWorkbenchChipButtonView : MonoBehaviour
         if (button.targetGraphic == null)
             button.targetGraphic = background;
         button.interactable = interactable;
-        button.onClick.RemoveAllListeners();
+        ClearClickListener();
         if (interactable && onClick != null)
-            button.onClick.AddListener(onClick);
+        {
+            currentClickListener = onClick;
+            button.onClick.AddListener(currentClickListener);
+        }
+    }
+
+    void OnDisable()
+    {
+        ClearClickListener();
+    }
+
+    void OnDestroy()
+    {
+        ClearClickListener();
+    }
+
+    void ClearClickListener()
+    {
+        if (button != null && currentClickListener != null)
+            button.onClick.RemoveListener(currentClickListener);
+        currentClickListener = null;
     }
 
     void EnsureReferences()

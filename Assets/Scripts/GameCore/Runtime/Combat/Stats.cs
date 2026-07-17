@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 角色正式属性枚举。
+    /// 顺序需要与 FormalAttributeCatalog 保持兼容，存档数组按该顺序保存。
+    /// </summary>
     public enum EStat
     {
         Health = 0,
@@ -17,6 +21,10 @@ namespace FantasyWord.GameCore
         AttackSpeed = 8
     }
 
+    /// <summary>
+    /// 一组角色属性值。
+    /// 内部数组会随 FormalAttributeCatalog 尺寸调整，避免新增属性后旧存档越界。
+    /// </summary>
     [Serializable]
     public class Stats : ISerializationCallbackReceiver
     {
@@ -153,6 +161,10 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 属性随等级成长的插值配置。
+    /// min/max 分别代表最低和最高等级的属性端点。
+    /// </summary>
     [Serializable]
     public struct StatsEvolutionProfile
     {

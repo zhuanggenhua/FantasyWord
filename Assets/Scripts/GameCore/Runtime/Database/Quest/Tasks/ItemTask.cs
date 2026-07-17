@@ -5,14 +5,23 @@ using YokiFrame;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 收集物品任务的进度存档块；数量会在恢复后从目标背包范围重新扫描。
+    /// </summary>
     [Serializable]
     public class ItemTaskProgressDataBlock : QuestTaskProgressDataBlock
     {
         public override IQuestTaskProgress CreateInstance() => new ItemTaskProgress(this);
     }
 
+    /// <summary>
+    /// 跟踪指定背包范围中的物品数量，并在数量变化或控制角色变化时刷新任务进度。
+    /// </summary>
     public class ItemTaskProgress : QuestTaskProgress<ItemTaskProgressDataBlock>
     {
+        /// <summary>
+        /// 当前范围内已有的目标物品数量。
+        /// </summary>
         public int currentQuantity { get; private set; } = 0;
 
         private ItemTask m_itemTask => (ItemTask)m_task;
@@ -21,7 +30,7 @@ namespace FantasyWord.GameCore
 
         public ItemTaskProgress(ItemTaskProgressDataBlock block) : base(block) { }
 
-        public override void OnProgressTrackingStarted()
+        protected override void OnProgressTrackingStarted()
         {
             EventKit.Type.Register<InventoryItemAddedEvent>(OnItemAdded);
             EventKit.Type.Register<InventoryItemRemovedEvent>(OnItemRemoved);
@@ -34,7 +43,7 @@ namespace FantasyWord.GameCore
             }
         }
 
-        public override void OnProgressTrackingStopped()
+        protected override void OnProgressTrackingStopped()
         {
             EventKit.Type.UnRegister<InventoryItemAddedEvent>(OnItemAdded);
             EventKit.Type.UnRegister<InventoryItemRemovedEvent>(OnItemRemoved);
@@ -85,15 +94,26 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// 要求玩家或队伍拥有指定数量物品的任务资产。
+    /// </summary>
     [CreateAssetMenu(menuName = AssetMenuIndexer.FantasyWord_Quests_Tasks + nameof(ItemTask))]
     public class ItemTask : QuestTask
     {
-        [SerializeField, FormerlySerializedAs("item")]
+        [FormerlySerializedAs("item")]
+        [InspectorName("目标物品")]
+        [Tooltip("任务要求收集或持有的物品。")]
+        [SerializeField]
         private Item m_item = null;
 
-        [SerializeField, FormerlySerializedAs("amountToCollect")]
+        [FormerlySerializedAs("amountToCollect")]
+        [InspectorName("目标数量")]
+        [Tooltip("达到该数量后任务完成。")]
+        [SerializeField]
         private int m_amountToCollect = 1;
 
+        [InspectorName("背包范围")]
+        [Tooltip("决定从队伍、当前控制角色或其他背包范围统计目标物品数量。")]
         [SerializeField]
         private EInventoryQueryScope m_inventoryScope = EInventoryQueryScope.Party;
 
@@ -108,6 +128,9 @@ namespace FantasyWord.GameCore
 
         public override IQuestTaskProgress CreateTaskProgress() => new ItemTaskProgress(this);
 
+        /// <summary>
+        /// 从配置的背包范围读取当前目标物品数量，作为任务完成判断的唯一来源。
+        /// </summary>
         public int GetCurrentQuantity()
         {
             return GameManager.InventorySystem.GetItemCount(

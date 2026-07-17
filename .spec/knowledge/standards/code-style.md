@@ -18,8 +18,10 @@ metadata:
 
 - 注释只写代码表达不了的约束、原因、边界和外部依赖。
 - 不写“改了什么”的流水账注释；改动说明放在交付汇报或提交信息。
-- Unity Inspector 字段说明和项目侧注释默认中文。
-- 需要新增或审查注释时，使用 `.agents/skills/code-comments/SKILL.md`。
+- 项目侧 C# 的公开/受保护/内部类型、ScriptableObject 配置、编辑器工具、验证入口、生命周期/协程/事件/物理/存档等非显然逻辑，默认补中文注释说明职责、契约和边界。
+- Unity Inspector 暴露字段默认补中文 `InspectorName` / `Tooltip` / `Header`，说明这个值影响什么、由谁配置、错误配置会怎样；不要依赖未登记的 Inspector 辅助插件。
+- 简单赋值、自说明字段和一眼能懂的私有方法不强行补注释，避免把代码翻译成中文。
+- 需要新增或审查注释时，使用全局 `D:\codex-home\skills\code-comments\SKILL.md`；本项目当前没有 `.agents/skills/code-comments/SKILL.md`。
 
 ## 命名
 
@@ -37,4 +39,3 @@ metadata:
 - 项目 `.spec/skills/<name>/SKILL.md` 只要求 `name` 和 `description`。
 - description 必须写清触发场景，不把完整 SOP 堆在描述里。
 - 详细做法放正文，相关细节放 references 或项目 docs。
-

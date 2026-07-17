@@ -28,6 +28,11 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     [SerializeField] EquipmentWorkbenchIconSlotView characterSlotPrefab;
     [SerializeField] EquipmentWorkbenchIconSlotView equipmentSlotPrefab;
 
+    [Header("Typography")]
+    [SerializeField]
+    [Tooltip("工作台 UI 使用的 TMP 字体资源。必须由预制体或启动器显式绑定。")]
+    TMP_FontAsset workbenchFont;
+
     EquipmentWorkbenchController _controller;
     TMP_FontAsset _font;
     TMP_FontAsset _readableFont;
@@ -112,8 +117,12 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         }
 
         _controller = controller;
-        _font = font;
-        _readableFont = ResolveReadableFont(font);
+        _font = font != null ? font : workbenchFont;
+        _readableFont = _font;
+        if (_readableFont == null)
+        {
+            Debug.LogError("换装工作台 UI 缺少显式字体资源，请在 UI 预制体或 EquipmentWorkbenchBootstrap 上绑定 TMP 字体。", this);
+        }
 
         ApplyStaticFonts();
 
@@ -163,17 +172,25 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     {
         ResolveMissingBindings();
 
-        TextMeshProUGUI[] labels = GetComponentsInChildren<TextMeshProUGUI>(true);
-        for (int i = 0; i < labels.Length; i++)
+        if (_readableFont != null)
         {
-            if (labels[i] != null)
-                labels[i].font = _readableFont;
-        }
+            TextMeshProUGUI[] labels = GetComponentsInChildren<TextMeshProUGUI>(true);
+            for (int i = 0; i < labels.Length; i++)
+            {
+                if (labels[i] != null)
+                    labels[i].font = _readableFont;
+            }
 
-        if (selectedCharacterLabel != null)
-            selectedCharacterLabel.font = _readableFont;
-        if (detailTitleLabel != null)
-            detailTitleLabel.font = _readableFont;
+            if (selectedCharacterLabel != null)
+            {
+                selectedCharacterLabel.font = _readableFont;
+            }
+
+            if (detailTitleLabel != null)
+            {
+                detailTitleLabel.font = _readableFont;
+            }
+        }
     }
 
     void Refresh()
@@ -2529,18 +2546,6 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             UnityEngine.Object.Destroy(target);
         else
             UnityEngine.Object.DestroyImmediate(target);
-    }
-
-    static TMP_FontAsset ResolveReadableFont(TMP_FontAsset primaryFont)
-    {
-        if (primaryFont != null)
-            return primaryFont;
-
-        TMP_FontAsset silver = Resources.Load<TMP_FontAsset>("Fonts/Silver SDF");
-        if (silver != null)
-            return silver;
-
-        return Resources.Load<TMP_FontAsset>("Fonts/Silver CJK Fallback SDF");
     }
 
     static string GetStatLabel(WorkbenchStatType stat)

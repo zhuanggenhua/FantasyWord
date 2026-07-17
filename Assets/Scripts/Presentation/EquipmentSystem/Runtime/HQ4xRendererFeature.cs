@@ -8,7 +8,7 @@
 // 使用方法：
 // 1. 在 Renderer2D.asset 中添加此 Feature
 // 2. 指定 HQ4xFilter Shader
-// 3. 提供 hq4x.png LUT 纹理（可放在 Resources 目录自动加载）
+// 3. 在 Renderer Feature 上显式绑定 hq4x.png LUT 纹理
 // 4. 调整参数以获得最佳效果
 // ============================================================================
 using UnityEngine;
@@ -16,15 +16,22 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
+    /// <summary>
+    /// URP 全屏 HQ4x 后处理入口，用 LUT 对像素画进行 4x 风格放大。
+    /// </summary>
     public class HQ4xRendererFeature : ScriptableRendererFeature
     {
+        /// <summary>
+        /// HQ4x 后处理的可调参数。
+        /// </summary>
         [System.Serializable]
         public class HQ4xSettings
         {
-            [Tooltip("HQ4x Filter Shader")]
+            [InspectorName("滤镜 Shader")]
+            [Tooltip("执行 HQ4x 滤镜的 Shader。")]
             public Shader shader;
             
-            [Tooltip("HQ4x 权重查找表 (256x4096)，留空则从 Resources/hq4x 自动加载")]
+            [Tooltip("HQ4x 权重查找表 (256x4096)。必须在 Renderer Feature 上显式绑定。")]
             public Texture2D lut;
             
             [Tooltip("渲染时机")]
@@ -40,6 +47,8 @@ using UnityEngine.Rendering.Universal;
             public bool enabled = true;
         }
         
+        [InspectorName("HQ4x 设置")]
+        [Tooltip("控制 HQ4x 后处理的 Shader、LUT、渲染时机和缩放倍率。")]
         public HQ4xSettings hq4xSettings = new HQ4xSettings();
         
         private HQ4xRenderPass _renderPass;
@@ -61,12 +70,6 @@ using UnityEngine.Rendering.Universal;
                 _material = CoreUtils.CreateEngineMaterial(hq4xSettings.shader);
             }
             
-            // 尝试从 Resources 加载 LUT
-            if (hq4xSettings.lut == null)
-            {
-                hq4xSettings.lut = Resources.Load<Texture2D>("hq4x");
-            }
-            
             _renderPass = new HQ4xRenderPass(_material);
             _renderPass.renderPassEvent = hq4xSettings.renderPassEvent;
         }
@@ -82,7 +85,7 @@ using UnityEngine.Rendering.Universal;
             // LUT 必须存在
             if (hq4xSettings.lut == null)
             {
-                Debug.LogWarning("HQ4xRendererFeature: LUT 纹理未设置，请提供 hq4x.png 或放到 Resources/hq4x.png");
+                Debug.LogWarning("HQ4xRendererFeature: LUT 纹理未设置，请在 Renderer2D.asset 的 HQ4xRendererFeature 上显式绑定 hq4x.png。");
                 return;
             }
             

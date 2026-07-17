@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 单个效果与目标交互后的结果。
+    /// 用于聚合多目标反馈，而不是直接代表整个技能成功或失败。
+    /// </summary>
     public enum EEffectInteractionResult
     {
         NotApplicable,
@@ -12,12 +16,20 @@ namespace FantasyWord.GameCore
         Consumed
     }
 
+    /// <summary>
+    /// 效果冲击数据的解释方式。
+    /// SourcePosition 表示来源位置，Velocity 表示方向/速度向量。
+    /// </summary>
     public enum EEffectImpactDataType
     {
         SourcePosition,
         Velocity
     }
 
+    /// <summary>
+    /// 伤害命中后的推力策略。
+    /// Default 走全局命中规则，Disabled 禁用，Override 使用效果自带参数。
+    /// </summary>
     public enum EDamagePushMode
     {
         Default,
@@ -42,6 +54,10 @@ namespace FantasyWord.GameCore
         public float sanitizedInvincibilityDuration => Mathf.Max(0.0f, invincibilityDuration);
     }
 
+    /// <summary>
+    /// 通用效果冲击参数。
+    /// 它把冲击向量解释方式和伤害受击手感配置打包，供不同效果复用。
+    /// </summary>
     [Serializable]
     public struct EffectImpactSettings
     {
@@ -50,6 +66,10 @@ namespace FantasyWord.GameCore
         public DamageImpactSettings damageImpact;
     }
 
+    /// <summary>
+    /// 一次效果应用的聚合结果。
+    /// 保存交互结果快照和实际受影响目标，避免外部修改内部数组。
+    /// </summary>
     public readonly struct EffectApplicationResult
     {
         private readonly EEffectInteractionResult[] m_feed;

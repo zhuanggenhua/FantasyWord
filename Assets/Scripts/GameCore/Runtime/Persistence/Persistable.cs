@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using MackySoft.SerializeReferenceExtensions;
@@ -59,7 +59,7 @@ namespace FantasyWord.GameCore
             MarkAsDestroyed();
             NotifyPersistenceSystemAboutDestruction();
             m_destroyedEvent.Invoke();
-            m_executeOnDeath.Execute(context);
+            m_executeOnDeath.ExecuteFireAndReport(context, nameof(Persistable), this);
             Destroy(gameObject);
         }
 
@@ -112,9 +112,15 @@ namespace FantasyWord.GameCore
 
         public void MakeRuntimeInstanced(PrefabReference instance, string identifier)
         {
+            if (!GameManager.Database.TryCreateReference(instance, out DatabaseEntryReference<PrefabReference> prefabReference))
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(Persistable)}] 运行时持久化 PrefabReference 必须先登记到 DatabaseRegistry：{(instance ? instance.name : "<null>")}");
+            }
+
             m_persistenceInfo = new RuntimeInstancedPersistentDataHandler
             {
-                prefab = instance,
+                prefab = prefabReference,
                 map = GameManager.MapSystem.GetCurrentMapName(),
                 identifier = identifier
             };
@@ -158,13 +164,8 @@ namespace FantasyWord.GameCore
 
         private void NotifyPersistenceSystemAboutDestruction()
         {
-            if (!GameManager.Exists() || !GameManager.TryGetSystem<PersistenceSystem>(out PersistenceSystem persistenceSystem))
-            {
-                return;
-            }
-
             PersistableDataBlock dataBlock = IsPersistent() ? CreateDataBlock() : null;
-            persistenceSystem.NotifyPersistableDestroyed(new PersistableDestructionSnapshot(
+            GameManager.PersistenceSystem.NotifyPersistableDestroyed(new PersistableDestructionSnapshot(
                 dataBlock,
                 GetPersistentIdentifier(),
                 GetOwnershipKind(),
@@ -228,4 +229,6 @@ namespace FantasyWord.GameCore
         protected virtual void OnLoad(PersistableDataBlock block) { }
     }
 }
+
+
 

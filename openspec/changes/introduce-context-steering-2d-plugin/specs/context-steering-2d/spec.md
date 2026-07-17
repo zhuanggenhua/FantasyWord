@@ -118,6 +118,19 @@ The plugin MUST expose named behaviour groups without owning project AI-state me
 - **AND** the plugin MUST NOT publish `path-follow`, `pursuit`, `chase` or other FantasyWord business constants
 - **AND** a missing or unknown mapping MUST fail during AI initialization instead of falling back to the default group
 
+### Requirement: Near-Target AI MUST Not Collapse Into Static Arrive By Default
+
+GameCore MUST switch moving-target AI into a near-target behaviour group when it reaches its combat keep distance, rather than leaving Arrive to clamp the output to a fully static result.
+
+#### Scenario: NPC reaches combat keep distance
+
+- **GIVEN** an NPC has a live combat target and its profile contains a domain-neutral near-target group such as `orbit`
+- **WHEN** the NPC reaches the configured distance it should keep from that target
+- **THEN** GameCore MUST select the configured near-target group by default
+- **AND** the default near-target group MUST NOT contain Arrive
+- **AND** the steering result MUST still publish non-zero preferred/safe velocity or another explicit near-target output when the group contributes
+- **AND** legacy scene or prefab data with an empty near-target group mapping MUST resolve to the default near-target group unless the author explicitly configures a disabled state
+
 ### Requirement: Editor Visualization MUST Explain Steering Decisions
 
 `ContextSteering2D` MUST provide editor-visible debugging that explains why a direction was chosen.

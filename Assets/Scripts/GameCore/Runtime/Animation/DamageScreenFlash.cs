@@ -101,6 +101,18 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private static bool TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter)
+        {
+            currentControlledCharacter = null;
+            if (!GameManager.Exists() || !GameManager.TryGetSystem(out PlayerSystem playerSystem))
+            {
+                return false;
+            }
+
+            currentControlledCharacter = playerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+            return currentControlledCharacter != null;
+        }
+
         private bool IsValidFlashSource(DamageTakenFeedbackContext context)
         {
             if (m_sources == EDamageScreenFlashSources.None)
@@ -108,7 +120,10 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            CharacterBase currentControlledCharacter = GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance();
+            if (!TryGetCurrentControlledCharacter(out CharacterBase currentControlledCharacter))
+            {
+                return false;
+            }
 
             return
                 (m_sources.HasFlag(EDamageScreenFlashSources.PlayerReceiveDamage) && context.target == currentControlledCharacter) ||

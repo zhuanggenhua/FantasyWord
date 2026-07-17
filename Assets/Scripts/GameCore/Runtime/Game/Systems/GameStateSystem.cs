@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using YokiFrame;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 游戏全局状态层，用于切换输入映射和暂停语义。
+    /// </summary>
     public enum EGameState
     {
         None,
@@ -11,19 +16,36 @@ namespace FantasyWord.GameCore
         Gameplay
     }
 
+    /// <summary>
+    /// 全局状态栈系统，菜单和对话以层的形式覆盖 gameplay 状态。
+    /// </summary>
     public class GameStateSystem : AGameSystem
     {
+        [InspectorName("启动状态")]
+        [Tooltip("系统启动时压入状态栈的第一层状态。")]
         [SerializeField] private EGameState m_startupState = EGameState.Gameplay;
 
+        /// <summary>
+        /// 当前栈顶状态；栈为空时为 None。
+        /// </summary>
         public EGameState currentState => m_stateStack.Count > 0 ? m_stateStack.Peek() : EGameState.None;
 
         private Stack<EGameState> m_stateStack = new();
 
         public override void OnSystemStart()
         {
+            EventKit.Type.Register<ReturnToMainMenuRequestedEvent>(OnReturnToMainMenuRequested);
             AddLayer(m_startupState);
         }
 
+        public override void OnSystemStop()
+        {
+            EventKit.Type.UnRegister<ReturnToMainMenuRequestedEvent>(OnReturnToMainMenuRequested);
+        }
+
+        /// <summary>
+        /// 移除栈顶状态层；调用方必须保证要移除的状态就是当前栈顶。
+        /// </summary>
         public void RemoveLayer(EGameState state)
         {
             Debug.AssertFormat(m_stateStack.Peek() == state, "Failed removing layer {0}. Make sure the layer you tried removing is at the top of the state stack", state);
@@ -35,6 +57,9 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 在状态栈顶压入新状态层，并立即进入该状态。
+        /// </summary>
         public void AddLayer(EGameState state)
         {
             m_stateStack.Push(state);
@@ -93,6 +118,12 @@ namespace FantasyWord.GameCore
         private void OnExitMenuState() { }
         private void OnExitGameplayState() { }
         private void OnExitDialogueState() { }
+
+        private void OnReturnToMainMenuRequested(ReturnToMainMenuRequestedEvent _)
+        {
+            Time.timeScale = 1.0f;
+            SceneManager.LoadScene(GameManager.Config.mainMenuSceneName);
+        }
     }
 }
 

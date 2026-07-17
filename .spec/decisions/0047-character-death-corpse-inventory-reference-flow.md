@@ -1,0 +1,22 @@
+# 0047-角色死亡尸体背包转移参考流程边界
+
+- 日期：2026-07-16
+- 状态：已采纳
+- 背景：
+  - 本轮按 `0046-参考流程优先的 GameManager 系统访问审计边界` 继续复核 `GameManager.TryGetSystem` 调用面。
+  - 2DRPGEngine 同职责死亡奖励流程在 `Monster.Kill()` 中直接通过 `GameManager.InventorySystem.AddToBag(...)` 和 `GameManager.InventorySystem.AddMoney(...)` 写入正式背包真相；它不是“系统未就绪时跳过”的表现流程。
+  - FantasyWord 在 `CharacterBase.Kill()` / `Revive()` 中新增了尸体背包、装备转移和复活取回尸体背包的项目职责，但旧实现用 `TryGetSystem(out InventorySystem)` 查询失败后直接 `return`，会把正式死亡/复活规则结果静默吞掉。
+  - FantasyWord 的尸体背包 owner 依赖角色稳定持久化标识；如果在确认尸体 owner 有效前先强制卸下装备，再写入尸体背包，就会在 owner 无效时形成“装备已从角色身上卸下，但没有进入尸体背包”的半完成状态。2DRPGEngine 没有多 owner 尸体背包，因此这个失败面是当前项目的必要适配。
+- 决策：
+  - 角色死亡时的自有背包转移到尸体、装备转移到尸体，以及复活时尸体背包转回角色，必须直接使用现有 `GameManager.InventorySystem` 正式入口。
+  - 缺少 `InventorySystem` 时应按正式运行时配置错误暴露并中断当前动作，不得静默跳过死亡掉落或复活取回。
+  - 装备转移到尸体前必须先确认尸体背包 owner 有效；缺稳定标识是角色/持久化配置错误，应在强制卸装前暴露。
+  - 尸体交互请求 `TryRequestCorpseInventory(...)` 仍可保留可失败语义：它只是玩家点击尸体打开转移菜单，系统或 looter 不满足前提时可以返回 false，让交互流程继续走默认交互或失败路径。
+- 影响：
+  - `CharacterBase.TransferOwnedInventoryToCorpseOwner()`、`TransferOwnedEquipmentToCorpseOwner()`、`TransferCorpseInventoryToOwnedInventory()` 不再使用 `GameManager.Exists()` / `TryGetSystem` / `return` 保护。
+  - `InventorySystem.TransferCharacterEquipmentToCorpse(...)` 在尸体 owner 无效时会先报错，不会先调用角色装备组件的强制卸装入口。
+  - Foundation 静态门禁必须防止自动尸体转移流程回退成非抛错查询。
+  - Inventory 运行时门禁必须防止尸体装备转移回退成“先强制卸装、后验证/写入尸体背包”的顺序。
+  - 本决策不改变 `InventorySystem` 多 owner、尸体 owner、菜单转移请求和存档 owner 数据结构。
+- 替代关系：
+  - 本决策是 0046 在角色死亡/尸体背包同职责流程上的落地案例；它不否定表现、UI、条件等可失败流程使用 `TryGetSystem` 的项目新增语义。

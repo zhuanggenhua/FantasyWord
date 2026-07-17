@@ -1175,6 +1175,7 @@ MonoBehaviour:
   chipButtonPrefab: {fileID: 1084703189808726778, guid: a2d53bd75ca5cc742b37a144fcfedea8, type: 3}
   characterSlotPrefab: {fileID: 6527530005315733120, guid: 15c5d50cfb2af5041b8eb5761bdc38a5, type: 3}
   equipmentSlotPrefab: {fileID: 6527530005315733120, guid: 15c5d50cfb2af5041b8eb5761bdc38a5, type: 3}
+  workbenchFont: {fileID: 11400000, guid: 577d95998db092d44a158b76409858c5, type: 2}
 --- !u!1 &4596849358199143621
 GameObject:
   m_ObjectHideFlags: 0

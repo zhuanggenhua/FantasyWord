@@ -17,13 +17,18 @@ namespace FantasyWord.GameCore
 
         public Task Execute(GameCommandContext context)
         {
+            if (m_character == null)
+            {
+                throw new InvalidOperationException($"{nameof(ToggleController)} 缺少要切换控制器的目标角色。");
+            }
+
             if (m_enabled)
             {
-                m_character?.StartController();
+                m_character.StartController();
             }
             else
             {
-                m_character?.StopController();
+                m_character.StopController();
             }
 
             return Task.CompletedTask;

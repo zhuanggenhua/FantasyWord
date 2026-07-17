@@ -1,0 +1,22 @@
+# 0043-条件当前角色与背包系统就绪边界
+
+- 日期：2026-07-15
+- 状态：已采纳（访问形式表述已由 0046 取代）
+- 2026-07-16 状态说明：
+  - 本文保留“被动条件在系统或当前角色不可解析时返回 false，且当前角色背包失败不误退成队伍背包”的失败语义。
+  - 文中关于直读 `GameManager.PlayerSystem / InventorySystem` 或必须换成查询 API 的表述，不再作为独立审计标准；当前以 `0046-参考流程优先的 GameManager 系统访问审计边界` 为准。
+- 背景：
+  - `IsAbilityUnlocked` 和 `IsItemInInventory` 是条件系统的被动判断节点，会被条件状态机、交互和任务流程反复查询。
+  - 旧实现直接读取 `GameManager.PlayerSystem` 或 `GameManager.InventorySystem`；当条件早于系统就绪或当前受控角色尚未建立时，会把“条件不成立”变成全局系统空引用。
+  - 当前角色背包查询不能在 PlayerSystem 不可用时静默退回默认队伍背包，否则会把“当前角色条件”误判成“队伍条件”。
+- 决策：
+  - `IsAbilityUnlocked` 必须先确认 PlayerSystem 和当前受控角色就绪；缺失时条件为 false。
+  - `IsItemInInventory` 必须先确认 InventorySystem 就绪；查询当前受控角色背包时还必须确认 PlayerSystem 和当前受控角色就绪。
+  - 条件监听当前受控角色变化时必须遵守同一个可失败就绪合同：系统未就绪时不注册监听、不抛全局空引用；当前实现使用 `TryGetSystem` 只是实现方式，不是通用判定标准。
+  - 条件运行时静态门禁必须覆盖这两个条件的 PlayerSystem / InventorySystem 就绪和失败语义合同，而不是检查访问形式。
+- 影响：
+  - 条件系统在启动早期、系统停用或当前控制角色为空时返回“条件不满足”，不抛空引用。
+  - `CurrentControlledCharacter` 背包查询失败不会被误导到默认队伍背包。
+  - 不改变条件监听 owner、组合条件语义或 InventorySystem 的正式库存真相。
+- 替代关系：
+  - 本决策已由 `0046` 和 `0050` 收紧解释：正文只能按“条件查询失败语义”理解，不再作为访问形式迁移依据。

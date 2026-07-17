@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using ContextSteering2D;
 using NUnit.Framework;
 using UnityEditor;
@@ -9,11 +10,12 @@ namespace FantasyWord.GameCore.Tests
 {
     public sealed class ContextSteering2DEditModeTests
     {
-        private const string DefaultProfilePath = "Assets/Plugins/ContextSteering2D/Runtime/Defaults/DefaultContextSteeringProfile2D.asset";
+        private const string DefaultProfilePath = "Assets/ProjectPlugins/ContextSteering2D/Runtime/Defaults/DefaultContextSteeringProfile2D.asset";
         private const string GameConfigPath = "Assets/GameData/GameCore/GameConfig.asset";
         private const string CharacterBasePrefabPath = "Assets/Prefabs/Entities/Characters/0_Character_Base.prefab";
         private const string TransitGroupId = "transit";
         private const string PredictiveTargetGroupId = "predictive-target";
+        private const string OrbitGroupId = "orbit";
 
         [Test]
         public void GameConfig_UsesDedicatedCharacterFilterForSteeringNeighbours()
@@ -69,7 +71,7 @@ namespace FantasyWord.GameCore.Tests
 
             Assert.That(profile, Is.Not.Null);
             Assert.DoesNotThrow(profile.ValidateOrThrow);
-            Assert.That(profile.BehaviourGroups, Has.Count.EqualTo(3));
+            Assert.That(profile.BehaviourGroups, Has.Count.EqualTo(4));
             SteeringBehaviourGroup2D group = profile.GetBehaviourGroup(ContextSteeringProfile2D.DefaultGroupId);
             Assert.That(group.Behaviours, Has.Count.EqualTo(5));
             Assert.That(group.Behaviours[0], Is.TypeOf<SeekSteeringBehaviour2D>());
@@ -93,6 +95,14 @@ namespace FantasyWord.GameCore.Tests
             Assert.That(pursuit.Behaviours[2], Is.TypeOf<ObstacleAvoidanceSteeringBehaviour2D>());
             Assert.That(pursuit.Behaviours[3], Is.TypeOf<SeparationSteeringBehaviour2D>());
             Assert.That(pursuit.Behaviours[4], Is.TypeOf<SideStepSteeringBehaviour2D>());
+
+            SteeringBehaviourGroup2D orbit = profile.GetBehaviourGroup(OrbitGroupId);
+            Assert.That(orbit.Behaviours, Has.Count.EqualTo(4));
+            Assert.That(orbit.Behaviours[0], Is.TypeOf<OrbitSteeringBehaviour2D>());
+            Assert.That(orbit.Behaviours[1], Is.TypeOf<ObstacleAvoidanceSteeringBehaviour2D>());
+            Assert.That(orbit.Behaviours[2], Is.TypeOf<SeparationSteeringBehaviour2D>());
+            Assert.That(orbit.Behaviours[3], Is.TypeOf<SideStepSteeringBehaviour2D>());
+            Assert.That(orbit.Behaviours, Has.None.TypeOf<ArriveSteeringBehaviour2D>());
         }
 
         [Test]
@@ -100,6 +110,34 @@ namespace FantasyWord.GameCore.Tests
         {
             ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
             Assert.Throws<InvalidOperationException>(() => profile.GetBehaviourGroup("missing"));
+        }
+
+        [Test]
+        public void AIController_TargetOrbitSwitchHonoursExplicitDisabledValue()
+        {
+            AIController controller = new();
+            Type type = typeof(AIController);
+            FieldInfo useOrbitField = type.GetField(
+                "m_useTargetOrbitSteeringAtSoughtDistance",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo orbitGroupField = type.GetField(
+                "m_targetOrbitSteeringGroupId",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            PropertyInfo resolvedProperty = type.GetProperty(
+                "ShouldUseTargetOrbitSteeringAtSoughtDistance",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.That(useOrbitField, Is.Not.Null);
+            Assert.That(orbitGroupField, Is.Not.Null);
+            Assert.That(resolvedProperty, Is.Not.Null);
+
+            useOrbitField.SetValue(controller, false);
+            orbitGroupField.SetValue(controller, string.Empty);
+            Assert.That((bool)resolvedProperty.GetValue(controller), Is.False);
+
+            useOrbitField.SetValue(controller, true);
+            orbitGroupField.SetValue(controller, string.Empty);
+            Assert.That((bool)resolvedProperty.GetValue(controller), Is.True);
         }
 
         [Test]
@@ -189,6 +227,31 @@ namespace FantasyWord.GameCore.Tests
                 1.0f);
             SteeringResult2D stopped = solver.Solve(frame, profile, PredictiveTargetGroupId);
             Assert.That(stopped.SpeedScale, Is.EqualTo(0.0f));
+        }
+
+        [Test]
+        public void OrbitGroup_UsesIntentRadiusWithoutArriveStop()
+        {
+            ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
+            ContextSteeringSolver2D solver = new(profile.SampleCount);
+            SteeringDetectionFrame2D frame = new();
+            frame.Reset(
+                solver.DirectionSet,
+                1,
+                new Vector2(1.0f, 0.0f),
+                Vector2.up,
+                Vector2.zero,
+                profile,
+                Vector2.zero,
+                Vector2.zero,
+                1.0f);
+
+            SteeringResult2D result = solver.Solve(frame, profile, OrbitGroupId);
+
+            Assert.That(result.SpeedScale, Is.EqualTo(1.0f));
+            Assert.That(result.PreferredVelocity.sqrMagnitude, Is.GreaterThan(0.0f));
+            Assert.That(result.DesiredDirection.y, Is.GreaterThan(0.2f));
+            Assert.That(solver.Context.Contributions[0].StableId, Is.EqualTo("orbit"));
         }
 
         [Test]

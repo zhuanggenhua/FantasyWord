@@ -1,0 +1,24 @@
+# 0014-UI 菜单当前控制角色监听生命周期 owner 边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 角色、背包和能力菜单可以用默认上下文跟随当前控制角色，也可以用显式上下文查看或操作指定角色。
+  - 这些菜单原先在面板初始化时注册 `PlayerSystem` 当前控制角色变化事件，并在销毁时注销；菜单隐藏但未销毁时仍可能继续响应角色切换。
+  - HUD 的启用/禁用生命周期不适合直接套到 UIKit 菜单；菜单面板的真实可见生命周期是 `OnPanelShown` / `OnPanelHidden`。
+  - `UIAbilityBar` 是能力菜单内部的能力槽呈现控件，不应和父面板同时订阅 `PlayerSystem`，否则当前控制角色跟随会形成父子双 owner。
+- 决策：
+  - UIKit 菜单面板跟随当前控制角色的监听 owner 是面板显示期，而不是面板初始化期或对象销毁期。
+  - `UICharacter`、`UIInventory`、`UIAbilities` 只在菜单上下文确实跟随当前控制角色时，于 `OnPanelShown` 注册监听；`OnPanelHidden` 和 `OnDestroy` 必须注销。
+  - 当前控制角色监听必须有幂等标记，并在 GameManager 或 PlayerSystem 未就绪时安全返回。
+  - 显式角色上下文不得注册当前控制角色监听；它只展示传入的角色或背包 owner。
+  - `UIAbilityBar` 不直接读取或监听 `PlayerSystem`；它只通过 `PresentCharacter(CharacterBase)` 呈现父面板传入的角色，并在隐藏或销毁时解绑角色能力槽事件。
+- 影响：
+  - `UICharacter` 的属性加点临时状态只在菜单显示期绑定当前角色，隐藏时停止跟随并清理临时面板状态。
+  - `UIInventory` 只在显示默认背包上下文时跟随当前控制角色，隐藏时停止监听。
+  - `UIAbilities` 只在显示期跟随当前控制角色，并负责把当前角色显式传给 `UIAbilityBar`。
+  - `UIAbilityBar` 从当前控制角色监听者降级为能力槽呈现子控件，避免父子同时持有同一个运行时真相。
+  - `scripts/Invoke-UIRuntimeStaticGate.ps1` 已扩展检查菜单当前控制角色监听的显示/隐藏生命周期，以及 `UIAbilityBar` 不直接订阅 `PlayerSystem`。
+- 替代关系：
+  - 本决策延续 `0013-HUD 当前控制角色监听生命周期 owner 边界` 对 `PlayerSystem` 真相源的判断。
+  - 本决策取代菜单面板中“OnPanelInit 注册、OnDestroy 注销”的隐式生命周期；HUD 仍按启用/禁用生命周期处理。

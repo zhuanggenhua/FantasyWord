@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 玩家输入被归一化后的命令类型。
+    /// 输入系统只负责生成这些请求，实际执行由玩家控制系统判定。
+    /// </summary>
     public enum EPlayerCommandKind
     {
         Interact,
@@ -14,6 +18,10 @@ namespace FantasyWord.GameCore
         StopFireAbility
     }
 
+    /// <summary>
+    /// 玩家命令执行失败原因。
+    /// 用于诊断和 UI 提示，避免只返回 false 丢失是哪道门禁拒绝。
+    /// </summary>
     public enum EPlayerCommandFailureReason
     {
         None,
@@ -30,6 +38,10 @@ namespace FantasyWord.GameCore
         AbilityRejected
     }
 
+    /// <summary>
+    /// 一次玩家命令请求。
+    /// 它把动作类型、方向、点击位置、技能槽和交互目标打包，执行层再统一校验 Actor。
+    /// </summary>
     public readonly struct PlayerCommandRequest
     {
         public PlayerCommandRequest(
@@ -61,6 +73,10 @@ namespace FantasyWord.GameCore
         public GameObject InteractionTarget { get; }
     }
 
+    /// <summary>
+    /// 玩家命令执行结果。
+    /// 成功时保留原请求，失败时额外给出失败原因。
+    /// </summary>
     public readonly struct PlayerCommandResult
     {
         private PlayerCommandResult(

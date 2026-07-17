@@ -12,16 +12,62 @@ namespace FantasyWord.GameCore
 
         private Color m_initialSpriteColor = Color.white;
         private CharacterPlayerControl m_playerControl = null;
+        private bool m_currentControlledCharacterListening = false;
+
+        private void Awake()
+        {
+            if (m_spriteRenderer != null)
+            {
+                m_initialSpriteColor = m_spriteRenderer.color;
+            }
+        }
+
+        private void OnEnable()
+        {
+            StartCurrentControlledCharacterListeningIfReady();
+        }
 
         private void Start()
         {
-            m_initialSpriteColor = m_spriteRenderer.color;
-            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
+            StartCurrentControlledCharacterListeningIfReady();
+        }
+
+        private void OnDisable()
+        {
+            StopCurrentControlledCharacterListening();
+            m_playerControl = null;
         }
 
         private void OnDestroy()
         {
+            StopCurrentControlledCharacterListening();
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
+        }
+
+        private void StopCurrentControlledCharacterListening()
+        {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
             if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
             {
                 GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
@@ -37,6 +83,11 @@ namespace FantasyWord.GameCore
 
         private void Update()
         {
+            if (m_interactionButtonFeedback == null || m_spriteRenderer == null)
+            {
+                return;
+            }
+
             if (m_playerControl == null)
             {
                 m_interactionButtonFeedback.gameObject.SetActive(false);

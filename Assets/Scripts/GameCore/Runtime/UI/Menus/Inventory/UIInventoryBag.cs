@@ -40,8 +40,18 @@ namespace FantasyWord.GameCore
         public void UpdateSlots(InventoryOwnerHandle owner)
         {
             m_currentOwner = owner;
+            if (m_slots == null)
+            {
+                return;
+            }
+
             ClearSlots();
-            FillSlots(owner);
+            if (!owner.IsValid || !GameManager.TryGetSystem(out InventorySystem inventorySystem))
+            {
+                return;
+            }
+
+            FillSlots(owner, inventorySystem);
         }
 
         private void ClearSlots()
@@ -52,11 +62,11 @@ namespace FantasyWord.GameCore
             }
         }
 
-        private void FillSlots(InventoryOwnerHandle owner)
+        private void FillSlots(InventoryOwnerHandle owner, InventorySystem inventorySystem)
         {
             int usedSlots = 0;
 
-            foreach (KeyValuePair<Item, int> entry in GameManager.InventorySystem.GetBagEntries(owner))
+            foreach (KeyValuePair<Item, int> entry in inventorySystem.GetBagEntries(owner))
             {
                 if (entry.Key.category == m_category)
                 {

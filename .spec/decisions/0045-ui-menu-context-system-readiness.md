@@ -1,0 +1,22 @@
+# 0045-UI 菜单上下文系统就绪边界
+
+- 日期：2026-07-15
+- 状态：已采纳（访问形式表述已由 0046 取代）
+- 2026-07-16 状态说明：
+  - 本文保留“菜单上下文系统或角色未就绪时返回空角色/无效 owner，且当前角色背包失败不误退成队伍背包”的失败语义。
+  - 文中关于直读 `GameManager.PlayerSystem / InventorySystem` 或必须换成查询 API 的表述，不再作为独立审计标准；当前以 `0046-参考流程优先的 GameManager 系统访问审计边界` 为准。
+- 背景：
+  - `CharacterMenuContext` 和 `InventoryMenuContext` 是角色菜单、背包菜单和相关 UI 请求的上下文数据入口。
+  - 旧实现直接读取 `GameManager.PlayerSystem` 和 `GameManager.InventorySystem` 来解析当前受控角色或背包 owner。
+  - 菜单上下文本身不是系统 owner；当 UI 请求早于系统就绪或当前角色为空时，应返回空角色/无效 owner，让菜单流程按已有失败语义处理，而不是在上下文结构里抛全局系统空引用。
+- 决策：
+  - `CharacterMenuContext.ResolveActor()` 和 `InventoryMenuContext.ResolveActor()` 是 UI 上下文解析入口；系统或角色未就绪时返回空角色，不把 UI 查询升级成正式结果写入错误。
+  - 背包 owner 解析必须遵守可失败上下文合同；无法取得当前角色或 InventorySystem 时返回无效 `InventoryOwnerHandle`，不得误退到默认队伍背包。
+  - 系统或角色未就绪时返回 `null` 或无效 `InventoryOwnerHandle`；不得回退到默认队伍背包来冒充当前角色背包。
+  - UI 运行时静态门禁必须覆盖两个菜单上下文的 PlayerSystem / InventorySystem 就绪和失败语义合同，而不是检查访问形式。
+- 影响：
+  - 角色菜单和背包菜单上下文不会在系统尚未就绪时抛空引用。
+  - 当前角色背包上下文不会被静默误判成队伍背包。
+  - 不改变 UIManager 菜单栈、UIKit 面板生命周期或 InventorySystem 库存真相。
+- 替代关系：
+  - 本决策已由 `0046` 和 `0050` 收紧解释：正文只能按“菜单上下文失败语义”理解，不再作为访问形式迁移依据。

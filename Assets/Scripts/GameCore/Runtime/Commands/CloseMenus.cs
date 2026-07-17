@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 请求关闭当前所有菜单的命令。
+    /// </summary>
     [Serializable]
     public class CloseMenus : IContextualCommand
     {

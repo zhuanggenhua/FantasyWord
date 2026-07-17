@@ -18,47 +18,45 @@ namespace FantasyWord.GameCore
         [SerializeField] private CharacterBase m_target = null;
 
         private string m_nameAndLevelFormat = string.Empty;
+        private bool m_targetListening = false;
 
         private readonly Dictionary<int, UIEffectIcon> m_effectIcons = new();
 
         private void Awake()
         {
             ConfigureEffectIconPool();
-
-            m_target.AddStatsChangedListener(OnStatsChanged);
-            m_target.AddCurrentStatsChangedListener(OnStatsChanged);
-            m_target.AddTemporalEffectPresentationAddedListener(OnTemporalEffectAdded);
-            m_target.AddTemporalEffectPresentationRemovedListener(OnTemporalEffectRemoved);
-            m_target.AddLevelUppedListener(OnLevelUpped);
+            CacheNameAndLevelFormat();
         }
 
-        private void OnDestroy()
+        private void OnEnable()
         {
-            m_target.RemoveStatsChangedListener(OnStatsChanged);
-            m_target.RemoveCurrentStatsChangedListener(OnStatsChanged);
-            m_target.RemoveTemporalEffectPresentationAddedListener(OnTemporalEffectAdded);
-            m_target.RemoveTemporalEffectPresentationRemovedListener(OnTemporalEffectRemoved);
-            m_target.RemoveLevelUppedListener(OnLevelUpped);
-
-            ReturnAllEffectIcons();
+            StartTargetListeningIfReady();
         }
 
         private void Start()
         {
-            m_nameAndLevelFormat = m_nameText.text;
+            StartTargetListeningIfReady();
+        }
 
-            UpdateResourceBars();
-            UpdateNameAndLevel();
+        private void OnDisable()
+        {
+            StopTargetListening();
+            ReturnAllEffectIcons();
+        }
 
-            // Recover any existing effects
-            foreach (CharacterTemporalEffectPresentationSnapshot effect in m_target.GetTemporalEffectPresentationSnapshots())
-            {
-                OnTemporalEffectAdded(effect);
-            }
+        private void OnDestroy()
+        {
+            StopTargetListening();
+            ReturnAllEffectIcons();
         }
 
         public void UpdateResourceBars()
         {
+            if (m_target == null)
+            {
+                return;
+            }
+
             if (m_healthSlider?.isActiveAndEnabled ?? false)
             {
                 m_healthSlider.minValue = 0;
@@ -76,7 +74,7 @@ namespace FantasyWord.GameCore
 
         public void UpdateNameAndLevel()
         {
-            if (m_nameText?.isActiveAndEnabled ?? false)
+            if (m_target != null && (m_nameText?.isActiveAndEnabled ?? false))
             {
                 m_nameText.text = StringFormatter.Format(m_nameAndLevelFormat).Replace("{name}", m_target.characterSheet.displayName).Replace("{level}", m_target.level.ToString());
             }
@@ -144,6 +142,54 @@ namespace FantasyWord.GameCore
             }
 
             m_effectIcons.Clear();
+        }
+
+        private void StartTargetListeningIfReady()
+        {
+            if (m_targetListening || m_target == null)
+            {
+                return;
+            }
+
+            m_targetListening = true;
+            m_target.AddStatsChangedListener(OnStatsChanged);
+            m_target.AddCurrentStatsChangedListener(OnStatsChanged);
+            m_target.AddTemporalEffectPresentationAddedListener(OnTemporalEffectAdded);
+            m_target.AddTemporalEffectPresentationRemovedListener(OnTemporalEffectRemoved);
+            m_target.AddLevelUppedListener(OnLevelUpped);
+
+            UpdateResourceBars();
+            UpdateNameAndLevel();
+
+            foreach (CharacterTemporalEffectPresentationSnapshot effect in m_target.GetTemporalEffectPresentationSnapshots())
+            {
+                OnTemporalEffectAdded(effect);
+            }
+        }
+
+        private void StopTargetListening()
+        {
+            if (!m_targetListening)
+            {
+                return;
+            }
+
+            m_targetListening = false;
+            if (m_target == null)
+            {
+                return;
+            }
+
+            m_target.RemoveStatsChangedListener(OnStatsChanged);
+            m_target.RemoveCurrentStatsChangedListener(OnStatsChanged);
+            m_target.RemoveTemporalEffectPresentationAddedListener(OnTemporalEffectAdded);
+            m_target.RemoveTemporalEffectPresentationRemovedListener(OnTemporalEffectRemoved);
+            m_target.RemoveLevelUppedListener(OnLevelUpped);
+        }
+
+        private void CacheNameAndLevelFormat()
+        {
+            m_nameAndLevelFormat = m_nameText != null ? m_nameText.text : string.Empty;
         }
     }
 }

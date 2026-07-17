@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using YokiFrame;
@@ -123,6 +125,32 @@ namespace FantasyWord.GameCore
             if (canvasGroup)
             {
                 canvasGroup.interactable = enable;
+            }
+        }
+
+        /// <summary>
+        /// Unity UI 按钮只能接同步回调；菜单异步流程必须经过这里报告异常，不能使用异步 void 回调。
+        /// </summary>
+        protected void RunPanelTaskAndReport(Task task, string operationName)
+        {
+            _ = RunPanelTaskAndReportAsync(task, operationName);
+        }
+
+        private async Task RunPanelTaskAndReportAsync(Task task, string operationName)
+        {
+            try
+            {
+                if (task != null)
+                {
+                    await task;
+                }
+            }
+            catch (Exception exception)
+            {
+                string operation = string.IsNullOrWhiteSpace(operationName) ? "菜单异步操作" : operationName;
+                Debug.LogException(
+                    new InvalidOperationException($"[{GetType().Name}] {operation} 执行失败。", exception),
+                    this);
             }
         }
 

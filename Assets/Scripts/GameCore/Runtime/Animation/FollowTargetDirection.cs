@@ -21,15 +21,31 @@ namespace FantasyWord.GameCore
 
         // Private Members
         private Vector3 m_initialPosition;
+        private bool m_targetDirectionListening = false;
 
         public void Awake()
         {
-            if (m_target != null)
-            {
-                m_target.AddTargetDirectionChangedListener(OnTargetDirectionChanged);
-            }
-
             m_initialPosition = transform.localPosition;
+        }
+
+        private void OnEnable()
+        {
+            StartTargetDirectionListeningIfReady();
+        }
+
+        private void Start()
+        {
+            StartTargetDirectionListeningIfReady();
+        }
+
+        private void OnDisable()
+        {
+            StopTargetDirectionListening();
+        }
+
+        private void OnDestroy()
+        {
+            StopTargetDirectionListening();
         }
 
         public void OnTargetDirectionChanged(Vector2 direction)
@@ -81,6 +97,32 @@ namespace FantasyWord.GameCore
             }
 
             transform.localRotation = Quaternion.Euler(0.0f, 0.0f, angle);
+        }
+
+        private void StartTargetDirectionListeningIfReady()
+        {
+            if (m_targetDirectionListening || m_target == null)
+            {
+                return;
+            }
+
+            m_targetDirectionListening = true;
+            m_target.AddTargetDirectionChangedListener(OnTargetDirectionChanged);
+            OnTargetDirectionChanged(m_target.GetTargetDirection());
+        }
+
+        private void StopTargetDirectionListening()
+        {
+            if (!m_targetDirectionListening)
+            {
+                return;
+            }
+
+            m_targetDirectionListening = false;
+            if (m_target != null)
+            {
+                m_target.RemoveTargetDirectionChangedListener(OnTargetDirectionChanged);
+            }
         }
     }
 }

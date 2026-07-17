@@ -36,6 +36,7 @@ namespace FantasyWord.GameCore
         public override void OnSystemStart()
         {
             EnsurePlayerInstance();
+            EnsurePrimaryPlayerInputTargetConfigured(nameof(OnSystemStart));
             ResetCurrentControlToPlayerInstance();
             m_pendingPlayerControlRestore = m_currentInputTarget == null;
             GameManager.PersistenceSystem.RegisterCustomInstancedPersistable(m_primaryPlayerCharacter, Constants.UniquePlayerIdentifier);
@@ -496,9 +497,23 @@ namespace FantasyWord.GameCore
             }
         }
 
+        private void EnsurePrimaryPlayerInputTargetConfigured(string operationName)
+        {
+            if (m_primaryPlayerCharacter.HasConfiguredPlayerInputTarget(out CharacterPlayerControl _))
+            {
+                return;
+            }
+
+            throw new InvalidOperationException(
+                $"{nameof(PlayerSystem)}.{operationName} requires the primary player character " +
+                $"[{m_primaryPlayerCharacter.gameObject.name}] to have an enabled " +
+                $"{nameof(CharacterPlayerControl)} that accepts player input.");
+        }
+
         public void LoadDataBlock(PlayerDataBlock block)
         {
             EnsurePlayerInstance();
+            EnsurePrimaryPlayerInputTargetConfigured(nameof(LoadDataBlock));
             StageControlledCharacterRestore(block);
 
             if (block?.primaryCharacterData != null)

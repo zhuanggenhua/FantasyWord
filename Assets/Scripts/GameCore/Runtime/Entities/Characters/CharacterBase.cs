@@ -376,15 +376,26 @@ namespace FantasyWord.GameCore
             inputTarget = null;
 
             if (!CanBePlayerControlled() ||
-                !TryGetComponent(out CharacterPlayerControl playerControl) ||
-                playerControl == null ||
-                !playerControl.AcceptsPlayerInput ||
-                !playerControl.isActiveAndEnabled)
+                !HasConfiguredPlayerInputTarget(out CharacterPlayerControl playerControl))
             {
                 return false;
             }
 
             inputTarget = playerControl;
+            return true;
+        }
+
+        public bool HasConfiguredPlayerInputTarget(out CharacterPlayerControl playerControl)
+        {
+            if (!TryGetComponent(out playerControl) ||
+                playerControl == null ||
+                !playerControl.AcceptsPlayerInput ||
+                !playerControl.isActiveAndEnabled)
+            {
+                playerControl = null;
+                return false;
+            }
+
             return true;
         }
 
@@ -419,32 +430,17 @@ namespace FantasyWord.GameCore
 
         private void TransferOwnedInventoryToCorpseOwner()
         {
-            if (!GameManager.Exists() || !GameManager.TryGetSystem(out InventorySystem inventorySystem))
-            {
-                return;
-            }
-
-            inventorySystem.TransferCharacterInventoryToCorpse(this);
+            GameManager.InventorySystem.TransferCharacterInventoryToCorpse(this);
         }
 
         private void TransferOwnedEquipmentToCorpseOwner()
         {
-            if (!GameManager.Exists() || !GameManager.TryGetSystem(out InventorySystem inventorySystem))
-            {
-                return;
-            }
-
-            inventorySystem.TransferCharacterEquipmentToCorpse(this);
+            GameManager.InventorySystem.TransferCharacterEquipmentToCorpse(this);
         }
 
         private void TransferCorpseInventoryToOwnedInventory()
         {
-            if (!GameManager.Exists() || !GameManager.TryGetSystem(out InventorySystem inventorySystem))
-            {
-                return;
-            }
-
-            inventorySystem.TransferCorpseInventoryToCharacter(this);
+            GameManager.InventorySystem.TransferCorpseInventoryToCharacter(this);
         }
 
         private bool TryRequestCorpseInventory(CharacterBase looter)
@@ -475,18 +471,12 @@ namespace FantasyWord.GameCore
 
         private void NotifyPlayerSystemAboutDeath()
         {
-            if (GameManager.Exists() && GameManager.TryGetSystem<PlayerSystem>(out PlayerSystem playerSystem))
-            {
-                playerSystem.NotifyCharacterDied(this);
-            }
+            GameManager.PlayerSystem.NotifyCharacterDied(this);
         }
 
         private void NotifyPlayerSystemAboutRevive()
         {
-            if (GameManager.Exists() && GameManager.TryGetSystem<PlayerSystem>(out PlayerSystem playerSystem))
-            {
-                playerSystem.NotifyCharacterRevived(this);
-            }
+            GameManager.PlayerSystem.NotifyCharacterRevived(this);
         }
 
         private void TryRegisterTerrainSurfaceDamageTarget()

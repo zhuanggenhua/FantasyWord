@@ -3,21 +3,37 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 技能压制持续效果的存档快照，只记录仍需保持压制的 Formal GAS 技能编码。
+    /// </summary>
     [Serializable]
     public class TemporalAbilitySuppressionEffectPersistedState : TemporalEffectPersistedState
     {
+        /// <summary>
+        /// 读档后需要继续压制的目标技能编码。
+        /// </summary>
         public int[] formalGasAbilityCodes;
     }
 
+    /// <summary>
+    /// 在持续时间内按来源键压制目标角色的指定 Formal GAS 技能，效果结束后撤销压制。
+    /// </summary>
     [Serializable]
     public class TemporalAbilitySuppressionEffect : ATemporalEffect, ITemporalEffectRuntimeStateCarrier
     {
+        /// <summary>
+        /// 设计时配置的技能压制列表；运行时会按状态来源登记，避免误删其他来源的压制。
+        /// </summary>
         [Serializable]
         internal struct AbilitySuppressionData
         {
+            [InspectorName("压制技能编码")]
+            [Tooltip("持续效果生效期间暂时禁用的目标 Formal GAS 技能编码列表。")]
             public int[] formalGasAbilityCodes;
         }
 
+        [InspectorName("技能压制配置")]
+        [Tooltip("配置该持续效果会暂时禁用哪些 Formal GAS 技能。")]
         [SerializeField] private AbilitySuppressionData m_abilitySuppressionData;
 
         public override TemporalEffectRuntimeTraits GetRuntimeTraits() =>
@@ -25,6 +41,13 @@ namespace FantasyWord.GameCore
 
         protected override bool OnApply()
         {
+            EnsureFormalGasAbilityCodeConfiguration();
+            if (!TemporalAbilityEffectSupport.HasConfiguredFormalGasAbilityCodes(
+                    m_abilitySuppressionData.formalGasAbilityCodes))
+            {
+                return false;
+            }
+
             SuppressAbilities();
             return true;
         }
@@ -83,15 +106,27 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        public void RestorePersistedState(TemporalEffectPersistedState persistedState)
+        public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)
         {
             if (persistedState is not TemporalAbilitySuppressionEffectPersistedState state)
             {
-                return;
+                return false;
+            }
+
+            if (!TemporalAbilityEffectSupport.TryValidateRestoredFormalGasAbilityCodeConfiguration(
+                    nameof(TemporalAbilitySuppressionEffect),
+                    nameof(TemporalAbilitySuppressionEffectPersistedState.formalGasAbilityCodes),
+                    state.formalGasAbilityCodes) ||
+                !TemporalAbilityEffectSupport.TryHasRestoredFormalGasAbilityCodes(
+                    nameof(TemporalAbilitySuppressionEffect),
+                    state.formalGasAbilityCodes))
+            {
+                return false;
             }
 
             state.RestoreSharedStateTo(this);
             m_abilitySuppressionData.formalGasAbilityCodes = TemporalAbilityEffectSupport.CloneFormalGasAbilityCodes(state.formalGasAbilityCodes);
+            return true;
         }
 
         private void SuppressAbilities()
@@ -107,6 +142,14 @@ namespace FantasyWord.GameCore
             {
                 targetCharacter.AddStatusEffectFormalGasAbilitySuppression(formalGasAbilityCode, source);
             }
+        }
+
+        private void EnsureFormalGasAbilityCodeConfiguration()
+        {
+            TemporalAbilityEffectSupport.EnsureFormalGasAbilityCodeConfiguration(
+                nameof(TemporalAbilitySuppressionEffect),
+                nameof(AbilitySuppressionData.formalGasAbilityCodes),
+                m_abilitySuppressionData.formalGasAbilityCodes);
         }
 
     }

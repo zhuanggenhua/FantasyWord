@@ -274,7 +274,6 @@ namespace FantasyWord.EditorTools
             Undo.RecordObject(caster, "配置近岸树木水面倒影");
             SerializedObject serialized = new(caster);
             SetObject(serialized, "m_reflectionAnchor", reflectionAnchor);
-            SetBool(serialized, "m_collectChildRenderersOnAwake", false);
             SerializedProperty sources = serialized.FindProperty("m_sourceRenderers")
                 ?? throw new InvalidOperationException("WaterReflectionCaster2D 缺少 m_sourceRenderers 字段。");
             sources.arraySize = 1;

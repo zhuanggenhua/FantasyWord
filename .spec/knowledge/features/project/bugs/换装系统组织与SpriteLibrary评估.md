@@ -42,8 +42,8 @@ metadata:
 
 换装动画正式职责边界：
 
-- `AnimationController`：只负责动作选择、动作锁和 Animator 动作状态，不读取或保存方向。
-- `DirectionalAnimationVariantDriver`：只负责方向选择、消费四向 `SpriteLibraryAsset` 引用、切换当前 `SpriteLibraryAsset` 及同步换装渲染方向；切方向不重播动作。
+- `CharacterActionAnimatorDriver`：只负责动作选择、动作锁和 Animator 动作状态，不读取或保存方向。
+- `DirectionalSpriteLibraryDriver`：只负责方向选择、消费四向 `SpriteLibraryAsset` 引用、切换当前 `SpriteLibraryAsset` 及同步换装渲染方向；切方向不重播动作。
 - `CharacterFrameData`：只负责 UV、锚点、帧作者数据和装备合成帧，不持有派生 SpriteLibrary 方向库引用。
 - SpriteLibrary：负责基础角色库、整套外观覆盖、方向/种族切换；每个角色固定四个真实方向库，不使用 `flipX`。
 - EquipmentSystem UV/Shader：负责衣服、头盔、披风、背包、武器前后遮挡、肤色和像素描边。

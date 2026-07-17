@@ -28,7 +28,7 @@
 
 ## 3. Existing Vertical Slice
 
-- [x] 建立 `Assets/Plugins/ContextSteering2D` 可运行竖切，验证方向采样、基础行为、共享检测帧雏形和轻量 push resolve。
+- [x] 建立 `Assets/ProjectPlugins/ContextSteering2D` 可运行竖切，验证方向采样、基础行为、共享检测帧雏形和轻量 push resolve。
 - [x] 保留 MIT attribution 记录：凡直接移植 UnitySteer 代码必须保留许可证说明；只吸收设计时也要在 references 标明来源。
 - [x] 实现 `SteeringDetectionFrame2D` 数据模型和非分配 Physics2D 查询缓冲。
 - [x] 实现轻量 push resolve 竖切，并明确不是 ORCA/RVO。
@@ -77,6 +77,7 @@
   - [ ] NPC 接入自身 `TerrainLayerState` 后再验收桥洞与跨层追逐；当前默认层调用不能冒充完整多层 NPC 导航。
 - [x] GameCore 只保留目标选择、阵营过滤、攻击触发、身体参数和移动执行。
 - [x] 目标选择、攻击预检、steering、局部避让在可行范围内复用同一份 tick frame；无法复用的视线查询需显式记录。
+- [x] GameCore 进入战斗保持距离后默认切到 `orbit` 近身行为组，不能继续由 Arrive 把 NPC 压成完全静止；旧场景/Prefab 里新增开关和组名为空时按默认 `orbit` 兼容。
 - [x] 移除 `FantasyWord.Steering` asmdef 引用。
 - [x] 旧 `Assets/Plugins/FantasyWordSteering` 删除或保留为未接入参考时，必须写清退出条件。
 
@@ -87,11 +88,19 @@
 - [x] 行为栈、combinator、selector、preferred velocity 和 backend replacement 有合同测试。
 - [x] 检测复用测试能证明同一 tick 没有重复 broadphase，或明确列出剩余查询。
 - [x] 移动测试场景中 NPC 可追敌、Arrive 减速、避障、分离和 push resolve。
+- [x] `ClickMoveTest` 中训练假人进入目标保持距离后仍能切到 `orbit`，并发布非零 preferred velocity / safe velocity / steering output。
 - [x] 两个以上 NPC 接近时能区分 behaviour separation、safe velocity 和 penetration push。
 - [x] 选中 NPC 时能在原生 SceneView 看到逐行为调试，且不存在重复绘制。
 - [x] 截图、测试日志或 Unity Console 记录作为重构后验收证据。
 - [ ] 后续自判通过后，必须先给用户看最终截图；用户看图认可后才进入用户自测。
 - [x] 完成 100/500/1000 Agent 性能基准，记录 RVO2、PBD、检测和总 fixed-step 成本；不得用空场景或纯数学循环冒充真 Agent 规模。
+
+### 2026-07-15 ClickMoveTest Near-Target Orbit Evidence
+
+- 修复前 fresh run 复现用户原始症状：`ClickMoveTest` 两个训练假人均有正式 Agent、Debug Probe、目标和转向输出链路，但新增的近身环绕开关在旧场景序列化数据中为 `false` 且组名为空，9000 帧内没有切到 `orbit`；NPC 最后仍停在 `predictive-target`，速度被 Arrive 压到接近 0。
+- 修复后 `Temp/UnityBridge/results/clickmove-context-steering-runtime.json` 的 fresh run 通过：2026-07-15 从 clean 的 `ClickMoveTest` 进入 PlayMode，490 帧内观察到 2 个 Agent、2 个 Probe、2 个 Probe 均有快照、最大位移 0.542、最大 orbit safe speed 1.572，并观察到 `transit`、`orbit`、preferred velocity、safe velocity、RVO 修正、Separation 和 PBD push；`ObservedOrbit=true`、`ObservedOrbitPreferredVelocity=true`、`ObservedOrbitSafeVelocity=true`、`ObservedOrbitOutput=true`、`Failures=[]`。
+- `ContextSteering2DEditModeTests` 新增 `OrbitGroup_UsesIntentRadiusWithoutArriveStop`：默认 `orbit` 组在意图停止半径处仍保持 `SpeedScale=1.0`、preferred velocity 非零，并确认默认 `orbit` 组不包含 Arrive。
+- 本轮无过滤 EditMode fresh run 通过：`editmode-all-smoke-after-orbit-fix-20260715` 返回 `Passed`、`failedTests=0`。Bridge 的 class/assembly 过滤器在同一 Editor 会话后续返回 0 匹配，但无过滤测试发现与执行正常。
 
 ### 2026-07-13 Runtime, Screenshot And Performance Evidence
 

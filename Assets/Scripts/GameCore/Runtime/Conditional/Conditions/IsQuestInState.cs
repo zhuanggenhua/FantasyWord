@@ -4,6 +4,9 @@ using YokiFrame;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 任务链中可被条件系统查询的任务状态。
+    /// </summary>
     public enum EQuestState
     {
         Unlocked,
@@ -13,10 +16,18 @@ namespace FantasyWord.GameCore
         Completed
     }
 
+    /// <summary>
+    /// 判断指定任务是否处于目标状态，并按状态订阅对应的任务事件刷新条件。
+    /// </summary>
     [Serializable]
     public class IsQuestInState : ABaseCondition
     {
+        [InspectorName("目标任务")]
+        [Tooltip("要查询状态的任务资产。")]
         [SerializeField] private Quest m_quest = null;
+
+        [InspectorName("目标状态")]
+        [Tooltip("条件期望任务达到的状态。")]
         [SerializeField] private EQuestState m_state = EQuestState.Unlocked;
 
         public override bool Evaluate()

@@ -29,8 +29,8 @@ namespace FantasyWord.GameCore
                 return Actor;
             }
 
-            return GameManager.Exists() && GameManager.HasSystem<PlayerSystem>()
-                ? GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance()
+            return GameManager.TryGetSystem(out PlayerSystem playerSystem)
+                ? playerSystem.GetCurrentControlledCharacterOrPlayerInstance()
                 : null;
         }
 

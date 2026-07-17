@@ -4,10 +4,18 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 给上下文角色添加或移除脚本来源的 Formal GAS 奖励技能。
+    /// </summary>
     [Serializable]
     public class AddOrRemoveAbility : IContextualCommand
     {
+        [InspectorName("动作")]
+        [Tooltip("决定添加还是移除该技能。")]
         [SerializeField] private EAction m_action = EAction.Add;
+
+        [InspectorName("Formal GAS 技能编码")]
+        [Tooltip("要添加或移除的 Formal GAS 技能编码；必须大于 0。")]
         [SerializeField] private int m_formalGasAbilityCode = 0;
 
         public Task Execute()
@@ -17,38 +25,38 @@ namespace FantasyWord.GameCore
 
         public Task Execute(GameCommandContext context)
         {
-            CharacterBase target = context.ResolveActorOrCurrentControlledCharacter();
-            if (target == null)
-            {
-                return Task.CompletedTask;
-            }
+            int formalGasAbilityCode = EnsureValidFormalGasAbilityCode();
+            CharacterBase target =
+                context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(AddOrRemoveAbility));
 
-            int formalGasAbilityCode = m_formalGasAbilityCode;
             switch (m_action)
             {
                 case EAction.Add:
-                    if (formalGasAbilityCode > 0)
-                    {
-                        target.AddBonusFormalGasAbility(formalGasAbilityCode, CreateCommandAbilitySource(formalGasAbilityCode));
-                    }
+                    target.AddBonusFormalGasAbility(formalGasAbilityCode, CreateCommandAbilitySource(formalGasAbilityCode));
                     break;
 
                 case EAction.Remove:
-                    if (formalGasAbilityCode > 0)
-                    {
-                        target.RemoveBonusFormalGasAbility(formalGasAbilityCode, CreateCommandAbilitySource(formalGasAbilityCode));
-                    }
+                    target.RemoveBonusFormalGasAbility(formalGasAbilityCode, CreateCommandAbilitySource(formalGasAbilityCode));
                     break;
             }
 
             return Task.CompletedTask;
         }
 
-        private CharacterAbilitySourceKey CreateCommandAbilitySource(int formalGasAbilityCode = 0)
+        private int EnsureValidFormalGasAbilityCode()
         {
-            string sourceId = formalGasAbilityCode > 0
-                ? $"{GetType().FullName}:{formalGasAbilityCode}"
-                : GetType().FullName;
+            if (m_formalGasAbilityCode <= 0)
+            {
+                throw new InvalidOperationException(
+                    $"[{nameof(AddOrRemoveAbility)}] 奖励技能命令需要大于 0 的 Formal GAS 技能编码，不能把空编码当成成功命令。");
+            }
+
+            return m_formalGasAbilityCode;
+        }
+
+        private CharacterAbilitySourceKey CreateCommandAbilitySource(int formalGasAbilityCode)
+        {
+            string sourceId = $"{GetType().FullName}:{formalGasAbilityCode}";
             return new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.Script, sourceId);
         }
     }

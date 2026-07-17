@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using azixMcAze.SerializableDictionary;
 using UnityEngine;
@@ -56,14 +57,23 @@ namespace FantasyWord.GameCore
 
         public CharacterEquipmentSlotData[] CreateSlotDataSnapshot(DatabaseRegistry databaseRegistry)
         {
-            return m_slots
-                .Where(kvp => kvp.Value)
-                .Select(kvp => new CharacterEquipmentSlotData
+            if (databaseRegistry == null)
+            {
+                throw new System.InvalidOperationException(
+                    $"[{nameof(CharacterEquippedItemLoadout)}] 保存已装备物品需要有效 DatabaseRegistry。");
+            }
+
+            List<CharacterEquipmentSlotData> slots = new();
+            foreach ((EEquipmentType slotType, Equipment equipment) in m_slots.Where(kvp => kvp.Value))
+            {
+                slots.Add(new CharacterEquipmentSlotData
                 {
-                    slotType = kvp.Key,
-                    equipment = databaseRegistry.CreateReference(kvp.Value)
-                })
-                .ToArray();
+                    slotType = slotType,
+                    equipment = databaseRegistry.CreateReference(equipment)
+                });
+            }
+
+            return slots.ToArray();
         }
 
         public bool RestoreFromSlotData(
@@ -71,11 +81,8 @@ namespace FantasyWord.GameCore
             System.Func<DatabaseEntryReference<Equipment>, Equipment> resolveEquipment,
             System.Action<Equipment> applyEquipment)
         {
-            CharacterEquipmentSlotData[] slotDataSnapshot = equipmentSlots?.ToArray();
-            if (slotDataSnapshot == null)
-            {
-                return false;
-            }
+            CharacterEquipmentSlotData[] slotDataSnapshot = equipmentSlots?.ToArray()
+                ?? System.Array.Empty<CharacterEquipmentSlotData>();
 
             Clear();
 

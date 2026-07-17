@@ -3,6 +3,7 @@
   "rootNamespace": "FantasyWord.GameCore",
   "references": [
     "FantasyWord.GameCore",
+    "FantasyWord.GAS.GeneratedRuntime",
     "ContextSteering2D.Runtime",
     "com.exhard.exgas.general",
     "com.exhard.exgas.runtime",

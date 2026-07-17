@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace FantasyWord.GameCore
@@ -25,7 +24,8 @@ namespace FantasyWord.GameCore
 
         public void GoToMainMenu()
         {
-            SceneManager.LoadScene(GameManager.Config.mainMenuSceneName);
+            GameRuntimeEvents.RequestReturnToMainMenu();
         }
     }
 }
+

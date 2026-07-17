@@ -78,6 +78,14 @@ namespace FantasyWord.GameCore
         public MapLoadingDelegationParams DelegationParams { get; }
     }
 
+    /// <summary>
+    /// 请求退出当前游戏会话并返回主菜单。
+    /// UI 只发布这个语义请求，真正加载哪个场景由正式游戏状态流程决定。
+    /// </summary>
+    public readonly struct ReturnToMainMenuRequestedEvent
+    {
+    }
+
     public static partial class GameRuntimeEvents
     {
         public static void NotifyMapLoading()
@@ -148,6 +156,11 @@ namespace FantasyWord.GameCore
             }
 
             Publish(new MapTransitionDelegationRequestedEvent(delegationParams));
+        }
+
+        public static void RequestReturnToMainMenu()
+        {
+            Publish(new ReturnToMainMenuRequestedEvent());
         }
 
         public static void NotifyGameFlagChanged(string variableName, bool value)

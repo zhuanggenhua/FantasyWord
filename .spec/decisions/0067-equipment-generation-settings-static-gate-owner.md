@@ -1,0 +1,22 @@
+# 0067-换装生成设置与静态门禁 owner 边界
+
+- 日期：2026-07-17
+- 状态：已采纳
+- 背景：
+  - 换装动画生成器已经使用 `EquipmentSystemGenerationSettings` 作为动画根目录、共享片段目录、方向 SpriteLibrary 目录、共享 Controller 文件和工作台目录的正式配置 owner。
+  - 旧静态门禁脚本重复手写同一套路径和目录名，会让“生成器按设置生成”和“门禁按旧路径验证”发生漂移。
+  - 这不是运行时资源身份问题；正式运行时仍靠 Unity 序列化引用、数据库稳定引用和换装工作台目录资产，不把官方内容改成字符串路径或 Yoki key。
+- 决策：
+  - 换装静态门禁必须读取正式 `EquipmentSystemGenerationSettings` 资产来解析派生动画资源路径。
+  - 门禁可以保留设置资产的默认路径，用于定位唯一正式设置 owner；但不得再维护第二套动画根、共享片段目录、方向库目录、Controller 或工作台目录真相。
+  - 读不到正式设置资产时，门禁必须报告配置缺失，而不是静默按内置路径继续当作通过。
+  - 生成器、门禁和专项规范都以该设置资产为生产规则入口；场景、Prefab 和运行时资源身份不随本决策改变。
+- 影响：
+  - 修改换装动画生成目录、共享 Controller 文件名或工作台目录时，只需要改正式生成设置资产，静态门禁会跟随同一来源验证。
+  - 门禁继续检查方向片段、方向状态、四向库完整性、工作台目录和显式绑定等结构合同。
+  - 该决策不授权生成器加载、保存或修补场景/Prefab；生成器仍只写派生动画资产和工作台目录中由它拥有的派生引用。
+- 验证：
+  - 2026-07-17 `Invoke-EquipmentSystemStaticGate.ps1 -AsJson` 通过。
+  - 门禁输出显示 `GenerationSettingsMissing=false`，并从设置资产解析出 `AnimationRoot=Assets/GameData/EquipmentSystem/Animations`、`SharedClipRoot=Assets/GameData/EquipmentSystem/Animations/SharedClips`、`SpriteLibraryRoot=Assets/GameData/EquipmentSystem/Animations/SpriteLibraries`、`ControllerPath=Assets/GameData/EquipmentSystem/Animations/换装共享动画状态机.controller`、`WorkbenchCatalogPath=Assets/GameData/EquipmentSystem/Data/Workbench/换装工作台目录.asset`。
+- 替代关系：
+  - 补充 0011 和换装动画专项规范；只处理生成设置与验证工具的 owner 对齐，不改变装备表现运行时架构。

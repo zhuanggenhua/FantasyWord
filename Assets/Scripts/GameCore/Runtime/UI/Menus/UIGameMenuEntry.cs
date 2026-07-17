@@ -1,13 +1,18 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 游戏主菜单中的单个条目，负责在选中时更新焦点表现并在点击时请求对应菜单。
+    /// </summary>
     public class UIGameMenuEntry : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
+        /// <summary>
+        /// 游戏主菜单条目可触发的动作。
+        /// </summary>
         public enum EGameMenuAction
         {
             None,
@@ -21,11 +26,18 @@ namespace FantasyWord.GameCore
             GoToMainMenu
         }
 
-        [Header("Settings")]
+        [Header("设置")]
+        [InspectorName("菜单动作")]
+        [Tooltip("点击该条目时执行的菜单动作。")]
         [SerializeField] private EGameMenuAction m_action = EGameMenuAction.None;
 
-        [Header("References")]
+        [Header("引用")]
+        [InspectorName("按钮")]
+        [Tooltip("接收点击和焦点的按钮。")]
         [SerializeField] private Button m_button = null;
+
+        [InspectorName("文本")]
+        [Tooltip("条目选中时显示的文本提示。")]
         [SerializeField] private TextMeshProUGUI m_text = null;
 
         private UIGameMenu m_menu = null;
@@ -41,6 +53,14 @@ namespace FantasyWord.GameCore
             if (m_action == EGameMenuAction.OpenCraft && GameManager.Config.onTheGoCraftingStation == null)
             {
                 gameObject.SetActive(false);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (m_button)
+            {
+                m_button.onClick.RemoveListener(OnButtonClicked);
             }
         }
 
@@ -97,10 +117,11 @@ namespace FantasyWord.GameCore
                     break;
 
                 case EGameMenuAction.GoToMainMenu:
-                    SceneManager.LoadScene(GameManager.Config.mainMenuSceneName);
+                    GameRuntimeEvents.RequestReturnToMainMenu();
                     break;
             }
         }
     }
 }
+
 

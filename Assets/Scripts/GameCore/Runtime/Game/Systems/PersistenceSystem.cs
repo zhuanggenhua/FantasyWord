@@ -193,8 +193,20 @@ namespace FantasyWord.GameCore
                 RuntimeInstancedPersistentDataHandler handler = (RuntimeInstancedPersistentDataHandler)block.info;
                 if (handler.map == currentMap)
                 {
-                    Debug.Assert(handler.prefab != null, "RuntimeInstanced persistable has no prefab reference");
-                    Persistable persistable = InstantiateRuntime<Persistable>(handler.prefab, Vector3.zero, Quaternion.identity, null, handler.identifier);
+                    if (handler.prefab == null || string.IsNullOrWhiteSpace(handler.prefab.guid))
+                    {
+                        Debug.LogError($"[{nameof(PersistenceSystem)}] 运行时持久化对象 {handler.identifier} 缺少 PrefabReference GUID，无法恢复。", this);
+                        continue;
+                    }
+
+                    PrefabReference prefabReference = GameManager.Database.LoadFromReference(handler.prefab);
+                    if (prefabReference == null)
+                    {
+                        Debug.LogError($"[{nameof(PersistenceSystem)}] 运行时持久化对象 {handler.identifier} 无法通过 PrefabReference GUID 恢复 Prefab。", this);
+                        continue;
+                    }
+
+                    Persistable persistable = InstantiateRuntime<Persistable>(prefabReference, Vector3.zero, Quaternion.identity, null, handler.identifier);
                     persistable.LoadDataBlock(block);
                     keysToRemove.Add(kvp.Key);
                 }
@@ -207,3 +219,4 @@ namespace FantasyWord.GameCore
         }
     }
 }
+

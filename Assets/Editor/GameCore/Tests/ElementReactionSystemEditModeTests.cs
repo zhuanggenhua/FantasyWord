@@ -15,6 +15,7 @@ namespace FantasyWord.GameCore.Tests
         private GameObject m_gridObject;
         private Tilemap m_tilemap;
         private Tilemap m_surfaceCoverTilemap;
+        private TerrainSurfaceLayerSource m_surfaceCoverSource;
         private TerrainNavigationMap m_navigationMap;
         private ElementReactionSystem m_reactionSystem;
         private Vector3Int m_testCell;
@@ -38,10 +39,6 @@ namespace FantasyWord.GameCore.Tests
 
             m_navigationMap = m_gridObject.AddComponent<TerrainNavigationMap>();
             SetPrivateField(m_navigationMap, "m_ruleTilemap", m_tilemap);
-            SetPrivateField(
-                m_navigationMap,
-                "m_surfaceCoverTilemap",
-                m_surfaceCoverTilemap);
 
             GameObject systemObject = new("元素反应系统");
             m_createdObjects.Add(systemObject);
@@ -147,22 +144,23 @@ namespace FantasyWord.GameCore.Tests
             Tile grassCoverTile = ScriptableObject.CreateInstance<Tile>();
             m_createdObjects.Add(grassCoverTile);
             m_surfaceCoverTilemap.SetTile(m_testCell, grassCoverTile);
-            TerrainSurfaceCoverTileMapping grassCoverMapping = new();
-            SetPrivateField(grassCoverMapping, "m_tile", grassCoverTile);
-            SetPrivateField(
-                grassCoverMapping,
-                "m_coverKind",
-                ETerrainSurfaceCoverKind.Grass);
-            SetPrivateField(
-                grassCoverMapping,
-                "m_traits",
-                ETerrainSurfaceCoverTraits.Flammable |
-                ETerrainSurfaceCoverTraits.Destructible |
-                ETerrainSurfaceCoverTraits.Regrowable);
+            TerrainSurfaceCoverTileMapping grassCoverMapping =
+                CreateSurfaceCoverMapping(
+                    grassCoverTile,
+                    ETerrainSurfaceCoverKind.Grass,
+                    ETerrainSurfaceCoverTraits.Flammable |
+                    ETerrainSurfaceCoverTraits.Destructible |
+                    ETerrainSurfaceCoverTraits.Regrowable);
+            m_surfaceCoverSource = CreateSurfaceLayerSource(
+                TerrainSurfaceCoverSourceReference.DefaultSurfaceLayerSourceId,
+                ETerrainSurfaceLayerRole.SurfaceCover,
+                m_surfaceCoverTilemap,
+                priority: 0,
+                grassCoverMapping);
             SetPrivateField(
                 m_navigationMap,
-                "m_surfaceCoverTileMappings",
-                new[] { grassCoverMapping });
+                "m_surfaceLayerSources",
+                new[] { m_surfaceCoverSource });
             m_navigationMap.RefreshNavigationData();
         }
 
@@ -199,6 +197,12 @@ namespace FantasyWord.GameCore.Tests
             Assert.AreEqual(ETerrainSurfaceKind.Dirt, sample.EffectiveSurface);
             Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.BaseSurfaceCover);
             Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.EffectiveSurfaceCover);
+            Assert.AreEqual(
+                ETerrainSurfaceLayerRole.SurfaceCover,
+                sample.SurfaceCoverSource.Role);
+            Assert.AreEqual(
+                TerrainSurfaceCoverSourceReference.DefaultSurfaceLayerSourceId,
+                sample.SurfaceCoverSource.SourceId);
             Assert.AreEqual(ETerrainSurfaceCoverLifecycle.Alive, sample.SurfaceCoverLifecycle);
             Assert.IsTrue(sample.IsSurfaceCoverFlammable);
             Assert.AreEqual(
@@ -231,37 +235,23 @@ namespace FantasyWord.GameCore.Tests
             m_createdObjects.Add(decorationGrassTile);
             decorationTilemap.SetTile(decorationCell, decorationGrassTile);
 
-            TerrainSurfaceCoverTileMapping decorationGrassMapping = new();
-            SetPrivateField(
-                decorationGrassMapping,
-                "m_tile",
-                decorationGrassTile);
-            SetPrivateField(
-                decorationGrassMapping,
-                "m_coverKind",
-                ETerrainSurfaceCoverKind.Grass);
-            SetPrivateField(
-                decorationGrassMapping,
-                "m_traits",
-                ETerrainSurfaceCoverTraits.Flammable |
-                ETerrainSurfaceCoverTraits.Destructible);
+            TerrainSurfaceCoverTileMapping decorationGrassMapping =
+                CreateSurfaceCoverMapping(
+                    decorationGrassTile,
+                    ETerrainSurfaceCoverKind.Grass,
+                    ETerrainSurfaceCoverTraits.Flammable |
+                    ETerrainSurfaceCoverTraits.Destructible);
 
-            TerrainSurfaceLayerSource decorationSource = new();
-            SetPrivateField(decorationSource, "m_sourceId", 10);
-            SetPrivateField(
-                decorationSource,
-                "m_role",
-                ETerrainSurfaceLayerRole.Decoration);
-            SetPrivateField(decorationSource, "m_tilemap", decorationTilemap);
-            SetPrivateField(decorationSource, "m_priority", 0);
-            SetPrivateField(
-                decorationSource,
-                "m_surfaceCoverTileMappings",
-                new[] { decorationGrassMapping });
+            TerrainSurfaceLayerSource decorationSource = CreateSurfaceLayerSource(
+                sourceId: 10,
+                ETerrainSurfaceLayerRole.Decoration,
+                decorationTilemap,
+                priority: 10,
+                decorationGrassMapping);
             SetPrivateField(
                 m_navigationMap,
                 "m_surfaceLayerSources",
-                new[] { decorationSource });
+                new[] { m_surfaceCoverSource, decorationSource });
             m_navigationMap.RefreshNavigationData();
 
             bool changed = m_reactionSystem.Apply(
@@ -341,6 +331,89 @@ namespace FantasyWord.GameCore.Tests
                 ETerrainRuntimeSurfaceState.None,
                 sample.RuntimeState);
             Assert.AreEqual(0, m_reactionSystem.ActiveTimedCellCount);
+        }
+
+        [Test]
+        public void ConfiguredSurfaceLayerSources_DoNotFallbackToLegacyCover()
+        {
+            Tile legacyOnlyTile = ScriptableObject.CreateInstance<Tile>();
+            m_createdObjects.Add(legacyOnlyTile);
+            m_surfaceCoverTilemap.SetTile(m_testCell, legacyOnlyTile);
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceCoverTilemap",
+                m_surfaceCoverTilemap);
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceCoverTileMappings",
+                new[]
+                {
+                    CreateSurfaceCoverMapping(
+                        legacyOnlyTile,
+                        ETerrainSurfaceCoverKind.Grass,
+                        ETerrainSurfaceCoverTraits.Flammable)
+                });
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceLayerSources",
+                new[]
+                {
+                    CreateSurfaceLayerSource(
+                        sourceId: 20,
+                        ETerrainSurfaceLayerRole.Decoration,
+                        m_surfaceCoverTilemap,
+                        priority: 0)
+                });
+            m_navigationMap.RefreshNavigationData();
+
+            Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                m_testCell,
+                out TerrainSurfaceSample sample));
+            Assert.AreEqual(ETerrainSurfaceCoverKind.None, sample.BaseSurfaceCover);
+            Assert.AreEqual(
+                TerrainSurfaceCoverSourceReference.None.SourceId,
+                sample.SurfaceCoverSource.SourceId);
+            Assert.AreEqual(
+                ETerrainSurfaceLayerRole.None,
+                sample.SurfaceCoverSource.Role);
+        }
+
+        [Test]
+        public void LegacySurfaceCoverFallback_WorksWhenNoSurfaceLayerSourcesConfigured()
+        {
+            Tile legacyTile = ScriptableObject.CreateInstance<Tile>();
+            m_createdObjects.Add(legacyTile);
+            m_surfaceCoverTilemap.SetTile(m_testCell, legacyTile);
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceLayerSources",
+                Array.Empty<TerrainSurfaceLayerSource>());
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceCoverTilemap",
+                m_surfaceCoverTilemap);
+            SetPrivateField(
+                m_navigationMap,
+                "m_surfaceCoverTileMappings",
+                new[]
+                {
+                    CreateSurfaceCoverMapping(
+                        legacyTile,
+                        ETerrainSurfaceCoverKind.Grass,
+                        ETerrainSurfaceCoverTraits.Flammable)
+                });
+            m_navigationMap.RefreshNavigationData();
+
+            Assert.IsTrue(m_navigationMap.TryGetSurfaceSample(
+                m_testCell,
+                out TerrainSurfaceSample sample));
+            Assert.AreEqual(ETerrainSurfaceCoverKind.Grass, sample.BaseSurfaceCover);
+            Assert.AreEqual(
+                TerrainSurfaceCoverSourceReference.LegacySurfaceCoverSourceId,
+                sample.SurfaceCoverSource.SourceId);
+            Assert.AreEqual(
+                ETerrainSurfaceLayerRole.SurfaceCover,
+                sample.SurfaceCoverSource.Role);
         }
 
         [Test]
@@ -588,6 +661,34 @@ namespace FantasyWord.GameCore.Tests
                 "m_presentationSignal",
                 presentationSignal);
             return operation;
+        }
+
+        private static TerrainSurfaceCoverTileMapping CreateSurfaceCoverMapping(
+            TileBase tile,
+            ETerrainSurfaceCoverKind coverKind,
+            ETerrainSurfaceCoverTraits traits)
+        {
+            TerrainSurfaceCoverTileMapping mapping = new();
+            SetPrivateField(mapping, "m_tile", tile);
+            SetPrivateField(mapping, "m_coverKind", coverKind);
+            SetPrivateField(mapping, "m_traits", traits);
+            return mapping;
+        }
+
+        private static TerrainSurfaceLayerSource CreateSurfaceLayerSource(
+            int sourceId,
+            ETerrainSurfaceLayerRole role,
+            Tilemap tilemap,
+            int priority,
+            params TerrainSurfaceCoverTileMapping[] mappings)
+        {
+            TerrainSurfaceLayerSource source = new();
+            SetPrivateField(source, "m_sourceId", sourceId);
+            SetPrivateField(source, "m_role", role);
+            SetPrivateField(source, "m_tilemap", tilemap);
+            SetPrivateField(source, "m_priority", priority);
+            SetPrivateField(source, "m_surfaceCoverTileMappings", mappings);
+            return source;
         }
 
         private static void InvokePrivate(

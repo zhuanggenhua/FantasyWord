@@ -1,0 +1,24 @@
+# 0046-参考流程优先的 GameManager 系统访问审计边界
+
+- 日期：2026-07-16
+- 状态：已采纳
+- 背景：
+  - `GameManager + AGameSystem` 是当前项目从 `2DRPGEngine` 吸收的正式世界规则宿主。
+  - 2DRPGEngine 原实现大量通过 `GameManager.InventorySystem`、`GameManager.PlayerSystem`、`GameManager.Player` 和 `GetSystem<T>()` 访问正式系统；它并没有把这个项目级宿主入口视为违规。
+  - 2DRPGEngine 也提供 `TryGetSystem<T>()`，但它只在特定流程里表达“系统可能尚未出现，先保护再继续”，不是替代所有正式系统访问的规范。
+  - 0041、0043、0045 等决策中出现了“不得直接读取 GameManager.PlayerSystem / InventorySystem”的过宽表述，容易把“系统未就绪保护”误读成“单例访问本身违规”，并进一步误导成“改成 TryGetSystem 就是更规范”。
+- 决策：
+  - 本决策不是 `GameManager` 调用面的例外豁免，而是所有“参考工程后重构/审计”的正式判定标准：先比较参考同职责细节流程，再判断当前差异；明显偏离参考且没有当前项目证据支撑的地方才是退步或误改。
+  - 审计 GameManager 系统访问时，主判定必须是参考流程对照，而不是访问形式偏好。每个结论至少写清三件事：2DRPGEngine 同职责流程怎么做、FantasyWord 当前流程哪里不同、差异是当前项目必要增强还是退步/误改。
+  - 现有 `GameManager.XxxSystem` 快捷入口本身不是违规项；它能通过的理由是该闭包来自 2DRPGEngine 同职责正式系统宿主，而不是“单例天然更好”或“单例天然更差”。
+  - `TryGetSystem<T>()` 也不是更高级的架构形式；只有参考同类流程或 FantasyWord 新增职责确实需要“系统未就绪时不抛错、返回 false/跳过本次表现/延迟处理”的语义时，才应使用。
+  - “必需依赖 / 可失败依赖”只能作为参考流程对照后的辅助说明，不得作为单独的软件工程标准来替代参考事实。
+  - 静态门禁不得仅因为出现 `GameManager.PlayerSystem`、`GameManager.InventorySystem`、`GameManager.AudioSystem` 等既有快捷入口而失败；也不得仅因为出现 `TryGetSystem<T>()` 就判定更规范。门禁必须绑定具体流程合同。
+  - 禁止新增更多 `GameManager.XxxSystem` 静态快捷入口承载新领域状态；开放世界、牌局、未来联机等新系统必须先有正式 owner 裁决。
+- 影响：
+  - 43-50 审计结论需要重新按“参考同职责流程 -> 当前差异 -> 差异性质”复核，不能把“直读 GameManager”或“改成 TryGetSystem”当作独立问题。
+  - `MovePlayer` 应保持参考同职责流程：原版通过 `GameManager.Player` 取得正式玩家，FantasyWord 通过 `GameManager.PlayerSystem.GetPrimaryPlayerCharacter()` 取得当前正式主玩家；这属于对参考玩家入口的项目适配，不应改成空目标静默跳过。
+  - 表现监听、区域触发、条件和菜单上下文是否保留 `TryGetSystem`，必须逐项说明它们与参考流程的差异，以及失败时返回 false、跳过表现或返回无效上下文是否是当前项目新增职责所需。
+- 替代关系：
+  - 本决策取代 0038-0045 中“不得直接读取 GameManager.XSystem”这一过宽表述，也取代本轮旧稿中把“必需/可选依赖”作为主判定的表述。
+  - 0042 的 `HasSystem<T>() / TryGetSystem<T>()` 空实例保护仍有效，但只定义查询 API 的安全性，不定义所有调用点必须使用 Try 查询。

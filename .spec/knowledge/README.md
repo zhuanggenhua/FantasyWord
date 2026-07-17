@@ -33,9 +33,11 @@ metadata:
 | 参考、复用、旧工程、插件迁移 | `.spec/knowledge/features/project/参考源映射.md` |
 | 测试、验证、bug 修复、排查 | `.spec/knowledge/features/project/开发与验收规范.md` |
 | AIBridge、Unity Editor 自动化、Console、截图 | `.spec/knowledge/features/project/AIBridge常用命令.md` |
-| AI 读图、OCR、截图核对、SpriteSheet | `.codex/skills/safe-image-reading/SKILL.md` |
+| AI 读图、OCR、截图核对、SpriteSheet | 已暂停：`.codex/skills/safe-image-reading/SKILL.md` 不再作为当前入口 |
 | 新增、保留或重写项目侧 C# | `.spec/knowledge/features/project/代码参考矩阵.md` |
 | 像素素材、Sprite、动画、装备表现 | `.spec/knowledge/features/project/素材与表现规范.md` |
+| 换装功能、装备工作台、FrameData 帧编辑器、Body/Head UV、Idle/Walk/Attack 换装验收 | `.spec/skills/equipment-system-workflow/SKILL.md` |
+| 换装动画流程、SpriteLibrary 方向变体、资源路径、Yoki/Addressables 边界 | `.spec/knowledge/features/project/换装动画与资源流程对照.md` |
 | 俯视角角色素材、MiniFantasy、装备层素材 | `.spec/knowledge/features/project/角色素材处理工作流.md` |
 | spec、proposal、change、阶段拆分 | `openspec/AGENTS.md` |
 
@@ -48,6 +50,7 @@ metadata:
 | `.spec/skills/before-you-code` | 吸收 LumioAgent，改为 FantasyWord 前提锁定与渐进披露入口。 |
 | `.spec/skills/systematic-debugging` | 与现有 bug 红线合并，强调原始症状保真和止血口径。 |
 | `.spec/skills/verification-before-completion` | 吸收 LumioAgent，作为完成声明前证据门禁。 |
+| `.spec/skills/equipment-system-workflow` | 项目新增，用于 FantasyWord 换装功能、帧编辑器 UV 配置和运行时截图验收。 |
 | `.spec/skills/task-breakdown` | 吸收 LumioAgent，适配“不擅自 worktree/分支”和项目任务卡。 |
 | `.spec/skills/subagent-driven-development` | 吸收 LumioAgent，改为必须使用 `gpt-5.4` + `high` 且不能自行 worktree。 |
 | `.spec/skills/using-git-worktrees` | 吸收 LumioAgent 的安全检查，但改为“默认禁止，需用户明确许可”。 |

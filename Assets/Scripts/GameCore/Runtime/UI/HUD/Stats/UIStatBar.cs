@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,41 +26,89 @@ namespace FantasyWord.GameCore
         private ShakeHandler? m_shakeHandler = null;
         private bool m_followCurrentControlledCharacter = false;
         private bool m_hasDisplayedBoundValue = false;
+        private CharacterBase m_configuredTarget = null;
+        private bool m_currentControlledCharacterListening = false;
 
         private void Awake()
         {
             m_followCurrentControlledCharacter = m_target == null;
+            if (!m_followCurrentControlledCharacter)
+            {
+                m_configuredTarget = m_target;
+                m_target = null;
+            }
+        }
+
+        private void OnEnable()
+        {
+            BindInitialTargetIfReady();
         }
 
         private void Start()
         {
+            BindInitialTargetIfReady();
+        }
+
+        private void OnDisable()
+        {
+            StopShake();
+            StopCurrentControlledCharacterListening();
+            UnbindTarget();
+        }
+
+        private void OnDestroy()
+        {
+            StopShake();
+            StopCurrentControlledCharacterListening();
+            UnbindTarget();
+        }
+
+        private void BindInitialTargetIfReady()
+        {
             if (m_followCurrentControlledCharacter)
             {
-                GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-                OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
+                StartCurrentControlledCharacterListeningIfReady();
             }
             else
             {
-                CharacterBase configuredTarget = m_target;
-                m_target = null;
-                BindTarget(configuredTarget);
+                BindTarget(m_configuredTarget);
+            }
+        }
+
+        private void StartCurrentControlledCharacterListeningIfReady()
+        {
+            if (m_currentControlledCharacterListening)
+            {
+                return;
             }
 
+            if (!GameManager.Exists() || !GameManager.HasSystem<PlayerSystem>())
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = true;
+            GameManager.PlayerSystem.AddCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            OnCurrentControlledCharacterChanged(GameManager.PlayerSystem.GetCurrentControlledCharacterOrPlayerInstance());
+        }
+
+        private void StopCurrentControlledCharacterListening()
+        {
+            if (!m_currentControlledCharacterListening)
+            {
+                return;
+            }
+
+            m_currentControlledCharacterListening = false;
+            if (GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
+            {
+                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
+            }
         }
 
         private void OnStatsChanged(Stats previous)
         {
             UpdateUI();
-        }
-
-        private void OnDestroy()
-        {
-            if (m_followCurrentControlledCharacter && GameManager.Exists() && GameManager.HasSystem<PlayerSystem>())
-            {
-                GameManager.PlayerSystem.RemoveCurrentControlledCharacterChangedListener(OnCurrentControlledCharacterChanged);
-            }
-
-            UnbindTarget();
         }
 
         private void OnCurrentControlledCharacterChanged(CharacterBase character)
@@ -110,6 +158,7 @@ namespace FantasyWord.GameCore
             }
 
             m_shakeHandler = TransformShaker.Shake(
+                owner: this,
                 target: m_slider.transform,
                 amplitude: m_shakeAmplitude,
                 frequency: m_shakeFrequency,
@@ -117,6 +166,16 @@ namespace FantasyWord.GameCore
             );
         }
 
+        private void StopShake()
+        {
+            if (!m_shakeHandler.HasValue)
+            {
+                return;
+            }
+
+            TransformShaker.InterruptShakeIfInProgress(m_shakeHandler.Value);
+            m_shakeHandler = null;
+        }
         private void BindTarget(CharacterBase character)
         {
             if (ReferenceEquals(m_target, character))
@@ -146,7 +205,11 @@ namespace FantasyWord.GameCore
                 m_target.RemoveStatsChangedListener(OnStatsChanged);
                 m_target.RemoveCurrentStatsChangedListener(OnStatsChanged);
             }
+
+            m_target = null;
         }
     }
 }
+
+
 

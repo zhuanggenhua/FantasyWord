@@ -471,6 +471,7 @@ namespace FantasyWord.GameCore
             private Vector2 ResolveMovementInput(Vector2 rawInput)
             {
                 Vector2 directionalInput = ApplyMovementInputMode(rawInput);
+                directionalInput = ResolveTerrainMovementInput(directionalInput);
                 Vector2 normalizedInput = directionalInput.normalized;
                 Vector2 targetInput = m_owner.m_useAnalogMovementInput
                     ? Vector2.ClampMagnitude(directionalInput, 1.0f)
@@ -512,6 +513,27 @@ namespace FantasyWord.GameCore
                 }
 
                 return m_smoothedMovementInput;
+            }
+
+            private Vector2 ResolveTerrainMovementInput(Vector2 input)
+            {
+                if (input.sqrMagnitude <= 0.000001f ||
+                    !GameManager.Exists() ||
+                    !GameManager.TryGetSystem(out MapSystem mapSystem) ||
+                    !mapSystem.TryGetActiveTerrainNavigationMap(out TerrainNavigationMap navigationMap))
+                {
+                    return input;
+                }
+
+                if (!navigationMap.TryResolveRampMovementDirection(
+                        m_owner.m_rigidbody.position,
+                        input,
+                        out Vector2 resolvedDirection))
+                {
+                    return input;
+                }
+
+                return resolvedDirection * input.magnitude;
             }
 
             private Vector2 ApplyMovementInputMode(Vector2 input)

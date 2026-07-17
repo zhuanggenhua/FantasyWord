@@ -122,5 +122,5 @@ Grid
 - Unity Editor 自动化、场景读取、截图和 Console：叠加 `.codex/skills/aibridge`。
 - 通用 Unity 工程、包、Prefab、Scene、资源规范：叠加 `.codex/skills/unity-production` 和 `.spec/knowledge/features/project/Unity工程通用规范.md`。
 - 像素素材、SpriteSheet、导入设置：叠加 `.spec/knowledge/features/project/素材与表现规范.md`。
-- 图片/图集读取验收：先走 `.codex/skills/safe-image-reading`。
+- 图片/图集读取验收：`.codex/skills/safe-image-reading` 已于 2026-07-14 按用户要求暂停，不再作为当前入口。
 - UI Tile/Grid 布局不是 Tilemap：走 `.agents/skills/unity-ui-development`。

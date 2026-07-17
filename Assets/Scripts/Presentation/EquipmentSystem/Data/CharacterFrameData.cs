@@ -4,6 +4,10 @@ using UnityEngine;
 
 #region 枚举
 
+/// <summary>
+/// MiniFantasy 角色四方向行的朝向枚举。
+/// 这里描述素材表格方向，不等同于 GameCore 的移动输入方向。
+/// </summary>
 public enum CharacterFacing
 {
     SouthEast = 0,
@@ -12,12 +16,19 @@ public enum CharacterFacing
     NorthWest = 3
 }
 
+/// <summary>
+/// 角色当前素材行面向镜头的粗略分组。
+/// </summary>
 public enum FacingDirection
 {
     Front,
     Back
 }
 
+/// <summary>
+/// 同一动作中的局部帧变体。
+/// 用于 UV 和像素区域算法区分上/下/左右的扩展规则。
+/// </summary>
 public enum FrameVariant
 {
     Base = 0,
@@ -78,6 +89,10 @@ public enum AnchorType
     OffHandWeapon // 副手武器锚点
 }
 
+/// <summary>
+/// 单个武器挂点数据。
+/// position 使用帧内像素坐标，direction 决定武器贴图相对 South 的旋转。
+/// </summary>
 [Serializable]
 public class AnchorPoint
 {
@@ -118,6 +133,10 @@ public class AnchorPoint
 
 #region 锚点映射
 
+/// <summary>
+/// 武器挂点在不同角色朝向下的左右手判定。
+/// 该配置只服务换装表现，不参与角色装备规则。
+/// </summary>
 public static class AnchorFacingConfig
 {
     /// <summary>
@@ -190,7 +209,8 @@ public class BodyPartPixel
 }
 
 /// <summary>
-/// 部位区域
+/// 头部或身体等可映射 UV 的部位区域。
+/// pixels 保存源角色像素，UV 字段指向装备贴图采样位置。
 /// </summary>
 [Serializable]
 public class BodyPartRegion
@@ -308,6 +328,10 @@ public class LimbMask
 
 #region 帧数据
 
+/// <summary>
+/// 单个动画帧的换装标注数据。
+/// 它同时保存武器锚点、身体/头部 UV 区域和手脚颜色替换蒙版。
+/// </summary>
 [Serializable]
 public class FrameData
 {
@@ -390,6 +414,10 @@ public class FrameData
     }
 }
 
+/// <summary>
+/// 一个动画条目的帧数据集合。
+/// 运行时通过动画类型或 Key 缓存查询，不直接扫描列表。
+/// </summary>
 [Serializable]
 public class AnimationData
 {
@@ -586,6 +614,10 @@ public class DetectConfig
 
 #endregion
 
+/// <summary>
+/// MiniFantasy 角色帧换装数据资产。
+/// 它是编辑器工具生成/维护 UV、锚点和蒙版的作者数据，不是运行时装备状态。
+/// </summary>
 [CreateAssetMenu(
     fileName = "角色帧数据",
     menuName = "Equipment System/Character Frame Data"

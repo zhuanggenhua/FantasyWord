@@ -1,0 +1,26 @@
+# 0005-存档与数据库稳定身份边界
+
+- 日期：2026-07-15
+- 状态：已采纳
+- 背景：
+  - 存档文件会跨场景切换、编辑器重启、资源重导入和后续版本迁移继续使用，因此不能保存运行时对象实例、场景 handle、`GetInstanceID()` 或编辑器路径。
+  - `InventorySystem` 需要保存队伍、角色、容器和尸体等背包 owner；这些 owner 必须能在读档时重新定位到同一个现实对象。
+  - `PersistenceSystem` 需要保存运行时实例化对象的 prefab 来源；直接序列化 `PrefabReference` 对象引用会把文件存档绑定到 Unity 对象实例，不是稳定业务身份。
+- 决策：
+  - 存档只允许保存稳定业务标识或 `DatabaseEntryReference<T>` 的 GUID；运行时对象引用、场景 handle、`GetInstanceID()`、编辑器路径和派生表现状态不得作为存档身份。
+  - `InventoryOwnerHandle` 的空 id 是无效 owner；除显式 `DefaultParty` 外，不得把缺失角色、缺失持久化对象或缺失 identifier 自动回退成 `default`。
+  - `CharacterInventory` 和容器/尸体库存必须通过角色或 `Persistable` 的稳定持久化标识创建 owner；缺少标识时应报错并中止该库存操作。
+  - 运行时实例化对象的 prefab 来源保存为 `DatabaseEntryReference<PrefabReference>`；读档时通过 `DatabaseRegistry.LoadFromReference()` 恢复。
+  - `DatabaseRegistry.TryCreateReference()` 是存档和能力来源写入的正式入口；未登记资产必须报错并由调用方跳过，不能把空 GUID 写进存档或来源键。
+  - 背包、装备槽、任务进度、角色变身/感染规则和物品/装备授予能力来源都必须通过 `TryCreateReference()` 写入稳定 GUID；无法解析或未登记时跳过该条并报错。
+- 影响：
+  - `RuntimeInstancedPersistentDataHandler.prefab` 已从直接 `PrefabReference` 改为 `DatabaseEntryReference<PrefabReference>`。
+  - `Persistable.MakeRuntimeInstanced()` 会先创建并校验 `PrefabReference` GUID；缺失登记时直接抛出可定位错误。
+  - `PersistenceSystem` 读档恢复运行时实例时先校验 prefab GUID，再通过数据库引用解回 prefab 资产。
+  - `InventoryOwnerHandle` 不再使用 `scene:{scene.handle}:{GetInstanceID()}` 或 `kind:default` 作为可保存 owner。
+  - `DatabaseRegistry.LoadFromReference()` 对 null 或空 GUID 返回 null，避免读坏档时空引用崩溃；但缺引用仍由调用方按上下文报错。
+  - 装备授予能力、物品使用授予能力、已装备物品槽、任务进度和角色变身/感染规则已改为校验数据库 GUID，避免空来源键或空存档引用继续扩散。
+  - `scripts/Invoke-PersistenceRuntimeStaticGate.ps1` 已覆盖 owner 临时身份、运行时 prefab 直接引用、空 GUID 存档、编辑器路径和读档缺引用上报。
+- 替代关系：
+  - 本决策不改变 `PersistenceSystem` 作为存档快照 owner 扫描 `Persistable` 的职责；该扫描仍属于存档系统正式入口。
+  - 后续如果接入 Addressables/YooAsset，只能作为资源加载层替换 prefab 解析实现，不能让存档重新保存资源路径或运行时对象实例。

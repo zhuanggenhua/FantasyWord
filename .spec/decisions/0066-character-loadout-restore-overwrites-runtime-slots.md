@@ -1,0 +1,23 @@
+# 0066-角色读档槽位覆盖边界
+
+- 日期：2026-07-17
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 的 `Hero.OnLoad` 会先重建装备字典和快捷能力槽，再按存档内容逐项恢复；存档没有某个槽位时，读档结果就是空槽。
+  - FantasyWord 把装备和快捷技能槽拆成 `CharacterEquipment`、`CharacterEquippedItemLoadout` 与 `CharacterEquippedAbilityLoadout`，这是当前多角色/EX-GAS 架构的必要适配。
+  - 旧恢复函数在存档数组为 `null` 或空数组时直接返回，可能留下 Prefab 初始装备、读档前运行时装备或读档前快捷技能槽。
+- 决策：
+  - 角色读档恢复装备槽和快捷技能槽时，存档槽位数据必须覆盖当前运行时槽位。
+  - `null` 和空数组都表示“没有保存的槽位”，恢复入口必须先清空现有槽位，而不是保持读档前状态。
+  - 坏保存记录中的单个无效装备引用或越界快捷槽可以跳过，但跳过不能阻止其它有效槽位恢复，也不能恢复到读档前旧槽位。
+  - 该合同只约束读档/运行时状态恢复；正常装备穿脱、背包回包和装备附加能力来源仍分别遵守 0055、0058 和装备附加能力来源合同。
+- 影响：
+  - 旧档缺少 `equipmentSlots` 或 `quickAbilitySlots` 字段时，不会把 Prefab 初始装备或读档前快捷槽误带进新状态。
+  - 角色仍可保留其正式拥有的能力来源；清空快捷槽只清空“装在哪个按键”的布局，不移除能力本身。
+  - EditMode 测试覆盖装备槽和快捷技能槽两条恢复路径。
+- 验证：
+  - 2026-07-17 AIBridge 精确运行装备槽和快捷槽两项读档覆盖测试，均通过。
+  - 2026-07-17 `MeleeAttackAbilityEditModeTests` 与完整 `FantasyWord.GameCore.EditModeTests` 均通过，`failedTests=0`。
+  - 2026-07-17 `spec-lint`、`Invoke-FoundationStaticGate.ps1 -AsJson` 与 `Test-FoundationReferenceParity.ps1 -AsJson` 均通过。
+- 替代关系：
+  - 补充 0055、0058 和 0065；本决策只处理角色槽位恢复覆盖语义。

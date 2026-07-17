@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 效果允许作用的目标分组。
+    /// 目标筛选先看 CombatSolver 的基础可命中规则，再叠加这些分组限制。
+    /// </summary>
     [Flags]
     public enum EEffectTargetFlags
     {
@@ -14,6 +18,10 @@ namespace FantasyWord.GameCore
         [HideInInspector] All = ~None
     }
 
+    /// <summary>
+    /// 效果表现禁用标记。
+    /// 用于在结算仍发生时屏蔽飘字、震屏或闪屏等表现。
+    /// </summary>
     [Flags]
     public enum EEffectVisualFlags
     {
@@ -25,9 +33,17 @@ namespace FantasyWord.GameCore
     }
 
 
+    /// <summary>
+    /// 战斗效果基类。
+    /// 它统一目标筛选、失败率、来源/目标引用和命中冲击数据，具体效果只实现 OnApply。
+    /// </summary>
     [Serializable]
     public abstract class AEffect : IEffect
     {
+        /// <summary>
+        /// 效果运行时和存档所需的最小数据。
+        /// source/target 是持久引用；运行时直接引用只作为当前帧加速入口。
+        /// </summary>
         [Serializable]
         protected struct EffectData
         {
@@ -83,6 +99,12 @@ namespace FantasyWord.GameCore
         protected virtual bool OnApply() => true;
         protected virtual void OnDeinit() { }
 
+        protected void BindRuntimeTarget(CharacterBase target)
+        {
+            m_runtimeTargetCharacter = target;
+            m_effectData.target = target;
+        }
+
         public void Init(CharacterBase source)
         {
             if (initialized)
@@ -109,8 +131,7 @@ namespace FantasyWord.GameCore
 
         public virtual bool Apply(CharacterBase target, EffectImpactSettings? impactSettings = null)
         {
-            m_runtimeTargetCharacter = target;
-            m_effectData.target = target;
+            BindRuntimeTarget(target);
 
             m_effectData.velocity = impactSettings.HasValue ?
                 ExtractVelocityFromImpactSettings(impactSettings.Value) :

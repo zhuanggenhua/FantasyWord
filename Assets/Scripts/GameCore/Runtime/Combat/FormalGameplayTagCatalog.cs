@@ -1,15 +1,18 @@
 using System;
+using GAS.General;
 
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 当前项目对 EX-GAS 2.0 的最小正式标签码占位。
-    /// 现阶段只保留角色动作锁读取需要的控制标签编码；
-    /// 未接入真实标签生成表前，默认返回 false，避免继续依赖错误的旧 GameplayTag 对象模型。
+    /// 当前项目对 EX-GAS 2.0 正式标签码的 GameCore 投影。
+    /// GameCore 不能直接引用生成程序集，因为生成程序集需要反向引用 GameCore 的正式扩展类型。
     /// </summary>
     public static class FormalGameplayTagCatalog
     {
-        public const int EventAttackingTagCode = 3003;
+        private const string GeneratedTagTypeName = "GAS.Runtime.XTag";
+
+        public static readonly int EventAttackingTagCode =
+            ResolveRequiredGeneratedTagCode("Event_Attacking", "Event.Attacking");
 
         public static readonly FormalGameplayTagDefinition AttackingEvent =
             new("event.attacking", "正在攻击", EventAttackingTagCode);
@@ -81,6 +84,24 @@ namespace FantasyWord.GameCore
                 EControlType.Root => RootControlEffect,
                 _ => throw new ArgumentOutOfRangeException(nameof(controlType), controlType, "未知的控制效果分类。")
             };
+        }
+
+        private static int ResolveRequiredGeneratedTagCode(string generatedMemberName, string stableName)
+        {
+            if (!ReflectionHelper.MemberExists(GeneratedTagTypeName, generatedMemberName))
+            {
+                throw new InvalidOperationException(
+                    $"缺少 EX-GAS 生成标签：{stableName} ({GeneratedTagTypeName}.{generatedMemberName})。请先从 EX-GAS 标签表重新生成运行时代码。");
+            }
+
+            object value = ReflectionHelper.GetStaticFieldOrProperty(GeneratedTagTypeName, generatedMemberName);
+            if (value is int tagCode && tagCode > 0)
+            {
+                return tagCode;
+            }
+
+            throw new InvalidOperationException(
+                $"EX-GAS 生成标签无效：{stableName} ({GeneratedTagTypeName}.{generatedMemberName}) 不是有效正整数。");
         }
     }
 

@@ -28,10 +28,8 @@ namespace FantasyWord.GameCore
             {
                 if (quest.questCompletedDialogue != null)
                 {
-                    await character.Say(quest.questCompletedDialogue, source, (actionFeed) =>
-                    {
-                        GameManager.JournalSystem.CompleteQuest(quest, ResolveQuestCompletionCommandContext(source));
-                    });
+                    await character.Say(quest.questCompletedDialogue, source);
+                    await GameManager.JournalSystem.CompleteQuest(quest, ResolveQuestCompletionCommandContext(source));
 
                     return true;
                 }

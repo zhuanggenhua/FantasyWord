@@ -1,0 +1,27 @@
+# 0051-玩家结果型命令必需目标边界
+
+- 日期：2026-07-16
+- 状态：已采纳
+- 背景：
+  - 2DRPGEngine 同职责命令中，`AddExperience`、`AddOrRemoveAbility`、`AddOrRemoveItem`、`AddOrRemoveMana`、`HealOrDamagePlayer`、`RevivePlayer` 和 `ExecuteCommandList` 都直接作用于正式玩家或正式背包系统。
+  - FantasyWord 引入 `GameCommandContext` 是合理增强：命令可以由本地玩家、AI、脚本或未来远端来源发起，且可显式作用于某个角色。
+  - 但上一版把“无上下文角色时回退当前受控角色”的可失败解析直接用于奖励、物品、治疗、伤害、法力、复活等结果型命令；解析不到角色时静默完成。这会把参考流程中的正式结果写入失败降级成无声 no-op。
+  - `AddOrRemoveAbility` 从参考工程的能力资产改为 Formal GAS 技能编码是合理适配；但编码小于等于 0 代表没有真实能力配置，不能像 UI 预览或查询那样静默忽略。否则奖励技能命令会被报告为成功，却没有给角色添加或移除任何能力。
+  - `AddOrRemoveItem` 的 Remove 分支同样是结果型命令：参考工程在唯一玩家背包里调用 `RemoveFromBag` 后不检查返回值；FantasyWord 多 owner 背包下如果目标 owner 没有该物品，命令仍成功返回会把“移除物品”这个正式结果吞掉。
+- 决策：
+  - 保留 `GameCommandContext.ResolveActorOrCurrentControlledCharacter()` 作为非抛错解析入口，只用于菜单上下文、条件、表现、预览和其它允许“没有当前角色就返回空”的流程。
+  - 新增 `GameCommandContext.ResolveRequiredActorOrCurrentControlledCharacter(...)` 作为玩家/角色结果型命令入口；缺上下文角色且缺当前受控角色时必须抛出可定位异常。
+  - `AddExperience`、`AddOrRemoveAbility`、`AddOrRemoveItem`、`AddOrRemoveMana`、`HealOrDamagePlayer` 和 `RevivePlayer` 必须使用必需目标入口，不能把缺目标当作成功完成。
+  - `AddOrRemoveAbility` 必须要求大于 0 的 Formal GAS 技能编码；空编码或无效编码是命令资产配置错误，必须抛出可定位异常，不能把奖励技能命令当作成功 no-op。
+  - `AddOrRemoveItem` 的 Remove 分支必须确认 `RemoveFromBag(...)` 成功；移除失败时抛出可定位异常，不能把命令结果当作成功。
+  - `ExecuteCommandList` 只有在确实配置了动作锁时才需要必需目标；无动作锁的纯脚本命令列表仍可在无角色上下文中执行。
+  - 门禁必须检查“结果型命令不得静默吞目标缺失”，而不是检查 `GameManager.XxxSystem` 或 `TryGetSystem<T>()` 的访问形式。
+- 影响：
+  - `GameCommandContext` 同时提供两种清楚语义：可失败解析和必需结果目标解析。
+  - 参考工程中的“玩家结果命令必须真的作用到玩家”语义得到保留；FantasyWord 的上下文命令增强也继续保留。
+  - 奖励技能命令遇到空 Formal GAS 编码时会在写角色状态前暴露配置错误，不再伪装成已经执行。
+  - 物品移除命令在物品不存在、数量不足或 owner 不匹配时会暴露配置/流程错误，不再静默完成。
+  - 后台命令入口仍通过 `ExecuteFireAndReport(...)` 把异常写入 Console，不会静默丢任务异常。
+- 替代关系：
+  - 本决策收紧 0041 和 0044：它们关于“目标解析收口到 GameCommandContext”的 owner 合同仍有效，但“解析不到就跳过”不再适用于玩家/角色结果型命令。
+  - 本决策延续 0046/0050 的参考流程优先原则：通过原因不是访问形式更安全，而是与参考同职责结果链一致，且对 FantasyWord 上下文增强做了最小必要适配。

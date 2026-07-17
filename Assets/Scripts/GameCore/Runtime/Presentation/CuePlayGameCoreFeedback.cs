@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// GameCore 可由 EX-GAS Cue 触发的反馈事件类型。
+    /// </summary>
     public enum EGameCoreFeedbackCueKind
     {
         AbilityStart = 0,
@@ -24,6 +27,9 @@ namespace FantasyWord.GameCore
         ReloadComplete = 13
     }
 
+    /// <summary>
+    /// Cue 播放反馈时解析角色的目标侧，决定使用效果目标还是效果来源。
+    /// </summary>
     public enum EGameCoreFeedbackCueTarget
     {
         Target = 0,
@@ -125,6 +131,9 @@ namespace FantasyWord.GameCore
         }
     }
 
+    /// <summary>
+    /// EX-GAS Cue 的参数载荷，把表格中的整数配置解码成 GameCore 反馈事件和目标侧。
+    /// </summary>
     [Serializable]
     public sealed class XParamGameCoreFeedback : XParam
     {

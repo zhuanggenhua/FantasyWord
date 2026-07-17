@@ -154,6 +154,32 @@ namespace FantasyWord.GameCore
             return devices.ToLower();
         }
 
+        /// <summary>
+        /// 返回 UI 按键提示应使用的图标族。设备名称和布局判断只在输入系统内集中维护。
+        /// </summary>
+        public EInputControlDisplayType GetCurrentControlDisplayType()
+        {
+            foreach (InputDevice device in m_playerInput.devices)
+            {
+                if (!device.enabled)
+                {
+                    continue;
+                }
+
+                if (MatchesDeviceFamily(device, "xinput", "xbox"))
+                {
+                    return EInputControlDisplayType.XBOX;
+                }
+
+                if (MatchesDeviceFamily(device, "dualsense", "dualshock", "playstation"))
+                {
+                    return EInputControlDisplayType.Playstation;
+                }
+            }
+
+            return EInputControlDisplayType.Keyboard;
+        }
+
         public void SetActionMap(EActionMap actionMap)
         {
             m_currentActionMap = actionMap;
@@ -289,6 +315,12 @@ namespace FantasyWord.GameCore
             InputKit.SetPersistenceKey(persistenceKey);
             InputKit.SetActionAsset(actionAsset);
             InputKit.LoadBindings();
+        }
+
+        private static bool MatchesDeviceFamily(InputDevice device, params string[] tokens)
+        {
+            string identity = $"{device.name};{device.layout};{device.displayName};{device.description.product};{device.description.manufacturer}".ToLowerInvariant();
+            return tokens.Any(identity.Contains);
         }
 
         private bool TryResolveLocalPlayerCommandContext(out GameCommandContext commandContext)

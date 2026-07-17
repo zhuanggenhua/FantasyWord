@@ -5,8 +5,9 @@ using azixMcAze.SerializableDictionary;
 
 namespace FantasyWord.GameCore
 {
-    // Only represent half of the possible directions,
-    // as the other half can be derived from these using symmetry (flipping sprite on X)
+    /// <summary>
+    /// 多方向动画可配置的方向枚举；当前仍保留八向，具体资源可通过 flipSprite 复用。
+    /// </summary>
     enum EAnimationDirection
     {
         Up,
@@ -19,19 +20,38 @@ namespace FantasyWord.GameCore
         UpLeft
     }
 
+    /// <summary>
+    /// 某个方向对应的 SpriteLibrary 覆盖配置，以及是否需要水平翻转。
+    /// </summary>
     [Serializable]
     public struct AnimationDirectionOverride
     {
+        [InspectorName("方向动画库")]
+        [Tooltip("角色朝该方向时切换到的 SpriteLibraryAsset。")]
         public SpriteLibraryAsset spriteLibrary;
+
+        [InspectorName("水平翻转")]
+        [Tooltip("开启后使用同一动画库但水平翻转 SpriteRenderer，适合复用左右对称资源。")]
         public bool flipSprite;
+
+        [InspectorName("匹配优先级")]
+        [Tooltip("当两个方向与输入方向距离几乎相同时，优先级较高的方向胜出。")]
         public float priority;
     }
 
+    /// <summary>
+    /// 根据面朝方向切换 SpriteLibrary 的多方向动画策略，支持用优先级解决方向边界抖动。
+    /// </summary>
     [Serializable]
     public class PolydirectionalAnimationStrategy : AAnimationStrategy
     {
-        [Header("Polydirectional Animation Settings")]
+        [Header("多方向动画设置")]
+        [InspectorName("Sprite Library")]
+        [Tooltip("运行时要切换 SpriteLibraryAsset 的 SpriteLibrary 组件。")]
         [SerializeField] protected SpriteLibrary m_spriteLibrary = null;
+
+        [InspectorName("方向覆盖")]
+        [Tooltip("每个方向对应的动画库和翻转策略；为空时保持默认动画库。")]
         [SerializeField] private SerializableDictionary<EAnimationDirection, AnimationDirectionOverride> m_animationDirectionOverrides = new();
 
         public override void Initialize()

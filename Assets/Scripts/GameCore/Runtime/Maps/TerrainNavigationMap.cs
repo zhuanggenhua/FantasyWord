@@ -77,8 +77,12 @@ namespace FantasyWord.GameCore
 
         [Header("运行时路径提示")]
         [InspectorName("显示运行时路径提示")]
-        [Tooltip("在 Game 视图中显示最近一次点击移动的路径线、目标点或失败红叉。用于 RTS 式连续点击移动调试。")]
+        [Tooltip("在 Game 视图中显示最近一次点击移动的一条可走路线、目标点或失败红叉。")]
         [SerializeField] private bool m_showRuntimeNavigationPath = true;
+
+        [InspectorName("显示运行时调试细节")]
+        [Tooltip("开启后叠加起点、点击点、吸附格、辅助线和路径点圈；默认关闭，避免玩家视图混入内部寻路细节。")]
+        [SerializeField] private bool m_showRuntimeNavigationDebugDetails;
 
         [InspectorName("路径线宽")]
         [Min(0.01f)]
@@ -127,22 +131,7 @@ namespace FantasyWord.GameCore
         private bool m_lastDebugPathSucceeded;
         private string m_lastDebugPathStatus = string.Empty;
         private bool m_suppressNavigationDebug;
-        private Transform m_runtimePathRoot;
-        private LineRenderer m_runtimePathLine;
-        private LineRenderer m_runtimeStartRing;
-        private LineRenderer m_runtimeClickRing;
-        private LineRenderer m_runtimeFinalDestinationRing;
-        private LineRenderer m_runtimeResolvedCellRing;
-        private LineRenderer m_runtimeFailureCross;
-        private LineRenderer m_runtimeClickToResolvedLine;
-        private LineRenderer m_runtimeResolvedToEndLine;
-        private TextMesh m_runtimeStartLabel;
-        private TextMesh m_runtimeClickLabel;
-        private TextMesh m_runtimeFinalDestinationLabel;
-        private TextMesh m_runtimeResolvedCellLabel;
-        private TextMesh m_runtimeStatusLabel;
-        private readonly List<LineRenderer> m_runtimeWaypointRings = new();
-        private Material m_runtimePathMaterial;
+        private readonly TerrainNavigationRuntimePathDebugView m_runtimePathDebugView = new();
 
         public Tilemap RuleTilemap => ActiveRuleTilemap;
         public IReadOnlyList<TerrainNavigationLayerSource> LayerSources => m_layerSources;
@@ -268,6 +257,79 @@ namespace FantasyWord.GameCore
                 destinationWorld,
                 out worldPath,
                 out _);
+        }
+
+        public bool TryResolveRampMovementDirection(
+            Vector2 currentWorld,
+            Vector2 desiredDirection,
+            out Vector2 resolvedDirection)
+        {
+            resolvedDirection = desiredDirection;
+            if (desiredDirection.sqrMagnitude <= 0.000001f ||
+                !EnsureNavigationData())
+            {
+                return false;
+            }
+
+            Tilemap tilemap = ActiveRuleTilemap;
+            if (tilemap == null)
+            {
+                return false;
+            }
+
+            Vector3Int currentCell = tilemap.WorldToCell(currentWorld);
+            if (!TryGetTile(currentCell, out TerrainNavigationTile currentTile) ||
+                currentTile.TransitionKind != ETerrainTransitionKind.Ramp ||
+                currentTile.RampDirection == ETerrainRampDirection.None)
+            {
+                return false;
+            }
+
+            Vector2 inputDirection = desiredDirection.normalized;
+            Vector2 bestDirection = Vector2.zero;
+            float bestScore = 0.25f;
+            for (int i = 0; i < CardinalNeighborOffsets.Length; i++)
+            {
+                Vector3Int candidateCell = currentCell + CardinalNeighborOffsets[i];
+                if (!TryGetTile(candidateCell, out TerrainNavigationTile candidateTile) ||
+                    !candidateTile.Walkable ||
+                    !CanTraverseElevation(currentCell, currentTile, candidateCell, candidateTile))
+                {
+                    continue;
+                }
+
+                bool isSameRamp =
+                    candidateTile.TransitionKind == ETerrainTransitionKind.Ramp &&
+                    candidateTile.RampDirection == currentTile.RampDirection;
+                bool isGroundExit = candidateTile.TransitionKind != ETerrainTransitionKind.Ramp;
+                if (!isSameRamp && !isGroundExit)
+                {
+                    continue;
+                }
+
+                Vector2 candidateCenter = tilemap.GetCellCenterWorld(candidateCell);
+                Vector2 candidateDirection = candidateCenter - currentWorld;
+                if (candidateDirection.sqrMagnitude <= 0.000001f)
+                {
+                    continue;
+                }
+
+                candidateDirection.Normalize();
+                float score = Vector2.Dot(inputDirection, candidateDirection);
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestDirection = candidateDirection;
+                }
+            }
+
+            if (bestDirection.sqrMagnitude <= 0.000001f)
+            {
+                return false;
+            }
+
+            resolvedDirection = bestDirection;
+            return true;
         }
 
         internal bool TryBuildWorldPathWithoutDebug(
@@ -1643,7 +1705,15 @@ namespace FantasyWord.GameCore
                 return coverKind;
             }
 
-            return ResolveLegacyBaseSurfaceCover(nodeKey, out traits, out sourceReference);
+            if (m_activeSurfaceLayerSources.Count == 0)
+            {
+                return ResolveLegacyBaseSurfaceCover(
+                    nodeKey,
+                    out traits,
+                    out sourceReference);
+            }
+
+            return ETerrainSurfaceCoverKind.None;
         }
 
         private ETerrainSurfaceCoverKind ResolveLegacyBaseSurfaceCover(
@@ -2189,414 +2259,35 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            EnsureRuntimeNavigationDebugObjects();
-            float z = GetRuntimeDebugZ();
-            Vector3 start = ToDebugPosition(m_lastDebugStart, z);
-            Vector3 click = ToDebugPosition(m_lastDebugDestination, z);
-            Vector3 finalDestination = ToDebugPosition(m_lastDebugFinalDestination, z);
-            Vector3 resolvedCell = ToDebugPosition(m_lastDebugResolvedCellCenter, z);
-
-            SyncRingRenderer(
-                m_runtimeStartRing,
-                start,
-                m_debugMarkerRadius * 0.75f,
-                Color.white,
-                m_runtimePathLineWidth * 0.72f);
-
-            SyncRingRenderer(
-                m_runtimeClickRing,
-                click,
-                m_debugMarkerRadius * 0.72f,
-                m_debugFailureColor,
-                m_runtimePathLineWidth * 0.58f);
-            SyncRuntimeLabel(
-                m_runtimeStartLabel,
-                start + Vector3.up * m_debugMarkerRadius * 1.45f,
-                "起点",
-                Color.white);
-            SyncRuntimeLabel(
-                m_runtimeClickLabel,
-                click + Vector3.down * m_debugMarkerRadius * 1.45f,
-                "点击",
-                m_debugFailureColor);
-            SyncRuntimeLabel(
-                m_runtimeStatusLabel,
-                start + Vector3.up * m_debugMarkerRadius * 2.35f,
-                m_lastDebugPathStatus,
-                Color.white);
-
-            if (!m_lastDebugPathSucceeded)
-            {
-                SetLineRendererPositions(m_runtimePathLine, Array.Empty<Vector3>(), m_debugPathColor);
-                SetLineRendererPositions(m_runtimeFinalDestinationRing, Array.Empty<Vector3>(), m_debugPathColor);
-                SetLineRendererPositions(m_runtimeResolvedCellRing, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
-                SetLineRendererPositions(m_runtimeClickToResolvedLine, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
-                SetLineRendererPositions(m_runtimeResolvedToEndLine, Array.Empty<Vector3>(), m_debugPathColor);
-                ClearRuntimeLabel(m_runtimeFinalDestinationLabel);
-                ClearRuntimeLabel(m_runtimeResolvedCellLabel);
-                ClearRuntimeWaypointRings();
-                SyncFailureCrossRenderer(click, m_debugFailureColor);
-                return;
-            }
-
-            SyncRingRenderer(
-                m_runtimeFinalDestinationRing,
-                finalDestination,
+            TerrainNavigationRuntimePathDebugSnapshot snapshot = new(
+                transform,
+                name,
+                GetRuntimeDebugZ(),
+                m_showRuntimeNavigationDebugDetails,
                 m_debugMarkerRadius,
+                m_runtimePathLineWidth,
+                m_runtimeWaypointRadius,
+                m_runtimeMarkerSegments,
                 m_debugPathColor,
-                m_runtimePathLineWidth);
-            SyncRuntimeLabel(
-                m_runtimeFinalDestinationLabel,
-                finalDestination + Vector3.up * m_debugMarkerRadius * 1.45f,
-                "终点",
-                m_debugPathColor);
-
-            if ((m_lastDebugResolvedCellCenter - m_lastDebugFinalDestination).sqrMagnitude > 0.0001f)
-            {
-                SyncRingRenderer(
-                    m_runtimeResolvedCellRing,
-                    resolvedCell,
-                    m_debugMarkerRadius * 0.54f,
-                    m_debugResolvedGoalColor,
-                    m_runtimePathLineWidth * 0.48f);
-                SyncRuntimeLabel(
-                    m_runtimeResolvedCellLabel,
-                    resolvedCell + Vector3.down * m_debugMarkerRadius * 2.35f,
-                    "吸附格",
-                    m_debugResolvedGoalColor);
-            }
-            else
-            {
-                SetLineRendererPositions(m_runtimeResolvedCellRing, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
-                ClearRuntimeLabel(m_runtimeResolvedCellLabel);
-            }
-
-            SyncRuntimeSegment(
-                m_runtimeClickToResolvedLine,
-                click,
-                resolvedCell,
+                m_debugFailureColor,
                 m_debugResolvedGoalColor,
-                m_runtimePathLineWidth * 0.38f);
-            SyncRuntimeSegment(
-                m_runtimeResolvedToEndLine,
-                resolvedCell,
-                finalDestination,
-                m_debugPathColor,
-                m_runtimePathLineWidth * 0.38f);
-
-            Vector3[] pathPositions = new Vector3[m_lastDebugWorldPath.Length + 1];
-            pathPositions[0] = start;
-            for (int i = 0; i < m_lastDebugWorldPath.Length; i++)
-            {
-                pathPositions[i + 1] = ToDebugPosition(m_lastDebugWorldPath[i], z);
-            }
-
-            SetLineRendererPositions(m_runtimePathLine, pathPositions, m_debugPathColor);
-            SyncRuntimeWaypointRings(z);
-            SetLineRendererPositions(m_runtimeFailureCross, Array.Empty<Vector3>(), m_debugFailureColor);
-        }
-
-        private void EnsureRuntimeNavigationDebugObjects()
-        {
-            if (m_runtimePathRoot == null)
-            {
-                GameObject root = new($"{name} Runtime Navigation Debug");
-                root.hideFlags = HideFlags.DontSave;
-                root.transform.SetParent(transform, worldPositionStays: false);
-                m_runtimePathRoot = root.transform;
-            }
-
-            m_runtimePathMaterial ??= CreateRuntimeDebugMaterial();
-            m_runtimePathLine = EnsureRuntimeLineRenderer(
-                m_runtimePathLine,
-                "Path",
-                loop: false);
-            m_runtimeStartRing = EnsureRuntimeLineRenderer(
-                m_runtimeStartRing,
-                "Start",
-                loop: true);
-            m_runtimeClickRing = EnsureRuntimeLineRenderer(
-                m_runtimeClickRing,
-                "Click",
-                loop: true);
-            m_runtimeFinalDestinationRing = EnsureRuntimeLineRenderer(
-                m_runtimeFinalDestinationRing,
-                "End",
-                loop: true);
-            m_runtimeResolvedCellRing = EnsureRuntimeLineRenderer(
-                m_runtimeResolvedCellRing,
-                "Resolved Cell",
-                loop: true);
-            m_runtimeFailureCross = EnsureRuntimeLineRenderer(
-                m_runtimeFailureCross,
-                "Failure",
-                loop: false);
-            m_runtimeClickToResolvedLine = EnsureRuntimeLineRenderer(
-                m_runtimeClickToResolvedLine,
-                "Click To Resolved Cell",
-                loop: false);
-            m_runtimeResolvedToEndLine = EnsureRuntimeLineRenderer(
-                m_runtimeResolvedToEndLine,
-                "Resolved Cell To End",
-                loop: false);
-            m_runtimeStartLabel = EnsureRuntimeTextMesh(m_runtimeStartLabel, "Start Label");
-            m_runtimeClickLabel = EnsureRuntimeTextMesh(m_runtimeClickLabel, "Click Label");
-            m_runtimeFinalDestinationLabel = EnsureRuntimeTextMesh(m_runtimeFinalDestinationLabel, "End Label");
-            m_runtimeResolvedCellLabel = EnsureRuntimeTextMesh(m_runtimeResolvedCellLabel, "Resolved Cell Label");
-            m_runtimeStatusLabel = EnsureRuntimeTextMesh(m_runtimeStatusLabel, "Status Label");
-        }
-
-        private LineRenderer EnsureRuntimeLineRenderer(
-            LineRenderer lineRenderer,
-            string objectName,
-            bool loop)
-        {
-            if (lineRenderer != null)
-            {
-                return lineRenderer;
-            }
-
-            GameObject lineObject = new(objectName);
-            lineObject.transform.SetParent(m_runtimePathRoot, worldPositionStays: false);
-            lineRenderer = lineObject.AddComponent<LineRenderer>();
-            lineObject.hideFlags = HideFlags.DontSave;
-            lineRenderer.useWorldSpace = true;
-            lineRenderer.loop = loop;
-            lineRenderer.material = m_runtimePathMaterial;
-            lineRenderer.textureMode = LineTextureMode.Stretch;
-            lineRenderer.numCapVertices = 4;
-            lineRenderer.numCornerVertices = 4;
-            lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            lineRenderer.receiveShadows = false;
-            lineRenderer.sortingOrder = 32760;
-            return lineRenderer;
-        }
-
-        private TextMesh EnsureRuntimeTextMesh(TextMesh textMesh, string objectName)
-        {
-            if (textMesh != null)
-            {
-                return textMesh;
-            }
-
-            GameObject textObject = new(objectName);
-            textObject.transform.SetParent(m_runtimePathRoot, worldPositionStays: false);
-            textObject.hideFlags = HideFlags.DontSave;
-            textMesh = textObject.AddComponent<TextMesh>();
-            textMesh.anchor = TextAnchor.MiddleCenter;
-            textMesh.alignment = TextAlignment.Center;
-            textMesh.fontSize = 48;
-            textMesh.characterSize = 0.045f;
-            textMesh.richText = false;
-
-            MeshRenderer meshRenderer = textObject.GetComponent<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.sortingOrder = 32761;
-            }
-
-            return textMesh;
-        }
-
-        private Material CreateRuntimeDebugMaterial()
-        {
-            Shader shader = Shader.Find("Sprites/Default");
-            if (shader == null)
-            {
-                shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
-            }
-
-            if (shader == null)
-            {
-                shader = Shader.Find("Hidden/Internal-Colored");
-            }
-
-            return new Material(shader)
-            {
-                name = $"{name} Runtime Navigation Debug Material",
-                hideFlags = HideFlags.HideAndDontSave
-            };
-        }
-
-        private void SyncRingRenderer(
-            LineRenderer lineRenderer,
-            Vector3 center,
-            float radius,
-            Color color,
-            float width)
-        {
-            int segmentCount = Mathf.Clamp(m_runtimeMarkerSegments, 12, 96);
-            Vector3[] positions = new Vector3[segmentCount];
-            for (int i = 0; i < segmentCount; i++)
-            {
-                float angle = i / (float)segmentCount * Mathf.PI * 2.0f;
-                positions[i] = center + new Vector3(
-                    Mathf.Cos(angle) * radius,
-                    Mathf.Sin(angle) * radius,
-                    0.0f);
-            }
-
-            SetLineRendererPositions(lineRenderer, positions, color, width);
-        }
-
-        private void SyncFailureCrossRenderer(Vector3 destination, Color color)
-        {
-            float radius = m_debugMarkerRadius * 0.9f;
-            Vector3[] positions =
-            {
-                destination + new Vector3(-radius, -radius, 0.0f),
-                destination + new Vector3(radius, radius, 0.0f),
-                destination,
-                destination + new Vector3(-radius, radius, 0.0f),
-                destination + new Vector3(radius, -radius, 0.0f)
-            };
-
-            SetLineRendererPositions(m_runtimeFailureCross, positions, color, m_runtimePathLineWidth);
-        }
-
-        private void SyncRuntimeSegment(
-            LineRenderer lineRenderer,
-            Vector3 from,
-            Vector3 to,
-            Color color,
-            float width)
-        {
-            if ((from - to).sqrMagnitude <= 0.0001f)
-            {
-                SetLineRendererPositions(lineRenderer, Array.Empty<Vector3>(), color, width);
-                return;
-            }
-
-            SetLineRendererPositions(
-                lineRenderer,
-                new[] { from, to },
-                color,
-                width);
-        }
-
-        private void SyncRuntimeLabel(
-            TextMesh textMesh,
-            Vector3 position,
-            string text,
-            Color color)
-        {
-            if (textMesh == null)
-            {
-                return;
-            }
-
-            textMesh.gameObject.SetActive(true);
-            textMesh.transform.position = position;
-            textMesh.text = text;
-            textMesh.color = color;
-        }
-
-        private static void ClearRuntimeLabel(TextMesh textMesh)
-        {
-            if (textMesh == null)
-            {
-                return;
-            }
-
-            textMesh.text = string.Empty;
-            textMesh.gameObject.SetActive(false);
-        }
-
-        private void SyncRuntimeWaypointRings(float z)
-        {
-            ClearRuntimeWaypointRings();
-            if (m_lastDebugWorldPath == null || m_lastDebugWorldPath.Length == 0)
-            {
-                return;
-            }
-
-            for (int i = 0; i < m_lastDebugWorldPath.Length - 1; i++)
-            {
-                LineRenderer waypointRing = GetOrCreateRuntimeWaypointRing(i);
-                SyncRingRenderer(
-                    waypointRing,
-                    ToDebugPosition(m_lastDebugWorldPath[i], z),
-                    m_runtimeWaypointRadius,
-                    m_debugPathColor,
-                    m_runtimePathLineWidth * 0.55f);
-            }
-        }
-
-        private LineRenderer GetOrCreateRuntimeWaypointRing(int index)
-        {
-            while (m_runtimeWaypointRings.Count <= index)
-            {
-                m_runtimeWaypointRings.Add(EnsureRuntimeLineRenderer(
-                    null,
-                    $"Waypoint {m_runtimeWaypointRings.Count:00}",
-                    loop: true));
-            }
-
-            return m_runtimeWaypointRings[index];
-        }
-
-        private void ClearRuntimeWaypointRings()
-        {
-            for (int i = 0; i < m_runtimeWaypointRings.Count; i++)
-            {
-                SetLineRendererPositions(
-                    m_runtimeWaypointRings[i],
-                    Array.Empty<Vector3>(),
-                    m_debugPathColor,
-                    m_runtimePathLineWidth * 0.55f);
-            }
-        }
-
-        private void SetLineRendererPositions(
-            LineRenderer lineRenderer,
-            IReadOnlyList<Vector3> positions,
-            Color color)
-        {
-            SetLineRendererPositions(
-                lineRenderer,
-                positions,
-                color,
-                m_runtimePathLineWidth);
-        }
-
-        private void SetLineRendererPositions(
-            LineRenderer lineRenderer,
-            IReadOnlyList<Vector3> positions,
-            Color color,
-            float width)
-        {
-            if (lineRenderer == null)
-            {
-                return;
-            }
-
-            lineRenderer.startWidth = width;
-            lineRenderer.endWidth = width;
-            lineRenderer.startColor = color;
-            lineRenderer.endColor = color;
-            lineRenderer.positionCount = positions?.Count ?? 0;
-            for (int i = 0; positions != null && i < positions.Count; i++)
-            {
-                lineRenderer.SetPosition(i, positions[i]);
-            }
+                m_lastDebugStart,
+                m_lastDebugDestination,
+                m_lastDebugFinalDestination,
+                m_lastDebugResolvedCellCenter,
+                m_lastDebugWorldPath,
+                m_lastDebugPathSucceeded,
+                m_lastDebugPathStatus);
+            m_runtimePathDebugView.Sync(snapshot);
         }
 
         private void ClearRuntimeNavigationDebugPath()
         {
-            SetLineRendererPositions(m_runtimePathLine, Array.Empty<Vector3>(), m_debugPathColor);
-            SetLineRendererPositions(m_runtimeStartRing, Array.Empty<Vector3>(), Color.white);
-            SetLineRendererPositions(m_runtimeClickRing, Array.Empty<Vector3>(), m_debugFailureColor);
-            SetLineRendererPositions(m_runtimeFinalDestinationRing, Array.Empty<Vector3>(), m_debugPathColor);
-            SetLineRendererPositions(m_runtimeResolvedCellRing, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
-            SetLineRendererPositions(m_runtimeFailureCross, Array.Empty<Vector3>(), m_debugFailureColor);
-            SetLineRendererPositions(m_runtimeClickToResolvedLine, Array.Empty<Vector3>(), m_debugResolvedGoalColor);
-            SetLineRendererPositions(m_runtimeResolvedToEndLine, Array.Empty<Vector3>(), m_debugPathColor);
-            ClearRuntimeLabel(m_runtimeStartLabel);
-            ClearRuntimeLabel(m_runtimeClickLabel);
-            ClearRuntimeLabel(m_runtimeFinalDestinationLabel);
-            ClearRuntimeLabel(m_runtimeResolvedCellLabel);
-            ClearRuntimeLabel(m_runtimeStatusLabel);
-            ClearRuntimeWaypointRings();
+            m_runtimePathDebugView.Clear(
+                m_debugPathColor,
+                m_debugFailureColor,
+                m_debugResolvedGoalColor,
+                m_runtimePathLineWidth);
         }
 
         private float GetRuntimeDebugZ()

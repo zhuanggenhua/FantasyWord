@@ -4,6 +4,10 @@ using UnityEngine.Events;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 装备操作结果。
+    /// 背包、角色动作锁和装备槽规则都通过该结果向 UI 反馈失败原因。
+    /// </summary>
     public enum EEquipmentOperationResult
     {
         Valid,
@@ -14,6 +18,10 @@ namespace FantasyWord.GameCore
         ActionLocked,
     }
 
+    /// <summary>
+    /// 角色 Actor 的持久化数据块。
+    /// 在 CharacterBase 基础上追加经验、自由属性点、装备槽和快捷技能槽。
+    /// </summary>
     [Serializable]
     public class CharacterActorDataBlock : CharacterBaseDataBlock
     {
@@ -38,6 +46,10 @@ namespace FantasyWord.GameCore
         public CharacterAbilitySlotData[] quickAbilitySlots;
     }
 
+    /// <summary>
+    /// 装备槽存档条目。
+    /// slotType 是槽位真相，equipment 是数据库引用，避免保存运行时装备实例。
+    /// </summary>
     [Serializable]
     public class CharacterEquipmentSlotData
     {
@@ -45,6 +57,10 @@ namespace FantasyWord.GameCore
         public DatabaseEntryReference<Equipment> equipment;
     }
 
+    /// <summary>
+    /// 快捷技能槽存档条目。
+    /// 只保存正式 EX-GAS 能力编号，运行时能力实例由 CharacterAbilitySet 重建。
+    /// </summary>
     [Serializable]
     public class CharacterAbilitySlotData
     {
@@ -52,12 +68,20 @@ namespace FantasyWord.GameCore
         public int formalGasAbilityCode;
     }
 
+    /// <summary>
+    /// 可成长、可装备、可被队伍/AI 控制的正式角色实体。
+    /// 它在 CharacterBase 基础上增加经验等级、自定义属性点、装备与快捷能力槽恢复。
+    /// </summary>
     public partial class CharacterActor : CharacterBase
     {
-        [Header("Audio")]
+        [Header("音频")]
+        [InspectorName("升级音效")]
+        [Tooltip("非静默升级时播放的音频配置。")]
         [SerializeField] private AudioClipResolver m_levelUpSound;
 
-        [Header("Presentation")]
+        [Header("表现")]
+        [InspectorName("动画驱动组件")]
+        [Tooltip("正式统一角色 Prefab 上的动画驱动。为空时回退到旧动画策略。")]
         [SerializeField] private MonoBehaviour m_animationDriverBehaviour;
 
         public int experience => m_experience;
@@ -80,15 +104,15 @@ namespace FantasyWord.GameCore
                 if (m_animationDriverBehaviour is ICharacterAnimationDriver animationDriver)
                 {
                     animationDriver.ClearAnimationLock();
-                    if (animationDriver.TryPlayAnimation("Idle"))
+                    if (animationDriver.TryPlayDefaultAnimation())
                     {
                         return;
                     }
                 }
 
                 Debug.LogError(
-                    $"角色“{name}”复活时无法通过正式动画驱动播放 Idle。"
-                    + "请检查统一角色 Prefab 的动画驱动引用和 Idle 动作配置。",
+                    $"角色“{name}”复活时无法通过正式动画驱动播放默认动作。"
+                    + "请检查统一角色 Prefab 的动画驱动引用和默认动作配置。",
                     this);
                 return;
             }
@@ -192,10 +216,7 @@ namespace FantasyWord.GameCore
                 m_animationStrategy?.Pause();
             }
 
-            if (GameManager.Exists() && GameManager.TryGetSystem<PlayerSystem>(out PlayerSystem playerSystem))
-            {
-                playerSystem.NotifyCharacterKilled(this);
-            }
+            GameManager.PlayerSystem.NotifyCharacterKilled(this);
         }
 
         protected override bool TryPlayHitAnimation()
@@ -206,14 +227,14 @@ namespace FantasyWord.GameCore
             }
 
             if (m_animationDriverBehaviour is ICharacterAnimationDriver animationDriver &&
-                animationDriver.TryPlayAnimation("Dmg"))
+                animationDriver.TryPlayDamageAnimation())
             {
                 return true;
             }
 
             Debug.LogError(
-                $"角色“{name}”无法通过正式动画驱动播放 Dmg。"
-                + "请检查统一角色 Prefab 的动画驱动引用、动画数据库和 Animator 状态。",
+                $"角色“{name}”无法通过正式动画驱动播放受击动作。"
+                + "请检查统一角色 Prefab 的动画驱动引用、受击动作配置、动画数据库和 Animator 状态。",
                 this);
             return false;
         }
@@ -227,7 +248,7 @@ namespace FantasyWord.GameCore
 
             m_usesFormalDeathAnimation = true;
             if (m_animationDriverBehaviour is ICharacterAnimationDriver animationDriver &&
-                animationDriver.TryLockAnimation("SpinDie"))
+                animationDriver.TryLockDeathAnimation())
             {
                 // 死亡是终止态：立即收口玩法逻辑，同时锁住非循环死亡动作，
                 // 防止尚未结束的攻击 Cue 或普通待机同步覆盖尸体表现。
@@ -235,8 +256,8 @@ namespace FantasyWord.GameCore
             }
 
             Debug.LogError(
-                $"角色“{name}”无法通过正式动画驱动播放 SpinDie。"
-                + "请检查统一角色 Prefab 的动画驱动引用、动画数据库和 Animator 状态。",
+                $"角色“{name}”无法通过正式动画驱动播放死亡动作。"
+                + "请检查统一角色 Prefab 的动画驱动引用、死亡动作配置、动画数据库和 Animator 状态。",
                 this);
             return false;
         }

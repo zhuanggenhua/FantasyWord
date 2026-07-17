@@ -28,6 +28,9 @@ namespace FantasyWord.GameCore
         private static readonly Dictionary<int, ResourceHandle> InstanceIdMap = new();
         private static readonly SparseArray<AsyncOperationStructure> Operations = new(10, int.MaxValue);
 
+        /// <summary>
+        /// Addressables 多键加载的合并策略，映射到 Addressables.MergeMode。
+        /// </summary>
         public enum MergeMode
         {
             None = 0,
@@ -46,10 +49,17 @@ namespace FantasyWord.GameCore
         {
             AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
                 Addressables.LoadResourceLocationsAsync(key, typeof(TAsset));
-            location.WaitForCompletion();
-            if (location.Status != AsyncOperationStatus.Succeeded || location.Result.Count == 0)
+            try
             {
-                throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                location.WaitForCompletion();
+                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
+                {
+                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                }
+            }
+            finally
+            {
+                Addressables.Release(location);
             }
         }
 
@@ -57,10 +67,17 @@ namespace FantasyWord.GameCore
         {
             AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
                 Addressables.LoadResourceLocationsAsync(key, (Addressables.MergeMode)mergeMode, typeof(TAsset));
-            location.WaitForCompletion();
-            if (location.Status != AsyncOperationStatus.Succeeded || location.Result.Count == 0)
+            try
             {
-                throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                location.WaitForCompletion();
+                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
+                {
+                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                }
+            }
+            finally
+            {
+                Addressables.Release(location);
             }
         }
 
@@ -68,10 +85,17 @@ namespace FantasyWord.GameCore
         {
             AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
                 Addressables.LoadResourceLocationsAsync(key, typeof(TAsset));
-            await location.ToUniTask();
-            if (location.Status != AsyncOperationStatus.Succeeded || location.Result.Count == 0)
+            try
             {
-                throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                await location.ToUniTask();
+                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
+                {
+                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                }
+            }
+            finally
+            {
+                Addressables.Release(location);
             }
         }
 
@@ -79,10 +103,17 @@ namespace FantasyWord.GameCore
         {
             AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
                 Addressables.LoadResourceLocationsAsync(key, (Addressables.MergeMode)mergeMode, typeof(TAsset));
-            await location.ToUniTask();
-            if (location.Status != AsyncOperationStatus.Succeeded || location.Result.Count == 0)
+            try
             {
-                throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                await location.ToUniTask();
+                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
+                {
+                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
+                }
+            }
+            finally
+            {
+                Addressables.Release(location);
             }
         }
 
@@ -236,12 +267,6 @@ namespace FantasyWord.GameCore
             return handle.InternalHandle.ToUniTask();
         }
 
-        public static ResourceHandle<T> ToResourceHandle<T>(this AssetReferenceT<T> assetReferenceT)
-            where T : UObject
-        {
-            return CreateHandle<T>(assetReferenceT.LoadAssetAsync(), AssetLoadOperation);
-        }
-
         public static string GetCatalogExtension()
         {
 #if UNITY_6000_0_OR_NEWER && !ENABLE_JSON_CATALOG
@@ -357,14 +382,14 @@ namespace FantasyWord.GameCore
         {
             Debug.Log($"[ResourceSystem] Load binary content catalog {path}.");
             WarnDynamicLoadPathForBinaryCatalog(actualPath);
-            Addressables.LoadContentCatalogAsync(path, true).WaitForCompletion();
+            LoadAddressablesCatalog(path);
         }
 
         private static async Task ProcessBinaryCatalogAsync(string path, string actualPath)
         {
             Debug.Log($"[ResourceSystem] Load binary content catalog {path}.");
             WarnDynamicLoadPathForBinaryCatalog(actualPath);
-            await Addressables.LoadContentCatalogAsync(path, true).ToUniTask();
+            await LoadAddressablesCatalogAsync(path);
         }
 
         private static void WarnDynamicLoadPathForBinaryCatalog(string actualPath)
@@ -377,24 +402,73 @@ namespace FantasyWord.GameCore
         {
             string contentCatalog = File.ReadAllText(path, Encoding.UTF8);
             string modifiedCatalog = contentCatalog.Replace(DynamicLoadPath, actualPath);
-            File.WriteAllText(path, modifiedCatalog, Encoding.UTF8);
-            Debug.Log($"[ResourceSystem] Load json content catalog {path}.");
-            Addressables.LoadContentCatalogAsync(path, true).WaitForCompletion();
-            File.WriteAllText(path, contentCatalog, Encoding.UTF8);
+            try
+            {
+                File.WriteAllText(path, modifiedCatalog, Encoding.UTF8);
+                Debug.Log($"[ResourceSystem] Load json content catalog {path}.");
+                LoadAddressablesCatalog(path);
+            }
+            finally
+            {
+                File.WriteAllText(path, contentCatalog, Encoding.UTF8);
+            }
         }
 
         private static async Task ProcessJsonCatalogAsync(string path, string actualPath)
         {
             string contentCatalog = await File.ReadAllTextAsync(path, Encoding.UTF8);
             string modifiedCatalog = contentCatalog.Replace(DynamicLoadPath, actualPath);
-            await File.WriteAllTextAsync(path, modifiedCatalog, Encoding.UTF8);
-            Debug.Log($"[ResourceSystem] Load json content catalog {path}.");
-            await Addressables.LoadContentCatalogAsync(path, true).ToUniTask();
-            await File.WriteAllTextAsync(path, contentCatalog, Encoding.UTF8);
+            try
+            {
+                await File.WriteAllTextAsync(path, modifiedCatalog, Encoding.UTF8);
+                Debug.Log($"[ResourceSystem] Load json content catalog {path}.");
+                await LoadAddressablesCatalogAsync(path);
+            }
+            finally
+            {
+                await File.WriteAllTextAsync(path, contentCatalog, Encoding.UTF8);
+            }
         }
 #endif
+
+        private static void LoadAddressablesCatalog(string path)
+        {
+            AsyncOperationHandle handle = Addressables.LoadContentCatalogAsync(path, false);
+            try
+            {
+                handle.WaitForCompletion();
+                if (handle.Status != AsyncOperationStatus.Succeeded)
+                {
+                    throw new InvalidResourceRequestException(path, $"Addressables catalog load failed: {path}.");
+                }
+            }
+            finally
+            {
+                Addressables.Release(handle);
+            }
+        }
+
+        private static async UniTask LoadAddressablesCatalogAsync(string path)
+        {
+            AsyncOperationHandle handle = Addressables.LoadContentCatalogAsync(path, false);
+            try
+            {
+                await handle.ToUniTask();
+                if (handle.Status != AsyncOperationStatus.Succeeded)
+                {
+                    throw new InvalidResourceRequestException(path, $"Addressables catalog load failed: {path}.");
+                }
+            }
+            finally
+            {
+                Addressables.Release(handle);
+            }
+        }
     }
 
+    /// <summary>
+    /// 资源地址无效时抛出的异常，保留原始地址便于定位配置问题。
+    /// </summary>
     public class InvalidResourceRequestException : Exception
     {
         public string InvalidAddress { get; }

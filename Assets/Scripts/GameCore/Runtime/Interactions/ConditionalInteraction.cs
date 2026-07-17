@@ -15,6 +15,12 @@ namespace FantasyWord.GameCore
         {
             if (m_condition?.Evaluate() ?? true)
             {
+                if (m_interaction == null)
+                {
+                    Debug.LogError($"[{nameof(ConditionalInteraction)}] 条件满足，但没有配置要执行的交互。");
+                    return Task.FromResult(false);
+                }
+
                 return m_interaction.TryExecute(source, target);
             }
 

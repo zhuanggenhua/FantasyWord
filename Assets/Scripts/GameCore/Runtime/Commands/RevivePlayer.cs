@@ -13,9 +13,10 @@ namespace FantasyWord.GameCore
 
         public Task Execute(GameCommandContext context)
         {
-            CharacterBase target = context.ResolveActorOrCurrentControlledCharacter();
+            CharacterBase target =
+                context.ResolveRequiredActorOrCurrentControlledCharacter(nameof(RevivePlayer));
 
-            target?.Revive();
+            target.Revive();
             return Task.CompletedTask;
         }
     }
