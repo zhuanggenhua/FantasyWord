@@ -15,6 +15,7 @@ namespace FantasyWord.GameCore.Tests
         private const string CharacterBasePrefabPath = "Assets/Prefabs/Entities/Characters/0_Character_Base.prefab";
         private const string TransitGroupId = "transit";
         private const string PredictiveTargetGroupId = "predictive-target";
+        private const string CombatWanderGroupId = "combat-wander";
         private const string OrbitGroupId = "orbit";
 
         [Test]
@@ -71,7 +72,7 @@ namespace FantasyWord.GameCore.Tests
 
             Assert.That(profile, Is.Not.Null);
             Assert.DoesNotThrow(profile.ValidateOrThrow);
-            Assert.That(profile.BehaviourGroups, Has.Count.EqualTo(4));
+            Assert.That(profile.BehaviourGroups, Has.Count.EqualTo(5));
             SteeringBehaviourGroup2D group = profile.GetBehaviourGroup(ContextSteeringProfile2D.DefaultGroupId);
             Assert.That(group.Behaviours, Has.Count.EqualTo(5));
             Assert.That(group.Behaviours[0], Is.TypeOf<SeekSteeringBehaviour2D>());
@@ -95,6 +96,12 @@ namespace FantasyWord.GameCore.Tests
             Assert.That(pursuit.Behaviours[2], Is.TypeOf<ObstacleAvoidanceSteeringBehaviour2D>());
             Assert.That(pursuit.Behaviours[3], Is.TypeOf<SeparationSteeringBehaviour2D>());
             Assert.That(pursuit.Behaviours[4], Is.TypeOf<SideStepSteeringBehaviour2D>());
+
+            SteeringBehaviourGroup2D combatWander = profile.GetBehaviourGroup(CombatWanderGroupId);
+            Assert.That(combatWander.Behaviours, Has.Count.EqualTo(3));
+            Assert.That(combatWander.Behaviours[0], Is.TypeOf<ObstacleAvoidanceSteeringBehaviour2D>());
+            Assert.That(combatWander.Behaviours[1], Is.TypeOf<CombatWanderSteeringBehaviour2D>());
+            Assert.That(combatWander.Behaviours[2], Is.TypeOf<SeparationSteeringBehaviour2D>());
 
             SteeringBehaviourGroup2D orbit = profile.GetBehaviourGroup(OrbitGroupId);
             Assert.That(orbit.Behaviours, Has.Count.EqualTo(4));
@@ -141,6 +148,136 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
+        public void AIController_CombatWanderSwitchHonoursExplicitDisabledValue()
+        {
+            AIController controller = new();
+            Type type = typeof(AIController);
+            FieldInfo useWanderField = type.GetField(
+                "m_useCombatWander",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            PropertyInfo resolvedProperty = type.GetProperty(
+                "ShouldUseCombatWander",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.That(useWanderField, Is.Not.Null);
+            Assert.That(resolvedProperty, Is.Not.Null);
+
+            useWanderField.SetValue(controller, false);
+            Assert.That((bool)resolvedProperty.GetValue(controller), Is.False);
+
+            useWanderField.SetValue(controller, true);
+            Assert.That((bool)resolvedProperty.GetValue(controller), Is.True);
+        }
+
+        [Test]
+        public void AIController_FacingModesAreExplicitStateChoices()
+        {
+            AIController controller = new();
+            Type type = typeof(AIController);
+            FieldInfo pursuitFacingField = type.GetField(
+                "m_targetPursuitFacingMode",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo wanderFacingField = type.GetField(
+                "m_combatWanderFacingMode",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            PropertyInfo pursuitFacingProperty = type.GetProperty(
+                "TargetPursuitFacingMode",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            PropertyInfo wanderFacingProperty = type.GetProperty(
+                "CombatWanderFacingMode",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.That(pursuitFacingField, Is.Not.Null);
+            Assert.That(wanderFacingField, Is.Not.Null);
+            Assert.That(pursuitFacingProperty, Is.Not.Null);
+            Assert.That(wanderFacingProperty, Is.Not.Null);
+            Assert.That(
+                Enum.GetNames(pursuitFacingField.FieldType),
+                Is.EquivalentTo(new[] { "KeepCurrent", "FaceTarget", "FaceMovement" }));
+            Assert.That(pursuitFacingProperty.GetValue(controller).ToString(), Is.EqualTo("FaceTarget"));
+            Assert.That(wanderFacingProperty.GetValue(controller).ToString(), Is.EqualTo("KeepCurrent"));
+        }
+
+        [Test]
+        public void AIController_AttackFacingGateUsesReferenceDefault()
+        {
+            AIController controller = new();
+            Type type = typeof(AIController);
+            FieldInfo requireFacingField = type.GetField(
+                "m_requireTargetFacingBeforeAttack",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            FieldInfo completionAngleField = type.GetField(
+                "m_attackFacingCompletionAngleDegrees",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            PropertyInfo requireFacingProperty = type.GetProperty(
+                "ShouldRequireTargetFacingBeforeAttack",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            PropertyInfo completionAngleProperty = type.GetProperty(
+                "AttackFacingCompletionAngleDegrees",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.That(requireFacingField, Is.Not.Null);
+            Assert.That(completionAngleField, Is.Not.Null);
+            Assert.That(requireFacingProperty, Is.Not.Null);
+            Assert.That(completionAngleProperty, Is.Not.Null);
+            Assert.That((bool)requireFacingProperty.GetValue(controller), Is.True);
+            Assert.That((float)completionAngleProperty.GetValue(controller), Is.EqualTo(5.0f));
+
+            requireFacingField.SetValue(controller, false);
+            completionAngleField.SetValue(controller, 7.5f);
+
+            Assert.That((bool)requireFacingProperty.GetValue(controller), Is.False);
+            Assert.That((float)completionAngleProperty.GetValue(controller), Is.EqualTo(7.5f));
+        }
+
+        [Test]
+        public void AIController_AttackFacingAlignmentMatchesDuolafashiFiveDegreeRule()
+        {
+            Assert.That(
+                AIController.IsAttackFacingAligned(Vector2.right, DirectionFromDegrees(4.0f), 5.0f),
+                Is.True);
+            Assert.That(
+                AIController.IsAttackFacingAligned(Vector2.right, DirectionFromDegrees(6.0f), 5.0f),
+                Is.False);
+            Assert.That(
+                AIController.IsAttackFacingAligned(Vector2.zero, Vector2.right, 5.0f),
+                Is.False);
+            Assert.That(
+                AIController.IsAttackFacingAligned(Vector2.right, Vector2.zero, 5.0f),
+                Is.False);
+        }
+
+        [Test]
+        public void AIController_AttackFacingWaitOverridesMovementFacingChoice()
+        {
+            AIController controller = new();
+            Type runtimeType = typeof(AIController).GetNestedType(
+                "BehaviourRuntime",
+                BindingFlags.NonPublic);
+            Assert.That(runtimeType, Is.Not.Null);
+
+            object runtime = Activator.CreateInstance(
+                runtimeType,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                binder: null,
+                args: new object[] { controller },
+                culture: null);
+            FieldInfo waitingField = runtimeType.GetField(
+                "m_waitingForAttackFacing",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo resolveFacingMode = runtimeType.GetMethod(
+                "ResolveActiveFacingMode",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+            Assert.That(waitingField, Is.Not.Null);
+            Assert.That(resolveFacingMode, Is.Not.Null);
+
+            waitingField.SetValue(runtime, true);
+
+            Assert.That(resolveFacingMode.Invoke(runtime, null).ToString(), Is.EqualTo("FaceTarget"));
+        }
+
+        [Test]
         public void PathCursor_UsesIntermediateWaypointBeforeFinalTarget()
         {
             CharacterSteeringPathCursor2D cursor = new();
@@ -167,6 +304,12 @@ namespace FantasyWord.GameCore.Tests
             Assert.IsTrue(cursor.HasDestinationMoved(new Vector2(1.5f, 0.0f), 0.5f));
             cursor.Clear();
             Assert.IsTrue(cursor.HasDestinationMoved(Vector2.right, 0.5f));
+        }
+
+        private static Vector2 DirectionFromDegrees(float degrees)
+        {
+            float radians = degrees * Mathf.Deg2Rad;
+            return new Vector2(Mathf.Cos(radians), Mathf.Sin(radians));
         }
 
         [Test]
@@ -252,6 +395,165 @@ namespace FantasyWord.GameCore.Tests
             Assert.That(result.PreferredVelocity.sqrMagnitude, Is.GreaterThan(0.0f));
             Assert.That(result.DesiredDirection.y, Is.GreaterThan(0.2f));
             Assert.That(solver.Context.Contributions[0].StableId, Is.EqualTo("orbit"));
+        }
+
+        [Test]
+        public void CombatWander_UsesRequestedSideAndFollowDistance()
+        {
+            ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
+            ContextSteeringSolver2D solver = new(profile.SampleCount);
+            SteeringDetectionFrame2D frame = new();
+            frame.Reset(
+                solver.DirectionSet,
+                1,
+                Vector2.zero,
+                Vector2.right,
+                Vector2.zero,
+                profile,
+                new Vector2(2.0f, 0.0f),
+                Vector2.zero,
+                wanderIntent: new SteeringWanderIntent2D(1.0f, 1.0f));
+
+            SteeringResult2D result = solver.Solve(frame, profile, CombatWanderGroupId);
+
+            Assert.That(result.DesiredDirection.x, Is.GreaterThan(0.2f));
+            Assert.That(result.DesiredDirection.y, Is.LessThan(-0.2f));
+            Assert.That(solver.Context.Contributions[1].StableId, Is.EqualTo("combat-wander"));
+        }
+
+        [Test]
+        public void CombatWander_DoesNotRetreatInsideFollowDistance()
+        {
+            ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
+            ContextSteeringSolver2D solver = new(profile.SampleCount);
+            SteeringDetectionFrame2D frame = new();
+            frame.Reset(
+                solver.DirectionSet,
+                1,
+                Vector2.zero,
+                Vector2.right,
+                Vector2.zero,
+                profile,
+                new Vector2(0.5f, 0.0f),
+                Vector2.zero,
+                wanderIntent: new SteeringWanderIntent2D(-1.0f, 1.0f));
+
+            SteeringResult2D result = solver.Solve(frame, profile, CombatWanderGroupId);
+
+            Assert.That(Mathf.Abs(result.DesiredDirection.x), Is.LessThan(0.05f));
+            Assert.That(result.DesiredDirection.y, Is.GreaterThan(0.9f));
+        }
+
+        [Test]
+        public void CombatWander_ChangesSideWhenRequestedSideFacesObstacleDanger()
+        {
+            ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
+            ContextSteeringSolver2D solver = new(profile.SampleCount);
+            SteeringDetectionFrame2D frame = new();
+            frame.Reset(
+                solver.DirectionSet,
+                1,
+                Vector2.zero,
+                Vector2.right,
+                Vector2.zero,
+                profile,
+                new Vector2(0.5f, 0.0f),
+                Vector2.zero,
+                wanderIntent: new SteeringWanderIntent2D(1.0f, 1.0f));
+            frame.AddObstacle(new SteeringObstacle2D(new Vector2(0.0f, -0.1f)));
+            frame.AddObstacle(new SteeringObstacle2D(new Vector2(0.0f, -0.15f)));
+
+            SteeringResult2D result = solver.Solve(frame, profile, CombatWanderGroupId);
+
+            Assert.That(result.DesiredDirection.y, Is.GreaterThan(0.2f));
+        }
+
+        [Test]
+        public void CombatWander_IncludesNeighbourSeparationFromReferenceAroundBehaviour()
+        {
+            ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
+            ContextSteeringSolver2D solver = new(profile.SampleCount);
+            SteeringDetectionFrame2D frame = new();
+            frame.Reset(
+                solver.DirectionSet,
+                1,
+                Vector2.zero,
+                Vector2.right,
+                Vector2.zero,
+                profile,
+                new Vector2(0.5f, 0.0f),
+                Vector2.zero,
+                wanderIntent: new SteeringWanderIntent2D(1.0f, 1.0f));
+            frame.AddNeighbour(new SteeringBody2D(2, new Vector2(0.0f, -0.1f), profile.AgentRadius));
+
+            solver.Solve(frame, profile, CombatWanderGroupId);
+
+            Assert.That(solver.Context.Contributions[2].StableId, Is.EqualTo("separation"));
+            ReadOnlySpan<float> separationInterest = solver.Context.Contributions[2].Interest;
+            bool hasUpwardSeparation = false;
+            for (int i = 0; i < solver.DirectionSet.Count; i++)
+            {
+                if (solver.DirectionSet[i].y > 0.7f && separationInterest[i] > 0.0f)
+                {
+                    hasUpwardSeparation = true;
+                    break;
+                }
+            }
+
+            Assert.That(hasUpwardSeparation, Is.True);
+        }
+
+        [Test]
+        public void CombatWander_UsesReferenceRangeCondition()
+        {
+            Assert.That(CombatWanderRuntime2D.ShouldUse(true, true, 2.0f, 3.0f), Is.True);
+            Assert.That(CombatWanderRuntime2D.ShouldUse(false, true, 2.0f, 3.0f), Is.False);
+            Assert.That(CombatWanderRuntime2D.ShouldUse(true, false, 2.0f, 3.0f), Is.False);
+            Assert.That(CombatWanderRuntime2D.ShouldUse(true, true, 4.0f, 3.0f), Is.False);
+        }
+
+        [Test]
+        public void CombatWander_KeepsRandomChoiceInsideReferenceWindow()
+        {
+            UnityEngine.Random.State previousState = UnityEngine.Random.state;
+            try
+            {
+                UnityEngine.Random.InitState(117);
+                CombatWanderRuntime2D runtime = new();
+
+                SteeringWanderIntent2D first = runtime.Tick(0.0f, 1.0f, 3.0f);
+                SteeringWanderIntent2D second = runtime.Tick(1.0f, 1.0f, 3.0f);
+
+                Assert.That(second.SideSign, Is.EqualTo(first.SideSign));
+                Assert.That(second.FollowDistance, Is.EqualTo(first.FollowDistance));
+                Assert.That(first.FollowDistance, Is.InRange(1.0f, 3.0f));
+            }
+            finally
+            {
+                UnityEngine.Random.state = previousState;
+            }
+        }
+
+        [Test]
+        public void CombatWander_ZeroSpeedDoesNotFallBackToProfileSpeed()
+        {
+            ContextSteeringProfile2D profile = AssetDatabase.LoadAssetAtPath<ContextSteeringProfile2D>(DefaultProfilePath);
+            ContextSteeringSolver2D solver = new(profile.SampleCount);
+            SteeringDetectionFrame2D frame = new();
+            frame.Reset(
+                solver.DirectionSet,
+                1,
+                Vector2.zero,
+                Vector2.right,
+                Vector2.zero,
+                profile,
+                Vector2.right,
+                Vector2.zero,
+                wanderIntent: new SteeringWanderIntent2D(1.0f, 1.0f));
+
+            SteeringResult2D result = solver.Solve(frame, profile, CombatWanderGroupId, 0.0f);
+
+            Assert.That(result.PreferredVelocity, Is.EqualTo(Vector2.zero));
         }
 
         [Test]

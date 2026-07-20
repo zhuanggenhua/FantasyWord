@@ -9,8 +9,8 @@ using UnityEngine;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// Mod 内容包运行时 API，迁自 Chris.ModAPI。
-    /// 它只负责发现、校验、启停状态和外部 Addressables catalog 加载，不直接接管 GameCore 玩法系统。
+    /// Mod 内容包运行时 API。
+    /// 它只负责发现、校验、启停状态和独立 YooAsset 包加载，不直接接管 GameCore 玩法系统。
     /// </summary>
     public static class ModAPI
     {
@@ -72,6 +72,17 @@ namespace FantasyWord.GameCore
                 Initialized = true;
                 NotifyRefreshed();
             }
+        }
+
+        /// <summary>
+        /// 清理本次运行的 Mod 清单状态。资源包生命周期由 ResourceSystem 统一回收。
+        /// </summary>
+        public static void Shutdown()
+        {
+            ModInfos.Clear();
+            s_config = null;
+            s_refreshed = null;
+            Initialized = false;
         }
 
         public static void DeleteMod(ModInfo modInfo)

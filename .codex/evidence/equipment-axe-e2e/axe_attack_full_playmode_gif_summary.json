@@ -1,0 +1,51 @@
+{
+  "gif": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\axe_attack_full_playmode.gif",
+  "contact_sheet": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\axe_attack_full_playmode_contact_sheet.png",
+  "frames": [
+    "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\gif_frames_full_readpixels_20260718_141510\\axe_attack_full_00.png",
+    "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\gif_frames_full_readpixels_20260718_141510\\axe_attack_full_01.png",
+    "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\gif_frames_full_readpixels_20260718_141510\\axe_attack_full_02.png",
+    "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\gif_frames_full_readpixels_20260718_141510\\axe_attack_full_03.png",
+    "C:\\Gamedev\\Unity\\Project\\FantasyWord\\.codex\\evidence\\equipment-axe-e2e\\gif_frames_full_readpixels_20260718_141510\\axe_attack_full_04.png"
+  ],
+  "size": [
+    1920,
+    1080
+  ],
+  "diffs": [
+    {
+      "bbox": [
+        900,
+        464,
+        1120,
+        588
+      ],
+      "diff_pixels": 15254
+    },
+    {
+      "bbox": [
+        912,
+        464,
+        1120,
+        624
+      ],
+      "diff_pixels": 17909
+    },
+    {
+      "bbox": [
+        912,
+        516,
+        1108,
+        624
+      ],
+      "diff_pixels": 5357
+    },
+    {
+      "bbox": null,
+      "diff_pixels": 0
+    }
+  ],
+  "source": "PlayMode GameView ReadPixels full frame, camera orthographic size 5.5",
+  "gif_frame_count": 4,
+  "gif_size_bytes": 259903
+}

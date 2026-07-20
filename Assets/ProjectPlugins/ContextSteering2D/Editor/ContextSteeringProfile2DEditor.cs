@@ -194,6 +194,7 @@ namespace ContextSteering2D.Editor
             AddMenuItem<AlignmentSteeringBehaviour2D>(menu, behaviours, "Alignment");
             AddMenuItem<CohesionSteeringBehaviour2D>(menu, behaviours, "Cohesion");
             AddMenuItem<OrbitSteeringBehaviour2D>(menu, behaviours, "Orbit");
+            AddMenuItem<CombatWanderSteeringBehaviour2D>(menu, behaviours, "Combat Wander");
             menu.ShowAsContext();
         }
 

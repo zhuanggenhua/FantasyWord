@@ -45,6 +45,7 @@ metadata:
 
 - Mod 是内容层，不是网络层。
 - Mod 通过稳定 ID、数据表、资源键、数据库条目和正式规则扩展点进入游戏。
+- Mod 动态资源必须使用独立 YooAsset `ResourcePackage`，`packageName` 唯一，覆盖顺序由 `loadOrder` 决定；包加载成功不等于数据合同或脚本安全已经完成。
 - 联机房间必须以房主 Mod 清单为准，至少比对 `modId`、`version`、`contentHash` 和 `loadOrder`。
 - 访客缺失或版本不一致时，不允许进入依赖该 Mod 的房主世界或牌局。
 - 联机同步稳定 ID 和裁决结果，不同步 Mod 文件本体。

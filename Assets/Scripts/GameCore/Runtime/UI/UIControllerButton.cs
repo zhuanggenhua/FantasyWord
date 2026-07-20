@@ -15,6 +15,7 @@ namespace FantasyWord.GameCore
         private Func<bool> m_isPressed = null;
         private UIControllerButtonManager m_manager = null;
         private bool m_registered = false;
+        private bool m_promptVisible = true;
 
         public UIControllerButtonManager.EAction action => m_action;
 
@@ -40,13 +41,7 @@ namespace FantasyWord.GameCore
 
         private void Update()
         {
-            if (m_sprites != null)
-            {
-                Sprite sprite = m_sprites[GetCurrentButtonState()];
-
-                if (m_image) m_image.sprite = sprite;
-                if (m_spriteRenderer) m_spriteRenderer.sprite = sprite;
-            }
+            RefreshSprite();
         }
 
         private UIControllerButtonManager.EButtonState GetCurrentButtonState()
@@ -66,6 +61,18 @@ namespace FantasyWord.GameCore
         {
             m_sprites = sprites;
             m_isPressed = isPressed;
+            RefreshSprite();
+        }
+
+        public void SetPromptVisible(bool visible)
+        {
+            if (m_promptVisible == visible)
+            {
+                return;
+            }
+
+            m_promptVisible = visible;
+            RefreshSprite();
         }
 
         public void SetAction(UIControllerButtonManager.EAction action)
@@ -113,6 +120,27 @@ namespace FantasyWord.GameCore
 
             // 控制器提示按钮只在当前正式 UI 根内解析管理器，避免再依赖全局静态单例。
             return canvasRoot.GetComponentInChildren<UIControllerButtonManager>(true);
+        }
+
+        private void RefreshSprite()
+        {
+            Sprite sprite = null;
+            if (m_promptVisible && m_sprites != null)
+            {
+                m_sprites.TryGetValue(GetCurrentButtonState(), out sprite);
+            }
+
+            if (m_image)
+            {
+                m_image.sprite = sprite;
+                m_image.enabled = sprite != null;
+            }
+
+            if (m_spriteRenderer)
+            {
+                m_spriteRenderer.sprite = sprite;
+                m_spriteRenderer.enabled = sprite != null;
+            }
         }
     }
 }

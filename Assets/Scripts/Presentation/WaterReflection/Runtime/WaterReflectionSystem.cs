@@ -16,6 +16,7 @@ namespace FantasyWord.Presentation
         private static readonly int ReflectionViewProjectionId =
             Shader.PropertyToID("_WaterReflectionViewProjection");
         private static readonly int WaterMaskTextureId = Shader.PropertyToID("_WaterMaskTex");
+        private const int ReflectionTextureDepthBits = 24;
 
         [Header("共享捕获")]
         [Tooltip("只渲染 WaterReflectionProxy 层的正交相机。必须使用不包含 xBRZ 的独立 Renderer2D。")]
@@ -24,9 +25,6 @@ namespace FantasyWord.Presentation
         [Tooltip("共享捕获相机在 UniversalRP Renderer List 中的索引。")]
         [Min(0)]
         [SerializeField] private int m_captureRendererIndex = 1;
-
-        [Tooltip("普通 Sprite 反射代理使用的材质。换装角色主体继续复用 EquipmentUV 材质。")]
-        [SerializeField] private Material m_defaultProxyMaterial;
 
         [Tooltip("反射代理专用 Unity Layer 名称。主相机必须排除该层。")]
         [SerializeField] private string m_proxyLayerName = "WaterReflectionProxy";
@@ -54,11 +52,11 @@ namespace FantasyWord.Presentation
         private readonly HashSet<WaterReflectionCaster2D> m_casters = new();
         private readonly Plane[] m_frustumPlanes = new Plane[6];
         private MaterialPropertyBlock m_waterPropertyBlock;
+        private Texture2D m_emptyReflectionTexture;
         private RenderTexture m_reflectionTexture;
         private int m_proxyLayer = -1;
         private bool m_ready;
 
-        public Material DefaultProxyMaterial => m_defaultProxyMaterial;
         public int ProxyLayer => m_proxyLayer;
         public Texture ReflectionTexture => m_reflectionTexture;
 
@@ -96,6 +94,7 @@ namespace FantasyWord.Presentation
         private void OnDestroy()
         {
             ReleaseReflectionTexture();
+            ReleaseEmptyReflectionTexture();
         }
 
         private void LateUpdate()
@@ -164,12 +163,6 @@ namespace FantasyWord.Presentation
             if (m_captureCamera == null)
             {
                 Debug.LogError("水面倒影系统缺少共享捕获相机，无法生成动态倒影。", this);
-                valid = false;
-            }
-
-            if (m_defaultProxyMaterial == null)
-            {
-                Debug.LogError("水面倒影系统缺少默认反射代理材质，普通 Sprite 无法生成倒影。", this);
                 valid = false;
             }
 
@@ -315,7 +308,11 @@ namespace FantasyWord.Presentation
             }
 
             ReleaseReflectionTexture();
-            m_reflectionTexture = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32)
+            m_reflectionTexture = new RenderTexture(
+                width,
+                height,
+                ReflectionTextureDepthBits,
+                RenderTextureFormat.ARGB32)
             {
                 name = "WaterReflectionSharedRT",
                 filterMode = FilterMode.Point,
@@ -331,7 +328,8 @@ namespace FantasyWord.Presentation
 
         private void ReleaseReflectionTexture()
         {
-            SetWaterReflectionTexture(Texture2D.blackTexture);
+            Texture emptyTexture = GetEmptyReflectionTexture();
+            SetWaterReflectionTexture(emptyTexture);
             if (m_captureCamera != null)
             {
                 m_captureCamera.targetTexture = null;
@@ -345,7 +343,7 @@ namespace FantasyWord.Presentation
             m_reflectionTexture.Release();
             Destroy(m_reflectionTexture);
             m_reflectionTexture = null;
-            Shader.SetGlobalTexture(ReflectionTextureId, Texture2D.blackTexture);
+            Shader.SetGlobalTexture(ReflectionTextureId, emptyTexture);
         }
 
         private void SetCaptureEnabled(bool enabledValue)
@@ -357,11 +355,46 @@ namespace FantasyWord.Presentation
 
             Texture reflectionTexture = enabledValue && m_reflectionTexture != null
                 ? m_reflectionTexture
-                : Texture2D.blackTexture;
+                : GetEmptyReflectionTexture();
             SetWaterReflectionTexture(reflectionTexture);
             Shader.SetGlobalTexture(
                 ReflectionTextureId,
                 reflectionTexture);
+        }
+
+        private Texture2D GetEmptyReflectionTexture()
+        {
+            if (m_emptyReflectionTexture != null)
+            {
+                return m_emptyReflectionTexture;
+            }
+
+            m_emptyReflectionTexture = new Texture2D(
+                1,
+                1,
+                TextureFormat.RGBA32,
+                false,
+                true)
+            {
+                name = "WaterReflectionEmptyTexture",
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            m_emptyReflectionTexture.SetPixel(0, 0, Color.clear);
+            m_emptyReflectionTexture.Apply(false, true);
+            return m_emptyReflectionTexture;
+        }
+
+        private void ReleaseEmptyReflectionTexture()
+        {
+            if (m_emptyReflectionTexture == null)
+            {
+                return;
+            }
+
+            Destroy(m_emptyReflectionTexture);
+            m_emptyReflectionTexture = null;
         }
 
         private void SetWaterReflectionTexture(Texture texture)

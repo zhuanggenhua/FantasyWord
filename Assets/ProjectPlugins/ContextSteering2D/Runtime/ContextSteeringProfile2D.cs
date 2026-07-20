@@ -83,6 +83,21 @@ namespace ContextSteering2D
             };
         }
 
+        internal static SteeringBehaviourGroup2D CreateCombatWanderGroup()
+        {
+            return new SteeringBehaviourGroup2D
+            {
+                m_stableId = "combat-wander",
+                m_displayName = "Combat Wander",
+                m_behaviours = new List<SteeringBehaviour2D>
+                {
+                    new ObstacleAvoidanceSteeringBehaviour2D(),
+                    new CombatWanderSteeringBehaviour2D(),
+                    new SeparationSteeringBehaviour2D(),
+                }
+            };
+        }
+
         internal void Validate(string profileName)
         {
             if (string.IsNullOrWhiteSpace(m_stableId))
@@ -146,6 +161,7 @@ namespace ContextSteering2D
             new SteeringBehaviourGroup2D(),
             SteeringBehaviourGroup2D.CreateTransitGroup(),
             SteeringBehaviourGroup2D.CreatePredictiveTargetGroup(),
+            SteeringBehaviourGroup2D.CreateCombatWanderGroup(),
             SteeringBehaviourGroup2D.CreateOrbitGroup(),
         };
 

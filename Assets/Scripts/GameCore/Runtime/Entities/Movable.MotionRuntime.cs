@@ -23,6 +23,7 @@ namespace FantasyWord.GameCore
             private Vector2 m_lastSuccessfulMovement = Vector2.zero;
             private float m_steeringSpeedScale = 1.0f;
             private Vector2 m_steeringCorrection = Vector2.zero;
+            private bool m_movementIntentUpdatesFacing = true;
             private MoveOrder? m_moveOrder = null;
             private PushOrder? m_pushOrder = null;
 
@@ -89,6 +90,7 @@ namespace FantasyWord.GameCore
             public void ResetMovement()
             {
                 m_owner.m_movementDirection = Vector2.zero;
+                m_movementIntentUpdatesFacing = true;
                 m_smoothedMovementInput = Vector2.zero;
                 m_accelerationAmount = 0.0f;
 
@@ -102,6 +104,8 @@ namespace FantasyWord.GameCore
                 {
                     m_owner.m_rigidbody.linearVelocity = Vector2.zero;
                 }
+
+                m_owner.UpdateMovementAnimation(Vector2.zero);
             }
 
             public bool HasMoveOrder()
@@ -138,7 +142,7 @@ namespace FantasyWord.GameCore
                 m_owner.OnStuckInAWall();
             }
 
-            public void SetMovementDirection(Vector2 direction)
+            public void SetMovementDirection(Vector2 direction, bool updateFacingFromIntent)
             {
                 // 吸收 uMMORPG PlayerNavMeshMovement.MoveWASD() 的优先级规则：
                 // 一旦开始直接方向驱动，就立刻取消现有导航/MoveOrder，避免继续沿旧路径滑行。
@@ -148,6 +152,11 @@ namespace FantasyWord.GameCore
                 }
 
                 m_owner.m_movementDirection = direction;
+                m_movementIntentUpdatesFacing = updateFacingFromIntent;
+                if (updateFacingFromIntent)
+                {
+                    UpdateFacingFromMovementIntent(direction);
+                }
             }
 
             public void SetSteeringMotion(float speedScale, Vector2 correctionDisplacement)
@@ -166,7 +175,12 @@ namespace FantasyWord.GameCore
                     }
                     else
                     {
-                        MoveInDirection(m_owner.m_movementDirection, m_owner.CalculateMoveSpeed(), false, true);
+                        MoveInDirection(
+                            m_owner.m_movementDirection,
+                            m_owner.CalculateMoveSpeed(),
+                            false,
+                            true,
+                            m_movementIntentUpdatesFacing);
                     }
                 }
                 finally
@@ -358,7 +372,7 @@ namespace FantasyWord.GameCore
 
                 Vector2 direction = targetDelta.normalized;
                 float speed = m_moveOrder.Value.speedOverride ?? m_owner.CalculateMoveSpeed();
-                if (!MoveInDirection(direction, speed, false, false))
+                if (!MoveInDirection(direction, speed, false, false, true))
                 {
                     CompleteMoveOrder(false);
                     return;
@@ -419,15 +433,25 @@ namespace FantasyWord.GameCore
                 TaskCompletionSource<bool> task = m_moveOrder.Value.task;
                 m_moveOrder = null;
                 task?.TrySetResult(success);
-                m_owner.m_animationStrategy?.SetMovement(Vector2.zero);
+                m_owner.UpdateMovementAnimation(Vector2.zero);
             }
 
-            private bool MoveInDirection(Vector2 direction, float moveSpeed, bool force = false, bool applyInputHandling = false)
+            private bool MoveInDirection(
+                Vector2 direction,
+                float moveSpeed,
+                bool force = false,
+                bool applyInputHandling = false,
+                bool updateFacingFromIntent = false)
             {
                 BeginMove();
 
-                Vector2 resolvedDirection = applyInputHandling ? ResolveMovementInput(direction) : direction.normalized;
                 bool canApplyMovement = force || m_owner.CanMove();
+                if (canApplyMovement && updateFacingFromIntent)
+                {
+                    UpdateFacingFromMovementIntent(direction);
+                }
+
+                Vector2 resolvedDirection = applyInputHandling ? ResolveMovementInput(direction) : direction.normalized;
 
                 if (canApplyMovement && moveSpeed > 0.0f && (resolvedDirection.sqrMagnitude > 0.0f || m_steeringCorrection.sqrMagnitude > 0.0f))
                 {
@@ -448,18 +472,10 @@ namespace FantasyWord.GameCore
                             TryMove(new Vector2(0.0f, resolvedDirection.y), resolvedSpeed);
                         }
                     }
-
-                    if (m_owner.m_lookAtDirectionUpdateStrategy == ELookAtDirectionUpdateStrategy.MovementBased)
-                    {
-                        Vector2 facingDirection = m_lastSuccessfulMovement.sqrMagnitude > 0.0001f
-                            ? m_lastSuccessfulMovement.normalized
-                            : resolvedDirection;
-                        m_owner.SetLookAtDirection(facingDirection);
-                    }
                 }
 
                 EndMove();
-                m_owner.m_animationStrategy?.SetMovement(m_lastSuccessfulMovement);
+                m_owner.UpdateMovementAnimation(m_lastSuccessfulMovement);
 
                 // MoveOrder 只应在完全走不动时失败；先撞到完整方向、再沿单轴滑动成功仍然是有效移动。
                 return !canApplyMovement ||
@@ -489,23 +505,19 @@ namespace FantasyWord.GameCore
                     return m_smoothedMovementInput;
                 }
 
-                float lerpSpeed;
                 if (targetInput == Vector2.zero)
                 {
                     m_accelerationAmount = Mathf.Lerp(m_accelerationAmount, 0.0f, m_owner.m_deceleration * Time.fixedDeltaTime);
-                    lerpSpeed = m_owner.m_deceleration;
+                    m_smoothedMovementInput = Vector2.Lerp(
+                        m_smoothedMovementInput,
+                        m_smoothedMovementInput * m_accelerationAmount,
+                        m_owner.m_deceleration * Time.fixedDeltaTime);
                 }
                 else
                 {
                     m_accelerationAmount = Mathf.Lerp(m_accelerationAmount, 1.0f, m_owner.m_acceleration * Time.fixedDeltaTime);
-                    lerpSpeed = m_owner.m_acceleration;
+                    m_smoothedMovementInput = Vector2.ClampMagnitude(targetInput, m_accelerationAmount);
                 }
-
-                Vector2 limitedInput = targetInput == Vector2.zero
-                    ? Vector2.zero
-                    : Vector2.ClampMagnitude(targetInput, m_accelerationAmount);
-
-                m_smoothedMovementInput = Vector2.Lerp(m_smoothedMovementInput, limitedInput, lerpSpeed * Time.fixedDeltaTime);
 
                 if (m_smoothedMovementInput.magnitude <= m_owner.m_idleThreshold)
                 {
@@ -513,6 +525,18 @@ namespace FantasyWord.GameCore
                 }
 
                 return m_smoothedMovementInput;
+            }
+
+            private void UpdateFacingFromMovementIntent(Vector2 direction)
+            {
+                float idleThresholdSquared = m_owner.m_idleThreshold * m_owner.m_idleThreshold;
+                if (m_owner.m_lookAtDirectionUpdateStrategy != ELookAtDirectionUpdateStrategy.MovementBased ||
+                    direction.sqrMagnitude <= idleThresholdSquared)
+                {
+                    return;
+                }
+
+                m_owner.SetLookAtDirection(direction.normalized);
             }
 
             private Vector2 ResolveTerrainMovementInput(Vector2 input)

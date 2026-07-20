@@ -694,7 +694,7 @@ $formalSceneInputHostAutomationPath = Join-Path $projectRoot "Assets/Editor/Game
 $formalSceneInputHostRepairScriptPath = Join-Path $projectRoot "scripts/Invoke-FormalSceneInputRootRepair.ps1"
 $uiPrefabPath = Join-Path $projectRoot "Assets/Prefabs/UI/User Interface.prefab"
 $characterBasePrefabPath = Join-Path $projectRoot "Assets/Prefabs/Entities/Characters/0_Character_Base.prefab"
-$uiKitDeathPrefabPath = Join-Path $projectRoot "Assets/Resources/Art/UIPrefab/UIKitDeathPanel.prefab"
+$uiKitDeathPrefabPath = Join-Path $projectRoot "Assets/GameRes/UI/Panels/UIKitDeathPanel.prefab"
 $uiManagerPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/UI/UIManager.cs"
 $uiControllerButtonPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/UI/UIControllerButton.cs"
 $uiControllerButtonManagerPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/UI/UIControllerButtonManager.cs"
@@ -874,16 +874,16 @@ $requiredFiles = @(
     "Assets/Editor/GameCore/PropertyDrawers/UIKitMenuPanelTypeReferencePropertyDrawer.cs",
     "Assets/Editor/GameCore/Bridge/FormalSceneInputRootAutomation.cs",
     "scripts/Invoke-FormalSceneInputRootRepair.ps1",
-    "Assets/Resources/Art/UIPrefab/UIGameMenu.prefab",
-    "Assets/Resources/Art/UIPrefab/UICharacter.prefab",
-    "Assets/Resources/Art/UIPrefab/UIAbilities.prefab",
-    "Assets/Resources/Art/UIPrefab/UIInventory.prefab",
-    "Assets/Resources/Art/UIPrefab/UIJournal.prefab",
-    "Assets/Resources/Art/UIPrefab/UIShop.prefab",
-    "Assets/Resources/Art/UIPrefab/UICraft.prefab",
-    "Assets/Resources/Art/UIPrefab/UISave.prefab",
-    "Assets/Resources/Art/UIPrefab/UISettings.prefab",
-    "Assets/Resources/Art/UIPrefab/UIKitDeathPanel.prefab",
+    "Assets/GameRes/UI/Panels/UIGameMenu.prefab",
+    "Assets/GameRes/UI/Panels/UICharacter.prefab",
+    "Assets/GameRes/UI/Panels/UIAbilities.prefab",
+    "Assets/GameRes/UI/Panels/UIInventory.prefab",
+    "Assets/GameRes/UI/Panels/UIJournal.prefab",
+    "Assets/GameRes/UI/Panels/UIShop.prefab",
+    "Assets/GameRes/UI/Panels/UICraft.prefab",
+    "Assets/GameRes/UI/Panels/UISave.prefab",
+    "Assets/GameRes/UI/Panels/UISettings.prefab",
+    "Assets/GameRes/UI/Panels/UIKitDeathPanel.prefab",
     "Assets/Scripts/GameCore/Runtime/UI/UIManager.cs",
     "Assets/Scripts/GameCore/Runtime/UI/UIControllerButton.cs",
     "Assets/Scripts/GameCore/Runtime/UI/UIControllerButtonManager.cs",

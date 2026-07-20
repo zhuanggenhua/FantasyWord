@@ -22,6 +22,7 @@ namespace ContextSteering2D
         public Vector2? TargetPosition { get; private set; }
         public Vector2 TargetVelocity { get; private set; }
         public float ArrivalStopRadius { get; private set; } = -1.0f;
+        public SteeringWanderIntent2D? WanderIntent { get; private set; }
         public IReadOnlyList<SteeringObstacle2D> Obstacles => m_obstacles;
         public IReadOnlyList<SteeringBody2D> Neighbours => m_neighbours;
         public IReadOnlyList<Collider2D> DetectedColliders => m_detectedColliders;
@@ -35,7 +36,8 @@ namespace ContextSteering2D
             ContextSteeringProfile2D profile,
             Vector2? targetPosition,
             Vector2 targetVelocity,
-            float arrivalStopRadius = -1.0f)
+            float arrivalStopRadius = -1.0f,
+            SteeringWanderIntent2D? wanderIntent = null)
         {
             DirectionSet = directionSet;
             AgentId = agentId;
@@ -50,6 +52,7 @@ namespace ContextSteering2D
             TargetPosition = targetPosition;
             TargetVelocity = targetVelocity;
             ArrivalStopRadius = arrivalStopRadius >= 0.0f ? arrivalStopRadius : -1.0f;
+            WanderIntent = wanderIntent;
             m_obstacles.Clear();
             m_neighbours.Clear();
             m_detectedColliders.Clear();

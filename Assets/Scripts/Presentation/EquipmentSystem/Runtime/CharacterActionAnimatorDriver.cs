@@ -18,6 +18,10 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     string defaultAnimationKey = "Idle";
 
     [SerializeField]
+    [Tooltip("角色产生真实位移时播放的移动动作键。该键必须存在于动画类型数据库和 Animator 状态中。")]
+    string movementAnimationKey = "Walk";
+
+    [SerializeField]
     [Tooltip("受击动作键。播放该动作后会按当前动作时长自动恢复默认动作。")]
     string damageAnimationKey = "Dmg";
 
@@ -41,6 +45,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     string _pendingAutoRestoreAnimationKey = string.Empty;
     string _pendingAutoRestoreFallbackKey = string.Empty;
     float _pendingAutoRestoreTime;
+    bool _isMoving;
 
     [SerializeField]
     string _debugCurrentState = "";
@@ -88,6 +93,28 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     void Update()
     {
         TryApplyPendingAutoRestore();
+    }
+
+    public void SetMovement(Vector2 movement)
+    {
+        _isMoving = movement.sqrMagnitude > 0.0001f;
+        string locomotionKey = CurrentLocomotionAnimationKey;
+
+        if (!string.IsNullOrEmpty(_pendingAutoRestoreAnimationKey))
+            _pendingAutoRestoreFallbackKey = locomotionKey;
+
+        if (!string.IsNullOrEmpty(_lockedAnimationKey))
+            return;
+
+        string currentAnimationKey = CurrentAnimationKey;
+        if (string.Equals(currentAnimationKey, locomotionKey, System.StringComparison.Ordinal))
+            return;
+
+        // 攻击、受击和工作动作拥有当前时段；这里只记录移动状态，动作结束时再恢复到正确的 Idle/Walk。
+        if (!string.IsNullOrEmpty(currentAnimationKey) && !IsLocomotionAnimation(currentAnimationKey))
+            return;
+
+        TryApplyAnimation(locomotionKey);
     }
 
     public void SetAnimation(int index)
@@ -153,7 +180,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
 
     public bool TryPlayDefaultAnimation()
     {
-        return TryPlayAnimation(DefaultAnimationKey);
+        return TryPlayAnimation(CurrentLocomotionAnimationKey);
     }
 
     public bool TryPlayDamageAnimation()
@@ -185,7 +212,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
 
     public bool TryRestoreDefaultAnimation(string expectedAnimationKey)
     {
-        return TryRestoreAnimation(expectedAnimationKey, DefaultAnimationKey);
+        return TryRestoreAnimation(expectedAnimationKey, CurrentLocomotionAnimationKey);
     }
 
     public bool TryPreviewAnimation(string animationKey, float normalizedTime)
@@ -427,8 +454,16 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     }
 
     string DefaultAnimationKey => NormalizeAnimationKey(defaultAnimationKey);
+    string MovementAnimationKey => NormalizeAnimationKey(movementAnimationKey);
+    string CurrentLocomotionAnimationKey => _isMoving ? MovementAnimationKey : DefaultAnimationKey;
     string DamageAnimationKey => NormalizeAnimationKey(damageAnimationKey);
     string DeathAnimationKey => NormalizeAnimationKey(deathAnimationKey);
+
+    bool IsLocomotionAnimation(string animationKey)
+    {
+        return string.Equals(animationKey, DefaultAnimationKey, System.StringComparison.Ordinal) ||
+            string.Equals(animationKey, MovementAnimationKey, System.StringComparison.Ordinal);
+    }
 
     static string NormalizeAnimationKey(string animationKey)
     {

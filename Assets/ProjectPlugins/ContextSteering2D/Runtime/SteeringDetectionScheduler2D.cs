@@ -30,7 +30,8 @@ namespace ContextSteering2D
                 profile,
                 agent.TargetPosition,
                 agent.TargetVelocity,
-                agent.ArrivalStopRadius);
+                agent.ArrivalStopRadius,
+                agent.WanderIntent);
 
             CollectRegisteredNeighbours(agent, agents, agentIndex, frame);
 

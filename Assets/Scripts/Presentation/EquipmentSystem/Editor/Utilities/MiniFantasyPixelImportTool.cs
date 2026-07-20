@@ -21,6 +21,7 @@ public static class MiniFantasyPixelImportTool
         "Assets/Art/KrishnaPalacio/MINIFANTASY - Farm",
         "Assets/Art/MINIFANTASY - Crafting and Professions I",
         "Assets/Art/MINIFANTASY Creatures - Super Low Res 2D Pixel Art by Krishna Palacio",
+        "Assets/Art/坐骑",
         "Assets/GameData/EquipmentSystem",
     };
 
@@ -29,6 +30,7 @@ public static class MiniFantasyPixelImportTool
         "Assets/Art/KrishnaPalacio",
         "Assets/Art/MINIFANTASY - Crafting and Professions I",
         "Assets/Art/MINIFANTASY Creatures - Super Low Res 2D Pixel Art by Krishna Palacio",
+        "Assets/Art/坐骑",
         "Assets/GameData/EquipmentSystem",
     };
 
@@ -500,7 +502,8 @@ public static class MiniFantasyPixelImportTool
             || fileName.StartsWith("Goblin_", StringComparison.OrdinalIgnoreCase)
             || fileName.StartsWith("Halfling_", StringComparison.OrdinalIgnoreCase)
             || fileName.StartsWith("Orc_", StringComparison.OrdinalIgnoreCase)
-            || fileName.StartsWith("Minifantasy_Creatures", StringComparison.OrdinalIgnoreCase);
+            || fileName.StartsWith("Minifantasy_Creatures", StringComparison.OrdinalIgnoreCase)
+            || normalized.StartsWith("Assets/Art/坐骑/", StringComparison.OrdinalIgnoreCase);
     }
 
     static IEnumerable<string> EnumerateTexturePaths(
@@ -542,7 +545,8 @@ public static class MiniFantasyPixelImportTool
             || normalized.IndexOf("/Sprites/Craftable Items Icons/", StringComparison.OrdinalIgnoreCase) >= 0
             || normalized.IndexOf("/Sprites/Miscellany/", StringComparison.OrdinalIgnoreCase) >= 0
             || normalized.IndexOf("/Sprites/FarmingActions/", StringComparison.OrdinalIgnoreCase) >= 0
-            || normalized.IndexOf("/Sprites/Farm_Animals/", StringComparison.OrdinalIgnoreCase) >= 0;
+            || normalized.IndexOf("/Sprites/Farm_Animals/", StringComparison.OrdinalIgnoreCase) >= 0
+            || normalized.StartsWith("Assets/Art/坐骑/", StringComparison.OrdinalIgnoreCase);
     }
 
     static bool IsGeneratedEquipmentUVMap(string path)
@@ -585,6 +589,7 @@ public static class MiniFantasyPixelImportTool
         return normalized.StartsWith("Assets/Art/KrishnaPalacio/MINIFANTASY", StringComparison.OrdinalIgnoreCase)
             || normalized.StartsWith("Assets/Art/MINIFANTASY - Crafting and Professions I/", StringComparison.OrdinalIgnoreCase)
             || normalized.StartsWith("Assets/Art/MINIFANTASY Creatures - Super Low Res 2D Pixel Art by Krishna Palacio/", StringComparison.OrdinalIgnoreCase)
+            || normalized.StartsWith("Assets/Art/坐骑/", StringComparison.OrdinalIgnoreCase)
             || normalized.StartsWith("Assets/GameData/EquipmentSystem/", StringComparison.OrdinalIgnoreCase);
     }
 }

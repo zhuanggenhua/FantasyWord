@@ -55,6 +55,7 @@ public class EquipmentRenderer : MonoBehaviour
     public string BodyAnimationDebugSummary => _debugCurrentAnim ?? string.Empty;
     public string DebugAnimatorPath => _debugAnimatorPath;
     public int EquippedSlotCount => _slots.Count;
+    public bool HasEquippedVisuals => _slots.Count > 0 || _mainHandWeapon != null || _offHandWeapon != null;
     public bool HasMainHandWeapon => _mainHandWeapon != null;
     public bool HasOffHandWeapon => _offHandWeapon != null;
 
@@ -65,6 +66,9 @@ public class EquipmentRenderer : MonoBehaviour
             _currentAnimData.GetKey(),
             _currentAnimName,
             StringComparison.Ordinal);
+
+    public bool IsOriginalSpriteDirectMode => _originalSpriteDirectMode;
+    public string CurrentSharedMaterialShaderName => ResolveSharedMaterialShaderName();
 
     // ========== 槽位：统一用字典管理 ==========
     readonly Dictionary<EquipmentType, EquipmentRenderData> _slots =
@@ -88,6 +92,7 @@ public class EquipmentRenderer : MonoBehaviour
     Animator _animator;
     CharacterActionAnimatorDriver _animationController;
     string _currentAnimName;
+    string _animationContextOverrideKey;
     List<string> _validAnimParams;
     bool _animParamsCached;
 
@@ -101,6 +106,9 @@ public class EquipmentRenderer : MonoBehaviour
 
     // Shader
     Material _shaderMaterial;
+    Material _defaultSharedMaterial;
+    Material _originalSpriteDirectMaterial;
+    bool _originalSpriteDirectMode;
 
     // 外观相关 Shader 属性（不走配置表的特殊处理）
     static readonly int MainTexProp = Shader.PropertyToID("_MainTex");
@@ -201,6 +209,13 @@ public class EquipmentRenderer : MonoBehaviour
 
     void LateUpdate()
     {
+        if (_originalSpriteDirectMode)
+        {
+            CacheSpriteRendererReference();
+            ApplyOriginalSpriteMaterial();
+            return;
+        }
+
         EnsureRendererInitialized();
         if (_charRenderer == null)
             return;
@@ -260,6 +275,13 @@ public class EquipmentRenderer : MonoBehaviour
     {
         if (frameData == null)
             return;
+
+        if (!string.IsNullOrWhiteSpace(_animationContextOverrideKey))
+        {
+            _debugAnimatorState = "override:" + _animationContextOverrideKey;
+            ApplyAnimationKey(_animationContextOverrideKey);
+            return;
+        }
 
         EnsureCharacterActionAnimatorDriverReference();
 
@@ -437,14 +459,16 @@ public class EquipmentRenderer : MonoBehaviour
     {
         if (_shaderMaterial != null)
             Destroy(_shaderMaterial);
+        if (_originalSpriteDirectMaterial != null)
+            Destroy(_originalSpriteDirectMaterial);
 
         ClearRuntimePlaceholderSprites();
     }
 
     void InitMaterial()
     {
-        if (_charRenderer == null)
-            _charRenderer = GetComponent<SpriteRenderer>();
+        CacheSpriteRendererReference();
+        CacheOriginalSpriteMaterial();
         if (_charRenderer == null)
             return;
 
@@ -495,13 +519,18 @@ public class EquipmentRenderer : MonoBehaviour
 
     void EnsureRendererInitialized()
     {
-        if (_charRenderer == null)
-            _charRenderer = GetComponent<SpriteRenderer>();
+        CacheSpriteRendererReference();
 
         EnsureCharacterActionAnimatorDriverReference();
 
         if (_animator == null)
             CacheAnimatorReference();
+
+        if (_originalSpriteDirectMode)
+        {
+            ApplyOriginalSpriteMaterial();
+            return;
+        }
 
         if (_shaderMaterial == null)
             InitMaterial();
@@ -509,6 +538,110 @@ public class EquipmentRenderer : MonoBehaviour
             _charRenderer.sharedMaterial = _shaderMaterial;
 
         ApplyPreviewMaterialDefaults();
+    }
+
+    void CacheSpriteRendererReference()
+    {
+        if (_charRenderer == null)
+            _charRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    void CacheOriginalSpriteMaterial()
+    {
+        CacheSpriteRendererReference();
+        if (_charRenderer == null || _charRenderer.sharedMaterial == null)
+            return;
+
+        if (_charRenderer.sharedMaterial == _shaderMaterial)
+            return;
+
+        _defaultSharedMaterial = _charRenderer.sharedMaterial;
+    }
+
+    void ApplyOriginalSpriteMaterial()
+    {
+        CacheSpriteRendererReference();
+        if (_charRenderer == null)
+            return;
+
+        if (_defaultSharedMaterial == null && !IsEquipmentUvMaterial(_charRenderer.sharedMaterial))
+            _defaultSharedMaterial = _charRenderer.sharedMaterial;
+
+        Material originalMaterial = ResolveOriginalSpriteDirectMaterial();
+        if (_charRenderer.sharedMaterial != originalMaterial)
+            _charRenderer.sharedMaterial = originalMaterial;
+    }
+
+    Material ResolveOriginalSpriteDirectMaterial()
+    {
+        if (_originalSpriteDirectMaterial != null)
+            return _originalSpriteDirectMaterial;
+
+        // 坐骑直显只需要 SpriteRenderer 按原 Sprite 透明度显示，不能复用可能来自普通换装链路的材质。
+        Shader shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
+        if (shader == null)
+            shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default");
+        if (shader == null)
+            shader = Shader.Find("Sprites/Default");
+
+        if (shader == null)
+            return null;
+
+        _originalSpriteDirectMaterial = new Material(shader)
+        {
+            name = "坐骑原版Sprite直显材质"
+        };
+        return _originalSpriteDirectMaterial;
+    }
+
+    static bool IsEquipmentUvMaterial(Material material)
+    {
+        Shader shader = material != null ? material.shader : null;
+        return shader != null && string.Equals(shader.name, "EquipmentSystem/EquipmentUV", StringComparison.Ordinal);
+    }
+
+    string ResolveSharedMaterialShaderName()
+    {
+        CacheSpriteRendererReference();
+        Material material = _charRenderer != null ? _charRenderer.sharedMaterial : null;
+        Shader shader = material != null ? material.shader : null;
+        return shader != null ? shader.name : string.Empty;
+    }
+
+    /// <summary>
+    /// 坐骑原版直显模式。
+    /// 开启后只保留 SpriteRenderer 的原版 Sprite 与普通材质，不再把骑手基础层送进换装 Shader。
+    /// </summary>
+    public void SetOriginalSpriteDirectMode(bool enabled)
+    {
+        if (_originalSpriteDirectMode == enabled)
+        {
+            if (enabled)
+            {
+                ResetEquipmentState();
+                DisableAllGeneratedWeaponRenderers();
+                ApplyOriginalSpriteMaterial();
+            }
+            return;
+        }
+
+        _originalSpriteDirectMode = enabled;
+        if (enabled)
+        {
+            if (_deferredSpriteSync != null)
+            {
+                StopCoroutine(_deferredSpriteSync);
+                _deferredSpriteSync = null;
+            }
+
+            ResetEquipmentState();
+            DisableAllGeneratedWeaponRenderers();
+            ApplyOriginalSpriteMaterial();
+            return;
+        }
+
+        EnsureRendererInitialized();
+        Refresh();
     }
 
     /// <summary>
@@ -573,6 +706,39 @@ public class EquipmentRenderer : MonoBehaviour
             if (renderer != null && renderer.enabled && renderer.sprite != null)
                 results.Add(renderer);
         }
+    }
+
+    /// <summary>
+    /// 按当前角色帧数据计算可见脚底的世界坐标。
+    /// groundPixelY 与换装 Shader 的地面基准共用同一套顶部起算像素语义，不能用带透明留白的 Sprite Bounds 底边替代。
+    /// </summary>
+    public bool TryGetGroundAnchorWorldPosition(out Vector2 worldPosition)
+    {
+        worldPosition = default;
+        CacheSpriteRendererReference();
+
+        Sprite sprite = _charRenderer != null ? _charRenderer.sprite : null;
+        if (frameData == null || sprite == null)
+            return false;
+
+        float frameHeight = _currentAnimData != null
+            ? _currentAnimData.frameSize.y
+            : sprite.rect.height;
+        if (frameHeight <= 0f || sprite.rect.height <= 0f || sprite.pixelsPerUnit <= 0f)
+            return false;
+
+        float groundFromTop = Mathf.Clamp(frameData.groundPixelY + 0.5f, 0f, frameHeight);
+        float normalizedGroundFromBottom = 1f - groundFromTop / frameHeight;
+        float spriteGroundPixelY = normalizedGroundFromBottom * sprite.rect.height;
+        float localGroundY = (spriteGroundPixelY - sprite.pivot.y) / sprite.pixelsPerUnit;
+        if (_charRenderer.flipY)
+            localGroundY = -localGroundY;
+
+        float worldGroundY = _charRenderer.transform
+            .TransformPoint(new Vector3(0f, localGroundY, 0f))
+            .y;
+        worldPosition = new Vector2(_charRenderer.bounds.center.x, worldGroundY);
+        return true;
     }
 
     /// <summary>
@@ -1082,6 +1248,14 @@ public class EquipmentRenderer : MonoBehaviour
     {
         EnsureRendererInitialized();
 
+        if (_originalSpriteDirectMode)
+        {
+            ResetEquipmentState();
+            DisableAllGeneratedWeaponRenderers();
+            ApplyOriginalSpriteMaterial();
+            return;
+        }
+
         if (frameData == null)
         {
             Debug.LogWarning("[EquipmentRenderer] frameData 未设置");
@@ -1241,6 +1415,56 @@ public class EquipmentRenderer : MonoBehaviour
                 _shaderMaterial.SetTexture(cfg.TexPropId, null);
             if (cfg.RectPropId != 0)
                 _shaderMaterial.SetVector(cfg.RectPropId, Vector4.zero);
+        }
+    }
+
+    public void SetAnimationContextOverride(string animationKey, bool autoRefresh = true)
+    {
+        string normalized = animationKey?.Trim() ?? string.Empty;
+        if (string.Equals(_animationContextOverrideKey, normalized, StringComparison.Ordinal))
+            return;
+
+        _animationContextOverrideKey = normalized;
+        SyncAnimationName();
+        if (autoRefresh)
+            SyncCurrentSpriteAndRefresh();
+    }
+
+    public void ClearAnimationContextOverride(bool autoRefresh = true)
+    {
+        if (string.IsNullOrEmpty(_animationContextOverrideKey))
+            return;
+
+        _animationContextOverrideKey = string.Empty;
+        SyncAnimationName();
+        if (autoRefresh)
+            SyncCurrentSpriteAndRefresh();
+    }
+
+    void DisableAllGeneratedWeaponRenderers()
+    {
+        foreach (var pair in _weaponRenderers)
+        {
+            SpriteRenderer renderer = pair.Value;
+            if (renderer == null)
+                continue;
+
+            renderer.enabled = false;
+            renderer.sprite = null;
+        }
+
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            Transform child = transform.GetChild(i);
+            if (child == null || !child.name.StartsWith(GeneratedWeaponRendererPrefix, StringComparison.Ordinal))
+                continue;
+
+            SpriteRenderer childRenderer = child.GetComponent<SpriteRenderer>();
+            if (childRenderer == null)
+                continue;
+
+            childRenderer.enabled = false;
+            childRenderer.sprite = null;
         }
     }
 

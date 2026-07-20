@@ -56,6 +56,7 @@ namespace ContextSteering2D
         internal bool CaptureDebug { get; private set; }
         internal float SemanticQueryRadius { get; private set; }
         internal float ArrivalStopRadius { get; private set; } = -1.0f;
+        internal SteeringWanderIntent2D? WanderIntent { get; private set; }
 
         public void SubmitIntent(
             bool active,
@@ -66,7 +67,8 @@ namespace ContextSteering2D
             bool captureDebug = false,
             float semanticQueryRadius = 0.0f,
             float maxSpeed = -1.0f,
-            float arrivalStopRadius = -1.0f)
+            float arrivalStopRadius = -1.0f,
+            SteeringWanderIntent2D? wanderIntent = null)
         {
             ThrowIfDisposed();
             Active = active;
@@ -76,8 +78,9 @@ namespace ContextSteering2D
             GroupId = string.IsNullOrWhiteSpace(groupId) ? Profile.DefaultGroupIdValue : groupId;
             CaptureDebug = captureDebug;
             SemanticQueryRadius = Mathf.Max(semanticQueryRadius, 0.0f);
-            MaxSpeed = maxSpeed > 0.0f ? maxSpeed : Profile.MaxSpeed;
+            MaxSpeed = maxSpeed >= 0.0f ? maxSpeed : Profile.MaxSpeed;
             ArrivalStopRadius = arrivalStopRadius >= 0.0f ? arrivalStopRadius : -1.0f;
+            WanderIntent = wanderIntent;
             Profile.GetBehaviourGroup(GroupId);
         }
 

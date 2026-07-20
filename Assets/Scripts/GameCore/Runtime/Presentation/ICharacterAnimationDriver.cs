@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace FantasyWord.GameCore
 {
     /// <summary>
@@ -6,6 +8,7 @@ namespace FantasyWord.GameCore
     /// </summary>
     public interface ICharacterAnimationDriver
     {
+        void SetMovement(Vector2 movement);
         bool TryPlayAnimation(string animationKey);
         bool TryLockAnimation(string animationKey);
         void ClearAnimationLock();

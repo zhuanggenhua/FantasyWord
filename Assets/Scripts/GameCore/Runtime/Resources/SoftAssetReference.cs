@@ -5,13 +5,13 @@ using UObject = UnityEngine.Object;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 软资源引用的非泛型基类，保存 Addressables 地址和编辑器锁定信息。
+    /// 软资源引用的非泛型基类，保存 YooAsset 地址和编辑器锁定信息。
     /// </summary>
     [Serializable]
     public class SoftAssetReferenceBase
     {
         [InspectorName("资源地址")]
-        [Tooltip("Addressables 资源地址。为空时该引用无效。")]
+        [Tooltip("YooAsset 资源地址。为空时该引用无效。")]
         public string Address;
 
 #if UNITY_EDITOR
@@ -31,8 +31,8 @@ namespace FantasyWord.GameCore
     }
 
     /// <summary>
-    /// 迁自 Chris 的轻量资源地址引用。
-    /// 它只适合引用 Addressables 资源地址，不替代存档和玩法数据使用的 DatabaseEntryReference。
+    /// 轻量资源地址引用。
+    /// 它只适合引用 YooAsset 资源地址，不替代存档和玩法数据使用的 DatabaseEntryReference。
     /// </summary>
     [Serializable]
     public class SoftAssetReference<T> : SoftAssetReferenceBase, IDisposable where T : UObject
@@ -109,7 +109,7 @@ namespace FantasyWord.GameCore
     }
 
     /// <summary>
-    /// 非泛型软资源引用，按 UnityEngine.Object 加载 Addressables 资源。
+    /// 非泛型软资源引用，按 UnityEngine.Object 加载 YooAsset 资源。
     /// </summary>
     [Serializable]
     public class SoftAssetReference : SoftAssetReferenceBase, IDisposable

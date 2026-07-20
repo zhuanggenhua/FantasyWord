@@ -5,6 +5,21 @@ using UnityEngine;
 namespace FantasyWord.GameCore
 {
     /// <summary>
+    /// AI 状态层的身体朝向模式。它只决定角色身体朝向，不替代移动求解、技能目标方向或武器瞄准。
+    /// </summary>
+    internal enum AICharacterFacingMode2D
+    {
+        [InspectorName("保持当前朝向")]
+        KeepCurrent,
+
+        [InspectorName("面向目标")]
+        FaceTarget,
+
+        [InspectorName("面向移动方向")]
+        FaceMovement
+    }
+
+    /// <summary>
     /// AI 控制器的存档状态，保留归位点、当前目标和关键冷却计时器。
     /// </summary>
     [Serializable]
@@ -87,6 +102,30 @@ namespace FantasyWord.GameCore
         [Tooltip("追击目标时使用的转向组 ID。")]
         [SerializeField] private string m_targetPursuitSteeringGroupId = "predictive-target";
 
+        [InspectorName("追击身体朝向")]
+        [Tooltip("追击目标时身体朝向的状态层裁决：可保持当前、面向目标，或面向移动方向。")]
+        [SerializeField] private AICharacterFacingMode2D m_targetPursuitFacingMode = AICharacterFacingMode2D.FaceTarget;
+
+        [InspectorName("启用战斗游走")]
+        [Tooltip("开启后，敌人进入游走范围便按参考行为随机左右游走；关闭时只使用原追击流程。")]
+        [SerializeField] private bool m_useCombatWander = false;
+
+        [InspectorName("战斗游走范围")]
+        [Tooltip("目标进入该范围时，允许使用战斗游走。")]
+        [SerializeField, Min(0.1f)] private float m_combatWanderRange = 3.0f;
+
+        [InspectorName("战斗游走速度倍率")]
+        [Tooltip("对应参考配置中的游走速度倍率。")]
+        [SerializeField, Min(0.0f)] private float m_combatWanderSpeedMultiplier = 1.0f;
+
+        [InspectorName("战斗游走转向组")]
+        [Tooltip("战斗游走使用的行为组 ID。")]
+        [SerializeField] private string m_combatWanderSteeringGroupId = "combat-wander";
+
+        [InspectorName("战斗游走身体朝向")]
+        [Tooltip("战斗游走开启后身体朝向的状态层裁决；默认保持当前，避免游走行为强制锁脸。")]
+        [SerializeField] private AICharacterFacingMode2D m_combatWanderFacingMode = AICharacterFacingMode2D.KeepCurrent;
+
         [InspectorName("启用近身环绕")]
         [Tooltip("目标进入保持距离后切换到近身环绕组。关闭时继续使用追击组，并由 Arrive 在攻击距离附近停住。")]
         [SerializeField] private bool m_useTargetOrbitSteeringAtSoughtDistance = true;
@@ -124,6 +163,14 @@ namespace FantasyWord.GameCore
         [Tooltip("两次攻击尝试之间的最小间隔秒数。")]
         [SerializeField] public float m_attackCooldown = 1.0f;
 
+        [InspectorName("攻击前要求对准目标")]
+        [Tooltip("开启后，AI 进入攻击触发半径时先面向目标，身体朝向完成后下一次判断才会开火。")]
+        [SerializeField] private bool m_requireTargetFacingBeforeAttack = true;
+
+        [InspectorName("攻击对准完成角度")]
+        [Tooltip("参考 duolafashi turnToTargetDetal 的 5 度完成判定；只用于攻击前对准门禁。")]
+        [SerializeField, Range(0.0f, 45.0f)] private float m_attackFacingCompletionAngleDegrees = 5.0f;
+
         private Transform transform => m_subject.transform;
 
         private Vector2 m_homePosition =>
@@ -133,6 +180,16 @@ namespace FantasyWord.GameCore
 
         private bool ShouldUseTargetOrbitSteeringAtSoughtDistance =>
             m_useTargetOrbitSteeringAtSoughtDistance;
+
+        private bool ShouldUseCombatWander => m_useCombatWander;
+
+        private AICharacterFacingMode2D TargetPursuitFacingMode => m_targetPursuitFacingMode;
+
+        private AICharacterFacingMode2D CombatWanderFacingMode => m_combatWanderFacingMode;
+
+        private bool ShouldRequireTargetFacingBeforeAttack => m_requireTargetFacingBeforeAttack;
+
+        private float AttackFacingCompletionAngleDegrees => Mathf.Clamp(m_attackFacingCompletionAngleDegrees, 0.0f, 45.0f);
 
         private string TargetOrbitSteeringGroupIdValue =>
             string.IsNullOrWhiteSpace(m_targetOrbitSteeringGroupId)
@@ -147,6 +204,24 @@ namespace FantasyWord.GameCore
 
         private BehaviourRuntime m_behaviourRuntime = null;
         private BehaviourRuntime behaviourRuntime => m_behaviourRuntime ??= new BehaviourRuntime(this);
+
+        /// <summary>
+        /// 判断当前身体朝向是否已经满足攻击前对准；角度完成值来自参考的转向完成语义。
+        /// </summary>
+        internal static bool IsAttackFacingAligned(
+            Vector2 currentFacing,
+            Vector2 attackDirection,
+            float completionAngleDegrees)
+        {
+            if (currentFacing.sqrMagnitude <= 0.0001f ||
+                attackDirection.sqrMagnitude <= 0.0001f)
+            {
+                return false;
+            }
+
+            float completedAngle = Mathf.Clamp(completionAngleDegrees, 0.0f, 45.0f);
+            return Vector2.Angle(currentFacing, attackDirection) < completedAngle;
+        }
 
         protected override void OnInitialize()
         {

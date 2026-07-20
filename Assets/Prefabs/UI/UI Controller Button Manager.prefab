@@ -50,3 +50,4 @@ MonoBehaviour:
     - {fileID: 7108339969198208228, guid: d94e4c183d468470e97ffccae2b0884d, type: 3}
     - {fileID: 7108339969198208228, guid: 9bd31b184fdf1400a8cc78d2ce3a92d4, type: 3}
     - {fileID: 7108339969198208228, guid: cb39981ffda603a4b8015a1b54e98ba8, type: 3}
+  m_buttonPromptsVisible: 0

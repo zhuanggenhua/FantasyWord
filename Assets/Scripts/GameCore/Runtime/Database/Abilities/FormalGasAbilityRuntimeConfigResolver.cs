@@ -16,7 +16,7 @@ namespace FantasyWord.GameCore
 
     /// <summary>
     /// 正式 EX-GAS 能力运行时资源配置。
-    /// GUID 优先指向 GameCore 数据库引用资产；资源地址只在后续接入 ResourceSystem/Addressables 后使用。
+    /// GUID 优先指向 GameCore 数据库引用资产；需要动态内容时，资源地址统一交给 ResourceSystem/YooAsset。
     /// 以 Assets/ 开头的项目路径只允许作为编辑器证据，不是玩家构建可用的运行时地址。
     /// </summary>
     public readonly struct FormalGasAbilityRuntimeConfig
@@ -167,7 +167,7 @@ namespace FantasyWord.GameCore
 
     /// <summary>
     /// 正式 GAS 资源加载门面。
-    /// 正式运行时只接受 ResourceSystem / Addressables 地址；编辑器 Assets 路径只能用于诊断和兜底。
+    /// 正式运行时只接受 ResourceSystem / YooAsset 地址；编辑器 Assets 路径只能用于诊断和兜底。
     /// </summary>
     public static class FormalGasAbilityResourceLoader
     {
@@ -212,7 +212,7 @@ namespace FantasyWord.GameCore
             if (IsEditorAssetPath(path))
             {
                 Debug.LogError(
-                    $"GameCore 正式 GAS 资源地址不能使用编辑器项目路径：{path}。请改为 ResourceSystem / Addressables 地址。");
+                    $"GameCore 正式 GAS 资源地址不能使用编辑器项目路径：{path}。请改为 ResourceSystem / YooAsset 地址。");
                 return null;
             }
 

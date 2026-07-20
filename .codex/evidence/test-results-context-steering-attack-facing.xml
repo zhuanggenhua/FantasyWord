@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="40" result="Passed" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.523114">
+  <test-suite type="TestSuite" id="1000" name="FantasyWord" fullname="FantasyWord" runstate="Runnable" testcasecount="318" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.523114" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1200" name="FantasyWord.GameCore.EditModeTests.dll" fullname="C:/Gamedev/Unity/Project/FantasyWord/Library/ScriptAssemblies/FantasyWord.GameCore.EditModeTests.dll" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.496865" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="277872" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1201" name="FantasyWord" fullname="FantasyWord" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.491532" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1202" name="GameCore" fullname="FantasyWord.GameCore" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.488754" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1203" name="Tests" fullname="FantasyWord.GameCore.Tests" runstate="Runnable" testcasecount="187" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.486045" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1008" name="ContextSteering2DEditModeTests" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" testcasecount="40" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.476285" total="40" passed="40" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1036" name="AgentSpatialIndex_CollectsOnlyAgentsInsideQueryRadius" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AgentSpatialIndex_CollectsOnlyAgentsInsideQueryRadius" methodname="AgentSpatialIndex_CollectsOnlyAgentsInsideQueryRadius" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1674497706" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.032994" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1018" name="AIController_AttackFacingAlignmentMatchesDuolafashiFiveDegreeRule" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AIController_AttackFacingAlignmentMatchesDuolafashiFiveDegreeRule" methodname="AIController_AttackFacingAlignmentMatchesDuolafashiFiveDegreeRule" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1220822641" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.003556" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1017" name="AIController_AttackFacingGateUsesReferenceDefault" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AIController_AttackFacingGateUsesReferenceDefault" methodname="AIController_AttackFacingGateUsesReferenceDefault" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="34458899" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.016199" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1019" name="AIController_AttackFacingWaitOverridesMovementFacingChoice" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AIController_AttackFacingWaitOverridesMovementFacingChoice" methodname="AIController_AttackFacingWaitOverridesMovementFacingChoice" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="770340280" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.002972" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1015" name="AIController_CombatWanderSwitchHonoursExplicitDisabledValue" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AIController_CombatWanderSwitchHonoursExplicitDisabledValue" methodname="AIController_CombatWanderSwitchHonoursExplicitDisabledValue" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="505400171" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.003877" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1016" name="AIController_FacingModesAreExplicitStateChoices" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AIController_FacingModesAreExplicitStateChoices" methodname="AIController_FacingModesAreExplicitStateChoices" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="789151105" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.010967" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1014" name="AIController_TargetOrbitSwitchHonoursExplicitDisabledValue" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.AIController_TargetOrbitSwitchHonoursExplicitDisabledValue" methodname="AIController_TargetOrbitSwitchHonoursExplicitDisabledValue" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="971522075" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.002723" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1023" name="Arrive_IntentStopRadiusOverridesProfileDefault" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.Arrive_IntentStopRadiusOverridesProfileDefault" methodname="Arrive_IntentStopRadiusOverridesProfileDefault" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="205439044" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.032769" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1022" name="Arrive_PreservesSpeedScaleAndIndependentContributions" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.Arrive_PreservesSpeedScaleAndIndependentContributions" methodname="Arrive_PreservesSpeedScaleAndIndependentContributions" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="733059876" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:32Z" duration="0.010827" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1011" name="CharacterBasePrefab_UsesTriggerHitboxSoPbdOwnsBodyContacts" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CharacterBasePrefab_UsesTriggerHitboxSoPbdOwnsBodyContacts" methodname="CharacterBasePrefab_UsesTriggerHitboxSoPbdOwnsBodyContacts" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1013715428" result="Passed" start-time="2026-07-19 02:16:32Z" end-time="2026-07-19 02:16:33Z" duration="0.064882" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1027" name="CombatWander_ChangesSideWhenRequestedSideFacesObstacleDanger" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_ChangesSideWhenRequestedSideFacesObstacleDanger" methodname="CombatWander_ChangesSideWhenRequestedSideFacesObstacleDanger" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="612708844" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.004069" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1026" name="CombatWander_DoesNotRetreatInsideFollowDistance" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_DoesNotRetreatInsideFollowDistance" methodname="CombatWander_DoesNotRetreatInsideFollowDistance" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1512809860" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001226" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1028" name="CombatWander_IncludesNeighbourSeparationFromReferenceAroundBehaviour" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_IncludesNeighbourSeparationFromReferenceAroundBehaviour" methodname="CombatWander_IncludesNeighbourSeparationFromReferenceAroundBehaviour" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="2141415350" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.004800" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1030" name="CombatWander_KeepsRandomChoiceInsideReferenceWindow" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_KeepsRandomChoiceInsideReferenceWindow" methodname="CombatWander_KeepsRandomChoiceInsideReferenceWindow" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="308559113" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.003668" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1029" name="CombatWander_UsesReferenceRangeCondition" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_UsesReferenceRangeCondition" methodname="CombatWander_UsesReferenceRangeCondition" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="381592002" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.000697" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1025" name="CombatWander_UsesRequestedSideAndFollowDistance" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_UsesRequestedSideAndFollowDistance" methodname="CombatWander_UsesRequestedSideAndFollowDistance" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1620357744" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001090" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1031" name="CombatWander_ZeroSpeedDoesNotFallBackToProfileSpeed" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.CombatWander_ZeroSpeedDoesNotFallBackToProfileSpeed" methodname="CombatWander_ZeroSpeedDoesNotFallBackToProfileSpeed" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="932636954" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.003533" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1038" name="ContactResolution_ExactlyOverlappingAgentsSeparateInOppositeDirections" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.ContactResolution_ExactlyOverlappingAgentsSeparateInOppositeDirections" methodname="ContactResolution_ExactlyOverlappingAgentsSeparateInOppositeDirections" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1119582764" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.006903" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1039" name="ContactResolution_HighResistanceAgentMovesLess" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.ContactResolution_HighResistanceAgentMovesLess" methodname="ContactResolution_HighResistanceAgentMovesLess" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1949406365" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001316" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1040" name="ContactResolution_IsStableWhenInputOrderChanges" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.ContactResolution_IsStableWhenInputOrderChanges" methodname="ContactResolution_IsStableWhenInputOrderChanges" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="709442320" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002919" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1041" name="ContactResolution_MultipleIterationsReducePenetration" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.ContactResolution_MultipleIterationsReducePenetration" methodname="ContactResolution_MultipleIterationsReducePenetration" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="897530637" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002980" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1048" name="DebugProbe_RetainsTransientPushCorrectionPeak" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.DebugProbe_RetainsTransientPushCorrectionPeak" methodname="DebugProbe_RetainsTransientPushCorrectionPeak" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="2145040800" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.007541" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1012" name="DefaultProfile_HasDefaultAndPathFollowBehaviourGroups" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.DefaultProfile_HasDefaultAndPathFollowBehaviourGroups" methodname="DefaultProfile_HasDefaultAndPathFollowBehaviourGroups" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="137102767" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.013561" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1009" name="GameConfig_UsesDedicatedCharacterFilterForSteeringNeighbours" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.GameConfig_UsesDedicatedCharacterFilterForSteeringNeighbours" methodname="GameConfig_UsesDedicatedCharacterFilterForSteeringNeighbours" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="2042779440" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002122" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1035" name="LocalAvoidance_GlobalRvoSimulatorRejectsConcurrentBackendOwners" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.LocalAvoidance_GlobalRvoSimulatorRejectsConcurrentBackendOwners" methodname="LocalAvoidance_GlobalRvoSimulatorRejectsConcurrentBackendOwners" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="587571604" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.006309" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1033" name="LocalAvoidance_HeadOnAgentsReceiveSafeVelocitiesWithinSpeedLimit" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.LocalAvoidance_HeadOnAgentsReceiveSafeVelocitiesWithinSpeedLimit" methodname="LocalAvoidance_HeadOnAgentsReceiveSafeVelocitiesWithinSpeedLimit" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1759986846" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.032698" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1034" name="LocalAvoidance_RemovedAgentDoesNotCorruptRemainingAgentMapping" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.LocalAvoidance_RemovedAgentDoesNotCorruptRemainingAgentMapping" methodname="LocalAvoidance_RemovedAgentDoesNotCorruptRemainingAgentMapping" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1100103291" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.007486" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1013" name="MissingBehaviourGroup_ThrowsInsteadOfFallingBack" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.MissingBehaviourGroup_ThrowsInsteadOfFallingBack" methodname="MissingBehaviourGroup_ThrowsInsteadOfFallingBack" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="949099599" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001032" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1024" name="OrbitGroup_UsesIntentRadiusWithoutArriveStop" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.OrbitGroup_UsesIntentRadiusWithoutArriveStop" methodname="OrbitGroup_UsesIntentRadiusWithoutArriveStop" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1922564201" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002007" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1021" name="PathCursor_ReplansOnlyAfterDestinationMovesPastThreshold" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.PathCursor_ReplansOnlyAfterDestinationMovesPastThreshold" methodname="PathCursor_ReplansOnlyAfterDestinationMovesPastThreshold" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="330694796" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002015" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1020" name="PathCursor_UsesIntermediateWaypointBeforeFinalTarget" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.PathCursor_UsesIntermediateWaypointBeforeFinalTarget" methodname="PathCursor_UsesIntermediateWaypointBeforeFinalTarget" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="2143347769" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001155" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1010" name="Physics2DSettings_DisablesCharacterSelfCollisionForCentralizedContactResolution" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.Physics2DSettings_DisablesCharacterSelfCollisionForCentralizedContactResolution" methodname="Physics2DSettings_DisablesCharacterSelfCollisionForCentralizedContactResolution" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="865441397" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.004040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1032" name="PursuitGroup_UsesPredictedDirectionWhileArriveOnlyLimitsSpeed" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.PursuitGroup_UsesPredictedDirectionWhileArriveOnlyLimitsSpeed" methodname="PursuitGroup_UsesPredictedDirectionWhileArriveOnlyLimitsSpeed" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1260134211" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002494" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1037" name="SideStep_HeadOnAgentsChooseDeterministicOppositeSides" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.SideStep_HeadOnAgentsChooseDeterministicOppositeSides" methodname="SideStep_HeadOnAgentsChooseDeterministicOppositeSides" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1812954474" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001557" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1047" name="SteeringResult_KeepsSafeDirectionIndependentFromPushCorrection" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.SteeringResult_KeepsSafeDirectionIndependentFromPushCorrection" methodname="SteeringResult_KeepsSafeDirectionIndependentFromPushCorrection" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="2032035176" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.001502" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1046" name="WorldSimulation_DoesNotRegisterIndependentChildHitboxAsSelfNeighbour" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.WorldSimulation_DoesNotRegisterIndependentChildHitboxAsSelfNeighbour" methodname="WorldSimulation_DoesNotRegisterIndependentChildHitboxAsSelfNeighbour" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="720519657" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.032691" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1044" name="WorldSimulation_PublishesInitialContactCorrectionInSameTick" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.WorldSimulation_PublishesInitialContactCorrectionInSameTick" methodname="WorldSimulation_PublishesInitialContactCorrectionInSameTick" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1427754944" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.004367" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1042" name="WorldSimulation_PublishesVelocityAndDoesNotMoveRigidbody" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.WorldSimulation_PublishesVelocityAndDoesNotMoveRigidbody" methodname="WorldSimulation_PublishesVelocityAndDoesNotMoveRigidbody" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1216079531" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.014591" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1045" name="WorldSimulation_ReleasesAndReacquiresRvoRuntimeServices" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.WorldSimulation_ReleasesAndReacquiresRvoRuntimeServices" methodname="WorldSimulation_ReleasesAndReacquiresRvoRuntimeServices" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1561156050" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.003248" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1043" name="WorldSimulation_UsesSubmittedRuntimeMaximumSpeed" fullname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests.WorldSimulation_UsesSubmittedRuntimeMaximumSpeed" methodname="WorldSimulation_UsesSubmittedRuntimeMaximumSpeed" classname="FantasyWord.GameCore.Tests.ContextSteering2DEditModeTests" runstate="Runnable" seed="1071205448" result="Passed" start-time="2026-07-19 02:16:33Z" end-time="2026-07-19 02:16:33Z" duration="0.002129" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+[Bridge:Info] All tests completed via TestFinished. Final duration: {duration:mm\:ss\.fff}
+[Bridge:Info] RunFinished
+[Bridge:Info] Run {testMode} finished with {totalTests} test results. Result status: {status}
+[Bridge:Info] Final duration: {duration:mm\:ss\.fff}. Completed: {completed}/{total}
+[Bridge:Info] [TestRunner] RunFinished found no active deferred request id.
+Saving results to: C:/Users/zhuagenbao/AppData/LocalLow/DefaultCompany/FantasyWord\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

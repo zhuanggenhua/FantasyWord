@@ -35,9 +35,12 @@ metadata:
 | AIBridge、Unity Editor 自动化、Console、截图 | `.spec/knowledge/features/project/AIBridge常用命令.md` |
 | AI 读图、OCR、截图核对、SpriteSheet | 已暂停：`.codex/skills/safe-image-reading/SKILL.md` 不再作为当前入口 |
 | 新增、保留或重写项目侧 C# | `.spec/knowledge/features/project/代码参考矩阵.md` |
+| 玩家输入朝向、AI 追击转向、攻击前对准、战斗游走朝向、武器瞄准、四向动画方向 | `.spec/knowledge/features/project/角色移动与朝向参考矩阵.md` |
 | 像素素材、Sprite、动画、装备表现 | `.spec/knowledge/features/project/素材与表现规范.md` |
-| 换装功能、装备工作台、FrameData 帧编辑器、Body/Head UV、Idle/Walk/Attack 换装验收 | `.spec/skills/equipment-system-workflow/SKILL.md` |
-| 换装动画流程、SpriteLibrary 方向变体、资源路径、Yoki/Addressables 边界 | `.spec/knowledge/features/project/换装动画与资源流程对照.md` |
+| 当前普通换装系统、动作/方向驱动、Shader 合成、装备槽、坐骑边界和阴影职责 | `.spec/knowledge/features/project/换装系统现状说明.md` |
+| 换装功能、坐骑原版素材接入、装备工作台、FrameData 帧编辑器、Body/Head UV、Idle/Walk/Attack、完整截图验收 | `.spec/skills/equipment-system-workflow/SKILL.md` |
+| 坐骑素材规律、坐骑动作语义、通用逐帧播放器、动物/载具骑手层对接 | `.spec/knowledge/features/project/坐骑动画素材规律.md` |
+| 换装动画流程、SpriteLibrary 方向变体、资源路径、Yoki/YooAsset 边界 | `.spec/knowledge/features/project/换装动画与资源流程对照.md` |
 | 俯视角角色素材、MiniFantasy、装备层素材 | `.spec/knowledge/features/project/角色素材处理工作流.md` |
 | spec、proposal、change、阶段拆分 | `openspec/AGENTS.md` |
 

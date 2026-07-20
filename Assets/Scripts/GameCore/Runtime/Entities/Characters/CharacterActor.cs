@@ -219,6 +219,17 @@ namespace FantasyWord.GameCore
             GameManager.PlayerSystem.NotifyCharacterKilled(this);
         }
 
+        protected override void UpdateMovementAnimation(Vector2 movement)
+        {
+            if (m_animationDriverBehaviour is ICharacterAnimationDriver animationDriver)
+            {
+                animationDriver.SetMovement(movement);
+                return;
+            }
+
+            base.UpdateMovementAnimation(movement);
+        }
+
         protected override bool TryPlayHitAnimation()
         {
             if (m_animationDriverBehaviour == null)

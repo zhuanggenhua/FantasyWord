@@ -11,8 +11,8 @@ namespace FantasyWord.GameCore
     }
 
     /// <summary>
-    /// Mod 目录加载器，迁自 Chris.ModLoader。
-    /// 它会扫描 Mod 目录、读取配置、执行启停/删除状态，并把启用包的 Addressables catalog 加进资源系统。
+    /// Mod 目录加载器。它会扫描目录、读取配置、执行启停/删除状态，
+    /// 并把每个启用内容初始化为独立 YooAsset 资源包。
     /// </summary>
     public sealed class ModLoader : IModLoader
     {
@@ -76,7 +76,8 @@ namespace FantasyWord.GameCore
                     continue;
                 }
 
-                await ResourceSystem.LoadCatalogAsync(directory);
+                EnsurePackageName(modInfo);
+                await ResourceSystem.LoadModPackageAsync(modInfo.packageName, directory, modInfo.loadOrder);
             }
 
             return true;
@@ -109,8 +110,18 @@ namespace FantasyWord.GameCore
                 return modInfo;
             }
 
-            await ResourceSystem.LoadCatalogAsync(path);
+            EnsurePackageName(modInfo);
+            await ResourceSystem.LoadModPackageAsync(modInfo.packageName, path, modInfo.loadOrder);
             return modInfo;
+        }
+
+        private static void EnsurePackageName(ModInfo modInfo)
+        {
+            if (string.IsNullOrWhiteSpace(modInfo.packageName))
+            {
+                throw new InvalidDataException(
+                    $"Mod {modInfo.FullName} 缺少 YooAsset 资源包名称 packageName，无法加载内容包。");
+            }
         }
     }
 }

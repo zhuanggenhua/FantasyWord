@@ -116,7 +116,7 @@ namespace FantasyWord.GameCore
             if (FormalGasAbilityResourceLoader.IsEditorAssetPath(config.PrefabPath))
             {
                 issues.Add(CreateWarning(
-                    $"EX-GAS Ability {formalGasAbilityCode} 的 PrefabPath 仍是编辑器项目路径：{config.PrefabPath}。它只能作为编辑器证据，正式运行时应改为 GameCore 数据库 PrefabReference GUID 或 ResourceSystem / Addressables 地址。"));
+                    $"EX-GAS Ability {formalGasAbilityCode} 的 PrefabPath 仍是编辑器项目路径：{config.PrefabPath}。它只能作为编辑器证据，正式运行时应改为 GameCore 数据库 PrefabReference GUID 或 ResourceSystem / YooAsset 地址。"));
             }
             else if (string.IsNullOrWhiteSpace(config.PrefabPath) &&
                      ResolveDatabaseEntry<PrefabReference>(config.PrefabGuid) == null)
@@ -129,7 +129,7 @@ namespace FantasyWord.GameCore
                 FormalGasAbilityResourceLoader.IsEditorAssetPath(config.IconPath))
             {
                 issues.Add(CreateWarning(
-                    $"EX-GAS Ability {formalGasAbilityCode} 的 IconPath 仍是编辑器项目路径：{config.IconPath}。图标正式运行时应改为 GameCore 数据库 SpriteReference GUID 或 ResourceSystem / Addressables 地址。"));
+                    $"EX-GAS Ability {formalGasAbilityCode} 的 IconPath 仍是编辑器项目路径：{config.IconPath}。图标正式运行时应改为 GameCore 数据库 SpriteReference GUID 或 ResourceSystem / YooAsset 地址。"));
             }
             else if (string.IsNullOrWhiteSpace(config.IconPath) &&
                      !string.IsNullOrWhiteSpace(config.IconGuid) &&

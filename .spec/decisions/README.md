@@ -71,6 +71,7 @@
 - [0066-角色读档槽位覆盖边界](0066-character-loadout-restore-overwrites-runtime-slots.md)
 - [0067-换装生成设置与静态门禁 owner 边界](0067-equipment-generation-settings-static-gate-owner.md)
 - [0068-当前运行时状态保存必需数据库引用边界](0068-save-current-state-required-database-reference.md)
+- [0069-YooAsset 动态资源与 Mod 包主轴](0069-yooasset-dynamic-resource-mainline.md)
 
 ## 新决策模板
 

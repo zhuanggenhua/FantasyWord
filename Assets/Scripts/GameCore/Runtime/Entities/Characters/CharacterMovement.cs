@@ -87,9 +87,7 @@ namespace FantasyWord.GameCore
                     return false;
                 }
 
-                Vector2 pathDestination = worldPath[^1];
                 m_character.SetMovementDirection(Vector2.zero);
-                m_character.LookAtTarget(pathDestination);
                 m_character.MoveAlongPath(worldPath, m_clickMoveStoppingDistance);
                 return true;
             }
@@ -98,7 +96,6 @@ namespace FantasyWord.GameCore
             Vector2 destination = resolvedDestination;
 
             m_character.SetMovementDirection(Vector2.zero);
-            m_character.LookAtTarget(destination);
             m_character.MoveTo(destination, m_clickMoveStoppingDistance);
             return true;
         }

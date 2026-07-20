@@ -20,9 +20,9 @@ metadata:
 - `ProjectSettings/InputManager.asset`
 - `Assets/**/*.asmdef`
 - `Assets/**/*.inputactions`
-- `Assets/**/AddressableAssetSettings.asset`
+- `Assets/**/BundleCollectorSetting.asset`
 
-汇报时至少明确：Unity 版本、渲染管线、输入方案、UI 系统、资源加载方案、是否使用 asmdef、是否使用 Addressables、目标平台和构建入口。
+汇报时至少明确：Unity 版本、渲染管线、输入方案、UI 系统、资源加载方案、是否使用 asmdef、YooAsset 包与运行模式、目标平台和构建入口。
 
 ## 当前检测基线
 
@@ -30,7 +30,8 @@ metadata:
 - 渲染：URP 2D
 - 输入：Unity Input System；当前正式资产入口仍是 `Assets/InputSystem_Actions.inputactions`，并已对齐回 `2DRPGEngine` 参考所需的 `Gameplay / UI / None` 动作图
 - UI：UGUI / TextMesh Pro 资源存在
-- Addressables：已接入官方包；当前已用于 Chris 资源/Mod 最小地基的外部 catalog 加载，官方玩法数据和全部资源管理尚未迁入 Addressables
+- YooAsset：`3.0.4` 嵌入式包；正式动态资源主轴，默认包为 `DefaultPackage`，编辑器使用 `EditorSimulateMode`
+- Addressables：仅保留给 YokiFrame 旧编辑器代码生成器和第三方编辑器模块，不进入 GameCore 运行时资源链
 - asmdef：当前仓库已经存在插件本体、`GameCore`、编辑器工具和测试程序集边界；这是现状，不等于后续项目侧还应继续扩张 asmdef。业务代码默认不新建、不保留项目侧 asmdef，避免 AI 漏加引用。
 
 ## 包与插件边界
@@ -40,7 +41,7 @@ metadata:
 - 当前包与插件台账以 `.spec/knowledge/features/project/第三方插件接入清单.md` 为准；常用正式工具至少包括 `Assets/Plugins/GAS`、`Assets/Plugins/YokiFrame`、`Assets/Plugins/Demigiant/DOTween`、`Packages/com.cysharp.unitask`、`Assets/Plugins/MackySoft.SerializeReferenceExtensions`、`Assets/Plugins/azixMcAze.SerializableDictionary`、`com.ami.broaudio`、`com.aibridge.unity` 与相关 Unity 官方包。
 - 当前 UPM Git 插件：`com.ami.broaudio`，来源 `https://github.com/man572142/Bro_Audio.git?path=/Assets/BroAudio#3.1.3`。
 - 当前 BroAudio 项目级配置资源：`Assets/Plugins/BroAudio`，来自参考项目同路径，包含 `Resources/AudioPlayer.prefab`、`SoundManager.prefab`、`BroAudioMixer.mixer`、`BroRuntimeSetting.asset`、`GlobalPlaybackGroup.asset` 和 Editor Resources；它不是 BroAudio 包源码本体。
-- 当前 Unity 官方依赖：`com.unity.addressables`，当前用于 UniTask Addressables 模块，并已作为 `GameCore/Runtime/Resources` 与 `GameCore/Runtime/Mods` 的外部 catalog 加载基础；是否把官方玩法资源整体迁到 Addressables 仍需另行评估。
+- 当前动态资源依赖：嵌入式 `com.tuyoogame.yooasset` `3.0.4`。`com.unity.addressables` 只保留编辑器兼容用途，不得重新进入 `GameCore/Runtime/Resources` 与 `GameCore/Runtime/Mods`。
 - `Packages/packages-lock.json` 只能由 Unity Package Manager 重新解析后更新；若它暂时未包含 `manifest.json` 新增包，不手写伪造锁文件，等统一 Unity 导入验证时刷新。
 - BroAudio 项目级资源中的脚本 GUID 来自 `com.ami.broaudio` 包源码；静态扫描若只看 `Assets` 和嵌入包，会暂时显示这些 GUID 缺失，必须等 Unity Package Manager 解析 Git 包后再判定。
 - 第三方包接入必须记录：包名、来源 URL、版本或 commit、UPM path、依赖、废弃入口迁移范围和本项目调用方式。
@@ -90,11 +91,13 @@ metadata:
 
 - 关键配置优先使用 ScriptableObject、JSON、YAML、C# 常量/record 等可审计载体。
 - Mod 支持是长期必须目标；新增正式配置、数据库条目、资源引用和存档字段时，默认考虑外部内容包能否追加、覆盖、禁用或缺失回退。
-- 正式进入玩法链路的项目侧 `Prefab`、`ScriptableObject`、`Sprite Library`、正式测试场景、场景内正式实例名和 Inspector 暴露名称默认优先中文命名；第三方原始资源目录可保留原名，但项目正式落点不得继续沿用误导性的英文占位名。
+- 正式进入玩法链路的项目侧 `Prefab`、`ScriptableObject`、`Sprite Library`、正式测试场景、场景内正式实例名和 Inspector 显示文案必须优先中文命名；第三方原始资源目录可保留原名，但项目正式落点不得继续沿用误导性的英文占位名。
+- 新增或改写 `[SerializeField]`、可见 `public` 字段、SO 配置字段、编辑器窗口参数和验证工具参数时，C# 字段符号保持英文代码命名，必须用中文 Inspector 特性暴露现实含义；至少补 `InspectorName`，有配置风险、单位、范围、引用 owner 或失败后果时同步补 `Tooltip`，分组使用中文 `Header`。
 - 编辑器顶部 `场景` 菜单的列表真相源固定为 `Assets/Scenes`，不是 Build Settings。新增、删除或移动正式场景时，先保证 `.unity` 文件位于 `Assets/Scenes`，再执行 `场景/刷新场景菜单`；Build Settings 只服务构建，不作为场景菜单过滤器。
 - 可被内容引用的数据必须优先使用稳定 ID、数据库引用或资源键；不要让运行时规则依赖不可迁移的场景实例名、临时数组下标、硬编码 Resources 路径或 Inspector 顺序。
 - 存档数据需要能处理“Mod 被移除、版本升级、资源缺失、ID 改名”的情况；至少要有可诊断的失败信息和安全回退，不得直接让旧存档崩溃。
-- Addressables 当前已经成为本地 Mod 外部 catalog 加载的最小方案；但资源包格式、依赖解析、平台限制、内容校验和官方资源是否整体迁入 Addressables 仍需专项设计，不能把“能加载 catalog”误报为完整 Mod 工作流。
+- YooAsset 是本地 Mod 独立资源包的正式底层；每个 Mod 使用独立 `ResourcePackage`，但数据合并、冲突策略、脚本沙箱、发布和内容安全仍需专项设计，不能把“资源包可加载”误报为完整 Mod 工作流。
+- 项目玩法素材不得放入 `Assets/Resources`；当前仅允许保留已核实的第三方启动配置。插件内部 `Resources` 属于插件实现细节，不代表项目资源主轴。
 - 场景、Prefab、Inspector 负责对象层级、组件挂载、静态引用关系、视觉配置和初始显示状态。
 - 脚本负责运行时状态推进、交互路由、规则与行为逻辑。
 - 新增或改写 `[SerializeField]`、Inspector 开关、组名、引用字段时，不得假设 C# 字段初始化值会自动回填已有场景、Prefab 或嵌套序列化控制器；必须检查目标实例的真实序列化值，或提供明确迁移、旧数据默认解析、`OnValidate` 修复和原场景运行验收。
@@ -111,11 +114,11 @@ metadata:
 
 ## Inspector、注释与可维护性
 
-- 代码必须优先适合人阅读：目录名、类型名、字段名、Inspector 文案、注释和测试名称都要能让维护者快速判断职责，不用靠猜历史来源。
+- 代码必须优先适合人阅读：目录名、类型名、字段符号、Inspector 文案、注释和测试名称都要能让维护者快速判断职责，不用靠猜历史来源；其中代码符号保持英文风格，给内容作者看的 Inspector 文案用中文特性表达。
 - 项目侧 C# 公开/受保护/内部类型、ScriptableObject 配置、序列化字段、编辑器菜单、验证入口和生命周期/协程/事件/物理/存档等非显然逻辑要写必要中文注释。
 - 注释不能缺，但也不能灌水。必须说明职责、调用契约、边界、为什么这样做、错误配置会怎样；禁止把“给变量赋值”“遍历列表”这类代码表面行为翻译成中文。
 - 当代码吸收 `2DRPGEngine`、`TopDownEngine` 或 `YokiFrame` 的能力时，关键类型或正式入口要在注释或文档中说明来源边界和当前项目真相源，避免以后误以为还存在兼容层或双轨实现。
-- 新增系统、工具、编辑器窗口、验证脚本、ScriptableObject 和 Inspector 暴露字段时，默认同步补中文注释、中文 `Tooltip` / `Header`；当前不得假设 NaughtyAttributes 已接入。如果后续重新接入对应插件，才允许使用其中文标签能力。
+- 新增系统、工具、编辑器窗口、验证脚本、ScriptableObject 和 Inspector 暴露字段时，必须同步补中文注释、中文 `InspectorName` / `Tooltip` / `Header`；当前不得假设 NaughtyAttributes 已接入。如果后续重新接入对应插件，才允许使用其中文标签能力。
 - 需要新增、改写或审查源码注释时，先读全局 `D:\codex-home\skills\code-comments\SKILL.md`；本项目当前没有 `.agents/skills/code-comments/SKILL.md`。
 - Inspector 暴露字段应显示中文名称和必要说明；若后续重新接入 NaughtyAttributes 或同类 Inspector 辅助插件，先在插件清单登记落点和用途，再使用 `[Label("中文名")]`、`[BoxGroup("中文分组")]` 等插件能力。
 - 不为简单赋值和自说明代码堆空话注释。

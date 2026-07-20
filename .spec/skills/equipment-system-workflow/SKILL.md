@@ -1,24 +1,26 @@
 ---
 name: equipment-system-workflow
-description: FantasyWord 换装功能工作流。用于 EquipmentSystem、装备工作台、FrameData 帧编辑器、Body/Head UV Map、布衣/帽子/护目镜/手套/武器槽、Idle/Walk/Attack 换装错位、运行时截图验收和截图站发布前核验。
+description: FantasyWord 换装与坐骑表现工作流。覆盖普通换装、坐骑原版素材直显、骑乘姿态普通装备叠加、动作协议和真实 GameView 完整截图/GIF 验收。
 ---
 
-# Equipment System Workflow（换装功能工作流）
+# Equipment System Workflow（换装与坐骑表现工作流）
 
 ## 适用范围
 
-- FantasyWord 的 MiniFantasy 换装系统、装备表现资产、帧编辑器配置和运行时换装验收。
-- 典型任务：新增或修正装备层、配置角色帧数据、生成 Body/Head UV 图、排查 Idle/Walk/Attack 换装错位、用装备测试场景截图验收。
+- FantasyWord 的 MiniFantasy 换装系统、装备表现资产、坐骑表现资产、帧编辑器配置和运行时表现验收。
+- 普通换装任务：新增或修正装备层、配置角色帧数据、生成 Body/Head UV 图、排查 Idle/Walk/Attack 换装错位。
+- 坐骑任务：接入作者原版坐骑本体和骑手基础层 Sprite，并在运行时逐帧直显；阴影不进入坐骑动作接入门槛。
+- 验收任务：用装备测试场景真实 GameView 完整截图验收，不用局部图、离屏图或预览图替代。
 - 不适用：普通角色动画状态机重构、正式战斗技能逻辑、非 MiniFantasy 素材迁移；这些任务先回到对应 Unity / GAS / 素材 skill。
 
 ## 前提锁定
 
 修改代码、资源、场景或发布截图前，先锁定四项：
 
-1. **问题对象**：明确是身体、头部、眼睛、手脚、服装、头部装备、武器槽，还是工作台 UI。
-2. **真相来源**：优先用正式 `CharacterFrameData`、装备资产、`EquipmentRenderer` 运行时输出和 Unity PlayMode 截图；离线合成图只能作辅助证据。
+1. **问题对象**：明确是身体、头部、眼睛、手脚、服装、头部装备、武器槽、坐骑表现，还是工作台 UI。
+2. **真相来源**：普通换装优先用正式 `CharacterFrameData`、装备资产、`EquipmentRenderer` 运行时输出和 Unity PlayMode 当前 GameView 完整截图；坐骑优先用作者原版坐骑 Sprite、骑手基础层 Sprite、`MountRenderData`、`MountedCharacterPresentation` 运行时输出和 Unity PlayMode 当前 GameView 完整截图。阴影按普通换装 Shader 职责理解，不作为坐骑动作接入门槛。离线合成图只能作辅助证据。
 3. **目标入口/环境**：默认装备验收入口是 `Assets/Scenes/EquipmentSystemDemo.unity` 的 `EquipmentSystemDemoCharacter`。移动/实战场景只在用户明确要求时作为补充入口。
-4. **验收口径**：写清动作、方向、帧、装备组合、是否允许基础动画自带武器，以及是否需要上传截图站。
+4. **验收口径**：写清动作、方向、帧、装备组合、是否为坐骑原版素材直显、是否允许基础动画自带武器、最终截图必须是完整画面，以及是否需要上传截图站。
 
 任一项没锁定时，只能继续定位或补证据，不得先改。
 
@@ -30,8 +32,9 @@ description: FantasyWord 换装功能工作流。用于 EquipmentSystem、装备
 - 默认外观：`Assets/GameData/EquipmentSystem/Appearance/基础人形外观.asset`
 - 装备资产：`Assets/GameData/EquipmentSystem/Equip/Visual/*.asset`
 - 运行时渲染：`Assets/Scripts/Presentation/EquipmentSystem/Runtime/EquipmentRenderer.cs`
+- 坐骑表现资产：`Assets/GameData/EquipmentSystem/Mounts/*.asset`
+- 坐骑运行时表现：`Assets/Scripts/Presentation/EquipmentSystem/Runtime/MountedCharacterPresentation.cs`
 - 类型配置：`Assets/Scripts/Presentation/EquipmentSystem/Data/Appearance/EquipTypeConfig.cs`
-- Shader：`Assets/Scripts/Presentation/EquipmentSystem/Shaders/EquipmentUV.shader`
 - 装备测试场景：`Assets/Scenes/EquipmentSystemDemo.unity`
 
 ## 层级含义
@@ -44,6 +47,7 @@ description: FantasyWord 换装功能工作流。用于 EquipmentSystem、装备
 | 鞋子 | 左右脚颜色替换 | 帧数据里的脚部蒙版 + Color 装备 |
 | 眼睛、眼部装饰 | 角色外观层 | 帧数据眼睛蒙版 + `CharacterAppearance` |
 | 武器、盾牌 | 独立武器槽 | 武器锚点和武器序列，不属于 Body/Head UV |
+| 坐骑本体、骑乘基础人形 | 坐骑表现层 | 作者原版 Sprite 逐帧直显 |
 
 ## 帧编辑器与 UV 流程
 
@@ -71,26 +75,45 @@ description: FantasyWord 换装功能工作流。用于 EquipmentSystem、装备
 - 截图前必须确认实际 Sprite 是 Attack，例如 `Minifantasy_CreaturesHumanAttack_*`；`requestedAnimation=Attack` 但 Sprite 仍是 Idle 时，不能当作 Attack 端到端证据。
 - 选择 Attack 验收帧时，优先选能同时看到身体、头部和至少前向手部的帧；挥击幅度大的帧可作为补充，不一定适合检查手套。
 
+## 坐骑表现规则
+
+1. 坐骑当前按作者原版素材直显：坐骑本体 Sprite、骑手基础层 Sprite 必须来自坐骑素材自身的同画布、同帧、同方向序列。
+2. 坐骑本体始终按作者原版 Sprite 直显，不使用普通换装材质，也不把 Body/Head UV 或装备 Shader 当作坐骑本体通过门槛。阴影按当前项目口径不进入坐骑动作适配。
+3. 骑手没有普通装备时按作者原版 Sprite 直显；骑手有普通装备时，仍使用同一作者骑手 Sprite 作为当前帧，但切换到该坐骑的骑乘 `CharacterFrameData` 和 Body/Head UV，通过现有 `EquipmentRenderer` 合成普通装备。两种模式必须分开验收。
+4. 坐骑动画必须通过“角色动作输入 -> 坐骑动作语义 -> 坐骑资产逐帧数据”对接；角色 `Idle/Walk` 只能作为输入，分别映射为坐骑 `Stand/Move`，不得直接把普通角色动作名当成坐骑素材动作真相。
+5. 坐骑不生成“动物 × 动作 × 方向”的 Animator 状态组合；正式做法是通用逐帧播放器同步坐骑本体和骑手基础层 Sprite。
+6. 每个坐骑资产声明自己支持的动作语义，例如 `Stand/Move/Attack/Hurt/Die/MountUp/MountDown`；不支持的语义只能按资产默认动作回退，并在报告里可见，不能说成该动作已真实接入。
+7. 运行时只同步动作语义、方向和帧索引；当前不得新增独立挂点或偏移配置作为坐骑接入前提。
+8. 坐骑验收必须分别记录坐骑本体和骑手基础层的真实 Sprite 名；任何一层为空都不能称为坐骑表现通过。阴影不是坐骑动作接入的必备层。
+9. 四向素材缺任一方向时必须失败，除非资产显式声明四向共用 SE；本体/骑手都有帧但数量不一致时必须失败，不得截成较短序列。
+10. 自定义动作按精确键选择；动作回退必须出现在运行时报告中。非循环动作必须配置完成行为。
+11. 样板生成器只补齐自己拥有的 Stand/Move 和缺失 UV；已有完整帧、人工标注和其它动作不得覆盖。重复执行前后要比较动作数、UV GUID 和目标资产哈希。
+
 ## 运行时验收
 
 1. 用 `EquipmentSystemDemo` 或用户指定的装备测试入口，不要默认拿当前 PlayMode 场景当目标。
-2. 通过真实 `EquipmentRenderer + EquipmentUV.shader` 渲染，不用离线像素合成冒充。
-3. 使用工作台控制器或等价正式组件设置角色、动作、方向和装备。
+2. 普通换装验收使用正式 `EquipmentRenderer` 运行时输出；坐骑验收使用正式 `MountedCharacterPresentation` 运行时输出，并按原版 Sprite 直显判断坐骑本体和骑手基础层。
+3. 使用工作台控制器或等价正式组件设置角色、动作、方向和装备；坐骑验收必须明确当前坐骑表现资产。
 4. 非武器层验收时显式保持 Weapon / Shield 槽为空；记录主手/副手装备槽状态。
-5. 至少覆盖代表性 Idle 与 Attack；方向问题要覆盖 SE/SW/NE/NW。
-6. 记录每张截图的场景、动作、方向、Sprite 名、装备槽数量、武器槽是否为空。
-7. 截图不得黑屏、裁边、加载中或来自错误场景。
+5. 至少覆盖代表性 Idle 与 Attack；坐骑最小闭环至少覆盖角色 Idle/Walk 输入解析出的坐骑 Stand/Move 与 SE/SW/NE/NW，且每组必须对照资产验证连续两帧。若用户指定更多动作或坐骑资产支持更多语义则按支持集覆盖。
+6. 记录每张截图的场景、动作、方向、Sprite 名、装备槽数量、武器槽是否为空；坐骑截图还要记录坐骑本体和骑手基础层 Sprite 名。
+7. 最终验收图必须是当前真实 GameView 通过 `ScreenCapture.CaptureScreenshot` 产生的完整画面，能看到角色/坐骑和场景关系。只围绕角色裁出来的 256x256 小图、局部辅助图、近景裁图、局部放大图、临时离屏相机、RenderTexture、只渲染临时对象的截图、材质预览、Sprite 预览和 UV 预览，一律只能作为内部调试证据，不能作为最终验收图，也不能发布为 `passed`。
+8. 动作、序列帧、挥砍、特效或时序类问题，优先录制 GIF 或输出连续帧证据；静态截图只能证明单帧状态，不能单独证明动画接入完成。
+9. GIF 可以由 PlayMode 中当前真实 GameView 连续截图编码生成，但不得用离线摆图、素材拼贴、临时离屏相机或手工合成帧冒充端到端动画。
+10. 截图/GIF 不得黑屏、裁边、加载中、只截局部、只截临时对象、出现洋红错误块，或来自错误场景。
 
 ## 图片核验与发布
 
 - `.codex/skills/safe-image-reading/SKILL.md` 与看图前压缩/预算门禁已于 2026-07-14 按用户要求暂停，不再作为当前截图核验入口。
 - 端到端证据仍应能回到真实截图和真实 Unity 现场，不用轻量图产物替代现实真相源。
 - 用户要求上传服务器时，先使用 `artifact-preview-publisher`；只发布已经核验通过的最终图。
-- 候选图、失败图、离线合成图、黑图和错误场景截图不得发布为 `passed`。
+- 候选图、失败图、离线合成图、黑图、错误场景截图、局部裁图、临时离屏相机图和局部辅助图不得发布为 `passed`。
 
 ## 禁止行为
 
 - 不得把离线合成图、UV 预览图或辅助标注图说成端到端证据。
+- 不得把局部辅助截图、角色近景裁图、临时离屏相机图、RenderTexture 图、材质预览或 Sprite 预览说成最终验收截图。
+- 坐骑当前验收不得把换装 Shader、Body/Head UV 材质状态或离线材质结果当作坐骑本体通过条件；坐骑本体和骑手基础层必须回到作者原版 Sprite 直显结果。阴影不作为坐骑动作接入门槛。
 - 不得因为 Attack 画面里有武器，就默认修改武器装备资产。
 - 不得把当前打开场景、旧截图或上一次 PlayMode 状态当作本轮目标入口。
 - 不得覆盖正确装备资产、场景或 `.meta`；资源错误需要撤回时只做最小手工修正，不用 git 回滚。
@@ -106,4 +129,8 @@ description: FantasyWord 换装功能工作流。用于 EquipmentSystem、装备
 - Attack 验收图的实际 Sprite 名是 Attack。
 - Weapon / Shield 槽状态符合本轮目标。
 - 身体、头部、眼睛、手脚的表现结论来自真实运行时截图。
+- 坐骑表现结论来自真实运行时完整截图；坐骑本体和骑手基础层都已记录真实 Sprite 名，穿普通装备时另行确认骑手换装 Shader 与骑乘 UV，坐骑本体仍保持原版直显。
+- Idle/Walk 四向已分别对照资产验证第 0 帧和下一帧，本体与骑手都真实推进且没有静默动作/方向回退。
+- 生成器重复执行没有减少动作、改变已有 UV GUID 或覆盖人工帧数据。
+- 最终验收图是当前真实 GameView 的 ScreenCapture 完整画面，不是局部裁图、局部放大图、临时离屏相机图、RenderTexture 图、局部辅助图或预览图。
 - 如果上传截图站，公开详情页、API、图片 URL 和文件 hash 均已核验。

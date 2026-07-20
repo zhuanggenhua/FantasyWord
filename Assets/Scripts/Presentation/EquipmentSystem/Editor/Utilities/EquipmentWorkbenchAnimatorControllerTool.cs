@@ -319,22 +319,25 @@ public static class EquipmentWorkbenchAnimatorControllerTool
 
         clip.name = spec.Action;
         clip.frameRate = settings.FrameRate;
-        EditorCurveBinding resolverBinding = new EditorCurveBinding
-        {
-            path = string.Empty,
-            type = typeof(SpriteResolver),
-            propertyName = "m_SpriteKey"
-        };
+        EditorCurveBinding resolverBinding = EditorCurveBinding.DiscreteCurve(
+            string.Empty,
+            typeof(SpriteResolver),
+            "m_SpriteHash");
 
-        Keyframe[] keys = new Keyframe[spec.FrameCount];
+        Keyframe[] keys = new Keyframe[spec.FrameCount + 1];
         for (int frame = 0; frame < spec.FrameCount; frame++)
         {
             keys[frame] = new Keyframe(
                 frame / settings.FrameRate,
-                GetSpriteKeyAsFloat(spec.Action, frame.ToString()),
+                GetSpriteHashAsFloat(spec.Action, frame.ToString()),
                 float.PositiveInfinity,
                 float.PositiveInfinity);
         }
+        keys[spec.FrameCount] = new Keyframe(
+            spec.FrameCount / settings.FrameRate,
+            GetSpriteHashAsFloat(spec.Action, (spec.FrameCount - 1).ToString()),
+            float.PositiveInfinity,
+            float.PositiveInfinity);
 
         AnimationCurve curve = new AnimationCurve(keys);
         for (int i = 0; i < curve.length; i++)
@@ -344,6 +347,10 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         }
 
         AnimationUtility.SetEditorCurve(clip, resolverBinding, curve);
+        AnimationUtility.SetEditorCurve(
+            clip,
+            EditorCurveBinding.DiscreteCurve(string.Empty, typeof(SpriteResolver), "m_SpriteKey"),
+            null);
         AnimationUtility.SetObjectReferenceCurve(
             clip,
             new EditorCurveBinding
@@ -361,7 +368,7 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         return clip;
     }
 
-    static float GetSpriteKeyAsFloat(string category, string label)
+    static float GetSpriteHashAsFloat(string category, string label)
     {
         if (SpriteKeyMethod == null)
             throw new MissingMethodException("Unity 2D Animation 未提供 SpriteLibrary 帧键生成入口。");

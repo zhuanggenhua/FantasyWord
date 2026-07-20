@@ -430,7 +430,7 @@ Transform:
   m_GameObject: {fileID: 37030679}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2, z: 0}
+  m_LocalPosition: {x: 0, y: -0.3125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4447,7 +4447,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FantasyWord.Presentation.WaterReflectionSystem
   m_captureCamera: {fileID: 155658348}
   m_captureRendererIndex: 1
-  m_defaultProxyMaterial: {fileID: 2100000, guid: 3a9444570e9f4da1bc89bf8a7828600c, type: 2}
   m_proxyLayerName: WaterReflectionProxy
   m_waterRenderers:
   - {fileID: 2080991805}
@@ -10723,165 +10722,6 @@ SortingGroup:
   m_SortingOrder: 3
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
---- !u!21 &660618900
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: EquipmentSystem/EquipmentUV
-  m_Shader: {fileID: 4800000, guid: 0dea0d18fec057147bded1c4d11e93f0, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _DEFAULTOUTLINEENABLED_ON
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _BagTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BeardTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _BodyUVMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CloakTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ClothTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _EyeDecoTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _FaceAccessoryTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _HairTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _HeadUVMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _HelmetTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _PantsTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Weapon0Tex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Weapon1Tex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _BodyInEast: 1
-    - _BodyInFront: 0
-    - _DebugMode: 0
-    - _DefaultOutlineEnabled: 1
-    - _EnableBag: 0
-    - _EnableBeard: 0
-    - _EnableCloak: 0
-    - _EnableCloth: 0
-    - _EnableEyeDeco: 0
-    - _EnableFaceAccessory: 0
-    - _EnableGloves: 0
-    - _EnableHair: 0
-    - _EnableHelmet: 0
-    - _EnableLeftEye: 0
-    - _EnableMask: 0
-    - _EnableRightEye: 0
-    - _EnableShoes: 0
-    - _ExtraOutlineEnabled: 0
-    - _HitOutline: 0
-    - _ShadowBaseY: 0.25
-    - _ShadowCenterX: 0.5
-    - _ShadowEnabled: 1
-    - _ShadowLeftX: 0
-    - _ShadowMode: 0
-    - _ShadowRightX: 0
-    - _SkinPaletteEnabled: 0
-    - _WaterReflectionLengthScale: 1
-    - _WaterReflectionProxy: 0
-    - _WaterReflectionSkew: -0.35
-    - _WaterReflectionVerticalScale: 0.65
-    - _Weapon0DepthMode: 0
-    - _Weapon0Enabled: 0
-    - _Weapon0FlipX: 0
-    - _Weapon0HandInFront: 1
-    - _Weapon0HideOutlineOnBody: 0
-    - _Weapon0IsSequence: 0
-    - _Weapon1DepthMode: 0
-    - _Weapon1Enabled: 0
-    - _Weapon1FlipX: 0
-    - _Weapon1HandInFront: 1
-    - _Weapon1HideOutlineOnBody: 0
-    - _Weapon1IsSequence: 0
-    m_Colors:
-    - _BagRect: {r: 0, g: 0, b: 1, a: 1}
-    - _BeardRect: {r: 0, g: 0, b: 1, a: 1}
-    - _CharFrameRect: {r: 0, g: 0, b: 1, a: 1}
-    - _CloakRect: {r: 0, g: 0, b: 1, a: 1}
-    - _ClothRect: {r: 0, g: 0, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ExtraOutlineColor: {r: 1, g: 1, b: 1, a: 1}
-    - _EyeDecoRect: {r: 0, g: 0, b: 1, a: 1}
-    - _FaceAccessoryRect: {r: 0, g: 0, b: 1, a: 1}
-    - _HairRect: {r: 0, g: 0, b: 1, a: 1}
-    - _HelmetRect: {r: 0, g: 0, b: 1, a: 1}
-    - _HitOutlineColor: {r: 0.7059, g: 0.0353, b: 0.0353, a: 1}
-    - _LeftEyeColor: {r: 0.6, g: 0.2, b: 0.8, a: 1}
-    - _LeftFootColor: {r: 0.3, g: 0.2, b: 0.1, a: 1}
-    - _LeftHandColor: {r: 0.6, g: 0.4, b: 0.2, a: 1}
-    - _MaskRect: {r: 0, g: 0, b: 1, a: 1}
-    - _PantsRect: {r: 0, g: 0, b: 1, a: 1}
-    - _RightEyeColor: {r: 0.6, g: 0.2, b: 0.8, a: 1}
-    - _RightFootColor: {r: 0.3, g: 0.2, b: 0.1, a: 1}
-    - _RightHandColor: {r: 0.6, g: 0.4, b: 0.2, a: 1}
-    - _ShadowColor: {r: 0, g: 0, b: 0, a: 0.6}
-    - _WaterReflectionAnchorWS: {r: 0, g: 0, b: 0, a: 0}
-    - _Weapon0AnchorFrameUV: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _Weapon0Rect: {r: 0, g: 0, b: 1, a: 1}
-    - _Weapon0RotCosSin: {r: 1, g: 0, b: 0, a: 0}
-    - _Weapon1AnchorFrameUV: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _Weapon1Rect: {r: 0, g: 0, b: 1, a: 1}
-    - _Weapon1RotCosSin: {r: 1, g: 0, b: 0, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &695738452
 GameObject:
   m_ObjectHideFlags: 0
@@ -24056,7 +23896,6 @@ MonoBehaviour:
   m_sourceRenderers:
   - {fileID: 987751660}
   m_equipmentRenderer: {fileID: 0}
-  m_collectChildRenderersOnAwake: 0
   m_reflectionAnchor: {fileID: 1387362305}
   m_verticalScale: 0.65
   m_skew: -0.35
@@ -25870,6 +25709,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: "\u6D4B\u8BD5-\u8BAD\u7EC3\u5047\u4EBA-\u8F6C\u5411B"
       objectReference: {fileID: 0}
+    - target: {fileID: 2101494329101190425, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: m_persistenceInfo
       value: 4536545658951696755
@@ -25895,8 +25738,24 @@ PrefabInstance:
       value: f75a61de-6411-4d61-9f5e-e4b12de14d80
       objectReference: {fileID: 0}
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696524].m_useCombatWander
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696524].m_combatWanderRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: managedReferences[4536545658951696524].m_navigationRepathInterval
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696524].m_combatWanderSpeedMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696524].m_combatWanderSteeringGroupId
+      value: combat-wander
       objectReference: {fileID: 0}
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: managedReferences[4536545658951696524].m_navigationWaypointTolerance
@@ -28444,7 +28303,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -39822,7 +39681,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: 
+  m_LockedProperties:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -50476,6 +50335,165 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4ec397e51032994b86867c678856477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!21 &1930635421
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: EquipmentSystem/EquipmentUV (Instance)
+  m_Shader: {fileID: 4800000, guid: 0dea0d18fec057147bded1c4d11e93f0, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _DEFAULTOUTLINEENABLED_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BagTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BeardTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BodyUVMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloakTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ClothTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EyeDecoTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceAccessoryTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HairTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HeadUVMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HelmetTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PantsTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Weapon0Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Weapon1Tex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BodyInEast: 1
+    - _BodyInFront: 0
+    - _DebugMode: 0
+    - _DefaultOutlineEnabled: 1
+    - _EnableBag: 0
+    - _EnableBeard: 0
+    - _EnableCloak: 0
+    - _EnableCloth: 0
+    - _EnableEyeDeco: 0
+    - _EnableFaceAccessory: 0
+    - _EnableGloves: 0
+    - _EnableHair: 0
+    - _EnableHelmet: 0
+    - _EnableLeftEye: 0
+    - _EnableMask: 0
+    - _EnableRightEye: 0
+    - _EnableShoes: 0
+    - _ExtraOutlineEnabled: 0
+    - _HitOutline: 0
+    - _ShadowBaseY: 0.25
+    - _ShadowCenterX: 0.5
+    - _ShadowEnabled: 1
+    - _ShadowLeftX: 0
+    - _ShadowMode: 0
+    - _ShadowRightX: 0
+    - _SkinPaletteEnabled: 0
+    - _WaterReflectionLengthScale: 1
+    - _WaterReflectionProxy: 0
+    - _WaterReflectionSkew: -0.35
+    - _WaterReflectionVerticalScale: 0.65
+    - _Weapon0DepthMode: 0
+    - _Weapon0Enabled: 0
+    - _Weapon0FlipX: 0
+    - _Weapon0HandInFront: 1
+    - _Weapon0HideOutlineOnBody: 0
+    - _Weapon0IsSequence: 0
+    - _Weapon1DepthMode: 0
+    - _Weapon1Enabled: 0
+    - _Weapon1FlipX: 0
+    - _Weapon1HandInFront: 1
+    - _Weapon1HideOutlineOnBody: 0
+    - _Weapon1IsSequence: 0
+    m_Colors:
+    - _BagRect: {r: 0, g: 0, b: 1, a: 1}
+    - _BeardRect: {r: 0, g: 0, b: 1, a: 1}
+    - _CharFrameRect: {r: 0, g: 0, b: 1, a: 1}
+    - _CloakRect: {r: 0, g: 0, b: 1, a: 1}
+    - _ClothRect: {r: 0, g: 0, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ExtraOutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _EyeDecoRect: {r: 0, g: 0, b: 1, a: 1}
+    - _FaceAccessoryRect: {r: 0, g: 0, b: 1, a: 1}
+    - _HairRect: {r: 0, g: 0, b: 1, a: 1}
+    - _HelmetRect: {r: 0, g: 0, b: 1, a: 1}
+    - _HitOutlineColor: {r: 0.7059, g: 0.0353, b: 0.0353, a: 1}
+    - _LeftEyeColor: {r: 0.6, g: 0.2, b: 0.8, a: 1}
+    - _LeftFootColor: {r: 0.3, g: 0.2, b: 0.1, a: 1}
+    - _LeftHandColor: {r: 0.6, g: 0.4, b: 0.2, a: 1}
+    - _MaskRect: {r: 0, g: 0, b: 1, a: 1}
+    - _PantsRect: {r: 0, g: 0, b: 1, a: 1}
+    - _RightEyeColor: {r: 0.6, g: 0.2, b: 0.8, a: 1}
+    - _RightFootColor: {r: 0.3, g: 0.2, b: 0.1, a: 1}
+    - _RightHandColor: {r: 0.6, g: 0.4, b: 0.2, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 0.6}
+    - _WaterReflectionAnchorWS: {r: 0, g: 0, b: 0, a: 0}
+    - _Weapon0AnchorFrameUV: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Weapon0Rect: {r: 0, g: 0, b: 1, a: 1}
+    - _Weapon0RotCosSin: {r: 1, g: 0, b: 0, a: 0}
+    - _Weapon1AnchorFrameUV: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _Weapon1Rect: {r: 0, g: 0, b: 1, a: 1}
+    - _Weapon1RotCosSin: {r: 1, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &1937080576
 GameObject:
   m_ObjectHideFlags: 0
@@ -55906,8 +55924,8 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1521965176739707566, guid: f32187b1edab1484a99d97ef54021bf5, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 660618900}
+      value:
+      objectReference: {fileID: 1930635421}
     - target: {fileID: 2101494329101190424, guid: f32187b1edab1484a99d97ef54021bf5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.75
@@ -56000,6 +56018,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1944804786174523385, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2101494329101190424, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5
@@ -56007,6 +56029,14 @@ PrefabInstance:
     - target: {fileID: 2101494329101190424, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: m_LocalPosition.y
       value: -2.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2101494329101190425, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5447713501700509203, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: m_controller
@@ -56113,6 +56143,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b64a77e6e17043179c24817be9b35bde, type: 2}
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696519].m_useCombatWander
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696519].m_combatWanderRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: managedReferences[4536545658951696519].m_attackTriggerRadius
       value: 1
       objectReference: {fileID: 0}
@@ -56127,6 +56165,18 @@ PrefabInstance:
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: managedReferences[4536545658951696519].m_soughtDistanceFromTarget
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696519].m_targetOrbitSteeringGroupId
+      value:
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696519].m_combatWanderSpeedMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696519].m_combatWanderSteeringGroupId
+      value: combat-wander
       objectReference: {fileID: 0}
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: managedReferences[4536545658951696519].m_navigationWaypointTolerance
@@ -56163,6 +56213,18 @@ PrefabInstance:
     - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
       propertyPath: managedReferences[4536545658951696519].m_timeBeforeResetAfterTargetSightLost
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122841227683649615, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: managedReferences[4536545658951696519].m_useTargetOrbitSteeringAtSoughtDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8132033150974277776, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8341864459697438900, guid: dca23ea6afacc0647bfd10c5cefa4099, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -56210,7 +56272,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FantasyWord.Presentation.WaterReflectionCaster2D
   m_sourceRenderers: []
   m_equipmentRenderer: {fileID: 735002000000000005}
-  m_collectChildRenderersOnAwake: 1
   m_reflectionAnchor: {fileID: 37030680}
   m_verticalScale: 0.65
   m_skew: -0.35

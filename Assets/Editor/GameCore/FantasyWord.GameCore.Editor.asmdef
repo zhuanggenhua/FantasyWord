@@ -15,7 +15,7 @@
     "UnityEngine.UI",
     "BroAudio",
     "AiBridge.Unity.Editor",
-    "Unity.Addressables.Editor",
+    "YooAsset.Editor",
     "MackySoft.SerializeReferenceExtensions",
     "azixMcAze.SerializableDictionary",
     "Unity.Collections",

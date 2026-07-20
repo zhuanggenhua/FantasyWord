@@ -1,0 +1,1221 @@
+fileFormatVersion: 2
+guid: f983330771ac2344ab4fa418352c31a4
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 8
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_00"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00bb7da9602c9ac45bf0d056f3d9d6e6
+      internalID: 1796656969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_01"
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c706890d956f2643bf28d13f0138db6
+      internalID: -196941527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_02"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96ccc72d435abda498ece72e198cadb9
+      internalID: 1911162399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_03"
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 603b26e27f916084182a8a5b528e960d
+      internalID: -715578268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_04"
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c95aceee0b9cdbb43b9a5ad19dd6b65e
+      internalID: -655580476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_05"
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c53b8beaca560bf45b77dc039e4d15b5
+      internalID: -1044776799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_06"
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8fbef45b646ef04cb6fb43b7fbbfba0
+      internalID: 965578928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_07"
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de4c0956c204b3147951fe0295b2555d
+      internalID: 164701300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_08"
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f0b164bad2077d49b759d04e46a4db5
+      internalID: -544081197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_09"
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 30ca4a3d238aae14b8666d7b4fd340a4
+      internalID: 935710013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_10"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bb1bd1bac3ed494d9d227ce57875b7c
+      internalID: -2019827687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_11"
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21dc8d5ab4febe84c80497153be46418
+      internalID: 646265234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_00"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7247841510f56a4887afa246103ac37
+      internalID: -348331776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_01"
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 387637107dc342047bc021fbde7e8f52
+      internalID: 113879383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_02"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 934387ce738cffb47990e71b65a3e68b
+      internalID: 438068582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_03"
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0622e64e3adfedd42a9fa941f599d4f8
+      internalID: 1395028125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_04"
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 895d4e31b7d2d7d49b5f08595d44e7a0
+      internalID: -2117901885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_05"
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7955457564d420641870729338fef785
+      internalID: -1543939022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_06"
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f8bd95bf1de2f640a18de5b821db6cd
+      internalID: -1610234586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_07"
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a404aedc7236d564fb95154ee950cdec
+      internalID: 1245937123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_08"
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31d91714215832c40b64bf20bc7cbf3d
+      internalID: -582042794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_09"
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2304b643e982c5247b9870d035c21855
+      internalID: -447793993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_10"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d66ec377e6d5c6b478209cff6037a89b
+      internalID: 731154548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_11"
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dbe48f48d1d1dc4d8979e5a45fcfdf8
+      internalID: -2098713283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_00"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f1d5e8ae27b158479660ea98cd22e71
+      internalID: -711965914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_01"
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0fc194ea4b264344b013bf09bc1fe37
+      internalID: -225116180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_02"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd202730afb8a3840a7997108875c298
+      internalID: -659849207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_03"
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b381a0eb6134e0a4290c6c1074e4f83e
+      internalID: 1631822020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_04"
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1c0bc6b60d1a784b8b18cf2290f3b5d
+      internalID: 1628350742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_05"
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cdb18262f758ace428069af204e010ed
+      internalID: 1613176528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_06"
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 894c379c34087444992b278343ad49cb
+      internalID: -647239519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_07"
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63ede3d10e8e07b41968931001cabe78
+      internalID: -585734683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_08"
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23fb791220b393b41a09f25482a24a79
+      internalID: 175865667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_09"
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fdec1e5208b37c943b10e55e24b23c91
+      internalID: 942564215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_10"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bfa9daff6f01b1948a2d1a93c655be39
+      internalID: -677246143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_11"
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52d2d06627c723a43b350a1b4e0a0530
+      internalID: -1816542051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_00"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6fdefaebd6c0b9f429c475065031bce7
+      internalID: 729813128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_01"
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fe500647a0548749ac05be13603ca22
+      internalID: -799780081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_02"
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddd0e57c9ee39d042983d346d1f5179f
+      internalID: 1251928944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_03"
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dae651cd8a2b63a4a961de7998189b2c
+      internalID: -1604344316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_04"
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df8cf04287d894545b2a619c7fd3e934
+      internalID: 225363196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_05"
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a123529d82b5c8439e3c5f4965b3dab
+      internalID: 1683509568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_06"
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d69cc4aa267f744fa4629fd836f4eae
+      internalID: 2017600054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_07"
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 067c3ce039a5f074aaeac7b758a06e1b
+      internalID: 148137545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_08"
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8435583710e5ac8418a5049aee10a34a
+      internalID: 45356197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_09"
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a259b16d7a1668b4393d358ca76144e4
+      internalID: -666253776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_10"
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f74f9f3cf8a43eb41972bbb042926248
+      internalID: 1360263365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_11"
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d44c83c89710fc946a2695cbf7edbc58
+      internalID: 1665894275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 643ae90971048354bb46a71ff06940ed
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_00": 1796656969
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_01": -196941527
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_02": 1911162399
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_03": -715578268
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_04": -655580476
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_05": -1044776799
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_06": 965578928
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_07": 164701300
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_08": -544081197
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_09": 935710013
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_10": -2019827687
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_0_11": 646265234
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_00": -348331776
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_01": 113879383
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_02": 438068582
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_03": 1395028125
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_04": -2117901885
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_05": -1543939022
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_06": -1610234586
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_07": 1245937123
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_08": -582042794
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_09": -447793993
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_10": 731154548
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_1_11": -2098713283
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_00": -711965914
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_01": -225116180
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_02": -659849207
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_03": 1631822020
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_04": 1628350742
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_05": 1613176528
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_06": -647239519
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_07": -585734683
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_08": 175865667
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_09": 942564215
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_10": -677246143
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_2_11": -1816542051
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_00": 729813128
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_01": -799780081
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_02": 1251928944
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_03": -1604344316
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_04": 225363196
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_05": 1683509568
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_06": 2017600054
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_07": 148137545
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_08": 45356197
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_09": -666253776
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_10": 1360263365
+      "War\u9A6C\u5F85\u673A\u88AD\u51FB\u8005_\u4EBA\u7C7B_3_11": 1665894275
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

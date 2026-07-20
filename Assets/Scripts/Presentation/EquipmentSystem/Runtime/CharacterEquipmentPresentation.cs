@@ -12,6 +12,7 @@ public sealed class CharacterEquipmentPresentation : MonoBehaviour
 {
     [SerializeField] private CharacterEquipment characterEquipment;
     [SerializeField] private EquipmentRenderer equipmentRenderer;
+    [SerializeField] private MountedCharacterPresentation mountedPresentation;
 
     private readonly HashSet<EquipmentRenderData> appliedVisuals = new();
 
@@ -59,10 +60,26 @@ public sealed class CharacterEquipmentPresentation : MonoBehaviour
         }
 
         appliedVisuals.Clear();
+        MountRenderData nextMount = null;
+        List<EquipmentRenderData> pendingVisuals = new();
         foreach (Equipment equipment in characterEquipment.GetEquippedItems())
         {
             if (!equipment)
             {
+                continue;
+            }
+
+            if (equipment.visual is MountRenderData mountVisual)
+            {
+                if (nextMount != null && nextMount != mountVisual)
+                {
+                    Debug.LogWarning(
+                        $"角色同时装备了多个坐骑表现，保留“{nextMount.DisplayName}”，忽略“{mountVisual.DisplayName}”。",
+                        this);
+                    continue;
+                }
+
+                nextMount = mountVisual;
                 continue;
             }
 
@@ -75,11 +92,33 @@ public sealed class CharacterEquipmentPresentation : MonoBehaviour
                 continue;
             }
 
+            pendingVisuals.Add(visual);
+        }
+
+        if (nextMount != null && mountedPresentation == null)
+        {
+            Debug.LogError(
+                $"装备了坐骑“{nextMount.DisplayName}”，但角色缺少 MountedCharacterPresentation 引用，不能切换骑乘表现。",
+                this);
+        }
+        else if (mountedPresentation != null)
+        {
+            mountedPresentation.SetMount(nextMount);
+        }
+
+        foreach (EquipmentRenderData visual in pendingVisuals)
+        {
             equipmentRenderer.Equip(visual, false);
             appliedVisuals.Add(visual);
         }
 
         equipmentRenderer.Refresh();
+        RefreshMountedRiderEquipmentOverlay();
+    }
+
+    public void RefreshMountedRiderEquipmentOverlay()
+    {
+        mountedPresentation?.RefreshRiderEquipmentOverlayFromRenderer();
     }
 
     private void ResolveReferences()

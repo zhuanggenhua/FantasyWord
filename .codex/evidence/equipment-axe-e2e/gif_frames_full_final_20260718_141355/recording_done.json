@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "scene": "Assets/Scenes/EquipmentSystemDemo.unity",
+  "character": "EquipmentSystemDemoCharacter",
+  "action": "Attack",
+  "direction": "SE",
+  "mainHand": "战斧",
+  "camera": { "name": "Main Camera", "orthographicSize": 5.5, "pixelWidth": 1920, "pixelHeight": 1080 },
+  "frames": [
+    { "index": 0, "normalizedTime": 0, "spriteName": "Minifantasy_CreaturesHumanAttack_0_02", "resolverLabel": "2", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.5, 0.75, 0.75, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_00.png" },
+    { "index": 1, "normalizedTime": 0.25, "spriteName": "Minifantasy_CreaturesHumanAttack_0_02", "resolverLabel": "2", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.5, 0.75, 0.75, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_01.png" },
+    { "index": 2, "normalizedTime": 0.5, "spriteName": "Minifantasy_CreaturesHumanAttack_0_02", "resolverLabel": "2", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.5, 0.75, 0.75, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_02.png" },
+    { "index": 3, "normalizedTime": 0.75, "spriteName": "Minifantasy_CreaturesHumanAttack_0_03", "resolverLabel": "3", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.75, 0.75, 1, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_03.png" },
+    { "index": 4, "normalizedTime": 0.99, "spriteName": "Minifantasy_CreaturesHumanAttack_0_03", "resolverLabel": "3", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.75, 0.75, 1, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_04.png" },
+    { "index": 5, "normalizedTime": 0, "spriteName": "Minifantasy_CreaturesHumanAttack_0_00", "resolverLabel": "0", "weaponTexture": "劈砍_斧_f", "weaponRect": [0, 0.75, 0.25, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_05.png" },
+    { "index": 6, "normalizedTime": 0.25, "spriteName": "Minifantasy_CreaturesHumanAttack_0_01", "resolverLabel": "1", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.25, 0.75, 0.5, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_06.png" },
+    { "index": 7, "normalizedTime": 0.5, "spriteName": "Minifantasy_CreaturesHumanAttack_0_02", "resolverLabel": "2", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.5, 0.75, 0.75, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_07.png" },
+    { "index": 8, "normalizedTime": 0.75, "spriteName": "Minifantasy_CreaturesHumanAttack_0_03", "resolverLabel": "3", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.75, 0.75, 1, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_08.png" },
+    { "index": 9, "normalizedTime": 0.99, "spriteName": "Minifantasy_CreaturesHumanAttack_0_03", "resolverLabel": "3", "weaponTexture": "劈砍_斧_f", "weaponRect": [0.75, 0.75, 1, 1], "path": "C:/Gamedev/Unity/Project/FantasyWord/.codex/evidence/equipment-axe-e2e/gif_frames_full_final_20260718_141355/axe_attack_full_09.png" }
+  ]
+}

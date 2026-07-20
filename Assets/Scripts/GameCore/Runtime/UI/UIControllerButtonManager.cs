@@ -50,12 +50,18 @@ namespace FantasyWord.GameCore
         [Tooltip("按控制器类型配置 SpriteLibraryAsset；每个库内需要用动作名作为分类、按钮状态作为标签。")]
         [SerializeField] private SerializableDictionary<EControllerType, SpriteLibraryAsset> m_controllerSpriteLibraries = null;
 
+        [InspectorName("显示按键提示")]
+        [Tooltip("默认关闭，避免测试时按键提示遮挡画面；需要检查提示时可在 Inspector 或代码中打开。")]
+        [SerializeField] private bool m_buttonPromptsVisible = false;
+
         private static readonly EButtonState[] s_buttonStates = (EButtonState[])Enum.GetValues(typeof(EButtonState));
 
         private readonly HashSet<UIControllerButton> m_buttons = new();
         private readonly List<UIControllerButton> m_staleButtons = new();
         private EControllerType m_controllerType;
         private bool m_controlsChangedListening = false;
+
+        public bool buttonPromptsVisible => m_buttonPromptsVisible;
 
         private void OnEnable()
         {
@@ -218,10 +224,40 @@ namespace FantasyWord.GameCore
             UpdateButton(button);
         }
 
+        public void SetButtonPromptsVisible(bool visible)
+        {
+            if (m_buttonPromptsVisible == visible)
+            {
+                return;
+            }
+
+            m_buttonPromptsVisible = visible;
+            UpdateControllerButtons();
+        }
+
+        [ContextMenu("显示按键提示")]
+        private void ShowButtonPrompts()
+        {
+            SetButtonPromptsVisible(true);
+        }
+
+        [ContextMenu("隐藏按键提示")]
+        private void HideButtonPrompts()
+        {
+            SetButtonPromptsVisible(false);
+        }
+
         private void UpdateButton(UIControllerButton button)
         {
             if (button == null || !button.isActiveAndEnabled)
             {
+                return;
+            }
+
+            button.SetPromptVisible(m_buttonPromptsVisible);
+            if (!m_buttonPromptsVisible)
+            {
+                button.Initialize(null, null);
                 return;
             }
 
@@ -231,6 +267,7 @@ namespace FantasyWord.GameCore
             {
                 Debug.LogError($"UI 控制器按键提示缺少 {m_controllerType} 图标库配置。", this);
                 button.Initialize(null, null);
+                button.SetPromptVisible(false);
                 return;
             }
 

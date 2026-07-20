@@ -14,7 +14,8 @@ namespace FantasyWord.GameCore
         Head,
         Torso,
         Hands,
-        Feet
+        Feet,
+        Mount
     }
 
     /// <summary>

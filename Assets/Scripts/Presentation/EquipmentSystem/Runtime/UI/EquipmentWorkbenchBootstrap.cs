@@ -1,4 +1,5 @@
 using TMPro;
+using FantasyWord.GameCore;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -22,6 +23,14 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
 
     [SerializeField]
     DirectionalSpriteLibraryDriver directionDriver;
+
+    [SerializeField]
+    [Tooltip("可选正式角色装备组件。绑定后工作台坐骑列表会把坐骑写入玩法 Mount 槽。")]
+    CharacterEquipment characterEquipment;
+
+    [SerializeField]
+    [Tooltip("可选装备表现同步器。绑定后坐骑穿戴后会立即刷新正式坐骑表现。")]
+    CharacterEquipmentPresentation characterEquipmentPresentation;
 
     [SerializeField]
     EquipmentWorkbenchController controller;
@@ -52,6 +61,8 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
         equipmentRenderer = GetComponent<EquipmentRenderer>();
         animationController = GetComponent<CharacterActionAnimatorDriver>();
         directionDriver = GetComponent<DirectionalSpriteLibraryDriver>();
+        characterEquipment = GetComponent<CharacterEquipment>();
+        characterEquipmentPresentation = GetComponent<CharacterEquipmentPresentation>();
         controller = GetComponent<EquipmentWorkbenchController>();
     }
 
@@ -126,7 +137,13 @@ public sealed class EquipmentWorkbenchBootstrap : MonoBehaviour
             return false;
         }
 
-        controller.Configure(catalog, equipmentRenderer, animationController, directionDriver);
+        controller.Configure(
+            catalog,
+            equipmentRenderer,
+            animationController,
+            directionDriver,
+            characterEquipment,
+            characterEquipmentPresentation);
         return true;
     }
 

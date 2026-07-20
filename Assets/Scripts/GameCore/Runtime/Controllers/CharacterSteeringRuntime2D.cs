@@ -41,7 +41,9 @@ namespace FantasyWord.GameCore
             Vector2 forward,
             string behaviourGroupId = null,
             float semanticQueryRadius = 0.0f,
-            float arrivalStopRadius = -1.0f)
+            float arrivalStopRadius = -1.0f,
+            float speedMultiplier = 1.0f,
+            SteeringWanderIntent2D? wanderIntent = null)
         {
             EnsureRegistered();
             m_handle.SubmitIntent(
@@ -52,8 +54,9 @@ namespace FantasyWord.GameCore
                 behaviourGroupId,
                 m_debugProbe != null && m_handle.Profile.DrawDebug,
                 semanticQueryRadius,
-                m_character.GetResolvedMoveSpeed(),
-                arrivalStopRadius);
+                m_character.GetResolvedMoveSpeed() * Mathf.Max(speedMultiplier, 0.0f),
+                arrivalStopRadius,
+                wanderIntent);
         }
 
         public void ApplyLatestResult()
@@ -62,17 +65,17 @@ namespace FantasyWord.GameCore
             float maxSpeed = Mathf.Max(m_handle.MaxSpeed, 0.0001f);
             float safeSpeedScale = Mathf.Clamp01(result.SafeVelocity.magnitude / maxSpeed);
             m_character.SetSteeringMotion(safeSpeedScale, result.PushCorrection);
-            m_character.SetMovementDirection(result.SafeDirection);
+            m_character.SetSteeringMovementDirection(result.SafeDirection);
         }
 
         public void Stop()
         {
             if (m_handle != null)
             {
-                Submit(false, null, Vector2.zero, m_character.transform.right);
+                Submit(false, null, Vector2.zero, ResolveCharacterForward());
             }
             m_character.SetSteeringMotion(1.0f, Vector2.zero);
-            m_character.SetMovementDirection(Vector2.zero);
+            m_character.SetSteeringMovementDirection(Vector2.zero);
         }
 
         public void Dispose()
@@ -100,6 +103,17 @@ namespace FantasyWord.GameCore
                 GameManager.Config.steeringNeighbourContactFilter,
                 GameManager.Config.steeringNeighbourContactFilter);
             m_handle.DebugSnapshotPublished += OnDebugSnapshotPublished;
+        }
+
+        private Vector2 ResolveCharacterForward()
+        {
+            Vector2 lookAtDirection = m_character.GetLookAtDirection();
+            if (lookAtDirection != Vector2.zero)
+            {
+                return lookAtDirection.normalized;
+            }
+
+            return m_character.transform.right;
         }
 
         private void OnDebugSnapshotPublished(SteeringDebugSnapshot2D snapshot)

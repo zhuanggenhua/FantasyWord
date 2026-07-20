@@ -8,7 +8,7 @@ namespace FantasyWord.GameCore
     {
         /// <summary>
         /// `AIController` 的内部业务行为模块。
-        /// 这里只维护目标、攻击和追击状态；转向求解、检测和局部避让统一交给 ContextSteering2D 世界模拟。
+        /// 这里只维护目标、攻击和战斗移动状态；转向求解、检测和局部避让统一交给 ContextSteering2D 世界模拟。
         /// </summary>
         private sealed class BehaviourRuntime
         {
@@ -17,9 +17,11 @@ namespace FantasyWord.GameCore
             private readonly AIController m_owner;
             private CharacterSteeringRuntime2D m_steeringAdapter = null;
             private readonly CharacterSteeringPathCursor2D m_pathCursor = new();
+            private readonly CombatWanderRuntime2D m_combatWander = new();
             private Vector2 m_steeringAverageOutput = Vector2.zero;
             private Vector2 m_targetPosition = Vector2.zero;
             private float m_navigationRepathTimer;
+            private bool m_waitingForAttackFacing = false;
 
             public BehaviourRuntime(AIController owner)
             {
@@ -38,6 +40,10 @@ namespace FantasyWord.GameCore
                 m_steeringAdapter = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);
                 ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId, "中间路线");
                 ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId, "移动目标追击");
+                if (m_owner.ShouldUseCombatWander)
+                {
+                    ValidateSteeringGroupMapping(m_owner.m_combatWanderSteeringGroupId, "战斗游走");
+                }
                 if (m_owner.ShouldUseTargetOrbitSteeringAtSoughtDistance)
                 {
                     ValidateSteeringGroupMapping(m_owner.TargetOrbitSteeringGroupIdValue, "近身环绕");
@@ -47,6 +53,8 @@ namespace FantasyWord.GameCore
             public void Stop()
             {
                 InvalidateNavigationPath();
+                m_waitingForAttackFacing = false;
+                m_combatWander.Reset();
                 m_steeringAdapter?.Stop();
             }
 
@@ -125,10 +133,12 @@ namespace FantasyWord.GameCore
                 if (m_owner.m_target && (m_owner.m_target.dead || !CombatSolver.IsJudiciousTarget(m_owner.m_subject, m_owner.m_target)))
                 {
                     m_owner.m_target = null;
+                    m_waitingForAttackFacing = false;
                 }
 
                 if (!m_owner.m_target)
                 {
+                    m_waitingForAttackFacing = false;
                     if (m_owner.m_retargetCooldownTimer == 0.0f)
                     {
                         m_owner.m_target = FindTarget();
@@ -144,28 +154,67 @@ namespace FantasyWord.GameCore
 
             private void TryAttackTarget(float distanceToTarget)
             {
-                if (CanSee(m_owner.m_target) && m_owner.m_attackCooldownTimer == 0.0f && distanceToTarget < m_owner.m_attackTriggerRadius)
+                if (!m_owner.m_target ||
+                    !CanSee(m_owner.m_target) ||
+                    m_owner.m_attackCooldownTimer != 0.0f ||
+                    distanceToTarget >= m_owner.m_attackTriggerRadius)
                 {
-                    if (m_owner.m_subject.TryGetFirstTriggerableFormalGasAbilityCode(out int formalGasAbilityCode))
-                    {
-                        Vector2 attackDirection = m_owner.m_target.transform.position - m_owner.transform.position;
-                        if (attackDirection.sqrMagnitude > 0.0001f)
-                        {
-                            attackDirection.Normalize();
-                            m_owner.m_subject.SetLookAtDirection(attackDirection);
-                            m_owner.m_subject.SetTargetDirection(attackDirection);
-                        }
-
-                        m_owner.m_subject.StopFireFormalGasAbility(formalGasAbilityCode);
-                        EAbilityFireCheckResult fireResult = m_owner.m_subject.FireFormalGasAbility(
-                            formalGasAbilityCode,
-                            GameCommandContext.AI(m_owner.m_subject));
-                        if (fireResult == EAbilityFireCheckResult.Valid)
-                        {
-                            m_owner.m_attackCooldownTimer = m_owner.m_attackCooldown;
-                        }
-                    }
+                    m_waitingForAttackFacing = false;
+                    return;
                 }
+
+                if (!m_owner.m_subject.TryGetFirstTriggerableFormalGasAbilityCode(out int formalGasAbilityCode))
+                {
+                    m_waitingForAttackFacing = false;
+                    return;
+                }
+
+                Vector2 attackDirection = m_owner.m_target.transform.position - m_owner.transform.position;
+                if (attackDirection.sqrMagnitude <= 0.0001f)
+                {
+                    m_waitingForAttackFacing = false;
+                    return;
+                }
+
+                attackDirection.Normalize();
+                m_owner.m_subject.SetTargetDirection(attackDirection);
+                if (!PrepareAttackFacing(attackDirection))
+                {
+                    return;
+                }
+
+                m_owner.m_subject.StopFireFormalGasAbility(formalGasAbilityCode);
+                EAbilityFireCheckResult fireResult = m_owner.m_subject.FireFormalGasAbility(
+                    formalGasAbilityCode,
+                    GameCommandContext.AI(m_owner.m_subject));
+                if (fireResult == EAbilityFireCheckResult.Valid)
+                {
+                    m_owner.m_attackCooldownTimer = m_owner.m_attackCooldown;
+                }
+            }
+
+            private bool PrepareAttackFacing(Vector2 attackDirection)
+            {
+                if (!m_owner.ShouldRequireTargetFacingBeforeAttack)
+                {
+                    m_waitingForAttackFacing = false;
+                    m_owner.m_subject.SetLookAtDirection(attackDirection);
+                    return true;
+                }
+
+                if (AIController.IsAttackFacingAligned(
+                        m_owner.m_subject.GetLookAtDirection(),
+                        attackDirection,
+                        m_owner.AttackFacingCompletionAngleDegrees))
+                {
+                    m_waitingForAttackFacing = false;
+                    return true;
+                }
+
+                // 对齐 duolafashi TurnTargetNode：未面向目标时只推进身体朝向，本次攻击保持等待。
+                m_waitingForAttackFacing = true;
+                m_owner.m_subject.SetLookAtDirection(attackDirection);
+                return false;
             }
 
             private void CheckIfTargetOutOfRange(float distanceToTarget)
@@ -184,6 +233,7 @@ namespace FantasyWord.GameCore
             {
                 m_owner.m_retargetCooldownTimer = retargetCooldown;
                 m_owner.m_target = null;
+                m_waitingForAttackFacing = false;
                 InvalidateNavigationPath();
             }
 
@@ -224,6 +274,37 @@ namespace FantasyWord.GameCore
                 float finalApproachDistance = soughtDistance +
                     ResolveNavigationWaypointTolerance();
 
+                if (CombatWanderRuntime2D.ShouldUse(
+                        m_owner.ShouldUseCombatWander,
+                        m_owner.m_target,
+                        distanceToDestination,
+                        m_owner.m_combatWanderRange))
+                {
+                    SteeringWanderIntent2D wanderIntent = m_combatWander.Tick(
+                        Time.fixedDeltaTime,
+                        m_owner.m_attackTriggerRadius,
+                        m_owner.m_combatWanderRange);
+                    Vector2 targetVelocity = Vector2.zero;
+                    if (m_owner.m_target.TryGetComponent(out Rigidbody2D wanderTargetBody))
+                    {
+                        targetVelocity = wanderTargetBody.linearVelocity;
+                    }
+
+                    m_steeringAdapter.Submit(
+                        true,
+                        m_targetPosition,
+                        targetVelocity,
+                        ResolveSubjectForward(),
+                        m_owner.m_combatWanderSteeringGroupId,
+                        m_owner.m_detectionRadius,
+                        speedMultiplier: m_owner.m_combatWanderSpeedMultiplier,
+                        wanderIntent: wanderIntent);
+                    m_steeringAdapter.ApplyLatestResult();
+                    m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                    ApplySubjectFacing(m_owner.CombatWanderFacingMode, m_steeringAverageOutput);
+                    return;
+                }
+
                 if (distanceToDestination <= finalApproachDistance)
                 {
                     bool useTargetOrbit =
@@ -245,16 +326,13 @@ namespace FantasyWord.GameCore
                         true,
                         m_targetPosition,
                         targetVelocity,
-                        m_owner.m_subject.transform.right,
+                        ResolveSubjectForward(),
                         finalGroupId,
                         m_owner.m_detectionRadius,
                         soughtDistance);
                     m_steeringAdapter.ApplyLatestResult();
-
-                    if (m_owner.m_subject.CanMove())
-                    {
-                        m_owner.m_subject.LookAtTarget(m_targetPosition);
-                    }
+                    m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                    ApplySubjectFacing(ResolveActiveFacingMode(), m_steeringAverageOutput);
                     return;
                 }
 
@@ -269,10 +347,10 @@ namespace FantasyWord.GameCore
                         false,
                         null,
                         Vector2.zero,
-                        m_owner.m_subject.transform.right,
+                        ResolveSubjectForward(),
                         semanticQueryRadius: m_owner.m_detectionRadius);
                     m_owner.m_subject.SetSteeringMotion(1.0f, Vector2.zero);
-                    m_owner.m_subject.SetMovementDirection(Vector2.zero);
+                    m_owner.m_subject.SetSteeringMovementDirection(Vector2.zero);
                     return;
                 }
 
@@ -281,7 +359,7 @@ namespace FantasyWord.GameCore
                     : (steeringTarget - currentPosition);
                 if (forward.sqrMagnitude <= 0.0001f)
                 {
-                    forward = m_owner.m_subject.transform.right;
+                    forward = ResolveSubjectForward();
                 }
 
                 Vector2 resolvedTargetVelocity = Vector2.zero;
@@ -300,8 +378,59 @@ namespace FantasyWord.GameCore
                     behaviourGroupId,
                     m_owner.m_detectionRadius,
                     isFinalTarget ? soughtDistance : -1.0f);
-                m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
                 m_steeringAdapter.ApplyLatestResult();
+                m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                ApplySubjectFacing(ResolveActiveFacingMode(), m_steeringAverageOutput);
+            }
+
+            private AICharacterFacingMode2D ResolveActiveFacingMode()
+            {
+                if (m_waitingForAttackFacing)
+                {
+                    return AICharacterFacingMode2D.FaceTarget;
+                }
+
+                return m_owner.m_target
+                    ? m_owner.TargetPursuitFacingMode
+                    : AICharacterFacingMode2D.FaceMovement;
+            }
+
+            private Vector2 ResolveSubjectForward()
+            {
+                Vector2 lookAtDirection = m_owner.m_subject.GetLookAtDirection();
+                if (lookAtDirection != Vector2.zero)
+                {
+                    return lookAtDirection.normalized;
+                }
+
+                return m_owner.m_subject.transform.right;
+            }
+
+            private void ApplySubjectFacing(AICharacterFacingMode2D facingMode, Vector2 movementDirection)
+            {
+                if (!m_owner.m_subject.CanMove())
+                {
+                    return;
+                }
+
+                switch (facingMode)
+                {
+                    case AICharacterFacingMode2D.FaceTarget:
+                        if (m_owner.m_target)
+                        {
+                            m_owner.m_subject.LookAtTarget(m_targetPosition);
+                        }
+                        break;
+                    case AICharacterFacingMode2D.FaceMovement:
+                        if (movementDirection != Vector2.zero)
+                        {
+                            m_owner.m_subject.SetLookAtDirection(movementDirection.normalized);
+                        }
+                        break;
+                    case AICharacterFacingMode2D.KeepCurrent:
+                    default:
+                        break;
+                }
             }
 
             private bool TryResolveSteeringTarget(

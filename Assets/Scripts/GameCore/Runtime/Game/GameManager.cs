@@ -49,11 +49,9 @@ namespace FantasyWord.GameCore
 
         private void Awake()
         {
-            FormalAbilityRuntimeBootstrap.EnsureInitialized();
             _instance = this;
 
             FindSystems();
-            InitializeSystems();
         }
 
         private void OnEnable()
@@ -65,10 +63,36 @@ namespace FantasyWord.GameCore
             }
         }
 
-        private void Start()
+        private async void Start()
         {
-            m_startInvoked = true;
-            StartSystems();
+            try
+            {
+                await ResourceSystem.InitializeAsync(cancellationToken: destroyCancellationToken);
+                await ModAPI.Initialize();
+                if (this == null || _instance != this)
+                {
+                    return;
+                }
+
+                FormalAbilityRuntimeBootstrap.EnsureInitialized();
+                InitializeSystems();
+
+                m_startInvoked = true;
+                if (m_lifecycleEventsEnabled)
+                {
+                    StartSystems();
+                }
+            }
+            catch (OperationCanceledException) when (this == null)
+            {
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(new InvalidOperationException(
+                    "GameManager 启动失败：YooAsset、Mod 或 GameCore 系统未完成初始化。", exception),
+                    this);
+                enabled = false;
+            }
         }
 
         private void OnDisable()
@@ -79,6 +103,18 @@ namespace FantasyWord.GameCore
             }
 
             m_lifecycleEventsEnabled = false;
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance != this)
+            {
+                return;
+            }
+
+            ModAPI.Shutdown();
+            ResourceSystem.Shutdown();
+            _instance = null;
         }
 
         public static bool Exists() => _instance;

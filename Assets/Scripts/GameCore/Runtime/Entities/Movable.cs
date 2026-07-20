@@ -24,7 +24,7 @@ namespace FantasyWord.GameCore
 
     /// <summary>
     /// 角色朝向更新策略。
-    /// MovementBased 跟随实际移动，TargetBased 跟随技能或交互目标方向。
+    /// MovementBased 跟随移动意图，TargetBased 跟随技能或交互目标方向。
     /// </summary>
     public enum ELookAtDirectionUpdateStrategy
     {
@@ -108,7 +108,7 @@ namespace FantasyWord.GameCore
         [Tooltip("允许死亡状态继续执行普通移动。默认关闭。")]
         [SerializeField] private bool m_canMoveDuringDeath = false;
         [InspectorName("朝向更新策略")]
-        [Tooltip("决定朝向跟随移动方向还是目标方向。")]
+        [Tooltip("决定朝向跟随移动意图还是技能/交互目标方向。")]
         [SerializeField] protected ELookAtDirectionUpdateStrategy m_lookAtDirectionUpdateStrategy = ELookAtDirectionUpdateStrategy.MovementBased;
 
         [Header("控制器设置")]
@@ -123,6 +123,7 @@ namespace FantasyWord.GameCore
 
         protected bool m_destroyOnDeath = true;
         protected Vector2 m_lookAtDirection = Vector2.zero;
+        private UnityEvent<Vector2> m_lookAtDirectionChangedEvent = new();
         private UnityEvent<Vector2> m_targetDirectionChangedEvent = new();
         private Vector2? m_targetDirectionOverride = null;
         private Vector2 m_movementDirection;
@@ -161,6 +162,22 @@ namespace FantasyWord.GameCore
         public void RemoveTargetDirectionChangedListener(UnityAction<Vector2> listener)
         {
             m_targetDirectionChangedEvent.RemoveListener(listener);
+        }
+
+        /// <summary>
+        /// 监听实体实际面朝方向变化；用于身体和换装表现，不等同于技能或交互目标方向。
+        /// </summary>
+        public void AddLookAtDirectionChangedListener(UnityAction<Vector2> listener)
+        {
+            m_lookAtDirectionChangedEvent.AddListener(listener);
+        }
+
+        /// <summary>
+        /// 取消监听实体实际面朝方向变化。
+        /// </summary>
+        public void RemoveLookAtDirectionChangedListener(UnityAction<Vector2> listener)
+        {
+            m_lookAtDirectionChangedEvent.RemoveListener(listener);
         }
 
         public bool TryGetController<TController>(out TController controller) where TController : class
@@ -410,6 +427,14 @@ namespace FantasyWord.GameCore
         public bool HasMoveOrder() => motionRuntime.HasMoveOrder();
         public bool HasActiveMovementIntent() => motionRuntime.HasActiveMovementIntent();
 
+        /// <summary>
+        /// 把本次真实移动结果交给动画表现；角色子类可转交给自己的正式动作驱动。
+        /// </summary>
+        protected virtual void UpdateMovementAnimation(Vector2 movement)
+        {
+            m_animationStrategy?.SetMovement(movement);
+        }
+
         protected virtual void FixedUpdate()
         {
             activeController?.FixedUpdate();
@@ -425,7 +450,15 @@ namespace FantasyWord.GameCore
 
         public void SetMovementDirection(Vector2 direction)
         {
-            motionRuntime.SetMovementDirection(direction);
+            motionRuntime.SetMovementDirection(direction, true);
+        }
+
+        /// <summary>
+        /// 写入移动求解器产出的安全移动方向；身体朝向必须由玩家输入或 AI 状态层显式决定。
+        /// </summary>
+        internal void SetSteeringMovementDirection(Vector2 direction)
+        {
+            motionRuntime.SetMovementDirection(direction, false);
         }
 
         public void SetSteeringMotion(float speedScale, Vector2 correctionDisplacement)
@@ -493,6 +526,7 @@ namespace FantasyWord.GameCore
                 }
 
                 m_lookAtDirection = direction;
+                m_lookAtDirectionChangedEvent.Invoke(direction);
                 m_animationStrategy?.SetLookAtDirection(direction);
             }
         }
@@ -530,6 +564,14 @@ namespace FantasyWord.GameCore
         public Vector2 GetTargetDirection()
         {
             return m_targetDirectionOverride ?? m_lookAtDirection;
+        }
+
+        /// <summary>
+        /// 返回实体当前实际面朝方向；移动朝向表现应读取它，而不是读取技能或交互目标方向。
+        /// </summary>
+        public Vector2 GetLookAtDirection()
+        {
+            return m_lookAtDirection;
         }
 
         public bool TryGetGas2DFacingDirection(out Vector2 direction)

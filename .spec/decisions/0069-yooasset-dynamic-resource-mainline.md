@@ -1,0 +1,24 @@
+# 0069-YooAsset 动态资源与 Mod 包主轴
+
+- 日期：2026-07-18
+- 状态：已采纳
+- 背景：
+  - `0002-ResourceSystem 资源 owner 边界` 曾把 Chris 的 Addressables 外部 catalog 方案作为动态资源入口，但当前项目没有形成正式 Addressables 内容配置，项目玩法素材反而进入了 `Assets/Resources`。
+  - YokiFrame 已提供 YooAsset 3.x 的初始化、ResKit 加载器和 UIKit 面板加载器；当前工程已嵌入 YooAsset `3.0.4`。
+  - FantasyWord 需要官方动态内容、DLC 和 Mod 共用同一套包、地址和句柄生命周期，同时保留 `DatabaseRegistry`、稳定 ID 与 Unity 序列化引用作为玩法内容真相。
+- 决策：
+  - FantasyWord 唯一正式动态资源主轴改为 YooAsset。默认内容使用 `DefaultPackage`；UIKit 正式面板和本地化 JSON 由 YooAsset Collector 收集并以无后缀地址加载。
+  - `ResourceSystem` 是项目侧 YooAsset 组合入口，复用 YokiFrame `YooInit`、ResKit 和 `YooAssetPanelLoaderPool`，不再加载 Addressables catalog，也不在 GameCore 运行时引用 Addressables/ResourceManager 程序集。
+  - 每个启用 Mod 必须提供独立 YooAsset `ResourcePackage` 和唯一 `packageName`；`loadOrder` 决定同地址覆盖优先级，`contentHash` 作为联机清单与内容一致性字段保留。Mod 包不得接管数据库、存档或规则 owner。
+  - 所有 YooAsset 句柄必须释放；包卸载固定执行 `DestroyPackageAsync`，成功后再 `YooAssets.RemovePackage`。跨多个包的合并请求必须在任一占用包卸载时整体释放。
+  - 项目玩法素材不得回到 `Assets/Resources`。该目录只允许保留已核实为第三方运行所需的启动配置；YokiFrame、TMP、BroAudio 等第三方插件内部的 `Resources` 不代表项目动态资源方案。
+  - `com.unity.addressables` 暂时只作为 YokiFrame 旧资源代码生成器和第三方编辑器模块的兼容依赖，不是运行时主轴；当这些编辑器依赖退出后再单独移除包。
+  - 本决策不引入 Mod C# 脚本热更、任意代码执行、创意工坊发布或完整数据合并规则。
+- 影响：
+  - `Assets/GameRes/UI/Panels` 与 `Assets/GameRes/Localization` 进入 `DefaultPackage` Collector；字体等序列化依赖随引用关系收集。
+  - `GameManager` 必须先等待 YooAsset 与本地化初始化，再加载 Mod 包和启动 GameCore 系统；销毁顺序反向执行。
+  - 静态门禁必须拒绝 GameCore 的 Addressables 运行时引用、旧 catalog API、项目玩法素材回流 `Assets/Resources`，并要求 YooAsset Collector 配置存在。
+  - UIKit 编辑器 smoke 可以使用 `AssetDatabase` 加载测试 Prefab，但测试结束必须恢复 YooAsset 正式面板加载器；编辑器测试资产不进入玩家包。
+- 替代关系：
+  - 本决策取代 `0002-resource-system-owner-boundary.md` 中“`ResourceSystem` 使用 Addressables、Mod 通过外部 catalog 加载、SoftAssetReference 表示 Addressables 地址”的部分。
+  - 本决策不改变 `0001`、`0002` 对官方玩法数据 owner 的裁决：数据库稳定引用和 Unity 序列化引用仍优先于动态资源地址。

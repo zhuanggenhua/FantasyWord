@@ -40,7 +40,7 @@ namespace ContextSteering2D
             }
 
             SteeringSelection2D selection = m_context.Resolve(contributionCount, profile.CombineMode, profile.SelectionMode);
-            float resolvedMaxSpeed = maxSpeed > 0.0f ? maxSpeed : profile.MaxSpeed;
+            float resolvedMaxSpeed = maxSpeed >= 0.0f ? maxSpeed : profile.MaxSpeed;
             Vector2 preferredVelocity = selection.Direction * resolvedMaxSpeed * selection.SpeedScale * selection.Strength;
             return new SteeringResult2D(
                 selection.Direction,

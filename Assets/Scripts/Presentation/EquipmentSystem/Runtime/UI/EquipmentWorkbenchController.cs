@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FantasyWord.GameCore;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -22,6 +23,12 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
     [SerializeField]
     DirectionalSpriteLibraryDriver directionDriver;
 
+    [SerializeField]
+    CharacterEquipment characterEquipment;
+
+    [SerializeField]
+    CharacterEquipmentPresentation characterEquipmentPresentation;
+
     bool _initialized;
     int _currentCharacterIndex = -1;
     EquipmentType _currentCategory;
@@ -31,6 +38,9 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
 
     readonly List<EquipmentWorkbenchEquipmentOption> _currentOptions =
         new List<EquipmentWorkbenchEquipmentOption>();
+
+    readonly List<EquipmentWorkbenchMountOption> _currentMountOptions =
+        new List<EquipmentWorkbenchMountOption>();
 
     readonly List<CharacterAppearance> _appearanceOptions = new List<CharacterAppearance>();
     readonly Dictionary<CharacterAppearance, int> _appearanceIndices =
@@ -43,6 +53,7 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
 
     public EquipmentWorkbenchCatalog Catalog => catalog;
     public EquipmentRenderer Renderer => equipmentRenderer;
+    public CharacterEquipment CharacterEquipment => characterEquipment;
     public CharacterActionAnimatorDriver CharacterActionAnimatorDriver => animationController;
     public DirectionalSpriteLibraryDriver DirectionDriver => directionDriver;
     public int CurrentCharacterIndex => _currentCharacterIndex;
@@ -65,12 +76,16 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         EquipmentWorkbenchCatalog newCatalog,
         EquipmentRenderer newRenderer,
         CharacterActionAnimatorDriver newCharacterActionAnimatorDriver,
-        DirectionalSpriteLibraryDriver newDirectionDriver)
+        DirectionalSpriteLibraryDriver newDirectionDriver,
+        CharacterEquipment newCharacterEquipment = null,
+        CharacterEquipmentPresentation newCharacterEquipmentPresentation = null)
     {
         catalog = newCatalog;
         equipmentRenderer = newRenderer;
         animationController = newCharacterActionAnimatorDriver;
         directionDriver = newDirectionDriver;
+        characterEquipment = newCharacterEquipment;
+        characterEquipmentPresentation = newCharacterEquipmentPresentation;
         _initialized = false;
     }
 
@@ -85,6 +100,10 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
             animationController = GetComponent<CharacterActionAnimatorDriver>();
         if (directionDriver == null)
             directionDriver = GetComponent<DirectionalSpriteLibraryDriver>();
+        if (characterEquipment == null)
+            TryGetComponent(out characterEquipment);
+        if (characterEquipmentPresentation == null)
+            TryGetComponent(out characterEquipmentPresentation);
 
         if (catalog == null || equipmentRenderer == null || animationController == null || directionDriver == null)
             return;
@@ -127,6 +146,20 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         return _currentOptions;
     }
 
+    public bool HasMountOptions()
+    {
+        return catalog != null && catalog.HasMountOptions;
+    }
+
+    public IReadOnlyList<EquipmentWorkbenchMountOption> GetMountOptions()
+    {
+        _currentMountOptions.Clear();
+        if (catalog != null)
+            catalog.GetMountOptions(_currentMountOptions);
+
+        return _currentMountOptions;
+    }
+
     public IReadOnlyList<CharacterAppearance> GetAppearanceOptions()
     {
         EnsureAppearanceOptions();
@@ -145,6 +178,22 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         return option != null
             && _equippedOptions.TryGetValue(option.Type, out EquipmentWorkbenchEquipmentOption equipped)
             && equipped == option;
+    }
+
+    public EquipmentWorkbenchMountOption GetEquippedMountOption()
+    {
+        if (catalog == null || characterEquipment == null)
+            return null;
+
+        return characterEquipment.TryGetEquipment(EEquipmentType.Mount, out Equipment equipment)
+            && catalog.TryGetMountOption(equipment, out EquipmentWorkbenchMountOption option)
+                ? option
+                : null;
+    }
+
+    public bool IsMountEquipped(EquipmentWorkbenchMountOption option)
+    {
+        return option != null && GetEquippedMountOption() == option;
     }
 
     public int GetTotalStat(WorkbenchStatType stat)
@@ -229,6 +278,7 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
             return;
 
         equipmentRenderer.Equip(option.Visual);
+        characterEquipmentPresentation?.RefreshMountedRiderEquipmentOverlay();
         SyncEquippedOptionsFromRenderer();
         NotifyStateChanged();
     }
@@ -243,8 +293,62 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         if (current != null)
             equipmentRenderer.Unequip(current);
 
+        characterEquipmentPresentation?.RefreshMountedRiderEquipmentOverlay();
         SyncEquippedOptionsFromRenderer();
         NotifyStateChanged();
+    }
+
+    public bool EquipMountOption(EquipmentWorkbenchMountOption option)
+    {
+        InitializeIfNeeded();
+        if (option == null || option.Equipment == null)
+            return false;
+
+        if (option.Equipment.type != EEquipmentType.Mount || option.MountVisual == null)
+        {
+            Debug.LogError(
+                $"坐骑选项“{option.DisplayName}”没有配置为正式 Mount 装备或缺少 MountRenderData。",
+                this);
+            return false;
+        }
+
+        if (characterEquipment == null)
+        {
+            Debug.LogError("工作台没有绑定正式 CharacterEquipment，不能把坐骑写入玩法 Mount 槽。", this);
+            return false;
+        }
+
+        EEquipmentOperationResult result = characterEquipment.TryEquip(option.Equipment, out _);
+        if (result != EEquipmentOperationResult.Valid)
+        {
+            Debug.LogWarning($"工作台穿戴坐骑“{option.DisplayName}”失败：{result}。", this);
+            NotifyStateChanged();
+            return false;
+        }
+
+        NotifyStateChanged();
+        return true;
+    }
+
+    public bool UnequipMount()
+    {
+        InitializeIfNeeded();
+        if (characterEquipment == null)
+        {
+            Debug.LogError("工作台没有绑定正式 CharacterEquipment，不能卸下玩法 Mount 槽。", this);
+            return false;
+        }
+
+        EEquipmentOperationResult result = characterEquipment.TryUnequip(EEquipmentType.Mount, out _);
+        if (result != EEquipmentOperationResult.Valid)
+        {
+            Debug.LogWarning($"工作台卸下坐骑失败：{result}。", this);
+            NotifyStateChanged();
+            return false;
+        }
+
+        NotifyStateChanged();
+        return true;
     }
 
     void ApplyCharacter(int index, bool notify)
@@ -281,6 +385,7 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         }
 
         equipmentRenderer.Refresh();
+        characterEquipmentPresentation?.RefreshMountedRiderEquipmentOverlay();
         SyncEquippedOptionsFromRenderer();
 
         if (notify)
@@ -406,6 +511,8 @@ public sealed class EquipmentWorkbenchController : MonoBehaviour
         {
             option?.BonusStats?.AddTo(_statTotals);
         }
+
+        GetEquippedMountOption()?.BonusStats?.AddTo(_statTotals);
     }
 
     void NotifyStateChanged()

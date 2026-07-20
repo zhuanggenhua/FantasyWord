@@ -1,0 +1,88 @@
+{
+  "goal": "将 FantasyWord 唯一动态资源主轴从 Addressables/Resources 重构为 YooAsset，并完成 UIKit 与 Mod 包验收",
+  "status": "in_progress",
+  "acceptance_criteria": [
+    {
+      "id": "C1",
+      "description": "YooAsset 3.0.4 安装并通过 Unity 编译",
+      "status": "passed",
+      "evidence": [
+        "Packages/com.tuyoogame.yooasset/package.json: version 3.0.4",
+        "Packages/packages-lock.json: com.tuyoogame.yooasset source=embedded",
+        "Unity final state: isPlaying=false, isCompiling=false, scriptCompilationFailed=false"
+      ]
+    },
+    {
+      "id": "C2",
+      "description": "ResourceSystem 与 ModLoader 不再依赖 Addressables 运行时",
+      "status": "passed",
+      "evidence": [
+        "scripts/Invoke-ResourceOwnerStaticGate.ps1: RuntimeAddressablesHitCount=0",
+        "Assets/Scripts/GameCore/FantasyWord.GameCore.asmdef no longer references UniTask.Addressables, Unity.Addressables or Unity.ResourceManager",
+        "ModLoader loads independent YooAsset packages through ResourceSystem.LoadModPackageAsync"
+      ]
+    },
+    {
+      "id": "C3",
+      "description": "UIKit 正式面板由 YooAsset 默认包加载且退出 Assets/Resources",
+      "status": "passed",
+      "evidence": [
+        "Collector BeginCollect returned 12 addresses including UIAbilities, UIEquipmentWorkbench and localization",
+        "PlayMode runtime probe opened and closed formal UISettings through the YooAsset panel loader",
+        "Assets/GameRes/UI/Panels contains the 11 formal UIKit panel prefabs"
+      ]
+    },
+    {
+      "id": "C4",
+      "description": "YooAsset Collector、EditorSimulate 与句柄释放链可验证",
+      "status": "pending",
+      "evidence": [
+        "EditorSimulateBuildInvoker produced Bundles/StandaloneWindows64/DefaultPackage/Simulate with 3 manifest files",
+        "PlayMode loaded localization TextAsset and verified the shared ResourceHandle became invalid after Dispose",
+        "UIKitSmokeValidator passed before its prefabs moved out of Tests/Resources, with stack depths 1 -> 2 -> 1 -> 0 and no failures",
+        "Both smoke prefabs now exist under Assets/Editor/GameCore/Tests/Fixtures/UIKit, but the final-path PlayMode smoke is pending because ClickMoveTest remains dirty"
+      ]
+    },
+    {
+      "id": "C5",
+      "description": "Resources 只保留明确允许的启动配置，遗留资源已分类收口",
+      "status": "passed",
+      "evidence": [
+        "scripts/Invoke-ResourceOwnerStaticGate.ps1: UnexpectedResourcesAssetCount=0",
+        "Assets/Resources contains only DOTweenSettings.asset plus metadata",
+        "Formal UI, fonts and localization assets were moved with their existing GUIDs"
+      ]
+    },
+    {
+      "id": "C6",
+      "description": "项目规范、决策、门禁与依赖清单同步完成",
+      "status": "passed",
+      "evidence": [
+        ".spec/decisions/0069-yooasset-dynamic-resource-mainline.md",
+        "node .spec/tools/spec-lint.mjs: passed",
+        "scripts/Invoke-ResourceOwnerStaticGate.ps1: CollectorContractPresent=true, Passed=true"
+      ]
+    },
+    {
+      "id": "C7",
+      "description": "独立 Mod 真包可由 ResourceSystem 初始化、加载、释放和移除",
+      "status": "pending",
+      "evidence": [
+        "ModSmokePackage Collector was created and then removed after the build attempt",
+        "YooAsset ScriptableBuildPipeline stopped at TaskPrepare_SBP with ErrorCode101: Found unsaved scene",
+        "scene-list-opened confirmed Assets/Scenes/ClickMoveTest.unity remains dirty; no save or discard was performed"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": ".codex/evidence/yooasset-refactor-task.json",
+      "description": "重构验收状态",
+      "required": true
+    }
+  ],
+  "notes": [
+    "DefaultPackage compile, collect, simulate, runtime load, localization and formal UIKit validation passed.",
+    "The final-path UIKit smoke and Mod bundle end-to-end check require the unrelated dirty ClickMoveTest scene to be saved or otherwise cleared by the user before PlayMode/build verification can continue."
+  ]
+}

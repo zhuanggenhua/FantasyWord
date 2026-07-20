@@ -8,7 +8,7 @@ using UObject = UnityEngine.Object;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 按地址缓存一组 Addressables 资源，迁自 Chris.ResourceCache。
+    /// 按地址缓存一组 YooAsset 资源。
     /// 它服务资源加载生命周期，不承担 GameCore 数据库条目的稳定 ID 真相。
     /// </summary>
     public class ResourceCache<TAsset> : IDisposable, IReadOnlyDictionary<string, TAsset>

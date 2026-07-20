@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using YokiFrame;
 
@@ -13,6 +14,10 @@ namespace FantasyWord.GameCore
     {
         private const string SmokeStackName = "fw_uikit_smoke";
         private const string SmokeTag = "fw-uikit-smoke";
+        private const string PrimaryPanelAssetPath =
+            "Assets/Editor/GameCore/Tests/Fixtures/UIKit/UIKitSmokePrimaryPanel.prefab";
+        private const string SecondaryPanelAssetPath =
+            "Assets/Editor/GameCore/Tests/Fixtures/UIKit/UIKitSmokeSecondaryPanel.prefab";
 
         /// <summary>
         /// UIKit smoke 的完整验证结果，记录资源、栈深度、焦点和清理状态，供桥接脚本写入 JSON 证据。
@@ -39,7 +44,7 @@ namespace FantasyWord.GameCore
         }
 
         /// <summary>
-        /// UIKit smoke 运行前需要存在的 Resources 资产证据。
+        /// UIKit smoke 运行前需要存在的框架根节点与编辑器测试资产证据。
         /// </summary>
         [Serializable]
         public sealed class UIKitSmokeResourceEvidence
@@ -82,11 +87,12 @@ namespace FantasyWord.GameCore
                 UIKit.HotCacheEnabled = false;
                 UIKit.FocusSystemEnabled = true;
                 CleanupSmokeArtifacts();
+                UIKit.SetPanelLoader(new EditorSmokePanelLoaderPool());
 
                 result.Resources = CaptureResources();
-                Require(result.Resources.UIKitRootPrefabFound, "缺少 UIKit 根 prefab：Resources/UIKit.prefab。", failures);
-                Require(result.Resources.PrimaryPanelPrefabFound, "缺少主 smoke 面板 prefab：Resources/Art/UIPrefab/UIKitSmokePrimaryPanel.prefab。", failures);
-                Require(result.Resources.SecondaryPanelPrefabFound, "缺少次 smoke 面板 prefab：Resources/Art/UIPrefab/UIKitSmokeSecondaryPanel.prefab。", failures);
+                Require(result.Resources.UIKitRootPrefabFound, "缺少 YokiFrame 内部的 UIKit 根 prefab。", failures);
+                Require(result.Resources.PrimaryPanelPrefabFound, $"缺少主 smoke 面板 prefab：{PrimaryPanelAssetPath}。", failures);
+                Require(result.Resources.SecondaryPanelPrefabFound, $"缺少次 smoke 面板 prefab：{SecondaryPanelAssetPath}。", failures);
 
                 UIKitSmokePrimaryPanel primaryPanel = OpenSmokePanel<UIKitSmokePrimaryPanel>(failures);
                 if (primaryPanel == null)
@@ -159,6 +165,7 @@ namespace FantasyWord.GameCore
             {
                 CleanupSmokeArtifacts();
                 UIKit.ClearFocus();
+                UIKit.SetPanelLoader(new YooAssetPanelLoaderPool());
                 UIKit.FocusSystemEnabled = previousFocusSystemEnabled;
                 UIKit.HotCacheEnabled = previousHotCacheEnabled;
             }
@@ -169,8 +176,8 @@ namespace FantasyWord.GameCore
             return new UIKitSmokeResourceEvidence
             {
                 UIKitRootPrefabFound = Resources.Load<GameObject>("UIKit") != null,
-                PrimaryPanelPrefabFound = Resources.Load<GameObject>(BuildPanelResourcePath(typeof(UIKitSmokePrimaryPanel))) != null,
-                SecondaryPanelPrefabFound = Resources.Load<GameObject>(BuildPanelResourcePath(typeof(UIKitSmokeSecondaryPanel))) != null,
+                PrimaryPanelPrefabFound = AssetDatabase.LoadAssetAtPath<GameObject>(PrimaryPanelAssetPath) != null,
+                SecondaryPanelPrefabFound = AssetDatabase.LoadAssetAtPath<GameObject>(SecondaryPanelAssetPath) != null,
             };
         }
 
@@ -224,8 +231,50 @@ namespace FantasyWord.GameCore
             UIKit.ClosePanelsByTag(SmokeTag);
         }
 
-        private static string BuildPanelResourcePath(Type panelType) =>
-            $"{DefaultPanelLoaderPool.DEFAULT_PATH_PREFIX}/{panelType.Name}";
+        private sealed class EditorSmokePanelLoaderPool : AbstractPanelLoaderPool
+        {
+            protected override IPanelLoader CreatePanelLoader() => new EditorSmokePanelLoader(this);
+        }
+
+        private sealed class EditorSmokePanelLoader : IPanelLoader
+        {
+            private readonly IPanelLoaderPool m_loaderPool;
+
+            public EditorSmokePanelLoader(IPanelLoaderPool loaderPool)
+            {
+                m_loaderPool = loaderPool;
+            }
+
+            public GameObject Load(PanelHandler handler)
+            {
+                string path = GetSmokePanelAssetPath(handler.Type);
+                return string.IsNullOrEmpty(path)
+                    ? null
+                    : AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            }
+
+            public void LoadAsync(PanelHandler handler, Action<GameObject> onLoadComplete)
+            {
+                onLoadComplete?.Invoke(Load(handler));
+            }
+
+            public void UnLoadAndRecycle()
+            {
+                m_loaderPool.RecycleLoader(this);
+            }
+
+            private static string GetSmokePanelAssetPath(Type panelType)
+            {
+                if (panelType == typeof(UIKitSmokePrimaryPanel))
+                {
+                    return PrimaryPanelAssetPath;
+                }
+
+                return panelType == typeof(UIKitSmokeSecondaryPanel)
+                    ? SecondaryPanelAssetPath
+                    : null;
+            }
+        }
 
         private static void Require(bool condition, string failure, List<string> failures)
         {

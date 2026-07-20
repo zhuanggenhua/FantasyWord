@@ -11,12 +11,6 @@ namespace FantasyWord.Presentation
     [DisallowMultipleComponent]
     public sealed class WaterReflectionCaster2D : MonoBehaviour
     {
-        private static readonly int ReflectionEnabledId = Shader.PropertyToID("_WaterReflectionProxy");
-        private static readonly int ReflectionAnchorId = Shader.PropertyToID("_WaterReflectionAnchorWS");
-        private static readonly int ReflectionVerticalScaleId = Shader.PropertyToID("_WaterReflectionVerticalScale");
-        private static readonly int ReflectionSkewId = Shader.PropertyToID("_WaterReflectionSkew");
-        private static readonly int ReflectionLengthScaleId = Shader.PropertyToID("_WaterReflectionLengthScale");
-
         [Header("反射来源")]
         [Tooltip("没有换装渲染器时使用的正式 SpriteRenderer。必须显式配置，运行时不自动扫描子级。")]
         [SerializeField] private SpriteRenderer[] m_sourceRenderers = System.Array.Empty<SpriteRenderer>();
@@ -25,7 +19,7 @@ namespace FantasyWord.Presentation
         [SerializeField] private EquipmentRenderer m_equipmentRenderer;
 
         [Header("45 度倒影")]
-        [Tooltip("反射绕该锚点生成；通常放在角色脚底或物体接地点。")]
+        [Tooltip("普通 Sprite 的反射接地点；换装角色优先使用 CharacterFrameData 的正式地面基准，缺失时才使用这里。")]
         [SerializeField] private Transform m_reflectionAnchor;
 
         [Tooltip("倒影相对原 Sprite 高度的压缩比例。")]
@@ -53,20 +47,29 @@ namespace FantasyWord.Presentation
         private float m_runtimeStrength;
         private float m_runtimeLengthScale = 1f;
 
-        public Vector2 ReflectionAnchorPosition =>
-            m_reflectionAnchor != null ? m_reflectionAnchor.position : transform.position;
+        public Vector2 ReflectionAnchorPosition
+        {
+            get
+            {
+                if (m_equipmentRenderer != null &&
+                    m_equipmentRenderer.TryGetGroundAnchorWorldPosition(out Vector2 groundPosition))
+                {
+                    return groundPosition;
+                }
+
+                return m_reflectionAnchor != null
+                    ? m_reflectionAnchor.position
+                    : transform.position;
+            }
+        }
 
         private sealed class ProxyBinding
         {
             public SpriteRenderer Source;
+            public Transform TransformRoot;
+            public Transform AxisCorrection;
             public SpriteRenderer Proxy;
             public MaterialPropertyBlock PropertyBlock;
-            public bool SourceHadPropertyBlock;
-            public bool ReflectionPropertiesInitialized;
-            public Vector2 ReflectionAnchor;
-            public float VerticalScale;
-            public float Skew;
-            public float LengthScale;
         }
 
         private void Awake()
@@ -306,20 +309,37 @@ namespace FantasyWord.Presentation
 
         private ProxyBinding CreateProxy(SpriteRenderer source)
         {
-            GameObject proxyObject = new($"Water Reflection Proxy - {source.name}");
-            proxyObject.hideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild;
-            proxyObject.layer = m_system.ProxyLayer;
-            proxyObject.transform.SetParent(source.transform, false);
+            HideFlags proxyHideFlags = HideFlags.DontSaveInEditor | HideFlags.DontSaveInBuild;
+
+            GameObject transformRootObject = new($"Water Reflection Transform - {source.name}")
+            {
+                hideFlags = proxyHideFlags,
+                layer = m_system.ProxyLayer
+            };
+
+            GameObject axisCorrectionObject = new($"Water Reflection Axis - {source.name}")
+            {
+                hideFlags = proxyHideFlags,
+                layer = m_system.ProxyLayer
+            };
+            axisCorrectionObject.transform.SetParent(transformRootObject.transform, false);
+
+            GameObject proxyObject = new($"Water Reflection Proxy - {source.name}")
+            {
+                hideFlags = proxyHideFlags,
+                layer = m_system.ProxyLayer
+            };
+            proxyObject.transform.SetParent(axisCorrectionObject.transform, false);
 
             SpriteRenderer proxy = proxyObject.AddComponent<SpriteRenderer>();
-            proxy.sharedMaterial = UsesEquipmentShader(source)
-                ? source.sharedMaterial
-                : m_system.DefaultProxyMaterial;
+            proxy.sharedMaterial = ResolveProxyMaterial(source);
             proxy.maskInteraction = SpriteMaskInteraction.None;
 
             return new ProxyBinding
             {
                 Source = source,
+                TransformRoot = transformRootObject.transform,
+                AxisCorrection = axisCorrectionObject.transform,
                 Proxy = proxy,
                 PropertyBlock = new MaterialPropertyBlock()
             };
@@ -409,54 +429,139 @@ namespace FantasyWord.Presentation
                     proxy.sortingOrder = source.sortingOrder;
                 }
 
-                Material expectedMaterial = UsesEquipmentShader(source)
-                    ? source.sharedMaterial
-                    : m_system.DefaultProxyMaterial;
+                Material expectedMaterial = ResolveProxyMaterial(source);
                 if (proxy.sharedMaterial != expectedMaterial)
                 {
                     proxy.sharedMaterial = expectedMaterial;
                 }
 
-                Vector2 anchor = ReflectionAnchorPosition;
-                bool sourceHasPropertyBlock = source.HasPropertyBlock();
-                bool reflectionPropertiesChanged =
-                    !binding.ReflectionPropertiesInitialized ||
-                    binding.ReflectionAnchor != anchor ||
-                    !Mathf.Approximately(binding.VerticalScale, m_verticalScale) ||
-                    !Mathf.Approximately(binding.Skew, m_skew) ||
-                    !Mathf.Approximately(binding.LengthScale, m_runtimeLengthScale);
-                if (!sourceHasPropertyBlock &&
-                    !binding.SourceHadPropertyBlock &&
-                    !reflectionPropertiesChanged)
+                if (!SynchronizeProxyTransform(binding, ReflectionAnchorPosition))
                 {
+                    proxy.enabled = false;
                     continue;
                 }
 
-                if (sourceHasPropertyBlock)
-                {
-                    source.GetPropertyBlock(binding.PropertyBlock);
-                }
-                else
-                {
-                    binding.PropertyBlock.Clear();
-                }
-
-                binding.PropertyBlock.SetFloat(ReflectionEnabledId, 1f);
-                binding.PropertyBlock.SetVector(
-                    ReflectionAnchorId,
-                    new Vector4(anchor.x, anchor.y, 0f, 0f));
-                binding.PropertyBlock.SetFloat(ReflectionVerticalScaleId, m_verticalScale);
-                binding.PropertyBlock.SetFloat(ReflectionSkewId, m_skew);
-                binding.PropertyBlock.SetFloat(ReflectionLengthScaleId, m_runtimeLengthScale);
-                proxy.SetPropertyBlock(binding.PropertyBlock);
-
-                binding.SourceHadPropertyBlock = sourceHasPropertyBlock;
-                binding.ReflectionPropertiesInitialized = true;
-                binding.ReflectionAnchor = anchor;
-                binding.VerticalScale = m_verticalScale;
-                binding.Skew = m_skew;
-                binding.LengthScale = m_runtimeLengthScale;
+                CopySourcePropertyBlock(binding);
             }
+        }
+
+        /// <summary>
+        /// 倒影只改变代理的几何矩阵，不要求源材质实现倒影，也不改写角色本体属性。
+        /// </summary>
+        private bool SynchronizeProxyTransform(ProxyBinding binding, Vector2 anchor)
+        {
+            if (binding.TransformRoot == null || binding.AxisCorrection == null)
+            {
+                return false;
+            }
+
+            Matrix4x4 sourceMatrix = binding.Source.transform.localToWorldMatrix;
+            float verticalScale = Mathf.Max(0.0001f, m_verticalScale * m_runtimeLengthScale);
+            float shear = -verticalScale * m_skew;
+
+            float m00 = sourceMatrix.m00 + shear * sourceMatrix.m10;
+            float m01 = sourceMatrix.m01 + shear * sourceMatrix.m11;
+            float m10 = -verticalScale * sourceMatrix.m10;
+            float m11 = -verticalScale * sourceMatrix.m11;
+            if (!TryDecomposeLinearTransform(
+                    m00,
+                    m01,
+                    m10,
+                    m11,
+                    out float rootRotation,
+                    out Vector2 rootScale,
+                    out float correctionRotation))
+            {
+                return false;
+            }
+
+            float sourceX = sourceMatrix.m03;
+            float sourceY = sourceMatrix.m13;
+            float deltaY = sourceY - anchor.y;
+            binding.TransformRoot.SetPositionAndRotation(
+                new Vector3(
+                    sourceX + shear * deltaY,
+                    anchor.y - verticalScale * deltaY,
+                    sourceMatrix.m23),
+                Quaternion.Euler(0f, 0f, rootRotation * Mathf.Rad2Deg));
+            binding.TransformRoot.localScale = new Vector3(
+                rootScale.x,
+                rootScale.y,
+                Mathf.Max(0.0001f, Mathf.Abs(binding.Source.transform.lossyScale.z)));
+
+            binding.AxisCorrection.localPosition = Vector3.zero;
+            binding.AxisCorrection.localRotation = Quaternion.Euler(
+                0f,
+                0f,
+                correctionRotation * Mathf.Rad2Deg);
+            binding.AxisCorrection.localScale = Vector3.one;
+
+            Transform proxyTransform = binding.Proxy.transform;
+            proxyTransform.localPosition = Vector3.zero;
+            proxyTransform.localRotation = Quaternion.identity;
+            proxyTransform.localScale = Vector3.one;
+            return true;
+        }
+
+        private static bool TryDecomposeLinearTransform(
+            float m00,
+            float m01,
+            float m10,
+            float m11,
+            out float rootRotation,
+            out Vector2 rootScale,
+            out float correctionRotation)
+        {
+            float ata00 = m00 * m00 + m10 * m10;
+            float ata01 = m00 * m01 + m10 * m11;
+            float ata11 = m01 * m01 + m11 * m11;
+            float axisRotation = 0.5f * Mathf.Atan2(2f * ata01, ata00 - ata11);
+            float axisCos = Mathf.Cos(axisRotation);
+            float axisSin = Mathf.Sin(axisRotation);
+
+            Vector2 firstAxis = new(axisCos, axisSin);
+            Vector2 secondAxis = new(-axisSin, axisCos);
+            Vector2 firstMapped = new(
+                m00 * firstAxis.x + m01 * firstAxis.y,
+                m10 * firstAxis.x + m11 * firstAxis.y);
+            Vector2 secondMapped = new(
+                m00 * secondAxis.x + m01 * secondAxis.y,
+                m10 * secondAxis.x + m11 * secondAxis.y);
+
+            float firstScale = firstMapped.magnitude;
+            float secondScale = secondMapped.magnitude;
+            if (firstScale <= 0.0001f || secondScale <= 0.0001f)
+            {
+                rootRotation = 0f;
+                rootScale = Vector2.zero;
+                correctionRotation = 0f;
+                return false;
+            }
+
+            Vector2 firstDirection = firstMapped / firstScale;
+            Vector2 secondDirection = secondMapped / secondScale;
+            float orientation = firstDirection.x * secondDirection.y -
+                firstDirection.y * secondDirection.x;
+            if (orientation < 0f)
+            {
+                secondScale = -secondScale;
+            }
+
+            rootRotation = Mathf.Atan2(firstDirection.y, firstDirection.x);
+            rootScale = new Vector2(firstScale, secondScale);
+            correctionRotation = -axisRotation;
+            return true;
+        }
+
+        private static void CopySourcePropertyBlock(ProxyBinding binding)
+        {
+            binding.PropertyBlock.Clear();
+            if (binding.Source.HasPropertyBlock())
+            {
+                binding.Source.GetPropertyBlock(binding.PropertyBlock);
+            }
+
+            binding.Proxy.SetPropertyBlock(binding.PropertyBlock);
         }
 
         private Bounds ReflectBounds(Bounds sourceBounds, float lengthScale)
@@ -495,12 +600,9 @@ namespace FantasyWord.Presentation
             return null;
         }
 
-        private static bool UsesEquipmentShader(SpriteRenderer source)
+        private Material ResolveProxyMaterial(SpriteRenderer source)
         {
-            return source != null &&
-                source.sharedMaterial != null &&
-                source.sharedMaterial.shader != null &&
-                source.sharedMaterial.shader.name == "EquipmentSystem/EquipmentUV";
+            return source != null ? source.sharedMaterial : null;
         }
 
         private static bool IsReflectionProxy(SpriteRenderer renderer)
@@ -532,7 +634,11 @@ namespace FantasyWord.Presentation
 
         private static void DestroyProxy(ProxyBinding binding)
         {
-            if (binding?.Proxy != null)
+            if (binding?.TransformRoot != null)
+            {
+                Object.Destroy(binding.TransformRoot.gameObject);
+            }
+            else if (binding?.Proxy != null)
             {
                 Object.Destroy(binding.Proxy.gameObject);
             }

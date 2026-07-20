@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.1008903">
+  <test-suite type="TestSuite" id="1000" name="FantasyWord" fullname="FantasyWord" runstate="Runnable" testcasecount="315" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.100890" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1197" name="FantasyWord.GameCore.EditModeTests.dll" fullname="C:/Gamedev/Unity/Project/FantasyWord/Library/ScriptAssemblies/FantasyWord.GameCore.EditModeTests.dll" runstate="Runnable" testcasecount="184" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.082613" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="220756" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1198" name="FantasyWord" fullname="FantasyWord" runstate="Runnable" testcasecount="184" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.080615" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1199" name="GameCore" fullname="FantasyWord.GameCore" runstate="Runnable" testcasecount="184" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.079067" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1200" name="Tests" fullname="FantasyWord.GameCore.Tests" runstate="Runnable" testcasecount="184" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.077603" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1002" name="CharacterMovementPresentationEditModeTests" fullname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" classname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="1.068609" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1003" name="FormalCharacter_DirectionalInputUpdatesFacingBeforePhysicsMovement" fullname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests.FormalCharacter_DirectionalInputUpdatesFacingBeforePhysicsMovement" methodname="FormalCharacter_DirectionalInputUpdatesFacingBeforePhysicsMovement" classname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" runstate="Runnable" seed="218232702" result="Passed" start-time="2026-07-19 02:03:30Z" end-time="2026-07-19 02:03:31Z" duration="0.988325" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1007" name="FormalCharacter_MovementDoesNotOverrideActionAndRestoresWalkAfterwards" fullname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests.FormalCharacter_MovementDoesNotOverrideActionAndRestoresWalkAfterwards" methodname="FormalCharacter_MovementDoesNotOverrideActionAndRestoresWalkAfterwards" classname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" runstate="Runnable" seed="37953089" result="Passed" start-time="2026-07-19 02:03:31Z" end-time="2026-07-19 02:03:31Z" duration="0.013262" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1005" name="FormalCharacter_MovementResultDrivesWalkThenIdle" fullname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests.FormalCharacter_MovementResultDrivesWalkThenIdle" methodname="FormalCharacter_MovementResultDrivesWalkThenIdle" classname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" runstate="Runnable" seed="433751014" result="Passed" start-time="2026-07-19 02:03:31Z" end-time="2026-07-19 02:03:31Z" duration="0.005933" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1006" name="FormalCharacter_SouthWestFacingUsesWestLibraryWithoutHorizontalFlip" fullname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests.FormalCharacter_SouthWestFacingUsesWestLibraryWithoutHorizontalFlip" methodname="FormalCharacter_SouthWestFacingUsesWestLibraryWithoutHorizontalFlip" classname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" runstate="Runnable" seed="1029735274" result="Passed" start-time="2026-07-19 02:03:31Z" end-time="2026-07-19 02:03:31Z" duration="0.023475" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+]]></output>
+              </test-case>
+              <test-case id="1004" name="FormalCharacter_SteeringMovementDoesNotOverrideFacing" fullname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests.FormalCharacter_SteeringMovementDoesNotOverrideFacing" methodname="FormalCharacter_SteeringMovementDoesNotOverrideFacing" classname="FantasyWord.GameCore.Tests.CharacterMovementPresentationEditModeTests" runstate="Runnable" seed="1992614570" result="Passed" start-time="2026-07-19 02:03:31Z" end-time="2026-07-19 02:03:31Z" duration="0.006022" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Bridge:Info] {emoji} Test finished ({counter}/{total}): {testName} - {testStatus}
+[Bridge:Info] All tests completed via TestFinished. Final duration: {duration:mm\:ss\.fff}
+[Bridge:Info] RunFinished
+[Bridge:Info] Run {testMode} finished with {totalTests} test results. Result status: {status}
+[Bridge:Info] Final duration: {duration:mm\:ss\.fff}. Completed: {completed}/{total}
+[Bridge:Info] [TestRunner] RunFinished found no active deferred request id.
+Saving results to: C:/Users/zhuagenbao/AppData/LocalLow/DefaultCompany/FantasyWord\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -63,6 +63,7 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     {
         Equipment,
         Appearance,
+        Mount,
     }
 
     static readonly Color SlotIdle = new Color(0.22f, 0.26f, 0.31f, 1f);
@@ -360,8 +361,23 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     {
         if (_rightListMode == RightListMode.Appearance)
             return Mathf.Max(1, _controller.GetAppearanceOptions().Count);
+        if (_rightListMode == RightListMode.Mount)
+            return GetMountSlotCount();
 
         return GetEquipmentSlotCountForCurrentCategory();
+    }
+
+    int GetMountSlotCount()
+    {
+        IReadOnlyList<EquipmentWorkbenchMountOption> options = _controller.GetMountOptions();
+        int optionCount = 0;
+        for (int i = 0; i < options.Count; i++)
+        {
+            if (options[i] != null)
+                optionCount++;
+        }
+
+        return 1 + Mathf.Max(1, optionCount);
     }
 
     int GetEquipmentSlotCountForCurrentCategory()
@@ -379,7 +395,11 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
 
     int GetCategoryChipCount()
     {
-        return 1 + (_controller != null ? _controller.GetAvailableCategories().Count : 0);
+        int count = 1 + (_controller != null ? _controller.GetAvailableCategories().Count : 0);
+        if (_controller != null && _controller.HasMountOptions())
+            count++;
+
+        return count;
     }
 
     bool EnsureIconSlotCount(
@@ -576,6 +596,15 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
                 _rightListMode == RightListMode.Equipment && category == _controller.CurrentCategory,
                 () => SelectEquipmentCategory(category));
         }
+
+        if (_controller.HasMountOptions())
+        {
+            BindChip(
+                _categoryChips[chipIndex++],
+                "坐骑",
+                _rightListMode == RightListMode.Mount,
+                SelectMountListMode);
+        }
     }
 
     void UpdateRightListButtons()
@@ -583,6 +612,12 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         if (_rightListMode == RightListMode.Appearance)
         {
             UpdateAppearanceListButtons();
+            return;
+        }
+
+        if (_rightListMode == RightListMode.Mount)
+        {
+            UpdateMountListButtons();
             return;
         }
 
@@ -651,6 +686,44 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         }
     }
 
+    void UpdateMountListButtons()
+    {
+        int slotIndex = 0;
+        EquipmentWorkbenchMountOption equippedMount = _controller.GetEquippedMountOption();
+        BindIconSlot(
+            _equipmentSlots[slotIndex++],
+            "卸下",
+            CreateEmptySlotPreviewSprite(),
+            equippedMount == null,
+            false,
+            equippedMount == null ? "当前为空" : null,
+            () => _controller.UnequipMount());
+
+        IReadOnlyList<EquipmentWorkbenchMountOption> options = _controller.GetMountOptions();
+        int renderedOptions = 0;
+        for (int i = 0; i < options.Count; i++)
+        {
+            EquipmentWorkbenchMountOption option = options[i];
+            if (option == null)
+                continue;
+
+            BindIconSlot(
+                _equipmentSlots[slotIndex++],
+                option.DisplayName,
+                CreateMountPreviewSprite(option),
+                false,
+                _controller.IsMountEquipped(option),
+                _controller.IsMountEquipped(option) ? "已装备" : null,
+                () => _controller.EquipMountOption(option));
+            renderedOptions++;
+        }
+
+        if (renderedOptions == 0)
+        {
+            BindDisabledEquipmentSlot(_equipmentSlots[slotIndex], "暂无坐骑");
+        }
+    }
+
     void SelectAppearanceListMode()
     {
         if (_rightListMode == RightListMode.Appearance)
@@ -672,6 +745,16 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             _layoutSignature = -1;
             Refresh();
         }
+    }
+
+    void SelectMountListMode()
+    {
+        if (_rightListMode == RightListMode.Mount)
+            return;
+
+        _rightListMode = RightListMode.Mount;
+        _layoutSignature = -1;
+        Refresh();
     }
 
     void BindChip(
@@ -762,6 +845,26 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
             return;
         }
 
+        if (_rightListMode == RightListMode.Mount)
+        {
+            EquipmentWorkbenchMountOption equippedMount = _controller.GetEquippedMountOption();
+            if (equippedMount == null)
+            {
+                detailTitleLabel.text =
+                    $"{stateSummary}\n\n"
+                    + "坐骑\n"
+                    + "当前为空";
+                return;
+            }
+
+            detailTitleLabel.text =
+                $"{stateSummary}\n\n"
+                + $"{equippedMount.DisplayName}\n"
+                + "坐骑\n"
+                + BuildMountStatSummary(equippedMount, true);
+            return;
+        }
+
         if (equipped == null)
         {
             string categoryName = EquipTypeRegistry.GetDisplayName(_controller.CurrentCategory);
@@ -782,8 +885,16 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     void UpdateRightPanelHeaderLabels()
     {
         SetHeaderLabelText("装备类型 Header", "类型");
-        SetHeaderLabelText("装备列表 Header", _rightListMode == RightListMode.Appearance ? "形象列表" : "装备列表");
-        SetHeaderLabelText("当前装备 Header", _rightListMode == RightListMode.Appearance ? "当前选择" : "当前装备");
+        SetHeaderLabelText(
+            "装备列表 Header",
+            _rightListMode == RightListMode.Appearance
+                ? "形象列表"
+                : _rightListMode == RightListMode.Mount ? "坐骑列表" : "装备列表");
+        SetHeaderLabelText(
+            "当前装备 Header",
+            _rightListMode == RightListMode.Appearance
+                ? "当前选择"
+                : _rightListMode == RightListMode.Mount ? "当前坐骑" : "当前装备");
     }
 
     void ConfigureTestWorkbenchLayoutIfNeeded()
@@ -1140,6 +1251,21 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
     }
 
     string BuildEquipmentStatSummary(EquipmentWorkbenchEquipmentOption option, bool multiline)
+    {
+        if (option?.BonusStats?.Values == null || option.BonusStats.Values.Count == 0)
+            return "无加成";
+
+        List<string> parts = new List<string>();
+        for (int i = 0; i < option.BonusStats.Values.Count; i++)
+        {
+            WorkbenchStatValue stat = option.BonusStats.Values[i];
+            parts.Add($"{GetStatLabel(stat.stat)} {(stat.value >= 0 ? "+" : string.Empty)}{stat.value}");
+        }
+
+        return string.Join(multiline ? "\n" : "  ", parts);
+    }
+
+    string BuildMountStatSummary(EquipmentWorkbenchMountOption option, bool multiline)
     {
         if (option?.BonusStats?.Values == null || option.BonusStats.Values.Count == 0)
             return "无加成";
@@ -1612,6 +1738,27 @@ public sealed class EquipmentWorkbenchRuntimeUI : MonoBehaviour
         Sprite customIcon = option?.CustomIcon;
         if (IsUsablePreviewSprite(customIcon))
             return customIcon;
+
+        return null;
+    }
+
+    Sprite CreateMountPreviewSprite(EquipmentWorkbenchMountOption option)
+    {
+        Sprite customIcon = option?.CustomIcon;
+        if (IsUsablePreviewSprite(customIcon))
+            return customIcon;
+
+        MountRenderData mount = option?.MountVisual;
+        if (mount == null || mount.Animations == null)
+            return null;
+
+        for (int i = 0; i < mount.Animations.Count; i++)
+        {
+            MountAnimationData animation = mount.Animations[i];
+            Sprite source = animation?.MountFrames?.GetFrame(CharacterAnimationDirections.SouthEast, 0);
+            if (IsUsablePreviewSprite(source))
+                return GetSequenceFramePreviewSprite(source);
+        }
 
         return null;
     }

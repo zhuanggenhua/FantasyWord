@@ -2,34 +2,34 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-#if !(UNITY_6000_0_OR_NEWER && !ENABLE_JSON_CATALOG)
-using System.Text;
-#endif
+using YokiFrame;
+using YooAsset;
 using UObject = UnityEngine.Object;
 
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// Addressables 资源加载入口，主体迁自 Chris.ResourceSystem。
-    /// 当前项目只把它作为资源和 Mod catalog 层使用，不替换 DatabaseRegistry 的数据引用真相。
+    /// 项目动态资源入口。默认包由 YokiFrame 的 YooInit 初始化，外部 Mod 各自使用独立 YooAsset 包。
+    /// DatabaseRegistry 与稳定 ID 仍是玩法数据真相，本类型只负责资源定位和生命周期。
     /// </summary>
     public static class ResourceSystem
     {
-        public const string DynamicLoadPath = "{DYNAMIC_LOCAL_PATH}";
+        private const byte AssetLoadOperationType = 0;
+        private const byte InstantiateOperationType = 1;
+        private const string LocalizationAddress = "localization";
 
-        private const byte AssetLoadOperation = 0;
-        private const byte InstantiateOperation = 1;
-        private static uint s_version = 1;
-        private static readonly Dictionary<int, ResourceHandle> InstanceIdMap = new();
-        private static readonly SparseArray<AsyncOperationStructure> Operations = new(10, int.MaxValue);
+        private static readonly HashSet<ResourceOperationState> ActiveOperations = new();
+        private static readonly List<ModPackageEntry> ModPackages = new();
+
+        public static bool Initialized => DefaultPackage != null && YooAssets.IsInitialized;
+        public static ResourcePackage DefaultPackage { get; private set; }
 
         /// <summary>
-        /// Addressables 多键加载的合并策略，映射到 Addressables.MergeMode。
+        /// 多地址加载的合并策略。YooAsset 没有 Addressables 标签合并语义，项目只保留直接地址集合的兼容入口。
         /// </summary>
         public enum MergeMode
         {
@@ -39,89 +39,188 @@ namespace FantasyWord.GameCore
             Intersection
         }
 
-        private struct AsyncOperationStructure
+        private sealed class ModPackageEntry
         {
-            public AsyncOperationHandle AsyncOperationHandle;
-            public ResourceHandle ResourceHandle;
+            public ResourcePackage Package;
+            public int LoadOrder;
+        }
+
+        /// <summary>
+        /// 初始化默认资源包，并让 UIKit 复用 YokiFrame 自带的 YooAsset 面板加载器。
+        /// </summary>
+        public static async UniTask InitializeAsync(
+            YooInitConfig config = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (Initialized)
+            {
+                return;
+            }
+
+            if (YooAssets.IsInitialized && !YooInit.Initialized)
+            {
+                throw new InvalidOperationException(
+                    "YooAsset 已被其它入口初始化，但 YokiFrame.YooInit 尚未初始化。请只保留 GameManager 的正式资源启动入口。");
+            }
+
+            if (!YooInit.Initialized)
+            {
+                await YooInit.InitAsync(config ?? new YooInitConfig(), cancellationToken);
+            }
+
+            DefaultPackage = YooInit.DefaultPackage ??
+                throw new InvalidOperationException("YokiFrame.YooInit 未提供默认资源包，请检查 YooInitConfig.PackageNames。");
+
+            YooInitUIKitExt.ConfigureUIKit();
+            await InitializeLocalizationAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// 释放项目持有的全部句柄和资源包。每个包必须先销毁，再从 YooAsset 注册表移除。
+        /// </summary>
+        public static void Shutdown()
+        {
+            foreach (ResourceOperationState operation in ActiveOperations.ToArray())
+            {
+                operation.Release();
+            }
+
+            if (!YooAssets.IsInitialized)
+            {
+                ResetState();
+                return;
+            }
+
+            ResourcePackage[] packages = YooAssets.GetPackages().ToArray();
+            if (YooInit.Initialized)
+            {
+                YooInit.Dispose();
+            }
+
+            foreach (ResourcePackage package in packages)
+            {
+                DestroyAndRemovePackage(package);
+            }
+
+            YooAssets.Destroy();
+            ResetState();
+        }
+
+        /// <summary>
+        /// 从 Mod 目录初始化一个独立资源包。目录必须是 YooAsset 对应包名的完整构建输出。
+        /// </summary>
+        public static async UniTask<ResourcePackage> LoadModPackageAsync(
+            string packageName,
+            string packageDirectory,
+            int loadOrder = 0)
+        {
+            EnsureInitialized();
+            if (string.IsNullOrWhiteSpace(packageName))
+            {
+                throw new ArgumentException("Mod 资源包名称不能为空。", nameof(packageName));
+            }
+
+            if (!Directory.Exists(packageDirectory))
+            {
+                throw new DirectoryNotFoundException($"Mod 资源包目录不存在：{packageDirectory}");
+            }
+
+            ModPackageEntry existing = ModPackages.FirstOrDefault(entry =>
+                string.Equals(entry.Package.PackageName, packageName, StringComparison.Ordinal));
+            if (existing != null)
+            {
+                return existing.Package;
+            }
+
+            if (YooAssets.TryGetPackage(packageName, out _))
+            {
+                throw new InvalidOperationException($"资源包名称重复：{packageName}");
+            }
+
+            ResourcePackage package = YooAssets.CreatePackage(packageName, unchecked((uint)Math.Max(loadOrder, 0)));
+            try
+            {
+                var fileSystemParameters =
+                    FileSystemParameters.CreateDefaultBuiltinFileSystemParameters(Path.GetFullPath(packageDirectory));
+                var options = new CustomPlayModeOptions
+                {
+                    AutoUnloadBundleWhenUnused = true
+                };
+                options.FileSystemParameterList.Add(fileSystemParameters);
+
+                InitializePackageOperation initialize = package.InitializePackageAsync(options);
+                await initialize;
+                EnsureSucceeded(initialize, $"初始化 Mod 资源包 {packageName}");
+
+                RequestPackageVersionOperation version = package.RequestPackageVersionAsync();
+                await version;
+                EnsureSucceeded(version, $"读取 Mod 资源包版本 {packageName}");
+
+                LoadPackageManifestOperation manifest = package.LoadPackageManifestAsync(
+                    new LoadPackageManifestOptions(version.PackageVersion, 60));
+                await manifest;
+                EnsureSucceeded(manifest, $"加载 Mod 资源清单 {packageName}");
+
+                ModPackages.Add(new ModPackageEntry
+                {
+                    Package = package,
+                    LoadOrder = loadOrder
+                });
+                ModPackages.Sort((left, right) => right.LoadOrder.CompareTo(left.LoadOrder));
+                return package;
+            }
+            catch
+            {
+                await DestroyAndRemovePackageAsync(package);
+                throw;
+            }
+        }
+
+        public static async UniTask UnloadModPackageAsync(string packageName)
+        {
+            ModPackageEntry entry = ModPackages.FirstOrDefault(candidate =>
+                string.Equals(candidate.Package.PackageName, packageName, StringComparison.Ordinal));
+            if (entry == null)
+            {
+                return;
+            }
+
+            ReleaseOperationsForPackage(packageName);
+            ModPackages.Remove(entry);
+            await DestroyAndRemovePackageAsync(entry.Package);
         }
 
         public static void EnsureAssetExists<TAsset>(object key)
         {
-            AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
-                Addressables.LoadResourceLocationsAsync(key, typeof(TAsset));
-            try
+            EnsureLocationExists(typeof(TAsset), ConvertKeyToLocation(key));
+        }
+
+        public static void EnsureAssetExists<TAsset>(IEnumerable keys, MergeMode mergeMode)
+        {
+            foreach (string location in ConvertKeysToLocations(keys, mergeMode))
             {
-                location.WaitForCompletion();
-                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
-                {
-                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
-                }
-            }
-            finally
-            {
-                Addressables.Release(location);
+                EnsureLocationExists(typeof(TAsset), location);
             }
         }
 
-        public static void EnsureAssetExists<TAsset>(IEnumerable key, MergeMode mergeMode)
+        public static UniTask EnsureAssetExistsAsync<TAsset>(object key)
         {
-            AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
-                Addressables.LoadResourceLocationsAsync(key, (Addressables.MergeMode)mergeMode, typeof(TAsset));
-            try
-            {
-                location.WaitForCompletion();
-                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
-                {
-                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
-                }
-            }
-            finally
-            {
-                Addressables.Release(location);
-            }
+            EnsureAssetExists<TAsset>(key);
+            return UniTask.CompletedTask;
         }
 
-        public static async UniTask EnsureAssetExistsAsync<TAsset>(object key)
+        public static UniTask EnsureAssetExistsAsync<TAsset>(IEnumerable keys, MergeMode mergeMode)
         {
-            AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
-                Addressables.LoadResourceLocationsAsync(key, typeof(TAsset));
-            try
-            {
-                await location.ToUniTask();
-                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
-                {
-                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
-                }
-            }
-            finally
-            {
-                Addressables.Release(location);
-            }
-        }
-
-        public static async UniTask EnsureAssetExistsAsync<TAsset>(IEnumerable key, MergeMode mergeMode)
-        {
-            AsyncOperationHandle<IList<UnityEngine.ResourceManagement.ResourceLocations.IResourceLocation>> location =
-                Addressables.LoadResourceLocationsAsync(key, (Addressables.MergeMode)mergeMode, typeof(TAsset));
-            try
-            {
-                await location.ToUniTask();
-                if (location.Status != AsyncOperationStatus.Succeeded || location.Result == null || location.Result.Count == 0)
-                {
-                    throw new InvalidResourceRequestException(StringifyKey(key), $"Address {StringifyKey(key)} not valid for loading {typeof(TAsset)} asset.");
-                }
-            }
-            finally
-            {
-                Addressables.Release(location);
-            }
+            EnsureAssetExists<TAsset>(keys, mergeMode);
+            return UniTask.CompletedTask;
         }
 
         public static ResourceHandle<T> LoadAssetAsync<T>(string address, Action<T> callback = null)
             where T : UObject
         {
-            AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(address);
-            ResourceHandle<T> resourceHandle = CreateHandle<T>(handle, AssetLoadOperation);
+            ResourcePackage package = ResolvePackage(address, typeof(T));
+            var state = Register(new AssetResourceOperationState<T>(package, address));
+            var resourceHandle = new ResourceHandle<T>(state);
             if (callback != null)
             {
                 resourceHandle.RegisterCallback(callback);
@@ -130,344 +229,560 @@ namespace FantasyWord.GameCore
             return resourceHandle;
         }
 
-        public static ResourceHandle<T> InstantiateAsync<T>(string address, Transform parent = null, Action<T> callback = null)
+        public static ResourceHandle<T> LoadAssetAsync<T>(
+            string packageName,
+            string address,
+            Action<T> callback = null)
             where T : UObject
         {
-            AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(address, parent);
-            ResourceHandle<GameObject> resourceHandle = CreateHandle<GameObject>(handle, InstantiateOperation);
+            ResourcePackage package = GetPackage(packageName);
+            EnsureLocationExists(package, typeof(T), address);
+            var state = Register(new AssetResourceOperationState<T>(package, address));
+            var resourceHandle = new ResourceHandle<T>(state);
             if (callback != null)
             {
-                resourceHandle.RegisterCallback(instance => callback(instance as T));
+                resourceHandle.RegisterCallback(callback);
             }
 
-            return resourceHandle.Convert<T>();
+            return resourceHandle;
+        }
+
+        public static ResourceHandle<T> InstantiateAsync<T>(
+            string address,
+            Transform parent = null,
+            Action<T> callback = null)
+            where T : UObject
+        {
+            ResourcePackage package = ResolvePackage(address, typeof(GameObject));
+            var state = Register(new InstantiateResourceOperationState(
+                package,
+                address,
+                new InstantiateOptions(true, parent, false)));
+            var resourceHandle = new ResourceHandle<T>(state);
+            if (callback != null)
+            {
+                resourceHandle.RegisterCallback(callback);
+            }
+
+            return resourceHandle;
+        }
+
+        public static ResourceHandle<IList<T>> LoadAssetsAsync<T>(object key, Action<IList<T>> callback = null)
+            where T : UObject
+        {
+            string location = ConvertKeyToLocation(key);
+            ResourcePackage package = ResolvePackage(location, typeof(T));
+            var state = Register(new AllAssetsResourceOperationState<T>(package, location));
+            var resourceHandle = new ResourceHandle<IList<T>>(state);
+            if (callback != null)
+            {
+                resourceHandle.RegisterCallback(callback);
+            }
+
+            return resourceHandle;
+        }
+
+        public static ResourceHandle<IList<T>> LoadAssetsAsync<T>(
+            IEnumerable keys,
+            MergeMode mode,
+            Action<IList<T>> callback = null)
+            where T : UObject
+        {
+            string[] locations = ConvertKeysToLocations(keys, mode);
+            var children = locations
+                .Select(location => new AllAssetsResourceOperationState<T>(
+                    ResolvePackage(location, typeof(T)),
+                    location))
+                .Cast<ResourceOperationState>()
+                .ToArray();
+            var state = Register(new CompositeResourceOperationState<T>(children));
+            var resourceHandle = new ResourceHandle<IList<T>>(state);
+            if (callback != null)
+            {
+                resourceHandle.RegisterCallback(callback);
+            }
+
+            return resourceHandle;
         }
 
         public static void Release(ResourceHandle handle)
         {
-            if (!IsValid(handle.Version, handle.Index))
-            {
-                return;
-            }
-
-            if (handle.OperationType == InstantiateOperation)
-            {
-                ReleaseInstance(handle);
-            }
-            else
-            {
-                ReleaseAsset(handle);
-            }
+            handle.State?.Release();
         }
 
         public static void Release<T>(ResourceHandle<T> handle)
         {
-            Release((ResourceHandle)handle);
+            handle.State?.Release();
         }
 
         public static void ReleaseAsset(ResourceHandle handle)
         {
-            if (!IsValid(handle.Version, handle.Index))
-            {
-                return;
-            }
-
-            Addressables.Release(handle.InternalHandle);
-            Operations.RemoveAt(handle.Index);
+            handle.State?.Release();
         }
 
         public static void ReleaseAsset<T>(ResourceHandle<T> handle)
         {
-            ReleaseAsset((ResourceHandle)handle);
+            handle.State?.Release();
         }
 
         public static void ReleaseInstance(ResourceHandle handle)
         {
-            if (!IsValid(handle.Version, handle.Index))
-            {
-                return;
-            }
-
-            GameObject gameObject = handle.Result as GameObject;
-            if (gameObject != null)
-            {
-                InstanceIdMap.Remove(gameObject.GetInstanceID());
-                Addressables.ReleaseInstance(gameObject);
-            }
-
-            Operations.RemoveAt(handle.Index);
-        }
-
-        public static ResourceHandle<IList<T>> LoadAssetsAsync<T>(object key, Action<IList<T>> callback = null)
-        {
-            AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(key, null);
-            ResourceHandle<IList<T>> resourceHandle = CreateHandle<IList<T>>(handle, AssetLoadOperation);
-            if (callback != null)
-            {
-                resourceHandle.RegisterCallback(callback);
-            }
-
-            return resourceHandle;
-        }
-
-        public static ResourceHandle<IList<T>> LoadAssetsAsync<T>(IEnumerable key, MergeMode mode, Action<IList<T>> callback = null)
-        {
-            AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(key, null, (Addressables.MergeMode)mode);
-            ResourceHandle<IList<T>> resourceHandle = CreateHandle<IList<T>>(handle, AssetLoadOperation);
-            if (callback != null)
-            {
-                resourceHandle.RegisterCallback(callback);
-            }
-
-            return resourceHandle;
-        }
-
-        internal static AsyncOperationHandle CastOperationHandle(uint version, int index)
-        {
-            return IsValid(version, index) ? Operations[index].AsyncOperationHandle : default;
-        }
-
-        internal static AsyncOperationHandle<T> CastOperationHandle<T>(uint version, int index)
-        {
-            return IsValid(version, index) ? Operations[index].AsyncOperationHandle.Convert<T>() : default;
-        }
-
-        public static bool IsValid(uint version, int index)
-        {
-            return Operations.IsAllocated(index) && Operations[index].ResourceHandle.Version == version;
+            handle.State?.Release();
         }
 
         public static bool IsValid(this ResourceHandle handle)
         {
-            return IsValid(handle.Version, handle.Index);
+            return handle.State?.IsValid == true;
         }
 
         public static bool IsValid<T>(this ResourceHandle<T> handle)
         {
-            return IsValid(handle.Version, handle.Index);
+            return handle.State?.IsValid == true;
         }
 
         public static bool IsDone(this ResourceHandle handle)
         {
-            return handle.IsValid() && handle.InternalHandle.IsDone;
+            return handle.State?.IsDone == true;
         }
 
         public static bool IsDone<T>(this ResourceHandle<T> handle)
         {
-            return handle.IsValid() && handle.InternalHandle.IsDone;
+            return handle.State?.IsDone == true;
         }
 
-        public static UniTask<T> ToUniTask<T>(this ResourceHandle<T> handle)
+        public static async UniTask<T> ToUniTask<T>(this ResourceHandle<T> handle)
         {
-            return handle.InternalHandle.ToUniTask();
+            if (handle.State == null)
+            {
+                throw new InvalidOperationException("资源句柄为空。");
+            }
+
+            object result = await handle.State.AwaitResultAsync();
+            return result == null ? default : (T)result;
         }
 
-        public static UniTask ToUniTask(this ResourceHandle handle)
+        public static async UniTask ToUniTask(this ResourceHandle handle)
         {
-            return handle.InternalHandle.ToUniTask();
+            if (handle.State == null)
+            {
+                throw new InvalidOperationException("资源句柄为空。");
+            }
+
+            await handle.State.AwaitResultAsync();
         }
 
-        public static string GetCatalogExtension()
+        internal static void NotifyReleased(ResourceOperationState state)
         {
-#if UNITY_6000_0_OR_NEWER && !ENABLE_JSON_CATALOG
-            return ".bin";
-#else
-            return ".json";
-#endif
+            ActiveOperations.Remove(state);
         }
 
-        public static bool LoadCatalog(string path)
+        private static TState Register<TState>(TState state) where TState : ResourceOperationState
         {
-            if (!TryFindCatalogPath(path, out string catalogPath))
-            {
-                Debug.LogError($"[ResourceSystem] No catalog file found in {path}.");
-                return false;
-            }
-
-            catalogPath = catalogPath.Replace(@"\", "/");
-            string actualPath = Path.GetDirectoryName(catalogPath)?.Replace(@"\", "/");
-
-            try
-            {
-#if UNITY_6000_0_OR_NEWER && !ENABLE_JSON_CATALOG
-                ProcessBinaryCatalog(catalogPath, actualPath);
-#else
-                ProcessJsonCatalog(catalogPath, actualPath);
-#endif
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[ResourceSystem] Unexpected error during catalog load {catalogPath}: {e}");
-                return false;
-            }
+            ActiveOperations.Add(state);
+            return state;
         }
 
-        public static async UniTask<bool> LoadCatalogAsync(string path)
+        private static ResourcePackage ResolvePackage(string address, Type assetType)
         {
-            if (!TryFindCatalogPath(path, out string catalogPath))
+            EnsureInitialized();
+            foreach (ModPackageEntry entry in ModPackages)
             {
-                Debug.LogError($"[ResourceSystem] No catalog file found in {path}.");
-                return false;
-            }
-
-            catalogPath = catalogPath.Replace(@"\", "/");
-            string actualPath = Path.GetDirectoryName(catalogPath)?.Replace(@"\", "/");
-
-            try
-            {
-#if UNITY_6000_0_OR_NEWER && !ENABLE_JSON_CATALOG
-                await ProcessBinaryCatalogAsync(catalogPath, actualPath);
-#else
-                await ProcessJsonCatalogAsync(catalogPath, actualPath);
-#endif
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[ResourceSystem] Unexpected error during catalog load {catalogPath}: {e}");
-                return false;
-            }
-        }
-
-        private static ResourceHandle<T> CreateHandle<T>(AsyncOperationHandle<T> asyncOperationHandle, byte operationType)
-        {
-            int index = Operations.Add(default);
-            ResourceHandle<T> resourceHandle = new(s_version++, index, operationType);
-            Operations[index] = new AsyncOperationStructure
-            {
-                AsyncOperationHandle = asyncOperationHandle,
-                ResourceHandle = resourceHandle
-            };
-
-            if (operationType == InstantiateOperation)
-            {
-                asyncOperationHandle.Completed += handle =>
+                AssetInfo modAsset = entry.Package.GetAssetInfo(address, assetType);
+                if (modAsset.IsValid)
                 {
-                    if (handle.Result is GameObject gameObject)
-                    {
-                        InstanceIdMap[gameObject.GetInstanceID()] = resourceHandle;
-                    }
+                    return entry.Package;
+                }
+            }
+
+            EnsureLocationExists(DefaultPackage, assetType, address);
+            return DefaultPackage;
+        }
+
+        private static ResourcePackage GetPackage(string packageName)
+        {
+            EnsureInitialized();
+            if (!YooAssets.TryGetPackage(packageName, out ResourcePackage package))
+            {
+                throw new InvalidOperationException($"资源包尚未初始化：{packageName}");
+            }
+
+            return package;
+        }
+
+        private static void EnsureLocationExists(Type assetType, string location)
+        {
+            ResolvePackage(location, assetType);
+        }
+
+        private static void EnsureLocationExists(ResourcePackage package, Type assetType, string location)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                throw new InvalidResourceRequestException(location, "资源地址不能为空。");
+            }
+
+            AssetInfo assetInfo = package.GetAssetInfo(location, assetType);
+            if (!assetInfo.IsValid)
+            {
+                throw new InvalidResourceRequestException(
+                    location,
+                    $"资源包 {package.PackageName} 中不存在类型为 {assetType.Name} 的地址：{location}。{assetInfo.Error}");
+            }
+        }
+
+        private static string ConvertKeyToLocation(object key)
+        {
+            if (key is string location && !string.IsNullOrWhiteSpace(location))
+            {
+                return location;
+            }
+
+            throw new InvalidResourceRequestException(
+                key?.ToString(),
+                "YooAsset 资源入口只接受明确的字符串地址；Addressables 标签键已经退出正式链路。");
+        }
+
+        private static string[] ConvertKeysToLocations(IEnumerable keys, MergeMode mode)
+        {
+            if (keys == null)
+            {
+                throw new ArgumentNullException(nameof(keys));
+            }
+
+            string[] locations = keys.Cast<object>().Select(ConvertKeyToLocation).Distinct().ToArray();
+            if (locations.Length == 0)
+            {
+                throw new InvalidResourceRequestException(string.Empty, "资源地址集合不能为空。");
+            }
+
+            return mode switch
+            {
+                MergeMode.UseFirst => new[] { locations[0] },
+                MergeMode.Union => locations,
+                MergeMode.Intersection => throw new NotSupportedException(
+                    "YooAsset 直接地址集合不支持 Addressables 的标签交集语义，请在内容清单中生成明确地址。"),
+                _ => locations
+            };
+        }
+
+        private static void EnsureInitialized()
+        {
+            if (!Initialized)
+            {
+                throw new InvalidOperationException("资源系统尚未初始化，请先等待 GameManager 完成 YooAsset 启动。");
+            }
+        }
+
+        private static void EnsureSucceeded(AsyncOperationBase operation, string action)
+        {
+            if (operation.Status != EOperationStatus.Succeeded)
+            {
+                throw new InvalidOperationException($"{action}失败：{operation.Error}");
+            }
+        }
+
+        private static void ReleaseOperationsForPackage(string packageName)
+        {
+            foreach (ResourceOperationState operation in ActiveOperations
+                         .Where(operation => operation.UsesPackage(packageName))
+                         .ToArray())
+            {
+                operation.Release();
+            }
+        }
+
+        private static async UniTask InitializeLocalizationAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ResourceHandle<TextAsset> handle = LoadAssetAsync<TextAsset>(LocalizationAddress);
+            try
+            {
+                TextAsset localizationAsset = await handle.ToUniTask();
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var provider = new JsonLocalizationProvider(useResources: false);
+                provider.LoadFromJson(localizationAsset.text);
+                if (provider.GetSupportedLanguages().Count == 0)
+                {
+                    throw new InvalidDataException(
+                        $"YooAsset 地址 {LocalizationAddress} 的本地化 JSON 没有有效语言数据。");
+                }
+
+                LocalizationKit.SetProvider(provider);
+            }
+            finally
+            {
+                handle.Dispose();
+            }
+        }
+
+        private static void DestroyAndRemovePackage(ResourcePackage package)
+        {
+            ReleaseOperationsForPackage(package.PackageName);
+            DestroyPackageOperation destroy = package.DestroyPackageAsync();
+            destroy.WaitForCompletion();
+            EnsureSucceeded(destroy, $"销毁资源包 {package.PackageName}");
+            YooAssets.RemovePackage(package.PackageName);
+        }
+
+        private static async UniTask DestroyAndRemovePackageAsync(ResourcePackage package)
+        {
+            ReleaseOperationsForPackage(package.PackageName);
+            DestroyPackageOperation destroy = package.DestroyPackageAsync();
+            await destroy;
+            EnsureSucceeded(destroy, $"销毁资源包 {package.PackageName}");
+            YooAssets.RemovePackage(package.PackageName);
+        }
+
+        private static void ResetState()
+        {
+            ActiveOperations.Clear();
+            ModPackages.Clear();
+            DefaultPackage = null;
+        }
+
+        private sealed class AssetResourceOperationState<T> : ResourceOperationState where T : UObject
+        {
+            private readonly ResourcePackage m_package;
+            private readonly AssetHandle m_handle;
+
+            public AssetResourceOperationState(ResourcePackage package, string address)
+                : base(address, AssetLoadOperationType)
+            {
+                m_package = package;
+                m_handle = package.LoadAssetAsync<T>(address);
+            }
+
+            public override string PackageName => m_package.PackageName;
+            public override bool UsesPackage(string packageName) =>
+                string.Equals(m_package.PackageName, packageName, StringComparison.Ordinal);
+            protected override bool IsOperationValid => m_handle.IsValid;
+            protected override bool IsOperationDone => m_handle.IsDone;
+            protected override object GetResult() => m_handle.GetAssetObject<T>();
+
+            protected override void WaitForCompletionCore()
+            {
+                m_handle.WaitForAsyncComplete();
+                EnsureHandleSucceeded(m_handle, Address);
+            }
+
+            protected override async UniTask<object> AwaitResultCore()
+            {
+                await m_handle;
+                EnsureHandleSucceeded(m_handle, Address);
+                return m_handle.GetAssetObject<T>();
+            }
+
+            protected override void RegisterCallbackCore(Action<object> callback)
+            {
+                m_handle.Completed += handle =>
+                {
+                    EnsureHandleSucceeded(handle, Address);
+                    callback(handle.GetAssetObject<T>());
                 };
             }
 
-            return resourceHandle;
-        }
-
-        private static bool TryFindCatalogPath(string path, out string catalogPath)
-        {
-            if (File.Exists(path) && string.Equals(Path.GetExtension(path), GetCatalogExtension(), StringComparison.OrdinalIgnoreCase))
+            protected override void ReleaseCore()
             {
-                catalogPath = path;
-                return true;
-            }
-
-            if (!Directory.Exists(path))
-            {
-                catalogPath = null;
-                return false;
-            }
-
-            catalogPath = Path.Combine(path, $"catalog{GetCatalogExtension()}");
-            return File.Exists(catalogPath);
-        }
-
-        private static string StringifyKey(object key)
-        {
-            return key is IEnumerable<string> list ? $"[{string.Join(",", list)}]" : key?.ToString() ?? string.Empty;
-        }
-
-#if UNITY_6000_0_OR_NEWER && !ENABLE_JSON_CATALOG
-        private static void ProcessBinaryCatalog(string path, string actualPath)
-        {
-            Debug.Log($"[ResourceSystem] Load binary content catalog {path}.");
-            WarnDynamicLoadPathForBinaryCatalog(actualPath);
-            LoadAddressablesCatalog(path);
-        }
-
-        private static async Task ProcessBinaryCatalogAsync(string path, string actualPath)
-        {
-            Debug.Log($"[ResourceSystem] Load binary content catalog {path}.");
-            WarnDynamicLoadPathForBinaryCatalog(actualPath);
-            await LoadAddressablesCatalogAsync(path);
-        }
-
-        private static void WarnDynamicLoadPathForBinaryCatalog(string actualPath)
-        {
-            Debug.LogWarning("[ResourceSystem] Unity 6 binary catalog is loaded through public Addressables API. " +
-                             $"If this catalog uses {DynamicLoadPath}, export it with concrete local paths or enable JSON catalog until binary rewrite is implemented.");
-        }
-#else
-        private static void ProcessJsonCatalog(string path, string actualPath)
-        {
-            string contentCatalog = File.ReadAllText(path, Encoding.UTF8);
-            string modifiedCatalog = contentCatalog.Replace(DynamicLoadPath, actualPath);
-            try
-            {
-                File.WriteAllText(path, modifiedCatalog, Encoding.UTF8);
-                Debug.Log($"[ResourceSystem] Load json content catalog {path}.");
-                LoadAddressablesCatalog(path);
-            }
-            finally
-            {
-                File.WriteAllText(path, contentCatalog, Encoding.UTF8);
+                m_handle.Release();
             }
         }
 
-        private static async Task ProcessJsonCatalogAsync(string path, string actualPath)
+        private sealed class InstantiateResourceOperationState : ResourceOperationState
         {
-            string contentCatalog = await File.ReadAllTextAsync(path, Encoding.UTF8);
-            string modifiedCatalog = contentCatalog.Replace(DynamicLoadPath, actualPath);
-            try
-            {
-                await File.WriteAllTextAsync(path, modifiedCatalog, Encoding.UTF8);
-                Debug.Log($"[ResourceSystem] Load json content catalog {path}.");
-                await LoadAddressablesCatalogAsync(path);
-            }
-            finally
-            {
-                await File.WriteAllTextAsync(path, contentCatalog, Encoding.UTF8);
-            }
-        }
-#endif
+            private readonly ResourcePackage m_package;
+            private readonly AssetHandle m_assetHandle;
+            private readonly InstantiateOperation m_operation;
 
-        private static void LoadAddressablesCatalog(string path)
-        {
-            AsyncOperationHandle handle = Addressables.LoadContentCatalogAsync(path, false);
-            try
+            public InstantiateResourceOperationState(
+                ResourcePackage package,
+                string address,
+                InstantiateOptions options)
+                : base(address, InstantiateOperationType)
             {
-                handle.WaitForCompletion();
-                if (handle.Status != AsyncOperationStatus.Succeeded)
+                m_package = package;
+                m_assetHandle = package.LoadAssetAsync<GameObject>(address);
+                m_operation = m_assetHandle.InstantiateAsync(options);
+            }
+
+            public override string PackageName => m_package.PackageName;
+            public override bool UsesPackage(string packageName) =>
+                string.Equals(m_package.PackageName, packageName, StringComparison.Ordinal);
+            protected override bool IsOperationValid => m_assetHandle.IsValid;
+            protected override bool IsOperationDone => m_operation.IsDone;
+            protected override object GetResult() => m_operation.Result;
+
+            protected override void WaitForCompletionCore()
+            {
+                m_operation.WaitForCompletion();
+                EnsureSucceeded(m_operation, $"实例化资源 {Address}");
+            }
+
+            protected override async UniTask<object> AwaitResultCore()
+            {
+                await m_operation;
+                EnsureSucceeded(m_operation, $"实例化资源 {Address}");
+                return m_operation.Result;
+            }
+
+            protected override void RegisterCallbackCore(Action<object> callback)
+            {
+                m_operation.Completed += operation =>
                 {
-                    throw new InvalidResourceRequestException(path, $"Addressables catalog load failed: {path}.");
-                }
+                    EnsureSucceeded(operation, $"实例化资源 {Address}");
+                    callback(m_operation.Result);
+                };
             }
-            finally
+
+            protected override void ReleaseCore()
             {
-                Addressables.Release(handle);
+                if (!m_operation.IsDone)
+                {
+                    m_operation.Cancel();
+                }
+
+                if (m_operation.Result != null)
+                {
+                    UObject.Destroy(m_operation.Result);
+                }
+
+                m_assetHandle.Release();
             }
         }
 
-        private static async UniTask LoadAddressablesCatalogAsync(string path)
+        private sealed class AllAssetsResourceOperationState<T> : ResourceOperationState where T : UObject
         {
-            AsyncOperationHandle handle = Addressables.LoadContentCatalogAsync(path, false);
-            try
+            private readonly ResourcePackage m_package;
+            private readonly AllAssetsHandle m_handle;
+            private IList<T> m_results;
+
+            public AllAssetsResourceOperationState(ResourcePackage package, string address)
+                : base(address, AssetLoadOperationType)
             {
-                await handle.ToUniTask();
-                if (handle.Status != AsyncOperationStatus.Succeeded)
-                {
-                    throw new InvalidResourceRequestException(path, $"Addressables catalog load failed: {path}.");
-                }
+                m_package = package;
+                m_handle = package.LoadAllAssetsAsync<T>(address);
             }
-            finally
+
+            public override string PackageName => m_package.PackageName;
+            public override bool UsesPackage(string packageName) =>
+                string.Equals(m_package.PackageName, packageName, StringComparison.Ordinal);
+            protected override bool IsOperationValid => m_handle.IsValid;
+            protected override bool IsOperationDone => m_handle.IsDone;
+            protected override object GetResult() => BuildResults();
+
+            protected override void WaitForCompletionCore()
             {
-                Addressables.Release(handle);
+                m_handle.WaitForAsyncComplete();
+                EnsureHandleSucceeded(m_handle, Address);
+                BuildResults();
+            }
+
+            protected override async UniTask<object> AwaitResultCore()
+            {
+                await m_handle;
+                EnsureHandleSucceeded(m_handle, Address);
+                return BuildResults();
+            }
+
+            protected override void RegisterCallbackCore(Action<object> callback)
+            {
+                m_handle.Completed += handle =>
+                {
+                    EnsureHandleSucceeded(handle, Address);
+                    callback(BuildResults());
+                };
+            }
+
+            protected override void ReleaseCore()
+            {
+                m_results = null;
+                m_handle.Release();
+            }
+
+            private IList<T> BuildResults()
+            {
+                return m_results ??= m_handle.AllAssetObjects.OfType<T>().ToList();
+            }
+        }
+
+        private sealed class CompositeResourceOperationState<T> : ResourceOperationState where T : UObject
+        {
+            private readonly ResourceOperationState[] m_children;
+            private IList<T> m_results;
+
+            public CompositeResourceOperationState(ResourceOperationState[] children)
+                : base(string.Join(",", children.Select(child => child.Address)), AssetLoadOperationType)
+            {
+                m_children = children;
+            }
+
+            public override string PackageName => string.Join(",", m_children.Select(child => child.PackageName).Distinct());
+            public override bool UsesPackage(string packageName) =>
+                m_children.Any(child => child.UsesPackage(packageName));
+            protected override bool IsOperationValid => m_children.All(child => child.IsValid);
+            protected override bool IsOperationDone => m_children.All(child => child.IsDone);
+            protected override object GetResult() => BuildResults();
+
+            protected override void WaitForCompletionCore()
+            {
+                foreach (ResourceOperationState child in m_children)
+                {
+                    child.WaitForCompletion();
+                }
+
+                BuildResults();
+            }
+
+            protected override async UniTask<object> AwaitResultCore()
+            {
+                foreach (ResourceOperationState child in m_children)
+                {
+                    await child.AwaitResultAsync();
+                }
+
+                return BuildResults();
+            }
+
+            protected override void RegisterCallbackCore(Action<object> callback)
+            {
+                AwaitAndInvoke(callback).Forget();
+            }
+
+            protected override void ReleaseCore()
+            {
+                foreach (ResourceOperationState child in m_children)
+                {
+                    child.Release();
+                }
+
+                m_results = null;
+            }
+
+            private async UniTaskVoid AwaitAndInvoke(Action<object> callback)
+            {
+                callback(await AwaitResultCore());
+            }
+
+            private IList<T> BuildResults()
+            {
+                return m_results ??= m_children
+                    .SelectMany(child => child.Result is IEnumerable<T> assets ? assets : Array.Empty<T>())
+                    .Distinct()
+                    .ToList();
+            }
+        }
+
+        private static void EnsureHandleSucceeded(HandleBase handle, string address)
+        {
+            if (handle.Status != EOperationStatus.Succeeded)
+            {
+                throw new InvalidResourceRequestException(address, $"YooAsset 加载失败：{handle.Error}");
             }
         }
     }
 
     /// <summary>
-    /// 资源地址无效时抛出的异常，保留原始地址便于定位配置问题。
+    /// 资源地址无效或加载失败时抛出的异常，保留原始地址便于定位内容配置。
     /// </summary>
     public class InvalidResourceRequestException : Exception
     {

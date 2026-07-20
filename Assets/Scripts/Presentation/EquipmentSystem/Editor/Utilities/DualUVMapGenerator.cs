@@ -45,12 +45,42 @@ public static class DualUVMapGenerator
         string spritesheetPath = AssetDatabase.GetAssetPath(anim.spritesheet);
         string directory = Path.GetDirectoryName(spritesheetPath);
         string baseName = Path.GetFileNameWithoutExtension(spritesheetPath);
+        return GenerateDualUVMapsForAnimation(data, anim, directory, baseName);
+    }
+
+    /// <summary>
+    /// 为指定动画生成身体/头部 UV 图，并写入明确的输出目录。
+    /// 用于坐骑骑手层这类第三方原始素材，避免把派生 UV 图写回素材包目录。
+    /// </summary>
+    public static bool GenerateDualUVMapsForAnimation(
+        CharacterFrameData data,
+        AnimationData anim,
+        string outputDirectory,
+        string fileNamePrefix)
+    {
+        if (data == null || anim == null || anim.spritesheet == null)
+        {
+            Debug.LogWarning($"[UV Map] 动画 {anim?.GetKey() ?? "null"} 没有 spritesheet");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(outputDirectory))
+        {
+            Debug.LogWarning($"[UV Map] 动画 {anim.GetKey()} 缺少输出目录");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(fileNamePrefix))
+            fileNamePrefix = anim.GetKey();
+
+        if (!Directory.Exists(outputDirectory))
+            Directory.CreateDirectory(outputDirectory);
 
         // 生成身体层 UV Map
         var bodyTex = GenerateBodyUVMapTexture(anim);
         if (bodyTex != null)
         {
-            string bodyPath = Path.Combine(directory, baseName + "_BodyUV.png");
+            string bodyPath = Path.Combine(outputDirectory, fileNamePrefix + "_BodyUV.png");
             SaveUVMapTexture(bodyTex, bodyPath);
             Object.DestroyImmediate(bodyTex);
 
@@ -66,7 +96,7 @@ public static class DualUVMapGenerator
         var headTex = GenerateHeadUVMapTexture(data, anim);
         if (headTex != null)
         {
-            string headPath = Path.Combine(directory, baseName + "_HeadUV.png");
+            string headPath = Path.Combine(outputDirectory, fileNamePrefix + "_HeadUV.png");
             SaveUVMapTexture(headTex, headPath);
             Object.DestroyImmediate(headTex);
 

@@ -22,7 +22,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
     EquipmentRenderer equipmentRenderer;
 
     [SerializeField]
-    [Tooltip("可选：角色移动/朝向 owner。存在时跟随目标朝向；工作台可不绑定并手动切方向。")]
+    [Tooltip("可选：角色移动/朝向 owner。存在时跟随实际面朝方向；工作台可不绑定并手动切方向。")]
     Movable movable;
 
     [SerializeField]
@@ -54,8 +54,8 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
 
         if (movable != null)
         {
-            movable.AddTargetDirectionChangedListener(SetFacingDirection);
-            SetFacingDirection(movable.GetTargetDirection());
+            movable.AddLookAtDirectionChangedListener(SetFacingDirection);
+            SetFacingDirection(movable.GetLookAtDirection());
         }
         else
         {
@@ -66,7 +66,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
     void OnDisable()
     {
         if (movable != null)
-            movable.RemoveTargetDirectionChangedListener(SetFacingDirection);
+            movable.RemoveLookAtDirectionChangedListener(SetFacingDirection);
     }
 
     public string[] GetDirectionNames()

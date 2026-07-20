@@ -57,6 +57,12 @@ MonoBehaviour:
     - rid: 4536545658951696608
     - rid: 4536545658951696609
     - rid: 4536545658951696610
+  - m_stableId: combat-wander
+    m_displayName: Combat Wander
+    m_behaviours:
+    - rid: 4536545658951696611
+    - rid: 4536545658951696612
+    - rid: 4536545658951696613
   m_drawDebug: 1
   references:
     version: 2
@@ -184,3 +190,22 @@ MonoBehaviour:
         m_enabled: 1
         m_weight: 1
         m_forwardDotThreshold: 0.15
+    - rid: 4536545658951696611
+      type: {class: ObstacleAvoidanceSteeringBehaviour2D, ns: ContextSteering2D, asm: ContextSteering2D.Runtime}
+      data:
+        m_stableId: obstacle-avoidance
+        m_enabled: 1
+        m_weight: 1
+        m_sidePreference: 0.35
+    - rid: 4536545658951696612
+      type: {class: CombatWanderSteeringBehaviour2D, ns: ContextSteering2D, asm: ContextSteering2D.Runtime}
+      data:
+        m_stableId: combat-wander
+        m_enabled: 1
+        m_weight: 1
+    - rid: 4536545658951696613
+      type: {class: SeparationSteeringBehaviour2D, ns: ContextSteering2D, asm: ContextSteering2D.Runtime}
+      data:
+        m_stableId: separation
+        m_enabled: 1
+        m_weight: 1

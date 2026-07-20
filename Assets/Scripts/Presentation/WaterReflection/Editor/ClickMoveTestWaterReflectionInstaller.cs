@@ -26,8 +26,6 @@ namespace FantasyWord.EditorTools
         private const string CaptureCameraName = "Water Reflection Capture Camera";
         private const string ReflectionAnchorName = "Water Reflection Anchor";
         private const string ProxyLayerName = "WaterReflectionProxy";
-        private const string ProxyMaterialPath =
-            "Assets/Settings/WaterReflection/WaterReflectionProxy2D.mat";
         private const string WaterMaterialPath =
             "Assets/Settings/WaterReflection/WaterReflectionTilemap.mat";
         private const string ResultRelativePath =
@@ -57,8 +55,6 @@ namespace FantasyWord.EditorTools
                 Camera mainCamera = FindSceneComponent<Camera>(scene, MainCameraName)
                     ?? throw new InvalidOperationException($"场景缺少主相机：{MainCameraName}");
 
-                Material proxyMaterial = AssetDatabase.LoadAssetAtPath<Material>(ProxyMaterialPath)
-                    ?? throw new InvalidOperationException($"缺少倒影代理材质：{ProxyMaterialPath}");
                 Material waterMaterial = AssetDatabase.LoadAssetAtPath<Material>(WaterMaterialPath)
                     ?? throw new InvalidOperationException($"缺少水面倒影材质：{WaterMaterialPath}");
                 int proxyLayer = LayerMask.NameToLayer(ProxyLayerName);
@@ -74,7 +70,7 @@ namespace FantasyWord.EditorTools
                     "添加水面倒影系统");
 
                 ConfigureCaptureCamera(captureCamera, proxyLayer);
-                ConfigureSystem(system, captureCamera, proxyMaterial, waterRenderer);
+                ConfigureSystem(system, captureCamera, waterRenderer);
                 ConfigureWaterRenderer(waterRenderer, waterMaterial);
                 ConfigureMainCamera(mainCamera, proxyLayer);
 
@@ -214,14 +210,12 @@ namespace FantasyWord.EditorTools
         private static void ConfigureSystem(
             WaterReflectionSystem system,
             Camera captureCamera,
-            Material proxyMaterial,
             TilemapRenderer waterRenderer)
         {
             Undo.RecordObject(system, "配置水面倒影系统");
             SerializedObject serialized = new(system);
             SetObject(serialized, "m_captureCamera", captureCamera);
             SetInt(serialized, "m_captureRendererIndex", 1);
-            SetObject(serialized, "m_defaultProxyMaterial", proxyMaterial);
             SetString(serialized, "m_proxyLayerName", ProxyLayerName);
             SerializedProperty waterRenderers = serialized.FindProperty("m_waterRenderers")
                 ?? throw new InvalidOperationException("WaterReflectionSystem 缺少 m_waterRenderers 字段。");
@@ -252,9 +246,15 @@ namespace FantasyWord.EditorTools
                 "添加玩家水面倒影");
             EquipmentRenderer equipmentRenderer = player.GetComponentInChildren<EquipmentRenderer>(true)
                 ?? throw new InvalidOperationException("玩家缺少 EquipmentRenderer，不能生成完整换装倒影。");
-            SpriteRenderer bodyRenderer = equipmentRenderer.GetComponent<SpriteRenderer>()
-                ?? throw new InvalidOperationException("玩家 EquipmentRenderer 缺少主体 SpriteRenderer，不能定位脚底倒影锚点。");
-            Transform reflectionAnchor = ConfigureReflectionAnchor(player.transform, bodyRenderer);
+            if (!equipmentRenderer.TryGetGroundAnchorWorldPosition(out Vector2 groundPosition))
+            {
+                throw new InvalidOperationException(
+                    "玩家换装表现缺少当前 Sprite 或 CharacterFrameData，不能从正式地面基准生成倒影锚点。");
+            }
+
+            Transform reflectionAnchor = ConfigureReflectionAnchor(
+                player.transform,
+                new Vector3(groundPosition.x, groundPosition.y, player.transform.position.z));
             Undo.RecordObject(caster, "配置玩家水面倒影");
             SerializedObject serialized = new(caster);
             SetObject(serialized, "m_equipmentRenderer", equipmentRenderer);
@@ -285,6 +285,12 @@ namespace FantasyWord.EditorTools
 
         private static Transform ConfigureReflectionAnchor(Transform owner, SpriteRenderer source)
         {
+            Vector3 worldAnchor = new(source.bounds.center.x, source.bounds.min.y, owner.position.z);
+            return ConfigureReflectionAnchor(owner, worldAnchor);
+        }
+
+        private static Transform ConfigureReflectionAnchor(Transform owner, Vector3 worldAnchor)
+        {
             Transform? existing = owner.Find(ReflectionAnchorName);
             Transform anchor;
             if (existing != null)
@@ -300,7 +306,6 @@ namespace FantasyWord.EditorTools
                 anchor = anchorObject.transform;
             }
 
-            Vector3 worldAnchor = new(source.bounds.center.x, source.bounds.min.y, owner.position.z);
             anchor.localPosition = owner.InverseTransformPoint(worldAnchor);
             anchor.localRotation = Quaternion.identity;
             anchor.localScale = Vector3.one;
