@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using GAS.Runtime;
 using Unity.Entities;
 using UnityEngine;
@@ -23,23 +24,23 @@ namespace FantasyWord.GameCore
     [Serializable]
     public struct FormalDamageEffectPayload
     {
-        [InspectorName("伤害描述")]
+        [LabelText("伤害描述")]
         [Tooltip("正式伤害的类型、固定值和属性缩放。")]
         [SerializeField] private DamageDescriptor m_damageDescriptor;
 
-        [InspectorName("表现标记")]
+        [LabelText("表现标记")]
         [Tooltip("命中后允许触发的视觉/反馈类型。")]
         [SerializeField] private EEffectVisualFlags m_visualFlags;
 
-        [InspectorName("打击参数")]
+        [LabelText("打击参数")]
         [Tooltip("命中停顿、击退或其它打击感参数。")]
         [SerializeField] private DamageImpactSettings m_damageImpact;
 
-        [InspectorName("冲击数据类型")]
+        [LabelText("冲击数据类型")]
         [Tooltip("说明 impactData 的解释方式，例如方向或世界坐标。")]
         [SerializeField] private EEffectImpactDataType m_impactDataType;
 
-        [InspectorName("冲击数据")]
+        [LabelText("冲击数据")]
         [Tooltip("与冲击数据类型配套使用的二维参数。")]
         [SerializeField] private Vector2 m_impactData;
 
@@ -120,6 +121,68 @@ namespace FantasyWord.GameCore
         }
 
         public FormalDamageEffectPayload Payload;
+    }
+
+    /// <summary>
+    /// 已完成攻击者侧结算的正式伤害载荷。
+    /// 持续伤害这类效果需要在初始化时锁定来源属性快照，运行时 tick 只把结果交回 GAS 伤害执行系统。
+    /// </summary>
+    [Serializable]
+    public readonly struct FormalResolvedDamageEffectPayload
+    {
+        public FormalResolvedDamageEffectPayload(
+            DamageOutputDescriptor damageOutput,
+            EEffectVisualFlags visualFlags,
+            DamageImpactSettings damageImpact,
+            EEffectImpactDataType impactDataType,
+            Vector2 impactData)
+        {
+            DamageOutput = damageOutput;
+            VisualFlags = visualFlags;
+            DamageImpact = damageImpact;
+            ImpactDataType = impactDataType;
+            ImpactData = impactData;
+        }
+
+        public DamageOutputDescriptor DamageOutput { get; }
+        public EEffectVisualFlags VisualFlags { get; }
+        public DamageImpactSettings DamageImpact { get; }
+        public EEffectImpactDataType ImpactDataType { get; }
+        public Vector2 ImpactData { get; }
+        public bool IsConfigured => DamageOutput.damage > 0 || DamageOutput.flags.HasFlag(EDamageFlag.Miss);
+    }
+
+    /// <summary>
+    /// 运行时配置组件：把已结算伤害写入 GameplayEffect 实体。
+    /// 该入口不提供给 EX-GAS 表编辑，只服务 DOT、脚本伤害等已经有 DamageOutputDescriptor 的链路。
+    /// </summary>
+    public sealed class MCConfFormalResolvedDamageEffect : GameplayEffectComponentConfig
+    {
+        public FormalResolvedDamageEffectPayload payload;
+
+        public override void LoadToGameplayEffectEntity(UEntity ge)
+        {
+            EntityHelper.AddManagedComponent<MCFormalResolvedDamageEffect>(ge);
+            EntityHelper.SetManagedComponent(ge, new MCFormalResolvedDamageEffect(payload));
+        }
+    }
+
+    /// <summary>
+    /// GameplayEffect 实体上的已结算伤害组件数据。
+    /// </summary>
+    public sealed class MCFormalResolvedDamageEffect : IComponentData
+    {
+        public MCFormalResolvedDamageEffect()
+        {
+            Payload = default;
+        }
+
+        public MCFormalResolvedDamageEffect(FormalResolvedDamageEffectPayload payload)
+        {
+            Payload = payload;
+        }
+
+        public FormalResolvedDamageEffectPayload Payload;
     }
 
     /// <summary>

@@ -3,17 +3,32 @@ using FantasyWord.GameCore;
 using UnityEngine;
 
 /// <summary>
-/// 把角色玩法装备的正式槽位状态同步到换装渲染器。
-/// 装备资产是唯一真相；这里不保存第二份装备配置。
+/// 角色装备表现层：将角色装备的玩法数据同步到换装渲染器
+///
+/// 职责：
+/// - 监听 CharacterEquipment 的装备变化事件
+/// - 将装备数据转换为渲染数据（EquipmentRenderData）
+/// - 驱动 EquipmentRenderer 更新外观
+/// - 管理坐骑表现（MountedCharacterPresentation）
+///
+/// 设计原则：
+/// - 装备资产（CharacterEquipment）是唯一真相
+/// - 本类不保存第二份装备配置，只做同步
+/// - 只关注表现层，不处理装备的玩法逻辑
+///
+/// 注意事项：
+/// - 同时装备多个坐骑时，只保留第一个
+/// - 装备必须配置 EquipmentRenderData 才能正确渲染
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(CharacterEquipment))]
 public sealed class CharacterEquipmentPresentation : MonoBehaviour
 {
-    [SerializeField] private CharacterEquipment characterEquipment;
-    [SerializeField] private EquipmentRenderer equipmentRenderer;
-    [SerializeField] private MountedCharacterPresentation mountedPresentation;
+    [SerializeField] private CharacterEquipment characterEquipment;         // 装备玩法组件（数据源）
+    [SerializeField] private EquipmentRenderer equipmentRenderer;           // 装备渲染器（表现层）
+    [SerializeField] private MountedCharacterPresentation mountedPresentation;  // 坐骑表现组件
 
+    // 当前已应用的装备视觉数据（用于清理旧装备）
     private readonly HashSet<EquipmentRenderData> appliedVisuals = new();
 
     private void Awake()

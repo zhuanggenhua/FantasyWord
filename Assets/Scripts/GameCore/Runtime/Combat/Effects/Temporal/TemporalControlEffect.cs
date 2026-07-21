@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -41,7 +42,7 @@ namespace FantasyWord.GameCore
             public EControlType controlType;
         }
 
-        [InspectorName("控制数据")]
+        [LabelText("控制数据")]
         [Tooltip("决定本持续效果锁定哪些角色动作。")]
         [SerializeField] private ControlData m_controlData;
 

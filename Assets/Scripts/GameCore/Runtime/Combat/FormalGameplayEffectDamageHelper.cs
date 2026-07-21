@@ -45,6 +45,52 @@ namespace FantasyWord.GameCore
             return true;
         }
 
+        public static bool TryApplyResolvedDamage(
+            CharacterBase source,
+            CharacterBase target,
+            DamageOutputDescriptor damageOutput,
+            EEffectVisualFlags visualFlags,
+            Vector2 impactVelocity,
+            DamageImpactSettings damageImpact)
+        {
+            if (target == null || damageOutput.damage <= 0 && !damageOutput.flags.HasFlag(EDamageFlag.Miss))
+            {
+                return false;
+            }
+
+            if (!TryResolveAbilitySystem(target, out AbilitySystemComponent targetAsc))
+            {
+                return false;
+            }
+
+            AbilitySystemComponent sourceAsc = null;
+            if (source != null && !TryResolveAbilitySystem(source, out sourceAsc))
+            {
+                sourceAsc = null;
+            }
+
+            UEntity sourceAscEntity = sourceAsc != null
+                ? sourceAsc.Cell.Entity
+                : UEntity.Null;
+
+            UEntity gameplayEffect = GameplayEffectHelper.CreateGameplayEffectEntity(
+                new GameplayEffectComponentConfig[]
+                {
+                    new MCConfFormalResolvedDamageEffect
+                    {
+                        payload = new FormalResolvedDamageEffectPayload(
+                            damageOutput,
+                            visualFlags,
+                            damageImpact,
+                            EEffectImpactDataType.Velocity,
+                            impactVelocity)
+                    }
+                });
+
+            GameplayEffectHelper.ApplyGameplayEffectTo(gameplayEffect, targetAsc.Cell.Entity, sourceAscEntity);
+            return true;
+        }
+
         public static Vector2 ResolveImpactVector(
             CharacterBase source,
             CharacterBase target,

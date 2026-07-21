@@ -1,5 +1,6 @@
 using System;
 using ContextSteering2D;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -9,13 +10,13 @@ namespace FantasyWord.GameCore
     /// </summary>
     internal enum AICharacterFacingMode2D
     {
-        [InspectorName("保持当前朝向")]
+        [LabelText("保持当前朝向")]
         KeepCurrent,
 
-        [InspectorName("面向目标")]
+        [LabelText("面向目标")]
         FaceTarget,
 
-        [InspectorName("面向移动方向")]
+        [LabelText("面向移动方向")]
         FaceMovement
     }
 
@@ -59,117 +60,116 @@ namespace FantasyWord.GameCore
     {
         private const string DefaultTargetOrbitSteeringGroupId = "orbit";
 
-        [Header("引用")]
-        [InspectorName("主控实体")]
-        [Tooltip("可选的跟随或守护对象；配置后 AI 的归位点优先取该实体位置。")]
-        [SerializeField] private Entity m_master = null;
+        [SerializeField]
+        [LabelText("主控实体"), Tooltip("可选的跟随或守护对象；配置后 AI 的归位点优先取该实体位置。")]
+        private Entity m_master = null;
 
         [Header("追踪设置")]
-        [InspectorName("发现半径")]
-        [Tooltip("AI 搜索可攻击目标的最大半径。")]
-        [SerializeField, Min(1.0f)] private float m_detectionRadius = 5.0f;
+        [SerializeField, Min(1.0f)]
+        [LabelText("发现半径"), Tooltip("AI 搜索可攻击目标的最大半径。")]
+        private float m_detectionRadius = 5.0f;
 
-        [InspectorName("离初始点重置半径")]
-        [Tooltip("AI 距离初始点超过该半径后，会倾向重置或返回活动范围。")]
-        [SerializeField, Min(1.0f)] private float m_resetFromInitialPositionRadius = 10.0f;
+        [SerializeField, Min(1.0f)]
+        [LabelText("离初始点重置半径"), Tooltip("AI 距离初始点超过该半径后，会倾向重置或返回活动范围。")]
+        private float m_resetFromInitialPositionRadius = 10.0f;
 
-        [InspectorName("离目标重置半径")]
-        [Tooltip("AI 与目标距离超过该半径后，会放弃或重新寻找目标。")]
-        [SerializeField, Min(1.0f)] private float m_resetFromTargetDistanceRadius = 10.0f;
+        [SerializeField, Min(1.0f)]
+        [LabelText("离目标重置半径"), Tooltip("AI 与目标距离超过该半径后，会放弃或重新寻找目标。")]
+        private float m_resetFromTargetDistanceRadius = 10.0f;
 
-        [InspectorName("越界重新选敌冷却")]
-        [Tooltip("目标离开范围后，等待该秒数再尝试重新寻找目标。")]
-        [SerializeField, Min(0.5f)] private float m_targetOutOfRangeRetargetCooldown = 3.0f;
+        [SerializeField, Min(0.5f)]
+        [LabelText("越界重新选敌冷却"), Tooltip("目标离开范围后，等待该秒数再尝试重新寻找目标。")]
+        private float m_targetOutOfRangeRetargetCooldown = 3.0f;
 
-        [InspectorName("距离主控目标期望距离")]
-        [Tooltip("存在主控实体时，AI 尝试保持在主控目标附近的距离。")]
-        [SerializeField, Min(0.1f)] private float m_soughtDistanceFromMasterTarget = 1.0f;
+        [SerializeField, Min(0.1f)]
+        [LabelText("距离主控目标期望距离"), Tooltip("存在主控实体时，AI 尝试保持在主控目标附近的距离。")]
+        private float m_soughtDistanceFromMasterTarget = 1.0f;
 
-        [InspectorName("距离目标期望距离")]
-        [Tooltip("追击目标时希望保持的距离，用于近战或环绕行为。")]
-        [SerializeField, Min(0.1f)] private float m_soughtDistanceFromTarget = 1.0f;
+        [SerializeField, Min(0.1f)]
+        [LabelText("距离目标期望距离"), Tooltip("追击目标时希望保持的距离，用于近战或环绕行为。")]
+        private float m_soughtDistanceFromTarget = 1.0f;
 
         [Header("转向设置")]
-        [InspectorName("转向配置")]
-        [Tooltip("ContextSteering2D 使用的方向评分配置。")]
-        [SerializeField] private ContextSteeringProfile2D m_steeringProfile = null;
+        [SerializeField]
+        [LabelText("转向配置"), Tooltip("ContextSteering2D 使用的方向评分配置。")]
+        private ContextSteeringProfile2D m_steeringProfile = null;
 
-        [InspectorName("通行转向组")]
-        [Tooltip("非战斗移动时使用的转向组 ID。")]
-        [SerializeField] private string m_transitSteeringGroupId = "transit";
+        [SerializeField]
+        [LabelText("通行转向组"), Tooltip("非战斗移动时使用的转向组 ID。")]
+        private string m_transitSteeringGroupId = "transit";
 
-        [InspectorName("追击转向组")]
-        [Tooltip("追击目标时使用的转向组 ID。")]
-        [SerializeField] private string m_targetPursuitSteeringGroupId = "predictive-target";
+        [SerializeField]
+        [LabelText("追击转向组"), Tooltip("追击目标时使用的转向组 ID。")]
+        private string m_targetPursuitSteeringGroupId = "predictive-target";
 
-        [InspectorName("追击身体朝向")]
-        [Tooltip("追击目标时身体朝向的状态层裁决：可保持当前、面向目标，或面向移动方向。")]
-        [SerializeField] private AICharacterFacingMode2D m_targetPursuitFacingMode = AICharacterFacingMode2D.FaceTarget;
+        [SerializeField]
+        [LabelText("追击身体朝向"), Tooltip("追击目标时身体朝向的状态层裁决：可保持当前、面向目标，或面向移动方向。")]
+        private AICharacterFacingMode2D m_targetPursuitFacingMode = AICharacterFacingMode2D.FaceTarget;
 
-        [InspectorName("启用战斗游走")]
-        [Tooltip("开启后，敌人进入游走范围便按参考行为随机左右游走；关闭时只使用原追击流程。")]
-        [SerializeField] private bool m_useCombatWander = false;
+        [SerializeField]
+        [LabelText("启用战斗游走"), Tooltip("开启后，敌人进入游走范围便按参考行为随机左右游走；关闭时只使用原追击流程。")]
+        private bool m_useCombatWander = false;
 
-        [InspectorName("战斗游走范围")]
-        [Tooltip("目标进入该范围时，允许使用战斗游走。")]
-        [SerializeField, Min(0.1f)] private float m_combatWanderRange = 3.0f;
+        [SerializeField, Min(0.1f)]
+        [LabelText("战斗游走范围"), Tooltip("目标进入该范围时，允许使用战斗游走。")]
+        private float m_combatWanderRange = 3.0f;
 
-        [InspectorName("战斗游走速度倍率")]
-        [Tooltip("对应参考配置中的游走速度倍率。")]
-        [SerializeField, Min(0.0f)] private float m_combatWanderSpeedMultiplier = 1.0f;
+        [SerializeField, Min(0.0f)]
+        [LabelText("战斗游走速度倍率"), Tooltip("对应参考配置中的游走速度倍率。")]
+        private float m_combatWanderSpeedMultiplier = 1.0f;
 
-        [InspectorName("战斗游走转向组")]
-        [Tooltip("战斗游走使用的行为组 ID。")]
-        [SerializeField] private string m_combatWanderSteeringGroupId = "combat-wander";
+        [SerializeField]
+        [LabelText("战斗游走转向组"), Tooltip("战斗游走使用的行为组 ID。")]
+        private string m_combatWanderSteeringGroupId = "combat-wander";
 
-        [InspectorName("战斗游走身体朝向")]
-        [Tooltip("战斗游走开启后身体朝向的状态层裁决；默认保持当前，避免游走行为强制锁脸。")]
-        [SerializeField] private AICharacterFacingMode2D m_combatWanderFacingMode = AICharacterFacingMode2D.KeepCurrent;
+        [SerializeField]
+        [LabelText("战斗游走身体朝向"), Tooltip("战斗游走开启后身体朝向的状态层裁决；默认保持当前，避免游走行为强制锁脸。")]
+        private AICharacterFacingMode2D m_combatWanderFacingMode = AICharacterFacingMode2D.KeepCurrent;
 
-        [InspectorName("启用近身环绕")]
-        [Tooltip("目标进入保持距离后切换到近身环绕组。关闭时继续使用追击组，并由 Arrive 在攻击距离附近停住。")]
-        [SerializeField] private bool m_useTargetOrbitSteeringAtSoughtDistance = true;
+        [SerializeField]
+        [LabelText("启用近身环绕"), Tooltip("目标进入保持距离后切换到近身环绕组。关闭时继续使用追击组，并由 Arrive 在攻击距离附近停住。")]
+        private bool m_useTargetOrbitSteeringAtSoughtDistance = true;
 
-        [InspectorName("近身环绕转向组")]
-        [Tooltip("目标进入保持距离后使用的行为组 ID；默认 orbit，不应包含 Arrive。")]
-        [SerializeField] private string m_targetOrbitSteeringGroupId = DefaultTargetOrbitSteeringGroupId;
+        [SerializeField]
+        [LabelText("近身环绕转向组"), Tooltip("目标进入保持距离后使用的行为组 ID；默认 orbit，不应包含 Arrive。")]
+        private string m_targetOrbitSteeringGroupId = DefaultTargetOrbitSteeringGroupId;
 
-        [InspectorName("重新寻路间隔")]
-        [Tooltip("导航目标刷新路径的最小间隔秒数。")]
-        [SerializeField, Min(0.1f)] private float m_navigationRepathInterval = 0.5f;
+        [SerializeField, Min(0.1f)]
+        [LabelText("重新寻路间隔"), Tooltip("导航目标刷新路径的最小间隔秒数。")]
+        private float m_navigationRepathInterval = 0.5f;
 
-        [InspectorName("目标移动重算阈值")]
-        [Tooltip("目标移动超过该距离后触发重新规划路径。")]
-        [SerializeField, Min(0.05f)] private float m_navigationTargetMoveThreshold = 0.5f;
+        [SerializeField, Min(0.05f)]
+        [LabelText("目标移动重算阈值"), Tooltip("目标移动超过该距离后触发重新规划路径。")]
+        private float m_navigationTargetMoveThreshold = 0.5f;
 
-        [InspectorName("路径点容差")]
-        [Tooltip("AI 距离当前路径点小于该值时视为已到达。")]
-        [SerializeField, Min(0.05f)] private float m_navigationWaypointTolerance = 0.2f;
+        [SerializeField, Min(0.05f)]
+        [LabelText("路径点容差"), Tooltip("AI 距离当前路径点小于该值时视为已到达。")]
+        private float m_navigationWaypointTolerance = 0.2f;
 
-        [InspectorName("丢失目标后重置时间")]
-        [Tooltip("看不见目标持续超过该时间后，AI 会进入重置或重新选敌流程。")]
-        [SerializeField, Min(0.1f)] private float m_timeBeforeResetAfterTargetSightLost = 3.0f;
+        [SerializeField, Min(0.1f)]
+        [LabelText("丢失目标后重置时间"), Tooltip("看不见目标持续超过该时间后，AI 会进入重置或重新选敌流程。")]
+        private float m_timeBeforeResetAfterTargetSightLost = 3.0f;
 
-        [InspectorName("不可见目标重新选敌冷却")]
-        [Tooltip("目标不可见后再次尝试选敌的冷却时间。")]
-        [SerializeField, Min(0.1f)] private float m_cannotSeeTargetRetargetCooldown = 1.0f;
+        [SerializeField, Min(0.1f)]
+        [LabelText("不可见目标重新选敌冷却"), Tooltip("目标不可见后再次尝试选敌的冷却时间。")]
+        private float m_cannotSeeTargetRetargetCooldown = 1.0f;
 
         [Header("攻击设置")]
-        [InspectorName("攻击触发半径")]
-        [Tooltip("目标进入该距离后 AI 可尝试触发攻击。")]
-        [SerializeField] public float m_attackTriggerRadius = 1.0f;
+        [SerializeField]
+        [LabelText("攻击触发半径"), Tooltip("目标进入该距离后 AI 可尝试触发攻击。")]
+        public float m_attackTriggerRadius = 1.0f;
 
-        [InspectorName("攻击冷却")]
-        [Tooltip("两次攻击尝试之间的最小间隔秒数。")]
-        [SerializeField] public float m_attackCooldown = 1.0f;
+        [SerializeField]
+        [LabelText("攻击冷却"), Tooltip("两次攻击尝试之间的最小间隔秒数。")]
+        public float m_attackCooldown = 1.0f;
 
-        [InspectorName("攻击前要求对准目标")]
-        [Tooltip("开启后，AI 进入攻击触发半径时先面向目标，身体朝向完成后下一次判断才会开火。")]
-        [SerializeField] private bool m_requireTargetFacingBeforeAttack = true;
+        [SerializeField]
+        [LabelText("攻击前要求对准目标"), Tooltip("开启后，AI 进入攻击触发半径时先面向目标，身体朝向完成后下一次判断才会开火。")]
+        private bool m_requireTargetFacingBeforeAttack = true;
 
-        [InspectorName("攻击对准完成角度")]
-        [Tooltip("参考 duolafashi turnToTargetDetal 的 5 度完成判定；只用于攻击前对准门禁。")]
-        [SerializeField, Range(0.0f, 45.0f)] private float m_attackFacingCompletionAngleDegrees = 5.0f;
+        [SerializeField, Range(0.0f, 45.0f)]
+        [LabelText("攻击对准完成角度"), Tooltip("参考 duolafashi turnToTargetDetal 的 5 度完成判定；只用于攻击前对准门禁。")]
+        private float m_attackFacingCompletionAngleDegrees = 5.0f;
 
         private Transform transform => m_subject.transform;
 
@@ -196,12 +196,18 @@ namespace FantasyWord.GameCore
                 ? DefaultTargetOrbitSteeringGroupId
                 : m_targetOrbitSteeringGroupId;
 
+        // 当前战斗目标。它是 AI 控制器自己的运行时追敌真相，存档时再转成 PersistableReference。
         private CharacterBase m_target = null;
+        // 重新搜索目标前的冷却，避免目标刚丢失时每个 FixedUpdate 都扫检测列表。
         private float m_retargetCooldownTimer = 0.0f;
+        // 攻击尝试冷却。只有正式能力成功接收释放请求后才会重置。
         private float m_attackCooldownTimer = 0.0f;
+        // AI 激活时记录的初始点；存在主控实体时归位点会优先跟随主控实体。
         private Vector2 m_initialPosition;
+        // 目标最近一次不可见后的累计时间，用于延迟丢失目标，而不是视线断开就立刻停追。
         private float m_timeSinceTargetLastSeen = 0.0f;
 
+        // 行为运行时延迟创建，避免控制器只被反序列化但未激活时提前创建转向适配器。
         private BehaviourRuntime m_behaviourRuntime = null;
         private BehaviourRuntime behaviourRuntime => m_behaviourRuntime ??= new BehaviourRuntime(this);
 
@@ -223,22 +229,35 @@ namespace FantasyWord.GameCore
             return Vector2.Angle(currentFacing, attackDirection) < completedAngle;
         }
 
+        /// <summary>
+        /// 初始化 AI 行为运行时，并记录归位基准点。
+        /// 转向组映射也在这里校验，配置错误会尽早暴露在控制器启用阶段。
+        /// </summary>
         protected override void OnInitialize()
         {
             behaviourRuntime.Initialize();
         }
 
+        /// <summary>
+        /// 控制器启动时监听受挑衅事件，让被攻击的 AI 可以临时锁定挑衅来源。
+        /// </summary>
         protected override void OnStart()
         {
             m_subject.AddProvokedListener(OnProvoked);
         }
 
+        /// <summary>
+        /// 控制器停止时清理事件订阅、当前路径和转向输出，避免下次接管时沿用旧目标状态。
+        /// </summary>
         protected override void OnStop()
         {
             m_subject.RemoveProvokedListener(OnProvoked);
             behaviourRuntime.Stop();
         }
 
+        /// <summary>
+        /// 控制器销毁时释放转向运行时资源。
+        /// </summary>
         protected override void OnTerminate() => m_behaviourRuntime?.Dispose();
 
         /// <summary>
@@ -266,18 +285,33 @@ namespace FantasyWord.GameCore
             return true;
         }
 
+        /// <summary>
+        /// 受挑衅时把来源交给行为运行时裁决。
+        /// 这里不直接改目标，避免绕过冷却、敌我和视线等统一规则。
+        /// </summary>
         private void OnProvoked(CharacterBase source)
         {
             behaviourRuntime.TryHandleProvoked(source);
         }
 
+        /// <summary>
+        /// 固定步推进 AI 行为。
+        /// 移动、寻敌和攻击都依赖物理检测与 FixedUpdate 节奏保持一致。
+        /// </summary>
         protected override void OnFixedUpdate()
         {
             behaviourRuntime.Tick();
         }
 
+        /// <summary>
+        /// 返回 AI 控制器自己的存档块类型。
+        /// </summary>
         protected override Type GetDataBlockType() => typeof(AIControllerDataBlock);
 
+        /// <summary>
+        /// 从控制器存档块恢复目标、归位点和关键冷却计时器。
+        /// 目标引用解析失败时会自然回到空目标状态，由下一次 Tick 重新选敌。
+        /// </summary>
         protected override void OnLoad(IControllerDataBlock block)
         {
             base.OnLoad(block);
@@ -289,6 +323,10 @@ namespace FantasyWord.GameCore
             m_timeSinceTargetLastSeen = aiControllerDataBlock.timeSinceTargetLastSeen;
         }
 
+        /// <summary>
+        /// 保存 AI 控制器的轻量运行时状态。
+        /// 转向路径和临时 steering 输出不写盘，读档后由 BehaviourRuntime 重新计算。
+        /// </summary>
         protected override void OnSave(IControllerDataBlock block)
         {
             base.OnSave(block);

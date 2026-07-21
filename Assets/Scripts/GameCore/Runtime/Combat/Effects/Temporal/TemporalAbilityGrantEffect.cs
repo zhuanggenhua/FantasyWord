@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -27,12 +28,12 @@ namespace FantasyWord.GameCore
         [Serializable]
         internal struct AbilityGrantData
         {
-            [InspectorName("授予技能编码")]
+            [LabelText("授予技能编码")]
             [Tooltip("持续效果生效期间临时授予目标的 Formal GAS 技能编码列表；效果结束后会按状态来源统一移除。")]
             public int[] formalGasAbilityCodes;
         }
 
-        [InspectorName("技能授予配置")]
+        [LabelText("技能授予配置")]
         [Tooltip("配置该持续效果会临时授予哪些 Formal GAS 技能。")]
         [SerializeField] private AbilityGrantData m_abilityGrantData;
 

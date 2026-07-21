@@ -1,4 +1,5 @@
 using FantasyWord.GameCore;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -11,51 +12,62 @@ using UnityEngine.Serialization;
 public sealed class MountedCharacterPresentation : MonoBehaviour
 {
     [Header("运行时依赖")]
-    [InspectorName("动作驱动")]
-    [Tooltip("读取当前角色动作键。正式 Prefab 必须显式绑定。")]
-    [SerializeField] private CharacterActionAnimatorDriver actionDriver;
+    [SerializeField]
+    [LabelText("动作驱动"), Tooltip("读取当前角色动作键。正式 Prefab 必须显式绑定。")]
+    private CharacterActionAnimatorDriver actionDriver;
 
-    [InspectorName("方向驱动")]
-    [Tooltip("读取当前 SE/SW/NE/NW 方向索引。正式 Prefab 必须显式绑定。")]
-    [SerializeField] private DirectionalSpriteLibraryDriver directionDriver;
+    [SerializeField]
+    [LabelText("方向驱动"), Tooltip("读取当前 SE/SW/NE/NW 方向索引。正式 Prefab 必须显式绑定。")]
+    private DirectionalSpriteLibraryDriver directionDriver;
 
-    [InspectorName("骑手 SpriteRenderer")]
-    [Tooltip("骑手基础层 SpriteRenderer，通常就是 EquipmentRenderer 所在对象的 SpriteRenderer。")]
-    [SerializeField] private SpriteRenderer riderRenderer;
+    [SerializeField]
+    [LabelText("骑手 SpriteRenderer"), Tooltip("骑手基础层 SpriteRenderer，通常就是 EquipmentRenderer 所在对象的 SpriteRenderer。")]
+    private SpriteRenderer riderRenderer;
 
-    [InspectorName("坐骑 SpriteRenderer")]
-    [Tooltip("坐骑本体底层 SpriteRenderer。")]
-    [SerializeField] private SpriteRenderer mountRenderer;
+    [SerializeField]
+    [LabelText("坐骑 SpriteRenderer"), Tooltip("坐骑本体底层 SpriteRenderer。")]
+    private SpriteRenderer mountRenderer;
 
-    [InspectorName("骑手换装渲染器")]
-    [Tooltip("可选引用。骑手穿普通装备时使用骑乘帧数据刷新换装材质；无普通装备时保持原版 Sprite 直显。")]
-    [SerializeField] private EquipmentRenderer riderEquipmentRenderer;
+    [SerializeField]
+    [LabelText("骑手换装渲染器"), Tooltip("可选引用。骑手穿普通装备时使用骑乘帧数据刷新换装材质；无普通装备时保持原版 Sprite 直显。")]
+    private EquipmentRenderer riderEquipmentRenderer;
 
-    [Header("未骑乘默认值")]
-    [InspectorName("默认骑手帧数据")]
-    [Tooltip("卸下坐骑后恢复的普通站立/行走帧数据。为空时使用启动时 EquipmentRenderer 上的帧数据。")]
-    [SerializeField] private CharacterFrameData defaultRiderFrameData;
+    [SerializeField]
+    [LabelText("默认骑手帧数据"), Tooltip("卸下坐骑后恢复的普通站立/行走帧数据。为空时使用启动时 EquipmentRenderer 上的帧数据。")]
+    private CharacterFrameData defaultRiderFrameData;
 
     [Header("调试")]
-    [SerializeField] private MountRenderData activeMount;
+    [SerializeField]
+    [LabelText("当前坐骑"), Tooltip("当前正在驱动的坐骑表现资产。为空时隐藏坐骑本体并恢复普通骑手表现。")]
+    private MountRenderData activeMount;
     [FormerlySerializedAs("debugAnimationKey")]
-    [SerializeField] private string debugCharacterAnimationKey;
-    [SerializeField] private string debugMountActionKey;
-    [SerializeField] private int debugDirectionIndex;
-    [SerializeField] private int debugFrameIndex;
-    [InspectorName("调试帧数")]
-    [Tooltip("当前坐骑动作在当前方向下，本体和骑手基础层共同可播放的帧数。")]
-    [SerializeField] private int debugFrameCount;
-    [InspectorName("调试动作周期秒数")]
-    [Tooltip("当前坐骑动作完成一轮的时间，用来确认不同帧数坐骑是否按同一动作周期采样。")]
-    [SerializeField] private float debugCycleDurationSeconds;
-    [InspectorName("骑手普通装备叠加")]
-    [Tooltip("为 true 时，骑手层使用骑乘帧数据和普通换装 Shader 叠加服装/帽子等装备。坐骑本体不受影响。")]
-    [SerializeField] private bool debugRiderEquipmentOverlayEnabled;
-    [InspectorName("动作发生回退")]
-    [SerializeField] private bool debugUsedFallbackAction;
-    [InspectorName("请求的坐骑动作")]
-    [SerializeField] private string debugRequestedMountActionKey;
+    [SerializeField]
+    [LabelText("调试角色动作"), Tooltip("动作驱动当前输出的角色动作键。用于确认角色动作到坐骑动作语义的映射。")]
+    private string debugCharacterAnimationKey;
+    [SerializeField]
+    [LabelText("调试坐骑动作"), Tooltip("本帧实际播放的坐骑动作键，可能是请求动作，也可能是资产声明的回退动作。")]
+    private string debugMountActionKey;
+    [SerializeField]
+    [LabelText("调试方向索引"), Tooltip("本帧使用的 SE/SW/NE/NW 方向索引。非法方向会停止刷新并报错。")]
+    private int debugDirectionIndex;
+    [SerializeField]
+    [LabelText("调试帧索引"), Tooltip("本帧应用到坐骑本体和骑手基础层的帧索引。")]
+    private int debugFrameIndex;
+    [SerializeField]
+    [LabelText("调试帧数"), Tooltip("当前坐骑动作在当前方向下，本体和骑手基础层共同可播放的帧数。")]
+    private int debugFrameCount;
+    [SerializeField]
+    [LabelText("调试动作周期秒数"), Tooltip("当前坐骑动作完成一轮的时间，用来确认不同帧数坐骑是否按同一动作周期采样。")]
+    private float debugCycleDurationSeconds;
+    [SerializeField]
+    [LabelText("骑手普通装备叠加"), Tooltip("为 true 时，骑手层使用骑乘帧数据和普通换装 Shader 叠加服装/帽子等装备。坐骑本体不受影响。")]
+    private bool debugRiderEquipmentOverlayEnabled;
+    [SerializeField]
+    [LabelText("动作发生回退"), Tooltip("当前坐骑不支持请求动作时为 true，表示本帧实际播放了资产声明的回退动作。")]
+    private bool debugUsedFallbackAction;
+    [SerializeField]
+    [LabelText("请求的坐骑动作"), Tooltip("本帧角色动作解析出的坐骑动作键，用于和实际播放动作对照。")]
+    private string debugRequestedMountActionKey;
 
     float _elapsed;
     int _lastAppliedFrameIndex = -1;
@@ -99,6 +111,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
             Destroy(_originalSpriteDirectMaterial);
     }
 
+    /// <summary>切换当前坐骑表现资产。坐骑本体仍按作者原版 Sprite 直显，骑手层按装备状态选择直显或换装叠加。</summary>
     public void SetMount(MountRenderData mount)
     {
         if (activeMount == mount)
@@ -146,6 +159,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
             riderEquipmentRenderer.Refresh();
     }
 
+    /// <summary>装备槽变化后刷新骑手普通装备叠加状态，并强制重刷当前坐骑帧。</summary>
     public void RefreshRiderEquipmentOverlayFromRenderer()
     {
         ApplyRiderRenderModeForCurrentState();
@@ -156,6 +170,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
         }
     }
 
+    /// <summary>请求坐骑播放指定语义动作。动作必须由坐骑资产声明，缺失时直接返回失败。</summary>
     public bool TryPlayAction(MountActionSemantic action, string customActionKey = null)
     {
         if (activeMount == null)
@@ -192,6 +207,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
         SetMount(null);
     }
 
+    /// <summary>推进坐骑本体和骑手基础层的动作、方向和帧索引。这里不改动作真相，只消费动作驱动和方向驱动的结果。</summary>
     void TickMountedPresentation(float deltaTime)
     {
         if (activeMount == null || !ValidateStaticReferences(reportErrors: false))
@@ -287,6 +303,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
         _lastAppliedFrameIndex = frameIndex;
     }
 
+    /// <summary>应用单帧坐骑本体和骑手 Sprite。骑手有普通装备时同步刷新换装渲染器，否则保持原版 Sprite 材质。</summary>
     void ApplyFrame(MountAnimationData animation, int directionIndex, int frameIndex)
     {
         Sprite mountSprite = animation.GetMountFrame(directionIndex, frameIndex);
@@ -332,6 +349,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
             riderEquipmentRenderer.ClearAnimationContextOverride(false);
     }
 
+    /// <summary>只有骑手存在普通装备且坐骑资产提供骑乘帧数据时，才启用普通装备叠加。</summary>
     bool ShouldRenderRiderEquipmentOverlay()
     {
         return activeMount != null
@@ -387,6 +405,7 @@ public sealed class MountedCharacterPresentation : MonoBehaviour
             targetRenderer.sharedMaterial = directMaterial;
     }
 
+    /// <summary>创建坐骑原版 Sprite 直显材质。材质只服务本表现组件，不写入资产。</summary>
     Material ResolveOriginalSpriteDirectMaterial()
     {
         if (_originalSpriteDirectMaterial != null)

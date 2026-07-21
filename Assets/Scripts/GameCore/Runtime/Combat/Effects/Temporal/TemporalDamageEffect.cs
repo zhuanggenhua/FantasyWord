@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -48,15 +49,15 @@ namespace FantasyWord.GameCore
         [Serializable]
         protected struct DamageData
         {
-            [InspectorName("伤害配置")]
+            [LabelText("伤害配置")]
             [Tooltip("持续伤害每次 tick 使用的基础伤害描述，包含伤害类型、固定伤害和缩放系数。")]
             public DamageDescriptor damage;
 
-            [InspectorName("触发间隔")]
+            [LabelText("触发间隔")]
             [Tooltip("两次伤害 tick 之间的秒数；为 0 时会每帧触发，通常不应这样配置。")]
             public float interval;
 
-            [InspectorName("延迟首次触发")]
+            [LabelText("延迟首次触发")]
             [Tooltip("开启后，效果生效时不会立刻造成伤害，而是等待一个完整触发间隔。")]
             public bool delayFirstTick;
 
@@ -71,7 +72,7 @@ namespace FantasyWord.GameCore
             [HideInInspector] public DamageOutputDescriptor damageOutput;
         }
 
-        [InspectorName("持续伤害配置")]
+        [LabelText("持续伤害配置")]
         [Tooltip("配置持续伤害的数值、触发间隔和首次触发策略。")]
         [SerializeField] private DamageData m_damageData;
 
@@ -102,7 +103,13 @@ namespace FantasyWord.GameCore
             if (m_damageData.timer <= 0.0f)
             {
                 m_damageData.timer = m_damageData.interval;
-                targetCharacter?.Damage(m_damageData.damageOutput, visualFlags, m_effectData.velocity, m_effectData.damageImpact);
+                FormalGameplayEffectDamageHelper.TryApplyResolvedDamage(
+                    sourceCharacter,
+                    targetCharacter,
+                    m_damageData.damageOutput,
+                    visualFlags,
+                    m_effectData.velocity,
+                    m_effectData.damageImpact);
             }
         }
 

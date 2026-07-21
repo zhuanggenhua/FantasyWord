@@ -57,6 +57,8 @@ metadata:
 - EX-GAS 只能作为能力、属性、标签、GameplayEffect、Cost/Cooldown 和 GameplayCue 表现触发等底座候选；但当某个具体职责已经被证据证明 `EX-GAS` 原生闭包更强，例如当前的时间轴预览、Cue 预览或 TargetCatcher 体系，就应先把该职责收口到 `GAS` 主轴，再讨论剩余缺口。不得一边承认 `GAS` 在该职责更强，一边继续保留项目侧并行主轴。
 - EX-GAS `GameplayCue` 只允许作为表现提示或表现事件触发入口。不得用 Cue 修改属性、执行伤害/治疗、支付资源、改变冷却、添加/移除状态、强制位移、决定目标、写存档或承担其它玩法结果。若历史或迁移期代码已经这样做，必须标为待重构债务，不得扩散到新技能。
 - GameCore `GameplayFeedbackSet` 是当前项目侧表现反馈真相源；EX-GAS `GameplayCue` 若需要接入项目侧表现，应转发到该闭包或正式替代者，不得新增并行反馈系统。
+- 当前资源模型采用拆分属性：`Health` / `Mana` 表示当前资源，`MaxHealth` / `MaxMana` 表示上限。正式边界见 [`0071-正式 GAS 资源 Modifier 与伤害 owner`](../../../decisions/0071-formal-gas-resource-modifier-and-damage-owner.md)：伤害、治疗、回蓝和耗蓝统一通过 `FormalGameplayEffectResourceModifier` 创建 EX-GAS Modifier，修改当前资源属性并触发 EX-GAS 重算与属性事件；项目侧禁止直接写 `CAttributeData.CurrentValue`。
+- 当前项目未发布，旧存档兼容不再约束 GAS 属性重构。若旧存档字段阻碍资源属性标准化，默认后续直接重写存档结构或迁移脚本，不为旧格式保留长期双轨属性真相。
 - 推荐用法默认是重要基线，但不是预设赢家。真正的裁决标准只有一个：按职责切片后，同一职责里谁实现得更好、且能维持单一真相。
 - 如果某个参考来源只是补“怎么更好编辑”或“怎么更好预览”，那它竞争的只是作者面职责；不得因为它在作者面更强，就把它直接升级成新的规则 owner。反过来，如果 GAS 在规则真相上胜出，也不等于它天然拥有最佳可视化作者体验；这两件事必须分别判断，但各自都只能留一个正式 owner。
 - `AbilityAsset / AbilitySpec / TimelineAbility / TargetCatcher / GameplayEffect` 能表达的技能，不自动等于必须由 EX-GAS 全权执行；其它成熟参考若在同职责上实现得更好，也可以胜出。任何“胜出”都必须绑定到具体职责，而不是扩大成整个技能系统的预设赢家。

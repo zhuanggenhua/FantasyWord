@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -32,16 +33,16 @@ namespace FantasyWord.GameCore
         [Serializable]
         internal struct AbilityReplacementData
         {
-            [InspectorName("授予技能编码")]
+            [LabelText("授予技能编码")]
             [Tooltip("状态生效期间临时添加到目标身上的 Formal GAS 技能编码。")]
             public int[] grantedFormalGasAbilityCodes;
 
-            [InspectorName("压制技能编码")]
+            [LabelText("压制技能编码")]
             [Tooltip("状态生效期间暂时禁用的目标原有 Formal GAS 技能编码。")]
             public int[] suppressedFormalGasAbilityCodes;
         }
 
-        [InspectorName("技能替换配置")]
+        [LabelText("技能替换配置")]
         [Tooltip("定义本状态要授予哪些技能、同时压制哪些技能。")]
         [SerializeField] private AbilityReplacementData m_abilityReplacementData;
 

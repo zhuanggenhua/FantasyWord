@@ -2,49 +2,58 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 装备渲染器 (配置驱动版本)
-/// 新增装备类型时只需在 EquipTypeRegistry 添加配置
+/// 装备渲染器。
+/// 它消费角色帧数据、当前动作帧、外观和装备资产，把 Body/Head UV、颜色层、独立武器槽和基础外观写入私有换装材质。
+/// 方向和动作真相来自 Animator/动作驱动或工作台预览覆盖，本组件不创建动作状态，也不拥有装备玩法槽位。
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
 public class EquipmentRenderer : MonoBehaviour
 {
-    [Header("数据")]
+    [Header("基础配置")]
+    [LabelText("角色帧数据"), Tooltip("换装合成使用的动作帧、Body/Head UV、脚底阴影和挂点数据。为空时只会清理装备层并保留基础 Sprite。")]
     public CharacterFrameData frameData;
-    
-    [Header("角色外观")]
+
+    [LabelText("角色外观"), Tooltip("头发、胡须、眼睛、眼部装饰和肤色调色板来源。为空时只渲染装备和基础 Sprite。")]
     public CharacterAppearance appearance;
 
-    [Header("初始装备（可选）")]
+    [LabelText("初始装备"), Tooltip("启动时自动装备的外观资产列表。玩法层运行时换装仍应通过 Equip/Unequip 入口同步。")]
     public List<EquipmentRenderData> initialEquipments = new List<EquipmentRenderData>();
 
-    [Header("调试")]
+    [LabelText("覆盖 Shader"), Tooltip("调试用 Shader 覆盖。正式链路应使用 EquipmentSystem/EquipmentUV。")]
     public Shader overrideShader;
 
-    [Header("运行时依赖")]
     [SerializeField]
+    [LabelText("动作控制入口")]
     [Tooltip("动作控制入口。正式 Prefab 应显式绑定；未绑定时只允许使用同对象 CharacterActionAnimatorDriver。")]
     CharacterActionAnimatorDriver animationController;
 
     [SerializeField]
+    [LabelText("角色 Animator")]
     [Tooltip("角色动作 Animator。正式 Prefab 应显式绑定；未绑定时只允许使用动作控制器暴露的 Animator 或同对象 Animator。")]
     Animator characterAnimator;
 
-    [Header("运行时状态 (只读)")]
-    [SerializeField]
+    [Header("运行时状态（只读）")]
+    [SerializeField, ReadOnly]
+    [LabelText("当前身体动画"), Tooltip("当前请求动作与实际身体帧数据的解析结果。发生 fallback 时会显示请求键到实际键的映射。")]
     string _debugCurrentAnim = "";
 
-    [SerializeField]
+    [SerializeField, ReadOnly]
+    [LabelText("Animator 状态来源"), Tooltip("当前动作键来源。override 表示工作台或坐骑覆盖，code 表示动作驱动输出。")]
     string _debugAnimatorState = "";
 
-    [SerializeField]
+    [SerializeField, ReadOnly]
+    [LabelText("存在 Body UV"), Tooltip("当前动作帧数据是否带 Body UV 图。缺失时普通身体装备层会被禁用。")]
     bool _debugHasBodyUVMap = false;
 
-    [SerializeField]
+    [SerializeField, ReadOnly]
+    [LabelText("存在 Head UV"), Tooltip("当前动作帧数据是否带 Head UV 图。缺失时普通头部装备层会被禁用。")]
     bool _debugHasHeadUVMap = false;
-    [SerializeField]
+    [SerializeField, ReadOnly]
+    [LabelText("Animator 路径"), Tooltip("当前缓存 Animator 在层级中的路径，用于排查 Prefab 绑定是否正确。")]
     string _debugAnimatorPath = "";
 
     public string RequestedAnimationKey => _currentAnimName ?? string.Empty;
@@ -70,11 +79,11 @@ public class EquipmentRenderer : MonoBehaviour
     public bool IsOriginalSpriteDirectMode => _originalSpriteDirectMode;
     public string CurrentSharedMaterialShaderName => ResolveSharedMaterialShaderName();
 
-    // ========== 槽位：统一用字典管理 ==========
+    // 普通装备槽只记录表现资产；装备合法性、背包和属性归属仍由 GameCore 装备系统负责。
     readonly Dictionary<EquipmentType, EquipmentRenderData> _slots =
         new Dictionary<EquipmentType, EquipmentRenderData>();
 
-    // ========== 武器槽位：主手 + 副手 ==========
+    // 武器走独立 SpriteRenderer + Shader 参数双通道，主手/副手互斥规则只服务表现层。
     EquipmentRenderData _mainHandWeapon;
     EquipmentRenderData _offHandWeapon;
 
@@ -187,12 +196,14 @@ public class EquipmentRenderer : MonoBehaviour
     static readonly int Weapon1IsSequenceProp = Shader.PropertyToID("_Weapon1IsSequence");
     static readonly int Weapon1HideOutlineOnBodyProp = Shader.PropertyToID("_Weapon1HideOutlineOnBody");
 
+    /// <summary>启动时初始化私有材质和清理历史生成的武器子渲染器，避免 Prefab 保存残留对象影响本次表现。</summary>
     void Awake()
     {
         EnsureRendererInitialized();
         RemovePersistedGeneratedWeaponRendererChildren();
     }
 
+    /// <summary>应用初始表现装备，并在第一次刷新前同步动作键，保证武器和 UV 都按当前动作采样。</summary>
     void Start()
     {
         // 初始装备
@@ -207,6 +218,7 @@ public class EquipmentRenderer : MonoBehaviour
         Refresh();
     }
 
+    /// <summary>每帧跟随 Animator 采样后的 Sprite，同步当前动作、方向行和帧索引；直显模式只维护原版材质。</summary>
     void LateUpdate()
     {
         if (_originalSpriteDirectMode)
@@ -327,6 +339,7 @@ public class EquipmentRenderer : MonoBehaviour
         ApplyAnimationKey(activeParam);
     }
 
+    /// <summary>解析动作驱动引用。Prefab 显式绑定优先，同对象兜底只服务当前角色根节点。</summary>
     void EnsureCharacterActionAnimatorDriverReference()
     {
         if (_animationController != null)
@@ -337,6 +350,7 @@ public class EquipmentRenderer : MonoBehaviour
             : GetComponent<CharacterActionAnimatorDriver>();
     }
 
+    /// <summary>缓存实际 Animator，并把层级路径写入调试字段，方便确认动作来源是否绑错对象。</summary>
     void CacheAnimatorReference()
     {
         EnsureCharacterActionAnimatorDriverReference();
@@ -355,6 +369,7 @@ public class EquipmentRenderer : MonoBehaviour
         _debugAnimatorPath = "(未配置角色 Animator)";
     }
 
+    /// <summary>应用动作键到身体帧数据。找不到精确帧数据时记录缺口，避免静默沿用上一动作 UV。</summary>
     void ApplyAnimationKey(string animationKey)
     {
         if (string.IsNullOrWhiteSpace(animationKey))
@@ -383,9 +398,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 根据 Key 在 frameData 中找到对应的动画
-    /// </summary>
+    /// <summary>按动作键查找身体帧数据；兼容 fallback 只用于表现层，不改变 Animator 或 GameCore 的动作真相。</summary>
     AnimationData FindAnimationByKey(string key)
     {
         if (frameData == null)
@@ -405,6 +418,7 @@ public class EquipmentRenderer : MonoBehaviour
         return null;
     }
 
+    /// <summary>检查当前帧数据是否存在指定动作的真实身体帧，用于工作台判断能否直接预览该动作。</summary>
     public bool HasExactBodyAnimation(AnimationTypeItem animationType)
     {
         if (animationType == null || string.IsNullOrWhiteSpace(animationType.name) || frameData == null)
@@ -422,6 +436,7 @@ public class EquipmentRenderer : MonoBehaviour
         return true;
     }
 
+    /// <summary>判断指定动作是否会落到备用身体帧，方便 UI 把“可显示”和“有真实动作帧”区分开。</summary>
     public bool UsesBodyAnimationFallback(AnimationTypeItem animationType)
     {
         return animationType != null
@@ -430,6 +445,7 @@ public class EquipmentRenderer : MonoBehaviour
             && FindAnimationByKey(animationType.name) != null;
     }
 
+    /// <summary>返回只服务身体帧展示的兼容动作键。这里不新增动画状态，也不声明素材真实支持该动作。</summary>
     static IEnumerable<string> GetBodyFrameFallbackKeys(string key)
     {
         switch (key)
@@ -455,6 +471,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>释放本组件创建的运行时材质和占位 Sprite，防止编辑器预览或运行时销毁后留下临时对象。</summary>
     void OnDestroy()
     {
         if (_shaderMaterial != null)
@@ -465,6 +482,7 @@ public class EquipmentRenderer : MonoBehaviour
         ClearRuntimePlaceholderSprites();
     }
 
+    /// <summary>创建换装专用材质实例，并绑定到 SpriteRenderer.sharedMaterial，所有后续装备参数都写入该私有实例。</summary>
     void InitMaterial()
     {
         CacheSpriteRendererReference();
@@ -517,6 +535,7 @@ public class EquipmentRenderer : MonoBehaviour
             _shaderMaterial.SetFloat(ShadowModeProp, 0f);
     }
 
+    /// <summary>确保 SpriteRenderer、动作来源和材质已准备好；坐骑直显模式会绕过换装材质并恢复普通 Sprite 材质。</summary>
     void EnsureRendererInitialized()
     {
         CacheSpriteRendererReference();
@@ -546,6 +565,7 @@ public class EquipmentRenderer : MonoBehaviour
             _charRenderer = GetComponent<SpriteRenderer>();
     }
 
+    /// <summary>记录进入换装材质前的共享材质，用于坐骑原版直显或退出覆盖时恢复可见 Sprite。</summary>
     void CacheOriginalSpriteMaterial()
     {
         CacheSpriteRendererReference();
@@ -558,6 +578,7 @@ public class EquipmentRenderer : MonoBehaviour
         _defaultSharedMaterial = _charRenderer.sharedMaterial;
     }
 
+    /// <summary>把 SpriteRenderer 切到原版 Sprite 直显材质，坐骑骑手基础层会走这条路径避免被普通换装 Shader 改写。</summary>
     void ApplyOriginalSpriteMaterial()
     {
         CacheSpriteRendererReference();
@@ -572,6 +593,7 @@ public class EquipmentRenderer : MonoBehaviour
             _charRenderer.sharedMaterial = originalMaterial;
     }
 
+    /// <summary>解析或创建原版 Sprite 直显材质。材质只归本组件持有，不写回资产或 Prefab。</summary>
     Material ResolveOriginalSpriteDirectMaterial()
     {
         if (_originalSpriteDirectMaterial != null)
@@ -765,7 +787,7 @@ public class EquipmentRenderer : MonoBehaviour
     }
 
     /// <summary>
-    /// 装备（配置驱动，无 switch）
+    /// 挂上一个表现装备资产。这里只更新渲染缓存，不拥有背包、属性或玩法装备合法性。
     /// </summary>
     public void Equip(EquipmentRenderData equip, bool autoRefresh = true)
     {
@@ -791,9 +813,7 @@ public class EquipmentRenderer : MonoBehaviour
             Refresh();
     }
 
-    /// <summary>
-    /// 装备武器（根据 WeaponSlotType 自动分配到主手/副手）
-    /// </summary>
+    /// <summary>根据 WeaponSlotType 分配主手/副手表现槽，并清理互斥武器的子渲染器缓存。</summary>
     void EquipWeapon(EquipmentRenderData equip)
     {
         switch (equip.weaponSlotType)
@@ -833,9 +853,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 卸下装备
-    /// </summary>
+    /// <summary>卸下一个表现装备资产。只有当前装备正是该资产时才清槽，避免误删同类型新装备。</summary>
     public void Unequip(EquipmentRenderData equip, bool autoRefresh = true)
     {
         if (equip == null)
@@ -886,9 +904,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 设置角色外观
-    /// </summary>
+    /// <summary>设置角色外观并立即刷新材质参数；外观只影响头发、胡须、眼睛、装饰和肤色。</summary>
     public void SetAppearance(CharacterAppearance newAppearance)
     {
         if (appearance == newAppearance)
@@ -928,6 +944,7 @@ public class EquipmentRenderer : MonoBehaviour
         return true;
     }
 
+    /// <summary>切换工作台预览方向。方向索引固定为 SE/SW/NE/NW 四行，越界会被裁剪。</summary>
     public void SetPreviewDirection(int rowIndex, bool autoRefresh = true)
     {
         ApplyPreviewDirection(rowIndex, autoRefresh);
@@ -945,11 +962,13 @@ public class EquipmentRenderer : MonoBehaviour
             Refresh();
     }
 
+    /// <summary>兼容旧调用的预览入口；失败时不抛错，调用方可用 TrySetPreviewAnimation 获取结果。</summary>
     public void SetPreviewAnimation(AnimationTypeItem animationType, bool autoRefresh = true)
     {
         TrySetPreviewAnimation(animationType, autoRefresh);
     }
 
+    /// <summary>设置角色外观，可由工作台批量切换时延后刷新。</summary>
     public void SetAppearance(CharacterAppearance newAppearance, bool autoRefresh)
     {
         if (appearance == newAppearance)
@@ -961,6 +980,7 @@ public class EquipmentRenderer : MonoBehaviour
             Refresh();
     }
 
+    /// <summary>替换角色帧数据并清空动作/帧缓存；下一次刷新会重新从 Animator 或预览覆盖解析动作。</summary>
     public void SetFrameData(CharacterFrameData newFrameData, bool autoRefresh = true)
     {
         frameData = newFrameData;
@@ -977,9 +997,7 @@ public class EquipmentRenderer : MonoBehaviour
             Refresh();
     }
 
-    /// <summary>
-    /// 卸下所有装备
-    /// </summary>
+    /// <summary>清空所有表现装备和武器缓存，只影响本渲染器的展示状态，不改角色装备玩法数据。</summary>
     public void UnequipAll()
     {
         var allEquipped = _slots.Values.ToList();
@@ -999,9 +1017,7 @@ public class EquipmentRenderer : MonoBehaviour
         Refresh();
     }
 
-    /// <summary>
-    /// 获取指定类型当前装备
-    /// </summary>
+    /// <summary>查询指定表现槽当前装备；武器槽按主手/副手实际缓存返回。</summary>
     public EquipmentRenderData GetEquipped(EquipmentType type)
     {
         var cfg = EquipTypeRegistry.Get(type);
@@ -1019,14 +1035,10 @@ public class EquipmentRenderer : MonoBehaviour
         return _slots.TryGetValue(type, out var equip) ? equip : null;
     }
 
-    /// <summary>
-    /// 获取主手武器
-    /// </summary>
+    /// <summary>获取当前主手表现武器。</summary>
     public EquipmentRenderData GetMainHandWeapon() => _mainHandWeapon;
 
-    /// <summary>
-    /// 获取副手武器
-    /// </summary>
+    /// <summary>获取当前副手表现武器或盾牌。</summary>
     public EquipmentRenderData GetOffHandWeapon() => _offHandWeapon;
 
     /// <summary>
@@ -1044,9 +1056,7 @@ public class EquipmentRenderer : MonoBehaviour
         return null;
     }
 
-    /// <summary>
-    /// 检查当前是否允许装备副手
-    /// </summary>
+    /// <summary>检查表现层当前主手配置是否允许副手显示；双手和双持武器会占用副手表现位。</summary>
     public bool CanEquipOffHand()
     {
         if (_mainHandWeapon == null)
@@ -1054,6 +1064,7 @@ public class EquipmentRenderer : MonoBehaviour
         return _mainHandWeapon.weaponSlotType == WeaponSlotType.MainHand;
     }
 
+    /// <summary>头盔、帽子、面罩是互斥头部外观，只保留本次新装备。</summary>
     void ClearExclusiveConflicts(EquipmentType newType, EquipmentRenderData incomingEquipment)
     {
         if (newType != EquipmentType.Helmet && newType != EquipmentType.Hat && newType != EquipmentType.Mask)
@@ -1064,12 +1075,14 @@ public class EquipmentRenderer : MonoBehaviour
         ClearHeadSlotType(EquipmentType.Mask, incomingEquipment);
     }
 
+    /// <summary>移除指定头部外观槽的旧资产，传入资产本身时保留，避免重复装备被误清。</summary>
     void ClearHeadSlotType(EquipmentType type, EquipmentRenderData incomingEquipment)
     {
         if (_slots.TryGetValue(type, out var equipped) && equipped != null && equipped != incomingEquipment)
             _slots.Remove(type);
     }
 
+    /// <summary>创建或登记武器子渲染器占位。正式武器图像仍写入角色 Shader，子对象主要用于旧预览路径和清理闭环。</summary>
     void CreateWeaponRenderer(EquipmentRenderData equip)
     {
         if (equip == null)
@@ -1105,6 +1118,7 @@ public class EquipmentRenderer : MonoBehaviour
         _weaponRenderers[equip] = sr;
     }
 
+    /// <summary>获取武器子渲染器占位；对象丢失时重建，但不会直接参与正式 Shader 武器图像合成。</summary>
     SpriteRenderer GetOrCreateWeaponRenderer(EquipmentRenderData equip)
     {
         if (equip == null)
@@ -1124,6 +1138,7 @@ public class EquipmentRenderer : MonoBehaviour
         return _weaponRenderers.TryGetValue(equip, out var created) ? created : null;
     }
 
+    /// <summary>清理不再对应当前主手/副手装备的生成武器子对象，避免 Prefab 或运行时层级残留。</summary>
     void RemoveStaleGeneratedWeaponRendererChildren()
     {
         var activeWeapons = new HashSet<EquipmentRenderData>();
@@ -1171,6 +1186,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>移除已经被 Unity 销毁的 SpriteRenderer 键，保持武器排序缓存可用。</summary>
     void RemoveDestroyedWeaponRendererSlots()
     {
         if (_weaponRendererSlots.Count == 0)
@@ -1184,6 +1200,7 @@ public class EquipmentRenderer : MonoBehaviour
             _weaponRendererSlots.Remove(destroyedRenderers[i]);
     }
 
+    /// <summary>启动时删除持久化到层级里的生成武器对象；这些对象必须由运行时重新创建。</summary>
     void RemovePersistedGeneratedWeaponRendererChildren()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
@@ -1203,6 +1220,7 @@ public class EquipmentRenderer : MonoBehaviour
         _weaponRendererSlots.Clear();
     }
 
+    /// <summary>删除指定装备对应的生成武器对象，用于换装或卸装时收尾。</summary>
     void RemoveGeneratedWeaponRendererChildren(EquipmentRenderData equip)
     {
         string expectedName = GetGeneratedWeaponRendererName(equip);
@@ -1244,6 +1262,10 @@ public class EquipmentRenderer : MonoBehaviour
             DestroyImmediate(target);
     }
 
+    /// <summary>
+    /// 重建当前帧的全部换装材质参数。
+    /// 缺少动作帧或 Body/Head UV 时，会主动清掉普通装备层，只保留可独立渲染的武器或装备序列帧。
+    /// </summary>
     public void Refresh()
     {
         EnsureRendererInitialized();
@@ -1353,6 +1375,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>把当前动作的 Body/Head UV 写入材质；缺失时清空旧贴图，防止上一动作 UV 残留。</summary>
     void UpdateUVMapTexture()
     {
         if (_shaderMaterial == null)
@@ -1418,6 +1441,10 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 设置临时动作上下文覆盖。
+    /// 坐骑和工作台可用它让换装材质跟随指定身体帧，但它不改 Animator、GameCore 动作状态或能力动作真相。
+    /// </summary>
     public void SetAnimationContextOverride(string animationKey, bool autoRefresh = true)
     {
         string normalized = animationKey?.Trim() ?? string.Empty;
@@ -1430,6 +1457,7 @@ public class EquipmentRenderer : MonoBehaviour
             SyncCurrentSpriteAndRefresh();
     }
 
+    /// <summary>清除临时动作上下文覆盖，恢复从动作驱动或 Animator Bool 参数解析当前动作。</summary>
     public void ClearAnimationContextOverride(bool autoRefresh = true)
     {
         if (string.IsNullOrEmpty(_animationContextOverrideKey))
@@ -1441,6 +1469,7 @@ public class EquipmentRenderer : MonoBehaviour
             SyncCurrentSpriteAndRefresh();
     }
 
+    /// <summary>禁用所有生成武器子渲染器；普通换装直显/坐骑直显会调用它确保子对象不叠画。</summary>
     void DisableAllGeneratedWeaponRenderers()
     {
         foreach (var pair in _weaponRenderers)
@@ -1468,6 +1497,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>根据躯干实际朝向写入身体前后关系，避免头部朝向覆盖影响身体/装备层深度。</summary>
     void UpdateBodyDepthMode()
     {
         if (_shaderMaterial == null)
@@ -1505,6 +1535,7 @@ public class EquipmentRenderer : MonoBehaviour
         _shaderMaterial.SetFloat(BodyInEastProp, bodyInEast ? 1f : 0f);
     }
 
+    /// <summary>根据当前帧左右脚像素与 groundPixelY 计算像素阴影模式，阈值必须和 Shader 侧阴影语义保持一致。</summary>
     void UpdateShadowHeight()
     {
         if (_shaderMaterial == null)
@@ -1695,6 +1726,7 @@ public class EquipmentRenderer : MonoBehaviour
         _shaderMaterial.SetFloat(cfg.EnablePropId, 1);
     }
 
+    /// <summary>禁用一个普通 Sprite 装备层，并清空贴图与 UV，防止非法贴图残留在材质上。</summary>
     void DisableSpriteEquipmentLayer(EquipTypeConfig cfg)
     {
         if (_shaderMaterial == null || cfg == null)
@@ -1705,6 +1737,7 @@ public class EquipmentRenderer : MonoBehaviour
         _shaderMaterial.SetFloat(cfg.EnablePropId, 0);
     }
 
+    /// <summary>创建运行时占位 Sprite。它只用于内部预览兜底，不能写回正式装备资产或当作最终素材。</summary>
     Sprite GetOrCreateRuntimePlaceholderSprite(EquipmentRenderData equip, EquipTypeConfig cfg)
     {
         if (equip == null || cfg == null)
@@ -1809,6 +1842,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>释放运行时占位贴图和 Sprite，避免编辑器预览或运行时切换后留下临时对象。</summary>
     void ClearRuntimePlaceholderSprites()
     {
         for (int i = 0; i < _runtimePlaceholderObjects.Count; i++)
@@ -1827,11 +1861,13 @@ public class EquipmentRenderer : MonoBehaviour
         _runtimePlaceholderSprites.Clear();
     }
 
+    /// <summary>过滤不能作为装备层采样源的 Sprite，避免 UI 图标或整张角色动作图误叠到 Body/Head UV 上。</summary>
     static bool IsInvalidEquipmentLayerSprite(Sprite sprite)
     {
         return IsUiIconSprite(sprite) || IsWholeCharacterActionSprite(sprite);
     }
 
+    /// <summary>判断 Sprite 是否来自 UI/Icon 资源路径或贴图名，这类图不能进入角色装备层。</summary>
     static bool IsUiIconSprite(Sprite sprite)
     {
         string path = GetEditorAssetPath(sprite);
@@ -1848,6 +1884,7 @@ public class EquipmentRenderer : MonoBehaviour
             || ContainsIgnoreCase(textureName, "Icons");
     }
 
+    /// <summary>判断 Sprite 是否像整张角色动作帧。正式装备层必须来自装备图集或声明的装备序列帧。</summary>
     static bool IsWholeCharacterActionSprite(Sprite sprite)
     {
         string path = GetEditorAssetPath(sprite);
@@ -1921,6 +1958,7 @@ public class EquipmentRenderer : MonoBehaviour
         return path;
     }
 
+    /// <summary>编辑器下读取 Sprite 资产路径供防误用过滤；运行时构建中返回空路径，不引入 AssetDatabase 依赖。</summary>
     static string GetEditorAssetPath(Sprite sprite)
     {
 #if UNITY_EDITOR
@@ -1965,9 +2003,7 @@ public class EquipmentRenderer : MonoBehaviour
         return region.variant;
     }
 
-    /// <summary>
-    /// 设置角色外观 (头发/胡子) - 来自 CharacterAppearance
-    /// </summary>
+    /// <summary>把 CharacterAppearance 写入外观 Shader 参数；头部装备可按资产配置隐藏头发或胡须。</summary>
     void ApplyAppearanceToShader()
     {
         if (_shaderMaterial == null || appearance == null)
@@ -2049,9 +2085,7 @@ public class EquipmentRenderer : MonoBehaviour
         ApplySkinPalette();
     }
     
-    /// <summary>
-    /// 设置肤色映射参数（颜色数组查表换肤）
-    /// </summary>
+    /// <summary>设置肤色查表参数。颜色数组按当前 ColorSpace 转换后写入，保证 Shader 比较空间一致。</summary>
     void ApplySkinPalette()
     {
         if (_shaderMaterial == null)
@@ -2122,9 +2156,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 颜色装备应用（配置驱动）
-    /// </summary>
+    /// <summary>应用手套、鞋子等颜色型装备，只写左右颜色和启用标记，不需要装备贴图。</summary>
     void ApplyColorEquipment(EquipmentRenderData equip, EquipTypeConfig cfg)
     {
         if (_shaderMaterial == null)
@@ -2443,6 +2475,7 @@ public class EquipmentRenderer : MonoBehaviour
         );
     }
 
+    /// <summary>禁用指定装备的生成武器子渲染器，确保正式武器图像只通过角色 Shader 合成。</summary>
     void DisableGeneratedWeaponRenderer(EquipmentRenderData equip)
     {
         if (equip == null)
@@ -2470,6 +2503,7 @@ public class EquipmentRenderer : MonoBehaviour
         }
     }
 
+    /// <summary>配置旧预览路径使用的武器子 SpriteRenderer；正式运行图像仍由 Shader 武器参数决定。</summary>
     void ConfigureWeaponPreviewRenderer(
         SpriteRenderer sr,
         Sprite weaponSprite,
@@ -2566,6 +2600,7 @@ public class EquipmentRenderer : MonoBehaviour
         _shaderMaterial.SetFloat(enableProp, 1f);
     }
 
+    /// <summary>启用或关闭 Shader 武器槽。关闭时同步清空贴图、锚点、旋转、深度和手部遮挡参数。</summary>
     void SetWeaponShaderEnabled(int slot, bool enabled)
     {
         if (_shaderMaterial == null)
@@ -2598,6 +2633,7 @@ public class EquipmentRenderer : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    /// <summary>运行中 Inspector 值变化时刷新表现，编辑态不主动改材质，避免保存临时运行时参数。</summary>
     void OnValidate()
     {
         if (Application.isPlaying)

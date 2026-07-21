@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -43,15 +44,15 @@ namespace FantasyWord.GameCore
         [Serializable]
         protected struct RestoreManaData
         {
-            [InspectorName("回蓝量")]
+            [LabelText("回蓝量")]
             [Tooltip("每次回蓝 tick 恢复的法力值。")]
             public int amount;
 
-            [InspectorName("触发间隔")]
+            [LabelText("触发间隔")]
             [Tooltip("两次回蓝 tick 之间的秒数；为 0 时会每帧触发，通常不应这样配置。")]
             public float interval;
 
-            [InspectorName("延迟首次触发")]
+            [LabelText("延迟首次触发")]
             [Tooltip("开启后，效果生效时不会立刻回蓝，而是等待一个完整触发间隔。")]
             public bool delayFirstTick;
 
@@ -61,7 +62,7 @@ namespace FantasyWord.GameCore
             [HideInInspector] public float timer;
         }
 
-        [InspectorName("持续回蓝配置")]
+        [LabelText("持续回蓝配置")]
         [Tooltip("配置持续恢复法力值的数值、触发间隔和首次触发策略。")]
         [SerializeField] protected RestoreManaData m_restoreManaData;
 

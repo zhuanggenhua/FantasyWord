@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -32,78 +33,106 @@ namespace FantasyWord.GameCore
         [Serializable]
         internal struct StatBoostEffect
         {
-            [InspectorName("属性增量")]
+            [LabelText("属性增量")]
             [Tooltip("持续期间施加到目标属性上的增量；负数表示降低属性。")]
             public int amount;
 
-            [InspectorName("目标属性")]
+            [LabelText("目标属性")]
             [Tooltip("要临时修改的角色属性。生命值和法力值会走当前资源的专用裁剪逻辑。")]
             public EStat stat;
         }
 
-        [InspectorName("属性修正配置")]
+        [LabelText("属性修正配置")]
         [Tooltip("配置要临时修改的属性和增量，效果结束时会按同一规则撤销。")]
         [SerializeField] private StatBoostEffect m_statBoostData;
+        [NonSerialized] private FormalActiveAttributeModifierHandle m_activeModifierHandle;
 
         public override TemporalEffectRuntimeTraits GetRuntimeTraits() =>
             TemporalEffectRuntimeTraits.NeedsLocalLifetimeAdvance;
 
         protected override bool OnApply()
         {
+            return ApplyConfiguredModifier(restoreFromRuntimeState: false);
+        }
+
+        protected override void OnRuntimeStateRestored()
+        {
+            ApplyConfiguredModifier(restoreFromRuntimeState: true);
+        }
+
+        protected override void OnCompleted()
+        {
+            if (targetCharacter == null)
+            {
+                return;
+            }
+
+            if (FormalGameplayAttributeSet.IsResourceStat(m_statBoostData.stat))
+            {
+                if (!targetCharacter.dead)
+                {
+                    ApplyCurrentResourceDelta(-m_statBoostData.amount, m_statBoostData.stat == EStat.Health ? 1 : 0);
+                }
+                return;
+            }
+
+            FormalGameplayEffectResourceModifier.TryRemoveActiveCurrentStatModifier(m_activeModifierHandle);
+            m_activeModifierHandle = default;
+        }
+
+        private bool ApplyConfiguredModifier(bool restoreFromRuntimeState)
+        {
             if (targetCharacter == null)
             {
                 return true;
             }
 
-            switch (m_statBoostData.stat)
+            if (FormalGameplayAttributeSet.IsResourceStat(m_statBoostData.stat))
             {
-                case EStat.Health:
-                    targetCharacter.ModifyCurrentHealth(m_statBoostData.amount);
-                    break;
-                case EStat.Mana:
-                    targetCharacter.ModifyCurrentMana(m_statBoostData.amount);
-                    break;
-                default:
-                    targetCharacter.ModifyCurrentStat(m_statBoostData.stat, m_statBoostData.amount);
-                    break;
+                return restoreFromRuntimeState ||
+                    ApplyCurrentResourceDelta(m_statBoostData.amount, minimumValue: 0);
             }
 
-            return true;
+            return FormalGameplayEffectResourceModifier.TryAddActiveCurrentStatModifier(
+                targetCharacter,
+                m_statBoostData.stat,
+                m_statBoostData.amount,
+                sourceCharacter,
+                out m_activeModifierHandle);
         }
 
-        protected override void OnCompleted()
+        private bool ApplyCurrentResourceDelta(int delta, int minimumValue)
         {
-            // 目标死亡后属性归还没有稳定承载对象，避免在死亡流程里再次改写角色状态。
-            if (targetCharacter == null || targetCharacter.dead)
+            int appliedDelta = m_statBoostData.stat switch
             {
-                return;
+                EStat.Health => targetCharacter.ClampCurrentHealthDelta(delta, minimumValue),
+                EStat.Mana => targetCharacter.ClampCurrentManaDelta(delta, minimumValue),
+                _ => delta
+            };
+
+            if (appliedDelta == 0)
+            {
+                return true;
             }
 
-            int amountToRemove = m_statBoostData.amount;
+            int? maxValue = appliedDelta > 0
+                ? m_statBoostData.stat switch
+                {
+                    EStat.Health => targetCharacter.GetMaxHealth(),
+                    EStat.Mana => targetCharacter.GetMaxMana(),
+                    _ => null
+                }
+                : null;
 
-            // 资源约束由角色拥有者统一裁剪，效果层只表达“我要撤掉多少增量”。
-            if (m_statBoostData.stat == EStat.Health)
-            {
-                amountToRemove = -targetCharacter.ClampCurrentHealthDelta(-amountToRemove, minimumValue: 1);
-            }
-
-            if (m_statBoostData.stat == EStat.Mana)
-            {
-                amountToRemove = -targetCharacter.ClampCurrentManaDelta(-amountToRemove);
-            }
-
-            switch (m_statBoostData.stat)
-            {
-                case EStat.Health:
-                    targetCharacter.ModifyCurrentHealth(-amountToRemove, minimumValue: 1);
-                    break;
-                case EStat.Mana:
-                    targetCharacter.ModifyCurrentMana(-amountToRemove);
-                    break;
-                default:
-                    targetCharacter.ModifyCurrentStat(m_statBoostData.stat, -amountToRemove);
-                    break;
-            }
+            return FormalGameplayEffectResourceModifier.TryApplyCurrentStatDelta(
+                targetCharacter,
+                m_statBoostData.stat,
+                appliedDelta,
+                minValue: minimumValue,
+                maxValue: maxValue,
+                sourceCharacter,
+                out _,
+                out _);
         }
 
         public override ITemporalEffect Clone()

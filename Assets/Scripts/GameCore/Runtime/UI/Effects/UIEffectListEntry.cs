@@ -1,4 +1,5 @@
-﻿using TMPro;
+using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -26,18 +27,20 @@ namespace FantasyWord.GameCore
     /// </summary>
     public class UIEffectListEntry : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IDeselectHandler
     {
-        [Header("引用")]
-        [InspectorName("图标")]
+        [SerializeField]
+        [LabelText("图标")]
         [Tooltip("展示持续效果图标的 Image。")]
-        [SerializeField] private Image m_icon = null;
+        private Image m_icon = null;
 
-        [InspectorName("文本")]
+        [SerializeField]
+        [LabelText("文本")]
         [Tooltip("展示持续效果简称的文本。")]
-        [SerializeField] private TextMeshProUGUI m_text = null;
+        private TextMeshProUGUI m_text = null;
 
-        [InspectorName("按钮")]
+        [SerializeField]
+        [LabelText("按钮")]
         [Tooltip("用于选择和焦点导航的 Button。")]
-        [SerializeField] private Button m_button = null;
+        private Button m_button = null;
 
         private CharacterTemporalEffectPresentationSnapshot m_effect;
         private UIEffectList m_effectList = null;
@@ -54,6 +57,7 @@ namespace FantasyWord.GameCore
             m_text.text = effect.Info.ShortName;
         }
 
+        /// <summary>鼠标进入条目时把焦点交给按钮，统一复用选择态详情显示逻辑。</summary>
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (m_button.IsInteractable())
@@ -62,6 +66,7 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>条目获得焦点时通知父级显示详情面板。</summary>
         public void OnSelect(BaseEventData eventData)
         {
             m_effectList.HandleEffectHovered(new EffectHoveredEvent()
@@ -71,10 +76,10 @@ namespace FantasyWord.GameCore
             });
         }
 
+        /// <summary>条目失去焦点时通知父级隐藏详情面板。</summary>
         public void OnDeselect(BaseEventData eventData)
         {
             m_effectList.HandleEffectNotHovered();
         }
     }
 }
-

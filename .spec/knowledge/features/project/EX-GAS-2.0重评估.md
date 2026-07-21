@@ -109,5 +109,7 @@ metadata:
 - 不回退到旧 `FormalGasMappingAudit / Bootstrap` 思路。
 - 不再把当前问题表述成“先决定要不要升级到 EX-GAS 2.0”。
 - 当前项目处于起步期；同职责旧规则残留若与 EX-GAS 正式链冲突，默认允许直接替换，不为历史包袱保留长期兼容层。
+- 当前生命/法力资源变化按 `0071-正式 GAS 资源 Modifier 与伤害 owner` 收口：`Health` / `Mana` 是当前资源属性，`MaxHealth` / `MaxMana` 是上限属性；伤害、治疗、回蓝和耗蓝统一通过 `FormalGameplayEffectResourceModifier` 进入 EX-GAS Modifier 链，项目侧禁止直接写 `CAttributeData.CurrentValue`。
+- 游戏尚未发布，旧存档兼容不作为 GAS 属性架构约束；后续若拆分 `当前资源 / 上限资源` 双属性，直接重写或迁移存档结构。
 - EX-GAS 2.0 的可视化编辑器与 Excel/Luban 工作流是当前正式技能的正式作者数据来源；项目侧只能补运行配置、资源桥和必要扩展点。
 - 当前真正要做的是：在已经存在的 EX-GAS 2.0 前提下，把项目侧旧能力作者流和执行流从正式技能里清干净。

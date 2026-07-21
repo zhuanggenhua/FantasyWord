@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [switch]$AsJson
 )
@@ -41,6 +41,7 @@ $editorRoot = Join-Path $projectRoot "Assets/Editor"
 
 $allowedEquipmentPrefixes = @(
     "Assets\Scripts\Presentation\EquipmentSystem\",
+    "Assets\Editor\Presentation\EquipmentSystem\Bridge\",
     "Assets\Scripts\Items\Runtime\Equipment\",
     "Assets\Editor\GameCore\EditorWindows\"
 )
@@ -58,6 +59,7 @@ $allowedCombatPaths = @(
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageBridge.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageHelper.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageSystem.cs",
+    "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectResourceModifier.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayTagCatalog.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Gas2DTargetCatchers.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Abilities\Active\ActiveAbilityBase.cs",

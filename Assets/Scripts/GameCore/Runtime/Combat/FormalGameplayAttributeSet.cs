@@ -21,6 +21,8 @@ namespace FantasyWord.GameCore
         public const int Agility = 7;
         public const int Luck = 8;
         public const int AttackSpeed = 9;
+        public const int MaxHealth = 10;
+        public const int MaxMana = 11;
 
         public static AttrSetConfig CreateConfig(Stats baseStats)
         {
@@ -31,6 +33,8 @@ namespace FantasyWord.GameCore
                 {
                     CreateResourceSetting(Health, safeBaseStats[EStat.Health]),
                     CreateResourceSetting(Mana, safeBaseStats[EStat.Mana]),
+                    CreateResourceSetting(MaxHealth, safeBaseStats[EStat.Health]),
+                    CreateResourceSetting(MaxMana, safeBaseStats[EStat.Mana]),
                     CreateRegularSetting(PhysicalAttack, safeBaseStats[EStat.PhysicalAttack]),
                     CreateRegularSetting(MagicalAttack, safeBaseStats[EStat.MagicalAttack]),
                     CreateRegularSetting(PhysicalDefense, safeBaseStats[EStat.PhysicalDefense]),
@@ -56,6 +60,26 @@ namespace FantasyWord.GameCore
                 EStat.AttackSpeed => AttackSpeed,
                 _ => throw new ArgumentOutOfRangeException(nameof(stat), stat, "未知正式属性。")
             };
+        }
+
+        public static int GetBaseAttributeCode(EStat stat)
+        {
+            return stat switch
+            {
+                EStat.Health => MaxHealth,
+                EStat.Mana => MaxMana,
+                _ => GetAttributeCode(stat)
+            };
+        }
+
+        public static int GetCurrentAttributeCode(EStat stat)
+        {
+            return GetAttributeCode(stat);
+        }
+
+        public static bool IsResourceStat(EStat stat)
+        {
+            return stat == EStat.Health || stat == EStat.Mana;
         }
 
         private static AttributeBaseSetting CreateRegularSetting(int attributeCode, int initialValue)

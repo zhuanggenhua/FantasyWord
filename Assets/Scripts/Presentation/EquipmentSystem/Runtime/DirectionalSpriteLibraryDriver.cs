@@ -1,31 +1,34 @@
 using FantasyWord.GameCore;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
 /// <summary>
-/// 将角色朝向映射到四向 SpriteLibraryAsset，不参与 Animator 动作状态切换。
+/// 将角色身体朝向映射到四向 SpriteLibraryAsset。
+/// 它只切 SE/SW/NE/NW 方向库，不参与 Animator 动作状态切换，也不拥有移动或目标方向真相。
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(SpriteResolver))]
 public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
 {
     [SerializeField]
-    [Tooltip("承载当前方向 SpriteLibraryAsset 的 SpriteLibrary。必须显式绑定，通常在角色根节点。")]
+    [LabelText("SpriteLibrary"), Tooltip("承载当前方向 SpriteLibraryAsset 的 SpriteLibrary。必须显式绑定，通常在角色根节点。")]
     SpriteLibrary spriteLibrary;
 
     [SerializeField]
-    [Tooltip("当前动画 SpriteResolver。必须显式绑定，通常与本组件同对象。")]
+    [LabelText("SpriteResolver"), Tooltip("当前动画 SpriteResolver。必须显式绑定，通常与本组件同对象。")]
     SpriteResolver spriteResolver;
 
     [SerializeField]
-    [Tooltip("可选：换装渲染器。存在时同步预览方向。")]
+    [LabelText("换装渲染器"), Tooltip("可选：换装渲染器。存在时同步预览方向。")]
     EquipmentRenderer equipmentRenderer;
 
     [SerializeField]
-    [Tooltip("可选：角色移动/朝向 owner。存在时跟随实际面朝方向；工作台可不绑定并手动切方向。")]
+    [LabelText("朝向来源"), Tooltip("可选：角色移动/朝向 owner。存在时跟随实际面朝方向；工作台可不绑定并手动切方向。")]
     Movable movable;
 
     [SerializeField]
+    [LabelText("默认四向库"), Tooltip("启动时可使用的默认 SE/SW/NE/NW SpriteLibraryAsset 集合。留空时等待动作驱动或工作台显式设置。")]
     DirectionalSpriteLibrarySet defaultAnimationLibraries = new DirectionalSpriteLibrarySet();
 
     DirectionalSpriteLibrarySet _libraries;
@@ -44,6 +47,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
         ValidateRequiredReferences();
     }
 
+    /// <summary>启用时绑定身体朝向监听。没有 Movable 的工作台场景会保留手动方向切换能力。</summary>
     void OnEnable()
     {
         if (!ValidateRequiredReferences())
@@ -79,6 +83,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
         return CharacterAnimationDirections.GetVector(index);
     }
 
+    /// <summary>设置当前动作对应的四向库集合。四个方向必须齐全，缺任一方向都直接失败。</summary>
     public bool SetAnimationLibraries(DirectionalSpriteLibrarySet libraries, bool resetDirection)
     {
         if (libraries == null)
@@ -102,6 +107,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
         return ApplyDirectionVariant();
     }
 
+    /// <summary>手动切换方向索引，主要供工作台和预览控制使用。</summary>
     public bool SetDirection(int index)
     {
         if (!CharacterAnimationDirections.IsValidIndex(index))
@@ -111,6 +117,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
         return ApplyDirectionVariant();
     }
 
+    /// <summary>根据角色身体朝向解析四向索引。零向量保持当前方向，避免静止帧随机跳方向。</summary>
     public void SetFacingDirection(Vector2 direction)
     {
         if (direction.sqrMagnitude <= 0.0001f)
@@ -119,6 +126,7 @@ public sealed class DirectionalSpriteLibraryDriver : MonoBehaviour
         SetDirection(CharacterAnimationDirections.ResolveIndex(direction, _currentDirectionIndex));
     }
 
+    /// <summary>把当前方向对应的 SpriteLibraryAsset 写入 SpriteLibrary，并同步换装渲染器的预览方向。</summary>
     bool ApplyDirectionVariant()
     {
         if (!ValidateRequiredReferences())

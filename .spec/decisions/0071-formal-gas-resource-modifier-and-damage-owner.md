@@ -1,0 +1,23 @@
+# 0071-正式 GAS 资源 Modifier 与伤害 owner
+
+- 日期：2026-07-21
+- 状态：已采纳
+- 背景：
+  - 项目已决定统一到 EX-GAS，不再保留“Ability/Timeline/GE/Cue 用 GAS，但属性当前值由项目手写”的混合真相。
+  - 游戏尚未发布，旧存档兼容不作为架构约束；可以直接重写存档字段和运行时恢复语义。
+  - 旧方案把 `Health.BaseValue` / `Mana.BaseValue` 当上限，把 `CurrentValue` 当当前血蓝，导致伤害、治疗、耗蓝只能绕开 EX-GAS Modifier 链直接写 `CAttributeData.CurrentValue`。
+- 决策：
+  - `FormalGameplayAttributeSet` 拆分资源模型：`Health` / `Mana` 表示当前资源属性，`MaxHealth` / `MaxMana` 表示上限属性。
+  - 运行时资源变化必须通过 `FormalGameplayEffectResourceModifier` 创建 `MCConfModifiers`，由 EX-GAS Modifier 改属性 `BaseValue`，再调用 EX-GAS `AttributeHelper.RecalculateCurrentValue` 触发正式 CurrentValue 重算和事件。
+  - 禁止项目侧直接写 `CAttributeData.CurrentValue`。`FormalAbilitySystemAttributeExtensions.SetAttrBaseValueAndRecalculate` 只允许写 `BaseValue` 并重算，不能提供 CurrentValue 覆盖入口。
+  - 伤害链路 owner 是 `FormalDamageExecutor`：GE 只携带正式伤害载荷，执行器负责目标校验、`DamageSolver` 结算、资源 Modifier 提交和目标侧表现钩子。
+  - 持续属性 Buff 的普通属性改动使用 active GameplayEffect Modifier 挂到 ASC 的 `BGameplayEffect` buffer；Health/Mana 这类当前资源变化仍按即时资源 Modifier 处理，并保留资源上下限裁剪。
+  - 存档只保存当前资源状态 `CharacterResourceStateData`，不再保存整份 `currentStats`。基础属性、装备、等级、持续效果先重建，再恢复 Health/Mana 当前资源缺口。
+- 影响：
+  - 先前的项目侧资源差量执行链整体退场；运行时资源变化只保留正式资源 Modifier 入口。
+  - 角色自身不再拥有正式伤害入口；DOT、脚本伤害和 GE 伤害都进入 `FormalGameplayEffectDamageHelper` / `FormalDamageExecutor`。
+  - `Stats` 只能作为快照 DTO、UI/事件载荷、启动期 bootstrap buffer 或批量计算输入存在，不能重新成为属性真相。
+  - 静态插件边界门禁登记 `FormalGameplayEffectResourceModifier` 为正式 GAS 扩展文件。
+- 替代关系：
+  - 本决策吸收并取代上一版未入库资源边界草案。
+  - 本决策同步更新 `Unity架构与GAS规范`、`EX-GAS-2.0重评估`、`开发与验收规范`、`框架职责所有权矩阵` 和 `框架问题清单与重构矩阵`。

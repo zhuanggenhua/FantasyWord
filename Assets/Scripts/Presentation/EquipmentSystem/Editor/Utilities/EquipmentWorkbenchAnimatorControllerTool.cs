@@ -9,43 +9,73 @@ using UnityEngine;
 using UnityEngine.U2D.Animation;
 
 /// <summary>
-/// 构建换装系统唯一动画链：纯动作 Animator + 每角色四向 SpriteLibraryAsset。
+/// 装备工作台动画控制器工具
+/// 负责从角色帧数据生成 SpriteLibrary 动画框架，支持换装系统的四向动画
 /// </summary>
 public static class EquipmentWorkbenchAnimatorControllerTool
 {
+    // 通过反射访问 Unity 2D Animation 内部的 Sprite 哈希生成方法
+    // 这个方法是私有的，但我们需要用它来生成 SpriteResolver 的帧键
     static readonly MethodInfo SpriteKeyMethod = typeof(SpriteLibrary).GetMethod(
         "GetHashForCategoryAndEntry",
         BindingFlags.Static | BindingFlags.NonPublic);
 
+    /// <summary>
+    /// 动作规格：描述一个动作的基本信息
+    /// </summary>
     sealed class ActionSpec
     {
+        /// <summary>动作名称（如 Idle、Walk、Attack）</summary>
         public string Action;
+
+        /// <summary>
+        /// 该动作的最大帧数
+        /// 从所有角色的所有方向中取最大值，确保动画片段足够长
+        /// </summary>
         public int FrameCount;
     }
 
-    [MenuItem("Tools/Equipment System/Rebuild SpriteLibrary Animation Framework")]
+    /// <summary>
+    /// 重建整个 SpriteLibrary 动画框架
+    /// 这个方法会：
+    /// 1. 为每个角色的每个方向生成 SpriteLibraryAsset（4个方向）
+    /// 2. 生成共享的 AnimatorController 和 AnimationClip
+    /// 3. 清理不再使用的旧资源
+    /// </summary>
+    [MenuItem("工具/装备系统/重建 SpriteLibrary 动画框架")]
     public static void Rebuild()
     {
+        // 加载生成配置
         EquipmentSystemGenerationSettings settings = LoadSettings();
+
+        // 加载角色目录（包含所有角色的帧数据）
         EquipmentWorkbenchCatalog catalog =
             AssetDatabase.LoadAssetAtPath<EquipmentWorkbenchCatalog>(settings.WorkbenchCatalogPath);
+
+        // 加载动画类型数据库（定义了哪些动作可用）
         AnimationTypeDatabase animationDatabase =
             AssetDatabase.LoadAssetAtPath<AnimationTypeDatabase>(settings.AnimationDatabasePath);
 
+        // 验证必需资源是否存在
         if (catalog == null)
             throw new InvalidOperationException($"找不到换装工作台目录：{settings.WorkbenchCatalogPath}");
         if (animationDatabase == null)
             throw new InvalidOperationException($"找不到动画类型数据库：{settings.AnimationDatabasePath}");
 
+        // 确保输出目录存在
         EnsureFolder(settings.AnimationRoot);
         EnsureFolder(settings.SharedClipRoot);
         EnsureFolder(settings.SpriteLibraryRoot);
 
+        // 构建动作规格列表（每个动作的帧数信息）
         List<ActionSpec> actionSpecs = BuildActionSpecs(catalog, animationDatabase);
         if (actionSpecs.Count == 0)
             throw new InvalidOperationException("角色帧数据中没有可用于 SpriteLibrary 的动画帧。");
 
+        // 记录需要保留的 SpriteLibrary 资源路径（用于后续清理旧资源）
         HashSet<string> desiredLibraryPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // 为每个角色生成四向 SpriteLibraryAsset
         for (int i = 0; i < catalog.Characters.Count; i++)
         {
             EquipmentWorkbenchCharacterOption character = catalog.Characters[i];
@@ -57,13 +87,24 @@ public static class EquipmentWorkbenchAnimatorControllerTool
                 character,
                 actionSpecs,
                 desiredLibraryPaths);
+
+            // 将生成的库保存到角色配置中
             character.SetAnimationLibraries(libraries);
         }
 
+        // 记录需要保留的 AnimationClip 资源路径
         HashSet<string> desiredClipPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // 生成共享的 AnimatorController（所有角色共用）
         BuildSharedController(settings, actionSpecs, desiredClipPaths);
+
+        // 删除不再使用的旧资源
         PruneGeneratedAssets(settings, desiredClipPaths, desiredLibraryPaths);
+
+        // 强制重新序列化 Catalog，确保引用关系正确
         ReserializeCatalog(settings, catalog);
+
+        // 保存所有改动并刷新资源数据库
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
@@ -72,10 +113,16 @@ public static class EquipmentWorkbenchAnimatorControllerTool
             + $"{actionSpecs.Count} 个动作片段，{catalog.Characters.Count * CharacterAnimationDirections.Count} 个方向库。 ");
     }
 
-    [MenuItem("Tools/Equipment System/Create Animation Generation Settings")]
+    /// <summary>
+    /// 创建动画生成设置资源
+    /// 如果已存在则选中它，不会重复创建
+    /// </summary>
+    [MenuItem("工具/装备系统/创建动画生成设置")]
     public static void CreateSettingsAsset()
     {
         string defaultPath = EquipmentSystemGenerationSettings.DefaultSettingsAssetPath;
+
+        // 查找是否有重复的设置资源（不允许有多个设置资源存在）
         string[] duplicatePaths = FindGenerationSettingsPaths()
             .Where(path => !string.Equals(path, defaultPath, StringComparison.OrdinalIgnoreCase))
             .ToArray();
@@ -88,17 +135,17 @@ public static class EquipmentWorkbenchAnimatorControllerTool
                 + string.Join(", ", duplicatePaths));
         }
 
+        // 如果已存在，直接选中它
         EquipmentSystemGenerationSettings existing =
-            AssetDatabase.LoadAssetAtPath<EquipmentSystemGenerationSettings>(
-                defaultPath);
+            AssetDatabase.LoadAssetAtPath<EquipmentSystemGenerationSettings>(defaultPath);
         if (existing != null)
         {
             Selection.activeObject = existing;
             return;
         }
 
-        string folder = Path.GetDirectoryName(defaultPath)
-            ?.Replace('\\', '/');
+        // 创建输出目录和新资源
+        string folder = Path.GetDirectoryName(defaultPath)?.Replace('\\', '/');
         if (!string.IsNullOrEmpty(folder))
             EnsureFolder(folder);
 
@@ -109,6 +156,12 @@ public static class EquipmentWorkbenchAnimatorControllerTool
         Selection.activeObject = settings;
     }
 
+    /// <summary>
+    /// 加载动画生成设置
+    /// 确保只有一个正式的设置资源存在，避免配置冲突
+    /// </summary>
+    /// <returns>动画生成设置</returns>
+    /// <exception cref="InvalidOperationException">当找不到设置或存在重复设置时抛出</exception>
     static EquipmentSystemGenerationSettings LoadSettings()
     {
         string defaultPath = EquipmentSystemGenerationSettings.DefaultSettingsAssetPath;
@@ -153,25 +206,38 @@ public static class EquipmentWorkbenchAnimatorControllerTool
             .ToArray();
     }
 
+    /// <summary>
+    /// 构建动作规格列表
+    /// 遍历动画数据库，为每个动作找到所有角色所有方向中的最大帧数
+    /// </summary>
+    /// <param name="catalog">角色目录</param>
+    /// <param name="animationDatabase">动画类型数据库</param>
+    /// <returns>动作规格列表，每个规格包含动作名和最大帧数</returns>
     static List<ActionSpec> BuildActionSpecs(
         EquipmentWorkbenchCatalog catalog,
         AnimationTypeDatabase animationDatabase)
     {
         List<ActionSpec> specs = new List<ActionSpec>();
+
+        // 遍历动画数据库中的每个动作类型
         for (int itemIndex = 0; itemIndex < animationDatabase.Count; itemIndex++)
         {
             if (!animationDatabase.TryGetByIndex(itemIndex, out AnimationTypeItem item) || item == null)
                 continue;
 
+            // 在所有角色的所有方向中找到这个动作的最大帧数
             int maxFrameCount = 0;
             for (int characterIndex = 0; characterIndex < catalog.Characters.Count; characterIndex++)
             {
                 CharacterFrameData frameData = catalog.Characters[characterIndex]?.FrameData;
                 AnimationData animation = frameData != null ? frameData.GetAnimationByKey(item.name) : null;
+
+                // 遍历四个方向（SE、SW、NE、NW）
                 for (int direction = 0; direction < CharacterAnimationDirections.Count; direction++)
                     maxFrameCount = Mathf.Max(maxFrameCount, BuildSprites(animation, direction).Length);
             }
 
+            // 只添加有帧数据的动作
             if (maxFrameCount > 0)
                 specs.Add(new ActionSpec { Action = item.name, FrameCount = maxFrameCount });
         }

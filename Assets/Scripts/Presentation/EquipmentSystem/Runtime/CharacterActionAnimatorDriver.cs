@@ -1,8 +1,10 @@
 using FantasyWord.GameCore;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 /// <summary>
-/// 角色动作 Animator 驱动。只负责动作状态，不拥有朝向或 SpriteLibrary 变体。
+/// 角色动作 Animator 驱动。
+/// 它只负责把 GameCore 的动作请求映射到 Animator 状态，不拥有身体朝向、SpriteLibrary 方向变体或装备材质合成。
 /// </summary>
 public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationDriver
 {
@@ -10,32 +12,31 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     const float MinimumAutoRestoreDelay = 0.05f;
 
     [Header("动画配置")]
-    [Tooltip("动画类型数据库")]
+    [LabelText("动画类型数据库"), Tooltip("动作键到 Animator 状态的数据库。动作键必须和共享动作 Animator 中的状态名对齐。")]
     public AnimationTypeDatabase animDatabase;
 
     [SerializeField]
-    [Tooltip("没有其它动作覆盖时恢复到的默认动作键。该键必须存在于动画类型数据库和 Animator 状态中。")]
+    [LabelText("默认动作键"), Tooltip("没有其它动作覆盖时恢复到的默认动作键。该键必须存在于动画类型数据库和 Animator 状态中。")]
     string defaultAnimationKey = "Idle";
 
     [SerializeField]
-    [Tooltip("角色产生真实位移时播放的移动动作键。该键必须存在于动画类型数据库和 Animator 状态中。")]
+    [LabelText("移动动作键"), Tooltip("角色产生真实位移时播放的移动动作键。该键必须存在于动画类型数据库和 Animator 状态中。")]
     string movementAnimationKey = "Walk";
 
     [SerializeField]
-    [Tooltip("受击动作键。播放该动作后会按当前动作时长自动恢复默认动作。")]
+    [LabelText("受击动作键"), Tooltip("受击动作键。播放该动作后会按当前动作时长自动恢复默认动作。")]
     string damageAnimationKey = "Dmg";
 
     [SerializeField]
-    [Tooltip("死亡动作键。角色死亡逻辑只请求锁定死亡表现，具体动作键由这里配置。")]
+    [LabelText("死亡动作键"), Tooltip("死亡动作键。角色死亡逻辑只请求锁定死亡表现，具体动作键由这里配置。")]
     string deathAnimationKey = "SpinDie";
 
-    [Header("运行时依赖")]
     [SerializeField]
-    [Tooltip("驱动角色动作片段的 Animator。正式 Prefab 应显式绑定；未绑定时只允许使用同对象 Animator。")]
+    [LabelText("角色 Animator"), Tooltip("驱动角色动作片段的 Animator。正式 Prefab 应显式绑定；未绑定时只允许使用同对象 Animator。")]
     Animator characterAnimator;
 
     [SerializeField]
-    [Tooltip("角色脚底阴影对象。为空表示该角色没有由动作控制器管理的独立阴影。")]
+    [LabelText("脚底阴影对象"), Tooltip("角色脚底阴影对象。为空表示该角色没有由动作控制器管理的独立阴影。")]
     GameObject shadowObject;
 
     Animator _animator;
@@ -48,9 +49,11 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     bool _isMoving;
 
     [SerializeField]
+    [LabelText("调试当前状态"), Tooltip("最近一次成功播放或失败记录的 Animator 状态名，仅用于运行时排查。")]
     string _debugCurrentState = "";
 
     [SerializeField]
+    [LabelText("调试 Animator 路径"), Tooltip("当前缓存 Animator 在层级中的路径，帮助确认 Prefab 绑定是否指向正确对象。")]
     string _debugAnimatorPath = "";
 
     public int CurrentAnimationIndex => _currentAnimIndex;
@@ -79,6 +82,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
     public string DebugCurrentState => _debugCurrentState;
     public string DebugAnimatorPath => _debugAnimatorPath;
 
+    /// <summary>启动时缓存 Animator 和阴影初始状态；缺少 Animator 会立即报错，避免动作请求静默丢失。</summary>
     void Awake()
     {
         CacheAnimatorReference(true);
@@ -95,6 +99,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         TryApplyPendingAutoRestore();
     }
 
+    /// <summary>接收角色移动意图并切换 Idle / Walk。攻击、受击、死亡等非移动动作拥有当前时段，不会被移动输入抢占。</summary>
     public void SetMovement(Vector2 movement)
     {
         _isMoving = movement.sqrMagnitude > 0.0001f;
@@ -146,6 +151,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         ApplyAnimation();
     }
 
+    /// <summary>尝试播放一次指定动作。受击动作会自动排队恢复到当前 Idle / Walk，其它动作只负责即时切换。</summary>
     public bool TryPlayAnimation(string animationKey)
     {
         string normalizedKey = animationKey?.Trim();
@@ -162,6 +168,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         return true;
     }
 
+    /// <summary>锁定指定动作，常用于死亡这类必须保持到外部明确清除的表现状态。</summary>
     public bool TryLockAnimation(string animationKey)
     {
         string normalizedKey = animationKey?.Trim();
@@ -215,6 +222,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         return TryRestoreAnimation(expectedAnimationKey, CurrentLocomotionAnimationKey);
     }
 
+    /// <summary>工作台预览指定动作和归一化时间，并同步刷新子级换装渲染器。这里只服务编辑/预览，不改变动作真相源。</summary>
     public bool TryPreviewAnimation(string animationKey, float normalizedTime)
     {
         if (!TryPlayAnimation(animationKey) || _animator == null)
@@ -234,6 +242,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         return true;
     }
 
+    /// <summary>替换动作数据库。工作台切角色或切素材时会调用这里，必要时重置到默认动作。</summary>
     public void SetAnimationDatabase(AnimationTypeDatabase database, bool resetSelection)
     {
         animDatabase = database;
@@ -316,6 +325,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         PlayAnimatorState(currentType);
     }
 
+    /// <summary>实际播放 Animator 状态。状态不存在时只写调试字段并返回失败，让上层看到配置缺口。</summary>
     bool PlayAnimatorState(AnimationTypeItem animType)
     {
         string stateName = ResolvePlayableStateName(animType);
@@ -331,6 +341,7 @@ public class CharacterActionAnimatorDriver : MonoBehaviour, ICharacterAnimationD
         return true;
     }
 
+    /// <summary>受击动作的自动恢复只在运行时生效，避免工作台预览被计时器改回默认动作。</summary>
     void ScheduleAutoRestoreIfNeeded(string animationKey)
     {
         string damageKey = DamageAnimationKey;

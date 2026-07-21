@@ -2,31 +2,86 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GAS.Runtime;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace FantasyWord.GameCore
 {
+    /// <summary>
+    /// 角色能力集：角色系统对 EX-GAS 的封装层
+    ///
+    /// 设计说明：
+    /// - 这不是 EX-GAS 的官方推荐用法，而是项目针对角色系统的自定义封装
+    /// - EX-GAS 官方推荐直接使用 AbilitySystemComponent（ASC）
+    /// - 本类在 ASC 之上提供了角色特定的能力管理功能
+    ///
+    /// 职责：
+    /// - 持有角色所有的正式技能（FormalGasAbility）实例
+    /// - 管理装备栏（快捷技能槽）系统
+    /// - 处理技能的激活、停止、冷却查询
+    /// - 提供技能状态的存档和恢复
+    /// - 桥接角色系统与 EX-GAS 系统
+    ///
+    /// 与 EX-GAS 的关系：
+    /// - 内部持有 CharacterAbilitySetRuntime，其中包含 ASC 的引用
+    /// - 将角色特定的技能规则（如装备栏、技能根节点）封装起来
+    /// - 不直接暴露 ASC，避免角色系统与 GAS 底层强耦合
+    ///
+    /// 组件依赖：
+    /// - CharacterBase：必需，通过 CharacterBase.RequireComponent 正向依赖
+    /// - ASC（AbilitySystemComponent）：由运行时动态创建
+    ///
+    /// 注意事项：
+    /// - 不能反向 RequireComponent<CharacterBase>，否则 Unity 自动补组件时会失败
+    /// - ownsAbilityComposition=false 时，该组件只作为占位符存在
+    /// </summary>
     // CharacterBase 已经正向要求 CharacterAbilitySet；
     // 这里不能反向 Require 抽象 CharacterBase，否则 Unity 自动补组件时会失败。
     [DisallowMultipleComponent]
     public sealed partial class CharacterAbilitySet : MonoBehaviour
     {
+        // EX-GAS 能力系统的内部常量
         private const string FormalRuleLogicTypeName = "FormalAbilityRuleProxyLogic";
-        private const int FormalAbilityCodeSeed = 1200000000;
-        private const int FormalCooldownTagSeed = 1700000000;
+        private const int FormalAbilityCodeSeed = 1200000000;  // 正式技能代码起始值
+        private const int FormalCooldownTagSeed = 1700000000;  // 冷却标签起始值
 
-        [Header("Ability Composition")]
-        [SerializeField] private CharacterBase m_character = null;
-        [SerializeField] private bool m_ownsAbilityComposition = true;
-        [SerializeField] private Transform m_staticAbilityRoot = null;
-        [SerializeField] private Transform m_polydirectionalAbilityRoot = null;
-        [SerializeField] private Transform m_horizontalAbilityRoot = null;
-        [SerializeField] private int[] m_additionalFormalGasAbilityCodes = null;
+        [Header("能力组合")]
+        [SerializeField]
+        [LabelText("角色主体"), Tooltip("拥有这套能力组合的角色。必须和同对象 CharacterBase 对齐。")]
+        private CharacterBase m_character = null;
 
+        /// <summary>
+        /// 是否拥有能力组合
+        /// false 表示此组件只作为占位符，不实际管理技能
+        /// </summary>
+        [SerializeField]
+        [LabelText("拥有能力组合"), Tooltip("关闭时组件只作为占位符，不创建或管理正式技能实例。")]
+        private bool m_ownsAbilityComposition = true;
+
+        // 技能根节点：不同类型的技能挂载到不同的根节点
+        [SerializeField]
+        [LabelText("静态技能根节点"), Tooltip("无方向技能实例的挂载根节点。为空会让对应技能缺少正式父节点。")]
+        private Transform m_staticAbilityRoot = null;
+        [SerializeField]
+        [LabelText("多向技能根节点"), Tooltip("八方向或多方向技能实例的挂载根节点。")]
+        private Transform m_polydirectionalAbilityRoot = null;
+        [SerializeField]
+        [LabelText("水平技能根节点"), Tooltip("左右水平技能实例的挂载根节点。")]
+        private Transform m_horizontalAbilityRoot = null;
+
+        /// <summary>
+        /// 额外添加的正式技能代码（补充配置表之外的技能）
+        /// </summary>
+        [SerializeField]
+        [LabelText("额外正式技能代码"), Tooltip("补充配置表之外的正式技能编号。重复或无效编号会在能力解析阶段暴露。")]
+        private int[] m_additionalFormalGasAbilityCodes = null;
+
+        // 运行时数据
         private readonly CharacterAbilitySetRuntime m_runtime = new();
         private readonly CharacterEquippedAbilityLoadout m_equippedAbilityLoadout = new(Constants.MaxEquipedAbilityCount);
         private readonly UnityEvent<CharacterEquippedAbilitySlotView[]> m_equippedAbilitiesChanged = new();
+
         public CharacterBase Character => m_character;
         public bool OwnsAbilityComposition => m_ownsAbilityComposition;
         internal CharacterAbilitySetRuntime Runtime => m_runtime;
@@ -75,6 +130,12 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// 激活指定的正式 EX-GAS 技能
+        /// </summary>
+        /// <param name="formalGasAbilityCode">技能代码</param>
+        /// <param name="commandContext">命令上下文</param>
+        /// <returns>技能激活检查结果</returns>
         internal EAbilityFireCheckResult FireFormalGasAbility(int formalGasAbilityCode, GameCommandContext commandContext)
         {
             if (!m_ownsAbilityComposition ||
@@ -88,6 +149,13 @@ namespace FantasyWord.GameCore
             return FireResolvedAbility(ability, commandContext);
         }
 
+        /// <summary>
+        /// 激活装备栏中指定槽位的技能
+        /// </summary>
+        /// <param name="index">槽位索引（0-based）</param>
+        /// <param name="commandContext">命令上下文</param>
+        /// <param name="activationContext">激活上下文（可选，包含瞄准方向等信息）</param>
+        /// <returns>技能激活结果，包含检查结果和技能代码</returns>
         internal CharacterAbilityFireResult FireEquippedAbilityAtIndex(
             int index,
             GameCommandContext commandContext,
@@ -277,6 +345,12 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 将技能装备到指定槽位
+        /// </summary>
+        /// <param name="formalGasAbilityCode">要装备的技能代码</param>
+        /// <param name="index">目标槽位索引</param>
+        /// <returns>装备是否成功</returns>
         internal bool TryEquipFormalGasAbilityCodeToSlot(int formalGasAbilityCode, int index)
         {
             if (!m_ownsAbilityComposition || !CanAssignFormalGasAbilityCode(formalGasAbilityCode, index))
@@ -284,6 +358,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
+            // 如果已经装备了相同技能，直接返回成功
             if (m_equippedAbilityLoadout.GetFormalGasAbilityCode(index) == formalGasAbilityCode)
             {
                 return true;
@@ -479,26 +554,42 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// Awake：确保角色引用存在
+        /// </summary>
         private void Awake()
         {
             EnsureCharacterReference();
         }
 
+        /// <summary>
+        /// OnEnable：确保角色引用存在（支持运行时动态添加组件）
+        /// </summary>
         private void OnEnable()
         {
             EnsureCharacterReference();
         }
 
+        /// <summary>
+        /// Reset：编辑器重置时自动关联角色组件
+        /// </summary>
         private void Reset()
         {
             EnsureCharacterReference();
         }
 
+        /// <summary>
+        /// OnValidate：Inspector 值改变时验证引用
+        /// </summary>
         private void OnValidate()
         {
             EnsureCharacterReference();
         }
 
+        /// <summary>
+        /// 确保 CharacterBase 引用存在
+        /// 如果为空，尝试从同一 GameObject 获取
+        /// </summary>
         private void EnsureCharacterReference()
         {
             if (m_character == null)
@@ -561,6 +652,14 @@ namespace FantasyWord.GameCore
             return true;
         }
 
+        /// <summary>
+        /// 激活已解析的技能实例
+        /// 处理方向设置、状态管理和技能触发
+        /// </summary>
+        /// <param name="ability">要激活的技能实例</param>
+        /// <param name="commandContext">命令上下文</param>
+        /// <param name="activationContext">激活上下文（可选，包含瞄准方向等）</param>
+        /// <returns>技能激活检查结果</returns>
         private EAbilityFireCheckResult FireResolvedAbility(
             ActiveAbilityBase ability,
             GameCommandContext commandContext,
@@ -570,6 +669,7 @@ namespace FantasyWord.GameCore
 
             if (triggerAbilityCheckResult == EAbilityFireCheckResult.Valid)
             {
+                // 处理瞄准方向（如果激活上下文提供了）
                 bool hasRequestedDirection = false;
                 Vector2 requestedDirection = Vector2.zero;
                 if (activationContext != null &&
@@ -584,6 +684,7 @@ namespace FantasyWord.GameCore
                     }
                 }
 
+                // 更新角色朝向（如果技能需要）
                 if (ability.ShouldUpdateLookAtDirectionOnFireForRuntime())
                 {
                     Vector2 targetDirection = m_character.GetTargetDirection();
@@ -598,8 +699,10 @@ namespace FantasyWord.GameCore
                     }
                 }
 
+                // 激活技能（自动状态管理或手动管理）
                 if (ability.UsesAutomaticRuntimeStateManagement())
                 {
+                    // 自动管理：激活 GameObject，技能结束后自动禁用
                     ability.gameObject.SetActive(true);
                     ability.Fire(
                         commandContext,
@@ -608,6 +711,7 @@ namespace FantasyWord.GameCore
                 }
                 else
                 {
+                    // 手动管理：由技能自己控制生命周期
                     ability.Fire(commandContext, activationContext, null);
                 }
             }

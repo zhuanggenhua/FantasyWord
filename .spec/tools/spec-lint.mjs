@@ -36,7 +36,7 @@ function walk(dir) {
 }
 
 function parseFrontmatter(file) {
-  const text = fs.readFileSync(file, "utf8");
+  const text = fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   if (!text.startsWith("---\n")) return null;
   const end = text.indexOf("\n---", 4);
   if (end < 0) return null;

@@ -27,6 +27,7 @@ metadata:
 | Unity 工程目录、代码落点、Prefab/Scene/Asset | `.spec/knowledge/features/project/项目目录与入口.md` |
 | ProjectSettings、Packages、URP、Input System、场景、Prefab、序列化、构建 | `.spec/knowledge/features/project/Unity工程通用规范.md` |
 | GameCore、输入、世界状态、表现层、运行时边界 | `.spec/knowledge/features/project/框架与运行时入口.md` |
+| EX-GAS、GameplayEffect、当前资源属性边界 | `.spec/knowledge/features/project/Unity架构与GAS规范.md`、`.spec/decisions/0071-formal-gas-resource-modifier-and-damage-owner.md` |
 | UI、UGUI、UI Toolkit、Canvas、TMP | `.agents/skills/unity-ui-development/SKILL.md` |
 | 2D Tilemap、Grid、Tile Palette、RuleTile、TilemapCollider2D | `.codex/skills/unity-tilemap-2d/SKILL.md` |
 | FishNet、联机、Mod 边界 | `.spec/knowledge/features/project/联机与Mod边界.md`、`.spec/knowledge/features/project/项目定位与迁移边界.md` |
