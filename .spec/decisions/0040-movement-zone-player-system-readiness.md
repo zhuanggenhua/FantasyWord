@@ -6,7 +6,7 @@
   - 本文保留“速度区域在当前受控角色不可解析时不施加倍率，并在禁用时清理已施加倍率”的失败语义。
   - 文中关于直读 `GameManager.PlayerSystem` 或必须换成查询 API 的表述，不再作为独立审计标准；当前以 `0046-参考流程优先的 GameManager 系统访问审计边界` 为准。
 - 背景：
-  - `MovementZone` 是从 TopDown `MovementZone` 吸收来的区域速度倍率触发器，当前项目只保留“进入施加倍率、离开或禁用恢复”的速度区域合同。
+  - `MovementZone` 参考过 TopDown 同名触发器的区域速度倍率流程，当前项目只保留“进入施加倍率、离开或禁用恢复”的速度区域合同。
   - 当配置为只影响玩家时，旧实现直接读取 `GameManager.PlayerSystem` 来取得当前受控角色。
   - 速度区域可能在场景对象启用、系统重启或触发器事件早于正式系统就绪时被调用；这种情况下不能让区域触发器用全局属性空引用来暴露问题。
 - 决策：
@@ -19,4 +19,4 @@
   - 区域倍率 owner 仍归 `MovementZone` 自身，角色移动倍率真相仍通过 `Movable.SetContextSpeedMultiplier()` / `ResetContextSpeedMultiplier()` 进入动作执行层。
   - 不引入 TopDown `ButtonActivated`、提示 UI、MoreMountains manager 或第二套角色生命周期。
 - 替代关系：
-  - 本决策补强 `MovementZone` 的 TopDown 吸收边界，不改变移动系统、输入系统或角色控制 owner。
+  - 本决策补强 `MovementZone` 的 TopDown 适配边界，不改变移动系统、输入系统或角色控制 owner。

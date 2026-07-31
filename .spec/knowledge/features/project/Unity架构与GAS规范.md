@@ -57,8 +57,19 @@ metadata:
 - EX-GAS 只能作为能力、属性、标签、GameplayEffect、Cost/Cooldown 和 GameplayCue 表现触发等底座候选；但当某个具体职责已经被证据证明 `EX-GAS` 原生闭包更强，例如当前的时间轴预览、Cue 预览或 TargetCatcher 体系，就应先把该职责收口到 `GAS` 主轴，再讨论剩余缺口。不得一边承认 `GAS` 在该职责更强，一边继续保留项目侧并行主轴。
 - EX-GAS `GameplayCue` 只允许作为表现提示或表现事件触发入口。不得用 Cue 修改属性、执行伤害/治疗、支付资源、改变冷却、添加/移除状态、强制位移、决定目标、写存档或承担其它玩法结果。若历史或迁移期代码已经这样做，必须标为待重构债务，不得扩散到新技能。
 - GameCore `GameplayFeedbackSet` 是当前项目侧表现反馈真相源；EX-GAS `GameplayCue` 若需要接入项目侧表现，应转发到该闭包或正式替代者，不得新增并行反馈系统。
+- EX-GAS Attribute / AttributeSet 编辑器与生成链是正式属性定义源。Excel/Luban 只是该作者链的数据载体，不得被低估为“裸表格流程”；项目侧不得再把 `EStat`、`FormalAttributeCatalog` 或其它手写壳扩张成 attribute code / AttributeSet code 的 owner。
+- 项目属性元数据必须绑定到 EX-GAS 属性 code / AttributeSet code：稳定 ID、中文显示、UI 分组、装备可加成标记、资源当前/上限关系、存档策略和未来联机同步策略都可以扩展 EX-GAS 属性表或使用一一绑定的项目元数据表承载，但不得另建第二套属性定义源。
+- 手写 `FormalGameplayAttributeSet` 已清退，不再作为迁移期兼容面保留；后续新增属性、属性重命名、属性废弃和正式 GE Modifier 配置必须回到 EX-GAS 属性作者源，并由生成器或门禁同步项目侧目录和 UI/装备元数据。
+- 禁止正式链路重新维护 EX-GAS 生成属性集和项目手写属性集两套属性宇宙。若发现项目侧代码表达 `XAttrSet` / `XAttribute` 已经表达的同一职责，默认动作是统一到 EX-GAS 作者源并清退手写重复，而不是把二者都称为正式入口。
 - 当前资源模型采用拆分属性：`Health` / `Mana` 表示当前资源，`MaxHealth` / `MaxMana` 表示上限。正式边界见 [`0071-正式 GAS 资源 Modifier 与伤害 owner`](../../../decisions/0071-formal-gas-resource-modifier-and-damage-owner.md)：伤害、治疗、回蓝和耗蓝统一通过 `FormalGameplayEffectResourceModifier` 创建 EX-GAS Modifier，修改当前资源属性并触发 EX-GAS 重算与属性事件；项目侧禁止直接写 `CAttributeData.CurrentValue`。
 - 当前项目未发布，旧存档兼容不再约束 GAS 属性重构。若旧存档字段阻碍资源属性标准化，默认后续直接重写存档结构或迁移脚本，不为旧格式保留长期双轨属性真相。
+- 按最小充分实现裁决阶梯复审后，当前属性系统结论如下：
+  - `FormalGameplayAttributeSet` 已删除是正确方向；它没有独立 owner，只是 `XAttrSet/XAttribute` 的同职责转发壳，不能再恢复。
+  - `FormalAttributeCatalog` 当前只允许作为绑定到 EX-GAS code 的项目元数据目录；它不能拥有属性数字、属性集数字、属性存在性或属性顺序真相。
+  - `EStat` / `Stats` 当前只作为装备、角色表、UI 和旧 DTO 的项目选择器；新增正式属性时不得只加 enum，必须先进入 EX-GAS Attribute / AttributeSet 作者源，再同步或生成项目元数据。
+  - `Stamina` / `MaxStamina` 已在 EX-GAS `FightUnit` 中但未进入 `FormalAttributeCatalog`，只能视为 GAS 内部资源位或待补项目元数据，不能长期靠 `DefaultStamina` 常量静默存在。
+  - `AttackRate` 当前存在于 EX-GAS Attribute 全表但不在 `FightUnit` AttributeSet；正式使用前必须决定是删除、加入具体 AttributeSet，还是标记为非角色属性，不能作为游离属性长期保留。
+  - 当前 `FormalAttributeCatalog` 通过反射读取生成常量只是 asmdef 循环约束下的迁移性做法；长期更好结构是把 `XAttribute/XAttrSet` 这类纯常量生成到不依赖 GameCore 的独立生成程序集，让 GameCore 直接引用纯生成常量。
 - 推荐用法默认是重要基线，但不是预设赢家。真正的裁决标准只有一个：按职责切片后，同一职责里谁实现得更好、且能维持单一真相。
 - 如果某个参考来源只是补“怎么更好编辑”或“怎么更好预览”，那它竞争的只是作者面职责；不得因为它在作者面更强，就把它直接升级成新的规则 owner。反过来，如果 GAS 在规则真相上胜出，也不等于它天然拥有最佳可视化作者体验；这两件事必须分别判断，但各自都只能留一个正式 owner。
 - `AbilityAsset / AbilitySpec / TimelineAbility / TargetCatcher / GameplayEffect` 能表达的技能，不自动等于必须由 EX-GAS 全权执行；其它成熟参考若在同职责上实现得更好，也可以胜出。任何“胜出”都必须绑定到具体职责，而不是扩大成整个技能系统的预设赢家。

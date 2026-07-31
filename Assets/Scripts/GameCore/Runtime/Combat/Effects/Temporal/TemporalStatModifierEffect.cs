@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -67,7 +67,7 @@ namespace FantasyWord.GameCore
                 return;
             }
 
-            if (FormalGameplayAttributeSet.IsResourceStat(m_statBoostData.stat))
+            if (FormalAttributeCatalog.IsResourceStat(m_statBoostData.stat))
             {
                 if (!targetCharacter.dead)
                 {
@@ -87,7 +87,7 @@ namespace FantasyWord.GameCore
                 return true;
             }
 
-            if (FormalGameplayAttributeSet.IsResourceStat(m_statBoostData.stat))
+            if (FormalAttributeCatalog.IsResourceStat(m_statBoostData.stat))
             {
                 return restoreFromRuntimeState ||
                     ApplyCurrentResourceDelta(m_statBoostData.amount, minimumValue: 0);

@@ -58,8 +58,11 @@ function assertRequiredFiles() {
     ".spec/rules/system.md",
     ".spec/knowledge/README.md",
     ".spec/knowledge/lessons.md",
+    ".spec/knowledge/standards/dispatch.md",
+    ".spec/knowledge/features/_TEMPLATE.md",
     ".spec/decisions/README.md",
     ".spec/tasks/README.md",
+    ".spec/tools/spec-lint.test.mjs",
   ];
   for (const file of required) {
     if (!exists(file)) fail(`缺少必需文件：${file}`);

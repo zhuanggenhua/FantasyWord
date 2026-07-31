@@ -5,8 +5,8 @@ using UnityEngine;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 角色正式属性枚举。
-    /// 顺序需要与 FormalAttributeCatalog 保持兼容，存档数组按该顺序保存。
+    /// 角色属性 DTO 选择器。
+    /// 这里的顺序只服务 Stats 数组和旧序列化兼容；EX-GAS attribute code 由生成属性源决定。
     /// </summary>
     public enum EStat
     {

@@ -7,7 +7,7 @@
   - 游戏尚未发布，旧存档兼容不作为架构约束；可以直接重写存档字段和运行时恢复语义。
   - 旧方案把 `Health.BaseValue` / `Mana.BaseValue` 当上限，把 `CurrentValue` 当当前血蓝，导致伤害、治疗、耗蓝只能绕开 EX-GAS Modifier 链直接写 `CAttributeData.CurrentValue`。
 - 决策：
-  - `FormalGameplayAttributeSet` 拆分资源模型：`Health` / `Mana` 表示当前资源属性，`MaxHealth` / `MaxMana` 表示上限属性。
+  - EX-GAS `FightUnit` 属性集拆分资源模型：`Health` / `Mana` 表示当前资源属性，`MaxHealth` / `MaxMana` 表示上限属性。
   - 运行时资源变化必须通过 `FormalGameplayEffectResourceModifier` 创建 `MCConfModifiers`，由 EX-GAS Modifier 改属性 `BaseValue`，再调用 EX-GAS `AttributeHelper.RecalculateCurrentValue` 触发正式 CurrentValue 重算和事件。
   - 禁止项目侧直接写 `CAttributeData.CurrentValue`。`FormalAbilitySystemAttributeExtensions.SetAttrBaseValueAndRecalculate` 只允许写 `BaseValue` 并重算，不能提供 CurrentValue 覆盖入口。
   - 伤害链路 owner 是 `FormalDamageExecutor`：GE 只携带正式伤害载荷，执行器负责目标校验、`DamageSolver` 结算、资源 Modifier 提交和目标侧表现钩子。

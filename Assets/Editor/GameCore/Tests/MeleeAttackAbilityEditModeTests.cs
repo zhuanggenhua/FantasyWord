@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -980,10 +980,10 @@ AssertFormalAttackAbilityReady(attacker);
             Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc));
             Assert.AreEqual(
                 previousHealth - expectedDamage,
-                Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+                Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(FormalAttributeCatalog.AttributeSetCode, FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health))));
             Assert.AreEqual(
                 previousMaxHealth,
-                Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+                Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(FormalAttributeCatalog.AttributeSetCode, FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health))));
         }
 
         [Test]
@@ -1123,10 +1123,10 @@ AssertFormalAttackAbilityReady(attacker);
             Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc));
             Assert.AreEqual(
                 previousHealth,
-                Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+                Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(FormalAttributeCatalog.AttributeSetCode, FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health))));
             Assert.AreEqual(
                 previousMaxHealth,
-                Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(FormalGameplayAttributeSet.SetCode, FormalGameplayAttributeSet.Health)));
+                Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(FormalAttributeCatalog.AttributeSetCode, FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health))));
         }
 
         [Test]

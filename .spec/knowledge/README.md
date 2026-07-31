@@ -17,17 +17,18 @@ metadata:
 | [`standards/workflow.md`](standards/workflow.md) | 做开发流程、提交、验证、知识沉淀、规范维护时查。 |
 | [`standards/testing.md`](standards/testing.md) | 做测试、验收、bug 修复、TDD 策略和验证证据时查。 |
 | [`standards/code-style.md`](standards/code-style.md) | 写代码、写注释、建文档、命名和生成物处理时查。 |
-| [`standards/skill-conflicts.md`](standards/skill-conflicts.md) | 查看 LumioAgent skill 与现有 airule/AGENTS/skills 的保留、合并和已收口结果时查。 |
+| [`standards/dispatch.md`](standards/dispatch.md) | 派发子 agent、触发 reviewer、写交接提示或判断串并行边界时查。 |
 
-## project docs（已迁入的 FantasyWord 知识库）
+## project docs（FantasyWord 项目知识）
 
 | 任务 | 继续读取 |
 |------|----------|
+| 新增功能设计现状文档 | `.spec/knowledge/features/_TEMPLATE.md` |
 | 不确定先读哪篇 | `.spec/knowledge/features/project/文档索引.md` |
 | Unity 工程目录、代码落点、Prefab/Scene/Asset | `.spec/knowledge/features/project/项目目录与入口.md` |
 | ProjectSettings、Packages、URP、Input System、场景、Prefab、序列化、构建 | `.spec/knowledge/features/project/Unity工程通用规范.md` |
 | GameCore、输入、世界状态、表现层、运行时边界 | `.spec/knowledge/features/project/框架与运行时入口.md` |
-| EX-GAS、GameplayEffect、当前资源属性边界 | `.spec/knowledge/features/project/Unity架构与GAS规范.md`、`.spec/decisions/0071-formal-gas-resource-modifier-and-damage-owner.md` |
+| EX-GAS、GameplayEffect、属性作者源与当前资源属性边界 | `.spec/knowledge/features/project/Unity架构与GAS规范.md`、`.spec/decisions/0071-formal-gas-resource-modifier-and-damage-owner.md`、`.spec/decisions/0073-ex-gas-attribute-authoring-single-source.md` |
 | UI、UGUI、UI Toolkit、Canvas、TMP | `.agents/skills/unity-ui-development/SKILL.md` |
 | 2D Tilemap、Grid、Tile Palette、RuleTile、TilemapCollider2D | `.codex/skills/unity-tilemap-2d/SKILL.md` |
 | FishNet、联机、Mod 边界 | `.spec/knowledge/features/project/联机与Mod边界.md`、`.spec/knowledge/features/project/项目定位与迁移边界.md` |
@@ -45,22 +46,22 @@ metadata:
 | 俯视角角色素材、MiniFantasy、装备层素材 | `.spec/knowledge/features/project/角色素材处理工作流.md` |
 | spec、proposal、change、阶段拆分 | `openspec/AGENTS.md` |
 
-## skills（整合后的工作流）
+## skills（项目工作流）
 
-| Skill | 来源与处理 |
-|-------|------------|
-| `.spec/skills/spec-steward` | 吸收 LumioAgent，按本项目五层落点规则改写。 |
-| `.spec/skills/brainstorming` | 吸收 LumioAgent，改为“先方案、获确认后再实施”的设计前流程。 |
-| `.spec/skills/before-you-code` | 吸收 LumioAgent，改为 FantasyWord 前提锁定与渐进披露入口。 |
-| `.spec/skills/systematic-debugging` | 与现有 bug 红线合并，强调原始症状保真和止血口径。 |
-| `.spec/skills/verification-before-completion` | 吸收 LumioAgent，作为完成声明前证据门禁。 |
-| `.spec/skills/equipment-system-workflow` | 项目新增，用于 FantasyWord 换装功能、帧编辑器 UV 配置和运行时截图验收。 |
-| `.spec/skills/task-breakdown` | 吸收 LumioAgent，适配“不擅自 worktree/分支”和项目任务卡。 |
-| `.spec/skills/subagent-driven-development` | 吸收 LumioAgent，改为必须使用 `gpt-5.4` + `high` 且不能自行 worktree。 |
-| `.spec/skills/using-git-worktrees` | 吸收 LumioAgent 的安全检查，但改为“默认禁止，需用户明确许可”。 |
-| `.spec/skills/writing-plans` | 改为指向 `D:\codex-home\skills\planning-with-files\SKILL.md`，避免第二套长期计划。 |
-| `.spec/skills/test-driven-development` | 改成项目务实 TDD 策略，不强制所有小改动 TDD。 |
-| `.spec/skills/receiving-code-review` | 吸收 LumioAgent，用于处理 review 反馈。 |
+| Skill | 职责 |
+|-------|------|
+| `.spec/skills/spec-steward` | 判断规范、知识、skill、任务卡和决策记录的正确落点，并同步索引。 |
+| `.spec/skills/brainstorming` | 设计或需求未收敛时，先形成方案和决策点，再进入实施。 |
+| `.spec/skills/before-you-code` | 动手前锁定问题对象、真相来源、目标入口/环境和验收口径。 |
+| `.spec/skills/systematic-debugging` | 处理 bug、测试失败和异常行为，强调原始症状保真和根因定位。 |
+| `.spec/skills/verification-before-completion` | 收口前取得新鲜验证证据，避免只用推测声明完成。 |
+| `.spec/skills/equipment-system-workflow` | 处理 FantasyWord 换装功能、帧编辑器 UV 配置和运行时截图验收。 |
+| `.spec/skills/task-breakdown` | 拆解多步骤或多模块任务，并约束同一文件集重叠任务串行执行。 |
+| `.spec/skills/subagent-driven-development` | 管理子 agent 派发、模型规格、审查边界和禁止二次派生。 |
+| `.spec/skills/using-git-worktrees` | 仅在用户明确授权时进入受控 worktree 检查与创建流程。 |
+| `.spec/skills/writing-plans` | 将长期计划路由到 `D:\codex-home\skills\planning-with-files\SKILL.md`，避免第二套计划真相源。 |
+| `.spec/skills/test-driven-development` | 使用项目务实 TDD 策略，不强制所有小改动补同粒度测试。 |
+| `.spec/skills/receiving-code-review` | 处理 review 反馈，先核实问题再修改。 |
 
 ## agents（职能角色）
 

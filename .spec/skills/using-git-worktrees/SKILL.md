@@ -7,7 +7,7 @@ description: 当用户明确要求或授权使用 git worktree 隔离开发时�
 
 ## 默认策略
 
-FantasyWord 项目默认禁止擅自创建、切换、重建或删除 worktree。LumioAgent 的 worktree 隔离思想只作为可选能力，不能作为默认动作。
+FantasyWord 项目默认禁止擅自创建、切换、重建或删除 worktree。worktree 隔离只作为用户明确授权后的可选能力，不能作为默认动作。
 
 ## 允许使用的条件
 

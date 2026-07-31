@@ -629,7 +629,6 @@ $persistenceSystemInstantiationRuntimePath = Join-Path $projectRoot "Assets/Scri
 $stateMessageDispatcherPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Animation/StateMessageDispatcher.cs"
 $animationStrategyPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Animation/Strategies/AAnimationStrategy.cs"
 $formalAttributeCatalogPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalAttributeCatalog.cs"
-$formalGameplayAttributeSetPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayAttributeSet.cs"
 $formalGameplayEffectDamageHelperPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayEffectDamageHelper.cs"
 $characterAlterationRulePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Database/Characters/CharacterAlterationRule.cs"
 $temporalEffectInterfacePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/ITemporalEffect.cs"
@@ -2352,8 +2351,32 @@ $formalAttributeCatalogMissingPatterns = Test-ContainsAll -Content $formalAttrib
 $formalAttributeCatalogDisallowedPatterns = Test-ContainsAny -Content $formalAttributeCatalogContent -Patterns @(
     "public static FormalAttributeDefinition[] Definitions =>",
     "public static IReadOnlyList<FormalAttributeDefinition> Definitions => s_definitionArray;",
-    "public static IList<FormalAttributeDefinition> Definitions =>"
+    "public static IList<FormalAttributeDefinition> Definitions =>",
+    "public const int SetCode",
+    "public const int Health",
+    "public const int Mana",
+    "public const int PhysicalAttack",
+    "public const int MagicalAttack",
+    "public const int PhysicalDefense",
+    "public const int MagicalDefense",
+    "public const int Agility",
+    "public const int Luck",
+    "public const int AttackSpeed",
+    "GetAttributeCode(EStat"
 )
+
+$disallowedFormalGameplayAttributeSetFiles = @(
+    "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayAttributeSet.cs",
+    "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayAttributeSet.cs.meta"
+)
+
+$formalGameplayAttributeSetExistingFiles = New-Object System.Collections.Generic.List[string]
+foreach ($relativePath in $disallowedFormalGameplayAttributeSetFiles) {
+    $fullPath = Join-Path $projectRoot $relativePath
+    if (Test-Path -LiteralPath $fullPath) {
+        [void]$formalGameplayAttributeSetExistingFiles.Add($fullPath)
+    }
+}
 
 $disallowedAbilitySheetFiles = @(
     "Assets/Scripts/GameCore/Runtime/Database/Abilities/AbilitySheet.cs",
@@ -3774,7 +3797,7 @@ $gameCoreGasRuntimeReferenceHits = Find-GameCoreGasRuntimeReferenceHits -Project
     $characterBasePath,
     $characterAbilitySetPath,
     $characterAbilitySetFormalRulesPath,
-    $formalGameplayAttributeSetPath,
+    $formalAttributeCatalogPath,
     $formalGameplayEffectDamageHelperPath,
     $characterBaseGasRuntimePath,
     $characterBaseResourcesPath,
@@ -4506,6 +4529,7 @@ $report = [ordered]@{
     AnimationStrategyMissingPatterns = @($animationStrategyMissingPatterns)
     FormalAttributeCatalogMissingPatterns = @($formalAttributeCatalogMissingPatterns)
     FormalAttributeCatalogDisallowedPatterns = @($formalAttributeCatalogDisallowedPatterns)
+    FormalGameplayAttributeSetExistingFiles = @($formalGameplayAttributeSetExistingFiles)
     AbilitySheetExistingFiles = @($abilitySheetExistingFiles)
     CharacterAlterationRuleMissingPatterns = @($characterAlterationRuleMissingPatterns)
     TemporalEffectInterfaceMissingPatterns = @($temporalEffectInterfaceMissingPatterns)
@@ -4704,6 +4728,7 @@ $report = [ordered]@{
     AnimationStrategyMissingPatternCount = @($animationStrategyMissingPatterns).Count
     FormalAttributeCatalogMissingPatternCount = @($formalAttributeCatalogMissingPatterns).Count
     FormalAttributeCatalogDisallowedPatternCount = @($formalAttributeCatalogDisallowedPatterns).Count
+    FormalGameplayAttributeSetExistingFileCount = @($formalGameplayAttributeSetExistingFiles).Count
     AbilitySheetExistingFileCount = @($abilitySheetExistingFiles).Count
     CharacterAlterationRuleMissingPatternCount = @($characterAlterationRuleMissingPatterns).Count
     TemporalEffectInterfaceMissingPatternCount = @($temporalEffectInterfaceMissingPatterns).Count
@@ -5328,6 +5353,11 @@ foreach ($pattern in $report.FormalAttributeCatalogMissingPatterns) {
 Write-Host ("FormalAttributeCatalog disallowed patterns: {0}" -f $report.FormalAttributeCatalogDisallowedPatternCount)
 foreach ($pattern in $report.FormalAttributeCatalogDisallowedPatterns) {
     Write-Host ("  [formal-attribute-catalog-disallowed] {0}" -f $pattern)
+}
+
+Write-Host ("FormalGameplayAttributeSet legacy files still present: {0}" -f $report.FormalGameplayAttributeSetExistingFileCount)
+foreach ($path in $report.FormalGameplayAttributeSetExistingFiles) {
+    Write-Host ("  [formal-gameplay-attribute-set-file] {0}" -f $path)
 }
 
 Write-Host ("Legacy AbilitySheet files still present: {0}" -f $report.AbilitySheetExistingFileCount)

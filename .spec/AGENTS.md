@@ -24,10 +24,10 @@
 | `.spec/rules/` | 强制红线，只写必须做、不得做、只能做什么。 |
 | `.spec/knowledge/standards/` | 长期规范和做法，回答“这类事该怎么做”。 |
 | `.spec/knowledge/features/` | 功能现状、系统设计和项目事实，回答“这个功能现在怎么设计”。 |
-| `.spec/knowledge/features/project/` | 已吸收的 FantasyWord 长期项目知识库，是当前唯一正式项目知识入口。 |
+| `.spec/knowledge/features/project/` | FantasyWord 长期项目知识库，是当前唯一正式项目知识入口。 |
 | `.spec/knowledge/lessons.md` | 反复踩坑的候选经验池，第二次出现收录，稳定复用后升级为正式规范。 |
 | `.spec/decisions/` | 架构、流程、规范层决策记录，只新增不改写历史。 |
-| `.spec/skills/` | 项目内可复用工作流，从 LumioAgent 吸收后已按本项目红线改写。 |
+| `.spec/skills/` | 项目内可复用工作流，已按 FantasyWord 红线和执行方式收口。 |
 | `.spec/agents/` | 需要隔离上下文才有价值的职能 agent；当前只登记 reviewer 角色说明。 |
 | `.spec/tasks/` | 进行中任务卡；完成后删除，历史交给 git。 |
 | `openspec/` | 功能 proposal/change/spec，不和 `.spec/decisions/` 混用。 |
@@ -40,6 +40,7 @@
 - Bug、测试失败、异常行为：先用 `.spec/skills/systematic-debugging` 找根因；没有锁定原始症状和真相源前不得修。
 - 装备换装、坐骑原版素材接入、帧编辑器、Body/Head UV、Idle/Walk/Attack 换装错位或完整截图验收：先用 `.spec/skills/equipment-system-workflow` 锁定对象、配置流程和端到端证据。
 - 多步骤或多模块任务：用 `.spec/skills/task-breakdown` 拆任务；同一文件集重叠的任务必须串行。
+- 派发子 agent、触发 reviewer 或判断串并行边界：用 `.spec/knowledge/standards/dispatch.md` 填齐交接要素。
 - 需要子 agent 执行时：用 `.spec/skills/subagent-driven-development`，并显式要求 `gpt-5.4` + `high`。
 - 收口前：用 `.spec/skills/verification-before-completion`，必须有新鲜验证证据，不能只说“应该好了”。
 - 新增或更新规范、skill、知识文档：用 `.spec/skills/spec-steward` 判断落点并同步索引。
@@ -55,15 +56,16 @@
 ## 项目验收口径
 
 - 文档或规范任务：至少验证 `.spec` 链接、索引、frontmatter、skill 路由和根入口一致。
-- `.spec` 结构改动后运行：`node .spec/tools/spec-lint.mjs`。
+- `.spec` 结构改动后运行：`node .spec/tools/spec-lint.mjs`；修改 lint 本身时追加 `node --test .spec/tools/spec-lint.test.mjs`。
 - 代码任务：按任务涉及范围选择静态检查、Unity Editor 自动化、PlayMode、测试或截图验收。
 - Bug 修复：必须回到用户原始症状验收；如果只做了止血、降噪、跳过或兜底，必须明确说只是缓解，不是根因修复。
 - Unity 场景或资产任务：不得把最近打开的场景、最近日志或自动化最后操作对象脑补为目标；必须锁定对象、真相来源、目标入口/环境、验收口径。
 
-## LumioAgent 吸收结果
+## 规范结构收口状态
 
-- 采用它的 `.spec` 结构、知识导航、经验升级、skill 工作流和结构校验思想。
+- `.spec` 分层、知识导航、经验升级、skill 工作流、reviewer 角色和结构校验已经是 FantasyWord 的正式机制。
 - `.spec/knowledge/features/project/` 的 62 个文档是当前项目知识入口。
-- 重复 skill 的处理结果记录在 `.spec/knowledge/standards/skill-conflicts.md`，当前已按“直接吸收，不再等待决策”处理。
+- 派活和审查交接模板落在 `.spec/knowledge/standards/dispatch.md`；功能现状文档模板落在 `.spec/knowledge/features/_TEMPLATE.md`。
+- 外部参考取舍记录在 `.spec/decisions/0072-spec-structure-reference-adoption.md`，不作为日常执行入口。
 - 不采用默认 worktree/分支策略；本项目继续遵守“未获许可不创建或切换分支、tag、worktree”。
 - 不采用强制全量 TDD 作为全局铁律；本项目保留“高风险逻辑、bug 修复、关键合同优先补测试，小改动不机械补同粒度测试”的务实策略。

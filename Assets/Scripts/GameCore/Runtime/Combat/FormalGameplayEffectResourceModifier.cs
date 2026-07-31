@@ -1,4 +1,4 @@
-using GAS.Runtime;
+﻿using GAS.Runtime;
 using Unity.Entities;
 using UnityEngine;
 using UEntity = Unity.Entities.Entity;
@@ -89,9 +89,9 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            int attributeCode = FormalGameplayAttributeSet.GetCurrentAttributeCode(stat);
+            int attributeCode = FormalAttributeCatalog.GetCurrentAttributeCode(stat);
             float oldCurrentValue = targetAbilitySystem.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
+                FormalAttributeCatalog.AttributeSetCode,
                 attributeCode);
 
             float targetValue = oldCurrentValue + delta;
@@ -133,7 +133,7 @@ namespace FantasyWord.GameCore
 
                 float recalculatedValue = AttributeHelper.RecalculateCurrentValue(
                     targetAscEntity,
-                    FormalGameplayAttributeSet.SetCode,
+                    FormalAttributeCatalog.AttributeSetCode,
                     attributeCode);
 
                 newValue = Mathf.RoundToInt(recalculatedValue);
@@ -210,7 +210,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            int attributeCode = FormalGameplayAttributeSet.GetCurrentAttributeCode(stat);
+            int attributeCode = FormalAttributeCatalog.GetCurrentAttributeCode(stat);
             UEntity sourceAscEntity = sourceAbilitySystem != null
                 ? sourceAbilitySystem.Cell.Entity
                 : targetAscEntity;
@@ -253,7 +253,7 @@ namespace FantasyWord.GameCore
 
             AttributeHelper.RecalculateCurrentValue(
                 targetAscEntity,
-                FormalGameplayAttributeSet.SetCode,
+                FormalAttributeCatalog.AttributeSetCode,
                 attributeCode);
 
             handle = new FormalActiveAttributeModifierHandle(
@@ -300,7 +300,7 @@ namespace FantasyWord.GameCore
             {
                 AttributeHelper.RecalculateCurrentValue(
                     handle.TargetAbilitySystemEntity,
-                    FormalGameplayAttributeSet.SetCode,
+                    FormalAttributeCatalog.AttributeSetCode,
                     handle.AttributeCode);
             }
 
@@ -315,7 +315,7 @@ namespace FantasyWord.GameCore
                 {
                     new ModifierSetting
                     {
-                        AttrSetCode = FormalGameplayAttributeSet.SetCode,
+                        AttrSetCode = FormalAttributeCatalog.AttributeSetCode,
                         AttrCode = attributeCode,
                         Operation = GEOperation.Add,
                         Magnitude = delta,

@@ -62,7 +62,7 @@ namespace FantasyWord.GameCore
 
         /// <summary>
         /// 用当前角色属性初始化正式 ASC。
-        /// 这是 CharacterBase 属性真相切到 FormalGameplayAttributeSet 的入口，初始化后同步已有能力规则到能力槽运行时。
+        /// 这是 CharacterBase 属性真相切到 FormalAttributeCatalog 的入口，初始化后同步已有能力规则到能力槽运行时。
         /// </summary>
         protected void InitializeFormalAbilitySystemFromCurrentAttributes()
         {
@@ -77,7 +77,7 @@ namespace FantasyWord.GameCore
 
             AbilitySystemCellConfig config = new(
                 baseTags: System.Array.Empty<int>(),
-                attrSets: new[] { FormalGameplayAttributeSet.CreateConfig(initialBaseStats) },
+                attrSets: new[] { FormalAttributeCatalog.CreateAttributeSetConfig(initialBaseStats) },
                 baseAbilities: System.Array.Empty<AbilityConfig>(),
                 level: m_level);
 
@@ -175,7 +175,7 @@ namespace FantasyWord.GameCore
         }
 
         /// <summary>
-        /// 从 FormalGameplayAttributeSet 读取基础属性。
+        /// 从 FormalAttributeCatalog 读取基础属性。
         /// 返回 false 表示正式属性真相尚未准备好，上层决定是否允许启动缓冲回退。
         /// </summary>
         private bool TryGetFormalBaseStat(EStat stat, out int value)
@@ -187,13 +187,13 @@ namespace FantasyWord.GameCore
             }
 
             value = Mathf.RoundToInt(abilitySystemComponent.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.GetBaseAttributeCode(stat)));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetBaseAttributeCode(stat)));
             return true;
         }
 
         /// <summary>
-        /// 从 FormalGameplayAttributeSet 读取当前属性。
+        /// 从 FormalAttributeCatalog 读取当前属性。
         /// Health/Mana 和其它当前值都走同一正式 ASC 查询入口。
         /// </summary>
         private bool TryGetFormalCurrentStat(EStat stat, out int value)
@@ -205,8 +205,8 @@ namespace FantasyWord.GameCore
             }
 
             value = Mathf.RoundToInt(abilitySystemComponent.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.GetCurrentAttributeCode(stat)));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(stat)));
             return true;
         }
 
@@ -268,9 +268,9 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            int attributeCode = FormalGameplayAttributeSet.GetCurrentAttributeCode(stat);
+            int attributeCode = FormalAttributeCatalog.GetCurrentAttributeCode(stat);
             int currentValue = Mathf.RoundToInt(abilitySystemComponent.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
+                FormalAttributeCatalog.AttributeSetCode,
                 attributeCode));
             return FormalGameplayEffectResourceModifier.TryApplyCurrentStatDelta(
                        abilitySystemComponent,
@@ -300,14 +300,14 @@ namespace FantasyWord.GameCore
             foreach (FormalAttributeDefinition definition in FormalAttributeCatalog.Definitions)
             {
                 EStat stat = definition.Stat;
-                int attributeCode = FormalGameplayAttributeSet.GetCurrentAttributeCode(stat);
+                int attributeCode = FormalAttributeCatalog.GetCurrentAttributeCode(stat);
 
                 System.Action<float, float> currentHandler = (oldValue, _) => OnFormalCurrentValueChanged(stat, oldValue);
                 m_formalCurrentValueChangedHandlers[stat] = currentHandler;
 
                 GASEventCenter.RegisterOnAttrCurrentValueChangeAfter(
                     abilitySystemComponent.Cell,
-                    FormalGameplayAttributeSet.SetCode,
+                    FormalAttributeCatalog.AttributeSetCode,
                     attributeCode,
                     currentHandler);
             }
@@ -331,13 +331,13 @@ namespace FantasyWord.GameCore
             foreach (FormalAttributeDefinition definition in FormalAttributeCatalog.Definitions)
             {
                 EStat stat = definition.Stat;
-                int attributeCode = FormalGameplayAttributeSet.GetCurrentAttributeCode(stat);
+                int attributeCode = FormalAttributeCatalog.GetCurrentAttributeCode(stat);
 
                 if (m_formalCurrentValueChangedHandlers.TryGetValue(stat, out System.Action<float, float> currentHandler))
                 {
                     GASEventCenter.UnRegisterOnAttrCurrentValueChangeAfter(
                         abilitySystemComponent.Cell,
-                        FormalGameplayAttributeSet.SetCode,
+                        FormalAttributeCatalog.AttributeSetCode,
                         attributeCode,
                         currentHandler);
                 }
@@ -376,8 +376,8 @@ namespace FantasyWord.GameCore
 
             AttributeHelper.RecalculateCurrentValue(
                 abilitySystemComponent.Cell.Entity,
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.GetCurrentAttributeCode(stat));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(stat));
             return true;
         }
 
@@ -473,25 +473,25 @@ namespace FantasyWord.GameCore
             {
                 foreach (FormalAttributeDefinition definition in FormalAttributeCatalog.Definitions)
                 {
-                    int currentAttributeCode = FormalGameplayAttributeSet.GetCurrentAttributeCode(definition.Stat);
-                    int baseAttributeCode = FormalGameplayAttributeSet.GetBaseAttributeCode(definition.Stat);
+                    int currentAttributeCode = FormalAttributeCatalog.GetCurrentAttributeCode(definition.Stat);
+                    int baseAttributeCode = FormalAttributeCatalog.GetBaseAttributeCode(definition.Stat);
 
                     if (baseAttributeCode == currentAttributeCode)
                     {
                         abilitySystemComponent.SetAttrBaseValueAndRecalculate(
-                            FormalGameplayAttributeSet.SetCode,
+                            FormalAttributeCatalog.AttributeSetCode,
                             baseAttributeCode,
                             safeBaseStats[definition.Stat]);
                         continue;
                     }
 
                     abilitySystemComponent.SetAttrBaseValueAndRecalculate(
-                        FormalGameplayAttributeSet.SetCode,
+                        FormalAttributeCatalog.AttributeSetCode,
                         currentAttributeCode,
                         safeCurrentStats[definition.Stat]);
 
                     abilitySystemComponent.SetAttrBaseValueAndRecalculate(
-                        FormalGameplayAttributeSet.SetCode,
+                        FormalAttributeCatalog.AttributeSetCode,
                         baseAttributeCode,
                         safeBaseStats[definition.Stat]);
                 }

@@ -73,6 +73,8 @@
 - [0068-当前运行时状态保存必需数据库引用边界](0068-save-current-state-required-database-reference.md)
 - [0069-YooAsset 动态资源与 Mod 包主轴](0069-yooasset-dynamic-resource-mainline.md)
 - [0071-正式 GAS 资源 Modifier 与伤害 owner](0071-formal-gas-resource-modifier-and-damage-owner.md)
+- [0072-.spec 结构完整收口裁决](0072-spec-structure-reference-adoption.md)
+- [0073-EX-GAS 属性作者源单一真相](0073-ex-gas-attribute-authoring-single-source.md)
 
 ## 新决策模板
 

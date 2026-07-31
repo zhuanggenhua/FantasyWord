@@ -72,16 +72,16 @@ namespace FantasyWord.GameCore.Tests
 
             Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc));
             int currentFormalHealth = Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Health));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health)));
             int baseFormalHealth = Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Health));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health)));
             Assert.AreEqual(previousHealth - 7, currentFormalHealth);
             Assert.AreEqual(previousHealth - 7, baseFormalHealth);
             int baseFormalMaxHealth = Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.MaxHealth));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetBaseAttributeCode(EStat.Health)));
             Assert.AreEqual(previousMaxHealth, baseFormalMaxHealth);
         }
 
@@ -102,16 +102,16 @@ namespace FantasyWord.GameCore.Tests
 
             Assert.IsTrue(caster.TryGetFormalAbilitySystem(out AbilitySystemComponent casterAsc));
             int currentFormalMana = Mathf.RoundToInt(casterAsc.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Mana));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Mana)));
             int baseFormalMana = Mathf.RoundToInt(casterAsc.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Mana));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Mana)));
             Assert.AreEqual(7, currentFormalMana);
             Assert.AreEqual(7, baseFormalMana);
             int baseFormalMaxMana = Mathf.RoundToInt(casterAsc.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.MaxMana));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetBaseAttributeCode(EStat.Mana)));
             Assert.AreEqual(previousMaxMana, baseFormalMaxMana);
         }
 

@@ -65,7 +65,8 @@ metadata:
 
 1. 当前项目已经有 EX-GAS 2.0，本地正式规则层是否继续由它承担。
 2. 项目侧 `AbilitySheet / AbilityExecutionAsset` 是否还能承担技能正式职责。
-3. `GameplayCue`、时间轴、旧项目侧兼容壳分别放在哪一层最稳。
+3. EX-GAS Attribute / AttributeSet 编辑与生成链是否应承担正式属性定义源。
+4. `GameplayCue`、时间轴、旧项目侧兼容壳分别放在哪一层最稳。
 
 ## 当前结论
 
@@ -97,11 +98,19 @@ metadata:
   - 项目侧运行配置和必要的 2D 扩展点
 - 因此后续评估、实现和文档都不再把 `FormalInstantDamageExecution` 当作当前主线前提。
 
+### 5. 属性作者源统一到 EX-GAS Attribute / AttributeSet 编辑链
+
+- EX-GAS 2.0 的 Attribute / AttributeSet 编辑器、Excel/Luban 数据载体和 `XAttribute` / `XAttrSet` 生成链，承担正式属性定义源。
+- 手写 `FormalGameplayAttributeSet` 已清退；`EStat` 只作为项目 DTO/UI 选择器，`FormalAttributeCatalog` 只保存绑定到 EX-GAS 属性 code 的项目元数据，不能扩张成第二套属性 schema。
+- 项目需要的稳定 ID、中文显示、UI 分组、资源当前/上限关系、装备可加成标记、存档策略和未来联机同步策略，应挂接到 EX-GAS 属性 code / AttributeSet code 上，而不是另起第二套属性定义。
+- 后续正式方向是由 EX-GAS 属性源生成或驱动项目侧目录、桥接代码、装备属性选择、UI 展示和静态门禁；不得长期保留 EX-GAS 生成属性集与项目手写属性集两套正式词汇表。
+
 ## 当前仍未完成的点
 
 - 当前基础攻击的正式伤害已经收口到 `GameplayEffect -> FormalDamage / FormalConditionalDamage` 这条链；项目侧 `MeleeAbilityExecutionAsset`（已删除） 不再是基础攻击正式执行壳。
 - 当前 2D 目标捕获通过项目侧 `CatchAreaBox2D` 扩展接入 EX-GAS TargetCatcher；可视化作者体验仍未完全闭合。
 - 当前复杂法术执行面、时间轴作者面和玩家可配置配方层还未完成正式裁决。
+- 当前属性定义不再保留项目手写 `FormalGameplayAttributeSet`；剩余债务是把项目元数据目录进一步改成由 EX-GAS 属性作者源生成或校验，避免元数据列表继续手工漂移。
 
 ## 当前实施口径
 
@@ -112,4 +121,5 @@ metadata:
 - 当前生命/法力资源变化按 `0071-正式 GAS 资源 Modifier 与伤害 owner` 收口：`Health` / `Mana` 是当前资源属性，`MaxHealth` / `MaxMana` 是上限属性；伤害、治疗、回蓝和耗蓝统一通过 `FormalGameplayEffectResourceModifier` 进入 EX-GAS Modifier 链，项目侧禁止直接写 `CAttributeData.CurrentValue`。
 - 游戏尚未发布，旧存档兼容不作为 GAS 属性架构约束；后续若拆分 `当前资源 / 上限资源` 双属性，直接重写或迁移存档结构。
 - EX-GAS 2.0 的可视化编辑器与 Excel/Luban 工作流是当前正式技能的正式作者数据来源；项目侧只能补运行配置、资源桥和必要扩展点。
+- EX-GAS 2.0 的 Attribute / AttributeSet 编辑器与生成链也是正式属性作者源；项目侧只补项目元数据绑定和生成产物，不再维护同职责手写属性源。
 - 当前真正要做的是：在已经存在的 EX-GAS 2.0 前提下，把项目侧旧能力作者流和执行流从正式技能里清干净。
