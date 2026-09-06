@@ -690,7 +690,7 @@ $uiKitDeathPanelPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/U
 $uiKitMenuOpenDataPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/UI/MenuPanels/UIKitMenuOpenData.cs"
 $uiKitMenuPanelTypeReferencePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/UI/MenuPanels/UIKitMenuPanelTypeReference.cs"
 $uiKitMenuPanelTypeReferenceDrawerPath = Join-Path $projectRoot "Assets/Editor/GameCore/PropertyDrawers/UIKitMenuPanelTypeReferencePropertyDrawer.cs"
-$formalSceneInputHostAutomationPath = Join-Path $projectRoot "Assets/Editor/GameCore/Bridge/FormalSceneInputRootAutomation.cs"
+$formalSceneInputHostAutomationPath = Join-Path $projectRoot "Assets/Editor/GameCore/Automation/FormalSceneInputRootAutomation.cs"
 $formalSceneInputHostRepairScriptPath = Join-Path $projectRoot "scripts/Invoke-FormalSceneInputRootRepair.ps1"
 $uiPrefabPath = Join-Path $projectRoot "Assets/Prefabs/UI/User Interface.prefab"
 $characterBasePrefabPath = Join-Path $projectRoot "Assets/Prefabs/Entities/Characters/0_Character_Base.prefab"
@@ -872,7 +872,7 @@ $requiredFiles = @(
     "Assets/Scripts/GameCore/Runtime/UI/MenuPanels/UIKitMenuOpenData.cs",
     "Assets/Scripts/GameCore/Runtime/UI/MenuPanels/UIKitMenuPanelTypeReference.cs",
     "Assets/Editor/GameCore/PropertyDrawers/UIKitMenuPanelTypeReferencePropertyDrawer.cs",
-    "Assets/Editor/GameCore/Bridge/FormalSceneInputRootAutomation.cs",
+    "Assets/Editor/GameCore/Automation/FormalSceneInputRootAutomation.cs",
     "scripts/Invoke-FormalSceneInputRootRepair.ps1",
     "Assets/GameRes/UI/Panels/UIGameMenu.prefab",
     "Assets/GameRes/UI/Panels/UICharacter.prefab",
@@ -1803,10 +1803,10 @@ $aiControllerDisallowedPatterns = Test-ContainsAny -Content $aiControllerContent
 
 $aiControllerBehaviourRuntimeMissingPatterns = Test-ContainsAll -Content $aiControllerBehaviourRuntimeContent -Patterns @(
     "private sealed class BehaviourRuntime",
-    "private CharacterSteeringRuntime2D m_steeringAdapter = null;",
+    "private CharacterSteeringRuntime2D m_steeringRuntime = null;",
     "private readonly CharacterSteeringPathCursor2D m_pathCursor = new();",
     "public void Initialize()",
-    "m_steeringAdapter = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);",
+    "m_steeringRuntime = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);",
     "ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId,",
     "ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId,",
     "public void TryHandleProvoked(CharacterBase source)",
@@ -1815,8 +1815,8 @@ $aiControllerBehaviourRuntimeMissingPatterns = Test-ContainsAll -Content $aiCont
     "m_owner.m_subject.FireFormalGasAbility(",
     "GameCommandContext.AI(m_owner.m_subject)",
     "private void ApplyMovement()",
-    "m_steeringAdapter.Submit(",
-    "m_steeringAdapter.ApplyLatestResult();",
+    "m_steeringRuntime.Submit(",
+    "m_steeringRuntime.ApplyLatestResult();",
     "private void ValidateSteeringGroupMapping"
 )
 
@@ -3624,17 +3624,22 @@ $formalSceneInputHostRepairScriptMissingPatterns = Test-ContainsAll -Content $fo
     "function Get-BridgeCommandQueueInfo {",
     "function Get-FormalSceneInputRootStaticInspection {",
     "function Get-SuggestedNextAction {",
+    '$script:bridgeRoot = Join-Path $projectRoot "Temp\UnityBridge"',
+    '$script:commandsDir = Join-Path $script:bridgeRoot "commands"',
+    '$script:resultsDir = Join-Path $script:bridgeRoot "results"',
     '$commandDirectoryPath = Join-Path $projectRoot "Temp\UnityBridge\commands"',
     '$commandQueueInfo = Get-BridgeCommandQueueInfo -CommandDirectoryPath $commandDirectoryPath',
     '$workflowReport.BridgeCommandQueue = $commandQueueInfo',
     'MissingExplicitRootScenes = @($sceneReports | Where-Object { -not $_.HasExplicitInputRoot } | ForEach-Object { $_.ScenePath })',
-    'Invoke-BridgeJson -BridgePath $bridgePath -ToolName "scene-lock-acquire"',
-    'Invoke-BridgeJson -BridgePath $bridgePath -ToolName "scene-save"',
+    'Invoke-BridgeJson -ToolName "scene-lock-acquire"',
+    'Invoke-BridgeJson -ToolName "scene-save"',
     '$workflowReport.StaticInspection = Get-FormalSceneInputRootStaticInspection -ProjectRoot $projectRoot',
     '$workflowReport.SuggestedNextAction = Get-SuggestedNextAction -WorkflowReport $workflowReport'
 )
 
 $formalSceneInputHostRepairScriptDisallowedPatterns = Test-ContainsAny -Content $formalSceneInputHostRepairScriptContent -Patterns @(
+    (".co" + "dex\skills\" + "ai" + "bridge\bridge.py"),
+    "-BridgePath `$bridgePath",
     "Stop-Process ",
     "taskkill ",
     "Start-Process ",
@@ -3967,7 +3972,7 @@ $directMainCameraAccessHits = Find-DirectMainCameraAccessHits -ProjectRoot $proj
 $controlGroupBypassHits = Find-ControlGroupBypassHits -ProjectRoot $projectRoot -AllowedFiles @(
     $playerSystemPath,
     $playerControlGroupPath,
-    (Join-Path $projectRoot "Assets/Editor/GameCore/Bridge/CompositeRuntimeSmokeValidator.cs")
+    (Join-Path $projectRoot "Assets/Editor/GameCore/Automation/CompositeRuntimeSmokeValidator.cs")
 )
 
 $formalEnumerableLeakHits = Test-FilesContainAny -Roots @(
@@ -4337,7 +4342,7 @@ $formalPresentationEventApiRegressionHits = Test-FilesContainAny -Roots @(
 
 $formalRuntimeCommentDebtHits = Test-FilesContainAny -Roots @(
     (Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime"),
-    (Join-Path $projectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime")
+    (Join-Path $projectRoot "Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Runtime")
 ) -Patterns @(
     "Hack-ish",
     "Workaround",

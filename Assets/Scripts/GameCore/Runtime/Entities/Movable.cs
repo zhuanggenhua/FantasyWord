@@ -133,8 +133,10 @@ namespace FantasyWord.GameCore
         private MotionRuntime motionRuntime => m_motionRuntime ??= new MotionRuntime(this);
         private IController activeController => m_activeControllerOverride ?? m_controller;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             Debug.Assert(m_rigidbody, ErrorMessages.InspectorMissingComponentReference<Rigidbody2D>());
 
             m_animationStrategy?.AddDeathAnimationEndedListener(OnDeathAnimationEnd);
@@ -321,9 +323,10 @@ namespace FantasyWord.GameCore
             return GameCommandContext.Script();
         }
 
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
             TerminateControllers();
+            base.OnDestroy();
         }
 
         protected virtual void OnDeathAnimationEnd() => OnDeath();

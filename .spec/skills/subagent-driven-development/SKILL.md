@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: 需要把已拆好的任务交给子 agent 实现、分析、修复、测试或审查时使用；FantasyWord 强制同模型配置 gpt-5.4 + high，且子 agent 不得再派生。
+description: 需要把已拆好的任务交给子 agent 实现、分析、修复、测试或审查时使用；FantasyWord 强制继承当前主 agent 的模型与推理强度，且子 agent 不得再派生。
 ---
 
 # Subagent Driven Development（子 agent 执行流程）
@@ -16,8 +16,9 @@ description: 需要把已拆好的任务交给子 agent 实现、分析、修复
 派发与改代码直接相关的任务时，必须在提示里写明：
 
 ```text
-模型配置：gpt-5.4 + high
-不得降级模型，不得改用其他模型。
+模型配置：继承当前主 agent 的模型与推理强度。
+只有工具无法继承且不显式指定会导致降级时，才指定与当前主 agent 等效的配置。
+不得降级模型，不得改用其他更弱配置。
 不得再派生子 agent。
 ```
 
@@ -45,4 +46,3 @@ description: 需要把已拆好的任务交给子 agent 实现、分析、修复
 - 子 agent 返回后，主 agent 读取改动、验证证据和 known gaps。
 - 高风险交付再触发 reviewer。
 - 不通过则退回具体问题，不让子 agent 盲目重试同一方案三次以上。
-

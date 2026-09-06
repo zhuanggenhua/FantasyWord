@@ -30,6 +30,7 @@ namespace FantasyWord.GameCore
             InstanstiationResult result = InstantiateInternal(instance.prefab, position, rotation, parent, identifier);
             TPersistable persistable = RequireInstantiatedPersistable<TPersistable>(result, instance.prefab);
             persistable.MakeRuntimeInstanced(instance, result.identifier);
+            RegisterPersistable(persistable);
             return persistable;
         }
 
@@ -41,11 +42,12 @@ namespace FantasyWord.GameCore
             InstanstiationResult result = InstantiateInternal(prefab, position, rotation, parent, identifier);
             TPersistable persistable = RequireInstantiatedPersistable<TPersistable>(result, prefab);
             persistable.MakeCustomInstanced(result.identifier);
+            RegisterPersistable(persistable);
             return persistable;
         }
 
         /// <summary>
-        /// 执行实际 Instantiate，并把新对象写入持久化表。
+        /// 执行实际 Instantiate，并返回新对象和本次解析出的标识符。
         /// </summary>
         internal InstanstiationResult InstantiateInternal(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null, string identifier = null)
         {
@@ -63,8 +65,6 @@ namespace FantasyWord.GameCore
                 throw new InvalidOperationException(
                     $"[{nameof(PersistenceSystem)}] Prefab {prefab.name} 缺少 {nameof(Persistable)}，不能作为持久化实例。");
             }
-
-            m_persistables[identifier] = persistable;
 
             return new InstanstiationResult
             {
@@ -85,8 +85,8 @@ namespace FantasyWord.GameCore
 
             identifier = ResolvePersistenceIdentifier(identifier);
 
-            m_persistables[identifier] = persistable;
             persistable.MakeCustomInstanced(identifier);
+            RegisterPersistable(persistable);
         }
 
         private TPersistable RequireInstantiatedPersistable<TPersistable>(InstanstiationResult result, GameObject prefab)
@@ -98,6 +98,7 @@ namespace FantasyWord.GameCore
             }
 
             m_persistables.Remove(result.identifier);
+            RemovePersistableIdentifier(result.identifier);
             if (result.persistable != null)
             {
                 Destroy(result.persistable.gameObject);

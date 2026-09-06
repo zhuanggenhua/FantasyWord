@@ -54,9 +54,9 @@ metadata:
 
 ## 验证记录
 
-- `python .codex/skills/aibridge/bridge.py script-execute '{"csharpCode":"public class Script { public static object Main() { return FantasyWord.GameCore.FormalAbilityAssetValidation.InspectAllAbilitySheets(); } }","bridgeSceneDirtyPolicy":"discard-generated"}'`：Passed，`Success = true`，`Issues = []`。
-- `python .codex/skills/aibridge/bridge.py tests-run '{"testMode":"EditMode","testClass":"MeleeAttackAbilityEditModeTests","includeMessages":true,"includeStacktrace":true,"requestId":"melee-execution-asset-resolve-20260702"}'`：Passed，`failedTests = 0`。
-- `python .codex/skills/aibridge/bridge.py scene-list-opened`：`Assets/Scenes/ClickMoveTest.unity`，`isDirty = false`。
+- `UnityBridge 文件队列 script-execute '{"csharpCode":"public class Script { public static object Main() { return FantasyWord.GameCore.FormalAbilityAssetValidation.InspectAllAbilitySheets(); } }","bridgeSceneDirtyPolicy":"discard-generated"}'`：Passed，`Success = true`，`Issues = []`。
+- `UnityBridge 文件队列 tests-run '{"testMode":"EditMode","testClass":"MeleeAttackAbilityEditModeTests","includeMessages":true,"includeStacktrace":true,"requestId":"melee-execution-asset-resolve-20260702"}'`：Passed，`failedTests = 0`。
+- `UnityBridge 文件队列 scene-list-opened`：`Assets/Scenes/ClickMoveTest.unity`，`isDirty = false`。
 
 ## 关联文件
 

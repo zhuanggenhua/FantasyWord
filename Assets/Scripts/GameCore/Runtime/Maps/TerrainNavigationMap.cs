@@ -645,7 +645,7 @@ namespace FantasyWord.GameCore
                 return false;
             }
 
-            if (!runtimeState.ReplaceCompatibilityFlags(state))
+            if (!runtimeState.ReplaceRuntimeStateFlags(state))
             {
                 return true;
             }

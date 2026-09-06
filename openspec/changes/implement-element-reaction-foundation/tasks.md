@@ -108,7 +108,7 @@
 - [x] 验证正式 Ability 激活时 `CuePlayGameCoreAudio` 实际消费目标 Resolver 并播放 `Flamethrower_FireSpell03_CC0`；`Temp/ElementReactionAudioE2E.txt` 已记录 `resolverMatched=True`、`matchingSourceCount=1`、`playingMatchingSourceCount=1`
 - [x] 用 `AudioPlaybackRequestedEvent` 探针记录持续喷火的音频请求次数与时间，并配对调用 `StopFireFormalGasAbility(20010)`；`Temp/ElementReactionAudioHoldProbe.txt` 记录请求发生在 1.050 秒和 3.253 秒，3.603 秒停止后新增请求为 0，确认第二次播放属于 `Auto` 输入门控的合法持续施法重启，不是单次 Ability 重复 Cue
 - [x] 确认 GameplayCue 不修改 Tile、状态或地表类型
-- [x] 地图恢复并通过来源逐格审计后，重新验证 Grass 覆盖命中后进入 Burning 并显示火焰覆盖；`test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260713.json` 为 Success
+- [x] 地图恢复并通过来源逐格审计后，重新验证 Grass 覆盖命中后进入 Burning 并显示火焰覆盖；阶段运行结果为 Success
 - [x] 地图恢复并通过来源逐格审计后，重新验证悬崖另一侧高台不会被直接点燃；定向测试 CollectAffectedCells_RejectsHighGroundAcrossCliff 通过
 - [x] 地图恢复并通过来源逐格审计后，重新验证合法坡道连接范围内的 Grass 可以被点燃；定向测试 CollectAffectedCells_ReachesHighGroundThroughRamp 通过
 - [x] 地图恢复并通过来源逐格审计后，重新验证 Burning 到期后移除 Grass 覆盖层并露出原本存在的 Dirt 底层；q-wide PlayMode 验证 6 格草覆盖隐藏、底层 Dirt 可见且无结果覆盖 Tile
@@ -127,18 +127,18 @@
 - [x] 验证没有新增平行角色状态容器，角色元素效果仍走 EX-GAS
 - [x] 在清理注册重复和填充表现映射后，重新运行四组定向 EditMode 测试并保存新鲜结果
 - [x] 运行编译敏感搜索并检查生成物一致性
-- [x] 地图恢复后重新在正式地形测试入口完成真实喷火端到端；新鲜结果 `test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260713.json` 为 Success，旧截图和旧运行结果不作为通过证据
-- [x] 重新审计 `ClickMoveTest.unity` 地图来源差异：`test-results/evidence-runtime-validation/element-surface/tilemap-source-audit-20260713.json` 记录当前可见地面以 `基础地面 + 地表覆盖` 组合对比来源 `Ground` 为 900/900 且差异 0，`地表装饰` 对比来源 `GroundDecoration` 为 267/267 且差异 0；此前“无需恢复旧场景”的旧审计结论废弃
+- [x] 地图恢复后重新在正式地形测试入口完成真实喷火端到端；新鲜阶段运行结果为 Success，旧截图和旧运行结果不作为通过证据
+- [x] 重新审计 `ClickMoveTest.unity` 地图来源差异：阶段运行结果 记录当前可见地面以 `基础地面 + 地表覆盖` 组合对比来源 `Ground` 为 900/900 且差异 0，`地表装饰` 对比来源 `GroundDecoration` 为 267/267 且差异 0；此前“无需恢复旧场景”的旧审计结论废弃
 - [x] 地图恢复后重新进入 PlayMode，验证正式 Q/EX-GAS 喷火、Burning 火焰、Grass 移除、Dirt 露出和场景重载恢复；运行时目标来自 547 格正式低地草覆盖，不依赖旧 6 格补丁
 - [x] 地图恢复后重新生成元素地表视觉证据；新鲜图 clickmove-element-surface-q-wide-burning.png / clickmove-element-surface-q-wide-expired.png 已生成并通过轻量联系表核验
-- [x] 新来源层相关 EditMode 覆盖已落到源码并复测通过：`ApplyFireToMappedDecorationLayer_AddsBurning`、`ConfiguredSurfaceLayerSources_DoNotFallbackToLegacyCover`、`LegacySurfaceCoverFallback_WorksWhenNoSurfaceLayerSourcesConfigured`；结果固化到 `test-results/evidence-runtime-validation/element-surface/editmode-ElementReactionSystemEditModeTests-20260714-surface-layer.json`
-- [x] 用户指出视觉数量不一致后，修正表现层和验证器并重跑新分层 PlayMode 端到端：`test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260714-visual-layer-fix.json` 为 Success，正式 Q/EX-GAS `TaskApplyWorldElement` 提交 Fire，6 个目标格 Burning，燃尽后 6 格 Grass 覆盖隐藏、底层 Dirt 可见，所有映射为地表覆盖语义的来源层可见残留为 0，二次 Q 提交 delta 为 1 且目标格 `ReapplyBurningCellCount = 0`
-- [x] 用户追问残留花/草后，补全纯草映射并复验：`test-results/evidence-runtime-validation/element-surface/full-scene-vegetation-mapping-audit-20260714-after-pure-grass-mapping.json` 记录纯草疑似漏映射为 0，剩余未映射疑似项均为 `LakeGrass`、`CliffGrass`、`CobblestoneGrass` 这类复合视觉；`test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260714-pure-grass-mapping.json` 为 Success，6 格 Burning、6 格露 Dirt、映射覆盖残留 0，预览相册已上传到 `http://8.148.71.102:18080/#/fantasyword/element-surface-q-wide-pure-grass-mapping`
+- [x] 新来源层相关 EditMode 覆盖已落到源码并复测通过：`ApplyFireToMappedDecorationLayer_AddsBurning`、`ConfiguredSurfaceLayerSources_DoNotFallbackToLegacyCover`、`LegacySurfaceCoverFallback_WorksWhenNoSurfaceLayerSourcesConfigured`；结果已写回阶段运行结论
+- [x] 用户指出视觉数量不一致后，修正表现层和验证器并重跑新分层 PlayMode 端到端：阶段运行结果为 Success，正式 Q/EX-GAS `TaskApplyWorldElement` 提交 Fire，6 个目标格 Burning，燃尽后 6 格 Grass 覆盖隐藏、底层 Dirt 可见，所有映射为地表覆盖语义的来源层可见残留为 0，二次 Q 提交 delta 为 1 且目标格 `ReapplyBurningCellCount = 0`
+- [x] 用户追问残留花/草后，补全纯草映射并复验：阶段运行结果 记录纯草疑似漏映射为 0，剩余未映射疑似项均为 `LakeGrass`、`CliffGrass`、`CobblestoneGrass` 这类复合视觉；阶段运行结果为 Success，6 格 Burning、6 格露 Dirt、映射覆盖残留 0，预览相册已上传到 `http://8.148.71.102:18080/#/fantasyword/element-surface-q-wide-pure-grass-mapping`
 - [x] 用户继续指出目标格仍有花后，确认该花不是 Tilemap 瓦片，而是手摆 `SpriteRenderer` 场景道具 `Flower (6)`，位于 q-wide 目标格 `(4, 12, 0)`；上一轮“独立道具隐藏”临时路线已废弃。本轮已将 `ClickMoveTest` 中 23 朵花和 10 处长草整体迁入统一 `地表植被覆盖` / `地表植被阴影` Tilemap，删除手摆自然植被对象，后续燃烧验收只消费 Tilemap 来源层和映射，不再保留独立花草特例。
-- [x] 新分层场景审计已固化：`test-results/evidence-runtime-validation/element-surface/clickmove-scene-surface-layer-audit-20260714.json` 确认 `ClickMoveTest` clean、旧单覆盖字段为空、`地表覆盖` 与 `地表装饰` 两条来源有效，临时效果层和结果覆盖层均为 0 格
-- [x] 2026-07-15 重构后最终审计：`test-results/evidence-runtime-validation/element-surface/clickmove-vegetation-tilemap-audit-20260715.txt` 确认 `地表植被覆盖=33`、`地表植被阴影=33`、手摆花草对象 0、花草 `SpriteRenderer` 0、缺脚本 0、`TerrainSurfaceLayerSource` 来源数 5，且植被覆盖/阴影排序为 -8/-7
-- [x] 2026-07-15 重构后 q-wide PlayMode E2E 已复验通过：`test-results/evidence-runtime-validation/element-surface/clickmove-element-surface-q-wide-visual-runtime-20260715-tilemap-vegetation.json` 为 Success，正式 Q/EX-GAS `TaskApplyWorldElement` 提交 Fire，6 个目标格 Burning，燃烧期间临时火焰 6 格，燃尽后 6 格 Grass 覆盖隐藏并露出 Dirt，映射覆盖来源可见残留为 0，二次 Q 提交 delta 为 1 且 `ReapplyBurningCellCount = 0`
+- [x] 新分层场景审计已固化：阶段运行结果 确认 `ClickMoveTest` clean、旧单覆盖字段为空、`地表覆盖` 与 `地表装饰` 两条来源有效，临时效果层和结果覆盖层均为 0 格
+- [x] 2026-07-15 重构后最终阶段审计： 确认 `地表植被覆盖=33`、`地表植被阴影=33`、手摆花草对象 0、花草 `SpriteRenderer` 0、缺脚本 0、`TerrainSurfaceLayerSource` 来源数 5，且植被覆盖/阴影排序为 -8/-7
+- [x] 2026-07-15 重构后 q-wide PlayMode E2E 已复验通过：阶段运行结果为 Success，正式 Q/EX-GAS `TaskApplyWorldElement` 提交 Fire，6 个目标格 Burning，燃烧期间临时火焰 6 格，燃尽后 6 格 Grass 覆盖隐藏并露出 Dirt，映射覆盖来源可见残留为 0，二次 Q 提交 delta 为 1 且 `ReapplyBurningCellCount = 0`
 - [x] 2026-07-15 最终验收截图已生成并上传预览站：`Assets/Screenshots/ElementSurfaceE2E/clickmove-element-surface-q-wide-burning.png` 与 `Assets/Screenshots/ElementSurfaceE2E/clickmove-element-surface-q-wide-expired.png` 均为 1920x1080；预览相册为 `http://8.148.71.102:18080/#/fantasyword/element-surface-q-wide-tilemap-vegetation`
 - [ ] Wet/Electrified/Steam 等其它元素表现等待正式素材后再验收，不能用占位图通过
-- [ ] 新分层后的最终全量收口尚未完成：元素相关 EditMode 类级测试已通过，但完整 `FantasyWord.GameCore.EditModeTests` 当前仍因 `MeleeAttackAbilityEditModeTests.FormalGasAttackRuntimeInstance_UsesGasContextNotMigrationSheetFlag` 失败，不能称全量通过；结果保存在 `test-results/evidence-runtime-validation/element-surface/gamecore-editmode-20260713-element-surface.json`
+- [ ] 新分层后的最终全量收口尚未完成：元素相关 EditMode 类级测试已通过，但完整 `FantasyWord.GameCore.EditModeTests` 当前仍因 `MeleeAttackAbilityEditModeTests.FormalGasAttackRuntimeInstance_UsesGasContextNotMigrationSheetFlag` 失败，不能称全量通过；结果只保留为阶段结论
 - [x] 运行 `npx openspec validate implement-element-reaction-foundation --strict`

@@ -47,10 +47,10 @@ metadata:
 
 ## 验证记录
 
-- `python .codex/skills/aibridge/bridge.py tests-run '{"testMode":"EditMode","testClass":"MeleeAttackAbilityEditModeTests","includeMessages":true,"includeStacktrace":true,"requestId":"melee-after-assets-refresh-20260702"}'`：Passed，`failedTests = 0`
-- `python .codex/skills/aibridge/bridge.py tests-run '{"testMode":"EditMode","testClass":"FormalDamagePipelineEditModeTests","includeMessages":true,"includeStacktrace":true,"requestId":"formal-damage-pipeline-after-weapon-start-gate-20260702"}'`：Passed，`failedTests = 0`
+- `UnityBridge 文件队列 tests-run '{"testMode":"EditMode","testClass":"MeleeAttackAbilityEditModeTests","includeMessages":true,"includeStacktrace":true,"requestId":"melee-after-assets-refresh-20260702"}'`：Passed，`failedTests = 0`
+- `UnityBridge 文件队列 tests-run '{"testMode":"EditMode","testClass":"FormalDamagePipelineEditModeTests","includeMessages":true,"includeStacktrace":true,"requestId":"formal-damage-pipeline-after-weapon-start-gate-20260702"}'`：Passed，`failedTests = 0`
 - `npx openspec validate refactor-melee-ability-authoring --strict`：Passed
-- `python .codex/skills/aibridge/bridge.py scene-list-opened`：`Assets/Scenes/ClickMoveTest.unity`，`isDirty = false`
+- `UnityBridge 文件队列 scene-list-opened`：`Assets/Scenes/ClickMoveTest.unity`，`isDirty = false`
 
 ## 关联文件
 

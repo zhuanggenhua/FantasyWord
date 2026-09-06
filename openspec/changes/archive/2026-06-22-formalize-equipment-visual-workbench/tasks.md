@@ -41,4 +41,4 @@
 - [x] `npx openspec validate formalize-equipment-visual-workbench --strict` 通过。
 - [x] AIBridge `console-get-logs` 最近窗口内 Error 为空。
 - [x] AIBridge `console-get-logs` 最近窗口内 Exception 为空。
-- [x] 更新本 change 的 `handoff.md` 和必要验证记录。
+- [x] 更新本 change 的 `已删除的历史交接记录` 和必要验证记录。

@@ -11,10 +11,10 @@ description: 维护 FantasyWord 的 .spec 规范结构、知识落点、skill �
 
 先分层，再写内容：
 
-- 全局 AGENTS：跨项目通用红线、路径、路由原则。落点在 `D:\codex-home\AGENTS.md`。
+- 系统 AGENTS：跨项目通用红线、路径、路由原则。落点在 `D:\codex-home\AGENTS.md`。
 - 项目 AGENTS：项目主入口指针和极少量必须常驻边界。当前根 `AGENTS.md` 只做 `.spec` 指针。
-- 全局 skill：可复用任务类型的具体 SOP。落点在 `D:\codex-home\skills`。
-- 项目 skill：只对 FantasyWord 成立的专项 workflow。落点优先 `.spec/skills`；既有 `.codex/.agents/skills` 保留。
+- 系统 skill：可复用任务类型的具体 SOP。落点在 `D:\codex-home\skills`。
+- 项目 skill：只对 FantasyWord 成立的专项 workflow。唯一落点是 `.spec/skills`；不得保留旧宿主 skill 目录作为入口、备份或发现适配层。
 - 任务/用户故事/专项文档：一次性决定、局部特例、具体素材或当轮偏离。落点在 `openspec/`、`.spec/knowledge/features/project/` 对应专项或 `.spec/tasks`。
 
 ## 内容类型
@@ -31,10 +31,12 @@ description: 维护 FantasyWord 的 .spec 规范结构、知识落点、skill �
 
 ## Skill 合并规则
 
-1. 先列出现有 skill 和外部 skill 是否同职责。
-2. 如果同职责但本项目已有强红线，优先保留本项目语义，把外部 skill 的结构或流程吸收进来。
+Skill 是会改变后续 agent 默认行为的正式入口：它决定触发后读哪些资料、走哪条工具链、先锁哪些前提、用什么验收口径。它不是官方资料收藏夹、插件功能清单或教程备份。外部 skill 只有能让 FantasyWord 下一次同类任务更正确、更安全或更快地执行时，才迁入或合并；否则只登记为候选资料或排除项。
+
+1. 先列出现有 skill 和外部 skill 是否同职责，再判断外部内容是否提供本项目现有入口没有覆盖的有效增量；同名、相似、内容更多或来自官方，都不能单独作为吸收理由。
+2. 如果同职责但本项目已有强红线，优先保留本项目语义；只有外部 skill 提供项目需要的缺失能力、更清晰门禁、未覆盖验证方式或当前版本官方 API 细节时，才抽取这部分有效增量。
 3. 如果冲突影响执行方式，必须列为用户决策项，不得擅自替换。
-4. 第三方/bundled skill 默认只作为候选，不直接覆盖正式资产。
+4. 第三方/bundled skill 默认只作为候选，不直接覆盖正式资产；重复的通用流程、示例、安装步骤和已有项目规则不复制进项目 skill。
 5. 自有项目 skill 可直接升级，但仍需说明变更文件、验证结果和剩余风险。
 
 ## 反复错误升级
@@ -49,5 +51,6 @@ description: 维护 FantasyWord 的 .spec 规范结构、知识落点、skill �
 - 新增/删除 `.spec` 文档后，同步 `.spec/knowledge/README.md`。
 - 新增 skill 后确认 frontmatter 只有 `name` 和 `description`。
 - 根 `AGENTS.md` 只能作为指针，不再堆详细 SOP。
-- 不作为正式入口保留旧 `.spec/knowledge/features/project` 或既有 skill，除非用户明确要求。
+- 同一规范口径只能有一个正式 owner；入口、索引和冲突矩阵只能保留摘要和链接，不能重复承载会漂移的模型配置、命令顺序、参数或验收清单。
+- 不作为正式入口保留旧宿主 skill 目录、旧项目知识库目录或未迁入的既有 skill，除非用户当轮明确要求；有效项目 skill 必须迁入 `.spec/skills` 后删除旧目录和旧引用。
 

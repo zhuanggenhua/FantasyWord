@@ -14,6 +14,7 @@ namespace FantasyWord.GameCore
         private readonly Dictionary<string, PersistableDataBlock> m_preInstanced = new();
         private readonly Dictionary<string, PersistableDataBlock> m_runtimeInstanced = new();
         private readonly Dictionary<string, Persistable> m_persistables = new();
+        private readonly HashSet<Persistable> m_registeredPersistables = new();
 
         public override void OnMapLoaded()
         {
@@ -38,6 +39,34 @@ namespace FantasyWord.GameCore
             }
 
             return false;
+        }
+
+        internal void RegisterPersistable(Persistable persistable)
+        {
+            if (persistable == null || !persistable.HasValidPersistenceInfo())
+            {
+                UnregisterPersistable(persistable);
+                return;
+            }
+
+            m_registeredPersistables.Add(persistable);
+            RemovePersistableIdentifier(persistable);
+            RegisterPersistableIdentifier(persistable);
+        }
+
+        internal void UnregisterPersistable(Persistable persistable)
+        {
+            if (ReferenceEquals(persistable, null))
+            {
+                return;
+            }
+
+            m_registeredPersistables.Remove(persistable);
+            RemovePersistableIdentifier(persistable);
+            if (persistable == null)
+            {
+                return;
+            }
         }
 
         public void LoadDataBlock(PersistenceDataBlock block)
@@ -94,14 +123,14 @@ namespace FantasyWord.GameCore
 
             if (destructionSnapshot.IsRuntimeInstanced && !string.IsNullOrEmpty(destructionSnapshot.Identifier))
             {
-                m_persistables.Remove(destructionSnapshot.Identifier);
+                RemovePersistableIdentifier(destructionSnapshot.Identifier);
                 RemoveRuntimeInstancedDataBlock(destructionSnapshot.Identifier);
             }
         }
 
         private void SnapshotPersistables(bool disablePersistence = false)
         {
-            foreach (Persistable persistable in Object.FindObjectsByType<Persistable>(FindObjectsSortMode.InstanceID))
+            foreach (Persistable persistable in CreateRegisteredPersistablesSnapshot())
             {
                 if (!persistable.IsAutomaticallyPersisted())
                 {
@@ -163,7 +192,7 @@ namespace FantasyWord.GameCore
 
         private void LoadPreInstancedDataBlocks()
         {
-            foreach (Persistable persistable in Object.FindObjectsByType<Persistable>(FindObjectsSortMode.InstanceID))
+            foreach (Persistable persistable in CreateRegisteredPersistablesSnapshot())
             {
                 if (!persistable.IsPreInstanced())
                 {
@@ -171,7 +200,7 @@ namespace FantasyWord.GameCore
                 }
 
                 string identifier = persistable.GetPersistentIdentifier();
-                m_persistables[identifier] = persistable;
+                RegisterPersistableIdentifier(persistable);
 
                 PersistableDataBlock block = GetPreInstancedDataBlock(identifier);
                 if (block != null)
@@ -215,6 +244,94 @@ namespace FantasyWord.GameCore
             foreach (string key in keysToRemove)
             {
                 m_runtimeInstanced.Remove(key);
+            }
+        }
+
+        private Persistable[] CreateRegisteredPersistablesSnapshot()
+        {
+            RefreshRegisteredPersistables();
+
+            List<Persistable> snapshot = new();
+            List<Persistable> stalePersistables = null;
+
+            foreach (Persistable persistable in m_registeredPersistables)
+            {
+                if (persistable == null || !persistable.HasValidPersistenceInfo())
+                {
+                    stalePersistables ??= new List<Persistable>();
+                    stalePersistables.Add(persistable);
+                    continue;
+                }
+
+                snapshot.Add(persistable);
+            }
+
+            if (stalePersistables != null)
+            {
+                foreach (Persistable stalePersistable in stalePersistables)
+                {
+                    UnregisterPersistable(stalePersistable);
+                }
+            }
+
+            return snapshot.ToArray();
+        }
+
+        private void RefreshRegisteredPersistables()
+        {
+            foreach (Persistable persistable in Persistable.CreateLoadedPersistablesSnapshot())
+            {
+                RegisterPersistable(persistable);
+            }
+        }
+
+        private void RegisterPersistableIdentifier(Persistable persistable)
+        {
+            string identifier = persistable.GetPersistentIdentifier();
+            if (string.IsNullOrEmpty(identifier))
+            {
+                return;
+            }
+
+            m_persistables[GetActualIdentifier(identifier)] = persistable;
+        }
+
+        private void RemovePersistableIdentifier(Persistable persistable)
+        {
+            List<string> identifiersToRemove = null;
+
+            foreach (KeyValuePair<string, Persistable> kvp in m_persistables)
+            {
+                if (kvp.Value == persistable)
+                {
+                    identifiersToRemove ??= new List<string>();
+                    identifiersToRemove.Add(kvp.Key);
+                }
+            }
+
+            if (identifiersToRemove == null)
+            {
+                return;
+            }
+
+            foreach (string identifier in identifiersToRemove)
+            {
+                m_persistables.Remove(identifier);
+            }
+        }
+
+        private void RemovePersistableIdentifier(string identifier)
+        {
+            if (string.IsNullOrEmpty(identifier))
+            {
+                return;
+            }
+
+            m_persistables.Remove(identifier);
+            string actualIdentifier = GetActualIdentifier(identifier);
+            if (actualIdentifier != identifier)
+            {
+                m_persistables.Remove(actualIdentifier);
             }
         }
     }

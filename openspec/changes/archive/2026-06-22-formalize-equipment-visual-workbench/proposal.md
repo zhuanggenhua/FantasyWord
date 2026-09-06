@@ -29,7 +29,7 @@
 
 ## Current Evidence
 
-- 已改动 AIBridge CLI：`.codex/skills/aibridge/bridge.py`，加固结果文件读取、超时边界复查和死锁清理。
+- 已改动 AIBridge CLI：`UnityBridge 文件队列`，加固结果文件读取、超时边界复查和死锁清理。
 - 已改动 AIBridge Unity 包：`Packages/com.aibridge.unity/Editor/Tools/Scene.Open.cs`，让 `scene-open` 打开场景后尝试设为 active，并避免把 Unity active-scene 延迟回报误判为场景未打开。
 - 已观察到 `scene-open` 曾实际打开 `Assets/Scenes/EquipmentSystemDemo.unity`，脚本回读 active scene 为 `EquipmentSystemDemo`；但 `scene-open` 外层仍曾返回 error，原因是包侧返回层对 `SetActiveScene` 的 false 结果处理过严。
 - 最新包侧改动已将该 false 结果降级为 warning，但尚未完成重新验证，因为上一会话被中断。

@@ -21,5 +21,5 @@
 ## 正式入口
 
 - 项目知识库唯一正式入口是 `.spec/knowledge/README.md` 与 `.spec/knowledge/features/project/`。
-- 现有 `.codex/skills`、`.agents/skills` 只作为任务型 skill 使用，不承载项目长期知识入口。
+- 项目 skill 的唯一正式落点是 `.spec/skills/`；不得继续保留旧宿主 skill 目录或根 `docs` 作为项目入口。
 - 需要新增或更新规范、skill、长期规则时，先用 `.spec/skills/spec-steward/SKILL.md` 判断落点。

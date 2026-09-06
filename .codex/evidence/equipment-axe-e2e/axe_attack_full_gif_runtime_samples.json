@@ -1,7 +1,0 @@
-{
-    "scene": "Assets/Scenes/EquipmentSystemDemo.unity",
-    "character": "EquipmentSystemDemoCharacter",
-    "action": "Attack",
-    "direction": "SE",
-    "evidenceKind": "PlayMode Animator SpriteHash samples"
-}

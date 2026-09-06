@@ -592,7 +592,7 @@ namespace FantasyWord.GameCore
             return true;
         }
 
-        public bool ReplaceCompatibilityFlags(ETerrainRuntimeSurfaceState flags)
+        public bool ReplaceRuntimeStateFlags(ETerrainRuntimeSurfaceState flags)
         {
             ETerrainRuntimeSurfaceState currentFlags = RuntimeStateFlags;
             if (currentFlags == flags)
@@ -602,18 +602,18 @@ namespace FantasyWord.GameCore
 
             m_activeStates.Clear();
             TerrainElementStateSource source = new(null, 0);
-            AddCompatibilityState(flags, ETerrainRuntimeSurfaceState.Wet, ETerrainElementStateKind.Wet, source);
-            AddCompatibilityState(
+            AddRuntimeFlagState(flags, ETerrainRuntimeSurfaceState.Wet, ETerrainElementStateKind.Wet, source);
+            AddRuntimeFlagState(
                 flags,
                 ETerrainRuntimeSurfaceState.Burning,
                 ETerrainElementStateKind.Burning,
                 source);
-            AddCompatibilityState(
+            AddRuntimeFlagState(
                 flags,
                 ETerrainRuntimeSurfaceState.Oiled,
                 ETerrainElementStateKind.Oiled,
                 source);
-            AddCompatibilityState(
+            AddRuntimeFlagState(
                 flags,
                 ETerrainRuntimeSurfaceState.Electrified,
                 ETerrainElementStateKind.Electrified,
@@ -688,7 +688,7 @@ namespace FantasyWord.GameCore
             }
         }
 
-        private void AddCompatibilityState(
+        private void AddRuntimeFlagState(
             ETerrainRuntimeSurfaceState flags,
             ETerrainRuntimeSurfaceState expectedFlag,
             ETerrainElementStateKind stateKind,

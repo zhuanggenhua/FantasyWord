@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d6207e7d8cc4a64a2a6c82ac6c00d37, type: 3}
   m_Name: "\u6362\u88C5\u52A8\u753B\u751F\u6210\u8BBE\u7F6E"
-  m_EditorClassIdentifier: Assembly-CSharp::EquipmentSystemGenerationSettings
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.EquipmentSystemGenerationSettings
   animationDatabasePath: Assets/GameData/EquipmentSystem/AnimationType/AnimationTypeDatabase.asset
   workbenchCatalogPath: "Assets/GameData/EquipmentSystem/Data/Workbench/\u6362\u88C5\u5DE5\u4F5C\u53F0\u76EE\u5F55.asset"
   animationRoot: Assets/GameData/EquipmentSystem/Animations

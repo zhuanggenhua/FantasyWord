@@ -6,26 +6,10 @@
 - “源码级复核”不表示逐行读取仓库内所有示例、历史兼容代码、第三方依赖和非相关 3D/编辑器文件。
 - `candidate-list.json`、`extra-deep-candidates.json` 中未进入下表的搜索候选只完成仓库级筛选，不得称为源码深读，也不得用于支撑正式架构结论。
 
-## Evidence Files
+## Retired Stage Evidence
 
-- `test-results/context-steering-research/deep-search-report.md`
-- `test-results/context-steering-research/unitysteer-deep-dive.md`
-- `test-results/context-steering-research/focused-summary.txt`
-- `test-results/context-steering-research/extra-deep-candidates.json`
-- `test-results/context-steering-research/repos/ricardojmendez__UnitySteer/UnitySteer-master`
-- `test-results/context-steering-research/repos/ricardojmendez__UnitySteerExamples`
-- `test-results/context-steering-research/repos/Nebukam__com.nebukam.orca`
-- `test-results/context-steering-research/repos/Nebukam__com.nebukam.beacon-orca`
-- `test-results/context-steering-research/repos/pk1234dva__orca_local_avoidance`
-- `test-results/context-steering-research/repos/snape__RVO2-CS`
-- `test-results/context-steering-research/repos/friedforfun__ContextSteering`
-- `test-results/context-steering-research/repos/AkiKurisu__AkiSteer`
-- `test-results/context-steering-research/repos/sturdyspoon__unity-movement-ai`
-- `test-results/context-steering-research/repos/SunnyValleyStudio__Unity-2D-Context-steering-AI`
-- `test-results/context-steering-research/repos/warmtrue__RVO2-Unity`
-- `test-results/context-steering-research/repos/unitycoder__Unity-DOTS-RTS-Collision-System`
-- `test-results/context-steering-research/repos/wayne-wu__webgpu-crowd-simulation`
-- `test-results/context-steering-research/repos/mrdav30__LockstepRTSEngine`
+- 原本机阶段研究产物已经退出项目目录，不再作为正式承载地；长期承载只保留下方参考裁决矩阵。
+- 外部参考以仓库身份和已吸收的职责结论登记：UnitySteer、UnitySteerExamples、N:ORCA、N:Beacon.ORCA、pk1234dva/orca_local_avoidance、RVO2 / RVO2-CS、friedforfun/ContextSteering、AkiSteer、unity-movement-ai、SunnyValleyStudio/Unity-2D-Context-steering-AI、warmtrue/RVO2-Unity、Unity DOTS RTS Collision、Position-Based Crowd Simulation、LockstepRTSEngine。
 
 ## Best-Practice Integration Matrix
 

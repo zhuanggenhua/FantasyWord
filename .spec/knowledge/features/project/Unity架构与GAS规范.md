@@ -13,11 +13,27 @@ metadata:
 - 本文定义 `FantasyWord` 的运行时架构、GAS 路线、角色/输入/战斗边界和工程红线。
 - 本文不记录某轮迁移进度，也不继承旧 `FantasyWorld` 用户故事。
 
+## 文档角色
+
+- `canonical-source`：本文裁决 FantasyWord 的 GameCore / Gameplay 如何接入 EX-GAS，以及哪些项目侧集成点允许存在。
+- `upstream`：`Assets/Plugins/GAS/package.json`、`Assets/Plugins/GAS/SKILL.md`、`Assets/Plugins/GAS/Wiki/`、`Assets/Plugins/GAS/CHANGELOG.md` 是 EX-GAS 插件用法和版本事实来源。
+- `project-fact`：`EX-GAS-2.0重评估.md` 记录本仓当前 EX-GAS 2.0.0 接入现态、旧判断失效点和本地稳定性补丁边界，不替代本文的长期集成口径。
+- `layering-source`：`.spec/knowledge/standards/framework-layering.md` 裁决 YokiFrame / GameCore / Gameplay 落点；本文只承载 EX-GAS 与 GameCore / Gameplay 的集成规则，不再依赖单独未收口台账。
+
+## 当前集成边界速查
+
+- EX-GAS 拥有 Ability、Timeline、GameplayEffect、GameplayCue、GameplayTag、Attribute 和 ASC 运行时状态。
+- YokiFrame 只提供无游戏语义的底座原语，不承载 GAS 业务含义。
+- GameCore 只提供跨游戏可复用的输入、资源、表现、存档、生命周期、属性/能力配置扩展点和必要的 2D 目标捕获扩展。
+- Gameplay 只提供 FantasyWord 的开放世界、角色、队伍、物品、战斗内容、表现策略和作者内容，不建立第二套技能 / 属性 / 标签 / 伤害真相。
+- 当前 `Assets/Scripts/Gen/FormalGasAbilityDescriptionGeneratedRuntime.cs` 是生成配置正式集成入口：它把 Luban / EX-GAS 生成表注册到 GameCore 的能力身份、运行配置、描述、时间轴和伤害扩展解析入口。它不是 Gameplay 业务，也不拆成独立中转程序集。
+- CardLoop 的独立 GAS 集成程序集不作为 FantasyWord 同步目标。FantasyWord 当前生成运行时程序集已经正式引用 `FantasyWord.GameCore`，继续由 `FantasyWord.GAS.GeneratedRuntime` 承担生成配置集成；若未来要解除这条引用，必须改生成源或 EX-GAS 扩展注册方式，而不是新增第二入口。
+
 ## 架构原则
 
 - 玩法规则优先落在项目侧代码和结构化数据中。
 - Unity 场景和 Prefab 负责对象层级、组件装配、静态引用和视觉初始状态。
-- `YokiFrame`、`EX-GAS`、`UniTask`、`NaughtyAttributes`、`BroAudio` 等插件只作为能力来源，不直接定义产品架构；已退出的旧框架不再作为当前项目参考入口。
+- `YokiFrame`、`EX-GAS`、`UniTask`、`Odin Inspector / Sirenix`、`BroAudio` 等插件只作为能力来源，不直接定义产品架构；已退出的旧框架和未登记插件不再作为当前项目参考入口。
 - 可复用能力先做小闭包，不提前引入大型抽象或网络框架；FishNet 作为后续联机阶段有限人数主机权威合作的首选评估框架，不进入当前单机核心。
 
 ## GameCore 正式边界
@@ -34,7 +50,7 @@ metadata:
 - `Items` 后续按 `InventorySystem/Item/Equipment/ItemEffect` 或 `EquipmentSystem` 参考矩阵重建，不再用物品请求队列替代背包和装备闭包。
 - `Combat` 后续按 EX-GAS 或 `2DRPGEngine` ability/effect 参考矩阵重建，不再用战斗请求队列替代技能/命中/效果闭包。
 - `Presentation` 后续按 BroAudio 或成熟表现层参考矩阵重建，不再用表现事件队列替代动画、音效、特效和相机闭包。
-- `EquipmentSystem` 当前只作为候选装备/换装表现资产保留，不能被写成正式物品系统完成证据。
+- `EquipmentSystem` 当前是正式换装表现业务闭包，不能被写成正式物品、背包或装备规则系统完成证据。
 - 任何模块进入正式链路前，必须先有参考矩阵、当前落点、差距和验证入口。
 
 ## EX-GAS 路线
@@ -55,7 +71,7 @@ metadata:
 - 技能执行实现必须先做证据裁决，再确定正式真相源；候选至少包含 EX-GAS 原生闭包、当前其它成熟参考闭包，以及能被证据证明更优的正式融合闭包。
 - 能力/法术/专长/物品能力这类整体规则体系的设计必须参考先行。正式顶层合同不得从单个火球、陨石、近战或某个编辑器想法倒推；必须先对照 WoW/AzerothCore/SimulationCraft 这类配置型 spell/effect/proc 数据模型、Pathfinder/D20 这类动作/目标/豁免/法抗/专长规则结构、或本地成熟源码参考，再决定项目侧合同。
 - EX-GAS 只能作为能力、属性、标签、GameplayEffect、Cost/Cooldown 和 GameplayCue 表现触发等底座候选；但当某个具体职责已经被证据证明 `EX-GAS` 原生闭包更强，例如当前的时间轴预览、Cue 预览或 TargetCatcher 体系，就应先把该职责收口到 `GAS` 主轴，再讨论剩余缺口。不得一边承认 `GAS` 在该职责更强，一边继续保留项目侧并行主轴。
-- EX-GAS `GameplayCue` 只允许作为表现提示或表现事件触发入口。不得用 Cue 修改属性、执行伤害/治疗、支付资源、改变冷却、添加/移除状态、强制位移、决定目标、写存档或承担其它玩法结果。若历史或迁移期代码已经这样做，必须标为待重构债务，不得扩散到新技能。
+- EX-GAS `GameplayCue` 只允许作为表现提示或表现事件触发入口。不得用 Cue 修改属性、执行伤害/治疗、支付资源、改变冷却、添加/移除状态、强制位移、决定目标、写存档或承担其它玩法结果。若历史代码已经这样做，必须标为待重构债务，不得扩散到新技能。
 - GameCore `GameplayFeedbackSet` 是当前项目侧表现反馈真相源；EX-GAS `GameplayCue` 若需要接入项目侧表现，应转发到该闭包或正式替代者，不得新增并行反馈系统。
 - 推荐用法默认是重要基线，但不是预设赢家。真正的裁决标准只有一个：按职责切片后，同一职责里谁实现得更好、且能维持单一真相。
 - 如果某个参考来源只是补“怎么更好编辑”或“怎么更好预览”，那它竞争的只是作者面职责；不得因为它在作者面更强，就把它直接升级成新的规则 owner。反过来，如果 GAS 在规则真相上胜出，也不等于它天然拥有最佳可视化作者体验；这两件事必须分别判断，但各自都只能留一个正式 owner。
@@ -65,10 +81,38 @@ metadata:
 - 一旦某个职责已经裁决出更优主轴，默认动作是迁移并清退旧同职责实现，而不是长期保留“推荐用法 + 项目特化 + 参考做法”三者并存。
 - 若当前实现只使用 GAS 处理成本、冷却、标签或属性，而命中判定、目标筛选、伤害结算仍在 `GameCore` 自己的能力类中，则必须标为“GAS 规则层混合接入”，不得汇报成“GAS 原生技能闭包已完成”。
 - 混合接入不得只因为“已经写了”而保留；进入正式技能作者流验收前，必须通过参考矩阵证明它比单用 EX-GAS 推荐闭包或单用参考动作闭包更适合当前项目。未证明前，混合只能作为当前已验证基础攻击 smoke 或迁移期链路存在，不能作为新增技能的默认路线。
-- 当前若为了迁移暂时保留旧近战/投射物命中脚本、旧伤害描述壳或其它“序列化外皮 + 转发到 GAS 正式效果”的过渡壳，必须明确标记为迁移壳，而不是正式主轴。后续默认动作仍是继续删除这些壳的独立资产语义，把命中后效果直接收口到正式 GAS 效果数据。
+- 不再新增“序列化外皮 + 转发到 GAS 正式效果”的过渡壳。已登记的正式入口必须直接落到 `GameCore` 或生成运行时的正式类型；如果仍发现旧近战、投射物命中或伤害描述残留承担同职责，应删除或重构回正式 GAS 效果数据。
 - 基础攻击、蓄力攻击、背刺这类动画窗口 + 碰撞盒 + 属性效果技能，必须继续进入多参考对照：EX-GAS `TimelineAbility / TargetCatcher / GameplayEffect`、`2DRPGEngine` 技能族闭包、`duolafashi` 这类时间轴/Prefab 内容生产流，以及其它已登记成熟参考。当前若证据表明 `GAS Timeline + TargetCatcher` 在同职责上更接近正式主轴，则默认先沿 `GAS` 方向验证；发现缺口时先补 `GAS`，而不是继续扩大项目侧并行时间轴或并行命中壳。
 - 基础攻击、蓄力攻击、背刺这类动画窗口 + 碰撞盒技能的作者工具必须参考先行。没有记录外部或本地成熟参考、当前落点、差距和验证入口前，不实现新的判定框 UI、资产模型或策划主流程。普通 `AbilitySheet` Inspector、只读检查脚本和 smoke 菜单只能算样例链路或诊断入口，不能冒充正式可视化技能编辑器；若 `GAS Timeline` 已能承担正式预览职责，也不得再为同一职责新增第二个项目侧时间轴入口。
 - 当前登记的判定框作者参考是 Kybernetik Platformer Game Kit：其 melee hit boxes 文档证明近战命中盒应围绕动画帧命中数据、Inspector/Preview 可视化和运行时 `PolygonCollider2D` 触发器组织。FantasyWord 若偏离这一路线，必须先证明偏离在策划效率、可视化、调试和运行时稳定性上更好。
+
+## 允许的项目侧薄集成点
+
+| 集成类别 | 允许职责 | 禁止职责 |
+| --- | --- | --- |
+| Ability 输入门控 | 把 GameCore / Gameplay 输入请求转换为 EX-GAS Ability 激活请求。 | 不保存技能身份、冷却、伤害、命中、弹匣或表现规则。 |
+| GameCore Ability 配置 | 给 EX-GAS Ability 附加跨游戏可复用的输入、Prefab、Icon、资源引用和根对象朝向配置。 | 不承载 Ability、GameplayEffect、Tag 或 Cue 规则真相。 |
+| TargetCatcher 扩展 | 用 EX-GAS 官方扩展点解析当前项目真实 2D 空间中的目标 ASC。 | 不新建第二套 Hitbox、伤害或目标选择规则。 |
+| CuePlay 转发 | 将 EX-GAS Cue 转到 GameCore 动画、音频、反馈或 UI 投影。 | 不结算数值、不改标签、不选目标。 |
+| 伤害 / 属性集成 | 把 GameplayEffect 配置转成执行数据，并把结果写回 ASC。 | 不在投射物、行动、UI 或临时脚本保存第二份伤害 / 生命真相。 |
+| 标签作者辅助 | 复用 EX-GAS 生成作者数据供 Gameplay 内容选择和校验。 | 不建立 Gameplay 本地标签表、枚举镜像或运行时标签服务。 |
+| 长期状态快照 | 只保存产品确实需要跨局延续、且能用公开接口恢复的长期事实。 | 不导出完整 ASC，不保存临时 GE、Cue、Timeline、ECS Entity 或派生 CurrentValue。 |
+| 生命周期启动 / 关闭 | 在 GameCore 进程生命周期中初始化、运行、停止和释放 EX-GAS。 | 不反射改写插件私有状态，不绕过插件正式 API。 |
+
+新增、保留或修改上述集成点前，必须先读取 EX-GAS 插件入口，按 `framework-layering.md` 判断职责属于 GameCore 扩展点还是 FantasyWord Gameplay 业务实现，并说明它连接的两端、允许职责、禁止职责和验证方式。
+
+## 生成配置集成合同清单
+
+当前生成配置集成必须保证下面这些合同持续成立；不得再新增同级第二入口：
+
+| 现实能力 | 当前入口 / 证据 | 当前消费者 | 保持要求 |
+| --- | --- | --- | --- |
+| 能力身份与策划描述解析 | `FormalGasAbilityDescriptionGeneratedRuntime.Register()` 注册 `FormalGasAbilityIdentityResolver`、`FormalGasAbilityDescriptionResolver` | 角色能力菜单、物品/背包事件文本、持续效果展示、编辑器技能审计和近战技能测试 | 必须能在无运行中 `GameManager` 的编辑器资产检查里解析名称、描述和伤害说明。 |
+| 能力 Prefab、Icon、输入门控和根对象朝向配置 | `FormalGasAbilityRuntimeConfigResolver.RegisterTryResolveRuntimeConfigHandler(...)` | `AbilityBase`、`ActiveAbilityBase`、`TimelineActiveAbility`、`CharacterBase.Abilities`、`FormalAbilityAssetValidation` 和相关测试 | 必须只从 EX-GAS / Luban 生成表解析运行时配置，不新增本地第二套能力配置表。 |
+| Timeline 执行节奏 | `FormalGasAbilityTimelineExecutionResolver.RegisterTryResolveTimelineExecutionSettingsHandler(...)` | `TimelineActiveAbility` 的输入缓冲、前摇和再次使用节奏 | 必须保留按 EX-GAS Timeline 帧率换算的前摇 / 再次使用时间，不把节奏复制到能力脚本默认值。 |
+| GameplayEffect 正式伤害扩展 | `GameplayEffectHelper.RegisterGetConfigByIDFunc(GetGameplayEffectConfigWithFormalDamage)` | `FormalGameplayEffectDamageSystem`、`FormalGameplayEffectDamageHelper`、投射物和地表伤害等正式伤害入口 | 必须继续把 `FormalDamage` / `FormalConditionalDamage` 转成 GameCore 正式伤害载荷，不恢复旧 `IEffect` 伤害真相。 |
+| 生成类型注册到 GameCore 扩展 | `XAbility.gen.cs`、`XCue.gen.cs` 直接注册 `FormalAbilityRuleProxyLogic`、2D TargetCatcher、`TaskApplyWorldElement` 和 GameCore Cue | EX-GAS 初始化缓存、目标捕获、世界元素 Timeline task、动画 / 音频 / 反馈 Cue | 这部分来自生成物，不能手改；若要解除 `FantasyWord.GAS.GeneratedRuntime -> FantasyWord.GameCore` 引用，必须改生成源或 EX-GAS 注册扩展方式，并重新生成。 |
+| 测试与工具反射入口 | `MeleeAttackAbilityEditModeTests.RegisterFormalGasAbilityDescriptionGeneratedRuntime()` 按 `FantasyWord.GAS.GeneratedRuntime` 反射当前注册类 | 编辑器测试和 `GasEditModeTestHelper` 的初始化链 | 必须继续指向 `GAS.Runtime.FormalGasAbilityDescriptionGeneratedRuntime`，不得出现第二注册入口。 |
 
 ## 俯视角角色与战斗
 

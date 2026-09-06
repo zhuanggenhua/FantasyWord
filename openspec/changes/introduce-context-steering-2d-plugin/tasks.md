@@ -104,9 +104,9 @@
 
 ### 2026-07-13 Runtime, Screenshot And Performance Evidence
 
-- `ContextSteering2DEditModeTests` 当前专项过滤通过，包含 per-intent Arrive 停止半径、即时 debug snapshot 发布、瞬时 push 峰值保留、RVO2、PBD、空间索引、真实速度和角色碰撞 owner 合同；2026-07-14 重新跑 class-only 专项过滤结果 `test-results/context-steering-2d-plugin/2026-07-14/context-steering-editmode-classonly-20260714.json` 为 `Passed`、`failedTests=0`、失败明细为空。该结果只作为 `ContextSteering2DEditModeTests` 专项通过证据，不冒充完整 GameCore 全量测试。
+- `ContextSteering2DEditModeTests` 当前专项过滤通过，包含 per-intent Arrive 停止半径、即时 debug snapshot 发布、瞬时 push 峰值保留、RVO2、PBD、空间索引、真实速度和角色碰撞 owner 合同；2026-07-14 重新跑 class-only 专项过滤结果 阶段运行结果为 `Passed`、`failedTests=0`、失败明细为空。该结果只作为 `ContextSteering2DEditModeTests` 专项通过证据，不冒充完整 GameCore 全量测试。
 - `Temp/UnityBridge/results/clickmove-context-steering-runtime.json` 的 strict fresh run 通过：2026-07-13 20:13 从 clean 的 `ClickMoveTest` 通过 `StartFromEditMode()` 进入 PlayMode，1872 帧内观察到 2 个 Agent、2 个 Probe、2 个 Probe 均有快照、邻居数 1、语义 Collider 2、最大位移 0.638，并观察到 `transit`、`predictive-target`、Arrive、preferred velocity、safe velocity、RVO 修正、Separation 和 PBD push。
-- `Assets/Editor/GameCore/Bridge/ClickMoveTestContextSteeringWaypointValidator.cs` 的航点转折 fresh run 通过，证据为 `test-results/context-steering-2d-plugin/2026-07-14/clickmove-context-steering-waypoint-runtime-20260714.json`：2026-07-14 从 clean 的 `ClickMoveTest` 进入 PlayMode 后 2112 帧 / 31.81 秒完成，路线源为 `fallback:(-10, -10, 0)->(-7, -8, 0)`，正式路线 `(-9.5,-9.5) -> (-8.5,-9.5) -> (-8.5,-7.5)`；观察到 `transit`、转角附近 `transit`、最终 `predictive-target`、preferred velocity 和 safe velocity，转角附近最小 transit 速度 3.986，静态地形切角、真实碰撞体 clearance 和运行轨迹切角违规均为 0，实际最大位移 0.504 大于所需 0.500。
+- `Assets/Editor/GameCore/Automation/ClickMoveTestContextSteeringWaypointValidator.cs` 的航点转折 fresh run 通过，阶段运行结果：2026-07-14 从 clean 的 `ClickMoveTest` 进入 PlayMode 后 2112 帧 / 31.81 秒完成，路线源为 `fallback:(-10, -10, 0)->(-7, -8, 0)`，正式路线 `(-9.5,-9.5) -> (-8.5,-9.5) -> (-8.5,-7.5)`；观察到 `transit`、转角附近 `transit`、最终 `predictive-target`、preferred velocity 和 safe velocity，转角附近最小 transit 速度 3.986，静态地形切角、真实碰撞体 clearance 和运行轨迹切角违规均为 0，实际最大位移 0.504 大于所需 0.500。
 - 航点转折验收器已修正为同时检查真实 `Physics2D` 阻挡碰撞体，并以真实秒数窗口和转角观察区衡量覆盖：只排除角色自身碰撞体，静态 Tilemap/CompositeCollider 仍计为阻挡，避免把“导航格可走但真实碰撞体不可走”的路线当作有效验收路线，也避免 Editor 帧数过快导致误判超时。
 - `ClickMoveTest` 的两个训练假人场景实例启用 `Persistable.m_forceNoPersistence`，避免旧存档位置覆盖测试场景作者坐标；Prefab 与其他场景对象保持原持久化规则。
 - `Assets/Screenshots/context-steering-final-sceneview-v7.png` 是最终 SceneView 验收图：选中真实 NPC，显示 Context Map、目标/邻居、Preferred、Safe、行为图例；PureRef 已打开给用户，预览站已发布到 `http://8.148.71.102:18080/#/fantasyword/context-steering-2d-plugin`。
@@ -130,6 +130,6 @@
 - 当前证据只证明竖切求解器、调试探针和轻量 push resolve 可运行；它不证明最终 adapter、共享检测复用、批量后端、真实 isolated preview 或逐行为调试已经完成。
 - 旧截图 `Assets/Screenshots/ContextSteering2D/context-steering-real-sceneview-debug.png` 只能证明有调试线，不能作为最终验收图；它缺少图例、分层和可读的位置关系。
 - 错误截图 `Assets/Screenshots/ContextSteering2D/context-steering-debug-sceneview-handles.png` 捕获到了非 Unity SceneView 窗口，不得作为证据。
-- 调试可读性候选图 `test-results/evidence-image-validation/context-steering-2d-debug/context-steering-readable-verdict-v3.png` 来自 Play Mode 的 `ContextSteeringDebugProbe2D` 快照，能读出训练假人、玩家目标、障碍、邻近单位、16 方向采样和最终方向；该图是验收解释图，不是原生 SceneView 截屏。
-- 推挤解析候选图 `test-results/evidence-image-validation/context-steering-2d-debug/context-steering-push-verdict.png` 基于 Play Mode 快照构造重叠邻居帧，输出 `Push=(-0.163,-0.064)`，证明轻量 push resolve 在重叠条件下会给出非零分离修正；普通邻居检测不等于推挤。
+- 调试可读性候选图阶段证据 来自 Play Mode 的 `ContextSteeringDebugProbe2D` 快照，能读出训练假人、玩家目标、障碍、邻近单位、16 方向采样和最终方向；该图是验收解释图，不是原生 SceneView 截屏。
+- 推挤解析候选图阶段证据 基于 Play Mode 快照构造重叠邻居帧，输出 `Push=(-0.163,-0.064)`，证明轻量 push resolve 在重叠条件下会给出非零分离修正；普通邻居检测不等于推挤。
 - 最终用户验收仍以用户看图认可为准；在用户认可前，不把截图项标成完全完成。

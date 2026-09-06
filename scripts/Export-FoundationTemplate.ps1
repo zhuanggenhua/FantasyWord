@@ -102,8 +102,6 @@ $coreItems = @(
     "AGENTS.md",
     ".gitattributes",
     ".gitignore",
-    ".agents\skills",
-    ".codex\skills",
     "Assets\Scripts\GameCore",
     "Assets\Editor\GameCore",
     "Assets\GameData\GameCore",
@@ -133,7 +131,8 @@ $fullOnlyItems = @(
     "Assets\Scenes\SampleScene.unity.meta",
     "Assets\Scenes\EquipmentSystemDemo.unity",
     "Assets\Scenes\EquipmentSystemDemo.unity.meta",
-    "Assets\Scripts\Presentation\EquipmentSystem",
+    "Assets\Scripts\Gameplay",
+    "Assets\Editor\Gameplay",
     "Assets\Settings",
     "Assets\UniversalRenderPipelineGlobalSettings.asset",
     "Assets\UniversalRenderPipelineGlobalSettings.asset.meta",
@@ -164,9 +163,8 @@ foreach ($item in $itemsToCopy) {
 }
 
 $preservedEmptyDirectories = @(
-    "Assets\Scripts\Presentation\EquipmentSystem\Tools",
-    "Assets\Scripts\Presentation\EquipmentSystem\Shaders\Includes",
-    ".codex\skills\unity-production\agents"
+    "Assets\Scripts\Gameplay\Runtime\Presentation\EquipmentSystem\Tools",
+    "Assets\Scripts\Gameplay\Runtime\Presentation\EquipmentSystem\Shaders\Includes"
 )
 
 Remove-UnapprovedEmptyDirectories -Root $OutputRoot -PreservedRelativePaths $preservedEmptyDirectories

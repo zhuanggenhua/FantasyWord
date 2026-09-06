@@ -116,12 +116,15 @@ namespace UnitySkills
         private static string _prefTotalProcessed;
         private static string _prefLastPort;
         private static string _prefConsecutiveFailures;
+        private static string _prefCommandLineColdStartProcessId;
         private static string PREF_SERVER_SHOULD_RUN => _prefServerShouldRun ??= PrefKey("ServerShouldRun");
         private static string PREF_AUTO_START => _prefAutoStart ??= PrefKey("AutoStart");
         private static string PREF_TOTAL_PROCESSED => _prefTotalProcessed ??= PrefKey("TotalProcessed");
         private static string PREF_LAST_PORT => _prefLastPort ??= PrefKey("LastPort");
         private static string PREF_CONSECUTIVE_FAILURES => _prefConsecutiveFailures ??= PrefKey("ConsecutiveRestartFailures");
+        private static string PREF_COMMAND_LINE_COLD_START_PROCESS_ID => _prefCommandLineColdStartProcessId ??= PrefKey("CommandLineColdStartProcessId");
         private const int MaxConsecutiveFailures = 10;
+        private const string CommandLineColdStartArg = "-unityskills-coldstart";
 
         // Domain Reload tracking
         private static bool _domainReloadPending = false;
@@ -535,6 +538,7 @@ namespace UnitySkills
             // Always clear on quit - we don't want auto-start on next Unity session
             EditorPrefs.SetBool(PREF_SERVER_SHOULD_RUN, false);
             EditorPrefs.SetInt(PREF_CONSECUTIVE_FAILURES, 0);
+            EditorPrefs.DeleteKey(PREF_COMMAND_LINE_COLD_START_PROCESS_ID);
             Stop();
         }
         
@@ -550,8 +554,15 @@ namespace UnitySkills
         /// </summary>
         private static void CheckAndRestoreServer()
         {
-            bool shouldRun = EditorPrefs.GetBool(PREF_SERVER_SHOULD_RUN, false);
-            bool autoStart = AutoStart;
+            bool commandLineColdStart = ConsumeCommandLineColdStartRequest();
+            bool commandLineColdStartActive = IsCommandLineColdStartActive();
+            bool shouldRun = commandLineColdStartActive || EditorPrefs.GetBool(PREF_SERVER_SHOULD_RUN, false);
+            bool autoStart = commandLineColdStartActive || AutoStart;
+
+            if (commandLineColdStart)
+            {
+                SkillsLogger.Log("[UnitySkills] Command-line cold start requested; starting REST server.");
+            }
 
             if (shouldRun && autoStart && !_isRunning)
             {
@@ -776,6 +787,7 @@ namespace UnitySkills
             {
                 EditorPrefs.SetBool(PREF_SERVER_SHOULD_RUN, false);
                 EditorPrefs.SetInt(PREF_CONSECUTIVE_FAILURES, 0);
+                EditorPrefs.DeleteKey(PREF_COMMAND_LINE_COLD_START_PROCESS_ID);
             }
 
             // Unregister from global registry
@@ -819,6 +831,40 @@ namespace UnitySkills
         public static void StopPermanent()
         {
             Stop(permanent: true);
+        }
+
+        private static bool ConsumeCommandLineColdStartRequest()
+        {
+            if (!HasCommandLineColdStartArg())
+                return false;
+
+            string currentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
+            if (string.Equals(EditorPrefs.GetString(PREF_COMMAND_LINE_COLD_START_PROCESS_ID, ""), currentProcessId, StringComparison.Ordinal))
+                return false;
+
+            EditorPrefs.SetString(PREF_COMMAND_LINE_COLD_START_PROCESS_ID, currentProcessId);
+            EditorPrefs.SetBool(PREF_SERVER_SHOULD_RUN, true);
+            return true;
+        }
+
+        private static bool IsCommandLineColdStartActive()
+        {
+            if (!HasCommandLineColdStartArg())
+                return false;
+
+            string currentProcessId = System.Diagnostics.Process.GetCurrentProcess().Id.ToString();
+            return string.Equals(EditorPrefs.GetString(PREF_COMMAND_LINE_COLD_START_PROCESS_ID, ""), currentProcessId, StringComparison.Ordinal);
+        }
+
+        private static bool HasCommandLineColdStartArg()
+        {
+            foreach (string arg in Environment.GetCommandLineArgs())
+            {
+                if (string.Equals(arg, CommandLineColdStartArg, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
         }
         
         /// <summary>

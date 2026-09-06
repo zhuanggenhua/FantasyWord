@@ -1,0 +1,30 @@
+{
+  "name": "FantasyWord.Gameplay.Editor",
+  "rootNamespace": "FantasyWord.Gameplay.Editor",
+  "references": [
+    "FantasyWord.Gameplay",
+    "FantasyWord.GameCore",
+    "FantasyWord.GameCore.Editor",
+    "YokiFrame",
+    "YokiFrame.UIKit",
+    "Unity.TextMeshPro",
+    "Unity.InputSystem",
+    "Unity.InputSystem.ForUI",
+    "UnityEngine.UI",
+    "Unity.2D.Animation.Runtime",
+    "Unity.2D.Sprite.Editor",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

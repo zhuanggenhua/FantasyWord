@@ -15,6 +15,11 @@ namespace GAS.Runtime
 
         public static bool IsInitialized { get; private set; }
 
+        /// <summary>
+        /// 当前 EX-GAS ECS 世界是否仍可用；Unity PlayMode 会释放 World，但禁用域重载时静态标记可能保留。
+        /// </summary>
+        public static bool HasLiveWorld => ExWorld != null && ExWorld.IsCreated;
+
         public static Entity EntityGlobalTimer { get; private set; }
 
         /// <summary>  
@@ -37,7 +42,7 @@ namespace GAS.Runtime
         
         public static void Initialize()
         {
-            if (IsInitialized)
+            if (IsInitialized && HasLiveWorld)
             {
 #if UNITY_EDITOR
                 Debug.LogWarning("EX-GAS has been initialized.Don't reinitialize.");
@@ -45,7 +50,13 @@ namespace GAS.Runtime
                 return;
             }
 
+            if (HasLiveWorld)
+            {
+                ScriptBehaviourUpdateOrder.RemoveWorldFromCurrentPlayerLoop(ExWorld);
+                ExWorld.Dispose();
+            }
 
+            ResetStaticRuntimeState();
             TurnController ??= new TurnController();
             ExWorld = new World("EX_GAS_World");
             EntityManager = ExWorld.EntityManager;
@@ -53,6 +64,20 @@ namespace GAS.Runtime
             // 系统逻辑帧计时器
             EntityGlobalTimer = ExWorld.EntityManager.CreateSingleton<GlobalTimer>();
             IsInitialized = true;
+        }
+
+        /// <summary>
+        /// PlayMode 或测试重启时清理 EX-GAS 静态状态；下一次 Initialize 会创建新的正式 World。
+        /// </summary>
+        public static void ResetForPlayModeBootstrap()
+        {
+            if (HasLiveWorld)
+            {
+                ScriptBehaviourUpdateOrder.RemoveWorldFromCurrentPlayerLoop(ExWorld);
+                ExWorld.Dispose();
+            }
+
+            ResetStaticRuntimeState();
         }
 
         public static void Run()
@@ -63,6 +88,19 @@ namespace GAS.Runtime
         public static void Stop()
         {
             IsRunning = false;
+        }
+
+        private static void ResetStaticRuntimeState()
+        {
+            IsRunning = false;
+            IsInitialized = false;
+            EntityGlobalTimer = Entity.Null;
+            EntityManager = default;
+            ExWorld = null;
+            TurnController?.ResetTurn();
+            _bindingAsc.Clear();
+            EntityHelper.ClearGameObjectBinding();
+            EntityHelper.UnregisterEntityCommandBuffer();
         }
 
         private static void CreateSystems()

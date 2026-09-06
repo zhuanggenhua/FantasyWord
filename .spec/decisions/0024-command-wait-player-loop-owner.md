@@ -8,7 +8,7 @@
   - 项目已经正式安装 UniTask，且本地 API 提供基于 Unity PlayerLoop 的 `UniTask.WaitForSeconds()`，不需要再额外找一个 `MonoBehaviour` 承载协程。
 - 决策：
   - `Wait` 命令的延迟等待由 Unity PlayerLoop 驱动，通过 `UniTask.WaitForSeconds()` 返回到命令 `Task` 链。
-  - `Wait` 不得启动协程、不得创建 `TaskCompletionSource` 桥接协程、不得依赖 `GameManager.Instance` 作为隐式运行 owner。
+  - `Wait` 不得启动协程、不得创建 `TaskCompletionSource` 包装协程、不得依赖 `GameManager.Instance` 作为隐式运行 owner。
   - 等待时长继续使用 Unity 缩放时间语义；负值在运行时按 0 处理，并在 Inspector 中用非负字段约束作者输入。
 - 影响：
   - `Wait.Execute(GameCommandContext)` 不再需要 `MonoBehaviour` 参数，也不会因全局 `GameManager` 禁用、销毁或替换影响命令等待。

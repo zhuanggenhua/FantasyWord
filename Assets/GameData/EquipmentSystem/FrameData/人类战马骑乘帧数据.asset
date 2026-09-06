@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 992a1667bac02fc4f903843a8453ef1f, type: 3}
   m_Name: "\u4EBA\u7C7B\u6218\u9A6C\u9A91\u4E58\u5E27\u6570\u636E"
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterFrameData
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.CharacterFrameData
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
   paletteRefSprite: {fileID: 0}
   paletteSize: {x: 32, y: 32}

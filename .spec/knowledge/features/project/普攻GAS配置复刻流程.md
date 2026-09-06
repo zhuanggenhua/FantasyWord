@@ -324,7 +324,7 @@ EX_GAS_Config/ProjectConfigTable/exgas_config/Datas/#exgas.gameplayEffect.xlsx
 说明：
 
 - `FormalDamage` 和 `FormalConditionalDamage` 是项目侧正式伤害扩展数据。
-- 它们通过项目侧运行时桥接追加进 EX-GAS `GameplayEffectConfig`。
+- 它们通过项目侧运行时扩展入口追加进 EX-GAS `GameplayEffectConfig`。
 - 伤害结算是玩法规则，不放在 `GameplayCue` 里。
 
 ### 步骤 5：配置 GameplayCue 命中反馈
@@ -521,30 +521,14 @@ Assets/DataGenerated/Luban/Json/GAS/
 
 ### 自动化验证
 
-刷新 Unity：
+自动化验证统一按 `.spec/knowledge/features/project/AIBridge常用命令.md` 中登记的 `Temp/UnityBridge` 文件队列或项目包装脚本执行，不再保留旧 CLI 路径作为可复制入口。
 
-```powershell
-python .codex/skills/aibridge/bridge.py assets-refresh '{"bridgeSceneDirtyPolicy":"discard-generated"}'
-```
+建议覆盖：
 
-检查编译状态：
-
-```powershell
-python .codex/skills/aibridge/bridge.py editor-application-get-state
-```
-
-检查 Console：
-
-```powershell
-python .codex/skills/aibridge/bridge.py console-get-logs '{"maxEntries":80,"includeStackTrace":true}'
-```
-
-近战回归测试当前可用口径：
-
-```powershell
-python .codex/skills/aibridge/bridge.py tests-run '{"testMode":"EditMode","testClass":"MeleeAttackAbilityEditModeTests","includePassingTests":true,"includeMessages":true,"includeStacktrace":true}'
-```
-
+- 资源刷新。
+- 编译状态检查。
+- Console `Error / Exception` 检查。
+- `MeleeAttackAbilityEditModeTests` 定向回归。
 通过标准：
 
 - Unity `isCompiling=false`。

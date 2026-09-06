@@ -31,7 +31,7 @@ function Convert-ToProjectRelativePath {
 }
 
 $violations = [System.Collections.Generic.List[string]]::new()
-$runtimeRoot = Join-Path $ProjectRoot "Assets/Scripts/Presentation/EquipmentSystem/Runtime"
+$runtimeRoot = Join-Path $ProjectRoot "Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Runtime"
 $workbenchPrefabPath = Join-Path $ProjectRoot "Assets/GameRes/UI/Panels/UIEquipmentWorkbench.prefab"
 $rendererPath = Join-Path $ProjectRoot "Assets/Settings/Renderer2D.asset"
 
@@ -48,7 +48,7 @@ if ($prefabText -notmatch '(?m)^\s*workbenchFont:\s*\{fileID:\s*(?!0(?:,|\}))') 
 }
 
 $rendererText = Read-Text $rendererPath
-if ($rendererText -notmatch '(?ms)m_EditorClassIdentifier:\s*Assembly-CSharp::EquipmentSystem\.HQ4xRendererFeature.*?lut:\s*\{fileID:\s*(?!0(?:,|\}))') {
+if ($rendererText -notmatch '(?ms)m_EditorClassIdentifier:\s*(?:Assembly-CSharp|FantasyWord\.Gameplay)::(?:EquipmentSystem\.)?HQ4xRendererFeature.*?lut:\s*\{fileID:\s*(?!0(?:,|\}))') {
     [void]$violations.Add("Assets/Settings/Renderer2D.asset: HQ4xRendererFeature must bind LUT explicitly.")
 }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using MackySoft.SerializeReferenceExtensions;
@@ -7,6 +8,8 @@ namespace FantasyWord.GameCore
 {
     public class Persistable : MonoBehaviour, IDataBlockHandler<PersistableDataBlock>
     {
+        private static readonly HashSet<Persistable> s_loadedPersistables = new();
+
         [SerializeField] private bool m_autoPersistWhenPreInstanced = false;
         [SerializeField] private bool m_disablePermanentDestroy = false;
         [SerializeReference, SubclassSelector] private ICommand m_executeOnDeath = null;
@@ -32,6 +35,7 @@ namespace FantasyWord.GameCore
         public void DisablePersistence()
         {
             m_forceNoPersistence = true;
+            TryUnregisterWithPersistenceSystem();
         }
 
         protected bool IsMarkedAsDestroyed()
@@ -124,6 +128,8 @@ namespace FantasyWord.GameCore
                 map = GameManager.MapSystem.GetCurrentMapName(),
                 identifier = identifier
             };
+
+            TryRegisterWithPersistenceSystem();
         }
 
         public void MakeCustomInstanced(string identifier)
@@ -132,6 +138,8 @@ namespace FantasyWord.GameCore
             {
                 identifier = identifier
             };
+
+            TryRegisterWithPersistenceSystem();
         }
 
         public PersistableDataBlock CreateDataBlock()
@@ -227,6 +235,76 @@ namespace FantasyWord.GameCore
         protected virtual Type GetDataBlockType() => typeof(PersistableDataBlock);
         protected virtual void OnSave(PersistableDataBlock block) { }
         protected virtual void OnLoad(PersistableDataBlock block) { }
+
+        protected virtual void Awake()
+        {
+            RegisterLoadedPersistable();
+        }
+
+        protected virtual void OnDestroy()
+        {
+            UnregisterLoadedPersistable();
+        }
+
+        internal static Persistable[] CreateLoadedPersistablesSnapshot()
+        {
+            List<Persistable> snapshot = new();
+            List<Persistable> missingPersistables = null;
+
+            foreach (Persistable persistable in s_loadedPersistables)
+            {
+                if (persistable == null)
+                {
+                    missingPersistables ??= new List<Persistable>();
+                    missingPersistables.Add(persistable);
+                    continue;
+                }
+
+                snapshot.Add(persistable);
+            }
+
+            if (missingPersistables != null)
+            {
+                foreach (Persistable persistable in missingPersistables)
+                {
+                    s_loadedPersistables.Remove(persistable);
+                }
+            }
+
+            return snapshot.ToArray();
+        }
+
+        internal bool HasValidPersistenceInfo() => IsPersistent();
+
+        private void RegisterLoadedPersistable()
+        {
+            s_loadedPersistables.Add(this);
+            TryRegisterWithPersistenceSystem();
+        }
+
+        private void UnregisterLoadedPersistable()
+        {
+            s_loadedPersistables.Remove(this);
+            TryUnregisterWithPersistenceSystem();
+        }
+
+        private void TryRegisterWithPersistenceSystem()
+        {
+            if (GameManager.Exists() &&
+                GameManager.TryGetSystem(out PersistenceSystem persistenceSystem))
+            {
+                persistenceSystem.RegisterPersistable(this);
+            }
+        }
+
+        private void TryUnregisterWithPersistenceSystem()
+        {
+            if (GameManager.Exists() &&
+                GameManager.TryGetSystem(out PersistenceSystem persistenceSystem))
+            {
+                persistenceSystem.UnregisterPersistable(this);
+            }
+        }
     }
 }
 

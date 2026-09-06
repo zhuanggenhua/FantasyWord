@@ -22,63 +22,58 @@ function Get-ProjectRoot {
     [System.IO.Path]::GetFullPath((Join-Path $scriptRoot ".."))
 }
 
-function Quote-ProcessArgument {
-    param([string]$Value)
-
-    if ($null -eq $Value) {
-        return '""'
-    }
-
-    if ($Value -notmatch '[\s"]') {
-        return $Value
-    }
-
-    $escaped = $Value -replace '(\\*)"', '$1$1\"'
-    $escaped = $escaped -replace '(\\+)$', '$1$1'
-    return '"' + $escaped + '"'
-}
-
 function Invoke-BridgeProcess {
     param(
-        [Parameter(Mandatory = $true)]
-        [string]$BridgePath,
         [Parameter(Mandatory = $true)]
         [string]$ToolName,
         [string]$JsonLiteral
     )
 
-    $processStartInfo = [System.Diagnostics.ProcessStartInfo]::new()
-    $processStartInfo.FileName = "python"
-    $processStartInfo.UseShellExecute = $false
-    $processStartInfo.RedirectStandardOutput = $true
-    $processStartInfo.RedirectStandardError = $true
+    New-Item -ItemType Directory -Force -Path $script:commandsDir | Out-Null
+    New-Item -ItemType Directory -Force -Path $script:resultsDir | Out-Null
 
-    $rawArguments = [System.Collections.Generic.List[string]]::new()
-    [void]$rawArguments.Add($BridgePath)
-    [void]$rawArguments.Add($ToolName)
-    if (-not [string]::IsNullOrWhiteSpace($JsonLiteral)) {
-        [void]$rawArguments.Add($JsonLiteral)
+    $id = "{0:yyyyMMddHHmmssfff}-{1}" -f [DateTime]::UtcNow, ([Guid]::NewGuid().ToString("N").Substring(0, 8))
+    $commandPath = Join-Path $script:commandsDir "$id.json"
+    $resultPath = Join-Path $script:resultsDir "$id.json"
+    $params = if ([string]::IsNullOrWhiteSpace($JsonLiteral)) {
+        @{}
+    }
+    else {
+        $JsonLiteral | ConvertFrom-Json
     }
 
-    $processStartInfo.Arguments = (($rawArguments | ForEach-Object { Quote-ProcessArgument $_ }) -join " ")
-
-    $process = [System.Diagnostics.Process]::Start($processStartInfo)
-    $stdout = $process.StandardOutput.ReadToEnd()
-    $stderr = $process.StandardError.ReadToEnd()
-    $process.WaitForExit()
-
-    $output = ($stdout + [Environment]::NewLine + $stderr).Trim()
-    if ($process.ExitCode -ne 0) {
-        throw "AIBridge call failed: $ToolName`n$output"
+    $payload = [ordered]@{
+        id = $id
+        tool = $ToolName
+        params = $params
     }
+    $tmpPath = "$commandPath.tmp"
+    [System.IO.File]::WriteAllText(
+        $tmpPath,
+        ($payload | ConvertTo-Json -Compress -Depth 32),
+        [System.Text.Encoding]::UTF8)
+    Move-Item -LiteralPath $tmpPath -Destination $commandPath -Force
 
-    return $output
+    $deadline = [DateTimeOffset]::UtcNow.AddSeconds(120)
+    do {
+        if (Test-Path -LiteralPath $resultPath) {
+            $resultJson = [System.IO.File]::ReadAllText($resultPath, [System.Text.Encoding]::UTF8)
+            $result = $resultJson | ConvertFrom-Json
+            if ($result.status -ne "success") {
+                throw "AIBridge file bridge call failed: $ToolName`n$($result.message)"
+            }
+
+            return $resultJson
+        }
+
+        Start-Sleep -Milliseconds 250
+    } while ([DateTimeOffset]::UtcNow -lt $deadline)
+
+    throw "Timeout waiting for AIBridge file bridge result. tool=$ToolName id=$id timeoutSeconds=120"
 }
 
 function Invoke-BridgeJson {
     param(
-        [Parameter(Mandatory = $true)]
-        [string]$BridgePath,
         [Parameter(Mandatory = $true)]
         [string]$ToolName,
         [hashtable]$Payload
@@ -91,7 +86,7 @@ function Invoke-BridgeJson {
         $Payload | ConvertTo-Json -Compress -Depth 12
     }
 
-    return (Invoke-BridgeProcess -BridgePath $BridgePath -ToolName $ToolName -JsonLiteral $jsonLiteral) | ConvertFrom-Json
+    return (Invoke-BridgeProcess -ToolName $ToolName -JsonLiteral $jsonLiteral) | ConvertFrom-Json
 }
 
 function Get-BridgeHeartbeatInfo {
@@ -356,8 +351,6 @@ function Assert-BridgeHeartbeatReady {
 function Invoke-FormalSceneAutomationMethod {
     param(
         [Parameter(Mandatory = $true)]
-        [string]$BridgePath,
-        [Parameter(Mandatory = $true)]
         [string]$MethodName,
         [Parameter(Mandatory = $true)]
         [string]$SceneLockToken
@@ -373,7 +366,7 @@ public class Script
 }
 "@
 
-    $response = Invoke-BridgeJson -BridgePath $BridgePath -ToolName "script-execute" -Payload @{
+    $response = Invoke-BridgeJson -ToolName "script-execute" -Payload @{
         csharpCode = $csharpCode
         bridgeSceneLockToken = $SceneLockToken
         bridgeSceneDirtyPolicy = "ignore"
@@ -387,10 +380,9 @@ public class Script
 }
 
 $projectRoot = Get-ProjectRoot
-$bridgePath = Join-Path $projectRoot ".codex\skills\aibridge\bridge.py"
-if (-not (Test-Path -LiteralPath $bridgePath)) {
-    throw "AIBridge CLI not found: $bridgePath"
-}
+$script:bridgeRoot = Join-Path $projectRoot "Temp\UnityBridge"
+$script:commandsDir = Join-Path $script:bridgeRoot "commands"
+$script:resultsDir = Join-Path $script:bridgeRoot "results"
 
 $workflowReport = [ordered]@{
     ProjectRoot = $projectRoot
@@ -447,7 +439,7 @@ try {
     }
 
     if ($canContinueWorkflow) {
-        $lockResponse = Invoke-BridgeJson -BridgePath $bridgePath -ToolName "scene-lock-acquire" -Payload @{
+        $lockResponse = Invoke-BridgeJson -ToolName "scene-lock-acquire" -Payload @{
             owner = $Owner
             reason = $Reason
             mode = "wait"
@@ -461,7 +453,7 @@ try {
         $sceneLockToken = [string]$lockResponse.message.token
         $workflowReport.LockAcquired = $true
 
-        $initialInspection = Invoke-FormalSceneAutomationMethod -BridgePath $bridgePath -MethodName "InspectOpenFormalScene" -SceneLockToken $sceneLockToken
+        $initialInspection = Invoke-FormalSceneAutomationMethod -MethodName "InspectOpenFormalScene" -SceneLockToken $sceneLockToken
         $workflowReport.InitialInspection = $initialInspection
 
         if (-not $initialInspection.Success) {
@@ -494,7 +486,7 @@ try {
                 $workflowReport.Success = $true
             }
             else {
-                $repairResult = Invoke-FormalSceneAutomationMethod -BridgePath $bridgePath -MethodName $repairMethod -SceneLockToken $sceneLockToken
+                $repairResult = Invoke-FormalSceneAutomationMethod -MethodName $repairMethod -SceneLockToken $sceneLockToken
                 $workflowReport.RepairAttempted = $true
                 $workflowReport.RepairResult = $repairResult
 
@@ -504,7 +496,7 @@ try {
                     $workflowReport.Success = $false
                 }
                 elseif (-not $initialInspection.SceneIsDirty -and -not $SkipAutoSaveCleanScene) {
-                    $saveResponse = Invoke-BridgeJson -BridgePath $bridgePath -ToolName "scene-save" -Payload @{
+                    $saveResponse = Invoke-BridgeJson -ToolName "scene-save" -Payload @{
                         bridgeSceneLockToken = $sceneLockToken
                         bridgeSceneDirtyPolicy = "ignore"
                     }
@@ -514,13 +506,13 @@ try {
                     }
 
                     $workflowReport.AutoSavedCleanFormalScene = $true
-                    $workflowReport.FinalInspection = Invoke-FormalSceneAutomationMethod -BridgePath $bridgePath -MethodName "InspectOpenFormalScene" -SceneLockToken $sceneLockToken
+                    $workflowReport.FinalInspection = Invoke-FormalSceneAutomationMethod -MethodName "InspectOpenFormalScene" -SceneLockToken $sceneLockToken
                     $workflowReport.Message = "Formal scene input root repair completed and the formal scene was saved in the same workflow."
                     $workflowReport.Success = $true
                 }
                 else {
                     $workflowReport.PendingUserSaveDecision = $initialInspection.SceneIsDirty
-                    $workflowReport.FinalInspection = Invoke-FormalSceneAutomationMethod -BridgePath $bridgePath -MethodName "InspectOpenFormalScene" -SceneLockToken $sceneLockToken
+                    $workflowReport.FinalInspection = Invoke-FormalSceneAutomationMethod -MethodName "InspectOpenFormalScene" -SceneLockToken $sceneLockToken
                     if ($initialInspection.SceneIsDirty) {
                         $workflowReport.Message = "Formal scene input root repair completed on an already-dirty formal scene, but the workflow did not save it. A user decision is still required."
                     }
@@ -536,7 +528,7 @@ try {
 finally {
     if (-not [string]::IsNullOrWhiteSpace($sceneLockToken)) {
         try {
-            [void](Invoke-BridgeJson -BridgePath $bridgePath -ToolName "scene-lock-release" -Payload @{
+            [void](Invoke-BridgeJson -ToolName "scene-lock-release" -Payload @{
                 token = $sceneLockToken
             })
         }

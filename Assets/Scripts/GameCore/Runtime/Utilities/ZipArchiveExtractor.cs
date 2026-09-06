@@ -57,7 +57,7 @@ namespace FantasyWord.GameCore
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
                     string destinationPath = Path.GetFullPath(Path.Combine(root, entry.FullName));
-                    if (!destinationPath.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+                    if (!IsPathInsideDirectory(root, destinationPath))
                     {
                         Debug.LogError($"[ZipArchiveExtractor] Unsafe zip entry path: {entry.FullName}");
                         return false;
@@ -85,6 +85,24 @@ namespace FantasyWord.GameCore
                 Debug.LogError($"[ZipArchiveExtractor] {e}");
                 return false;
             }
+        }
+
+        private static bool IsPathInsideDirectory(string rootPath, string candidatePath)
+        {
+            string normalizedRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(rootPath));
+            string normalizedCandidate = Path.GetFullPath(candidatePath);
+            return normalizedCandidate.StartsWith(normalizedRoot, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string EnsureTrailingDirectorySeparator(string path)
+        {
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) ||
+                path.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+            {
+                return path;
+            }
+
+            return path + Path.DirectorySeparatorChar;
         }
     }
 }

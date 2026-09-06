@@ -133,8 +133,7 @@ namespace FantasyWord.GameCore
 
             foreach (string zip in Directory.GetFiles(path, "*.zip", allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
             {
-                ZipArchiveExtractor.UnzipFile(zip, Path.GetDirectoryName(zip));
-                File.Delete(zip);
+                ExtractAndDeleteArchive(zip);
             }
         }
 
@@ -148,8 +147,7 @@ namespace FantasyWord.GameCore
             string[] zips = Directory.GetFiles(path, "*.zip", allDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
             UniTask[] tasks = zips.Select(zip => UniTask.RunOnThreadPool(() =>
             {
-                ZipArchiveExtractor.UnzipFile(zip, Path.GetDirectoryName(zip));
-                File.Delete(zip);
+                ExtractAndDeleteArchive(zip);
             })).ToArray();
 
             await UniTask.WhenAll(tasks);
@@ -157,12 +155,24 @@ namespace FantasyWord.GameCore
 
         public static void DeleteModFromDisk(ModInfo modInfo)
         {
+            DeleteModFromDisk(modInfo, LoadingPath);
+        }
+
+        internal static void DeleteModFromDisk(ModInfo modInfo, string loadingRoot)
+        {
             if (modInfo == null || string.IsNullOrWhiteSpace(modInfo.FilePath) || !Directory.Exists(modInfo.FilePath))
             {
                 return;
             }
 
-            Directory.Delete(modInfo.FilePath, true);
+            string fullPath = Path.GetFullPath(modInfo.FilePath);
+            if (!IsPathInsideDirectory(loadingRoot, fullPath))
+            {
+                Debug.LogError($"[ModAPI] Refuse to delete mod outside loading root: {fullPath}");
+                return;
+            }
+
+            Directory.Delete(fullPath, true);
         }
 
         public static async UniTask<ModInfo> LoadModInfo(string modInfoPath)
@@ -173,8 +183,46 @@ namespace FantasyWord.GameCore
                 return null;
             }
 
-            modInfo.FilePath = Path.GetDirectoryName(modInfoPath)?.Replace(@"\", "/");
+            string directory = Path.GetDirectoryName(modInfoPath);
+            modInfo.FilePath = string.IsNullOrWhiteSpace(directory) ? null : Path.GetFullPath(directory);
             return modInfo;
+        }
+
+        private static void ExtractAndDeleteArchive(string zip)
+        {
+            string outputDirectory = Path.GetDirectoryName(zip);
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+            {
+                return;
+            }
+
+            if (ZipArchiveExtractor.UnzipFile(zip, outputDirectory))
+            {
+                File.Delete(zip);
+            }
+        }
+
+        private static bool IsPathInsideDirectory(string rootPath, string candidatePath)
+        {
+            if (string.IsNullOrWhiteSpace(rootPath) || string.IsNullOrWhiteSpace(candidatePath))
+            {
+                return false;
+            }
+
+            string normalizedRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(rootPath));
+            string normalizedCandidate = Path.GetFullPath(candidatePath);
+            return normalizedCandidate.StartsWith(normalizedRoot, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string EnsureTrailingDirectorySeparator(string path)
+        {
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) ||
+                path.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+            {
+                return path;
+            }
+
+            return path + Path.DirectorySeparatorChar;
         }
 
         private static void EnsureInitialized()

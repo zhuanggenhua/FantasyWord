@@ -59,7 +59,7 @@ namespace FantasyWord.GameCore
                 ModStatus state = m_modConfigData.EnsureModState(modInfo).status;
                 if (state == ModStatus.Delete)
                 {
-                    ModAPI.DeleteModFromDisk(modInfo);
+                    ModAPI.DeleteModFromDisk(modInfo, m_modConfigData.LoadingPath);
                     m_modConfigData.ConsumeDeletedModState(modInfo);
                     continue;
                 }
@@ -100,7 +100,7 @@ namespace FantasyWord.GameCore
             ModStatus state = configData.EnsureModState(modInfo).status;
             if (state == ModStatus.Delete)
             {
-                ModAPI.DeleteModFromDisk(modInfo);
+                ModAPI.DeleteModFromDisk(modInfo, configData.LoadingPath);
                 configData.ConsumeDeletedModState(modInfo);
                 return null;
             }

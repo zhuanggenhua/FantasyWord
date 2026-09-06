@@ -1,6 +1,6 @@
 param(
     [string]$OutputRoot = "Assets/Art/角色/真正英雄裸体动作",
-    [string]$EvidenceRoot = ".codex/evidence/真正英雄裸体动作"
+    [string]$EvidenceRoot = "Logs/evidence/真正英雄裸体动作"
 )
 
 Set-StrictMode -Version Latest

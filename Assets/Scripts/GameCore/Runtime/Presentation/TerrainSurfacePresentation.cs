@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// 地表元素运行时表现桥接器。
+    /// 地表元素运行时表现同步器。
     /// 它只同步临时火焰/蒸汽 Tile 和草覆盖层显隐，不修改规则 Tilemap，也不把燃尽结果写成新的作者地形。
     /// </summary>
     [DisallowMultipleComponent]

@@ -7,6 +7,7 @@
 - Unity 工程根目录：`C:\Gamedev\Unity\Project\FantasyWord`。
 - 当前 Unity 版本：`6000.3.10f1`；渲染管线：URP 2D；输入方案：Unity Input System。
 - 当前游戏定位：单机优先、有限人数主机权威合作为未来方向的俯视角开放世界像素游戏。
+- 框架分层：YokiFrame 是底座，GameCore 是通用游戏框架，Gameplay 是 FantasyWord 具体业务层；总分层唯一口径见 `.spec/knowledge/standards/framework-layering.md`，Gameplay 内部对象架构见 `.spec/knowledge/standards/gameplay-architecture.md`。
 - 当前阶段：不接入网络框架，不创建网络空壳；先做稳单机核心、内容数据化、稳定 ID、可审计与可迁移。
 - 当前美术基线：MiniFantasy。
 
@@ -27,7 +28,7 @@
 | `.spec/knowledge/features/project/` | 已吸收的 FantasyWord 长期项目知识库，是当前唯一正式项目知识入口。 |
 | `.spec/knowledge/lessons.md` | 反复踩坑的候选经验池，第二次出现收录，稳定复用后升级为正式规范。 |
 | `.spec/decisions/` | 架构、流程、规范层决策记录，只新增不改写历史。 |
-| `.spec/skills/` | 项目内可复用工作流，从 LumioAgent 吸收后已按本项目红线改写。 |
+| `.spec/skills/` | 项目内可复用工作流；外部 workflow 只吸收有效增量，按本项目红线改写。 |
 | `.spec/agents/` | 需要隔离上下文才有价值的职能 agent；当前只登记 reviewer 角色说明。 |
 | `.spec/tasks/` | 进行中任务卡；完成后删除，历史交给 git。 |
 | `openspec/` | 功能 proposal/change/spec，不和 `.spec/decisions/` 混用。 |
@@ -40,13 +41,15 @@
 - Bug、测试失败、异常行为：先用 `.spec/skills/systematic-debugging` 找根因；没有锁定原始症状和真相源前不得修。
 - 装备换装、坐骑原版素材接入、帧编辑器、Body/Head UV、Idle/Walk/Attack 换装错位或完整截图验收：先用 `.spec/skills/equipment-system-workflow` 锁定对象、配置流程和端到端证据。
 - 多步骤或多模块任务：用 `.spec/skills/task-breakdown` 拆任务；同一文件集重叠的任务必须串行。
-- 需要子 agent 执行时：用 `.spec/skills/subagent-driven-development`，并显式要求 `gpt-5.4` + `high`。
+- 需要子 agent 执行时：用 `.spec/skills/subagent-driven-development`；模型与推理强度口径以该 skill 为准。
 - 收口前：用 `.spec/skills/verification-before-completion`，必须有新鲜验证证据，不能只说“应该好了”。
 - 新增或更新规范、skill、知识文档：用 `.spec/skills/spec-steward` 判断落点并同步索引。
+- Unity Editor 自动化：先读 `.spec/skills/unity-skills`；只做 Unity CLI 查询/打开时读 `.spec/skills/unity-cli`；涉及 UPM 包查询、安装、移除或升级时读 `.spec/skills/unity-package-management`；需要沿用既有 AIBridge 验证链或 UnitySkills 不覆盖时，再读 `.spec/knowledge/features/project/AIBridge常用命令.md`。
+- 裁决具体业务、开放世界、队伍、派系、经济、表现或模式 owner：先读 `.spec/knowledge/standards/framework-layering.md`，再读 `.spec/knowledge/standards/gameplay-architecture.md`。
 
 ## 子 Agent 约束
 
-- 使用子 agent 做代码分析、设计、重构、实现、修复、测试等与改代码直接相关的任务时，必须显式使用 `gpt-5.4` + `high`。
+- 使用子 agent 做代码分析、设计、重构、实现、修复、测试等与改代码直接相关的任务时，模型与推理强度口径以 `.spec/skills/subagent-driven-development` 为唯一正式 owner。
 - 子 agent 只能执行被派发的任务，不得继续派生子 agent。
 - reviewer 类审查只在需要隔离审查价值时使用；普通小改动不用为了形式派审。
 - 未经用户当轮明确许可，不创建、切换、重建或删除分支、tag、worktree。
@@ -56,14 +59,15 @@
 
 - 文档或规范任务：至少验证 `.spec` 链接、索引、frontmatter、skill 路由和根入口一致。
 - `.spec` 结构改动后运行：`node .spec/tools/spec-lint.mjs`。
+- 修改 `.spec/tools/spec-lint.mjs` 后还要运行：`node --test .spec/tools/spec-lint.test.mjs`。
 - 代码任务：按任务涉及范围选择静态检查、Unity Editor 自动化、PlayMode、测试或截图验收。
 - Bug 修复：必须回到用户原始症状验收；如果只做了止血、降噪、跳过或兜底，必须明确说只是缓解，不是根因修复。
 - Unity 场景或资产任务：不得把最近打开的场景、最近日志或自动化最后操作对象脑补为目标；必须锁定对象、真相来源、目标入口/环境、验收口径。
 
-## LumioAgent 吸收结果
+## 外部工作流吸收结果
 
-- 采用它的 `.spec` 结构、知识导航、经验升级、skill 工作流和结构校验思想。
-- `.spec/knowledge/features/project/` 的 62 个文档是当前项目知识入口。
+- 采用 `.spec` 结构、知识导航、经验升级、skill 工作流和结构校验思想。
+- `.spec/knowledge/features/project/` 只保留长期项目入口；阶段取证和历史台账通过 `文档索引.md` 路由到专项目录，具体是否默认必读以 `.spec/knowledge/README.md` 和 `文档索引.md` 为准。
 - 重复 skill 的处理结果记录在 `.spec/knowledge/standards/skill-conflicts.md`，当前已按“直接吸收，不再等待决策”处理。
 - 不采用默认 worktree/分支策略；本项目继续遵守“未获许可不创建或切换分支、tag、worktree”。
-- 不采用强制全量 TDD 作为全局铁律；本项目保留“高风险逻辑、bug 修复、关键合同优先补测试，小改动不机械补同粒度测试”的务实策略。
+- 不采用强制全量 TDD 作为一刀切铁律；本项目保留“高风险逻辑、bug 修复、关键合同优先补测试，小改动不机械补同粒度测试”的务实策略。

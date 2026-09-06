@@ -35,7 +35,7 @@ namespace FantasyWord.GameCore
     }
 
     /// <summary>
-    /// CharacterAbilitySet 的 Formal GAS 规则桥接部分，负责注册能力规则、评估成本/冷却并同步项目侧冷却状态。
+    /// CharacterAbilitySet 的 Formal GAS 规则集成部分，负责注册能力规则、评估成本/冷却并同步项目侧冷却状态。
     /// </summary>
     public sealed partial class CharacterAbilitySet
     {

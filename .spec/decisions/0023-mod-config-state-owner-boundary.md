@@ -6,6 +6,8 @@
   - `Assets/Scripts/GameCore/Runtime/Mods` 是从 Chris 吸收的最小 Mod 地基，负责本地 Mod 目录扫描、zip 解包、启停状态、版本校验和外部 catalog 加载。
   - 当前项目没有继续引入 Chris 全套 Config 框架，`ModConfig` 是项目侧 JSON 配置 owner。
   - `GetModState()` 原先会在读取状态时创建默认记录，并在遇到 `Delete` 状态时删除状态记录，导致“读取配置”和“修改配置”的职责混在一个方法里。
+- 术语说明：
+  - 本 ADR 原文里的“Mod 地基”按当前三层口径应理解为 `GameCore` 的最小 Mod 通用框架闭包，不表示 `GameCore` 是项目底座；总分层以 `.spec/knowledge/standards/framework-layering.md` 为准。
 - 决策：
   - `ModConfig.GetModState()` 只作为状态查询入口，不得创建或删除 `ModState` 记录。
   - 扫描到真实 Mod 并需要登记默认状态时，必须显式调用 `EnsureModState()`。

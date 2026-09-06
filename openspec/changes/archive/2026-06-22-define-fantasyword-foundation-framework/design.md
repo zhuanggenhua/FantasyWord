@@ -65,7 +65,7 @@
 
 旧 `FantasyWordBootstrapper + FantasyWordRuntimeContext + FantasyWordModuleInstaller + FantasyWordServiceRegistry + FantasyWordEventBus + 五大 ModuleAsset` 没有成熟参考同职责依据，不再作为正式实现、验收口径或后续扩展前提。
 
-当前存在的裁剪闭包不是新的框架设计。它们只允许表示三类情况：移除参考项目第三方依赖、适配当前 Unity/C# 编译语义、或者因为上游参考闭包尚未迁入而暂时禁止某些 API。每个裁剪点必须登记到 `.spec/knowledge/features/project/foundation-reference-audit.md` 的“参考偏离台账”；没有登记的偏离不得作为正式实现保留。
+当前存在的裁剪闭包不是新的框架设计。它们只允许表示三类情况：移除参考项目第三方依赖、适配当前 Unity/C# 编译语义、或者因为上游参考闭包尚未迁入而暂时禁止某些 API。每个裁剪点必须登记到 `.spec/knowledge/features/project/framework-reference-evidence/foundation-reference-audit.md` 的“参考偏离台账”；没有登记的偏离不得作为正式实现保留。
 
 本 change 的目标不是把多个成熟框架外面再包一层，而是选定单一真相源后直接落地。基础 RPG 数据、生命周期、地图、存档、命令、交互、物品、任务和 UI 闭包默认以 `2DRPGEngine` 为主；俯视角动作手感、能力组件、武器、拾取、机关、相机和 2D 地牢样板默认以 `TopDownEngine` 为局部参考；对象池、协程、资源/场景/文本强类型入口、本地化、日志和 UI 小工具由 `YokiFrame` 承担工具层。任何同职责冲突都必须在这三者中选一个当前真相源，不得通过 `Compatibility`、`Adapter`、`FoundationSupport` 或镜像包装层维持双轨。
 

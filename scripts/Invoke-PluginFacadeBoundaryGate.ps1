@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [switch]$AsJson
 )
@@ -40,22 +40,23 @@ $scriptsRoot = Join-Path $projectRoot "Assets/Scripts"
 $editorRoot = Join-Path $projectRoot "Assets/Editor"
 
 $allowedEquipmentPrefixes = @(
-    "Assets\Scripts\Presentation\EquipmentSystem\",
+    "Assets\Scripts\Gameplay\Runtime\Presentation\EquipmentSystem\",
     "Assets\Scripts\Items\Runtime\Equipment\",
+    "Assets\Editor\Gameplay\Presentation\EquipmentSystem\",
     "Assets\Editor\GameCore\EditorWindows\"
 )
 
 $allowedEquipmentPaths = @(
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAnimator.cs",
-    "Assets\Scripts\Presentation\WaterReflection\Runtime\WaterReflectionCaster2D.cs",
-    "Assets\Scripts\Presentation\WaterReflection\Editor\ClickMoveTestWaterReflectionInstaller.cs"
+    "Assets\Scripts\Gameplay\Runtime\Presentation\WaterReflection\Runtime\WaterReflectionCaster2D.cs",
+    "Assets\Editor\Gameplay\Presentation\WaterReflection\Authoring\ClickMoveTestWaterReflectionInstaller.cs"
 )
 
 $allowedCombatPrefixes = @()
 
 $allowedCombatPaths = @(
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayAttributeSet.cs",
-    "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageBridge.cs",
+    "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageIntegration.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageHelper.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageSystem.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayTagCatalog.cs",
@@ -88,9 +89,9 @@ $allowedCombatPaths = @(
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreAudio.cs",
     "Assets\Scripts\GameCore\Runtime\Presentation\CuePlayGameCoreFeedback.cs",
     "Assets\Editor\GameCore\GAS\GasTimelineHitboxSceneHandle.cs",
-    "Assets\Editor\GameCore\Bridge\CompositeRuntimeSmokeValidator.cs",
-    "Assets\Editor\GameCore\Bridge\ClickMoveTestElementSurfaceVisualValidator.cs",
-    "Assets\Editor\GameCore\Bridge\ClickMoveTestGasBasicAttackValidator.cs"
+    "Assets\Editor\GameCore\Automation\CompositeRuntimeSmokeValidator.cs",
+    "Assets\Editor\GameCore\Automation\ClickMoveTestElementSurfaceVisualValidator.cs",
+    "Assets\Editor\GameCore\Automation\ClickMoveTestGasBasicAttackValidator.cs"
 )
 
 $allowedPresentationPrefixes = @(
@@ -156,7 +157,7 @@ $forbiddenUiHostDependencyPatterns = @(
 $allowedUiHostDependencyPrefixes = @(
     "Assets\Scripts\GameCore\Runtime\UI\",
     "Assets\Scripts\GameCore\Runtime\UI\UIKitSmoke\",
-    "Assets\Editor\GameCore\Bridge\UIKitSmoke\"
+    "Assets\Editor\GameCore\Automation\UIKitSmoke\"
 )
 
 $forbiddenSaveKitDirectCallPatterns = @(
@@ -175,7 +176,7 @@ $allowedFeedbackBoundaryPatterns = @(
 )
 
 $allowedLayerPrefixes = @(
-    "Assets\Editor\GameCore\Bridge\"
+    "Assets\Editor\GameCore\Automation\"
 )
 
 function Test-IsAllowedLifecycleDependency {

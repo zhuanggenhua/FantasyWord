@@ -15,7 +15,7 @@ namespace FantasyWord.GameCore
             private const float MinimumNavigationWaypointTolerance = 0.3f;
 
             private readonly AIController m_owner;
-            private CharacterSteeringRuntime2D m_steeringAdapter = null;
+            private CharacterSteeringRuntime2D m_steeringRuntime = null;
             private readonly CharacterSteeringPathCursor2D m_pathCursor = new();
             private readonly CombatWanderRuntime2D m_combatWander = new();
             private Vector2 m_steeringAverageOutput = Vector2.zero;
@@ -37,7 +37,7 @@ namespace FantasyWord.GameCore
                     throw new InvalidOperationException("AIController can only be attached to a CharacterBase.");
                 }
 
-                m_steeringAdapter = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);
+                m_steeringRuntime = new CharacterSteeringRuntime2D(character, m_owner.m_steeringProfile);
                 ValidateSteeringGroupMapping(m_owner.m_transitSteeringGroupId, "中间路线");
                 ValidateSteeringGroupMapping(m_owner.m_targetPursuitSteeringGroupId, "移动目标追击");
                 if (m_owner.ShouldUseCombatWander)
@@ -55,13 +55,13 @@ namespace FantasyWord.GameCore
                 InvalidateNavigationPath();
                 m_waitingForAttackFacing = false;
                 m_combatWander.Reset();
-                m_steeringAdapter?.Stop();
+                m_steeringRuntime?.Stop();
             }
 
             public void Dispose()
             {
-                m_steeringAdapter?.Dispose();
-                m_steeringAdapter = null;
+                m_steeringRuntime?.Dispose();
+                m_steeringRuntime = null;
             }
 
             public void TryHandleProvoked(CharacterBase source)
@@ -95,7 +95,7 @@ namespace FantasyWord.GameCore
 
             private CharacterBase FindTarget()
             {
-                foreach (Collider2D collider in m_steeringAdapter.DetectedColliders)
+                foreach (Collider2D collider in m_steeringRuntime.DetectedColliders)
                 {
                     CharacterBase potentialTarget = collider != null ? collider.GetComponentInParent<CharacterBase>() : null;
                     if (potentialTarget != null &&
@@ -290,7 +290,7 @@ namespace FantasyWord.GameCore
                         targetVelocity = wanderTargetBody.linearVelocity;
                     }
 
-                    m_steeringAdapter.Submit(
+                    m_steeringRuntime.Submit(
                         true,
                         m_targetPosition,
                         targetVelocity,
@@ -299,8 +299,8 @@ namespace FantasyWord.GameCore
                         m_owner.m_detectionRadius,
                         speedMultiplier: m_owner.m_combatWanderSpeedMultiplier,
                         wanderIntent: wanderIntent);
-                    m_steeringAdapter.ApplyLatestResult();
-                    m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                    m_steeringRuntime.ApplyLatestResult();
+                    m_steeringAverageOutput = m_steeringRuntime.LatestResult.SafeDirection;
                     ApplySubjectFacing(m_owner.CombatWanderFacingMode, m_steeringAverageOutput);
                     return;
                 }
@@ -322,7 +322,7 @@ namespace FantasyWord.GameCore
                         targetVelocity = targetBody.linearVelocity;
                     }
 
-                    m_steeringAdapter.Submit(
+                    m_steeringRuntime.Submit(
                         true,
                         m_targetPosition,
                         targetVelocity,
@@ -330,8 +330,8 @@ namespace FantasyWord.GameCore
                         finalGroupId,
                         m_owner.m_detectionRadius,
                         soughtDistance);
-                    m_steeringAdapter.ApplyLatestResult();
-                    m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                    m_steeringRuntime.ApplyLatestResult();
+                    m_steeringAverageOutput = m_steeringRuntime.LatestResult.SafeDirection;
                     ApplySubjectFacing(ResolveActiveFacingMode(), m_steeringAverageOutput);
                     return;
                 }
@@ -343,7 +343,7 @@ namespace FantasyWord.GameCore
                         out string behaviourGroupId,
                         out bool isFinalTarget))
                 {
-                    m_steeringAdapter.Submit(
+                    m_steeringRuntime.Submit(
                         false,
                         null,
                         Vector2.zero,
@@ -370,7 +370,7 @@ namespace FantasyWord.GameCore
                     resolvedTargetVelocity = resolvedTargetBody.linearVelocity;
                 }
 
-                m_steeringAdapter.Submit(
+                m_steeringRuntime.Submit(
                     true,
                     steeringTarget,
                     resolvedTargetVelocity,
@@ -378,8 +378,8 @@ namespace FantasyWord.GameCore
                     behaviourGroupId,
                     m_owner.m_detectionRadius,
                     isFinalTarget ? soughtDistance : -1.0f);
-                m_steeringAdapter.ApplyLatestResult();
-                m_steeringAverageOutput = m_steeringAdapter.LatestResult.SafeDirection;
+                m_steeringRuntime.ApplyLatestResult();
+                m_steeringAverageOutput = m_steeringRuntime.LatestResult.SafeDirection;
                 ApplySubjectFacing(ResolveActiveFacingMode(), m_steeringAverageOutput);
             }
 

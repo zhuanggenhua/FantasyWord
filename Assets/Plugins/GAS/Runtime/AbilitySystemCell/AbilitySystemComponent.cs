@@ -9,22 +9,34 @@ namespace GAS.Runtime
 
         private void Awake()
         {
+            if (!GASManager.HasLiveWorld)
+            {
+                GASManager.Initialize();
+            }
+
             _abilitySystemCell = new AbilitySystemCell();
         }
 
         private void OnDestroy()
         {
-            _abilitySystemCell.Dispose();
+            _abilitySystemCell?.Dispose();
+            _abilitySystemCell = null;
         }
         
         private void OnEnable()
         {
-            EntityHelper.BindGameObjectToEntity(_abilitySystemCell.Entity, gameObject);
+            if (_abilitySystemCell != null)
+            {
+                EntityHelper.BindGameObjectToEntity(_abilitySystemCell.Entity, gameObject);
+            }
         }
 
         private void OnDisable()
         {
-            EntityHelper.UnbindGameObjectToEntity(_abilitySystemCell.Entity);
+            if (_abilitySystemCell != null)
+            {
+                EntityHelper.UnbindGameObjectToEntity(_abilitySystemCell.Entity);
+            }
         }
         
 

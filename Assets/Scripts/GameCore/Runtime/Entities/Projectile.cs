@@ -76,8 +76,10 @@ namespace FantasyWord.GameCore
 
         internal bool shouldPersistRuntimeState => m_operating && m_remainingLifetime > 0.0f;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             m_hasDestroyAnimation = m_animator && AnimationUtils.HasParameter(m_animator, m_destroyAnimationParameter);
         }
 

@@ -2,7 +2,7 @@
 name: Bug排查索引
 description: 项目知识：Bug排查索引.md：Bug排查索引。
 metadata:
-  type: doc
+  type: index
   status: 已交付
 ---
 
@@ -25,4 +25,10 @@ metadata:
 - EX-GAS 动态冷却标签不生效：`bugs/EX-GAS动态冷却标签不生效排查记录.md`
 - 武器输入缓冲绕过 GAS 激活检查：`bugs/武器输入缓冲绕过GAS激活检查排查记录.md`
 - EX-GAS 时间轴预览切场景保存弹窗：`bugs/EX-GAS时间轴预览切场景保存弹窗排查记录.md`
+- 第三方素材 meta 变更审计：`bugs/第三方素材meta变更审计.md`
+- 换装系统组织与 SpriteLibrary 评估：`bugs/换装系统组织与SpriteLibrary评估.md`
+- 换装测试动作来源表：`bugs/换装测试动作来源表.md`
+- 换装测试回归矩阵：`bugs/换装测试回归矩阵.md`
+- 换装测试运行态复测清单：`bugs/换装测试运行态复测清单.md`
+- 换装测试问题验收表：`bugs/换装测试问题验收表.md`
 

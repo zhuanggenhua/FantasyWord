@@ -23,10 +23,9 @@ if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
     $ProjectRoot = (Resolve-Path (Join-Path $scriptRoot "..")).Path
 }
 
-$bridgePath = Join-Path $ProjectRoot ".codex\skills\aibridge\bridge.py"
-if (-not (Test-Path -LiteralPath $bridgePath)) {
-    throw "AIBridge CLI not found: $bridgePath"
-}
+$bridgeRoot = Join-Path $ProjectRoot "Temp\UnityBridge"
+$commandsDir = Join-Path $bridgeRoot "commands"
+$resultsDir = Join-Path $bridgeRoot "results"
 
 function Test-IsGitTrackedFile {
     param(
@@ -44,22 +43,6 @@ function Test-IsGitTrackedFile {
     return -not [string]::IsNullOrWhiteSpace(($gitOutput | Out-String).Trim())
 }
 
-function Quote-ProcessArgument {
-    param([string]$Value)
-
-    if ($null -eq $Value) {
-        return '""'
-    }
-
-    if ($Value -notmatch '[\s"]') {
-        return $Value
-    }
-
-    $escaped = $Value -replace '(\\*)"', '$1$1\"'
-    $escaped = $escaped -replace '(\\+)$', '$1$1'
-    return '"' + $escaped + '"'
-}
-
 function Invoke-BridgeProcess {
     param(
         [Parameter(Mandatory = $true)]
@@ -67,43 +50,47 @@ function Invoke-BridgeProcess {
         [string]$JsonLiteral
     )
 
-    $processStartInfo = [System.Diagnostics.ProcessStartInfo]::new()
-    $processStartInfo.FileName = "python"
-    $processStartInfo.UseShellExecute = $false
-    $processStartInfo.RedirectStandardOutput = $true
-    $processStartInfo.RedirectStandardError = $true
+    New-Item -ItemType Directory -Force -Path $commandsDir | Out-Null
+    New-Item -ItemType Directory -Force -Path $resultsDir | Out-Null
 
-    $rawArguments = [System.Collections.Generic.List[string]]::new()
-    [void]$rawArguments.Add($bridgePath)
-    [void]$rawArguments.Add($ToolName)
-    if (-not [string]::IsNullOrWhiteSpace($JsonLiteral)) {
-        [void]$rawArguments.Add($JsonLiteral)
+    $id = "{0:yyyyMMddHHmmssfff}-{1}" -f [DateTime]::UtcNow, ([Guid]::NewGuid().ToString("N").Substring(0, 8))
+    $commandPath = Join-Path $commandsDir "$id.json"
+    $resultPath = Join-Path $resultsDir "$id.json"
+    $params = if ([string]::IsNullOrWhiteSpace($JsonLiteral)) {
+        @{}
+    }
+    else {
+        $JsonLiteral | ConvertFrom-Json
     }
 
-    $quotedArguments = $rawArguments | ForEach-Object { Quote-ProcessArgument $_ }
-    $processStartInfo.Arguments = ($quotedArguments -join " ")
-
-    $process = [System.Diagnostics.Process]::Start($processStartInfo)
-    $stdout = $process.StandardOutput.ReadToEnd()
-    $stderr = $process.StandardError.ReadToEnd()
-    $process.WaitForExit()
-
-    $trimmedStdout = $stdout.Trim()
-    $trimmedStderr = $stderr.Trim()
-    $output = ($trimmedStdout + [Environment]::NewLine + $trimmedStderr).Trim()
-    if ($process.ExitCode -ne 0) {
-        throw "AIBridge call failed: $ToolName`n$output"
+    $payload = [ordered]@{
+        id = $id
+        tool = $ToolName
+        params = $params
     }
+    $tmpPath = "$commandPath.tmp"
+    [System.IO.File]::WriteAllText(
+        $tmpPath,
+        ($payload | ConvertTo-Json -Compress -Depth 32),
+        [System.Text.Encoding]::UTF8)
+    Move-Item -LiteralPath $tmpPath -Destination $commandPath -Force
 
-    if (-not [string]::IsNullOrWhiteSpace($trimmedStderr)) {
-        Write-Warning $trimmedStderr
-    }
+    $deadline = [DateTimeOffset]::UtcNow.AddSeconds(120)
+    do {
+        if (Test-Path -LiteralPath $resultPath) {
+            $resultJson = [System.IO.File]::ReadAllText($resultPath, [System.Text.Encoding]::UTF8)
+            $result = $resultJson | ConvertFrom-Json
+            if ($result.status -ne "success") {
+                throw "AIBridge file bridge call failed: $ToolName`n$($result.message)"
+            }
 
-    if (-not [string]::IsNullOrWhiteSpace($trimmedStdout)) {
-        return $trimmedStdout
-    }
+            return $resultJson
+        }
 
-    return $trimmedStderr
+        Start-Sleep -Milliseconds 250
+    } while ([DateTimeOffset]::UtcNow -lt $deadline)
+
+    throw "Timeout waiting for AIBridge file bridge result. tool=$ToolName id=$id timeoutSeconds=120"
 }
 
 function Invoke-BridgeJson {

@@ -41,6 +41,38 @@ metadata:
 
 ## 条目
 
+### 旧工程恢复不能降级为最小可编译
+- 日期：2026-03-11
+- 现象：恢复 FantasyWord 早期核心系统时，曾把 Combat / Ability / Projectile 等核心层做成“接口占位 + 主链可编译”，没有达到参考框架同层级能力。
+- 根因：把编译通过误当成恢复目标，忽略了数据层、运行时层、效果描述、堆叠、目标过滤、宿主承载和 UI 接入的闭包。
+- 规避：系统恢复 / 框架迁移任务默认以参考框架同职责能力为最低实现目标；编译通过只能作为阶段验证，不能替代功能闭包验收。
+- 来源：旧 `.learnings/LEARNINGS.md` 用户纠偏收口。
+- 状态：候选
+
+### 旧工程脚本恢复先分完好损坏缺失
+- 日期：2026-03-12
+- 现象：恢复 `Chest / Loot` 一类旧工程脚本时，曾直接按“参考职责 + 当前工程裁剪适配”重写，偏离了用户期望的恢复策略。
+- 根因：没有先判断文件是完好、损坏还是缺失，就按实现难度选择了裁剪实现。
+- 规避：损坏或缺失文件优先按同名参考迁移后再薄适配；完好文件先对比旧工程和当前实现，再择优选用，通常先把完好旧工程实现作为优先候选。
+- 来源：旧 `.learnings/LEARNINGS.md` 用户纠偏收口。
+- 状态：候选
+
+### 旧工程剩余差集必须覆盖 Editor 参考树
+- 日期：2026-03-12
+- 现象：评估剩余脚本时，只扫 runtime 参考树，导致 `_Editor/DatabaseWindow/DatabaseWindow.cs` 和 `_Editor/Playtest/EditorPlayModeOverride.cs` 被误判为没有同名参考。
+- 根因：把运行时代码搜索结果误当成全项目参考事实，漏掉 Editor 目录。
+- 规避：剩余差集只要包含 `_Editor/*` 或编辑器工具，就必须同步搜索参考源 editor 目录；依赖旧宿主 API 时优先补当前宿主入口，不能直接放弃。
+- 来源：旧 `.learnings/LEARNINGS.md` 用户纠偏收口。
+- 状态：候选
+
+### 损坏素材包脚本不能当逻辑源直接迁移
+- 日期：2026-03-13
+- 现象：从损坏备份迁入的 MiniFantasy 候选 `.cs` / `.unity` 曾因路径和名字对上，被当成可恢复逻辑源候选。
+- 根因：没有先做文本可读性和 Unity 场景可解析性检查；路径相似被误当成内容可信。
+- 规避：对损坏备份、恢复目录和外来素材包，先区分“素材源”和“逻辑源”；非正常文本源码不得继续按同名迁移脚本推进，场景只能在 Unity 中作为黑盒资源验证或重建最小宿主。
+- 来源：旧 `.learnings/ERRORS.md` 阶段错误收口。
+- 状态：候选
+
 ### 多参考源设计必须先定裁决标准再实施
 - 日期：2026-07-13
 - 现象：参考 2DRPGEngine 的 SpriteLibrary 方向变体设计时，先纠正了 Animator 方向状态问题，但随后新增了独立 `CharacterAnimationVariantSet` 包装层；该层虽然能运行，却不是对 Unity 原生能力和参考工程职责内核的最薄落地。
@@ -56,7 +88,7 @@ metadata:
 - 根因：弹窗处理口径只覆盖恢复备份，没有统一覆盖外部修改场景和其它普通模态确认。
 - 规避：外部修改场景直接选择 `重新加载 / Reload`；其它普通阻塞弹窗点击默认或主按钮继续。涉及删除本地数据或覆盖未知未保存内容时，仍按既有安全红线先取证。
 - 来源：用户纠偏。
-- 状态：已升格 -> `.spec/knowledge/features/project/开发与验收规范.md`、`.spec/knowledge/features/project/AIBridge常用命令.md`、`D:\codex-home\skills\aibridge\SKILL.md`
+- 状态：已升格 -> `.spec/knowledge/features/project/开发与验收规范.md`、`.spec/knowledge/features/project/AIBridge常用命令.md`、`.spec/knowledge/features/project/AIBridge常用命令.md`
 
 ### 视觉测试层不得越权改正式生成器和配置资产
 - 日期：2026-07-10

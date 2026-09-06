@@ -16,8 +16,8 @@ function Read-Text {
 }
 
 $violations = [System.Collections.Generic.List[string]]::new()
-$runtimePath = Join-Path $ProjectRoot "Assets/Scripts/Presentation/WaterReflection/Runtime/WaterReflectionCaster2D.cs"
-$installerPath = Join-Path $ProjectRoot "Assets/Scripts/Presentation/WaterReflection/Editor/ClickMoveTestWaterReflectionInstaller.cs"
+$runtimePath = Join-Path $ProjectRoot "Assets/Scripts/Gameplay/Runtime/Presentation/WaterReflection/Runtime/WaterReflectionCaster2D.cs"
+$installerPath = Join-Path $ProjectRoot "Assets/Editor/Gameplay/Presentation/WaterReflection/Authoring/ClickMoveTestWaterReflectionInstaller.cs"
 $runtimeText = Read-Text $runtimePath
 $installerText = Read-Text $installerPath
 

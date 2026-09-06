@@ -8,7 +8,7 @@ using UnityEngine;
 namespace FantasyWord.GameCore
 {
     /// <summary>
-    /// EX-GAS Timeline 向世界地表提交元素的薄桥接。
+    /// EX-GAS Timeline 向世界地表提交元素的正式任务扩展。
     /// 地表匹配、状态合并和地貌转化全部由 ElementReactionSystem 决定。
     /// </summary>
     public sealed class TaskApplyWorldElement : AbilityTaskBase<XParamApplyWorldElement>

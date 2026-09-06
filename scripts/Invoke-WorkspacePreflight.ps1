@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [switch]$IncludeGeneratedRoots,
     [switch]$AsJson
@@ -74,15 +74,12 @@ if (-not (Test-Path -LiteralPath $projectSettingsPath)) {
 
 $formalRoots = @(
     (Join-Path $projectRoot "Assets"),
-    (Join-Path $projectRoot "docs"),
+    (Join-Path $projectRoot ".spec"),
     (Join-Path $projectRoot "openspec"),
-    (Join-Path $projectRoot ".codex"),
     (Join-Path $projectRoot "scripts")
 )
 
 $generatedRoots = @(
-    (Join-Path $projectRoot ".codexbridge"),
-    (Join-Path $projectRoot "AIBridgeCache"),
     (Join-Path $projectRoot "Library"),
     (Join-Path $projectRoot "Logs"),
     (Join-Path $projectRoot "Temp"),
@@ -92,8 +89,8 @@ $generatedRoots = @(
 $contractPlaceholderExactPaths = @(
     "Assets/Art/MINIFANTASY Creatures - Super Low Res 2D Pixel Art by Krishna Palacio/Scripts",
     "Assets/ArtRes/KrishnaPalacio",
-    "Assets/Scripts/Presentation/EquipmentSystem/Tools",
-    "Assets/Scripts/Presentation/EquipmentSystem/Shaders/Includes",
+    "Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Tools",
+    "Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Shaders/Includes",
     "Assets/ThirdParty/MiniFantasyUV",
     "Assets/Plugins/YokiFrame/Core/Runtime/ResKit/Loader/Editor",
     "Assets/Plugins/YokiFrame/Tools/BuffKit/Runtime/Core/Core",
@@ -101,7 +98,6 @@ $contractPlaceholderExactPaths = @(
     "Assets/Plugins/YokiFrame/Tools/SceneKit/Tests",
     "openspec/specs",
     "openspec/changes",
-    ".codex/skills/unity-production/agents",
     "Assets/ArtRes",
     "Assets/Minifantasy_NPCs_Assets",
     "Assets/Sprites",
@@ -125,12 +121,29 @@ $contractPlaceholderExactPaths = @(
     "Assets/Scripts/GameCore/Runtime/Database/Abilities/Passive"
 )
 
+$retiredProjectRootExactPaths = @(
+    ("." + "codex"),
+    ("." + "agents"),
+    ("." + "codexbridge"),
+    ("." + "learnings"),
+    ("." + "tmp"),
+    "AIBridgeCache",
+    "docs",
+    "skills-lock.json",
+    "test-results",
+    "_ai_preview_clickmove_gas_attack.jpg",
+    "scripts/Watch-CodexAbort.ps1",
+    (("." + "spec") + "/backups")
+)
+
 $disallowedFormalArtifactExactPaths = @(
     "Assets/Editor/com.IvanMurzak",
     "Assets/Resources/Unity-MCP-ConnectionConfig.json",
     "Assets/_Recovery",
     "Assets/_Recovery.meta"
 )
+
+$disallowedFormalArtifactExactPaths += $retiredProjectRootExactPaths
 
 $disallowedFormalArtifactPathPrefixes = @(
     "Assets/Editor/com.IvanMurzak/",
@@ -144,6 +157,13 @@ $bucket = New-PreflightBucket
 foreach ($relativePath in $disallowedFormalArtifactExactPaths) {
     $fullPath = Join-Path $projectRoot $relativePath
     if (Test-Path -LiteralPath $fullPath) {
+        [void]$bucket.DisallowedFormalArtifacts.Add($relativePath)
+    }
+}
+
+Get-ChildItem -LiteralPath $projectRoot -File -Filter "_ai_preview_*.jpg" -ErrorAction SilentlyContinue | ForEach-Object {
+    $relativePath = Convert-ToProjectRelativePath -ProjectRoot $projectRoot -FullPath $_.FullName
+    if (-not $bucket.DisallowedFormalArtifacts.Contains($relativePath)) {
         [void]$bucket.DisallowedFormalArtifacts.Add($relativePath)
     }
 }
@@ -209,7 +229,7 @@ if ($AsJson) {
 
 Write-Host "FantasyWord workspace preflight"
 Write-Host ("ProjectRoot: {0}" -f $report.ProjectRoot)
-Write-Host "Generated roots are excluded by default: .codexbridge, AIBridgeCache, Library, Logs, Temp, obj"
+Write-Host "Generated roots are excluded by default: Library, Logs, Temp, obj"
 Write-Host "Use -IncludeGeneratedRoots only when you need a generated-output summary; generated empties are not pending cleanup by default."
 Write-Host ("Contract placeholders: {0}" -f $report.ContractPlaceholderCount)
 foreach ($path in $report.ContractPlaceholders) {

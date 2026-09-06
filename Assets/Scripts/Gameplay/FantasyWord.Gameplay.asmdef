@@ -1,0 +1,25 @@
+{
+  "name": "FantasyWord.Gameplay",
+  "rootNamespace": "FantasyWord.Gameplay",
+  "references": [
+    "FantasyWord.GameCore",
+    "YokiFrame",
+    "YokiFrame.UIKit",
+    "Unity.TextMeshPro",
+    "Unity.InputSystem",
+    "Unity.InputSystem.ForUI",
+    "UnityEngine.UI",
+    "Unity.2D.Animation.Runtime",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

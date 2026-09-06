@@ -15,6 +15,11 @@ namespace GAS.Runtime
 
         public AbilitySystemCell()
         {
+            if (!GASManager.HasLiveWorld)
+            {
+                GASManager.Initialize();
+            }
+
             Entity = EntityManager.CreateEntity();
             EntityManager.SetName(Entity, $"ASC_V{Entity.Version}_{Entity.Index}");
             GASManager.BindAscToEntity(Entity, this);
@@ -34,12 +39,12 @@ namespace GAS.Runtime
         public Entity Entity { get; private set; }
         private static EntityManager EntityManager => GASManager.EntityManager;
 
-        public void Dispose()  
-        {  
-            GASManager.UnbindAscToEntity(Entity);  
-            if (GASManager.ExWorld != null && GASManager.ExWorld.IsCreated)  
-                EntityHelper.DestroyEntity(Entity);  
-            Entity = Entity.Null;  
+        public void Dispose()
+        {
+            GASManager.UnbindAscToEntity(Entity);
+            if (Entity != Entity.Null && GASManager.HasLiveWorld)
+                EntityHelper.DestroyEntity(Entity);
+            Entity = Entity.Null;
         }
 
         public void Init(IEnumerable<int> baseTags, IEnumerable<AttrSetConfig> attrSets, IEnumerable<AbilityConfig> baseAbilities, int level = 1)

@@ -1,12 +1,37 @@
 #!/usr/bin/env node
+/**
+ * FantasyWord spec-lint — .spec/ 组织结构一致性机械校验。
+ *
+ * 校验范围：
+ *  1. 核心入口存在，根 AGENTS.md 只做 .spec 指针。
+ *  2. ADR 文件名、标题、索引登记和无 frontmatter。
+ *  3. 任务卡 frontmatter 只保留 status/owner，status 使用项目枚举。
+ *  4. skill / agent / knowledge frontmatter、链接和知识索引可达性。
+ *  5. standards 文档必须直接登记到 .spec/knowledge/README.md。
+ *  6. UnitySkills 项目入口只能保留薄 SKILL.md，不得把包内 modules / references 镜像复制进 .spec。
+ *  7. 废弃入口、迁移残留和运行时引用兜底表述不得回流。
+ */
 import fs from "node:fs";
 import path from "node:path";
 
-const root = process.cwd();
+const root = process.argv[2] ? path.resolve(process.argv[2]) : process.cwd();
 const specRoot = path.join(root, ".spec");
 const errors = [];
 const statuses = new Set(["设计中", "实施中", "已交付", "历史归档"]);
-const retiredKnowledgePath = path.join("docs", "ai");
+const retiredProjectRootPaths = [
+  "." + "codex",
+  "." + "agents",
+  "." + "codexbridge",
+  "." + "learnings",
+  "." + "tmp",
+  "AIBridgeCache",
+  "docs",
+  "skills-lock.json",
+  "test-results",
+  "_ai_preview_clickmove_gas_attack.jpg",
+  path.join("scripts", "Watch-CodexAbort.ps1"),
+  path.join("." + "spec", "backups"),
+];
 
 function rel(file) {
   return path.relative(root, file).replaceAll(path.sep, "/");
@@ -37,10 +62,9 @@ function walk(dir) {
 
 function parseFrontmatter(file) {
   const text = fs.readFileSync(file, "utf8");
-  if (!text.startsWith("---\n")) return null;
-  const end = text.indexOf("\n---", 4);
-  if (end < 0) return null;
-  const raw = text.slice(4, end).trim();
+  const matchFrontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!matchFrontmatter) return null;
+  const raw = matchFrontmatter[1].trim();
   const result = {};
   const lines = raw.split(/\r?\n/);
   for (const line of lines) {
@@ -73,14 +97,63 @@ function assertRootPointer() {
   }
 }
 
+function assertDecisionRecords() {
+  const decisionsDir = path.join(specRoot, "decisions");
+  const indexPath = path.join(decisionsDir, "README.md");
+  if (!fs.existsSync(indexPath)) return;
+
+  const indexText = fs.readFileSync(indexPath, "utf8");
+  if (indexText.startsWith("---")) fail(".spec/decisions/README.md 不应使用 frontmatter；ADR 格式契约由正文说明");
+
+  const decisionFiles = walk(decisionsDir)
+    .filter((file) => file.endsWith(".md") && path.basename(file) !== "README.md");
+
+  for (const file of decisionFiles) {
+    const name = path.basename(file);
+    const text = fs.readFileSync(file, "utf8");
+    if (!/^\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(name)) {
+      fail(`${rel(file)} ADR 文件名必须是 NNNN-<slug>.md`);
+    }
+    if (text.startsWith("---")) fail(`${rel(file)} ADR 不应使用 frontmatter`);
+    const number = name.slice(0, 4);
+    if (!new RegExp(`^#\\s+${number}\\b`, "m").test(text)) {
+      fail(`${rel(file)} ADR 标题必须以 "# ${number}" 开头`);
+    }
+    if (!indexText.includes(`](${name})`)) fail(`${rel(file)} 未登记进 decisions/README.md 索引`);
+  }
+}
+
+function assertTaskCards() {
+  const tasksDir = path.join(specRoot, "tasks");
+  const readme = path.join(tasksDir, "README.md");
+  if (fs.existsSync(readme) && fs.readFileSync(readme, "utf8").startsWith("---")) {
+    fail(".spec/tasks/README.md 不应使用 frontmatter；任务卡格式契约由正文说明");
+  }
+  if (!fs.existsSync(tasksDir)) return;
+
+  const statusEnum = new Set(["pending", "in_progress", "completed", "active"]);
+  for (const entry of fs.readdirSync(tasksDir, { withFileTypes: true })) {
+    if (entry.isDirectory() || !entry.name.endsWith(".md") || entry.name === "README.md") continue;
+    const file = path.join(tasksDir, entry.name);
+    const fm = parseFrontmatter(file);
+    if (!fm) {
+      fail(`${rel(file)} 任务卡缺少 frontmatter`);
+      continue;
+    }
+    const keys = Object.keys(fm).filter((key) => key !== "__raw");
+    for (const key of keys) {
+      if (!["status", "owner"].includes(key)) fail(`${rel(file)} 任务卡 frontmatter 只允许 status/owner，发现 ${key}`);
+    }
+    if (!statusEnum.has(fm.status)) fail(`${rel(file)} status 不在枚举内：${fm.status ?? ""}`);
+    if (keys.includes("owner") && !fm.owner) fail(`${rel(file)} owner 不能为空`);
+  }
+}
+
 function assertNoRetiredEntrypoints() {
-  const retiredAbsolute = path.join(root, retiredKnowledgePath);
-  if (fs.existsSync(retiredAbsolute)) {
-    const entries = walk(retiredAbsolute);
-    if (entries.length > 0) {
-      fail(`废弃规范入口仍存在且非空：${retiredKnowledgePath.replaceAll(path.sep, "/")}`);
-    } else {
-      console.warn(`spec-lint warning: 废弃规范入口空目录仍被外部进程占用：${retiredKnowledgePath.replaceAll(path.sep, "/")}`);
+  for (const retiredPath of retiredProjectRootPaths) {
+    const retiredAbsolute = path.join(root, retiredPath);
+    if (fs.existsSync(retiredAbsolute)) {
+      fail(`废弃项目入口仍存在：${retiredPath.replaceAll(path.sep, "/")}`);
     }
   }
 
@@ -98,6 +171,13 @@ function assertNoRetiredEntrypoints() {
     new RegExp(["docs", "ai"].join("/"), "i"),
     new RegExp(String.raw`docs\\ai`, "i"),
     new RegExp(["docs", "ai"].join("-"), "i"),
+    new RegExp(String.raw`\.` + "codex" + String.raw`[\\/]`, "i"),
+    new RegExp(String.raw`\.` + "agents" + String.raw`[\\/]`, "i"),
+    new RegExp(String.raw`\.` + "codexbridge", "i"),
+    new RegExp(["docs", "archive"].join(String.raw`[\\/]`), "i"),
+    new RegExp(String.raw`\.` + "spec" + String.raw`[\\/]backups`, "i"),
+    new RegExp("safe-image-reading-" + "disabled", "i"),
+    new RegExp("session-" + "hand" + "off", "i"),
     new RegExp(["历史", "兼容"].join("")),
     new RegExp(["兼容", "说明"].join("")),
     new RegExp(["迁移", "版"].join("")),
@@ -125,6 +205,25 @@ function assertNoRetiredEntrypoints() {
   }
 }
 
+function assertNoRetiredIgnoreEntries() {
+  const ignorePath = path.join(root, ".gitignore");
+  if (!fs.existsSync(ignorePath)) return;
+
+  const text = fs.readFileSync(ignorePath, "utf8");
+  const retiredIgnoreEntries = [
+    "/.codexbridge/",
+    "/AIBridgeCache/",
+    "/test-results/",
+    "/.learnings/",
+    "/docs/archive/",
+    "/_ai_preview_*.jpg",
+  ];
+
+  for (const entry of retiredIgnoreEntries) {
+    if (text.includes(entry)) fail(`.gitignore 仍隐藏废弃入口或阶段证据目录：${entry}`);
+  }
+}
+
 function assertSkillFrontmatter() {
   const skillsDir = path.join(specRoot, "skills");
   for (const skillFile of walk(skillsDir).filter((file) => path.basename(file) === "SKILL.md")) {
@@ -140,6 +239,35 @@ function assertSkillFrontmatter() {
     }
     if (fm.name !== expectedName) fail(`${rel(skillFile)} name=${fm.name}，应为 ${expectedName}`);
     if (!fm.description) fail(`${rel(skillFile)} 缺少 description`);
+  }
+}
+
+function assertUnitySkillsThinEntrypoint() {
+  const unitySkillsDir = path.join(specRoot, "skills", "unity-skills");
+  if (!fs.existsSync(unitySkillsDir)) return;
+
+  const files = walk(unitySkillsDir).map((file) => rel(file));
+  const allowed = new Set([".spec/skills/unity-skills/SKILL.md"]);
+  for (const file of files) {
+    if (!allowed.has(file)) {
+      fail(`${file} 是 UnitySkills 上游资料镜像；.spec/skills/unity-skills 只能保留薄 SKILL.md，通用资料读取 Packages/com.besty.unity-skills/unity-skills~`);
+    }
+  }
+
+  const skillPath = path.join(unitySkillsDir, "SKILL.md");
+  if (!fs.existsSync(skillPath)) {
+    fail(".spec/skills/unity-skills 缺少 SKILL.md");
+    return;
+  }
+
+  const skillText = fs.readFileSync(skillPath, "utf8");
+  for (const required of [
+    "Packages/com.besty.unity-skills/unity-skills~/SKILL.md",
+    "Packages/com.besty.unity-skills/unity-skills~/skills/SKILL.md",
+    "不在 `.spec/skills/unity-skills/` 内保存上游",
+    ".spec/skills/unity-package-management/SKILL.md",
+  ]) {
+    if (!skillText.includes(required)) fail(`.spec/skills/unity-skills/SKILL.md 缺少薄入口说明：${required}`);
   }
 }
 
@@ -194,6 +322,82 @@ function assertKnowledgeLinks() {
   }
 }
 
+function resolveKnowledgeTarget(file, target) {
+  if (/^(https?:|mailto:|#|[A-Za-z]:\\)/.test(target)) return null;
+  const clean = target.split("#")[0].trim();
+  if (!clean || !clean.endsWith(".md")) return null;
+
+  const normalized = clean.replaceAll("\\", "/");
+  if (normalized.startsWith(".spec/knowledge/")) {
+    return path.resolve(root, normalized);
+  }
+  if (normalized.startsWith("standards/") || normalized.startsWith("features/") || normalized === "lessons.md") {
+    return path.resolve(path.join(specRoot, "knowledge"), normalized);
+  }
+  return path.resolve(path.dirname(file), normalized);
+}
+
+function localKnowledgeRouteLinks(file) {
+  const links = [];
+  const frontmatter = parseFrontmatter(file);
+  if (!frontmatter || !/(?:^|\n)\s*type:\s*index\s*$/m.test(frontmatter.__raw)) return links;
+
+  const text = fs.readFileSync(file, "utf8");
+  const rows = text
+    .split(/\r?\n/)
+    .filter((line) => line.trimStart().startsWith("|") || line.trimStart().startsWith("-"));
+  const patterns = [
+    /\[[^\]]+\]\(([^)]+)\)/g,
+    /`([^`]+\.md)`/g,
+  ];
+
+  for (const row of rows) {
+    for (const pattern of patterns) {
+      for (const match of row.matchAll(pattern)) {
+        const resolved = resolveKnowledgeTarget(file, match[1]);
+        if (resolved && resolved.startsWith(path.join(specRoot, "knowledge")) && fs.existsSync(resolved)) {
+          links.push(resolved);
+        }
+      }
+    }
+  }
+
+  return links;
+}
+
+function assertKnowledgeRouting() {
+  const knowledgeRoot = path.join(specRoot, "knowledge");
+  const entry = path.join(knowledgeRoot, "README.md");
+  if (!fs.existsSync(entry)) return;
+
+  const allKnowledge = walk(knowledgeRoot).filter((file) => file.endsWith(".md"));
+  const reachable = new Set();
+  const pending = [entry];
+
+  while (pending.length > 0) {
+    const file = pending.pop();
+    if (reachable.has(file) || !fs.existsSync(file)) continue;
+    reachable.add(file);
+    for (const target of localKnowledgeRouteLinks(file)) {
+      if (!reachable.has(target)) pending.push(target);
+    }
+  }
+
+  for (const file of allKnowledge) {
+    if (!reachable.has(file)) {
+      fail(`${rel(file)} 无法从 .spec/knowledge/README.md 的索引链到达，缺少渐进式读取入口`);
+    }
+  }
+
+  const rootIndex = fs.readFileSync(entry, "utf8");
+  for (const standard of walk(path.join(knowledgeRoot, "standards")).filter((file) => file.endsWith(".md"))) {
+    const relative = path.relative(knowledgeRoot, standard).replaceAll(path.sep, "/");
+    if (!rootIndex.includes(`](${relative})`)) {
+      fail(`${rel(standard)} 未直接登记到知识根索引的 standards 路由表`);
+    }
+  }
+}
+
 function assertNoRuntimeFallbackLanguage() {
   const scopedRoots = [
     ".spec/knowledge",
@@ -226,11 +430,16 @@ function assertNoRuntimeFallbackLanguage() {
 
 assertRequiredFiles();
 assertRootPointer();
+assertDecisionRecords();
+assertTaskCards();
 assertNoRetiredEntrypoints();
+assertNoRetiredIgnoreEntries();
 assertSkillFrontmatter();
+assertUnitySkillsThinEntrypoint();
 assertAgentFrontmatter();
 assertKnowledgeFrontmatter();
 assertKnowledgeLinks();
+assertKnowledgeRouting();
 assertNoRuntimeFallbackLanguage();
 
 if (errors.length > 0) {

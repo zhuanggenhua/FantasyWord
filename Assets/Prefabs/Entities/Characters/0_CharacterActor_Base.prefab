@@ -491,7 +491,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8dd33f42c60aaa64a85bf7d063c4965e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterActionAnimatorDriver
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.CharacterActionAnimatorDriver
   animDatabase: {fileID: 11400000, guid: dcfa39904e5228b449bfaddba02ae639, type: 2}
   defaultAnimationKey: Idle
   movementAnimationKey: Walk
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eaa6552a27abf1a4e88046d3e6a2d23a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EquipmentRenderer
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.EquipmentRenderer
   frameData: {fileID: 11400000, guid: 720d2b3b0c58d5b4295a6468bd84a86c, type: 2}
   appearance: {fileID: 11400000, guid: a1ff30d38f2dfa346a3c8920b6183736, type: 2}
   initialEquipments: []
@@ -535,7 +535,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5faca898f745042a9e5380d141a605, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DirectionalSpriteLibraryDriver
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.DirectionalSpriteLibraryDriver
   spriteLibrary: {fileID: 1000657716828344336, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}
   spriteResolver: {fileID: 8000241243821908510, guid: 35b65aa833459fb48a5da6b625c71835, type: 3}
   equipmentRenderer: {fileID: 7667983027141764858}
@@ -556,7 +556,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 687dc6e87ef60fa43b249e6438721dd4, type: 3}
   m_Name: ""
-  m_EditorClassIdentifier: Assembly-CSharp::MountedCharacterPresentation
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.MountedCharacterPresentation
   actionDriver: {fileID: 5038573517113386918}
   directionDriver: {fileID: 2130344745629598593}
   riderRenderer: {fileID: 6821360554761733335}
@@ -820,7 +820,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8b77a8eddf9eb04a954e59613db5101, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterEquipmentPresentation
+  m_EditorClassIdentifier: FantasyWord.Gameplay::FantasyWord.Gameplay.Presentation.EquipmentSystem.CharacterEquipmentPresentation
   characterEquipment: {fileID: 1265987612345678908}
   equipmentRenderer: {fileID: 7667983027141764858}
   mountedPresentation: {fileID: 1387718667228279555}

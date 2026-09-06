@@ -31,10 +31,10 @@ description: FantasyWord 换装与坐骑表现工作流。覆盖普通换装、�
 - 工作台目录：`Assets/GameData/EquipmentSystem/Data/Workbench/换装工作台目录.asset`
 - 默认外观：`Assets/GameData/EquipmentSystem/Appearance/基础人形外观.asset`
 - 装备资产：`Assets/GameData/EquipmentSystem/Equip/Visual/*.asset`
-- 运行时渲染：`Assets/Scripts/Presentation/EquipmentSystem/Runtime/EquipmentRenderer.cs`
+- 运行时渲染：`Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Runtime/EquipmentRenderer.cs`
 - 坐骑表现资产：`Assets/GameData/EquipmentSystem/Mounts/*.asset`
-- 坐骑运行时表现：`Assets/Scripts/Presentation/EquipmentSystem/Runtime/MountedCharacterPresentation.cs`
-- 类型配置：`Assets/Scripts/Presentation/EquipmentSystem/Data/Appearance/EquipTypeConfig.cs`
+- 坐骑运行时表现：`Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Runtime/MountedCharacterPresentation.cs`
+- 类型配置：`Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Data/Appearance/EquipTypeConfig.cs`
 - 装备测试场景：`Assets/Scenes/EquipmentSystemDemo.unity`
 
 ## 层级含义
@@ -104,7 +104,7 @@ description: FantasyWord 换装与坐骑表现工作流。覆盖普通换装、�
 
 ## 图片核验与发布
 
-- `.codex/skills/safe-image-reading/SKILL.md` 与看图前压缩/预算门禁已于 2026-07-14 按用户要求暂停，不再作为当前截图核验入口。
+- 看图前压缩/预算门禁已按用户要求停用；当前截图核验按项目视觉验收规则和用户展示入口执行，不保留旧 skill 路由。
 - 端到端证据仍应能回到真实截图和真实 Unity 现场，不用轻量图产物替代现实真相源。
 - 用户要求上传服务器时，先使用 `artifact-preview-publisher`；只发布已经核验通过的最终图。
 - 候选图、失败图、离线合成图、黑图、错误场景截图、局部裁图、临时离屏相机图和局部辅助图不得发布为 `passed`。

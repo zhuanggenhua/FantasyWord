@@ -56,7 +56,7 @@ $preservedRuntimeExtraPaths = @(
     "UI\UITipsService.cs"
 )
 $preservedEditorExtraPaths = @(
-    "Bridge\BridgePollerRecovery.cs"
+    "Automation\AIBridgePollerRecovery.cs"
 )
 # Preserve approved project-side patches when re-pulling reference files.
 $preservedRuntimePatchedPaths = @(

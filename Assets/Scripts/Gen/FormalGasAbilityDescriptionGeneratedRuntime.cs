@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using FantasyWord.GameCore;
 using UnityEngine;
+using JSON = SimpleJSON.JSON;
+using JSONNode = SimpleJSON.JSONNode;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -34,6 +37,39 @@ namespace GAS.Runtime
             FormalGasAbilityTimelineExecutionResolver.RegisterTryResolveTimelineExecutionSettingsHandler(
                 TryResolveTimelineExecutionSettings);
             GameplayEffectHelper.RegisterGetConfigByIDFunc(GetGameplayEffectConfigWithFormalDamage);
+        }
+
+        /// <summary>
+        /// 将生成的 EX-GAS 配置表接入当前项目资源生命周期。
+        /// 编辑器未启动资源系统时读取作者 JSON；运行时只走 ResourceSystem / YooAsset。
+        /// </summary>
+        public static bool InitializeConfigTables()
+        {
+#if UNITY_EDITOR
+            if (!ResourceSystem.Initialized)
+            {
+                XLuban.LoadTablesForEditor();
+                Register();
+                return true;
+            }
+#endif
+
+            XLauncher.InitConfigTables(LoadConfigTable);
+            Register();
+            return true;
+        }
+
+        private static JSONNode LoadConfigTable(string tableName)
+        {
+            TextAsset tableAsset = FormalGasAbilityResourceLoader.LoadRuntimeAddressSync<TextAsset>(tableName);
+            if (tableAsset == null)
+            {
+                throw new InvalidOperationException(
+                    $"无法从 YooAsset 加载 EX-GAS 配置表：{tableName}。"
+                    + "请检查 DefaultPackage 的 gas-config 收集组和资源地址。");
+            }
+
+            return JSON.Parse(tableAsset.text);
         }
 
         private static bool TryResolveAbilityIdentity(

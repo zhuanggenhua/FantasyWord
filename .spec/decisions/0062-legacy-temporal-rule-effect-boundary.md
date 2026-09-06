@@ -15,7 +15,7 @@
   - `TemporalAbilityGrantEffect`、`TemporalAbilitySuppressionEffect`、`TemporalAbilityReplacementEffect` 只允许作为 Formal GAS 能力来源/压制的迁移期壳存在；它们不得恢复旧 `AbilitySheet` 引用。
 - 影响：
   - `scripts/Invoke-AbilityRuntimeStaticGate.ps1` 新增正式资产扫描，发现旧规则型持续效果类型引用时失败。
-  - `reference-flow-comparison-audit.md` 把旧规则型持续效果从待复核项改为“迁移期兼容壳需收窄”。
+  - `.spec/knowledge/standards/framework-layering.md`、`.spec/knowledge/features/project/Unity架构与GAS规范.md` 与相关正式矩阵继续承载旧规则型持续效果的现态分流，不再依赖活跃任务卡或单独未收口台账。
   - 这不是删除旧存档兼容能力，也不是把参考旧效果主链搬回 FantasyWord。
 - 替代关系：
   - 补充 `0050` 的参考流程审计纠偏和 `0060` 之后的能力/效果主链收口：参考旧效果链的职责内核已被 EX-GAS 主轴替代，旧规则型效果只能保留为受门禁约束的兼容残留。

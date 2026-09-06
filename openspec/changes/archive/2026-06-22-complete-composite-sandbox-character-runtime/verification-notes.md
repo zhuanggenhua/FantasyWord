@@ -6,10 +6,10 @@
 - `scripts/Invoke-FoundationStaticGate.ps1 -AsJson` 通过；并已把门禁签名更新到当前正式订单/点击移动合同。
 - `scripts/Invoke-PluginFacadeBoundaryGate.ps1 -AsJson` 通过，`ViolationCount = 0`。
 - Unity AIBridge 复核时，编辑器状态满足 `isPlaying=false / isCompiling=false / isUpdating=false`。
-- `scripts/Invoke-FoundationBridgeSmoke.ps1` 通过，`AssetsRefresh` 成功，Editor 状态稳定。
+- `scripts/Invoke-FoundationAutomationSmoke.ps1` 通过，`AssetsRefresh` 成功，Editor 状态稳定。
 - `scripts/Invoke-CompositeRuntimeSmoke.ps1` 通过，正式覆盖控制组 / RTS 订单链 / GAS formal 恢复关键路径。
-- `python .codex/skills/aibridge/bridge.py assets-refresh '{"options":"ForceSynchronousImport"}'` 成功。
-- `python .codex/skills/aibridge/bridge.py console-get-logs '{"maxEntries":80,"includeStackTrace":true,"lastMinutes":10}'` 返回空数组，没有新的 `Error / Exception`。
+- `UnityBridge 文件队列 assets-refresh '{"options":"ForceSynchronousImport"}'` 成功。
+- `UnityBridge 文件队列 console-get-logs '{"maxEntries":80,"includeStackTrace":true,"lastMinutes":10}'` 返回空数组，没有新的 `Error / Exception`。
 
 ## 现态证据
 

@@ -8,15 +8,15 @@ metadata:
 
 # 换装系统组织与 SpriteLibrary 评估
 
-> 范围：`Assets/Scenes/EquipmentSystemDemo.unity`、`Assets/Scripts/Presentation/EquipmentSystem`、`Assets/GameData/EquipmentSystem` 和 MiniFantasy 原包动画组织。
+> 范围：`Assets/Scenes/EquipmentSystemDemo.unity`、`Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem`、`Assets/GameData/EquipmentSystem` 和 MiniFantasy 原包动画组织。
 > 结论时间：2026-07-13。
 
 ## 已锁定事实
 
 | 项 | 当前事实 | 结论 |
 |---|---|---|
-| 脚本模块 | `Assets/Scripts/Presentation/EquipmentSystem` 只负责换装表现、UV、Shader、预览 UI、编辑器工具 | 它不是完整物品/背包/装备规则系统；`Presentation` 这一层不是多余包装，而是在表达“表现层”。 |
-| 玩法装备 | `GameCore` 下已有 `Equipment`、`CharacterEquipment`、`EquipmentSpriteLibraryUpdater` 等玩法/视觉桥接入口 | 正式装备规则应继续归 `GameCore`，换装表现只接收可视数据，不反向拥有背包和装备规则。 |
+| 脚本模块 | `Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem` 只负责换装表现、UV、Shader、预览 UI、编辑器工具 | 它不是完整物品/背包/装备规则系统；`Presentation` 这一层不是多余包装，而是在表达“表现层”。 |
+| 玩法装备 | `GameCore` 下已有 `Equipment`、`CharacterEquipment`、`EquipmentSpriteLibraryUpdater` 等玩法到视觉同步入口 | 正式装备规则应继续归 `GameCore`，换装表现只接收可视数据，不反向拥有背包和装备规则。 |
 | 动画资源 | `Assets/GameData/EquipmentSystem/Animations` 只保留共享 Controller、每动作一个 `SharedClips` 片段和每角色四方向 `SpriteLibraries` | 角色或方向变体都不得生成独立动画片段或覆盖控制器。 |
 | 原包组织 | CP1 和 Creatures 原包提供各人形种族四方向帧素材 | 项目侧把素材收口成相同动作分类、相同帧标签的四向 SpriteLibrary；不使用左右镜像复用。 |
 | 控制器方式 | 换装控制器只承载动作状态，0 参数、0 连线，由代码 `Animator.Play` 切动作 | Animator 状态不得包含 `_SE/_SW/_NE/_NW`；方向变化不得调用 `Animator.Play` 或重置播放进度。 |
@@ -28,7 +28,7 @@ metadata:
 | 层级 | 建议落点 | 原因 |
 |---|---|---|
 | 装备规则、背包、穿脱、属性 | `Assets/Scripts/GameCore/...` | 这些是玩法真相，后续要进存档、战斗、Mod 和联机边界。 |
-| 换装渲染、UV、Shader、工作台预览 | `Assets/Scripts/Presentation/EquipmentSystem` | 当前代码职责就是表现层；直接挪到顶层 `EquipmentSystem` 会把“表现模块”误解成“完整装备系统”。 |
+| 换装渲染、UV、Shader、工作台预览 | `Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem` | 当前代码职责就是表现层；直接挪到顶层 `EquipmentSystem` 会把“表现模块”误解成“完整装备系统”。 |
 | 换装共享控制器、共享动画片段和角色四向精灵库 | `Assets/GameData/EquipmentSystem/Animations` | `SharedClips` 只按动作分类动画 `SpriteResolver.m_SpriteKey`；每个角色的 SE/SW/NE/NW 库使用相同分类和帧标签，只保存方向对应的具体 Sprite；工作台角色选项和运行时方向驱动直接持有四个原生 `SpriteLibraryAsset` 引用，不再额外生成动画变体包装资产。 |
 | 帧数据、装备表现数据、外观数据 | `Assets/GameData/EquipmentSystem/...` | 这些是换装表现配置，继续保留 `.meta` 和引用闭包。 |
 

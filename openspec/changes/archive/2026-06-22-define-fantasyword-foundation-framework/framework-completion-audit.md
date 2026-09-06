@@ -40,7 +40,7 @@
 | 开放世界模拟层 | `FantasyWord` 自建 | 未开始正式实现。当前没有任何正式 world runtime 入口，区域/Cell、队伍、派系、AI 日程、经济/基地生产仍未落地 |
 | 目录边界 | `GameCore/Editor/Plugins` 当前成立 | 已成立。目录裁决和现态执行一致；`Invoke-FrameworkVerdictGate.ps1` 当前 `MissingDirectoryCount = 0`，顶层 `World/Characters/Combat/...` 仍只是未来晋升目标 |
 | 一级缺口 | 点击移动/实例宿主/出生点分流等仍受阻 | 未解锁。还缺 4 个正式参考位，因此这些能力仍不得硬做 |
-| 提案剩余暂留项 | 只保留确实未决的裁决 | 当前 `patched-parity-matrix.md` 的 runtime patched 项已清零 `暂留`，`.spec/knowledge/features/project/foundation-reference-audit.md` 里原先最后 3 条 `暂留` 也已改成正式 `保留`：`GameConfig` 继续作为唯一配置真相入口，`Persistable.Destroy()` 的 fire-and-forget 命令调用只是语言适配，`PersistenceSystem.GetActualIdentifier()` 只是把映射读取统一收回 `GameConfig` API 的内部薄 helper。当前剩余工作已不再是“同职责真相未决”，而是动作表现深化、投射物池化/真实存档/点击移动一级缺口，以及更高层开放世界模拟尚未开工 |
+| 提案剩余暂留项 | 只保留确实未决的裁决 | 当前 `patched-parity-matrix.md` 的 runtime patched 项已清零 `暂留`，`.spec/knowledge/features/project/framework-reference-evidence/foundation-reference-audit.md` 里原先最后 3 条 `暂留` 也已改成正式 `保留`：`GameConfig` 继续作为唯一配置真相入口，`Persistable.Destroy()` 的 fire-and-forget 命令调用只是语言适配，`PersistenceSystem.GetActualIdentifier()` 只是把映射读取统一收回 `GameConfig` API 的内部薄 helper。当前剩余工作已不再是“同职责真相未决”，而是动作表现深化、投射物池化/真实存档/点击移动一级缺口，以及更高层开放世界模拟尚未开工 |
 
 这里也要分层理解：
 
@@ -126,7 +126,7 @@
 2. 地图表现层：基础配置已落地；下一步只在正式场景接线时补相机/边界读取组件，不接入 TopDown `LevelManager`。
 3. 控制对象层：当前控制对象接口前两阶段已完成；`PlayerController` 里也已经存在 `Directional + ClickToMove` 的当前基础移动链路。`2026-06-17` 又补过一轮 `ClickMoveTest / SampleScene` 的最小 PlayMode smoke，两张正式场景都没有新的 `Error / Exception / Assert`。但 2D 移动与场景组织仍卡在 4 个一级框架缺口上：单机/本地 2D 导航 Provider、2D 点击移动执行闭包、单机/本地场景实例宿主参考、单机/本地出生点分流宿主参考。当前已经吸收进现有闭包的 `uMMORPG` 规则包括：`Movement.Reset/Warp/IsValidSpawnPoint/NearestValidDestination`、`Navigate(destination, stoppingDistance)`、`PlayerNavMeshMovement.MoveWASD()` 的手动输入取消旧路径、`Database.CharacterLoad()` 的失效保存位置回退，以及 `Portal.cs` 的父级玩家解析；同时现有 `Movable.MoveTo(...)` 已能跑通“点地后直线靠近”。但正式的完整 2D 导航 Provider 仍不存在，也没有“靠近完成后自动续接动作”框架入口，因此“超距后自动靠近再施法/交互”和“控制对象与世界穿越目标统一”都只能继续登记为二级缺口，不能绕过一级缺口先落代码。补充：本机现有参考池已复核到当前边界；工作区虽已新增 `Assets/Plugins/AStar 2D Grid Pathfinding` 本地源码，但它当前不止算法层，还带有 demo 级 world/grid 映射与路径跟随宿主，不过仍缺正式运行时状态和输入/移动闭包整合，不能直接关闭前两个一级缺口。`2DRPGEngine` 的 NodeCanvas `Pathfinding` 任务已确认只是 `NavMeshAgent` 包装，`uMMORPG PlayerCharacterControllerMovement.cs + CharacterController2k.cs` 也已判退为 `Mirror + 3D CharacterController` 玩家运动体系；后续若要补前两个一级缺口，仍需更完整的新参考或继续扩大本地候选取证。
 4. 开放世界层：区域/Cell、队伍、派系、AI 日程、经济/基地生产和局部模拟都未实现；当前也没有任何真实调用者需要“live runtime 角色集合”这层真相，因此 `CharacterRegistrySystem` 已撤回，世界层身份、离线状态、区域外角色和长期队伍语义仍待后续正式规格决定。`uMMORPG Instance.cs` 只能证明“实例宿主至少要显式承载入口、归属、边界、实例内出生点和清理策略”，`PortalToInstance.cs` 只额外证明“入口脚本最多负责查找/创建实例并把玩家送到实例入口”，`NetworkManagerMMO.GetStartPositionFor(...) + NetworkStartPositionForClass.cs` 只能证明“出生点分流本身也应有正式宿主”；它们都还不能直接搬回当前单机 `MapSystem + MapInfo + Teleporter`，详见 `ummorpg-movement-scene-audit.md`；因此不能把当前 GameCore 基线说成完整开放世界地基。
-5. Unity 现态验证：当前静态门禁已通过；若继续改运行时代码或场景接线，再跑 AIBridge `Invoke-FoundationBridgeSmoke.ps1`。
+5. Unity 现态验证：当前静态门禁已通过；若继续改运行时代码或场景接线，再跑 AIBridge `Invoke-FoundationAutomationSmoke.ps1`。
 
 ## 已跑静态验收
 

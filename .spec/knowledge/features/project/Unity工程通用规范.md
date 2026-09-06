@@ -36,9 +36,12 @@ metadata:
 
 ## 包与插件边界
 
-- 正式 Unity Editor 自动化统一迁移到 `com.aibridge.unity`。
+- 正式 Unity Editor 自动化优先通过已安装的 UnitySkills 包；项目薄入口是 `.spec/skills/unity-skills/SKILL.md`，上游资料读取 `Packages/com.besty.unity-skills/unity-skills~`。
+- Unity CLI 只作为查询、打开当前项目和明确授权后的无头验证候选；项目入口是 `.spec/skills/unity-cli/SKILL.md`，不得用它绕过 UnitySkills 或另起第二个 Editor。
+- UPM 包查询、安装、移除和升级先走 `.spec/skills/unity-package-management/SKILL.md`；默认通过 UnitySkills 包模块或 Unity Package Manager 正式入口，不手写 `Packages/manifest.json` 或伪造 `Packages/packages-lock.json`。
+- AIBridge 继续作为既有专项验证链和历史自动化入口保留；只有 UnitySkills 不覆盖、项目专项流程更贴合，或需要沿用既有 AIBridge 证据链时才使用。
 - 旧 `com.ivanmurzak.unity.mcp` / UnityMCP 不再作为正式自动化入口。
-- 当前包与插件台账以 `.spec/knowledge/features/project/第三方插件接入清单.md` 为准；常用正式工具至少包括 `Assets/Plugins/GAS`、`Assets/Plugins/YokiFrame`、`Assets/Plugins/Demigiant/DOTween`、`Packages/com.cysharp.unitask`、`Assets/Plugins/MackySoft.SerializeReferenceExtensions`、`Assets/Plugins/azixMcAze.SerializableDictionary`、`com.ami.broaudio`、`com.aibridge.unity` 与相关 Unity 官方包。
+- 当前包与插件台账以 `.spec/knowledge/features/project/第三方插件接入清单.md` 为准；常用正式工具至少包括 `Assets/Plugins/GAS`、`Assets/Plugins/Sirenix`、`Assets/Plugins/YokiFrame`、`Assets/Plugins/Demigiant/DOTween`、`Assets/Plugins/MackySoft.SerializeReferenceExtensions`、`Assets/Plugins/azixMcAze.SerializableDictionary`、`com.ami.broaudio`、`com.aibridge.unity` 与相关 Unity 官方包。`Packages/com.cysharp.unitask` 目录和 lock 记录存在，但 `Packages/manifest.json` 当前未声明，Unity 包解析前按“包声明待复核”处理。
 - 当前 UPM Git 插件：`com.ami.broaudio`，来源 `https://github.com/man572142/Bro_Audio.git?path=/Assets/BroAudio#3.1.3`。
 - 当前 BroAudio 项目级配置资源：`Assets/Plugins/BroAudio`，来自参考项目同路径，包含 `Resources/AudioPlayer.prefab`、`SoundManager.prefab`、`BroAudioMixer.mixer`、`BroRuntimeSetting.asset`、`GlobalPlaybackGroup.asset` 和 Editor Resources；它不是 BroAudio 包源码本体。
 - 当前动态资源依赖：嵌入式 `com.tuyoogame.yooasset` `3.0.4`。`com.unity.addressables` 只保留编辑器兼容用途，不得重新进入 `GameCore/Runtime/Resources` 与 `GameCore/Runtime/Mods`。
@@ -61,7 +64,7 @@ metadata:
   - 明确要与第三方插件形成长期稳定边界，且已有真实编译价值证明的独立模块
 - “候选模块”“演示模块”“试验功能”“为了看起来更分层”都不是新增 asmdef 的充分理由。
 - 若某个项目侧 asmdef 只是为了给候选目录分层、没有稳定对外边界、且持续造成 AI 漏引用风险，应优先记为待收敛对象，而不是继续照此扩张。
-- `Assets/Scripts/Presentation/EquipmentSystem` 是正式换装表现业务目录，但不再保留项目侧 asmdef；换装表现业务代码跟随主项目程序集编译，第三方插件、框架层和必要编辑器/测试程序集按各自边界处理。
+- `Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem` 是正式换装表现业务目录；换装表现业务代码跟随 `FantasyWord.Gameplay` 程序集编译，第三方插件、框架层和必要编辑器/测试程序集按各自边界处理。
 
 ## 仓库配置
 
@@ -92,7 +95,7 @@ metadata:
 - 关键配置优先使用 ScriptableObject、JSON、YAML、C# 常量/record 等可审计载体。
 - Mod 支持是长期必须目标；新增正式配置、数据库条目、资源引用和存档字段时，默认考虑外部内容包能否追加、覆盖、禁用或缺失回退。
 - 正式进入玩法链路的项目侧 `Prefab`、`ScriptableObject`、`Sprite Library`、正式测试场景、场景内正式实例名和 Inspector 显示文案必须优先中文命名；第三方原始资源目录可保留原名，但项目正式落点不得继续沿用误导性的英文占位名。
-- 新增或改写 `[SerializeField]`、可见 `public` 字段、SO 配置字段、编辑器窗口参数和验证工具参数时，C# 字段符号保持英文代码命名，必须用中文 Inspector 特性暴露现实含义；至少补 `InspectorName`，有配置风险、单位、范围、引用 owner 或失败后果时同步补 `Tooltip`，分组使用中文 `Header`。
+- 新增或改写 `[SerializeField]`、可见 `public` 字段、SO 配置字段、编辑器窗口参数和验证工具参数时，C# 字段符号保持英文代码命名，必须用中文 Inspector 特性暴露现实含义；默认至少补 Unity `InspectorName`，目标已经由 Odin Inspector 绘制或文件已有 `Sirenix.OdinInspector` 依赖时可用 Odin `LabelText`，有配置风险、单位、范围、引用 owner 或失败后果时同步补中文 `Tooltip`，分组使用中文 `Header`。
 - 编辑器顶部 `场景` 菜单的列表真相源固定为 `Assets/Scenes`，不是 Build Settings。新增、删除或移动正式场景时，先保证 `.unity` 文件位于 `Assets/Scenes`，再执行 `场景/刷新场景菜单`；Build Settings 只服务构建，不作为场景菜单过滤器。
 - 可被内容引用的数据必须优先使用稳定 ID、数据库引用或资源键；不要让运行时规则依赖不可迁移的场景实例名、临时数组下标、硬编码 Resources 路径或 Inspector 顺序。
 - 存档数据需要能处理“Mod 被移除、版本升级、资源缺失、ID 改名”的情况；至少要有可诊断的失败信息和安全回退，不得直接让旧存档崩溃。
@@ -106,7 +109,8 @@ metadata:
 
 ## 自动化与验证
 
-- 本地自动化默认使用 AIBridge 连接当前唯一正常 Unity Editor。
+- 本地自动化默认先走 `.spec/skills/unity-skills/SKILL.md`；AIBridge 只在既有专项验证链、UnitySkills 不覆盖或已锁定的历史 AIBridge 流程里使用。
+- 检查 UnitySkills REST 服务可用性时使用 `.spec/tools/unityskills-ensure.mjs`；该脚本只检查或等待当前项目 Editor 的插件服务，不关闭 Unity、不启动第二个 Editor。
 - 不默认启动第二个 Unity Editor。
 - 不把 `Unity.exe -batchmode` 当日常验证入口；batchmode 仅用于 CI、当轮明确授权或无 Editor 构建场景。
 - 自动化默认不抢 Unity 前台、不聚焦窗口、不切走用户输入焦点。
@@ -118,7 +122,7 @@ metadata:
 - 项目侧 C# 公开/受保护/内部类型、ScriptableObject 配置、序列化字段、编辑器菜单、验证入口和生命周期/协程/事件/物理/存档等非显然逻辑要写必要中文注释。
 - 注释不能缺，但也不能灌水。必须说明职责、调用契约、边界、为什么这样做、错误配置会怎样；禁止把“给变量赋值”“遍历列表”这类代码表面行为翻译成中文。
 - 当代码吸收 `2DRPGEngine`、`TopDownEngine` 或 `YokiFrame` 的能力时，关键类型或正式入口要在注释或文档中说明来源边界和当前项目真相源，避免以后误以为还存在兼容层或双轨实现。
-- 新增系统、工具、编辑器窗口、验证脚本、ScriptableObject 和 Inspector 暴露字段时，必须同步补中文注释、中文 `InspectorName` / `Tooltip` / `Header`；当前不得假设 NaughtyAttributes 已接入。如果后续重新接入对应插件，才允许使用其中文标签能力。
-- 需要新增、改写或审查源码注释时，先读全局 `D:\codex-home\skills\code-comments\SKILL.md`；本项目当前没有 `.agents/skills/code-comments/SKILL.md`。
-- Inspector 暴露字段应显示中文名称和必要说明；若后续重新接入 NaughtyAttributes 或同类 Inspector 辅助插件，先在插件清单登记落点和用途，再使用 `[Label("中文名")]`、`[BoxGroup("中文分组")]` 等插件能力。
+- 新增系统、工具、编辑器窗口、验证脚本、ScriptableObject 和 Inspector 暴露字段时，必须同步补中文注释、中文 `InspectorName` / `Tooltip` / `Header`；若目标已使用 Odin Inspector，可用 `LabelText` 承载中文显示名。当前不得假设 NaughtyAttributes 已接入，后续重新接入对应插件前必须先更新插件清单。
+- 需要新增、改写或审查源码注释时，先读系统 skill `D:\codex-home\skills\code-comments\SKILL.md`。
+- Inspector 暴露字段应显示中文名称和必要说明；Odin Inspector 已登记为 EX-GAS 与部分项目侧 Inspector 绘制依赖，可在真实 Odin 上下文使用 `LabelText` / `Header` / `Tooltip`。NaughtyAttributes 当前未登记，不得使用 `[Label("中文名")]`、`[BoxGroup("中文分组")]` 等未接入插件能力。
 - 不为简单赋值和自说明代码堆空话注释。

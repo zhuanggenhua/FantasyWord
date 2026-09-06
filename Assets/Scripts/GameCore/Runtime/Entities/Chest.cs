@@ -71,8 +71,10 @@ namespace FantasyWord.GameCore
         private bool m_opening = false;
         private Coroutine m_contentRevealCoroutine = null;
 
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             Debug.Assert(m_chestAnimator, ErrorMessages.InspectorMissingComponentReference<Animator>());
             Debug.Assert(m_contentAnimator, ErrorMessages.InspectorMissingComponentReference<Animator>());
             Debug.Assert(m_contentSpriteRenderer, ErrorMessages.InspectorMissingComponentReference<SpriteRenderer>());
@@ -101,9 +103,10 @@ namespace FantasyWord.GameCore
             StopContentRevealCoroutine();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             StopContentRevealCoroutine();
+            base.OnDestroy();
         }
 
         /// <summary>

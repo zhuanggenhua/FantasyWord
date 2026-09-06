@@ -23,7 +23,7 @@
 - [0017-角色信息面板监听生命周期 owner 边界](0017-ui-character-info-lifecycle.md)
 - [0018-EX-GAS 动画 Cue 驱动 owner 边界](0018-ex-gas-animation-cue-driver-owner.md)
 - [0019-主菜单 Cancel 输入监听生命周期 owner 边界](0019-main-menu-cancel-input-lifecycle.md)
-- [0020-换装表现桥接显式渲染器 owner 边界](0020-equipment-presentation-explicit-renderer-owner.md)
+- [0020-换装表现同步显式渲染器 owner 边界](0020-equipment-presentation-explicit-renderer-owner.md)
 - [0021-Transform 抖动协程 owner 边界](0021-transform-shaker-coroutine-owner.md)
 - [0022-对话消息框跳字协程生命周期 owner 边界](0022-dialogue-message-box-coroutine-lifecycle.md)
 - [0023-Mod 配置状态 owner 边界](0023-mod-config-state-owner-boundary.md)
