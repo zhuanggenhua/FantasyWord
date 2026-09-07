@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using GAS.Runtime;
 using NUnit.Framework;
@@ -38,7 +38,7 @@ namespace FantasyWord.GameCore.Tests
         }
 
         [Test]
-        public void Damage_UpdatesFormalAscCurrentHealth()
+        public void Damage_UpdatesFormalAscCurrentHealthWithoutChangingMaxHealth()
         {
             CharacterActor attacker = CreateCharacter("attacker", CreateStats(health: 30, physicalAttack: 10));
             CharacterActor defender = CreateCharacter("defender", CreateStats(health: 50, physicalDefense: 3));
@@ -72,13 +72,17 @@ namespace FantasyWord.GameCore.Tests
 
             Assert.IsTrue(defender.TryGetFormalAbilitySystem(out AbilitySystemComponent defenderAsc));
             int currentFormalHealth = Mathf.RoundToInt(defenderAsc.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Health));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health)));
             int baseFormalHealth = Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Health));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Health)));
             Assert.AreEqual(previousHealth - 7, currentFormalHealth);
-            Assert.AreEqual(previousMaxHealth, baseFormalHealth);
+            Assert.AreEqual(previousHealth - 7, baseFormalHealth);
+            int baseFormalMaxHealth = Mathf.RoundToInt(defenderAsc.GetAttrBaseValue(
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetBaseAttributeCode(EStat.Health)));
+            Assert.AreEqual(previousMaxHealth, baseFormalMaxHealth);
         }
 
         [Test]
@@ -98,13 +102,38 @@ namespace FantasyWord.GameCore.Tests
 
             Assert.IsTrue(caster.TryGetFormalAbilitySystem(out AbilitySystemComponent casterAsc));
             int currentFormalMana = Mathf.RoundToInt(casterAsc.GetAttrCurrentValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Mana));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Mana)));
             int baseFormalMana = Mathf.RoundToInt(casterAsc.GetAttrBaseValue(
-                FormalGameplayAttributeSet.SetCode,
-                FormalGameplayAttributeSet.Mana));
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetCurrentAttributeCode(EStat.Mana)));
             Assert.AreEqual(7, currentFormalMana);
-            Assert.AreEqual(previousMaxMana, baseFormalMana);
+            Assert.AreEqual(7, baseFormalMana);
+            int baseFormalMaxMana = Mathf.RoundToInt(casterAsc.GetAttrBaseValue(
+                FormalAttributeCatalog.AttributeSetCode,
+                FormalAttributeCatalog.GetBaseAttributeCode(EStat.Mana)));
+            Assert.AreEqual(previousMaxMana, baseFormalMaxMana);
+        }
+
+        [Test]
+        public void FormalResourceModifier_NotifiesCharacterCurrentStatsChanged()
+        {
+            CharacterActor caster = CreateCharacter("caster", CreateStats(health: 30, mana: 12));
+
+            int notificationCount = 0;
+            int previousManaFromNotification = -1;
+            caster.AddCurrentStatsChangedListener(previousStats =>
+            {
+                notificationCount++;
+                previousManaFromNotification = previousStats[EStat.Mana];
+            });
+
+            caster.ConsumeMana(5);
+
+            Assert.AreEqual(1, notificationCount);
+            Assert.AreEqual(12, previousManaFromNotification);
+            Assert.AreEqual(7, caster.GetCurrentMana());
+            Assert.AreEqual(12, caster.GetMaxMana());
         }
 
         private void CreateGameManagerWithMinimalConfig()

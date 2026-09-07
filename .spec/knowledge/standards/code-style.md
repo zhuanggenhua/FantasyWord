@@ -18,15 +18,109 @@ metadata:
 ## 注释
 
 - 注释只写代码表达不了的约束、原因、边界和外部依赖。
-- 不写“改了什么”的流水账注释；改动说明放在交付汇报或提交信息。
+- 不写"改了什么"的流水账注释；改动说明放在交付汇报或提交信息。
 - 项目侧新增或改写注释必须使用中文；第三方源码、生成代码、外部协议/API 名称、稳定 ID 和引用原文可保留英文，但项目侧语义说明不能只写英文。
-- 项目侧 C# 的公开/受保护/内部类型、ScriptableObject 配置、编辑器工具、验证入口、生命周期/协程/事件/物理/存档等非显然逻辑，必须补中文注释说明职责、契约和边界。
+<<- 项目侧 C# 的公开/受保护/内部类型、ScriptableObject 配置、编辑器工具、验证入口、生命周期/协程/事件/物理/存档等非显然逻辑，必须补中文注释说明职责、契约和边界。
 - Unity Inspector 暴露配置必须补中文 `InspectorName` / `Tooltip` / `Header`，说明这个值影响什么、由谁配置、错误配置会怎样；目标已经由 Odin Inspector 绘制，或字段所在文件已有 `Sirenix.OdinInspector` 依赖时，可使用 `LabelText` / `Tooltip` / `Header` 等 Odin 中文特性；不得引入未登记的 Inspector 辅助插件。
 - 这里的“Inspector 暴露配置”包括 `[SerializeField]` 字段、会显示在 Inspector 的 `public` 字段、ScriptableObject 配置字段、编辑器窗口参数、验证工具参数和其它给内容作者直接调整的字段。
 - 新增或改写暴露字段时，字段符号本身继续使用英文代码命名；至少用中文 `InspectorName` 或 Odin `LabelText` 表达字段现实含义。存在配置风险、单位、取值范围、引用 owner 或旧数据兼容影响时，必须同步写中文 `Tooltip`。有分组时使用中文 `Header`。
 - NaughtyAttributes 当前没有正式落点，不得按可用依赖使用；若后续重新接入 NaughtyAttributes 或同类 Inspector 辅助插件，必须先登记插件落点，再使用其中文标签能力。
 - 简单赋值、自说明字段和一眼能懂的私有方法不强行补注释，避免把代码翻译成中文。
 - 需要新增或审查注释时，使用系统 skill `D:\codex-home\skills\code-comments\SKILL.md`。
+
+### 必须补注释的代码
+
+以下类型的代码必须补充中文注释说明职责、契约和边界：
+
+- **运行时核心组件**（重点）：游戏逻辑、角色控制、能力系统、战斗系统等运行时代码。
+- **ScriptableObject 配置类**：说明配置用途、配置者身份（策划/美术/程序）、错误配置的影响范围。
+- **公开 API 方法**：说明职责、参数约束、返回值语义、失败后果和副作用。
+- **复杂算法**：说明设计思路、边界条件、性能考虑和已知限制。
+- **生命周期方法**（`Awake`/`Start`/`OnEnable`/`Update` 等）：说明在什么时机做什么、依赖什么前提、对其他组件的影响。
+- **协程和异步方法**：说明执行时机、取消条件、异常处理。
+- **事件和回调**：说明触发时机、参数含义、调用顺序。
+- **物理和碰撞**：说明碰撞层、触发条件、预期行为。
+- **存档相关**：说明持久化字段、加载时机、版本兼容。
+
+**编辑器工具类**：只需补充类级注释、MenuItem 中文化和关键方法的简要说明，内部实现细节可省略。
+
+### Inspector 中文化规范（强制）
+
+当前项目已引入 Odin Inspector，所有 Inspector 暴露配置必须使用中文标签。
+
+#### 推荐用法（Odin Inspector）
+
+```csharp
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+public class ExampleConfig : ScriptableObject
+{
+    [SerializeField, Min(1)]
+    [LabelText("生命值上限"), Tooltip("角色的最大生命值，死亡时重置为此值")]
+    private int maxHealth = 100;
+
+    [SerializeField, Range(0f, 10f)]
+    [LabelText("移动速度"), Tooltip("单位：米/秒")]
+    private float moveSpeed = 5f;
+
+    [SerializeField]
+    [LabelText("可装备武器类型"), Tooltip("留空表示可装备所有类型")]
+    private WeaponType[] allowedWeapons;
+
+    [TitleGroup("战斗配置")]
+    [SerializeField, Min(0)]
+    [LabelText("基础攻击力")]
+    private int baseAttack = 10;
+}
+```
+
+#### 特性使用规则
+
+- 字段符号本身继续使用英文代码命名，例如 `maxHealth`、`moveSpeed`。
+- 所有 `[SerializeField]`、`public` 暴露字段、ScriptableObject 配置字段都必须补 `[LabelText("中文名")]` 或同职责中文 `InspectorName`。
+- 存在配置风险、单位、取值范围、引用 owner 或旧数据兼容影响时，必须同步写中文 `Tooltip`。
+- 配置项较多，或者存在多个清晰职责块时，使用中文 `[TitleGroup]`、`[BoxGroup]`、`[FoldoutGroup]` 等。
+- 只有 1-2 个字段时，优先使用字段自己的中文标签和提示；不要额外加独立 Group。
+- `[Min]`、`[Range]`、`[Space]` 等 Unity 内置特性可以正常使用；`[Header]` 只用于明确的 Inspector 区块分隔。
+
+#### 特性顺序规则
+
+当同时使用 Odin 特性和 Unity 内置约束特性时，约束特性必须写在前面，中文显示特性写在后面：
+
+```csharp
+[SerializeField, Min(0.5f)]
+[LabelText("生成间距"), Tooltip("两株草之间的基础距离")]
+private float spawnSpacing = 4f;
+```
+
+Unity PropertyDrawer 机制会让自定义绘制接管字段显示；约束特性在前可以避免内置约束被覆盖。`[Header]` 和 `[Space]` 是 `DecoratorDrawer`，不受该顺序限制。
+
+#### MenuItem 中文化规范（强制）
+
+项目侧所有 `[MenuItem]` 必须使用中文菜单路径；第三方插件例外。
+
+```csharp
+[MenuItem("工具/装备系统/重建 SpriteLibrary 动画框架")]
+public static void Rebuild() { }
+```
+
+### #region 折叠区块规范
+
+`#region` 是代码结构折叠标记，不替代 XML 文档注释、字段注释或关键逻辑注释。它主要用于装备编辑器、FrameData、渲染器、运行时 partial 或算法集中类。
+
+- 文件较大，或者一个类里有多个清晰职责块时使用。
+- 某一段包含 3 个以上同职责字段、方法或内部类型时，可以用一个中文 `#region` 收起来。
+- 区块名使用中文，必要时保留稳定英文术语，例如 `UV Map`、`Shader`、`Sprite Library`。
+- 不给 1-2 个字段或 1 个普通方法单独套 `#region`。
+- 不用 `#region` 遮住杂乱代码、临时 TODO、改动流水账或未收口逻辑。
+- 第三方插件、参考工程和生成物不因本规范强制改 `#region`。
+
+### 注释质量标准
+
+- 复杂业务逻辑、英文 API 语义、关键决策、坐标转换和边界条件需要注释。
+- 简单赋值、一眼能懂的逻辑不需要注释。
+- 注释要说明原因、边界和业务意图，不重复翻译代码。
 
 ## 命名
 

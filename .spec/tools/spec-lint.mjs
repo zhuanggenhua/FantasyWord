@@ -61,10 +61,11 @@ function walk(dir) {
 }
 
 function parseFrontmatter(file) {
-  const text = fs.readFileSync(file, "utf8");
-  const matchFrontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!matchFrontmatter) return null;
-  const raw = matchFrontmatter[1].trim();
+  const text = fs.readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+  if (!text.startsWith("---\n")) return null;
+  const end = text.indexOf("\n---", 4);
+  if (end < 0) return null;
+  const raw = text.slice(4, end).trim();
   const result = {};
   const lines = raw.split(/\r?\n/);
   for (const line of lines) {
@@ -82,8 +83,11 @@ function assertRequiredFiles() {
     ".spec/rules/system.md",
     ".spec/knowledge/README.md",
     ".spec/knowledge/lessons.md",
+    ".spec/knowledge/standards/dispatch.md",
+    ".spec/knowledge/features/_TEMPLATE.md",
     ".spec/decisions/README.md",
     ".spec/tasks/README.md",
+    ".spec/tools/spec-lint.test.mjs",
   ];
   for (const file of required) {
     if (!exists(file)) fail(`缺少必需文件：${file}`);

@@ -3,15 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { execFileSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const lintPath = fileURLToPath(new URL("./spec-lint.mjs", import.meta.url));
-
-function run(command, args, cwd) {
-  return execFileSync(command, args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
-}
 
 function write(file, text) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -65,6 +61,7 @@ function makeFixture() {
     "# 当前任务",
     "",
   ].join("\n"));
+  write(path.join(root, ".spec/tools/spec-lint.test.mjs"), "// fixture placeholder\n");
 
   write(path.join(root, ".spec/knowledge/README.md"), [
     docFrontmatter("knowledge", "结构检查入口", "index"),
@@ -73,6 +70,9 @@ function makeFixture() {
     "| 文档 | 何时查 |",
     "|------|--------|",
     "| [`standards/code-design.md`](standards/code-design.md) | 写代码时查。 |",
+    "| [`standards/workflow.md`](standards/workflow.md) | 工作流。 |",
+    "| [`standards/dispatch.md`](standards/dispatch.md) | 派活。 |",
+    "| [`features/_TEMPLATE.md`](features/_TEMPLATE.md) | 功能模板。 |",
     "| [`features/project/文档索引.md`](features/project/文档索引.md) | 不确定入口时查。 |",
     "| [`lessons.md`](lessons.md) | 经验池。 |",
     "",
@@ -80,6 +80,21 @@ function makeFixture() {
   write(path.join(root, ".spec/knowledge/standards/code-design.md"), [
     docFrontmatter("code-design", "代码设计规范"),
     "# Code Design",
+    "",
+  ].join("\n"));
+  write(path.join(root, ".spec/knowledge/standards/workflow.md"), [
+    docFrontmatter("workflow", "工作流"),
+    "# Workflow",
+    "",
+  ].join("\n"));
+  write(path.join(root, ".spec/knowledge/standards/dispatch.md"), [
+    docFrontmatter("dispatch", "派活规范"),
+    "# Dispatch",
+    "",
+  ].join("\n"));
+  write(path.join(root, ".spec/knowledge/features/_TEMPLATE.md"), [
+    docFrontmatter("template", "功能现状模板"),
+    "# Template",
     "",
   ].join("\n"));
   write(path.join(root, ".spec/knowledge/features/project/文档索引.md"), [
@@ -128,9 +143,31 @@ function makeFixture() {
   return root;
 }
 
+function runLint(root) {
+  try {
+    const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+    return {
+      status: result.status,
+      output: `${result.stdout ?? ""}${result.stderr ?? ""}`,
+    };
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+}
+
 test("accepts FantasyWord spec shape", () => {
+  const result = runLint(makeFixture());
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /spec-lint passed/);
+});
+
+test("rejects missing dispatch required file", () => {
   const root = makeFixture();
-  assert.equal(run(process.execPath, [lintPath, root], root).trim(), "spec-lint passed");
+  fs.rmSync(path.join(root, ".spec/knowledge/standards/dispatch.md"), { force: true });
+
+  const result = runLint(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.output, /缺少必需文件：\.spec\/knowledge\/standards\/dispatch\.md/);
 });
 
 test("rejects standards that are not registered in the root knowledge index", () => {
@@ -141,9 +178,9 @@ test("rejects standards that are not registered in the root knowledge index", ()
     "",
   ].join("\n"));
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /未直接登记到知识根索引/);
+  assert.match(result.output, /未直接登记到知识根索引/);
 });
 
 test("rejects knowledge files that cannot be reached through index documents", () => {
@@ -154,9 +191,42 @@ test("rejects knowledge files that cannot be reached through index documents", (
     "",
   ].join("\n"));
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /无法从 \.spec\/knowledge\/README\.md/);
+  assert.match(result.output, /无法从 \.spec\/knowledge\/README\.md/);
+});
+
+test("rejects knowledge dangling links", () => {
+  const root = makeFixture();
+  write(path.join(root, ".spec/knowledge/README.md"), [
+    docFrontmatter("knowledge", "导航", "index"),
+    "# 导航",
+    "",
+    "[missing](standards/missing.md)",
+    "",
+  ].join("\n"));
+
+  const result = runLint(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.output, /链接不存在：standards\/missing\.md/);
+});
+
+test("rejects skill frontmatter with extra fields", () => {
+  const root = makeFixture();
+  write(path.join(root, ".spec/skills/demo/SKILL.md"), [
+    "---",
+    "name: demo",
+    "description: 演示",
+    "tools: shell",
+    "---",
+    "",
+    "# Demo",
+    "",
+  ].join("\n"));
+
+  const result = runLint(root);
+  assert.notEqual(result.status, 0);
+  assert.match(result.output, /frontmatter 只允许 name\/description/);
 });
 
 test("rejects copied UnitySkills package docs inside project skill entry", () => {
@@ -185,43 +255,47 @@ test("rejects copied UnitySkills package docs inside project skill entry", () =>
     "",
   ].join("\n"));
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /UnitySkills 上游资料镜像/);
+  assert.match(result.output, /UnitySkills 上游资料镜像/);
 });
 
 test("rejects retired project roots", () => {
   const root = makeFixture();
   write(path.join(root, "." + "codex", "skills", "old", "SKILL.md"), "# old\n");
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /废弃项目入口仍存在/);
+  assert.match(result.output, /废弃项目入口仍存在/);
 });
 
 test("rejects retired project-local diagnostics script", () => {
   const root = makeFixture();
   write(path.join(root, "scripts", "Watch-CodexAbort.ps1"), "# old host diagnostic\n");
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /废弃项目入口仍存在/);
+  assert.match(result.output, /废弃项目入口仍存在/);
 });
 
 test("rejects retired project skill lock", () => {
   const root = makeFixture();
   write(path.join(root, "skills-lock.json"), JSON.stringify({ version: 1, skills: {} }));
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /废弃项目入口仍存在/);
+  assert.match(result.output, /废弃项目入口仍存在/);
 });
 
 test("rejects retired ignore entries", () => {
   const root = makeFixture();
-  fs.appendFileSync(path.join(root, ".gitignore"), "/.codexbridge/\n/AIBridgeCache/\n/test-results/\n/.learnings/\n/docs/archive/legacy-recovery/MigrationStaging/\n/_ai_preview_*.jpg\n", "utf8");
+  fs.appendFileSync(
+    path.join(root, ".gitignore"),
+    "/.codexbridge/\n/AIBridgeCache/\n/test-results/\n/.learnings/\n/docs/archive/legacy-recovery/MigrationStaging/\n/_ai_preview_*.jpg\n",
+    "utf8",
+  );
 
-  const result = spawnSync(process.execPath, [lintPath, root], { cwd: root, encoding: "utf8" });
+  const result = runLint(root);
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /\.gitignore 仍隐藏废弃入口或阶段证据目录/);
+  assert.match(result.output, /\.gitignore 仍隐藏废弃入口或阶段证据目录/);
 });

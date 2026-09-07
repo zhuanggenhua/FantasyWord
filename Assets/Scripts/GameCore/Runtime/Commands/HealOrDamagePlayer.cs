@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -36,13 +35,24 @@ namespace FantasyWord.GameCore
                     break;
 
                 case EAction.Remove:
-                    target.Damage(new DamageOutputDescriptor
-                    {
-                        source = new UnknownDamageSource(),
-                        damage = math.abs(m_amount),
-                        flags = EDamageFlag.None,
-                        type = EDamageType.None,
-                    });
+                    FormalGameplayEffectDamageHelper.TryApplyDamage(
+                        null,
+                        target,
+                        new FormalDamageEffectPayload(
+                            new DamageDescriptor
+                            {
+                                damageType = EDamageType.None,
+                                flatDamages = Mathf.Abs(m_amount),
+                                scalingFactor = 0.0f,
+                                criticalBehavior = EResolutionBehavior.Never,
+                                missBehavior = EResolutionBehavior.Never,
+                                ignoreDefense = true,
+                                silent = false
+                            },
+                            EEffectVisualFlags.None,
+                            default,
+                            EEffectImpactDataType.Velocity,
+                            Vector2.zero));
                     break;
             }
 

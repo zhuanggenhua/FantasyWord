@@ -629,8 +629,8 @@ $persistenceSystemInstantiationRuntimePath = Join-Path $projectRoot "Assets/Scri
 $stateMessageDispatcherPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Animation/StateMessageDispatcher.cs"
 $animationStrategyPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Animation/Strategies/AAnimationStrategy.cs"
 $formalAttributeCatalogPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalAttributeCatalog.cs"
-$formalGameplayAttributeSetPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayAttributeSet.cs"
 $formalGameplayEffectDamageHelperPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayEffectDamageHelper.cs"
+$formalGameplayEffectResourceModifierPath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayEffectResourceModifier.cs"
 $characterAlterationRulePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Database/Characters/CharacterAlterationRule.cs"
 $temporalEffectInterfacePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/ITemporalEffect.cs"
 $temporalEffectBasePath = Join-Path $projectRoot "Assets/Scripts/GameCore/Runtime/Combat/Effects/Temporal/ATemporalEffect.cs"
@@ -1634,10 +1634,12 @@ $uiHudAbilityMessageMissingPatterns = Test-ContainsAll -Content $uiHudAbilityMes
     "EPlayerCommandFailureReason.InteractionLocked",
     "EPlayerCommandFailureReason.MissingAbility",
     "EPlayerCommandFailureReason.BlockedByState",
-    "EPlayerCommandKind.FireAbility => `"I can't cast right now.`"",
+    "EPlayerCommandFailureReason.InteractionLocked => ResolveInteractionLockedMessage(result.Request.Kind)",
+    "EPlayerCommandFailureReason.BlockedByState => ResolveBlockedByStateMessage(result.Request.Kind)",
+    "private static string ResolveInteractionLockedMessage(EPlayerCommandKind kind)",
+    "private static string ResolveBlockedByStateMessage(EPlayerCommandKind kind)",
+    "EPlayerCommandKind.FireAbility",
     "EPlayerCommandKind.Interact",
-    "I can't interact right now.",
-    "EPlayerCommandKind.Interact => `"Nothing to interact with.`"",
     "_ => null"
 )
 
@@ -2352,8 +2354,32 @@ $formalAttributeCatalogMissingPatterns = Test-ContainsAll -Content $formalAttrib
 $formalAttributeCatalogDisallowedPatterns = Test-ContainsAny -Content $formalAttributeCatalogContent -Patterns @(
     "public static FormalAttributeDefinition[] Definitions =>",
     "public static IReadOnlyList<FormalAttributeDefinition> Definitions => s_definitionArray;",
-    "public static IList<FormalAttributeDefinition> Definitions =>"
+    "public static IList<FormalAttributeDefinition> Definitions =>",
+    "public const int SetCode",
+    "public const int Health",
+    "public const int Mana",
+    "public const int PhysicalAttack",
+    "public const int MagicalAttack",
+    "public const int PhysicalDefense",
+    "public const int MagicalDefense",
+    "public const int Agility",
+    "public const int Luck",
+    "public const int AttackSpeed",
+    "GetAttributeCode(EStat"
 )
+
+$disallowedFormalGameplayAttributeSetFiles = @(
+    "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayAttributeSet.cs",
+    "Assets/Scripts/GameCore/Runtime/Combat/FormalGameplayAttributeSet.cs.meta"
+)
+
+$formalGameplayAttributeSetExistingFiles = New-Object System.Collections.Generic.List[string]
+foreach ($relativePath in $disallowedFormalGameplayAttributeSetFiles) {
+    $fullPath = Join-Path $projectRoot $relativePath
+    if (Test-Path -LiteralPath $fullPath) {
+        [void]$formalGameplayAttributeSetExistingFiles.Add($fullPath)
+    }
+}
 
 $disallowedAbilitySheetFiles = @(
     "Assets/Scripts/GameCore/Runtime/Database/Abilities/AbilitySheet.cs",
@@ -2562,15 +2588,22 @@ $temporalStatModifierEffectMissingPatterns = @(
         "public bool TryRestorePersistedState(TemporalEffectPersistedState persistedState)"
     ))
     (Test-MethodContainsAll -Content $temporalStatModifierEffectContent -MethodName "OnApply" -Patterns @(
-        "switch (m_statBoostData.stat)",
-        "targetCharacter.ModifyCurrentHealth(m_statBoostData.amount);",
-        "targetCharacter.ModifyCurrentMana(m_statBoostData.amount);"
+        "return ApplyConfiguredModifier(restoreFromRuntimeState: false);"
+    ))
+    (Test-MethodContainsAll -Content $temporalStatModifierEffectContent -MethodName "private bool ApplyConfiguredModifier" -Patterns @(
+        "FormalAttributeCatalog.IsResourceStat(m_statBoostData.stat)",
+        "ApplyCurrentResourceDelta(m_statBoostData.amount, minimumValue: 0)",
+        "FormalGameplayEffectResourceModifier.TryAddActiveCurrentStatModifier("
     ))
     (Test-MethodContainsAll -Content $temporalStatModifierEffectContent -MethodName "OnCompleted" -Patterns @(
-        "targetCharacter.ClampCurrentHealthDelta(-amountToRemove, minimumValue: 1);",
-        "targetCharacter.ClampCurrentManaDelta(-amountToRemove);",
-        "targetCharacter.ModifyCurrentHealth(-amountToRemove, minimumValue: 1);",
-        "targetCharacter.ModifyCurrentMana(-amountToRemove);"
+        "FormalAttributeCatalog.IsResourceStat(m_statBoostData.stat)",
+        "ApplyCurrentResourceDelta(-m_statBoostData.amount, m_statBoostData.stat == EStat.Health ? 1 : 0)",
+        "FormalGameplayEffectResourceModifier.TryRemoveActiveCurrentStatModifier(m_activeModifierHandle);"
+    ))
+    (Test-MethodContainsAll -Content $temporalStatModifierEffectContent -MethodName "private bool ApplyCurrentResourceDelta" -Patterns @(
+        "targetCharacter.ClampCurrentHealthDelta(delta, minimumValue)",
+        "targetCharacter.ClampCurrentManaDelta(delta, minimumValue)",
+        "FormalGameplayEffectResourceModifier.TryApplyCurrentStatDelta("
     ))
 )
 
@@ -2660,10 +2693,14 @@ $characterBaseResourcesMissingPatterns = Test-ContainsAll -Content $characterBas
     "private void SetFormalCurrentStatOrReportFailure(EStat stat, int value)",
     "private int GetFormalBaseStatOrBootstrapBuffer(EStat stat)",
     "private int GetFormalCurrentStatOrBootstrapBuffer(EStat stat)",
+    "private CharacterResourceStateData CreateCurrentResourceStateData() => new()",
     "private Stats CreateBootstrapBaseStatsSnapshotOrReportFailure()",
     "private Stats CreateBootstrapCurrentStatsSnapshotOrReportFailure()",
     "private bool IsAttributeBootstrapReadWindowOpen() => m_isAttributeBootstrapReadWindowOpen;",
-    "public bool Damage(DamageOutputDescriptor damageOutput, EEffectVisualFlags visualFlags = EEffectVisualFlags.None, Vector2? velocity = null, DamageImpactSettings damageImpact = default)",
+    "internal void ApplyFormalDamageImpact(DamageInputDescriptor damageInput, Vector2 velocity, DamageImpactSettings damageImpact)",
+    "internal void NotifyFormalDamageProvoked(CharacterBase sourceCharacter)",
+    "internal void PrepareFormalDamageHit(CharacterBase sourceCharacter, DamageInputDescriptor damageInput)",
+    "internal void CompleteFormalDamageHit(",
     "m_provoked.Invoke(sourceCharacter);",
     "characterSheet.feedbacks.PlayDamageTaken(transform.position, this, damageInput, visualFlags);",
     "public virtual void LevelUp(bool silentMode = false)",
@@ -2931,7 +2968,9 @@ $characterBaseGasRuntimeMissingPatterns = Test-ContainsAll -Content $characterBa
     "NormalizeTemporalEffectTypes(effectTypes)",
     "CollectOwnedTemporalEffectRuntimeKeysForCleanse(",
     "GetOwnedTemporalEffectRuntimeKeySnapshot()",
-    "protected void ApplySavedCurrentStatsToOwnedAttributeTruth(Stats currentStats)",
+    "protected void ApplySavedCurrentResourcesToOwnedAttributeTruth(CharacterResourceStateData currentResources)",
+    "private void ApplySavedCurrentResource(EStat stat, int requestedValue, int maxValue)",
+    "FormalGameplayEffectResourceModifier.TryApplyCurrentStatDelta(",
     "private int ReadFormalBaseStatOrReportFailure(EStat stat)",
     "private int ReadFormalCurrentStatOrReportFailure(EStat stat)",
     "private CharacterTemporalEffectRuntimeStateData CreateOwnedTemporalEffectRuntimeState(ITemporalEffect effect)",
@@ -3024,7 +3063,7 @@ $characterBaseStateApiDisallowedPatterns = Test-ContainsAny -Content $characterB
 $characterBasePersistenceMissingPatterns = Test-ContainsAll -Content $characterBasePersistenceContent -Patterns @(
     "protected override Type GetDataBlockType() => typeof(CharacterBaseDataBlock);",
     "protected override void OnSave(PersistableDataBlock block)",
-    "characterBlock.currentStats = CreateCurrentStatsSnapshot();",
+    "characterBlock.currentResources = CreateCurrentResourceStateData();",
     "characterBlock.activeAlterationRules = CreateActiveAlterationRuleSnapshots();",
     "characterBlock.abilityRuntimeStates =",
     "abilitySet.CreateAbilityRuntimeStates(",
@@ -3035,7 +3074,7 @@ $characterBasePersistenceMissingPatterns = Test-ContainsAll -Content $characterB
     "RestoreAbilitySuppressions(",
     "RestoreActiveAlterationRules(characterBlock.activeAlterationRules);",
     "LoadOwnedTemporalEffects(characterBlock);",
-    "ApplySavedCurrentStatsToOwnedAttributeTruth(characterBlock.currentStats);",
+    "ApplySavedCurrentResourcesToOwnedAttributeTruth(characterBlock.currentResources);",
     "loadedAbilitySet.LoadAbilityRuntimeStates(",
     "private CharacterAbilitySourceData[] CreateAbilitySuppressionDataBlocks(",
     "private static void RestoreAbilitySuppressions(",
@@ -3779,8 +3818,9 @@ $gameCoreGasRuntimeReferenceHits = Find-GameCoreGasRuntimeReferenceHits -Project
     $characterBasePath,
     $characterAbilitySetPath,
     $characterAbilitySetFormalRulesPath,
-    $formalGameplayAttributeSetPath,
+    $formalAttributeCatalogPath,
     $formalGameplayEffectDamageHelperPath,
+    $formalGameplayEffectResourceModifierPath,
     $characterBaseGasRuntimePath,
     $characterBaseResourcesPath,
     $characterBaseStateApiPath,
@@ -4511,6 +4551,7 @@ $report = [ordered]@{
     AnimationStrategyMissingPatterns = @($animationStrategyMissingPatterns)
     FormalAttributeCatalogMissingPatterns = @($formalAttributeCatalogMissingPatterns)
     FormalAttributeCatalogDisallowedPatterns = @($formalAttributeCatalogDisallowedPatterns)
+    FormalGameplayAttributeSetExistingFiles = @($formalGameplayAttributeSetExistingFiles)
     AbilitySheetExistingFiles = @($abilitySheetExistingFiles)
     CharacterAlterationRuleMissingPatterns = @($characterAlterationRuleMissingPatterns)
     TemporalEffectInterfaceMissingPatterns = @($temporalEffectInterfaceMissingPatterns)
@@ -4709,6 +4750,7 @@ $report = [ordered]@{
     AnimationStrategyMissingPatternCount = @($animationStrategyMissingPatterns).Count
     FormalAttributeCatalogMissingPatternCount = @($formalAttributeCatalogMissingPatterns).Count
     FormalAttributeCatalogDisallowedPatternCount = @($formalAttributeCatalogDisallowedPatterns).Count
+    FormalGameplayAttributeSetExistingFileCount = @($formalGameplayAttributeSetExistingFiles).Count
     AbilitySheetExistingFileCount = @($abilitySheetExistingFiles).Count
     CharacterAlterationRuleMissingPatternCount = @($characterAlterationRuleMissingPatterns).Count
     TemporalEffectInterfaceMissingPatternCount = @($temporalEffectInterfaceMissingPatterns).Count
@@ -4823,7 +4865,6 @@ $expectedNonFailureCountValues = @{
     ActiveAbilityBaseMissingPatternCount = 2
     CharacterBaseAbilitiesMissingPatternCount = 22
     CharacterBaseAbilitySetRuntimeMissingPatternCount = 8
-    CharacterBaseResourcesMissingPatternCount = 1
     CharacterBaseStateApiMissingPatternCount = 2
     CharacterEquippedAbilityLoadoutMissingPatternCount = 1
     CharacterPlayerControlMissingPatternCount = 6
@@ -5333,6 +5374,11 @@ foreach ($pattern in $report.FormalAttributeCatalogMissingPatterns) {
 Write-Host ("FormalAttributeCatalog disallowed patterns: {0}" -f $report.FormalAttributeCatalogDisallowedPatternCount)
 foreach ($pattern in $report.FormalAttributeCatalogDisallowedPatterns) {
     Write-Host ("  [formal-attribute-catalog-disallowed] {0}" -f $pattern)
+}
+
+Write-Host ("FormalGameplayAttributeSet legacy files still present: {0}" -f $report.FormalGameplayAttributeSetExistingFileCount)
+foreach ($path in $report.FormalGameplayAttributeSetExistingFiles) {
+    Write-Host ("  [formal-gameplay-attribute-set-file] {0}" -f $path)
 }
 
 Write-Host ("Legacy AbilitySheet files still present: {0}" -f $report.AbilitySheetExistingFileCount)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using YokiFrame;
 
@@ -9,38 +10,55 @@ namespace FantasyWord.GameCore
     /// </summary>
     public struct FloatingTextAnimation
     {
+        /// <summary>要显示的浮字文本。</summary>
         public string text;
+
+        /// <summary>浮字生成的世界坐标。</summary>
         public Vector2 position;
+
+        /// <summary>浮字显示颜色。</summary>
         public Color color;
+
+        /// <summary>传给浮字 Animator 的触发参数。</summary>
         public string animationTrigger;
     }
 
     /// <summary>
-    /// 战斗浮字入口。这里只负责节流和排队，实例生命周期统一交给 YokiFrame 对象池管理。
+    /// 战斗浮字对象池入口。
+    /// 它只负责排队、节流和从 YokiFrame 对象池租用实例，不决定战斗事件是否应该显示。
     /// </summary>
     public class FloatingTextPool : MonoBehaviour
     {
-        // Inspector Settings
-        [Header("References")]
+        [Header("浮字对象池")]
+        [SerializeField]
+        [LabelText("浮字预制体")]
         [Tooltip("浮动文字预制体，必须带有 FloatingText 组件。")]
-        [SerializeField] private GameObject m_floatingTextPrefab = null;
+        private GameObject m_floatingTextPrefab = null;
 
-        [Header("Settings")]
+        [SerializeField, Min(0)]
+        [LabelText("对象池容量")]
         [Tooltip("预热数量和最大同时存活数量。容量不足时新浮字会继续留在队列中等待。")]
-        [SerializeField] private int m_poolSize = 3;
-        [Tooltip("两条浮动文字之间的最小播放间隔，用于避免同一帧伤害数字堆叠。")]
-        [SerializeField] private float m_minimumDelayBetweenTexts = 0.15f;
+        private int m_poolSize = 3;
 
-        // Private Members
+        [SerializeField, Min(0f)]
+        [LabelText("最小播放间隔")]
+        [Tooltip("两条浮动文字之间的最小播放间隔，用于避免同一帧伤害数字堆叠。")]
+        private float m_minimumDelayBetweenTexts = 0.15f;
+
         private float m_cooldown = 0.0f;
         private float m_poolExhaustedWarningCooldown = 0.0f;
         private readonly Queue<FloatingTextAnimation> m_queue = new();
 
+        /// <summary>按 Inspector 配置预热并限制浮字对象池容量。</summary>
         private void Awake()
         {
             ConfigureFloatingTextPool();
         }
 
+        /// <summary>
+        /// 按最小间隔从队列播放浮字。
+        /// 对象池暂时没有实例时保留队列，等待后续帧继续租用。
+        /// </summary>
         private void Update()
         {
             if (m_queue.Count > 0 && m_cooldown <= 0.0f)
@@ -59,8 +77,7 @@ namespace FantasyWord.GameCore
                 {
                     if (m_poolExhaustedWarningCooldown <= 0.0f)
                     {
-                        Debug.LogWarning(
-                            "No floating text available. The queued text will wait for a pooled instance.");
+                        Debug.LogWarning("没有可用的浮动文字实例，已排队的浮字会继续等待对象池归还实例。");
                         m_poolExhaustedWarningCooldown = 1.0f;
                     }
                 }
@@ -72,6 +89,7 @@ namespace FantasyWord.GameCore
                 m_poolExhaustedWarningCooldown - Time.deltaTime);
         }
 
+        /// <summary>从对象池租用浮字实例，并验证预制体上是否带有 FloatingText 组件。</summary>
         private FloatingText RentFloatingText()
         {
             if (m_floatingTextPrefab == null)
@@ -90,11 +108,12 @@ namespace FantasyWord.GameCore
                 return floatingText;
             }
 
-            Debug.LogError("FloatingText Prefab invalid. Make sure the prefab has a FloatingText component", instance);
+            Debug.LogError("浮动文字预制体配置无效，请确认预制体带有 FloatingText 组件。", instance);
             GameObjectPoolService.Return(instance);
             return null;
         }
 
+        /// <summary>配置并预热浮字对象池；预制体缺失时延后到租用阶段暴露为空队列。</summary>
         private void ConfigureFloatingTextPool()
         {
             if (m_floatingTextPrefab == null)
@@ -107,6 +126,7 @@ namespace FantasyWord.GameCore
             GameObjectPoolService.Prewarm(m_floatingTextPrefab, capacity);
         }
 
+        /// <summary>把一个浮字播放请求加入队列，实际播放时间由最小间隔和对象池可用状态决定。</summary>
         public void ShowText(string text, Vector2 position, Color color, string animationTrigger)
         {
             m_queue.Enqueue(new()
@@ -119,4 +139,3 @@ namespace FantasyWord.GameCore
         }
     }
 }
-

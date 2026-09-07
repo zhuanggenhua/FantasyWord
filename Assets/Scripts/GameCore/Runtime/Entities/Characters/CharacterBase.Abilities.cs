@@ -9,6 +9,10 @@ namespace FantasyWord.GameCore
 {
     public abstract partial class CharacterBase
     {
+        /// <summary>
+        /// 正式 EX-GAS 能力进入角色拥有列表后的统一收口。
+        /// 这里同时登记到技能槽组件、应用已有压制状态并广播展示事件。
+        /// </summary>
         protected virtual void OnFormalGasAbilityAdded(int formalGasAbilityCode)
         {
             if (formalGasAbilityCode <= 0 || !TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -22,6 +26,10 @@ namespace FantasyWord.GameCore
             GameRuntimeEvents.NotifyCharacterFormalGasAbilityAdded(this, formalGasAbilityCode);
         }
 
+        /// <summary>
+        /// 正式 EX-GAS 能力离开角色拥有列表后的统一收口。
+        /// 移除时必须同步清理所有装备槽，避免 UI 或输入仍指向已释放的能力编号。
+        /// </summary>
         protected virtual void OnFormalGasAbilityRemoved(int formalGasAbilityCode)
         {
             if (formalGasAbilityCode <= 0 || !TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -34,6 +42,10 @@ namespace FantasyWord.GameCore
             GameRuntimeEvents.NotifyCharacterFormalGasAbilityRemoved(this, formalGasAbilityCode);
         }
 
+        /// <summary>
+        /// 初始化角色等级带来的正式能力。
+        /// 如果存在 <see cref="CharacterAbilitySet"/>，由它先合并初始槽位规则；否则直接使用 Sheet 的可用能力列表。
+        /// </summary>
         private void InitializeAbilities()
         {
             IEnumerable<int> formalGasAbilityCodes =
@@ -43,6 +55,10 @@ namespace FantasyWord.GameCore
             UnlockFormalGasAbilitiesForLevel(formalGasAbilityCodes);
         }
 
+        /// <summary>
+        /// 授予额外正式能力。
+        /// 该入口可用于装备、永久成长或其它非临时来源；来源键决定后续撤回和叠加计数。
+        /// </summary>
         public bool AddBonusFormalGasAbility(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             if (formalGasAbilityCode <= 0 || count <= 0)
@@ -58,6 +74,10 @@ namespace FantasyWord.GameCore
                 OnFormalGasAbilityAdded);
         }
 
+        /// <summary>
+        /// 撤回额外正式能力。
+        /// count 只减少对应来源的叠层，叠层归零时才释放能力实例。
+        /// </summary>
         public bool RemoveBonusFormalGasAbility(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             if (formalGasAbilityCode <= 0 || count <= 0)
@@ -92,6 +112,10 @@ namespace FantasyWord.GameCore
                 OnFormalGasAbilityAdded);
         }
 
+        /// <summary>
+        /// 撤回临时来源授予的正式能力。
+        /// 非临时来源会被拒绝，避免状态效果接口误删装备或永久成长带来的能力。
+        /// </summary>
         public bool RemoveSourcedBonusFormalGasAbility(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             if (formalGasAbilityCode <= 0 || count <= 0 || !IsTemporaryAbilitySourceKind(source.Kind))
@@ -107,6 +131,10 @@ namespace FantasyWord.GameCore
                 OnFormalGasAbilityRemoved);
         }
 
+        /// <summary>
+        /// 移除某个临时来源授予的全部正式能力。
+        /// 返回移除前的来源条目，方便调用方做审计、存档回滚或展示刷新。
+        /// </summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllSourcedBonusAbilities(CharacterAbilitySourceKey source)
         {
             if (!IsTemporaryAbilitySourceKind(source.Kind))
@@ -151,6 +179,10 @@ namespace FantasyWord.GameCore
             return true;
         }
 
+        /// <summary>
+        /// 移除临时来源的能力压制叠层。
+        /// 压制状态变化后会立即同步到能力实例的可用状态和 GameObject 激活状态。
+        /// </summary>
         public bool RemoveSourcedFormalGasAbilitySuppression(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             if (formalGasAbilityCode <= 0 || count <= 0 || !IsTemporaryAbilitySourceKind(source.Kind))
@@ -167,6 +199,10 @@ namespace FantasyWord.GameCore
             return true;
         }
 
+        /// <summary>
+        /// 移除某个临时来源造成的全部能力压制。
+        /// 只撤回该来源自己的叠层，仍被其它来源压制的能力不会被误恢复。
+        /// </summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllSourcedAbilitySuppressions(CharacterAbilitySourceKey source)
         {
             if (!IsTemporaryAbilitySourceKind(source.Kind))
@@ -188,66 +224,79 @@ namespace FantasyWord.GameCore
             return entries;
         }
 
+        /// <summary>状态效果授予正式能力的语义入口。</summary>
         public bool AddStatusEffectFormalGasAbility(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             return AddSourcedBonusFormalGasAbility(formalGasAbilityCode, source, count);
         }
 
+        /// <summary>状态效果撤回正式能力的语义入口。</summary>
         public bool RemoveStatusEffectFormalGasAbility(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             return RemoveSourcedBonusFormalGasAbility(formalGasAbilityCode, source, count);
         }
 
+        /// <summary>移除某个状态效果授予的全部正式能力。</summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllStatusEffectAbilities(CharacterAbilitySourceKey source)
         {
             return RemoveAllSourcedBonusAbilities(source);
         }
 
+        /// <summary>状态效果压制正式能力的语义入口。</summary>
         public bool AddStatusEffectFormalGasAbilitySuppression(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             return AddSourcedFormalGasAbilitySuppression(formalGasAbilityCode, source, count);
         }
 
+        /// <summary>撤回状态效果造成的正式能力压制。</summary>
         public bool RemoveStatusEffectFormalGasAbilitySuppression(int formalGasAbilityCode, CharacterAbilitySourceKey source, int count = 1)
         {
             return RemoveSourcedFormalGasAbilitySuppression(formalGasAbilityCode, source, count);
         }
 
+        /// <summary>移除某个状态效果造成的全部正式能力压制。</summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllStatusEffectAbilitySuppressions(CharacterAbilitySourceKey source)
         {
             return RemoveAllSourcedAbilitySuppressions(source);
         }
 
+        /// <summary>移除指定变形来源授予的全部正式能力。</summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllTransformationAbilities(string transformationId)
         {
             return RemoveAllSourcedBonusAbilities(CreateTransformationAbilitySource(transformationId));
         }
 
+        /// <summary>移除指定变形来源造成的全部正式能力压制。</summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllTransformationAbilitySuppressions(string transformationId)
         {
             return RemoveAllSourcedAbilitySuppressions(CreateTransformationAbilitySource(transformationId));
         }
 
+        /// <summary>移除指定感染来源授予的全部正式能力。</summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllInfectionAbilities(string infectionId)
         {
             return RemoveAllSourcedBonusAbilities(CreateInfectionAbilitySource(infectionId));
         }
 
+        /// <summary>移除指定感染来源造成的全部正式能力压制。</summary>
         public CharacterAbilitySourceRuntimeEntry[] RemoveAllInfectionAbilitySuppressions(string infectionId)
         {
             return RemoveAllSourcedAbilitySuppressions(CreateInfectionAbilitySource(infectionId));
         }
 
+        /// <summary>查询角色当前是否拥有指定正式能力编号。</summary>
         public bool HasFormalGasAbility(int formalGasAbilityCode)
         {
             return AbilityRuntime.HasFormalGasAbility(formalGasAbilityCode);
         }
 
+        /// <summary>查询指定正式能力是否被来源化规则压制。</summary>
         public bool IsFormalGasAbilitySuppressed(int formalGasAbilityCode)
         {
             return AbilityRuntime.IsFormalGasAbilitySuppressed(formalGasAbilityCode);
         }
 
+        /// <summary>创建当前角色拥有的正式能力编号快照。</summary>
         public int[] CreateOwnedFormalGasAbilityCodeSnapshot()
         {
             return AbilityRuntime.GetFormalGasAbilityCodeSnapshots();
@@ -282,6 +331,10 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 将来源化压制状态应用到能力实例。
+        /// 压制时取消技能槽生命周期、打断能力并禁用实例；恢复时只按默认激活规则重新启用。
+        /// </summary>
         private void ApplyFormalGasAbilitySuppressionState(int formalGasAbilityCode)
         {
             if (!AbilityRuntime.TryGetFormalGasAbilityInstance(
@@ -313,16 +366,22 @@ namespace FantasyWord.GameCore
             abilityInstance.gameObject.SetActive(GetDefaultAbilityState(abilityInstance));
         }
 
+        /// <summary>构建变形来源键。</summary>
         private static CharacterAbilitySourceKey CreateTransformationAbilitySource(string transformationId)
         {
             return new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.Transformation, transformationId);
         }
 
+        /// <summary>构建感染来源键。</summary>
         private static CharacterAbilitySourceKey CreateInfectionAbilitySource(string infectionId)
         {
             return new CharacterAbilitySourceKey(ECharacterAbilitySourceKind.Infection, infectionId);
         }
 
+        /// <summary>
+        /// 判断来源是否属于临时能力来源。
+        /// 只有临时来源允许走 sourced 接口，装备和永久成长应走普通 bonus 接口。
+        /// </summary>
         private static bool IsTemporaryAbilitySourceKind(ECharacterAbilitySourceKind sourceKind)
         {
             return sourceKind == ECharacterAbilitySourceKind.StatusEffect ||
@@ -359,6 +418,10 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// 查询主动能力冷却快照。
+        /// UI 只拿只读快照，不直接访问 CharacterAbilitySet 内部槽位状态。
+        /// </summary>
         public bool TryGetActiveAbilityCooldownSnapshot(
             CharacterEquippedAbilitySlotView slot,
             out CharacterAbilityCooldownSnapshot snapshot)
@@ -372,6 +435,10 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// 创建当前快捷技能槽视图快照。
+        /// 结果用于 HUD、能力菜单和存档前预览，不把内部槽位数组暴露出去。
+        /// </summary>
         public CharacterEquippedAbilitySlotView[] GetEquippedAbilitySlotViewSnapshots()
         {
             if (TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -382,11 +449,19 @@ namespace FantasyWord.GameCore
             return System.Array.Empty<CharacterEquippedAbilitySlotView>();
         }
 
+        /// <summary>
+        /// 触发指定快捷技能槽。
+        /// 这个公开入口只接收命令上下文，瞄准和目标上下文由内部重载或命令执行器补齐。
+        /// </summary>
         public CharacterAbilityFireResult FireEquippedAbilityAtIndex(int index, GameCommandContext commandContext)
         {
             return FireEquippedAbilityAtIndex(index, commandContext, null);
         }
 
+        /// <summary>
+        /// 触发指定快捷技能槽，并传入已解析的 EX-GAS 激活上下文。
+        /// 没有能力槽组件时返回 Unknown，不在这里临时创建替代组件。
+        /// </summary>
         internal CharacterAbilityFireResult FireEquippedAbilityAtIndex(
             int index,
             GameCommandContext commandContext,
@@ -400,6 +475,10 @@ namespace FantasyWord.GameCore
             return new CharacterAbilityFireResult(EAbilityFireCheckResult.Unknown, 0);
         }
 
+        /// <summary>
+        /// 停止指定快捷技能槽的持续输入。
+        /// 没有能力槽组件或槽位无效时返回 false。
+        /// </summary>
         public bool StopFireEquippedAbilityAtIndex(int index)
         {
             if (TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -410,6 +489,10 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// 直接触发指定正式 EX-GAS 能力。
+        /// 这是角色级能力触发入口；缺少 CharacterAbilitySet 时会报错并返回 Unknown。
+        /// </summary>
         public EAbilityFireCheckResult FireFormalGasAbility(int formalGasAbilityCode, GameCommandContext commandContext)
         {
             if (TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -421,6 +504,9 @@ namespace FantasyWord.GameCore
             return EAbilityFireCheckResult.Unknown;
         }
 
+        /// <summary>
+        /// 停止指定正式 EX-GAS 能力的持续输入。
+        /// </summary>
         public bool StopFireFormalGasAbility(int formalGasAbilityCode)
         {
             if (TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -431,18 +517,29 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// 将正式能力编号装备到快捷技能槽。
+        /// 只委托给 CharacterAbilitySet，角色本体不直接维护槽位数组。
+        /// </summary>
         public bool TryEquipFormalGasAbilityCodeToSlot(int formalGasAbilityCode, int index)
         {
             return TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet) &&
                 abilitySet.TryEquipFormalGasAbilityCodeToSlot(formalGasAbilityCode, index);
         }
 
+        /// <summary>
+        /// 清空指定快捷技能槽。
+        /// </summary>
         public bool ClearEquippedAbilitySlot(int index)
         {
             return TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet) &&
                 abilitySet.ClearEquippedAbilitySlot(index);
         }
 
+        /// <summary>
+        /// 创建快捷技能槽存档快照。
+        /// 只保存槽位索引和正式能力编号，不保存运行时能力实例。
+        /// </summary>
         public CharacterAbilitySlotData[] CreateEquippedAbilitySlotDataSnapshot(DatabaseRegistry databaseRegistry)
         {
             if (TryGetOwnedAbilitySet(out CharacterAbilitySet abilitySet))
@@ -453,6 +550,10 @@ namespace FantasyWord.GameCore
             return System.Array.Empty<CharacterAbilitySlotData>();
         }
 
+        /// <summary>
+        /// 从存档槽位恢复快捷技能布局。
+        /// 恢复前提是正式能力实例已经由 CharacterBase/AbilityRuntime 恢复完成。
+        /// </summary>
         public bool RestoreEquippedAbilitiesFromSlotData(
             System.Collections.Generic.IEnumerable<CharacterAbilitySlotData> quickAbilitySlots)
         {
@@ -460,6 +561,10 @@ namespace FantasyWord.GameCore
                 abilitySet.RestoreEquippedAbilitiesFromSlotData(quickAbilitySlots);
         }
 
+        /// <summary>
+        /// 订阅快捷技能槽变化。
+        /// 空监听会被忽略，避免 UnityEvent 注册空委托。
+        /// </summary>
         public void AddEquippedAbilitiesChangedListener(UnityAction<CharacterEquippedAbilitySlotView[]> listener)
         {
             if (listener == null)
@@ -473,6 +578,9 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 取消订阅快捷技能槽变化。
+        /// </summary>
         public void RemoveEquippedAbilitiesChangedListener(UnityAction<CharacterEquippedAbilitySlotView[]> listener)
         {
             if (listener == null)
@@ -506,6 +614,10 @@ namespace FantasyWord.GameCore
         /// </summary>
         private void InterruptActions() => AbilityRuntime.NotifyActionInterrupted();
 
+        /// <summary>
+        /// 根据等级解锁正式能力。
+        /// 能力实例创建、角色层注册和事件广播都通过 OnFormalGasAbilityAdded 收口。
+        /// </summary>
         private void UnlockFormalGasAbilitiesForLevel(IEnumerable<int> formalGasAbilityCodes)
         {
             if (formalGasAbilityCodes == null)
@@ -522,6 +634,10 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 实例化正式 EX-GAS 能力 Prefab。
+        /// 配置缺失、Prefab 缺失或根节点缺失都会明确报错，不创建半成品能力实例。
+        /// </summary>
         private AbilityBase InstantiateFormalGasAbilityPrefab(int formalGasAbilityCode)
         {
             if (formalGasAbilityCode <= 0 ||
@@ -564,6 +680,10 @@ namespace FantasyWord.GameCore
             return ability;
         }
 
+        /// <summary>
+        /// 释放能力 Prefab 实例。
+        /// 播放态使用 Destroy，编辑器非播放态使用 DestroyImmediate，避免遗留编辑器对象。
+        /// </summary>
         private void ReleaseAbilityPrefab(AbilityBase ability)
         {
             if (ability)
@@ -579,6 +699,10 @@ namespace FantasyWord.GameCore
             }
         }
 
+        /// <summary>
+        /// 判断能力实例创建后的默认激活状态。
+        /// 持续存在的被动/规则能力默认激活，可触发能力默认交给输入入口触发。
+        /// </summary>
         private static bool GetDefaultAbilityState(AbilityBase abilityInstance)
         {
             if (abilityInstance == null)

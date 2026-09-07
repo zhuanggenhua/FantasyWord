@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Sirenix.OdinInspector;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -32,13 +33,23 @@ namespace FantasyWord.GameCore
         protected struct TemporalData
         {
             [HideInInspector] public int runtimeKey;
-            [InfinityFloat] public float duration;
+            [InfinityFloat]
+            [LabelText("持续时间"), Tooltip("持续效果的基础时长，支持 InfinityFloat 表示无限持续。")]
+            public float duration;
+
+            [LabelText("可叠加效果 ID")]
+            [Tooltip("非空时，同 ID 的持续效果会按叠加策略处理；留空表示每个实例独立存在。")]
             public string stackableEffectId;
+
+            [LabelText("初次叠加策略")]
+            [Tooltip("同 ID 效果再次进入时如何处理旧实例的剩余时间或生命周期。")]
             public EInitialStackBehavior stackBehavior;
             [HideInInspector] public float remainingDuration;
         }
 
-        [SerializeField] protected TemporalData m_temporalData;
+        [SerializeField]
+        [LabelText("持续效果数据"), Tooltip("持续时间、叠加 ID、叠加策略和运行时 key 的共享数据。")]
+        protected TemporalData m_temporalData;
         private static int s_nextRuntimeKey = 0;
 
         public virtual bool completed => m_temporalData.remainingDuration <= 0.0f;
@@ -54,12 +65,19 @@ namespace FantasyWord.GameCore
         protected virtual void OnStacked(ITemporalEffect effect) { }
         public abstract ITemporalEffect Clone();
         protected abstract TemporalEffectPresentationState BuildPresentationState();
+        /// <summary>
+        /// 返回展示分类。派生类不提供分类时，Cleanse 和效果栏只会拿到默认无分类结果。
+        /// </summary>
         protected virtual bool TryResolvePresentationEffectType(out EEffectType effectType)
         {
             effectType = default;
             return false;
         }
 
+        /// <summary>
+        /// 应用持续效果并登记到目标角色。
+        /// runtimeKey 在首次应用时生成；如果派生类应用失败，会回滚这次临时生成的 key。
+        /// </summary>
         public override bool Apply(CharacterBase target, EffectImpactSettings? impactSettings = null)
         {
             int previousRuntimeKey = m_temporalData.runtimeKey;
@@ -84,6 +102,10 @@ namespace FantasyWord.GameCore
             return false;
         }
 
+        /// <summary>
+        /// 完成持续效果。
+        /// 先调用 OnCompleted 让派生类撤销动作锁、速度规则或能力来源，再执行统一清理。
+        /// </summary>
         public void Complete()
         {
             OnCompleted();
@@ -105,6 +127,10 @@ namespace FantasyWord.GameCore
             BindRuntimeTarget(owner);
         }
 
+        /// <summary>
+        /// 尝试把同 ID 的新效果叠加到当前实例。
+        /// 只处理持续时间/生命周期策略，具体叠层副作用留给 OnStacked。
+        /// </summary>
         public virtual bool TryStack(ITemporalEffect effect)
         {
             if (!string.IsNullOrWhiteSpace(effect.stackableEffectId) && !string.IsNullOrWhiteSpace(m_temporalData.stackableEffectId))
@@ -137,6 +163,10 @@ namespace FantasyWord.GameCore
             Update(Time.deltaTime);
         }
 
+        /// <summary>
+        /// 推进持续效果一帧。
+        /// deltaTime 会被裁剪为非负数，避免外部错误时间输入反向延长效果。
+        /// </summary>
         public void Update(float deltaTime)
         {
             Debug.Assert(m_effectData.initialized, "Effect must be initialized before updating.");

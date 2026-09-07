@@ -1,4 +1,5 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -27,12 +28,12 @@ namespace FantasyWord.GameCore
         [Serializable]
         internal struct AbilitySuppressionData
         {
-            [InspectorName("压制技能编码")]
+            [LabelText("压制技能编码")]
             [Tooltip("持续效果生效期间暂时禁用的目标 Formal GAS 技能编码列表。")]
             public int[] formalGasAbilityCodes;
         }
 
-        [InspectorName("技能压制配置")]
+        [LabelText("技能压制配置")]
         [Tooltip("配置该持续效果会暂时禁用哪些 Formal GAS 技能。")]
         [SerializeField] private AbilitySuppressionData m_abilitySuppressionData;
 

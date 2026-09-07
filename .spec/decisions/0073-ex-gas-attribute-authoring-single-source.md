@@ -1,0 +1,22 @@
+# 0073-EX-GAS 属性作者源单一真相
+
+- 日期：2026-07-30
+- 状态：已采纳
+- 背景：
+  - 项目已经采用 EX-GAS 2.0 作为属性、能力、GameplayEffect 和规则结果的正式方向。
+  - 当前代码里存在 `EStat`、`FormalAttributeCatalog`、`FormalGameplayAttributeSet` 三处手写属性定义，同时 EX-GAS 自身已经有 Attribute / AttributeSet 编辑器、Excel/Luban 数据载体和 `XAttribute` / `XAttrSet` 生成链。
+  - 继续把项目侧手写属性表描述成比 EX-GAS 作者链更好的正式设计，会违反单一真相原则，也会让 GE Modifier、装备属性、UI 显示和存档语义长期面对两套属性词汇表。
+- 决策：
+  - FantasyWord 正式属性定义源统一到 EX-GAS Attribute / AttributeSet 编辑与生成链；Excel/Luban 只视为该编辑链的数据载体，不再被误写成“裸表格流程”。
+  - 项目侧不再新增手写 attribute code / AttributeSet code 源；手写 `FormalGameplayAttributeSet` 清退，不再作为迁移期桥接和兼容面存在。
+  - 项目需要的稳定 ID、中文显示、UI 分组、装备可加成标记、资源当前/上限关系、存档策略、未来联机同步策略等元数据，必须挂接到 EX-GAS 属性 code / AttributeSet code 上；可以通过扩展 EX-GAS 属性编辑器/表字段或一一绑定的项目元数据表实现，但不得形成第二套属性定义源。
+  - 后续应由 EX-GAS 属性源生成或驱动项目侧 `FormalAttributeCatalog.g.cs`、装备属性选择、UI 属性展示和静态校验；不得再生成或维护 `FormalGameplayAttributeSet` 这类同职责手写属性集壳。
+  - 正式 GameplayEffect Modifier、装备属性、UI 属性行、存档资源恢复和未来网络属性同步都必须引用同一套 EX-GAS 属性 code；不得同时维护 `XAttrSet.FightUnit = 1` 与项目手写 `FormalGameplayAttributeSet.SetCode = 1001` 两套正式属性宇宙。
+- 影响：
+  - `FormalGameplayAttributeSet.SetCode = 1001` 手写属性集已从正式运行链路清退；属性集 code 只能来自 EX-GAS 生成常量。
+  - `Stats` 继续只能作为快照 DTO、装备/角色作者输入容器、UI/事件载荷、启动期 bootstrap buffer 或批量计算输入；它不能反向定义属性集合。
+  - 属性扩展、重命名、废弃和迁移的正式入口必须回到 EX-GAS 属性作者源及其项目元数据绑定，不能靠新增 enum 值、switch 分支或数组 resize 伪兼容完成。
+  - 后续需要补静态门禁：禁止正式 GE Modifier 引用非正式属性集，禁止手写属性列表继续扩张，禁止属性 code 重复或项目元数据缺失。
+- 替代关系：
+  - 本决策补充并收紧 `0071-正式 GAS 资源 Modifier 与伤害 owner`：0071 继续定义资源变化和伤害 owner；本决策定义属性作者源和属性编码单一真相。
+  - 本决策取代先前“手写三层属性定义比 EX-GAS 属性编辑链更适合长期维护”的口径。

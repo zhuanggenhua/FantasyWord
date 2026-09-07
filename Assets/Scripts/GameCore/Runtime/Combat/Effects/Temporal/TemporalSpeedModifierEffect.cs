@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace FantasyWord.GameCore
@@ -32,16 +33,16 @@ namespace FantasyWord.GameCore
         [Serializable]
         public struct SpeedModifierData
         {
-            [InspectorName("移动速度倍率")]
+            [LabelText("移动速度倍率")]
             [Tooltip("持续期间应用到目标移动速度上的倍率；1 表示不变，小于 1 减速，大于 1 加速。")]
             public float factor;
 
-            [InspectorName("恢复曲线")]
+            [LabelText("恢复曲线")]
             [Tooltip("可选曲线。存在两个以上关键帧时，会按持续进度把倍率插值回 1。")]
             public AnimationCurve customCurve;
         }
 
-        [InspectorName("移速修正配置")]
+        [LabelText("移速修正配置")]
         [Tooltip("配置持续期间目标移动速度倍率，以及是否随时间恢复正常速度。")]
         [SerializeField] private SpeedModifierData m_speedModifierData;
 

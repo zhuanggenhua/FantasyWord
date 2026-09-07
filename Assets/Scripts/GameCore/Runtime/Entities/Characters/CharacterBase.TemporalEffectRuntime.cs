@@ -13,6 +13,10 @@ namespace FantasyWord.GameCore
         /// </summary>
         private readonly SortedDictionary<int, ITemporalEffect> m_temporalEffectsByRuntimeKey = new();
 
+        /// <summary>
+        /// 注册角色拥有的持续效果。
+        /// runtimeKey 是正式主键；同 key 新实例会替换旧实例，并把旧实例交给调用方完成退场。
+        /// </summary>
         private ITemporalEffect RegisterOwnedTemporalEffect(ITemporalEffect effect)
         {
             if (effect == null)
@@ -42,6 +46,10 @@ namespace FantasyWord.GameCore
             return null;
         }
 
+        /// <summary>
+        /// 按 runtimeKey 查询当前登记的持续效果。
+        /// runtimeKey 无效、未登记或登记值为空时都返回 false。
+        /// </summary>
         private bool TryGetOwnedTemporalEffect(int runtimeKey, out ITemporalEffect effect)
         {
             effect = null;
@@ -62,6 +70,7 @@ namespace FantasyWord.GameCore
         /// <summary>
         /// 当调用方只需要当前登记的 effect 主键时，直接拿 key 快照，
         /// 避免先投影成对象数组再回查注册表。
+        /// 快照会过滤掉无效 key 和空 effect，供推进、存档、清除等流程安全遍历。
         /// </summary>
         private int[] GetOwnedTemporalEffectRuntimeKeySnapshot()
         {
@@ -87,6 +96,7 @@ namespace FantasyWord.GameCore
         /// <summary>
         /// 某些调用方只关心“这是不是当前登记的那只 effect”，
         /// 不应该自己再把 key 查询和引用比较拼在一起。
+        /// 这能防止旧 effect 被替换后仍在完成回调里误操作当前新 effect。
         /// </summary>
         private bool IsCurrentOwnedTemporalEffect(ITemporalEffect effect)
         {
@@ -97,6 +107,10 @@ namespace FantasyWord.GameCore
                 ReferenceEquals(registeredEffect, effect);
         }
 
+        /// <summary>
+        /// 按 runtimeKey 快照移除持续效果。
+        /// 输入可以包含重复 key；方法会去重并返回实际移除的 effect 实例，由调用方统一 Finalize。
+        /// </summary>
         private ITemporalEffect[] RemoveOwnedTemporalEffectsByRuntimeKeySnapshot(int[] runtimeKeys)
         {
             if (runtimeKeys == null)

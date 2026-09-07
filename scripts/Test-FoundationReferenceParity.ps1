@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
     [string]$ProjectRoot,
     [string]$ReferenceCoreRoot = "C:\Gamedev\Unity\Engine\2DRPGEngine\Assets\Mythril2D\Core",
@@ -49,8 +49,8 @@ $allowedExtraRuntimePaths = @(
     "Database\Quest\Tasks\TalkToCharacterTask.cs",
     "Database\Save\SpriteReference.cs",
     "Combat\FormalAttributeCatalog.cs",
-    "Combat\FormalGameplayAttributeSet.cs",
     "Combat\FormalGameplayEffectDamageIntegration.cs",
+    "Combat\FormalGameplayEffectResourceModifier.cs",
     "Combat\FormalGameplayEffectDamageHelper.cs",
     "Combat\FormalGameplayEffectDamageSystem.cs",
     "Combat\Gas2DTargetCatchers.cs",
@@ -241,6 +241,7 @@ $allowedExtraEditorPaths = @(
     "Tests\ContextSteering2DEditModeTests.cs",
     "Tests\ElementReactionCoreEditModeTests.cs",
     "Tests\ElementReactionSystemEditModeTests.cs",
+    "Tests\FormalAttributeSingleSourceEditModeTests.cs",
     "Tests\FormalDamagePipelineEditModeTests.cs",
     "Tests\GasEditModeTestHelper.cs",
     "Tests\InventorySystemTransactionEditModeTests.cs",

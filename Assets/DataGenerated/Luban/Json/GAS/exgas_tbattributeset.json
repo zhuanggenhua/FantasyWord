@@ -75,6 +75,38 @@
         "MaxValue": 9999,
         "UseMinValue": true,
         "UseMaxValue": true
+      },
+      {
+        "ID": 11,
+        "InitValue": 0,
+        "MinValue": 0,
+        "MaxValue": 999,
+        "UseMinValue": true,
+        "UseMaxValue": true
+      },
+      {
+        "ID": 12,
+        "InitValue": 0,
+        "MinValue": 0,
+        "MaxValue": 999,
+        "UseMinValue": true,
+        "UseMaxValue": true
+      },
+      {
+        "ID": 13,
+        "InitValue": 0,
+        "MinValue": 0,
+        "MaxValue": 999,
+        "UseMinValue": true,
+        "UseMaxValue": true
+      },
+      {
+        "ID": 14,
+        "InitValue": 0,
+        "MinValue": 0,
+        "MaxValue": 999,
+        "UseMinValue": true,
+        "UseMaxValue": true
       }
     ]
   },

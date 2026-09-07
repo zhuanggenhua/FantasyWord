@@ -55,10 +55,11 @@ $allowedEquipmentPaths = @(
 $allowedCombatPrefixes = @()
 
 $allowedCombatPaths = @(
-    "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayAttributeSet.cs",
+    "Assets\Scripts\GameCore\Runtime\Combat\FormalAttributeCatalog.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageIntegration.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageHelper.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectDamageSystem.cs",
+    "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayEffectResourceModifier.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\FormalGameplayTagCatalog.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Gas2DTargetCatchers.cs",
     "Assets\Scripts\GameCore\Runtime\Combat\Abilities\Active\ActiveAbilityBase.cs",
@@ -70,6 +71,7 @@ $allowedCombatPaths = @(
     "Assets\Scripts\GameCore\Runtime\Entities\Characters\CharacterBase.Abilities.cs",
     "Assets\Scripts\GameCore\Runtime\Entities\Characters\CharacterCommandExecutor.cs",
     "Assets\Scripts\GameCore\Runtime\Game\FormalAbilityRuntimeBootstrap.cs",
+    "Assets\Editor\GameCore\Tests\FormalAttributeSingleSourceEditModeTests.cs",
     "Assets\Editor\GameCore\Tests\FormalDamagePipelineEditModeTests.cs",
     "Assets\Editor\GameCore\Tests\GasEditModeTestHelper.cs",
     "Assets\Editor\GameCore\Tests\MeleeAttackAbilityEditModeTests.cs",

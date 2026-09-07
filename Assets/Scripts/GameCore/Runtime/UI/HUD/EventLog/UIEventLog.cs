@@ -1,5 +1,6 @@
 using UnityEngine;
 using azixMcAze.SerializableDictionary;
+using Sirenix.OdinInspector;
 using YokiFrame;
 
 namespace FantasyWord.GameCore
@@ -10,16 +11,13 @@ namespace FantasyWord.GameCore
     [System.Serializable]
     public struct UIEventSettings
     {
-        [InspectorName("启用")]
-        [Tooltip("是否显示这类事件日志。")]
+        [LabelText("启用"), Tooltip("是否显示这类事件日志。")]
         public bool enabled;
 
-        [InspectorName("文本模板")]
-        [Tooltip("事件日志文本模板，参数由对应事件处理函数传入。")]
+        [LabelText("文本模板"), Tooltip("事件日志文本模板，参数由对应事件处理函数传入。")]
         public string text;
 
-        [InspectorName("颜色")]
-        [Tooltip("这类事件日志显示时使用的文本颜色。")]
+        [LabelText("颜色"), Tooltip("这类事件日志显示时使用的文本颜色。")]
         public Color color;
     }
 
@@ -28,42 +26,85 @@ namespace FantasyWord.GameCore
     /// </summary>
     public class UIEventLog : MonoBehaviour
     {
+        #region Inspector 配置
+
         [Header("全局参数")]
-        [InspectorName("日志停留时长")]
-        [Tooltip("单条日志完整显示后的停留秒数。")]
-        [SerializeField] private float m_logDuration = 3.0f;
+        [SerializeField, Min(0f)]
+        [LabelText("日志停留时长"), Tooltip("单条日志完整显示后的停留秒数。")]
+        private float m_logDuration = 3.0f;
 
-        [InspectorName("单字打字时长")]
-        [Tooltip("日志逐字出现时，每个字符的显示间隔秒数。")]
-        [SerializeField] private float m_characterTypingDuration = 0.025f;
+        [SerializeField, Min(0f)]
+        [LabelText("单字打字时长"), Tooltip("日志逐字出现时，每个非空白字符的显示间隔秒数。")]
+        private float m_characterTypingDuration = 0.025f;
 
-        [InspectorName("日志行池大小")]
-        [Tooltip("事件日志最多同时保留的行数，超出后复用最早一行。")]
-        [SerializeField] private int m_linePoolSize = 5;
+        [SerializeField, Min(1)]
+        [LabelText("日志行池大小"), Tooltip("事件日志最多同时保留的行数，超出后复用最早一行。")]
+        private int m_linePoolSize = 5;
 
-        [InspectorName("日志行预制体")]
-        [Tooltip("对象池使用的日志行预制体，必须包含 UIEventLogLine。")]
-        [SerializeField] private GameObject m_linePrefab = null;
+        [SerializeField]
+        [LabelText("日志行预制体"), Tooltip("对象池使用的日志行预制体，必须包含 UIEventLogLine。")]
+        private GameObject m_linePrefab = null;
 
-        [InspectorName("记录的物品转移类型")]
-        [Tooltip("只有这些物品转移类型会显示为物品获得/移除日志。")]
-        [SerializeField] private SerializableHashSet<EItemTransferType> m_itemTransferTypesToLog = null;
+        [SerializeField]
+        [LabelText("记录的物品转移类型"), Tooltip("只有这些物品转移类型会显示为物品获得/移除日志，未配置会导致物品日志过滤失败。")]
+        private SerializableHashSet<EItemTransferType> m_itemTransferTypesToLog = null;
 
         [Header("事件设置")]
-        [SerializeField] private UIEventSettings m_experienceAdded;
-        [SerializeField] private UIEventSettings m_levelUp;
-        [SerializeField] private UIEventSettings m_moneyAdded;
-        [SerializeField] private UIEventSettings m_moneyRemoved;
-        [SerializeField] private UIEventSettings m_itemAdded;
-        [SerializeField] private UIEventSettings m_itemRemoved;
-        [SerializeField] private UIEventSettings m_abilityAdded;
-        [SerializeField] private UIEventSettings m_abilityRemoved;
-        [SerializeField] private UIEventSettings m_questStarted;
-        [SerializeField] private UIEventSettings m_questUpdated;
-        [SerializeField] private UIEventSettings m_questCompleted;
+        [SerializeField]
+        [LabelText("经验获得日志"), Tooltip("角色获得经验时显示的日志模板配置。")]
+        private UIEventSettings m_experienceAdded;
 
+        [SerializeField]
+        [LabelText("角色升级日志"), Tooltip("角色升级时显示的日志模板配置。")]
+        private UIEventSettings m_levelUp;
+
+        [SerializeField]
+        [LabelText("金钱增加日志"), Tooltip("玩家可见背包获得金钱时显示的日志模板配置。")]
+        private UIEventSettings m_moneyAdded;
+
+        [SerializeField]
+        [LabelText("金钱减少日志"), Tooltip("玩家可见背包失去金钱时显示的日志模板配置。")]
+        private UIEventSettings m_moneyRemoved;
+
+        [SerializeField]
+        [LabelText("物品获得日志"), Tooltip("玩家可见背包获得物品时显示的日志模板配置。")]
+        private UIEventSettings m_itemAdded;
+
+        [SerializeField]
+        [LabelText("物品移除日志"), Tooltip("玩家可见背包移除物品时显示的日志模板配置。")]
+        private UIEventSettings m_itemRemoved;
+
+        [SerializeField]
+        [LabelText("能力获得日志"), Tooltip("角色获得能力时显示的日志模板配置。")]
+        private UIEventSettings m_abilityAdded;
+
+        [SerializeField]
+        [LabelText("能力移除日志"), Tooltip("角色失去能力时显示的日志模板配置。")]
+        private UIEventSettings m_abilityRemoved;
+
+        [SerializeField]
+        [LabelText("任务开始日志"), Tooltip("任务开始时显示的日志模板配置。")]
+        private UIEventSettings m_questStarted;
+
+        [SerializeField]
+        [LabelText("任务更新日志"), Tooltip("任务进度更新时显示的日志模板配置。")]
+        private UIEventSettings m_questUpdated;
+
+        [SerializeField]
+        [LabelText("任务完成日志"), Tooltip("任务完成时显示的日志模板配置。")]
+        private UIEventSettings m_questCompleted;
+
+        #endregion
+
+        /// <summary>对象池租出的日志行缓存；销毁 UI 时必须统一归还，避免池内保留失效实例。</summary>
         private UIEventLogLine[] m_lines = null;
 
+        #region 生命周期
+
+        /// <summary>
+        /// 预热事件日志行对象池，并把租出的行初始化为隐藏状态。
+        /// 这里要求预制体配置正确，否则事件到达时无法显示日志。
+        /// </summary>
         private void Awake()
         {
             ConfigureLinePool();
@@ -109,6 +150,7 @@ namespace FantasyWord.GameCore
             EventKit.Type.Register<QuestCompletedEvent>(OnQuestCompleted);
         }
 
+        /// <summary>禁用时对称退订全局事件，避免 HUD 重新启用后同一条事件被重复写入。</summary>
         private void OnDisable()
         {
             EventKit.Type.UnRegister<CharacterExperienceGainedEvent>(OnCharacterExperienceGained);
@@ -124,10 +166,15 @@ namespace FantasyWord.GameCore
             EventKit.Type.UnRegister<QuestCompletedEvent>(OnQuestCompleted);
         }
 
+        /// <summary>销毁时归还已租出的日志行；对象池本身由全局池服务维护。</summary>
         private void OnDestroy()
         {
             ReturnLines();
         }
+
+        #endregion
+
+        #region 事件处理
 
         private void OnCharacterExperienceGained(CharacterExperienceGainedEvent characterExperienceGainedEvent) =>
             OnExperienceGained(characterExperienceGainedEvent.Amount);
@@ -160,14 +207,17 @@ namespace FantasyWord.GameCore
         private void OnQuestUpdated(QuestProgressionUpdatedEvent questProgressionUpdatedEvent) => Log(m_questUpdated, questProgressionUpdatedEvent.Quest.title);
         private void OnQuestCompleted(QuestCompletedEvent questCompletedEvent) => Log(m_questCompleted, questCompletedEvent.Quest.title);
 
+        /// <summary>只显示玩家能感知的背包 owner，并继续按配置过滤物品转移类型。</summary>
         private bool ShouldLog(InventoryOwnerHandle owner, EItemTransferType transferType) =>
             IsPlayerVisibleInventoryOwner(owner) && m_itemTransferTypesToLog.Contains(transferType);
 
+        /// <summary>事件日志面向玩家 HUD，只展示队伍或角色背包的变化，避免箱子、商店等系统背包刷屏。</summary>
         private static bool IsPlayerVisibleInventoryOwner(InventoryOwnerHandle owner)
         {
             return owner.Kind == EInventoryOwnerKind.Party || owner.Kind == EInventoryOwnerKind.Character;
         }
 
+        /// <summary>能力日志需要角色名兜底；缺配置时返回可读中文，避免 HUD 暴露空字符串。</summary>
         private static string ResolveCharacterDisplayName(CharacterBase character)
         {
             if (!character)
@@ -194,6 +244,14 @@ namespace FantasyWord.GameCore
             }
         }
 
+        #endregion
+
+        #region 日志输出与对象池
+
+        /// <summary>
+        /// 按事件配置格式化并显示一条日志。
+        /// 模板参数由具体事件处理器负责传入，模板和参数不匹配时会直接暴露到 HUD 日志链路。
+        /// </summary>
         private void Log(UIEventSettings settings, params object[] args)
         {
             if (settings.enabled)
@@ -206,11 +264,12 @@ namespace FantasyWord.GameCore
                 }
                 else
                 {
-                    Debug.LogError("No available line, consider expanding the pool");
+                    Debug.LogError("没有可用的事件日志行，请扩大事件日志行池。", this);
                 }
             }
         }
 
+        /// <summary>优先使用空闲日志行；全部占用时复用最早一行，保持 HUD 日志实例数量稳定。</summary>
         private UIEventLogLine FindAvailableLine()
         {
             foreach (UIEventLogLine line in m_lines)
@@ -225,6 +284,7 @@ namespace FantasyWord.GameCore
             return m_lines.Length > 0 ? m_lines[0] : null;
         }
 
+        /// <summary>按当前配置预热事件日志行对象池，避免第一条日志出现时临时实例化。</summary>
         private void ConfigureLinePool()
         {
             if (m_linePrefab == null)
@@ -236,6 +296,7 @@ namespace FantasyWord.GameCore
             GameObjectPoolService.Prewarm(m_linePrefab, m_linePoolSize);
         }
 
+        /// <summary>销毁 HUD 时把租出的日志行归还池中，避免跨场景池缓存引用旧 UI 层级。</summary>
         private void ReturnLines()
         {
             if (m_lines == null)
@@ -251,5 +312,7 @@ namespace FantasyWord.GameCore
                 }
             }
         }
+
+        #endregion
     }
 }

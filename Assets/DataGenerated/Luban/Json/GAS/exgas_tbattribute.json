@@ -1,52 +1,72 @@
 [
   {
     "ID": 1,
-    "Name": "Hp",
-    "Desc": "血量"
+    "Name": "Health",
+    "Desc": "生命"
   },
   {
     "ID": 2,
-    "Name": "Mp",
-    "Desc": "蓝量"
+    "Name": "Mana",
+    "Desc": "法力"
   },
   {
     "ID": 3,
-    "Name": "Spd",
-    "Desc": "速度"
+    "Name": "Agility",
+    "Desc": "敏捷"
   },
   {
     "ID": 4,
-    "Name": "Atk",
-    "Desc": "攻击力"
+    "Name": "PhysicalAttack",
+    "Desc": "物理攻击"
   },
   {
     "ID": 5,
-    "Name": "Def",
-    "Desc": "防御力"
+    "Name": "PhysicalDefense",
+    "Desc": "物理防御"
   },
   {
     "ID": 6,
-    "Name": "Sp",
+    "Name": "Stamina",
     "Desc": "耐力"
   },
   {
     "ID": 7,
-    "Name": "HpMax",
-    "Desc": "血上限"
+    "Name": "MaxHealth",
+    "Desc": "生命上限"
   },
   {
     "ID": 8,
-    "Name": "MpMax",
-    "Desc": "魔力上限"
+    "Name": "MaxMana",
+    "Desc": "法力上限"
   },
   {
     "ID": 9,
-    "Name": "SpMax",
+    "Name": "MaxStamina",
     "Desc": "耐力上限"
   },
   {
     "ID": 10,
-    "Name": "AtkRate",
+    "Name": "AttackRate",
     "Desc": "攻击加成百分比"
+  },
+  {
+    "ID": 11,
+    "Name": "MagicalAttack",
+    "Desc": "法术攻击"
+  },
+  {
+    "ID": 12,
+    "Name": "MagicalDefense",
+    "Desc": "法术防御"
+  },
+  {
+    "ID": 13,
+    "Name": "Luck",
+    "Desc": "幸运"
+  },
+  {
+    "ID": 14,
+    "Name": "AttackSpeed",
+    "Desc": "攻击速度"
   }
 ]
