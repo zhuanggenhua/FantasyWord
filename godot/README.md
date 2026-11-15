@@ -35,8 +35,12 @@ node .spec/tools/spec-lint.mjs
 - **有序键盘与角色移动意图**：WASD 和方向键保持独立，不混合为额外的斜向；松开活跃按键组时，
   向仍按住的一组交接，最后归零才发独立停止命令。Godot Viewport 测试贯通键盘事件、角色命令及原版
   动作意图的加减速和停止清理。见[键盘输入](keyboard-input-port.md)与[移动计算](movement-port.md)。
-- **尚未接入实际场景移动**：Viewport 注入的是测试输入，角色在其中只记录意图，不写真实坐标。
-  手柄、自动设备切换、按键重绑、焦点恢复、实际碰撞寻路、相机和表现仍未验收。
+- **航点和位移请求**：按 `Movable.MotionRuntime` 的原顺序执行航点，区分到达、失败和被新命令取消；
+  探测整向受阻后尝试 X、Y，并保留失败探测的碰撞对象。宿主只接收位移请求，到点仍以宿主实际观察的位置为准。
+  半径、场景地形和坐标转换未接入；这不是可游玩的主场景。见[移动计算和执行](movement-port.md)。
+- **场景运行仍待验收**：真实设备、地图、角色、相机和表现尚未连通，手柄、设备切换、重绑和焦点未验收。
+  [场景验收表](runtime-acceptance.md)保留了原仓库的点击移动、转角和 GAS 验证判据；
+  独立地形查询探针只验证 Godot 物理 API，不代替正式场景。
 - [Unity 构建列表](../ProjectSettings/EditorBuildSettings.asset)把 ClickMoveTest 的路径写在第一项，
   但它、EquipmentSystemDemo、SampleScene 的列表 GUID 都和各自的实际 `.meta` 不符，
   不能据此确定实际运行顺序。按[运行时入口文档](../.spec/knowledge/features/project/框架与运行时入口.md)，
