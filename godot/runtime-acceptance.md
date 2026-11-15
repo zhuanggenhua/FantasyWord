@@ -91,3 +91,29 @@ SmartUpdate、相机混合、真正的边界计算和正式角色场景仍未验
 
 原 OpenSpec 记过一张 PlayMode 主相机历史截图；锁定 Git 对象和当前原仓库工作树均没有该 PNG
 及其 meta。黑屏与 Edit Mode 图不算当前 GameView 验收；当前没有原生 Unity/Godot 同场景图。
+
+### 原静态净空与回退路线的重测
+
+从锁定源仓库本地提取 27 个静态 BoxCollider2D、8 个静态 CompositeCollider2D 的最终浮点轮廓。
+8 个合并输入 TilemapCollider2D 不作为第二套形状叠加。按
+[Unity GetPath 的闭合路径语义](https://docs.unity3d.com/ja/current/ScriptReference/CompositeCollider2D.GetPath.html)
+重建轮廓；静态净空与玩法移动查询分开。通过实际角色配置中的半径 0.35 减原验证器的 0.03 皮肤距，
+净空圆半径为 0.32。按 [Unity BoundsInt 的 X 优先枚举](https://github.com/Unity-Technologies/UnityCsReference/blob/master/Runtime/Export/Geometry/BoundsInt.cs)
+遍历规则格；`TryGetSurfaceSample` 成功只表示有地表规则数据，包括阻挡格，不用可走图节点代替。
+两套输入均留本地，不上传原地图或碰撞数据。
+
+已有私有规则文件时，从 Godot 迁移仓库根目录运行：
+
+```sh
+python3 godot/tools/extract_clickmovetest_colliders.py \
+  --unity-checkout /path/to/unity-repo --output /private/clickmovetest-colliders.json
+"${GODOT:-godot}" --headless --path godot --script res://tools/check_clickmovetest_static_clearance.gd \
+  -- /private/clickmovetest-rules.json /private/clickmovetest-colliders.json
+```
+
+完整遍历可能耗时约一分多钟。Godot 在 35 个源静态身体上重测首选路线与回退规则，
+生成的两个字段分别复现 [原 OpenSpec 记录](../openspec/changes/introduce-context-steering-2d-plugin/tasks.md)：
+回退请求格 `(-10,-10,0) → (-7,-8,0)`，最终世界折线
+`(-9.5,-9.5) → (-8.5,-9.5) → (-8.5,-7.5)`；净空违规 0。
+请求格不等于吸附后的世界落点。这里是静态验收工具，不改变正式角色的移动掩码，
+不模拟 NPC 转向、动态角色接触或路径跟随，也不是当前 Unity 原生重跑。
