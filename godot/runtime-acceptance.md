@@ -32,3 +32,15 @@
 正式镜头不能只挂一个无条件跟随节点：
 [PlayerCameraRig](../Assets/Scripts/GameCore/Runtime/Presentation/PlayerCameraRig.cs) 区分当前控制目标、
 地图目标覆写与地图边界；这些尚未接入，独立于点击命令验收中的相机位移和方向阈值。
+
+## 原场景玩家绑定，不自动补绑
+
+锁定版本的两份场景都实例化了
+[玩家角色](../Assets/Prefabs/Entities/Characters/Heroes/玩家角色.prefab)，继承
+[CharacterActor 基础预制体](../Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab)
+和上面的根碰撞体；这一继承链没有覆写根胶囊尺寸或偏移。场景的正式玩家绑定不能仅凭名称推断。
+[ClickMoveTest](../Assets/Scenes/ClickMoveTest.unity) 的 `m_primaryPlayerCharacter` 指向场景内的
+实例组件；[SampleScene](../Assets/Scenes/SampleScene.unity) 的相同字段在文件中则指向外部玩家 prefab。
+[PlayerSystem](../Assets/Scripts/GameCore/Runtime/Game/Systems/PlayerSystem.cs) 启动时明确检查
+玩家属于已加载场景；SampleScene 虽也摆了玩家实例，仍须运行验证其引用能否满足这项检查。
+这里不自动搜索、不新建替代玩家，也未宣称 Unity 已出现运行错误。
