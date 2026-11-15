@@ -1,10 +1,13 @@
 extends AnimatableBody2D
 ## 正式角色显式注入身体形状和动作 owner；不创建角色、查找依赖或决定场景配置。
 ## 使用 Godot 4.7.2 原生同步：提交后仍读旧姿态，待物理步回写实际姿态。
-## 未包含原版推力、墙内恢复、传送和控制器调度，不替代完整 Movable 生命周期。
+## 已接原推力分支；仍未包含墙内恢复、传送和控制器调度，不替代完整 Movable 生命周期。
 
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
 const Execution = preload("res://game_core/movement/motion_execution.gd")
+
+@export var push_intensity_scale := 1.0
+@export var push_resistance_scale := 1.0
 
 var execution: RefCounted
 var _terrain: RefCounted
@@ -36,6 +39,7 @@ func advance_movement(fixed_delta: float, ramp_direction: Callable = Callable())
 	# 角色 owner 在自身物理回调里先更新控制意图，再调用；此节点不另开重复调度。
 	assert(execution != null and Engine.is_in_physics_frame(), "须先配置身体并在固定物理步推进移动")
 	execution.handle_movement(fixed_delta, ramp_direction)
+	execution.handle_push(fixed_delta) # 原 FixedUpdate 顺序：正常移动后才执行推力。
 
 
 func get_movement_position() -> Vector2:
@@ -58,7 +62,7 @@ func clear_velocity() -> void:
 
 
 func can_move() -> bool:
-	return _motion_owner.can_move()
+	return not execution.is_pushed() and _motion_owner.can_move()
 
 
 func calculate_move_speed() -> float:
@@ -95,3 +99,15 @@ func move_to(destination: Vector2, stopping_distance: float = 0.1, speed_overrid
 
 func move_along_path(route: PackedVector2Array, stopping_distance: float, speed_override: Variant = null):
 	return execution.move_along_path(route, stopping_distance, speed_override)
+
+
+func push_motion(direction: Vector2, intensity: float = 5.0, resistance: float = 10.0) -> void:
+	execution.push_motion(direction, intensity, resistance, push_intensity_scale, push_resistance_scale)
+
+
+func is_pushed() -> bool:
+	return execution.is_pushed()
+
+
+func interrupt_push() -> void:
+	execution.interrupt_push()

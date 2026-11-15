@@ -7,6 +7,7 @@ const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Follow = preload("res://game_core/presentation/world_space_camera_follow.gd")
+const SourceFixedStep = preload("res://game_core/movement/source_fixed_step.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
@@ -112,9 +113,9 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 	return Commands.submit_single_character(kind, direction, point, body, true,
 		body, true, true, body, movement, route)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_native_delta: float) -> void:
 	if movement != null:
-		body.advance_movement(delta)
+		body.advance_movement(SourceFixedStep.GAMEPLAY_DELTA_SECONDS)
 		steps += 1
 
 func _process(delta: float) -> void:

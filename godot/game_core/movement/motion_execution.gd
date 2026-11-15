@@ -26,6 +26,7 @@ var _last_successful_movement := Vector2.ZERO
 var _steering_scale := 1.0
 var _steering_correction := Vector2.ZERO
 var _cast_hits: Dictionary = {}
+var _push_order: Dictionary = {}
 
 
 func _init(host: Object, input_filter: RefCounted) -> void:
@@ -98,6 +99,51 @@ func handle_movement(fixed_delta: float, ramp_direction: Callable = Callable()) 
 	_steering_correction = Vector2.ZERO
 
 
+func is_pushed() -> bool:
+	return not _push_order.is_empty()
+
+
+func interrupt_push() -> void:
+	_push_order.clear()
+
+
+func push_motion(direction: Vector2, intensity: float, resistance: float,
+		intensity_scale: float, resistance_scale: float) -> void:
+	# 原 Push 不归一化方向，也不重置移动命令；新推力替换旧推力。
+	if intensity_scale <= 0.0:
+		return
+	_host.clear_velocity()
+	_push_order = {"direction": direction,
+		"intensity": _f32(_f32(intensity) * _f32(intensity_scale)),
+		"resistance": _f32(_f32(resistance) * _f32(resistance_scale)), "collisions": {}}
+
+
+func handle_push(fixed_delta: float) -> void:
+	if not is_pushed():
+		return
+	# 原 BeginMove：和同一步正常移动共用最后成功速度与命中缓存。
+	_last_successful_movement = Vector2.ZERO
+	_cast_hits.clear()
+	if _push_order.intensity > _f32(0.2):
+		var success := _try_move(_push_order.direction, _push_order.intensity, fixed_delta)
+		# Unity.Mathematics.math.lerp 不夹紧；不改成 move_toward 或指数衰减。
+		var old: float = _push_order.intensity
+		var blend := _f32(_f32(fixed_delta) * _push_order.resistance)
+		_push_order.intensity = _f32(old + _f32(_f32(-old) * blend))
+		if not success:
+			for hit in _cast_hits:
+				if not _push_order.collisions.has(hit):
+					_push_order.collisions[hit] = true
+					_host.register_collision(hit)
+	else:
+		_push_order.clear()
+	# 原 EndMove(false)：不额外发送动画、朝向或重复碰撞通知。
+
+
+static func _f32(value: float) -> float:
+	return PackedFloat32Array([value])[0]
+
+
 func _execute_order(fixed_delta: float) -> void:
 	var stopping := Filter.effective_stop_distance(_stopping_distance)
 	var delta: Vector2 = _route[_waypoint_index] - _host.get_movement_position()
@@ -133,7 +179,7 @@ func _move_in_direction(direction: Vector2, move_speed: float, fixed_delta: floa
 		apply_input: bool, update_facing: bool, ramp_direction: Callable = Callable()) -> bool:
 	_last_successful_movement = Vector2.ZERO
 	_cast_hits.clear()
-	var can_apply: bool = _host.can_move()
+	var can_apply: bool = not is_pushed() and _host.can_move()
 	if can_apply and update_facing:
 		_host.update_facing_from_intent(direction)
 	# 原逻辑即使被移动门禁阻挡，也推进输入平滑。
