@@ -1,6 +1,6 @@
 extends SceneTree
 ## Optional actual rule data → world path → actor physics bridge.
-## Source collision shapes, visuals, camera follow behavior and OS input remain excluded.
+## Source collision shapes, visuals, camera scheduler parity and OS input remain excluded.
 
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Body = preload("res://game_core/movement/native_motion_body.gd")
@@ -9,9 +9,23 @@ const CharacterMovement = preload("res://game_core/movement/character_movement.g
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
+const WorldSpaceFollow = preload("res://game_core/presentation/world_space_camera_follow.gd")
+const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const START := Vector2(-5.5, 5.5)
 const END := Vector2(-3.5, 3.5)
+
+class ProbeBody extends Body:
+	signal teleported
+
+class PlayerProvider extends RefCounted:
+	signal controlled_character_changed(character: Node2D)
+	var actor: Node2D
+	func get_current_controlled_character_or_player_instance() -> Node2D: return actor
+
+class MapEvents extends RefCounted:
+	signal map_loaded
+	signal map_unloaded
 
 class Owner extends RefCounted:
 	func can_move() -> bool: return true
@@ -74,7 +88,7 @@ func _run() -> void:
 	if route.try_build_world_path(START, Vector2(1000,1000)) != null:
 		_refuse("no legal route must refuse rather than traverse terrain")
 		return
-	var body := Body.new()
+	var body := ProbeBody.new()
 	body.position = Terrain.to_physics(START)
 	body.collision_layer = 256
 	var capsule := CapsuleShape2D.new()
@@ -117,7 +131,7 @@ func _run() -> void:
 	# Reuse the verified starting camera pose, not an invented follow trajectory.
 	# Try the original 75%/50% screen sample against the real viewport.
 	root.size = Vector2i(800, 600)
-	var camera := Camera2D.new()
+	var camera := WorldSpaceFollow.new()
 	camera.position = Terrain.to_physics(Vector2(0.75,-3.1))
 	root.add_child(camera)
 	camera.make_current()
@@ -143,5 +157,27 @@ func _run() -> void:
 	if body.get_movement_position().distance_to(stopped) < 0.1:
 		_refuse("projected click order did not move the real body")
 		return
-	print("ClickMoveTest locked world route: PASS (4 ordered waypoints across the ramp, no fallback, authored viewport click and native actor without source colliders)")
+	var player := PlayerProvider.new()
+	player.actor = body
+	var map_events := MapEvents.new()
+	var binding := Binding.new(camera, null, func(): return player, func(): return null, map_events)
+	binding.on_enable()
+	binding.start_binding()
+	if not camera.advance_follow(0.0) or not camera.get_screen_center_position().is_equal_approx(body.global_position):
+		binding.on_disable()
+		_refuse("invalid camera state must snap to the bound actor before sampling")
+		return
+	var camera_from := camera.get_screen_center_position()
+	var actor_from := body.global_position
+	for tick in range(120):
+		await physics_frame
+		camera.advance_follow(0.02)
+	var actor_delta := body.global_position - actor_from
+	var camera_delta := camera.get_screen_center_position() - camera_from
+	binding.on_disable()
+	if actor_delta.length() < 0.1 or camera_delta.length() < 0.1 \
+			or actor_delta.normalized().dot(camera_delta.normalized()) < 0.9:
+		_refuse("actor/camera displacement failed source-validator thresholds in the isolated probe")
+		return
+	print("ClickMoveTest locked world route: PASS (source-damped follow; actor %.4f, screen center %.4f, alignment %.4f; no source colliders)" % [actor_delta.length(), camera_delta.length(), actor_delta.normalized().dot(camera_delta.normalized())])
 	quit(0)

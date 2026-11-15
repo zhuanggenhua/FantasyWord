@@ -5,7 +5,7 @@
 
 | 入口 | 原版验收判据 | Godot 当前边界 |
 | --- | --- | --- |
-| [点击移动](../Assets/Editor/GameCore/Automation/ClickMoveTestRuntimeValidator.cs) | 点击位于画面宽 75%、高 50%；不是 UI 命中；直接发角色命令后立刻产生 MoveOrder。观察 120 帧，角色与相机各移动至少 0.1 世界单位，两者位移方向的点积至少 0.9。 | 还未通过真实相机投影、地图和角色位移。原验证器也直接发命令，真实设备点击另测。 |
+| [点击移动](../Assets/Editor/GameCore/Automation/ClickMoveTestRuntimeValidator.cs) | 点击位于画面宽 75%、高 50%；不是 UI 命中；直接发角色命令后立刻产生 MoveOrder。观察 120 帧，角色与相机各移动至少 0.1 世界单位，两者位移方向的点积至少 0.9。 | 已在隔离 Godot 视口上以原规则图、测试角色和受控调度跑通投影、移动与镜头位移门槛；不含正式场景/UI/设备输入。 |
 | [航点转角](../Assets/Editor/GameCore/Automation/ClickMoveTestContextSteeringWaypointValidator.cs) | 转角半径 0.65 内保持 transit，最低速度 0.05；静态路径和实际轨迹均不能切过不可行走格，静态采样不穿正式碰撞体；终点需切到 predictive-target，并观察 preferred/safe velocity。 | 命令完成与逐轴试走并不证明 NPC 航点转角、寻路或避障等价。 |
 | [GAS 普攻](../Assets/Editor/GameCore/Automation/ClickMoveTestGasBasicAttackValidator.cs) | 装备真实 Ability、实际扣血并可击杀；观察攻击、受伤和浮动伤害文字。 | 当前只有可运行的战斗计算测试。旧脚本还要求地形过滤包含 Character，与锁定的 GameConfig 及 ContextSteering 测试冲突，不把该断言移为地形要求。 |
 
@@ -68,3 +68,26 @@ Transform，Follow 的位置阻尼为 (1, 1, 1)、偏移 (0, 0, -10)。该地图
 限位实例中确认画布中心不是相机节点位置；非当前镜头或无效投影时不发指令。
 原规则联测还按画面 75%/50%、序列化初始镜头配置投影，驱动测试身体在真实规则图上开始移动。
 联测仍使用受控 UI 判断与固定镜头，不等于真实 UI 命中、系统鼠标事件、相机跟随位移或整场景效果已验收。
+
+### 受限的 WorldSpace 镜头跟随
+
+本项目锁定 Cinemachine 3.1.6。移植只覆盖该镜头的单活动相机、WorldSpace、全附着、
+目标 Z=0、固定偏移 (0,0,-10)、XY 等阻尼 1。采用原标准阻尼的指数残差和逐轴极小量判断，
+失效先吸附，不将阻尼 1 直接传给 Godot 原生平滑。
+原地图规则联测以固定步进观察 120 帧，读取 Godot 实际画面中心，
+角色和相机位移各超过 0.1，方向点积达到 0.9；不等于原生 Unity 调度已对比。
+SmartUpdate、相机混合、真正的边界计算和正式角色场景仍未验收。
+
+点击移动沿用有证据的默认层。打开桥梁相关任务不等于已有可玩的跨层桥梁，
+也不让未实现的桥梁阻断第一个原样场景。当前镜头和移动联测与原产品要求的一局生存战斗不同。
+
+### 为什么原地形碰撞另验
+
+原始 ClickMoveTest 的静态障碍序列化在 Default 层，而 GameConfig 的移动 Cast 掩码不含 Default；
+原航点验证器则用重叠查询做静态净空检查，并排除触发器和角色。
+本地读取原 CompositeCollider2D 已生成的轮廓后，在首选转角样本的一处测到 Default 几何重叠；
+按移动掩码查询不会看到该几何。不能重新分层来强行令两条路径一致，也不能把无碰撞验证当成原版
+航点验收通过。下一步需用源逻辑验证首选路线或回退路线，不能称 Unity 实际 PlayMode 已失败或通过。
+
+原 OpenSpec 记过一张 PlayMode 主相机历史截图；锁定 Git 对象和当前原仓库工作树均没有该 PNG
+及其 meta。黑屏与 Edit Mode 图不算当前 GameView 验收；当前没有原生 Unity/Godot 同场景图。
