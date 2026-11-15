@@ -1,12 +1,14 @@
 extends SceneTree
 ## Optional actual rule data → world path → actor physics bridge.
-## The probe contains no source collision shapes, visuals, camera or OS input.
+## Source collision shapes, visuals, camera follow behavior and OS input remain excluded.
 
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Body = preload("res://game_core/movement/native_motion_body.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const CharacterMovement = preload("res://game_core/movement/character_movement.gd")
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
+const Commands = preload("res://game_core/movement/movement_commands.gd")
+const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const START := Vector2(-5.5, 5.5)
 const END := Vector2(-3.5, 3.5)
@@ -112,5 +114,34 @@ func _run() -> void:
 	if body.get_movement_position() != stopped:
 		_refuse("cleared order moved the native actor")
 		return
-	print("ClickMoveTest locked world route: PASS (4 ordered waypoints across the ramp, flat compression, no fallback, native actor without source colliders)")
+	# Reuse the verified starting camera pose, not an invented follow trajectory.
+	# Try the original 75%/50% screen sample against the real viewport.
+	root.size = Vector2i(800, 600)
+	var camera := Camera2D.new()
+	camera.position = Terrain.to_physics(Vector2(0.75,-3.1))
+	root.add_child(camera)
+	camera.make_current()
+	await process_frame
+	var viewport_size: Vector2 = root.get_visible_rect().size
+	camera.zoom = ScreenProjection.zoom_for_view_height(viewport_size.y, 5.0)
+	camera.force_update_scroll()
+	var screen := viewport_size * Vector2(0.75,0.5)
+	var world_point: Variant = ScreenProjection.project(camera, screen)
+	if world_point == null or not world_point.is_equal_approx(Vector2(0.75 + 2.5 * viewport_size.x / viewport_size.y, -3.1)):
+		_refuse("authored orthographic viewport did not project the test click")
+		return
+	var result: Variant = Commands.on_click_performed(screen, false, camera, body,
+		func(_point): return false,
+		func(cam, _actor, point): return ScreenProjection.project(cam, point),
+		func(kind, direction, world):
+			return Commands.execute(kind, direction, world, body, true, body, controller, route))
+	if result != Commands.Failure.NONE or not body.execution.has_move_order():
+		_refuse("projected viewport click did not queue a route on the original rule data")
+		return
+	for tick in range(6):
+		await physics_frame
+	if body.get_movement_position().distance_to(stopped) < 0.1:
+		_refuse("projected click order did not move the real body")
+		return
+	print("ClickMoveTest locked world route: PASS (4 ordered waypoints across the ramp, no fallback, authored viewport click and native actor without source colliders)")
 	quit(0)

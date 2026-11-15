@@ -32,7 +32,9 @@ static func on_click_performed(screen_point: Vector2, blocked: bool, camera: Obj
 		return null
 	if is_over_ui.call(screen_point):
 		return null
-	var world_point: Vector2 = screen_to_world.call(camera, controlled_character, screen_point)
+	var world_point: Variant = screen_to_world.call(camera, controlled_character, screen_point)
+	if not world_point is Vector2 or not world_point.is_finite():
+		return null
 	return submit.call(Kind.CLICK_MOVE, Vector2.ZERO, world_point)
 
 
