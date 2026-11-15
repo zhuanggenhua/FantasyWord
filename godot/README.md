@@ -37,11 +37,11 @@ node .spec/tools/spec-lint.mjs
   动作意图的加减速和停止清理。见[键盘输入](keyboard-input-port.md)与[移动计算](movement-port.md)。
 - **航点和位移请求**：按 `Movable.MotionRuntime` 的原顺序执行航点，区分到达、失败和被新命令取消；
   探测整向受阻后尝试 X、Y，并保留失败探测的碰撞对象。宿主只接收位移请求，到点仍以宿主实际观察的位置为准。
-  原角色形状的地形查询已有 Godot 物理适配与联测；正式场景、角色位置写入和画面坐标比例仍未接入。
-  这不是可游玩的主场景。见[移动计算和执行](movement-port.md)。
+  地形查询已与真实 Godot 运动学身体联测，位移请求与下一次物理同步后的身体坐标分开观察。
+  仍未接入正式角色场景、原地图或画面坐标比例。见[移动计算和执行](movement-port.md)。
 - **场景运行仍待验收**：真实设备、地图、角色、相机和表现尚未连通，手柄、设备切换、重绑和焦点未验收。
   [场景验收表](runtime-acceptance.md)保留了原仓库的点击移动、转角和 GAS 验证判据；
-  地形联测使用 Godot 物理世界和独立测试身体，不代替原地图和场景。
+  物理联测使用真实 Godot 身体和独立测试地形，不代替原地图和场景。
 - [Unity 构建列表](../ProjectSettings/EditorBuildSettings.asset)把 ClickMoveTest 的路径写在第一项，
   但它、EquipmentSystemDemo、SampleScene 的列表 GUID 都和各自的实际 `.meta` 不符，
   不能据此确定实际运行顺序。按[运行时入口文档](../.spec/knowledge/features/project/框架与运行时入口.md)，

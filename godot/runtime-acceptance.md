@@ -44,3 +44,8 @@
 [PlayerSystem](../Assets/Scripts/GameCore/Runtime/Game/Systems/PlayerSystem.cs) 启动时明确检查
 玩家属于已加载场景；SampleScene 虽也摆了玩家实例，仍须运行验证其引用能否满足这项检查。
 这里不自动搜索、不新建替代玩家，也未宣称 Unity 已出现运行错误。
+
+ClickMoveTest 的 `MapInfo` 实际绑定了
+[TerrainNavigationMap](../Assets/Scripts/GameCore/Runtime/Maps/TerrainNavigationMap.cs)。
+该场景的导航矩形格大小为 (1, 1)，规则 Tilemap 之外还有独立表层配置；
+因此无地图的直线后备路径不等于 ClickMoveTest 的正式点击移动，不能用身体移动联测替代该场景验收。
