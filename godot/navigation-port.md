@@ -44,9 +44,25 @@ python3 godot/tools/extract_clickmovetest_rules.py \
 联测通过原转角验证器的首选路段与一条平地控制路径。平地样本不是相机投影后的原生点击。
 原编辑器仍未运行对照，实际节点图不代表撞墙、坡道画面或世界路径已验收。
 
+## 节点路径变成真实位移
+
+默认层按原版 `ConvertToWorldPath` 投影到格中心。符合坡向和高程条件的连续坡道段，
+保留其中每一个原格中心，不把它们拟合成新斜线。其他经过点只有共线且同向才压缩，
+精确点击保留原世界目标；吸附目标用格中心；输出不包含用于压缩的起点。
+
+从同一只读原规则文件额外运行：
+
+```sh
+"${GODOT:-godot}" --headless --path godot --script res://tools/check_clickmovetest_world_path.gd \
+  -- /private/clickmovetest-rules.json
+```
+
+这一联测把原地图规则图、选格、原版坡道世界路点、角色点击命令和真实 Godot 身体接起来。
+测试身体依次到达原转角样本的四个路点（含三个坡道格中心）；有地图但目标不可达时清除指令，不走直线后备。
+该联测不放原场景的碰撞形状，不能据此验收贴墙避障、真实视觉或原镜头。
+
 ## 尚未接入
 
-世界路径仍须把格路径按原规则采样为连续路径，保留坡道端点与点击落点；
-真实地图渲染和碰撞形状、运行时地表代价、角色场景与镜头还未接入。
-[原地形导航测试](../Assets/Editor/GameCore/Tests/TerrainNavigationMapEditModeTests.cs)
-仍是路点和场景验收的依据。当前不是 ClickMoveTest 已可试玩。
+本次只实现默认层连续路径。显式跨层过渡的世界路径、手动坡道输入修正、真实地图渲染和碰撞形状、
+动态地表代价与正式角色/镜头仍待接入。[原地形导航测试](../Assets/Editor/GameCore/Tests/TerrainNavigationMapEditModeTests.cs)
+仍是后续验收依据。当前不是 ClickMoveTest 已可试玩。

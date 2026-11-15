@@ -49,3 +49,16 @@ ClickMoveTest 的 `MapInfo` 实际绑定了
 [TerrainNavigationMap](../Assets/Scripts/GameCore/Runtime/Maps/TerrainNavigationMap.cs)。
 该场景的导航矩形格大小为 (1, 1)，规则 Tilemap 之外还有独立表层配置；
 因此无地图的直线后备路径不等于 ClickMoveTest 的正式点击移动，不能用身体移动联测替代该场景验收。
+
+## ClickMoveTest 镜头基线
+
+在锁定的 [ClickMoveTest](../Assets/Scenes/ClickMoveTest.unity) 中，主相机和玩家虚拟相机的
+序列化坐标都是 (0.75, -3.1, -10)，正交半高均为 5。虚拟镜头作者优先级 10，绑定玩家实例的
+Transform，Follow 的位置阻尼为 (1, 1, 1)、偏移 (0, 0, -10)。该地图未指定相机目标，也未启用地图边界。
+这些是起始配置，不是运行后必然的画面位置，也不把 Cinemachine 阻尼值直接当作 Godot 的平滑速度。
+
+[PlayerCameraRig](../Assets/Scripts/GameCore/Runtime/Presentation/PlayerCameraRig.cs) 优先允许的地图目标，
+其次当前控制角色，最后通过 PlayerSystem 找默认玩家。跟随对象变更需丢弃前次相机状态；
+角色传送即使不改目标身份也作失效处理，切换角色必须解绑旧监听。地图边界变更或清空需更新边界缓存。
+以后做点击投影和镜头位移验收时读取实际视口画布/屏幕中心，不拿相机节点的位置代替；
+Godot 的限位或平滑可让两者不同。当前未接线这套镜头行为。
