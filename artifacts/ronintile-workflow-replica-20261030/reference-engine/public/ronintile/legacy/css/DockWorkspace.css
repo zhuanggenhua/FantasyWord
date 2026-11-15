@@ -1,0 +1,211 @@
+.dockworkspace-view {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	background-color: var(--colorBG);
+	background-image: var(--wasteTexture);
+}
+
+.dockworkspace-main {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+}
+
+.dockworkspace-backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: 20;
+	display: none;
+	background: rgba(0, 0, 0, 0.18);
+	pointer-events: none;
+}
+
+.dockworkspace-view--open .dockworkspace-backdrop {
+	display: none;
+}
+
+.dockworkspace-tabs {
+	position: absolute;
+	z-index: 40;
+	display: flex;
+	gap: 8px;
+	pointer-events: none;
+}
+
+.dockworkspace-tabs--right {
+	top: 72px;
+	right: 0;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.dockworkspace-tabs--bottom {
+	right: 24px;
+	bottom: 0;
+	flex-direction: row;
+	align-items: flex-end;
+}
+
+.dockworkspace-tab {
+	pointer-events: auto;
+	border: 1px solid var(--colorSteel);
+	border-radius: 4px 0 0 4px;
+	background: var(--rtTabIdle);
+	color: var(--color2);
+	font-family: mainFont, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+	font-size: 12px;
+	line-height: 1;
+	letter-spacing: 0;
+	cursor: default;
+	box-shadow: var(--rtDockTabRing);
+}
+
+.dockworkspace-tab--right {
+	min-width: 34px;
+	min-height: 88px;
+	padding: 10px 8px;
+	writing-mode: vertical-rl;
+	text-orientation: mixed;
+}
+
+.dockworkspace-tab--bottom {
+	min-width: 104px;
+	height: 34px;
+	padding: 0 14px;
+	border-radius: 4px 4px 0 0;
+}
+
+.dockworkspace-tab:hover,
+.dockworkspace-tab--active {
+	border-color: var(--colorSelect);
+	background: var(--rtTabActive);
+	color: var(--colorSelect);
+}
+
+.dockworkspace-panel-host {
+	position: absolute;
+	inset: 0;
+	z-index: 30;
+	pointer-events: none;
+}
+
+.dockworkspace-panel {
+	position: absolute;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border: 1px solid var(--colorSteel);
+	background-color: var(--colorBG);
+	background-image: var(--wasteTexture);
+	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.58);
+	pointer-events: auto;
+	transition: transform 140ms ease;
+}
+
+.dockworkspace-panel--right {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: min(270px, 31vw);
+	transform: translateX(calc(100% + 12px));
+	border-radius: 4px 0 0 4px;
+}
+
+.dockworkspace-panel--bottom {
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: min(420px, 58vh);
+	transform: translateY(calc(100% + 12px));
+	border-radius: 4px 4px 0 0;
+}
+
+.dockworkspace-panel--active {
+	transform: translateX(0) translateY(0);
+}
+
+.dockworkspace-panel-body {
+	position: relative;
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.dockworkspace-stack {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	box-sizing: border-box;
+	min-height: 0;
+	overflow-y: auto;
+}
+
+.dockworkspace-stack-section {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 auto;
+	min-height: 0;
+	border-bottom: 1px solid rgba(102, 112, 97, 0.7);
+	overflow: visible;
+	box-sizing: border-box;
+}
+
+.dockworkspace-stack-section:last-child {
+	border-bottom: 0;
+}
+
+.dockworkspace-stack-section--medium {
+	min-height: 0;
+}
+
+.dockworkspace-stack-section--large {
+	min-height: 0;
+}
+
+.dockworkspace-stack-title {
+	position: relative;
+	flex: 0 0 30px;
+	width: 100%;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	padding: 0 10px;
+	border-bottom: 1px solid rgba(143, 68, 50, 0.68);
+	background: transparent;
+	color: var(--color2);
+	font-family: mainFont, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+	font-size: 12px;
+	box-sizing: border-box;
+	z-index: 2;
+}
+
+.dockworkspace-stack-title--with-end {
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.dockworkspace-stack-title-label {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.dockworkspace-stack-title-end {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	margin-top: 1px;
+}
+
+.dockworkspace-stack-body {
+	position: relative;
+	flex: 0 0 auto;
+	min-height: 0;
+	overflow: visible;
+	width: 100%;
+	box-sizing: border-box;
+}

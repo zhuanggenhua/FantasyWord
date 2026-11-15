@@ -1,0 +1,107 @@
+{
+  "goal": "重构河渡镇为连续开放地图，建筑室内与室外共用坐标，步行进出并自动揭开本栋屋顶，不切场景",
+  "status": "complete",
+  "acceptance_criteria": [
+    {
+      "id": "1",
+      "description": "旧整栋阻挡被真实墙体、门洞、家具碰撞替代，全部建筑有同坐标室内",
+      "status": "pass",
+      "evidence": [
+        "map/source-audit.json",
+        "map/nav/nav-report.json",
+        "map/design-review.json"
+      ]
+    },
+    {
+      "id": "2",
+      "description": "Tiled 每栋建筑独立分组，屋顶、地板、墙、家具、入口和碰撞可整体编辑",
+      "status": "pass",
+      "evidence": [
+        "map/river-trade-town.tmx",
+        "map/delivery-verification.json"
+      ]
+    },
+    {
+      "id": "3",
+      "description": "实际浏览器连续行走进出全部建筑，不传送不切地图，屋顶按所在建筑自动隐藏与恢复",
+      "status": "pass",
+      "evidence": [
+        "map/preview/preview-qa.json",
+        "map/preview/inn-inside.png"
+      ]
+    },
+    {
+      "id": "4",
+      "description": "墙体、家具、双桥及原素材来源通过检查，当前画面经 AI 检查",
+      "status": "pass",
+      "evidence": [
+        "map/visual-review.json",
+        "map/design-review.json",
+        "map/source-audit.json"
+      ]
+    },
+    {
+      "id": "5",
+      "description": "可编辑地图包、离线预览与编辑说明交付，明确未验证 Unity",
+      "status": "pass",
+      "evidence": [
+        "map/river-trade-town-unity-import.zip",
+        "map/README.md",
+        "map/delivery-verification.json"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "map/river-trade-town.tmx",
+      "description": "river-trade-town.tmx",
+      "required": true
+    },
+    {
+      "path": "map/river-trade-town.tmj",
+      "description": "river-trade-town.tmj",
+      "required": true
+    },
+    {
+      "path": "map/river-trade-town-unity-import.zip",
+      "description": "river-trade-town-unity-import.zip",
+      "required": true
+    },
+    {
+      "path": "map/README.md",
+      "description": "README.md",
+      "required": true
+    },
+    {
+      "path": "map/preview/preview.html",
+      "description": "preview/preview.html",
+      "required": true
+    },
+    {
+      "path": "map/preview/preview-qa.json",
+      "description": "preview/preview-qa.json",
+      "required": true
+    },
+    {
+      "path": "map/town-interiors.png",
+      "description": "town-interiors.png",
+      "required": true
+    },
+    {
+      "path": "map/visual-review.json",
+      "description": "visual-review.json",
+      "required": true
+    },
+    {
+      "path": "map/delivery-verification.json",
+      "description": "delivery-verification.json",
+      "required": true
+    }
+  ],
+  "notes": [
+    "沿用现有 Tiled CLI 与原素材；不启动 Unity、不改第三方生成器、不提交、不改分支。",
+    "10栋建筑同图行走进出通过，24个室内外目标可达，实际键盘与点击入口通过。",
+    "整组平移8px后墙体、家具、门洞和室内区域同步，原生重读像素一致。",
+    "最终交付位于map目录；其他目录是实验过程，不作为当前交付。"
+  ]
+}

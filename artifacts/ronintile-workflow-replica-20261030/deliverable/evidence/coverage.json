@@ -1,0 +1,98 @@
+{
+  "status": "pass-for-requested-material-cli-chain",
+  "referenceModule": "FrameRonin / Tile处理 / RoninTile",
+  "notReferenceModule": "FrameRonin / 地图拼接 AI整图扩展",
+  "implementation": "原引擎本地化 + 自有CLI/文件宿主；不是独立算法重写",
+  "rows": [
+    {
+      "stage": "导入与切图",
+      "status": "pass",
+      "evidence": "evidence/full-reference-run-v5/workflow-report.json",
+      "scope": "原imageToSources/TileBase，原素材哈希与Sprite切片"
+    },
+    {
+      "stage": "Blob边界及12槽关系",
+      "status": "pass",
+      "evidence": "evidence/workflow-verification.json",
+      "scope": "关系图重读，图集/PNG内容对账"
+    },
+    {
+      "stage": "Wang边界及旋转翻转",
+      "status": "pass",
+      "evidence": "evidence/workflow-verification.json",
+      "scope": "原规则与完整关系图重读"
+    },
+    {
+      "stage": "物件组合及分层铺设",
+      "status": "pass",
+      "evidence": "evidence/workflow-verification.json",
+      "scope": "两个9x14物件各4组件，铺设8格；独立物件层"
+    },
+    {
+      "stage": "撤销与恢复",
+      "status": "pass",
+      "evidence": "evidence/workflow-verification.json",
+      "scope": "776→768→776实际放置数"
+    },
+    {
+      "stage": "原生工程保存及重读",
+      "status": "pass",
+      "evidence": "evidence/continued-edit-verification.json",
+      "scope": "完整工程恢复，关系图按引用对账"
+    },
+    {
+      "stage": "地图与素材集7类导出",
+      "status": "pass",
+      "evidence": "evidence/workflow-verification.json",
+      "scope": "逐格式文件清单、PNG解码、JSON/JSON5解析、Unity真实归档；不代表各引擎运行"
+    },
+    {
+      "stage": "交付包命令完整重放",
+      "status": "pass",
+      "evidence": "evidence/replay-verification.json",
+      "scope": "866+7步骤，原生核心数据和最终PNG相同"
+    },
+    {
+      "stage": "最终地图原素材溯源",
+      "status": "pass",
+      "evidence": "map/native-consumption-report.json",
+      "scope": "154原Sprite、10792Base放置、146原生层，原PNG/Meta哈希未变"
+    },
+    {
+      "stage": "Tiled真实层编辑文件",
+      "status": "pass",
+      "evidence": "map/tiled-verification.json",
+      "scope": "TMX/TMJ各148层，Tiled1.12.2重读与原图差≤1/255"
+    },
+    {
+      "stage": "同世界10栋室内",
+      "status": "pass",
+      "evidence": "map/preview/preview-qa.json",
+      "scope": "真实键盘/点击及连续步进，进出揭顶、墙、家具，0传送0无效步"
+    },
+    {
+      "stage": "导航20门内外目标",
+      "status": "pass",
+      "evidence": "map/nav-check/nav-report.json",
+      "scope": "20目标可达，0薄缝"
+    },
+    {
+      "stage": "全站独立源码重写",
+      "status": "not-claimed",
+      "evidence": "README.md",
+      "scope": "复用原引擎，本轮未独立重写网站"
+    },
+    {
+      "stage": "全GUI/等距/旧格式及79API全部组合",
+      "status": "not-verified",
+      "evidence": "README.md",
+      "scope": "原能力存在不等于已验收；GUI有缺失资源"
+    },
+    {
+      "stage": "Unity/Godot/GameMaker/Defold运行",
+      "status": "not-verified",
+      "evidence": "README.md",
+      "scope": "只验收导出内容，未启动各游戏引擎"
+    }
+  ]
+}

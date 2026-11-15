@@ -1,0 +1,9 @@
+{
+  "status": "fail",
+  "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded.",
+  "stack": "page.waitForFunction: Timeout 30000ms exceeded.\n    at C:\\Gamedev\\Unity\\Project\\FantasyWord\\scripts\\ai-map-experiment\\verify_town_preview.mjs:18:16",
+  "errors": [
+    "TypeError: layer \"地面\" is a tiles layer, but its tile collision (N7) is not resolved: pass options.tileSolids (map_nav.py check writes them into nav-grid.json as runtimeInputs), or add them to collision.solids and set collision.tilesResolved to true"
+  ],
+  "externalRequests": []
+}

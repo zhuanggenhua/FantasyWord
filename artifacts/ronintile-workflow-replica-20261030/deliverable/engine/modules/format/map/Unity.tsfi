@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="Unity Package">
+
+	<folder mode="targz"><!----><name><var v="export_name"/>.unitypackage</name><!----><directory-contents>
+
+		<folder><!----><name><GUID v="_GUIDRonintileFolder"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_GUIDRonintileFolder"><replace from="-" to=""/></GUID>
+<!--		|-->folderAsset: yes
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->DefaultImporter:
+<!--		|-->  externalObjects: {}
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name><GUID v="_GUIDSetsFolder"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile/Sets<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_GUIDSetsFolder"><replace from="-" to=""/></GUID>
+<!--		|-->folderAsset: yes
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->DefaultImporter:
+<!--		|-->  externalObjects: {}
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name><GUID v="_GUIDSetsSubfolder"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile/Sets/<var v="export_name"/><!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_GUIDSetsSubfolder"><replace from="-" to=""/></GUID>
+<!--		|-->folderAsset: yes
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->DefaultImporter:
+<!--		|-->  externalObjects: {}
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name><GUID v="_GUIDMapsFolder"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile/Maps<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_GUIDMapsFolder"><replace from="-" to=""/></GUID>
+<!--		|-->folderAsset: yes
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->DefaultImporter:
+<!--		|-->  externalObjects: {}
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder foreach="tile"><as i="_tile"/><!----><name><GUID v="_tile._GUIDTile"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile/Sets/<var v="export_name"/>/<var v="export_name"/>_<var v="_tile.index"/>.asset<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_tile._GUIDTile"><replace from="-" to=""/></GUID>
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->NativeFormatImporter:
+<!--		|-->  externalObjects: {}
+<!--		|-->  mainObjectFileID: 11400000
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset</name><!----><text-contents><!--
+			|-->%YAML 1.1
+<!--		|-->%TAG !u! tag:unity3d.com,2011:
+<!--		|-->--- !u!114 &amp;11400000
+<!--		|-->MonoBehaviour:
+<!--		|-->  m_ObjectHideFlags: 0
+<!--		|-->  m_PrefabParentObject: {fileID: 0}
+<!--		|-->  m_PrefabInternal: {fileID: 0}
+<!--		|-->  m_GameObject: {fileID: 0}
+<!--		|-->  m_Enabled: 1
+<!--		|-->  m_EditorHideFlags: 1
+<!--		|-->  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
+<!--		|-->  m_Name: <var v="export_name"/>_<var v="_tile.index"/>
+<!--		|-->  m_EditorClassIdentifier: 
+<!--		|-->  m_Sprite: {fileID: <nvar expression="21300000+x0*2"><x v="_tile.index"/></nvar>, guid: <GUID v="_GUIDSet"><replace from="-" to=""/></GUID>, type: 3}
+<!--		|-->  m_Color: {r: 1, g: 1, b: 1, a: 1}
+<!--		|-->  m_Transform:
+<!--		|-->    e00: 1
+<!--		|-->    e01: 0
+<!--		|-->    e02: 0
+<!--		|-->    e03: 0
+<!--		|-->    e10: 0
+<!--		|-->    e11: 1
+<!--		|-->    e12: 0
+<!--		|-->    e13: 0
+<!--		|-->    e20: 0
+<!--		|-->    e21: 0
+<!--		|-->    e22: 1
+<!--		|-->    e23: 0
+<!--		|-->    e30: 0
+<!--		|-->    e31: 0
+<!--		|-->    e32: 0
+<!--		|-->    e33: 1
+<!--		|-->  m_InstancedGameObject: {fileID: 0}
+<!--		|-->  m_Flags: 1
+<!--		|-->  m_ColliderType: 1<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<image-file><!----><name>preview.png</name>
+						<!----><width><x v="tile_width"/></width>
+						<!----><height><x v="tile_height"/></height><!----><image-contents><!--
+			|--><ivar v="_tile.image">
+<!--		|-->	<grid-x expression="0"/>
+<!--		|-->	<grid-y expression="0"/>
+<!--		|--></ivar><!--
+			|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name><GUID v="_GUIDSet"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile/Sets/<var v="export_name"/>/<var v="export_name"/>.png<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_GUIDSet"><replace from="-" to=""/></GUID>
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->TextureImporter:
+<!--		|-->  fileIDToRecycleName:
+<!--		|--><list-loop foreach="tile"><as i="_tile"/><text-contents>    <nvar expression="21300000+x0*2"><x v="_tile.index"/></nvar>: <var v="export_name"/>_<var v="_tile.index"/>
+<!--		|--></text-contents></list-loop>  externalObjects: {}
+<!--		|-->  serializedVersion: 4
+<!--		|-->  mipmaps:
+<!--		|-->    mipMapMode: 0
+<!--		|-->    enableMipMap: 0
+<!--		|-->    sRGBTexture: 1
+<!--		|-->    linearTexture: 0
+<!--		|-->    fadeOut: 0
+<!--		|-->    borderMipMap: 0
+<!--		|-->    mipMapsPreserveCoverage: 0
+<!--		|-->    alphaTestReferenceValue: 0.5
+<!--		|-->    mipMapFadeDistanceStart: 1
+<!--		|-->    mipMapFadeDistanceEnd: 3
+<!--		|-->  bumpmap:
+<!--		|-->    convertToNormalMap: 0
+<!--		|-->    externalNormalMap: 0
+<!--		|-->    heightScale: 0.25
+<!--		|-->    normalMapFilter: 0
+<!--		|-->  isReadable: 0
+<!--		|-->  grayScaleToAlpha: 0
+<!--		|-->  generateCubemap: 6
+<!--		|-->  cubemapConvolution: 0
+<!--		|-->  seamlessCubemap: 0
+<!--		|-->  textureFormat: 1
+<!--		|-->  maxTextureSize: 2048
+<!--		|-->  textureSettings:
+<!--		|-->    serializedVersion: 2
+<!--		|-->    filterMode: 0
+<!--		|-->    aniso: -1
+<!--		|-->    mipBias: -1
+<!--		|-->    wrapU: 1
+<!--		|-->    wrapV: 1
+<!--		|-->    wrapW: 1
+<!--		|-->  nPOTScale: 0
+<!--		|-->  lightmap: 0
+<!--		|-->  compressionQuality: 50
+<!--		|-->  spriteMode: 2
+<!--		|-->  spriteExtrude: 1
+<!--		|-->  spriteMeshType: 1
+<!--		|-->  alignment: 0
+<!--		|-->  spritePivot: {x: 0.5, y: 0.5}
+<!--		|-->  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+<!--		|-->  spritePixelsToUnits: <var v="tile_width"/>
+<!--		|-->  alphaUsage: 1
+<!--		|-->  alphaIsTransparency: 1
+<!--		|-->  spriteTessellationDetail: -1
+<!--		|-->  textureType: 8
+<!--		|-->  textureShape: 1
+<!--		|-->  maxTextureSizeSet: 0
+<!--		|-->  compressionQualitySet: 0
+<!--		|-->  textureFormatSet: 0
+<!--		|-->  platformSettings:
+<!--		|-->  - buildTarget: DefaultTexturePlatform
+<!--		|-->    maxTextureSize: 2048
+<!--		|-->    resizeAlgorithm: 0
+<!--		|-->    textureFormat: -1
+<!--		|-->    textureCompression: 0
+<!--		|-->    compressionQuality: 50
+<!--		|-->    crunchedCompression: 0
+<!--		|-->    allowsAlphaSplitting: 0
+<!--		|-->    overridden: 0
+<!--		|-->    androidETC2FallbackOverride: 0
+<!--		|-->  spriteSheet:
+<!--		|-->    serializedVersion: 2
+<!--		|-->    sprites:
+<!--		|--><list-loop foreach="tile"><as i="_tile"/><text-contents>    - serializedVersion: 2
+<!--			|-->      name: <var v="export_name"/>_<var v="_tile.index"/>
+<!--			|-->      rect:
+<!--			|-->        serializedVersion: 2
+<!--			|-->        x: <nvar expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_width"/></nvar>
+<!--			|-->        y: <nvar expression="(ceil(x0/8)-1-floor(x1/8))*x2"><x v="tile_count"/><x v="_tile.index"/><x v="tile_height"/></nvar>
+<!--			|-->        width: <var v="tile_width"/>
+<!--			|-->        height: <var v="tile_height"/>
+<!--			|-->      alignment: 0
+<!--			|-->      pivot: {x: 0, y: 0}
+<!--			|-->      border: {x: 0, y: 0, z: 0, w: 0}
+<!--			|-->      outline: []
+<!--			|-->      physicsShape: []
+<!--			|-->      tessellationDetail: 0
+<!--		|--></text-contents></list-loop>    outline: []
+<!--		|-->    physicsShape: []
+<!--		|-->  spritePackingTag: 
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<image-file><!----><name>asset</name>
+						<!----><width expression="min(x0, 8)*x1"><x v="tile_count"/><x v="tile_width"/></width>
+						<!----><height expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_height"/></height><!----><image-contents><!--
+			|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--		|-->	<ivar v="_tile.image">
+<!--		|-->		<grid-x expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_width"/></grid-x>
+<!--		|-->		<grid-y expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_height"/></grid-y>
+<!--		|-->	</ivar>
+<!--		|--></image-contents></image-loop><!--
+			|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+			<image-file><!----><name>preview.png</name>
+						<!----><width expression="min(x0, 8)*x1"><x v="tile_count"/><x v="tile_width"/></width>
+						<!----><height expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_height"/></height><!----><image-contents><!--
+			|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--		|-->	<ivar v="_tile.image">
+<!--		|-->		<grid-x expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_width"/></grid-x>
+<!--		|-->		<grid-y expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_height"/></grid-y>
+<!--		|-->	</ivar>
+<!--		|--></image-contents></image-loop><!--
+			|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name><GUID v="_GUIDMap"><replace from="-" to=""/></GUID></name><!----><directory-contents>
+
+			<text-file><!----><name>pathname</name><!----><text-contents><!--
+			|-->Assets/ronintile/Maps/<var v="export_name"/>.prefab<!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset.meta</name><!----><text-contents><!--
+			|-->fileFormatVersion: 2
+<!--		|-->guid: <GUID v="_GUIDMap"><replace from="-" to=""/></GUID>
+<!--		|-->timeCreated: <var v="timestamp"/>
+<!--		|-->licenseType: Free
+<!--		|-->NativeFormatImporter:
+<!--		|-->  externalObjects: {}
+<!--		|-->  mainObjectFileID: 100100000
+<!--		|-->  userData: 
+<!--		|-->  assetBundleName: 
+<!--		|-->  assetBundleVariant: <!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<text-file><!----><name>asset</name><!----><text-contents><!--
+			|-->%YAML 1.1
+<!--		|-->%TAG !u! tag:unity3d.com,2011:
+<!--		|-->--- !u!1001 &amp;100100000
+<!--		|-->Prefab:
+<!--		|-->  m_ObjectHideFlags: 1
+<!--		|-->  serializedVersion: 2
+<!--		|-->  m_Modification:
+<!--		|-->    m_TransformParent: {fileID: 0}
+<!--		|-->    m_Modifications: []
+<!--		|-->    m_RemovedComponents: []
+<!--		|-->  m_ParentPrefab: {fileID: 0}
+<!--		|-->  m_RootGameObject: {fileID: 1000000000000000}
+<!--		|-->  m_IsPrefabParent: 1
+<!--		|-->--- !u!1 &amp;1000000000000000
+<!--		|-->GameObject:
+<!--		|-->  m_ObjectHideFlags: 0
+<!--		|-->  m_PrefabParentObject: {fileID: 0}
+<!--		|-->  m_PrefabInternal: {fileID: 100100000}
+<!--		|-->  serializedVersion: 5
+<!--		|-->  m_Component:
+<!--		|-->  - component: {fileID: 1000000000000001}
+<!--		|-->  - component: {fileID: 1000000000000000000}
+<!--		|-->  m_Layer: 0
+<!--		|-->  m_Name: <var v="export_name"/>
+<!--		|-->  m_TagString: Untagged
+<!--		|-->  m_Icon: {fileID: 0}
+<!--		|-->  m_NavMeshLayer: 0
+<!--		|-->  m_StaticEditorFlags: 0
+<!--		|-->  m_IsActive: 1
+<!--		|-->--- !u!156049354 &amp;1000000000000000000
+<!--		|-->Grid:
+<!--		|-->  m_ObjectHideFlags: 1
+<!--		|-->  m_PrefabParentObject: {fileID: 0}
+<!--		|-->  m_PrefabInternal: {fileID: 100100000}
+<!--		|-->  m_GameObject: {fileID: 1000000000000000}
+<!--		|-->  m_Enabled: 1
+<!--		|-->  m_CellSize: {x: 1, y: <nvar expression="x1/x0"><x v="tile_width"/><x v="tile_height"/></nvar>, z: 0}
+<!--		|-->  m_CellGap: {x: 0, y: 0, z: 0}
+<!--		|-->  m_CellLayout: 2
+<!--		|-->  m_CellSwizzle: 0
+<!--		|-->--- !u!4 &amp;1000000000000001
+<!--		|-->Transform:
+<!--		|-->  m_ObjectHideFlags: 1
+<!--		|-->  m_PrefabParentObject: {fileID: 0}
+<!--		|-->  m_PrefabInternal: {fileID: 100100000}
+<!--		|-->  m_GameObject: {fileID: 1000000000000000}
+<!--		|-->  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<!--		|-->  m_LocalPosition: {x: 0, y: 0, z: 0}
+<!--		|-->  m_LocalScale: {x: 1, y: 1, z: 1}
+<!--		|-->  m_Children:
+<!--		|--><list-loop foreach="layer"><as i="_layer"/><text-contents>  - {fileID: <nvar expression="3000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--		|--></text-contents></list-loop>  m_Father: {fileID: 0}
+<!--		|-->  m_RootOrder: 0
+<!--		|-->  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<!--		|--><list-loop foreach="layer"><as i="_layer"/><text-contents>--- !u!1 &amp;<nvar expression="2000000000000000+x0"><x v="_layer.index"/></nvar>
+<!--			|-->GameObject:
+<!--			|-->  m_ObjectHideFlags: 0
+<!--			|-->  m_PrefabParentObject: {fileID: 0}
+<!--			|-->  m_PrefabInternal: {fileID: 100100000}
+<!--			|-->  serializedVersion: 5
+<!--			|-->  m_Component:
+<!--			|-->  - component: {fileID: <nvar expression="3000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--			|-->  - component: {fileID: <nvar expression="5000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--			|-->  - component: {fileID: <nvar expression="4000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--			|-->  m_Layer: 0
+<!--			|-->  m_Name: '<var v="_layer.name"><replace from="'" to="''"/></var>'
+<!--			|-->  m_TagString: Untagged
+<!--			|-->  m_Icon: {fileID: 0}
+<!--			|-->  m_NavMeshLayer: 0
+<!--			|-->  m_StaticEditorFlags: 0
+<!--			|-->  m_IsActive: 1
+<!--			|-->--- !u!4 &amp;<nvar expression="3000000000000000+x0"><x v="_layer.index"/></nvar>
+<!--			|-->Transform:
+<!--			|-->  m_ObjectHideFlags: 1
+<!--			|-->  m_PrefabParentObject: {fileID: 0}
+<!--			|-->  m_PrefabInternal: {fileID: 100100000}
+<!--			|-->  m_GameObject: {fileID: <nvar expression="2000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--			|-->  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+<!--			|-->  m_LocalPosition: {x: 0, y: 0, z: 0}
+<!--			|-->  m_LocalScale: {x: 1, y: 1, z: 1}
+<!--			|-->  m_Children: []
+<!--			|-->  m_Father: {fileID: 1000000000000001}
+<!--			|-->  m_RootOrder: 0
+<!--			|-->  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<!--			|-->--- !u!483693784 &amp;<nvar expression="4000000000000000+x0"><x v="_layer.index"/></nvar>
+<!--			|-->TilemapRenderer:
+<!--			|-->  m_ObjectHideFlags: 1
+<!--			|-->  m_PrefabParentObject: {fileID: 0}
+<!--			|-->  m_PrefabInternal: {fileID: 100100000}
+<!--			|-->  m_GameObject: {fileID: <nvar expression="2000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--			|-->  m_Enabled: 1
+<!--			|-->  m_CastShadows: 0
+<!--			|-->  m_ReceiveShadows: 0
+<!--			|-->  m_DynamicOccludee: 1
+<!--			|-->  m_MotionVectors: 1
+<!--			|-->  m_LightProbeUsage: 0
+<!--			|-->  m_ReflectionProbeUsage: 0
+<!--			|-->  m_Materials:
+<!--			|-->  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+<!--			|-->  m_StaticBatchInfo:
+<!--			|-->    firstSubMesh: 0
+<!--			|-->    subMeshCount: 0
+<!--			|-->  m_StaticBatchRoot: {fileID: 0}
+<!--			|-->  m_ProbeAnchor: {fileID: 0}
+<!--			|-->  m_LightProbeVolumeOverride: {fileID: 0}
+<!--			|-->  m_ScaleInLightmap: 1
+<!--			|-->  m_PreserveUVs: 0
+<!--			|-->  m_IgnoreNormalsForChartDetection: 0
+<!--			|-->  m_ImportantGI: 0
+<!--			|-->  m_StitchLightmapSeams: 0
+<!--			|-->  m_SelectedEditorRenderState: 0
+<!--			|-->  m_MinimumChartSize: 4
+<!--			|-->  m_AutoUVMaxDistance: 0.5
+<!--			|-->  m_AutoUVMaxAngle: 89
+<!--			|-->  m_LightmapParameters: {fileID: 0}
+<!--			|-->  m_SortingLayerID: 0
+<!--			|-->  m_SortingLayer: 0
+<!--			|-->  m_SortingOrder: <var v="_layer.index"/>
+<!--			|-->  m_ChunkSize: {x: 32, y: 32, z: 32}
+<!--			|-->  m_MaxChunkCount: 16
+<!--			|-->  m_MaxFrameAge: 16
+<!--			|-->  m_SortOrder: 3
+<!--			|-->  m_MaskInteraction: 0
+<!--			|-->--- !u!1839735485 &amp;<nvar expression="5000000000000000+x0"><x v="_layer.index"/></nvar>
+<!--			|-->Tilemap:
+<!--			|-->  m_ObjectHideFlags: 1
+<!--			|-->  m_PrefabParentObject: {fileID: 0}
+<!--			|-->  m_PrefabInternal: {fileID: 100100000}
+<!--			|-->  m_GameObject: {fileID: <nvar expression="2000000000000000+x0"><x v="_layer.index"/></nvar>}
+<!--			|-->  m_Enabled: 1
+<!--			|-->  m_Tiles:
+<!--			|--><list-loop foreach="_layer.position"><as i="_position"/><as i="_tile"/><text-contents>  - first: {x: <nvar expression="floor((x0-1)/2)-x1"><x v="map_height"/><x v="_position.y"/></nvar>, y: <nvar expression="floor((x0-1)/2)-x1"><x v="map_width"/><x v="_position.x"/></nvar>, z: 0}
+<!--				|-->    second:
+<!--				|-->      m_TileIndex: <var v="_tile.index"/>
+<!--				|-->      m_TileSpriteIndex: <var v="_tile.index"/>
+<!--				|-->      m_TileMatrixIndex: 0
+<!--				|-->      m_TileColorIndex: 0
+<!--				|-->      m_ObjectToInstantiate: {fileID: 0}
+<!--				|-->      m_TileFlags: 1
+<!--				|-->      m_ColliderType: 1
+<!--			|--></text-contents></list-loop>  m_AnimatedTiles: {}
+<!--			|-->  m_TileAssetArray:
+<!--			|--><list-loop foreach="tile"><as i="_tile"/><text-contents>  - m_RefCount: <var v="_layer!_tile.position_count"/>
+<!--				|-->    m_Data: {fileID: 11400000, guid: <GUID v="_tile._GUIDTile"><replace from="-" to=""/></GUID>, type: 2}
+<!--			|--></text-contents></list-loop>  m_TileSpriteArray:
+<!--			|--><list-loop foreach="tile"><as i="_tile"/><text-contents>  - m_RefCount: <var v="_layer!_tile.position_count"/>
+<!--				|-->    m_Data: {fileID: <nvar expression="21300000+x0*2"><x v="_tile.index"/></nvar>, guid: <GUID v="_GUIDSet"><replace from="-" to=""/></GUID>, type: 3}
+<!--			|--></text-contents></list-loop>  m_TileMatrixArray:
+<!--			|-->  - m_RefCount: <var v="_layer.position_count"/>
+<!--			|-->    m_Data:
+<!--			|-->      e00: 1
+<!--			|-->      e01: 0
+<!--			|-->      e02: 0
+<!--			|-->      e03: 0
+<!--			|-->      e10: 0
+<!--			|-->      e11: 1
+<!--			|-->      e12: 0
+<!--			|-->      e13: 0
+<!--			|-->      e20: 0
+<!--			|-->      e21: 0
+<!--			|-->      e22: 1
+<!--			|-->      e23: 0
+<!--			|-->      e30: 0
+<!--			|-->      e31: 0
+<!--			|-->      e32: 0
+<!--			|-->      e33: 1
+<!--			|-->  m_TileColorArray:
+<!--			|-->  - m_RefCount: <var v="_layer.position_count"/>
+<!--			|-->    m_Data: {r: 1, g: 1, b: 1, a: 1}
+<!--			|-->  m_AnimationFrameRate: 1
+<!--			|-->  m_Color: {r: 1, g: 1, b: 1, a: 1}
+<!--			|-->  m_Origin: {x: <nvar expression="-ceil((x0-1)/2)"><x v="map_height"/></nvar>, y: <nvar expression="-ceil((x0-1)/2)"><x v="map_width"/></nvar>, z: 0}
+<!--			|-->  m_Size: {x: <var v="map_height"/>, y: <var v="map_width"/>, z: 1}
+<!--			|-->  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+<!--			|-->  m_TileOrientation: 0
+<!--			|-->  m_TileOrientationMatrix:
+<!--			|-->    e00: 1
+<!--			|-->    e01: 0
+<!--			|-->    e02: 0
+<!--			|-->    e03: 0
+<!--			|-->    e10: 0
+<!--			|-->    e11: 1
+<!--			|-->    e12: 0
+<!--			|-->    e13: 0
+<!--			|-->    e20: 0
+<!--			|-->    e21: 0
+<!--			|-->    e22: 1
+<!--			|-->    e23: 0
+<!--			|-->    e30: 0
+<!--			|-->    e31: 0
+<!--			|-->    e32: 0
+<!--			|-->    e33: 1
+<!--			|-->  m_TileRefreshArray:
+<!--			|--><list-loop foreach="tile"><as i="_tile"/><text-contents>  - serializedVersion: 1
+<!--				|-->    m_DirtyIndex: 0
+<!--			|--></text-contents></list-loop><!--
+			|--></text-contents></list-loop><!--
+			|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

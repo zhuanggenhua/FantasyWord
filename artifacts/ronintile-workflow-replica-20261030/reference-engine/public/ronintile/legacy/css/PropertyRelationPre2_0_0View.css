@@ -1,0 +1,23 @@
+.propertyrelationpre2_0_0-arrow-view {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    background-size: 16px;
+}
+
+.propertyrelationpre2_0_0-text-view {
+    position: absolute;
+    border-width: 2px 4px 2px 4px;
+    border-radius: 4px;
+    border-style: solid;
+    background: var(--colorBG);
+    border-color: var(--colorBG);
+    left: 50.5%;
+    transform: translateX(-50%);
+
+    font-size: 12px;
+    font-family: mainFont;
+    color: var(--color2);
+
+    white-space: nowrap;
+}

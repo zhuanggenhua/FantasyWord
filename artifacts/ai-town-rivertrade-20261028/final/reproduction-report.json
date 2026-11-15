@@ -1,0 +1,31 @@
+{
+  "status": "pass",
+  "files": [
+    {
+      "file": "river-trade-town.tmx",
+      "sha256": "390e6c00ca01f91c3793b25a00f11b8ceda057fac1ab0d0f406f4790037ed4e3",
+      "identical": true
+    },
+    {
+      "file": "river-trade-town.tmj",
+      "sha256": "cd18fbe8b1e4ee5f973b454e74e8314e647ca5f634cb8d680d8a660f5f26f8a3",
+      "identical": true
+    },
+    {
+      "file": "tiled-native.png",
+      "sha256": "063146fcf708561bea47542a8bf09ac9747efa9ae4353926484634ef22a4d959",
+      "identical": true
+    }
+  ],
+  "portable_tmx_reload": {
+    "version": "1.12.2",
+    "input": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Temp\\river-trade-town-import-roundtrip\\river-trade-town.tmx",
+    "status": "pass",
+    "width": 80,
+    "height": 60,
+    "layers": 17,
+    "tilesets": 2
+  },
+  "render_identical": true,
+  "unity_verified": false
+}

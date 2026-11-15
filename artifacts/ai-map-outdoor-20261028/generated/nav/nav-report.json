@@ -1,0 +1,225 @@
+{
+  "schema": "generate2dmap.nav_report.v1",
+  "status": "pass",
+  "method": "plan Appendix C validity (centre + 8 footprint samples against walk regions, solids, object footprints scaled once, tile collision and material classes) on a grid of cell max(1, round(r/2)) px; 4-neighbour moves open when segmentClear holds between node centres (samples every cell/2, plus the exact thin-gap centre path and one_way direction); BFS from every spawn and portal arrival to every interaction, exit, anchor slot and approach point",
+  "notProven": [
+    "that the collision data matches the painted art",
+    "positions closer than one grid cell to a blocker (the grid samples cell centres)",
+    "runtime movement code: map-runtime.mjs parity is tested during integration",
+    "links to maps not passed with --link"
+  ],
+  "checks": [
+    {
+      "id": "starts_valid",
+      "status": "pass",
+      "value": {
+        "starts": 1,
+        "blocked": []
+      },
+      "threshold": {
+        "blocked": 0
+      }
+    },
+    {
+      "id": "targets_reachable",
+      "status": "pass",
+      "value": {
+        "reachable": 0,
+        "total": 0,
+        "unreachable": []
+      },
+      "threshold": {
+        "unreachable": 0
+      }
+    },
+    {
+      "id": "portals_inside_world",
+      "status": "pass",
+      "value": {
+        "outside": []
+      },
+      "threshold": {
+        "outside": 0
+      }
+    },
+    {
+      "id": "arrivals_outside_triggers",
+      "status": "pass",
+      "value": {
+        "problems": 0
+      },
+      "threshold": {
+        "problems": 0
+      }
+    },
+    {
+      "id": "reciprocal_links",
+      "status": "pass",
+      "value": {
+        "links": [],
+        "notChecked": []
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "thin_gaps",
+      "status": "pass",
+      "value": 0,
+      "threshold": "reported: moves the thin-gap rule closed although every footprint sample was valid"
+    },
+    {
+      "id": "unreachable_walkable_area",
+      "status": "pass",
+      "value": {
+        "pockets": 0,
+        "cells": 0
+      },
+      "threshold": "reported"
+    },
+    {
+      "id": "blocked_rects_union",
+      "status": "pass",
+      "value": {
+        "rects": 112,
+        "blockedCells": 34533
+      },
+      "threshold": "union == blocked cells"
+    },
+    {
+      "id": "footprints_scaled_once",
+      "status": "pass",
+      "value": {
+        "objectSolids": 26
+      },
+      "threshold": "object footprint x scale, never inflated by the actor radius"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "d2d92a4704ede5336b66903455b8edd57fa74e2f05b4cb812c74e3f526e59453",
+      "bytes": 459514
+    },
+    {
+      "path": "../assets/terrain-tileset.json",
+      "sha256": "7b94061db5020d879f2f52dd481afe968a5b5176fa4906afe79c13487886972c",
+      "bytes": 4417
+    },
+    {
+      "path": "../assets/terrain-atlas.png",
+      "sha256": "35d87602f53e9da95dcd12c74ed309edfc5dc76a27c9a7e3f4e1403783e15d00",
+      "bytes": 6103
+    },
+    {
+      "path": "../assets/TreeNoApples.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/TreeApples.png",
+      "sha256": "6e00faab30818cf4433c532896c3bd26672f2f454f2c3d86817e66544ef6cbec",
+      "bytes": 546
+    },
+    {
+      "path": "../assets/PillarTall1.png",
+      "sha256": "c5183530076d795eefea97b4f2e3e3482ac9b6966c427634fd1e60f1a7c3c27f",
+      "bytes": 307
+    },
+    {
+      "path": "../assets/PillarMedium2.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "../assets/PillarShort1.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "../assets/PillarTall3.png",
+      "sha256": "800ce4b8d88b72df7d3cba32a0ea776ffdfefcd197c27b2ea7ceb0aed9e84c73",
+      "bytes": 399
+    },
+    {
+      "path": "../assets/PillarMedium3.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "../assets/PillarShort2.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "../assets/FlowerWhite.png",
+      "sha256": "c0117a19b88e44217f61deea06bf5d04ad0ddf4569172ae3074b957e0dee0afe",
+      "bytes": 107
+    },
+    {
+      "path": "../assets/FlowerRed.png",
+      "sha256": "60c1a7bae2959b0bd3904c3a3da7e05ac0a4da76be24225cb2a36e5e00dfbff6",
+      "bytes": 125
+    },
+    {
+      "path": "../assets/FlowerPink.png",
+      "sha256": "9d18bf184d9154ce996bd75616c189b14161e21c0e4832eda36429faf3116160",
+      "bytes": 133
+    },
+    {
+      "path": "../assets/GrassLong1.png",
+      "sha256": "ff7e5cb4e4618529ba13ed6fda5e9a1f65a9875b81ee2c0ab7526956e900188c",
+      "bytes": 92
+    },
+    {
+      "path": "../assets/GrassLong2.png",
+      "sha256": "89d34146e74debed2b18436630c2f3d2516050c30ac8066ddb60be0003673a60",
+      "bytes": 99
+    }
+  ],
+  "outputs": [
+    {
+      "path": "nav-grid.json",
+      "sha256": "5c3dd2ee2df3b3382a925ebef4cf95f831c0c2345cfc252f9136884ddcc97b56",
+      "bytes": 257883
+    },
+    {
+      "path": "nav-debug.png",
+      "sha256": "5c6cc0a9f6d6335e0e9d2c9a5ae1e325fd3894f7fa4db176010cabf3c8fd0901",
+      "bytes": 42686
+    }
+  ],
+  "tool": {
+    "name": "map_nav.py",
+    "version": "0.4.0"
+  },
+  "map": "forest-ruins",
+  "cell": 1,
+  "starts": [
+    {
+      "kind": "spawn",
+      "id": "south_entry",
+      "point": [
+        36.0,
+        300.0
+      ],
+      "reachable": true,
+      "steps": 0,
+      "node": [
+        35.5,
+        299.5
+      ],
+      "reason": null
+    }
+  ],
+  "targets": [],
+  "links": [],
+  "thinGaps": [],
+  "unreachablePockets": [],
+  "bundleNav": {
+    "cell": 1,
+    "grid": "nav-grid.json"
+  },
+  "problems": []
+}

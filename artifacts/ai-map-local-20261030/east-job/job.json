@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "map": "../map/frontier-world.tmx",
+  "fingerprint": "9f44fa110d38a5c3264b84bdb4c394471f1a4fa40da03a15dd6664ee2bd52e6c",
+  "name": "east",
+  "direction": "east",
+  "box": [
+    1336,
+    0,
+    3008,
+    941
+  ],
+  "size": [
+    1672,
+    941
+  ],
+  "contextSha256": "baf97ff98feefca67f7171acbf818d1ba6040059a7a4f3bc42734178c09e670e",
+  "maskSha256": "83fe24cdaf92dfa11a93889aa3477776f782d48714d0846a355ca31d4d50cd06",
+  "prompt": "Outpaint this adjacent east game-map region. Return exactly 1672x941 pixels. The visible part of context.png is immutable existing world; complete only transparent pixels. Match its pixel clusters, camera, sprite proportions, palette and top-left lighting. Continue every road and watercourse across the shared boundary at the exact matching location. No UI, words, border or new perspective. Continue the main dirt caravan road from the existing left boundary to the right edge, with matching road width and scale. New eastern outskirts: sparse open meadow, a small orchard, old roadside shrine and a woodland fork. Continue the rocky stream along the lower boundary where it enters from the old region; do not introduce disconnected waterways. Keep a simple broad traversable road and one looping side trail, generous clearings, and no additional town center. Seam continuity takes priority over adding detail."
+}

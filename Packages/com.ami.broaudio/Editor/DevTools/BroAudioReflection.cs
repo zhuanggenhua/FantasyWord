@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+
 using UnityEngine.Audio;
 using static Ami.Extension.ReflectionExtension;
 using Ami.BroAudio.Tools;
@@ -171,14 +171,14 @@ namespace Ami.Extension.Reflection
             switch (parameterType)
             {
                 case ExposedParameterType.Volume:
-                    if (TryGetGUID(MethodName.GetGUIDForVolume, reflection.MixerGroupClass, mixerGroup, out GUID volGUID))
+                    if (TryGetGUID(MethodName.GetGUIDForVolume, reflection.MixerGroupClass, mixerGroup, out UnityEngine.GUID volGUID))
                     {
                         object volParaPath = CreateParameterPathInstance("AudioGroupParameterPath", mixerGroup, volGUID);
                         CustomParameterExposer.AddExposedParameter(mixerGroup.name, volParaPath, volGUID, audioMixer, reflection);
                     }
                     break;
                 case ExposedParameterType.Pitch:
-                    if (TryGetGUID(MethodName.GetGUIDForPitch, reflection.MixerGroupClass, mixerGroup, out GUID pitchGUID))
+                    if (TryGetGUID(MethodName.GetGUIDForPitch, reflection.MixerGroupClass, mixerGroup, out UnityEngine.GUID pitchGUID))
                     {
                         object pitchParaPath = CreateParameterPathInstance("AudioGroupParameterPath", mixerGroup, pitchGUID);
                         CustomParameterExposer.AddExposedParameter(mixerGroup.name + BroName.PitchParaNameSuffix, pitchParaPath, pitchGUID, audioMixer, reflection);
@@ -196,7 +196,7 @@ namespace Ami.Extension.Reflection
                         return;
                     }
 
-                    if (TryGetGUID(MethodName.GetGUIDForMixLevel, reflection.EffectClass, effect, out GUID effectGUID))
+                    if (TryGetGUID(MethodName.GetGUIDForMixLevel, reflection.EffectClass, effect, out UnityEngine.GUID effectGUID))
                     {
                         object effectParaPath = CreateParameterPathInstance("AudioEffectParameterPath", mixerGroup, effect, effectGUID);
                         CustomParameterExposer.AddExposedParameter(mixerGroup.name + BroName.EffectParaNameSuffix, effectParaPath, effectGUID, audioMixer, reflection);
@@ -240,18 +240,18 @@ namespace Ami.Extension.Reflection
             }
         }
 
-        private static bool TryGetGUID(MethodName methodName, Type type, object target, out GUID guid)
+        private static bool TryGetGUID(MethodName methodName, Type type, object target, out UnityEngine.GUID guid)
         {
             guid = default;
             object obj = ExecuteMethod(methodName.ToString(), ReflectionExtension.Void, type, target);
             return TryConvertGUID(obj, ref guid);
         }
 
-        private static bool TryConvertGUID(object obj, ref GUID guid)
+        private static bool TryConvertGUID(object obj, ref UnityEngine.GUID guid)
         {
             try
             {
-                guid = (GUID)obj;
+                guid = (UnityEngine.GUID)obj;
             }
             catch (InvalidCastException)
             {

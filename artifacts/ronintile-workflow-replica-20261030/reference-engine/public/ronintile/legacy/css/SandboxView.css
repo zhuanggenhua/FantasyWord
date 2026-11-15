@@ -1,0 +1,103 @@
+.sandboxview-brush-view {
+	visibility: hidden;
+	border-radius: 8px;
+	border-style: solid;
+	border-width: 4px;
+	border-color: var(--colorSelect);
+	box-shadow: 0 0 8px rgba(246, 224, 94, 0.45);
+	width: 4px;
+	height: 4px;
+	position: absolute;
+}
+
+.sandboxview-tray-view {
+	background: var(--wastePanel);
+	border-radius: 0px 0px 4px 0px;
+	border-width: 0px 4px 4px 0px;
+	border-style: solid;
+	border-color: var(--rtInset);
+	position: absolute;
+}
+
+.sandboxview-layerproperties-view {
+	background-color: var(--colorBG);
+	background-image: var(--wasteTexture);
+	position: relative;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: visible;
+    overflow-y: visible;
+}
+
+.sandboxview-layerproperties-container-view {
+	margin-top: 12px;
+	position: relative;
+}
+
+.sandboxview-layer-view {
+	display: flex;
+	flex-direction: row;
+	margin-top: 8px;
+	background: var(--rtDeepFill);
+
+	border-width: 4px 4px 4px 4px;
+    border-radius: 0px 4px 4px 0px;
+    margin-left: -4px;
+    margin-right: -4px;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: var(--rtInset);
+}
+
+.sandboxview-layer-drag-view {
+	display: inline-block;
+	background-image: radial-gradient(var(--colorSteel) 2.8px, transparent 3px);
+    background-size: 14px 14px;
+    background-position: -3px -3px;
+    height: 64px;
+  	width: 22px;
+  	flex-shrink: 0;
+}
+
+.sandboxview-layer-content-view {
+	background: var(--rtCanvas);
+	clip-path: inset(0);
+	position: relative;
+	flex-grow: 1;
+	border-width: 4px 4px 4px 0px;
+    border-radius: 0px 3px 3px 0px;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: var(--colorSteel);
+    margin-left: 6px;
+}
+
+.sandboxview-layer-add-view {
+	background: var(--rtTabIdle);
+	border: 1px solid var(--colorSteel);
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 104px;
+	height: 36px;
+	margin-top: 16px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.sandboxview-layer-add-view--in-title {
+	width: 28px;
+	height: 24px;
+	min-width: 28px;
+	margin: 0;
+	margin-top: 0;
+}
+
+.sandboxview-layer-add-icon-view {
+    width: 20px;
+    height: 20px;
+    background-size: 20px;
+}

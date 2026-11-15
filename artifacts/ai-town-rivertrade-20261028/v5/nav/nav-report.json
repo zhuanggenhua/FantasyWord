@@ -1,0 +1,466 @@
+{
+  "schema": "generate2dmap.nav_report.v1",
+  "status": "pass",
+  "method": "plan Appendix C validity (centre + 8 footprint samples against walk regions, solids, object footprints scaled once, tile collision and material classes) on a grid of cell max(1, round(r/2)) px; 4-neighbour moves open when segmentClear holds between node centres (samples every cell/2, plus the exact thin-gap centre path and one_way direction); BFS from every spawn and portal arrival to every interaction, exit, anchor slot and approach point",
+  "notProven": [
+    "that the collision data matches the painted art",
+    "positions closer than one grid cell to a blocker (the grid samples cell centres)",
+    "runtime movement code: map-runtime.mjs parity is tested during integration",
+    "links to maps not passed with --link"
+  ],
+  "checks": [
+    {
+      "id": "starts_valid",
+      "status": "pass",
+      "value": {
+        "starts": 1,
+        "blocked": []
+      },
+      "threshold": {
+        "blocked": 0
+      }
+    },
+    {
+      "id": "targets_reachable",
+      "status": "pass",
+      "value": {
+        "reachable": 14,
+        "total": 14,
+        "unreachable": []
+      },
+      "threshold": {
+        "unreachable": 0
+      }
+    },
+    {
+      "id": "portals_inside_world",
+      "status": "pass",
+      "value": {
+        "outside": []
+      },
+      "threshold": {
+        "outside": 0
+      }
+    },
+    {
+      "id": "arrivals_outside_triggers",
+      "status": "pass",
+      "value": {
+        "problems": 0
+      },
+      "threshold": {
+        "problems": 0
+      }
+    },
+    {
+      "id": "reciprocal_links",
+      "status": "pass",
+      "value": {
+        "links": [],
+        "notChecked": []
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "thin_gaps",
+      "status": "pass",
+      "value": 0,
+      "threshold": "reported: moves the thin-gap rule closed although every footprint sample was valid"
+    },
+    {
+      "id": "unreachable_walkable_area",
+      "status": "pass",
+      "value": {
+        "pockets": 0,
+        "cells": 0
+      },
+      "threshold": "reported"
+    },
+    {
+      "id": "blocked_rects_union",
+      "status": "pass",
+      "value": {
+        "rects": 301,
+        "blockedCells": 75252
+      },
+      "threshold": "union == blocked cells"
+    },
+    {
+      "id": "footprints_scaled_once",
+      "status": "pass",
+      "value": {
+        "objectSolids": 81
+      },
+      "threshold": "object footprint x scale, never inflated by the actor radius"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "d3776145d8da8f7ca1d0de6b2f298179109ab4365eba969ea1701ac4758a50df",
+      "bytes": 913352
+    },
+    {
+      "path": "../assets/terrain-forge.json",
+      "sha256": "23dd4e1f9f447804714db681a71d9b3adce210ef5c83eae0b93873930394a979",
+      "bytes": 5496
+    },
+    {
+      "path": "../assets/terrain.png",
+      "sha256": "a4406116578588821387f11aa987eff6ad8cd5e6f40198018164921e8a0b8fc8",
+      "bytes": 5278
+    },
+    {
+      "path": "../assets/prop-018.png",
+      "sha256": "8176cf14d2c7891c361628348d85f71c7aa563f4a571dc731b220a878524379a",
+      "bytes": 160
+    },
+    {
+      "path": "../assets/prop-017.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/prop-013.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "../assets/prop-014.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "../assets/prop-015.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "../assets/prop-016.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "../assets/prop-007.png",
+      "sha256": "d6b779a1337ccc4edaa366a2bbd5d793c56e185a8501dc6d6b8cf5f65701550b",
+      "bytes": 489
+    },
+    {
+      "path": "../assets/prop-008.png",
+      "sha256": "3f5c154a0256ed6459398aa627fb1c794ec1e014400e0a3c0b5f1071f0ab64b5",
+      "bytes": 542
+    },
+    {
+      "path": "../assets/prop-004.png",
+      "sha256": "90883dd6867aa9eb5f1c50bd4596f93b7a6c765dc5d3ff1e682eb5746f252adc",
+      "bytes": 350
+    },
+    {
+      "path": "../assets/prop-002.png",
+      "sha256": "8526472720253b8ea8fd7fa0f45cbad56e9e5a82be0533956de30bda834b4546",
+      "bytes": 339
+    },
+    {
+      "path": "../assets/prop-009.png",
+      "sha256": "24eed5471fce0d719c3892b58c587295bc6ea1d6b9fada4a635c6db2bedc2131",
+      "bytes": 557
+    },
+    {
+      "path": "../assets/prop-006.png",
+      "sha256": "e5f05f6ce5dcf389f0d9e81e964b170a938790734c98f0608a50ae0106467bb7",
+      "bytes": 290
+    },
+    {
+      "path": "../assets/prop-000.png",
+      "sha256": "b6d5a5748e0be4ba4039fa86a158868735ffee1db0d3a2c989795724cda20d13",
+      "bytes": 984
+    },
+    {
+      "path": "../assets/prop-003.png",
+      "sha256": "30118ade0e7ef45077bdbfcad2a678c8bda9bab14c38ccf3f2f10613cd65f586",
+      "bytes": 220
+    },
+    {
+      "path": "../assets/prop-001.png",
+      "sha256": "bc0f29ca6e83b52d0fe13248fc324dd674b911d69ff6cb55e71e3b1799a35322",
+      "bytes": 251
+    },
+    {
+      "path": "../assets/prop-005.png",
+      "sha256": "5b5155496ec64fcbbc3935201a7beec1c08ee82a8910542315d581cd06963d87",
+      "bytes": 119
+    },
+    {
+      "path": "../assets/prop-010.png",
+      "sha256": "c2aeae2575c030b4c95d33ea0f657fc02603a54ed6841e40e79477eaacbddbaa",
+      "bytes": 408
+    },
+    {
+      "path": "../assets/prop-011.png",
+      "sha256": "7da3090eb123687353255383b902443a0d5ec3ef5882c3acb9ae11864ed0029f",
+      "bytes": 257
+    },
+    {
+      "path": "../assets/prop-012.png",
+      "sha256": "812f89e248539c2a08a43a4a183ff0b5fe2415744b99d778c2334b530f030e21",
+      "bytes": 207
+    }
+  ],
+  "outputs": [
+    {
+      "path": "nav-grid.json",
+      "sha256": "90bf4abdb0c7200afe1e11c7cf2fa9325454ca1a4902023eb067487dddd265c3",
+      "bytes": 638840
+    },
+    {
+      "path": "nav-debug.png",
+      "sha256": "c85e365cef0d876fd5358573ee7efb61615491d0d9c131d9a954f8431e8a5b3a",
+      "bytes": 57130
+    }
+  ],
+  "tool": {
+    "name": "map_nav.py",
+    "version": "0.4.0"
+  },
+  "map": "river-trade-town",
+  "cell": 1,
+  "starts": [
+    {
+      "kind": "spawn",
+      "id": "west_entry",
+      "point": [
+        28.0,
+        228.0
+      ],
+      "reachable": true,
+      "steps": 0,
+      "node": [
+        27.5,
+        227.5
+      ],
+      "reason": null
+    }
+  ],
+  "targets": [
+    {
+      "kind": "interaction",
+      "id": "target-4000",
+      "point": [
+        92.0,
+        124.0
+      ],
+      "reachable": true,
+      "steps": 160,
+      "node": [
+        89.5,
+        125.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4001",
+      "point": [
+        84.0,
+        180.0
+      ],
+      "reachable": true,
+      "steps": 96,
+      "node": [
+        81.5,
+        181.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4002",
+      "point": [
+        276.0,
+        156.0
+      ],
+      "reachable": true,
+      "steps": 312,
+      "node": [
+        273.5,
+        157.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4003",
+      "point": [
+        420.0,
+        156.0
+      ],
+      "reachable": true,
+      "steps": 456,
+      "node": [
+        417.5,
+        157.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4004",
+      "point": [
+        532.0,
+        132.0
+      ],
+      "reachable": true,
+      "steps": 592,
+      "node": [
+        529.5,
+        133.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4005",
+      "point": [
+        508.0,
+        212.0
+      ],
+      "reachable": true,
+      "steps": 539,
+      "node": [
+        505.5,
+        212.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4006",
+      "point": [
+        332.0,
+        260.0
+      ],
+      "reachable": true,
+      "steps": 327,
+      "node": [
+        330.5,
+        257.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4007",
+      "point": [
+        356.0,
+        388.0
+      ],
+      "reachable": true,
+      "steps": 479,
+      "node": [
+        354.5,
+        385.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4008",
+      "point": [
+        524.0,
+        380.0
+      ],
+      "reachable": true,
+      "steps": 639,
+      "node": [
+        522.5,
+        377.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4009",
+      "point": [
+        572.0,
+        332.0
+      ],
+      "reachable": true,
+      "steps": 639,
+      "node": [
+        570.5,
+        329.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4500",
+      "point": [
+        388.0,
+        268.0
+      ],
+      "reachable": true,
+      "steps": 391,
+      "node": [
+        386.5,
+        265.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4501",
+      "point": [
+        492.0,
+        300.0
+      ],
+      "reachable": true,
+      "steps": 527,
+      "node": [
+        490.5,
+        297.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4502",
+      "point": [
+        140.0,
+        380.0
+      ],
+      "reachable": true,
+      "steps": 255,
+      "node": [
+        138.5,
+        377.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "target-4503",
+      "point": [
+        620.0,
+        228.0
+      ],
+      "reachable": true,
+      "steps": 642,
+      "node": [
+        617.5,
+        229.5
+      ],
+      "reason": null
+    }
+  ],
+  "links": [],
+  "thinGaps": [],
+  "unreachablePockets": [],
+  "bundleNav": {
+    "cell": 1,
+    "grid": "nav-grid.json"
+  },
+  "problems": []
+}

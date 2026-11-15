@@ -1,0 +1,55 @@
+{
+  "project": "../native/project.json",
+  "steps": [
+    {
+      "op": "draw",
+      "tile": null,
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "layer": 0
+    },
+    {
+      "op": "undo"
+    },
+    {
+      "op": "redo"
+    },
+    {
+      "op": "undo"
+    },
+    {
+      "op": "save",
+      "name": "edited"
+    },
+    {
+      "op": "reload",
+      "name": "edited"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "JSON",
+      "rect": [
+        0,
+        0,
+        96,
+        72
+      ],
+      "name": "edited-json"
+    },
+    {
+      "op": "render",
+      "rect": [
+        0,
+        0,
+        96,
+        72
+      ],
+      "name": "edited-image"
+    }
+  ]
+}

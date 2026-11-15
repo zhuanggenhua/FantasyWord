@@ -1,0 +1,25 @@
+{
+  "status": "pass",
+  "entry": "deliverable/replay.ps1",
+  "steps": [
+    866,
+    7
+  ],
+  "projectFieldsEqual": [
+    "tilewidth",
+    "tileheight",
+    "tileshape",
+    "sources",
+    "tiles",
+    "set",
+    "set_regions",
+    "sandbox_layers",
+    "sandbox"
+  ],
+  "relationGraphEqual": true,
+  "metadataEqual": true,
+  "nativeRenderIdentical": true,
+  "maximumPixelDifference": 0,
+  "runtimeDependencies": "delivered engine + toolkit + input",
+  "externalRequests": 0
+}

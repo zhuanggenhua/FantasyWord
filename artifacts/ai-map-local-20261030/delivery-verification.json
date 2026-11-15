@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "archive": "local-map-tool-and-demo.zip",
+  "sha256": "cd2a0b1b7f2e134632ab35bb39d6f67fa928b7a0c53bc475918145f5681fd215",
+  "bytes": 31757850,
+  "files": 21,
+  "independentZipTiledRereadPixelIdentical": true,
+  "mapSha256": "fc2a395794834cba19eab24765b98981a4526be0d2584c42aceb63f85ee5cc56",
+  "toolSha256": "66010ced0a4393dc199589138f65e9f2192672593a6d9ef914ab0245c9f0b43b",
+  "unityVerified": false
+}

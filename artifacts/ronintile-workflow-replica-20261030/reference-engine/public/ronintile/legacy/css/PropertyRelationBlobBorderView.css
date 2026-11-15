@@ -1,0 +1,11 @@
+.propertyrelationblobborder-remove-view {
+    width:17px;
+    height:17px;
+    right:8px;
+    top:8px;
+    border-radius: 8px;
+    background: var(--color1);
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+}

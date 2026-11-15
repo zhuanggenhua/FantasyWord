@@ -1,0 +1,122 @@
+{
+  "goal": "复刻RoninTile原素材地图完整工作流，并用MiniFantasy原素材逐阶段对账验证",
+  "status": "complete",
+  "acceptance_criteria": [
+    {
+      "id": "C1",
+      "description": "锁定原版实际完整流程与逐阶段对照台账",
+      "status": "pass",
+      "evidence": [
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\scope.md",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\reference-skill-world.md",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\coverage.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\module-integrity.json"
+      ]
+    },
+    {
+      "id": "C2",
+      "description": "原版导入真实素材完成可回读参考工程",
+      "status": "pass",
+      "evidence": [
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\full-reference-run-v5\\project.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\wang-reference-run-v3\\project.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\workflow-verification.json"
+      ]
+    },
+    {
+      "id": "C3",
+      "description": "本地流程实现素材图块、关系、分层铺图与工程保存",
+      "status": "pass",
+      "evidence": [
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\replay-verification.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\continued-edit-verification.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\portable-cli-verification.json"
+      ]
+    },
+    {
+      "id": "C4",
+      "description": "本地导出与原版同输入结果逐项对账",
+      "status": "pass",
+      "evidence": [
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\workflow-verification.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\native\\exports\\stoneford-unity.unitypackage",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\delivery-verification.json"
+      ]
+    },
+    {
+      "id": "C5",
+      "description": "用用户原素材生成新地图并验收素材来源、编辑与连续室内",
+      "status": "pass",
+      "evidence": [
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\map\\native-consumption-report.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\map\\tiled-verification.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\map\\nav-check\\nav-report.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\map\\preview\\preview-qa.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\visual-audit.json",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\image-open-report.json"
+      ]
+    },
+    {
+      "id": "C6",
+      "description": "交付完整操作流程及未覆盖项的准确状态",
+      "status": "pass",
+      "evidence": [
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\README.md",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\replay.ps1",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\ronintile-material-workflow.zip",
+        "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\delivery-verification.json"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\ronintile-material-workflow.zip",
+      "description": "ronintile-material-workflow.zip",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\delivery-verification.json",
+      "description": "delivery-verification.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\README.md",
+      "description": "deliverable/README.md",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\map\\stoneford.tmx",
+      "description": "deliverable/map/stoneford.tmx",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\native\\project.json",
+      "description": "deliverable/native/project.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\map\\preview\\preview.html",
+      "description": "deliverable/map/preview/preview.html",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\evidence\\coverage.json",
+      "description": "deliverable/evidence/coverage.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\image-open-report.json",
+      "description": "image-open-report.json",
+      "required": true
+    }
+  ],
+  "notes": [
+    "完整表示本轮8px正交原素材CLI工作流逐阶段覆盖，不表示全站独立重写。",
+    "实际执行原版2.1.0-pro引擎，111个业务模块/导出模板保留；自写CLI/宿主修复/本项目连续室内预览。",
+    "原skill整图AI扩展与RoninTile素材处理是两个模块；本轮按用户原素材要求验收后者。",
+    "未验收：完整GUI、等距、旧格式迁移、79 API全部组合、Unity/Godot/GMS/Defold引擎运行。",
+    "原PNG和Meta哈希未变；原生结果与独立重建、Tiled重绘最大RGBA差1/255。",
+    "10建筑包含9封闭建筑和1开放棚亭；全为同图进出，预览行为不代表Unity运行。",
+    "旧AI整图扩图实验不符合当前请求，已标记userRejected，不再列为本任务成果。"
+  ]
+}

@@ -1,0 +1,32 @@
+.propertyrelationprop-remove-view {
+    width:17px;
+    height:17px;
+    right:8px;
+    top:8px;
+    border-radius: 8px;
+    background: var(--color1);
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.propertyrelationprop-prop-container-view {
+    height: 152px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    position: relative;
+    width: auto;
+}
+
+.propertyrelationprop-bg-container-view {
+    height: 92px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-width: 1px 0px 0px 0px;
+    border-style: solid;
+    border-color: var(--color1);
+    box-sizing: border-box;
+    position: relative;
+    width: auto;
+}

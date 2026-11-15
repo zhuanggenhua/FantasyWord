@@ -1,0 +1,55 @@
+{
+  "repository": "https://github.com/0x0funky/agent-sprite-forge",
+  "revision": "5324342fdfab72430f4e9604f3fe427009f8596d",
+  "subdirectory": "skills/generate2dmap",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "b1d0b1842a2d8a22572b72e615b0ada9e3c624998274d8e41c6136e4496fd204"
+    },
+    {
+      "path": "references/layered-map-contract.md",
+      "sha256": "9c3e51ba61a077a1e7ad8696a7142e41a73a111b143b54347b229c37eb1e142c"
+    },
+    {
+      "path": "references/runtime/map-runtime.mjs",
+      "sha256": "c1fc3d9bf15cfa53fdfeb050ce4252f7ace4c923066ca4e135dea576e7445273"
+    },
+    {
+      "path": "references/schemas/common.schema.json",
+      "sha256": "8670fd7e6a745d4d0d05cbb24a8e0b5e39fc9c84b657acdf33af95a991e37645"
+    },
+    {
+      "path": "references/schemas/map.schema.json",
+      "sha256": "74a40e04e436d1517a688dc3a808ea2293d5cd55f9c3ca2e81a2d959090499cc"
+    },
+    {
+      "path": "scripts/build_scene_preview.py",
+      "sha256": "d217040286dbf7580f4eab68c21f4e511844235a728eb562e616c9104abc4b4a"
+    },
+    {
+      "path": "scripts/export_tiled.py",
+      "sha256": "d0d3b7f90a1923d149f7b46c45d1cd301155fc1318284c870102be42cb423774"
+    },
+    {
+      "path": "scripts/forge_core.py",
+      "sha256": "f227ac7fd81335544a9f33f23cde74324a4e6f906146581562e705d4214bf61b"
+    },
+    {
+      "path": "scripts/forge_nav.py",
+      "sha256": "e2b108f184b18c0990f3a12a3aeeb608be296e1b5d3dc4cc394197e3484272cd"
+    },
+    {
+      "path": "scripts/forge_schema.py",
+      "sha256": "fc3a6efd4f94161a00d0d71d8e823c5ecb9f14fcf7b14598210937d8666b50c6"
+    },
+    {
+      "path": "scripts/map_bundle.py",
+      "sha256": "08ad9bceaefeee59deb2022abd4d30ad41a1693560bfa526466b8ac23f9e4e09"
+    },
+    {
+      "path": "scripts/map_nav.py",
+      "sha256": "b479e0229cf015db4ef1e93cf012bc3d4c8f296483599d8a28e8c49984ab5fc8"
+    }
+  ]
+}

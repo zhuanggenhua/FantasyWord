@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="GMS2 Assets">
+
+	<translation name="_TLBlob">
+		<map from="0" to="46"/>
+		<map from="2" to="44"/>
+		<map from="8" to="43"/>
+		<map from="10" to="41"/>
+		<map from="14" to="40"/>
+		<map from="32" to="42"/>
+		<map from="34" to="32"/>
+		<map from="40" to="35"/>
+		<map from="42" to="19"/>
+		<map from="46" to="18"/>
+		<map from="56" to="34"/>
+		<map from="58" to="17"/>
+		<map from="62" to="16"/>
+		<map from="128" to="45"/>
+		<map from="130" to="39"/>
+		<map from="131" to="38"/>
+		<map from="136" to="33"/>
+		<map from="138" to="31"/>
+		<map from="139" to="30"/>
+		<map from="142" to="29"/>
+		<map from="143" to="28"/>
+		<map from="160" to="37"/>
+		<map from="162" to="27"/>
+		<map from="163" to="25"/>
+		<map from="168" to="23"/>
+		<map from="170" to="15"/>
+		<map from="171" to="14"/>
+		<map from="174" to="13"/>
+		<map from="175" to="12"/>
+		<map from="184" to="22"/>
+		<map from="186" to="11"/>
+		<map from="187" to="10"/>
+		<map from="190" to="9"/>
+		<map from="191" to="8"/>
+		<map from="224" to="36"/>
+		<map from="226" to="26"/>
+		<map from="227" to="24"/>
+		<map from="232" to="21"/>
+		<map from="234" to="7"/>
+		<map from="235" to="6"/>
+		<map from="238" to="5"/>
+		<map from="239" to="4"/>
+		<map from="248" to="20"/>
+		<map from="250" to="3"/>
+		<map from="251" to="2"/>
+		<map from="254" to="1"/>
+		<map from="255" to="0"/>
+	<!--|||||||||||||||||||||||||||||||||--></translation>
+
+	<translation name="_TLWang">
+		<map from="0" to="15"/>
+		<map from="1" to="14"/>
+		<map from="2" to="13"/>
+		<map from="3" to="12"/>
+		<map from="4" to="7"/>
+		<map from="5" to="6"/>
+		<map from="6" to="5"/>
+		<map from="7" to="4"/>
+		<map from="8" to="11"/>
+		<map from="9" to="10"/>
+		<map from="10" to="9"/>
+		<map from="11" to="8"/>
+		<map from="12" to="3"/>
+		<map from="13" to="2"/>
+		<map from="14" to="1"/>
+		<map from="15" to="0"/>
+	<!--|||||||||||||||||||||||||||||||||--></translation>
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<folder><!----><name>sprites</name><!----><directory-contents>
+
+			<folder><!----><name>sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<folder><!----><name>layers</name><!----><directory-contents>
+
+					<folder><!----><name><GUID v="_GUIDSprite"/></name><!----><directory-contents>
+
+						<image-file><!----><name><GUID v="_GUIDLayer"/>.png</name>
+									<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+									<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+						|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--					|-->	<ivar v="_tile.image">
+<!--					|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--					|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--					|-->	</ivar>
+<!--					|--></image-contents></image-loop><!--
+						|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+					<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+				<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+				<image-file><!----><name><GUID v="_GUIDSprite"/>.png</name>
+							<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+							<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+				|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--			|-->	<ivar v="_tile.image">
+<!--			|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--			|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--			|-->	</ivar>
+<!--			|--></image-contents></image-loop><!--
+				|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+				<text-file><!----><name>sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->  "name": "sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->  "HTile": false,
+<!--			|-->  "VTile": false,
+<!--			|-->  "For3D": false,
+<!--			|-->  "preMultiplyAlpha": false,
+<!--			|-->  "edgeFiltering": false,
+<!--			|-->  "collisionTolerance": 0,
+<!--			|-->  "bbox_left": 0,
+<!--			|-->  "bbox_right": <nvar expression="min(x0+1, 8)*x1-1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->  "bbox_top": 0,
+<!--			|-->  "bbox_bottom": <nvar expression="ceil((x0+1)/8)*x1-1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->  "origin": 0,
+<!--			|-->  "bboxMode": 0,
+<!--			|-->  "collisionKind": 1,
+<!--			|-->  "type": 0,
+<!--			|-->  "swfPrecision": 2.525,
+<!--			|-->  "width": <nvar expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->  "height": <nvar expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->  "textureGroupId": {
+<!--			|-->    "name": "Default",
+<!--			|-->    "path": "texturegroups/Default",
+<!--			|-->  },
+<!--			|-->  "swatchColours": null,
+<!--			|-->  "gridX": 0,
+<!--			|-->  "gridY": 0,
+<!--			|-->  "frames": [
+<!--			|-->    {"compositeImage":{"FrameId":{"name":"<GUID v="_GUIDSprite"/>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
+<!--			|-->        {"FrameId":{"name":"<GUID v="_GUIDSprite"/>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"LayerId":{"name":"<GUID v="_GUIDLayer"/>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+<!--			|-->      ],"parent":{"name":"sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"resourceVersion":"1.0","name":"<GUID v="_GUIDSprite"/>","tags":[],"resourceType":"GMSpriteFrame",},
+<!--			|-->  ],
+<!--			|-->  "sequence": {
+<!--			|-->    "tracks": [
+<!--			|-->      {"name":"frames","spriteId":null,"keyframes":{"Keyframes":[
+<!--			|-->            {"id":"<GUID v="_GUIDSequenceTracks"/>","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"<GUID v="_GUIDSprite"/>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe&lt;SpriteFrameKeyframe&gt;",},
+<!--			|-->          ],"resourceVersion":"1.0","resourceType":"KeyframeStore&lt;SpriteFrameKeyframe&gt;",},"trackColour":0,"inheritsTrackColour":true,"builtinName":0,"traits":0,"interpolation":1,"tracks":[],"events":[],"modifiers":[],"isCreationTrack":false,"resourceVersion":"1.0","tags":[],"resourceType":"GMSpriteFramesTrack",},
+<!--			|-->    ],
+<!--			|-->    "name": "Sprite2",
+<!--			|-->    "spriteId": {"name":"sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},
+<!--			|-->    "timeUnits": 1,
+<!--			|-->    "playback": 1,
+<!--			|-->    "playbackSpeed": 30.0,
+<!--			|-->    "playbackSpeedType": 0,
+<!--			|-->    "autoRecord": true,
+<!--			|-->    "volume": 1.0,
+<!--			|-->    "length": 1.0,
+<!--			|-->    "events": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore&lt;MessageEventKeyframe&gt;",},
+<!--			|-->    "moments": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore&lt;MomentsEventKeyframe&gt;",},
+<!--			|-->    "visibleRange": null,
+<!--			|-->    "lockOrigin": false,
+<!--			|-->    "showBackdrop": true,
+<!--			|-->    "showBackdropImage": false,
+<!--			|-->    "backdropImagePath": "",
+<!--			|-->    "backdropImageOpacity": 0.5,
+<!--			|-->    "backdropWidth": 1366,
+<!--			|-->    "backdropHeight": 768,
+<!--			|-->    "backdropXOffset": 0.0,
+<!--			|-->    "backdropYOffset": 0.0,
+<!--			|-->    "xorigin": 0,
+<!--			|-->    "yorigin": 0,
+<!--			|-->    "eventToFunction": {},
+<!--			|-->    "eventStubScript": null,
+<!--			|-->    "parent": {"name":"sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},
+<!--			|-->    "resourceVersion": "1.3",
+<!--			|-->    "tags": [],
+<!--			|-->    "resourceType": "GMSequence",
+<!--			|-->  },
+<!--			|-->  "layers": [
+<!--			|-->    {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"<GUID v="_GUIDLayer"/>","tags":[],"resourceType":"GMImageLayer",},
+<!--			|-->  ],
+<!--			|-->  "parent": {
+<!--			|-->    "name": "Sprites",
+<!--			|-->    "path": "folders/Sprites.yy",
+<!--			|-->  },
+<!--			|-->  "resourceVersion": "1.0",
+<!--			|-->  "tags": [],
+<!--			|-->  "resourceType": "GMSprite",
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name>tilesets</name><!----><directory-contents>
+
+			<folder><!----><name>tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<image-file><!----><name>output_tileset.png</name>
+							<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+							<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+				|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--			|-->	<ivar v="_tile.image">
+<!--			|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--			|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--			|-->	</ivar>
+<!--			|--></image-contents></image-loop><!--
+				|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+				<text-file><!----><name>tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->  "name": "tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->  "spriteId": {
+<!--			|-->    "name": "sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->    "path": "sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",
+<!--			|-->  },
+<!--			|-->  "tileWidth": <var v="tile_size"/>,
+<!--			|-->  "tileHeight": <var v="tile_size"/>,
+<!--			|-->  "tilexoff": 0,
+<!--			|-->  "tileyoff": 0,
+<!--			|-->  "tilehsep": 0,
+<!--			|-->  "tilevsep": 0,
+<!--			|-->  "spriteNoExport": true,
+<!--			|-->  "textureGroupId": {
+<!--			|-->    "name": "Default",
+<!--			|-->    "path": "texturegroups/Default",
+<!--			|-->  },
+<!--			|-->  "out_tilehborder": 0,
+<!--			|-->  "out_tilevborder": 0,
+<!--			|-->  "out_columns": <nvar expression="min(x0+1, 8)"><x v="tile_count"/></nvar>,
+<!--			|-->  "tile_count": <nvar expression="ceil((x0+1)/8)*min(x0+1, 8)"><x v="tile_count"/></nvar>,
+<!--			|-->  "autoTileSets": [<list-loop foreach="blobset"><as i="_blobset"/><as i="_basetile"/><text-contents>
+<!--			|-->    {"tiles":[<grid-loop foreach="_blobset.member"><as i="_member"/><as i="_tile"/><width expression="1"/><height expression="47"></height><grid-x expression="0"/><grid-y><x v="_member.role" tl="_TLBlob"/></grid-y><separator-y>,</separator-y><text-contents>
+<!--			|-->        <nvar expression="x0+1"><x v="_tile.index"/></nvar></text-contents><null-contents>
+<!--			|-->        0</null-contents></grid-loop>
+<!--			|-->            ],"closed_edge":false,"resourceVersion":"1.0","name":"autotile_<var v="_blobset.index"/>","tags":[],"resourceType":"GMAutoTileSet",},</text-contents></list-loop><list-loop foreach="wangset"><as i="_wangset"/><as i="_basetile"/><text-contents>
+<!--			|-->    {"tiles":[<grid-loop foreach="_wangset.member"><as i="_member"/><as i="_tile"/><width expression="1"/><height expression="16"></height><grid-x expression="0"/><grid-y><x v="_member.role" tl="_TLWang"/></grid-y><separator-y>,</separator-y><text-contents>
+<!--			|-->        <nvar expression="x0+1"><x v="_tile.index"/></nvar></text-contents><null-contents>
+<!--			|-->        0</null-contents></grid-loop>
+<!--			|-->            ],"closed_edge":false,"resourceVersion":"1.0","name":"autotile_<nvar expression="x0+x1"><x v="blobset_count"/><x v="_wangset.index"/></nvar>","tags":[],"resourceType":"GMAutoTileSet",},</text-contents></list-loop>
+<!--			|-->  ],
+<!--			|-->  "tileAnimationFrames": [],
+<!--			|-->  "tileAnimationSpeed": 15.0,
+<!--			|-->  "tileAnimation": {
+<!--			|-->    "FrameData": [
+<!--			|--><list-loop foreach="tile"><as i="_tile"/><text-contents>      <var v="_tile.index"/></text-contents><separator>,
+<!--			|--></separator></list-loop>
+<!--			|-->    ],
+<!--			|-->    "SerialiseFrameCount": 1,
+<!--			|-->  },
+<!--			|-->  "macroPageTiles": {
+<!--			|-->    "SerialiseWidth": 0,
+<!--			|-->    "SerialiseHeight": 0,
+<!--			|-->    "TileSerialiseData": [],
+<!--			|-->  },
+<!--			|-->  "parent": {
+<!--			|-->    "name": "Tile Sets",
+<!--			|-->    "path": "folders/Tile Sets.yy",
+<!--			|-->  },
+<!--			|-->  "resourceVersion": "1.0",
+<!--			|-->  "tags": [],
+<!--			|-->  "resourceType": "GMTileSet",
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<text-file><!----><name><var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yyp</name><!----><text-contents><!--
+		|-->{
+<!--	|-->  "resources": [
+<!--	|-->	{"id":{"name":"tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>","path":"tilesets/tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"order":0,},
+<!--	|-->    {"id":{"name":"sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>","path":"sprites/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>/sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",},"order":0,},
+<!--	|-->  ],
+<!--	|-->  "Options": [
+<!--	|-->    {"name":"Main","path":"options/main/options_main.yy",},
+<!--	|-->    {"name":"Windows","path":"options/windows/options_windows.yy",},
+<!--	|-->  ],
+<!--	|-->  "isDnDProject": true,
+<!--	|-->  "isEcma": false,
+<!--	|-->  "tutorialPath": "",
+<!--	|-->  "configs": {
+<!--	|-->    "name": "Default",
+<!--	|-->    "children": [],
+<!--	|-->  },
+<!--	|-->  "RoomOrder": [],
+<!--	|-->  "Folders": [
+<!--	|-->    {"folderPath":"folders/Sprites.yy","order":1,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Tile Sets.yy","order":2,"resourceVersion":"1.0","name":"Tile Sets","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Sounds.yy","order":3,"resourceVersion":"1.0","name":"Sounds","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Paths.yy","order":4,"resourceVersion":"1.0","name":"Paths","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Scripts.yy","order":5,"resourceVersion":"1.0","name":"Scripts","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Shaders.yy","order":6,"resourceVersion":"1.0","name":"Shaders","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Fonts.yy","order":7,"resourceVersion":"1.0","name":"Fonts","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Timelines.yy","order":8,"resourceVersion":"1.0","name":"Timelines","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Objects.yy","order":9,"resourceVersion":"1.0","name":"Objects","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Rooms.yy","order":10,"resourceVersion":"1.0","name":"Rooms","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Sequences.yy","order":11,"resourceVersion":"1.0","name":"Sequences","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Animation Curves.yy","order":12,"resourceVersion":"1.0","name":"Animation Curves","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Notes.yy","order":13,"resourceVersion":"1.0","name":"Notes","tags":[],"resourceType":"GMFolder",},
+<!--	|-->    {"folderPath":"folders/Extensions.yy","order":14,"resourceVersion":"1.0","name":"Extensions","tags":[],"resourceType":"GMFolder",},
+<!--	|-->  ],
+<!--	|-->  "AudioGroups": [
+<!--	|-->    {"targets":461609314234257646,"resourceVersion":"1.0","name":"audiogroup_default","resourceType":"GMAudioGroup",},
+<!--	|-->  ],
+<!--	|-->  "TextureGroups": [
+<!--	|-->    {"isScaled":true,"autocrop":true,"border":2,"mipsToGenerate":0,"targets":461609314234257646,"resourceVersion":"1.0","name":"Default","resourceType":"GMTextureGroup",},
+<!--	|-->  ],
+<!--	|-->  "IncludedFiles": [],
+<!--	|-->  "MetaData": {
+<!--	|-->    "IDEVersion": "2.3.0.529",
+<!--	|-->  },
+<!--	|-->  "resourceVersion": "1.3",
+<!--	|-->  "name": "gms232",
+<!--	|-->  "tags": [],
+<!--	|-->  "resourceType": "GMProject",
+<!--	|-->}<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

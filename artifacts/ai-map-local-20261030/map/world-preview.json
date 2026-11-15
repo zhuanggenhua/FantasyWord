@@ -1,0 +1,18 @@
+{
+  "map": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\map\\frontier-world.tmx",
+  "fingerprint": "36afc407bd990aa0c8a9657b4f33a33ddb42b98e5193f764999185c3d90882b8",
+  "worldBounds": [
+    0,
+    0,
+    3008,
+    941
+  ],
+  "size": [
+    3008,
+    941
+  ],
+  "chunks": 2,
+  "unityVerified": false,
+  "collisionVerified": false,
+  "artworkOnly": true
+}

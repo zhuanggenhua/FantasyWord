@@ -1,0 +1,580 @@
+{
+  "tileSize": 8,
+  "steps": [
+    {
+      "op": "import",
+      "image": "inputs/floor.png",
+      "at": [
+        0,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/road.png",
+      "at": [
+        4,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/prop.png",
+      "at": [
+        20,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-0.png",
+      "at": [
+        80,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-1.png",
+      "at": [
+        81,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-2.png",
+      "at": [
+        82,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-3.png",
+      "at": [
+        83,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-4.png",
+      "at": [
+        84,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-5.png",
+      "at": [
+        85,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-6.png",
+      "at": [
+        86,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-7.png",
+      "at": [
+        87,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-8.png",
+      "at": [
+        88,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-9.png",
+      "at": [
+        89,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-10.png",
+      "at": [
+        90,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-11.png",
+      "at": [
+        91,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-12.png",
+      "at": [
+        92,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-13.png",
+      "at": [
+        93,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-14.png",
+      "at": [
+        94,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-15.png",
+      "at": [
+        95,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-16.png",
+      "at": [
+        96,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/cobble-17.png",
+      "at": [
+        97,
+        0
+      ]
+    },
+    {
+      "op": "call",
+      "function": "getTileSet",
+      "args": [
+        0,
+        0
+      ],
+      "as": "floor"
+    },
+    {
+      "op": "call",
+      "function": "getTileSet",
+      "args": [
+        4,
+        0
+      ],
+      "as": "road"
+    },
+    {
+      "op": "build-borders",
+      "kind": "wang",
+      "cells": [
+        [
+          4,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "op": "relation",
+      "kind": "wang",
+      "tile": "road",
+      "other": "floor",
+      "slots": [
+        {
+          "tile": [
+            81,
+            0
+          ],
+          "r": 1,
+          "c": false,
+          "cutoff": 0,
+          "fx": true
+        },
+        {
+          "tile": [
+            85,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            87,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            83,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            80,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            82,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            88,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            86,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            89,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            90,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            91,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        },
+        {
+          "tile": [
+            92,
+            0
+          ],
+          "r": 0,
+          "c": false,
+          "cutoff": 0
+        }
+      ]
+    },
+    {
+      "op": "prop",
+      "rect": [
+        20,
+        0,
+        2,
+        2
+      ]
+    },
+    {
+      "op": "layer",
+      "index": 0,
+      "name": "地面"
+    },
+    {
+      "op": "draw",
+      "tile": "floor",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ]
+    },
+    {
+      "op": "paint",
+      "tile": "road",
+      "rect": [
+        2,
+        8,
+        28,
+        5
+      ]
+    },
+    {
+      "op": "paint",
+      "tile": "road",
+      "rect": [
+        10,
+        3,
+        5,
+        17
+      ]
+    },
+    {
+      "op": "layer",
+      "name": "物件"
+    },
+    {
+      "op": "paint",
+      "tile": [
+        20,
+        0
+      ],
+      "cells": [
+        [
+          5,
+          4
+        ],
+        [
+          22,
+          16
+        ]
+      ],
+      "layer": 1
+    },
+    {
+      "op": "undo"
+    },
+    {
+      "op": "redo"
+    },
+    {
+      "op": "save",
+      "name": "checkpoint"
+    },
+    {
+      "op": "reload",
+      "name": "checkpoint"
+    },
+    {
+      "op": "render",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-render"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "JSON",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-JSON"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Image",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-Image"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Unity",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-Unity"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Godot",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-Godot"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "GMS2",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-GMS2"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "GMS2 (2.3.0)",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-GMS2-2.3.0"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Defold",
+      "rect": [
+        0,
+        0,
+        32,
+        24
+      ],
+      "name": "map-Defold"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "JSON",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-JSON"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "Image",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-Image"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "Unity",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-Unity"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "Godot",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-Godot"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "GMS2",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-GMS2"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "GMS2 (2.3.0)",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-GMS2-2.3.0"
+    },
+    {
+      "op": "export",
+      "domain": "set",
+      "format": "Defold",
+      "rect": [
+        0,
+        0,
+        104,
+        20
+      ],
+      "name": "set-Defold"
+    }
+  ]
+}

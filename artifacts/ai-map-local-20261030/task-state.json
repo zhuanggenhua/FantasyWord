@@ -1,0 +1,86 @@
+{
+  "goal": "完成可由CLI驱动的本地地图拼接工具，并以新生成地图验证邻接扩图和Tiled编辑",
+  "status": "complete",
+  "acceptance_criteria": [
+    {
+      "id": "C1",
+      "description": "查明参考地图拼接流程及复用边界",
+      "status": "pass",
+      "evidence": [
+        "design.md",
+        "source-and-generation.json"
+      ]
+    },
+    {
+      "id": "C2",
+      "description": "实现TMX为作者源的本地拼接CLI",
+      "status": "pass",
+      "evidence": [
+        "../../scripts/ai-map-experiment/map_stitch.py",
+        "verification.json"
+      ]
+    },
+    {
+      "id": "C3",
+      "description": "新生成地图完成起始块和相邻扩展的真实拼接",
+      "status": "pass",
+      "evidence": [
+        "map/frontier-world.tmx",
+        "east-job/commit-report.json",
+        "map/world-preview.png"
+      ]
+    },
+    {
+      "id": "C4",
+      "description": "验证旧像素保留和Tiled原生重读",
+      "status": "pass",
+      "evidence": [
+        "verification.json",
+        "delivery-verification.json"
+      ]
+    },
+    {
+      "id": "C5",
+      "description": "交付可编辑地图、操作说明与明确能力边界",
+      "status": "pass",
+      "evidence": [
+        "README.md",
+        "visual-review.json",
+        "local-map-tool-and-demo.zip"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\map\\frontier-world.tmx",
+      "description": "map/frontier-world.tmx",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\map\\world-preview.png",
+      "description": "map/world-preview.png",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\verification.json",
+      "description": "verification.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\README.md",
+      "description": "README.md",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\local-map-tool-and-demo.zip",
+      "description": "local-map-tool-and-demo.zip",
+      "required": true
+    }
+  ],
+  "notes": [
+    "完成范围为独立本地拼接工具及真实两块生成美术工程，未完成可行走地图、独立室内屋顶和Unity接入。",
+    "用户明确指出整图AI扩图不符合原素材拼接目标；历史检查仅覆盖旧实验，不作为当前请求完成证据。"
+  ],
+  "acceptedAsRequestedDeliverable": false,
+  "userRejected": true
+}

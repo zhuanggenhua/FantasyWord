@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="layer_0_map-Godot.tscn" type="PackedScene" id=0]
+[ext_resource path="layer_1_map-Godot.tscn" type="PackedScene" id=1]
+
+[node name="map_map-Godot" type="Node2D"]
+[node name="0_地面" parent="." instance=ExtResource( 0 )]
+[node name="1_物件" parent="." instance=ExtResource( 1 )]

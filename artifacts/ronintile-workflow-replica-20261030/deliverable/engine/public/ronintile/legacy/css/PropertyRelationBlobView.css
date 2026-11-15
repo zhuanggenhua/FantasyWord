@@ -1,0 +1,141 @@
+.propertyrelationblob-section-container-view {
+	width: 100%;
+	height: auto;
+	min-height: 0;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+}
+
+.propertyrelationblob-relation-section-view {
+    border-right: 1px solid var(--color1);
+    display: inline-block;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    overflow-y: visible;
+}
+
+.propertyrelationblob-rule-section-view {
+	flex-grow: 1;
+	position: relative;
+	overflow: hidden;
+}
+
+.propertyrelationblob-relation-container-view {
+    margin: 8px;
+    line-height: 0px;
+}
+
+.propertyrelationblob-tile-image-view {
+    width: 16px;
+	height: 16px;
+    border-radius: 2px;
+    display: inline-block;
+    background: var(--color1);
+    line-height: 0px;
+    background-size: 16px;
+}
+
+.propertyrelationblob-remove-view {
+    width:17px;
+    height:17px;
+    border-radius: 8px;
+    display: inline-block;
+    background: var(--color1);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.propertyrelationblob-rule-container-view {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	width: 120px;
+	height: 120px;
+}
+
+.propertyrelationblob-tile-image-rule-view {
+    width: 16px;
+	height: 16px;
+    border-radius: 2px;
+    position: absolute;
+    background: var(--color1);
+    background-size: 16px;
+}
+
+.propertyrelationblob-tile-image-rule-view-display {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    background-size: 16px;
+}
+
+.propertyrelationblob-tile-image-rule-select-view {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    border-style: solid;
+    border-color: var(--colorSelect);
+    border-width: 2px;
+    box-sizing: border-box;
+    visibility: hidden;
+}
+
+.propertyrelationblob-tile-image-rule-large-view {
+    width: 32px;
+	height: 32px;
+    border-radius: 4px;
+    position: absolute;
+    background: var(--color1);
+    background-size: 32px;
+}
+
+.propertyrelationblob-tile-image-rule-large-view-display {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    background-size: 32px;
+}
+
+.propertyrelationblob-tile-image-rule-large-select-view {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: var(--colorSelect);
+    border-width: 4px;
+    box-sizing: border-box;
+    visibility: hidden;
+}
+
+:root {
+    --hlStripe: 5.655px;
+    --hlStripes: 11.31px;
+}
+
+@keyframes propertytiling-highlight-anim {
+    0% {
+        background-position: 0px 8px;
+    }
+    100% {
+        background-position: 0px 24px;
+    }
+}
+
+.propertyrelationblob-tile-highlight-view {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    background: repeating-linear-gradient(135deg, transparent, transparent, var(--hlStripe), var(--color2) var(--hlStripe), var(--color2) var(--hlStripes));
+    background-size: 32px 32px;
+    background-position: 0px 0px;
+    animation: propertytiling-highlight-anim 1s infinite;
+    visibility: hidden;
+}

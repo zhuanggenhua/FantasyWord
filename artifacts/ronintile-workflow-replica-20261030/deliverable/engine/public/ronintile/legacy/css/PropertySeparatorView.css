@@ -1,0 +1,9 @@
+.propertyseparator-view {
+    height: 2px;
+    position: relative;
+    background: linear-gradient(90deg, transparent, var(--colorRust), var(--colorSelect), var(--colorRust), transparent);
+    opacity: 0.78;
+    margin: 8px;
+	margin-left: 4px;
+	margin-right: 4px;
+}

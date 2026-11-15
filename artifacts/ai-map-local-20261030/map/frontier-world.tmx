@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<map version="1.10" orientation="orthogonal" renderorder="right-down" width="376" height="118" tilewidth="8" tileheight="8" infinite="0" nextlayerid="6" nextobjectid="1">
+  <properties>
+    <property name="localMapStitchVersion" value="1" />
+    <property name="worldMode" value="continuous" />
+    <property name="artworkOnly" value="true" />
+  </properties>
+  <group id="1" name="地图图块">
+    <imagelayer id="4" name="seed" offsetx="0" offsety="0" class="WorldChunk">
+      <properties>
+        <property name="chunkId" value="seed" />
+      </properties>
+      <image source="assets/seed-3b86a9e83b2b.png" width="1672" height="941" />
+    </imagelayer>
+    <imagelayer id="5" name="east" offsetx="1336" offsety="0" class="WorldChunk">
+      <properties>
+        <property name="chunkId" value="east" />
+      </properties>
+      <image source="assets/east-6a3110c75d33.png" width="1672" height="941" />
+    </imagelayer>
+  </group>
+  <objectgroup id="2" name="碰撞标注" visible="0" class="Collision" />
+  <objectgroup id="3" name="地标与入口" class="Landmarks" />
+</map>

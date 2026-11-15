@@ -1,0 +1,48 @@
+.propertydiscreteslider-view {
+    margin: 8px;
+	margin-left: 8px;
+	margin-right: 8px;
+	color: var(--color2);
+	display: inline-block;
+	font-size: 12px;
+	font-family: mainFont;
+	display: flex;
+	align-items: center;
+}
+
+.propertydiscreteslider-slot-view {
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    display: inline-block;
+    overflow: hidden;
+
+    border-width: 1px;
+    border-radius: 2px;
+    border-style: solid;
+    border-color: var(--color2);
+}
+
+.propertydiscreteslider-separator-view {
+    width: 4px;
+    height: 4px;
+    display: inline-block;
+    overflow: hidden;
+    background: var(--colorRust);
+}
+
+.propertydiscreteslider-slot-checked-view {
+	position: relative;
+	width: 0%;
+	height: 0%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	transition: width 0.1s, height 0.1s;
+	box-sizing: border-box;
+    border-width: 1px;
+    border-radius: 2px;
+    border-style: solid;
+    border-color: var(--rtInset);
+    background: var(--color2);
+}

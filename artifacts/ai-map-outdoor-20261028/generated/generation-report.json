@@ -1,0 +1,10 @@
+{
+  "status": "generated",
+  "tile_cells": 1920,
+  "unique_original_sprites": 122,
+  "objects": 132,
+  "trees": 20,
+  "blocked_terrain_cells": 460,
+  "art_source": "existing",
+  "seed": 20261028
+}

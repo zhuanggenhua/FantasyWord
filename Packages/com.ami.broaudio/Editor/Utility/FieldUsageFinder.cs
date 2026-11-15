@@ -94,13 +94,13 @@ public class FieldUsageFinder : EditorWindow
                         namespaceItem.AddChild(typeItem);
                     }
 
-                    if (namespaceItem.children.Any())
+                    if (namespaceItem.childList.Any())
                     {
                         assemblyItem.AddChild(namespaceItem);
                     }
                 }
 
-                if (assemblyItem.children.Any())
+                if (assemblyItem.childList.Any())
                 {
                     root.AddChild(assemblyItem);
                 }

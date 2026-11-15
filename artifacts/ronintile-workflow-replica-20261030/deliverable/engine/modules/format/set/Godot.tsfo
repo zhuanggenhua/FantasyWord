@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="Godot Assets">
+
+	<translation name="_TLBlob">
+		<map from="0" to="16"/>
+		<map from="2" to="18"/>
+		<map from="8" to="48"/>
+		<map from="10" to="50"/>
+		<map from="14" to="54"/>
+		<map from="32" to="144"/>
+		<map from="34" to="146"/>
+		<map from="40" to="176"/>
+		<map from="42" to="178"/>
+		<map from="46" to="182"/>
+		<map from="56" to="432"/>
+		<map from="58" to="434"/>
+		<map from="62" to="438"/>
+		<map from="128" to="24"/>
+		<map from="130" to="26"/>
+		<map from="131" to="27"/>
+		<map from="136" to="56"/>
+		<map from="138" to="58"/>
+		<map from="139" to="59"/>
+		<map from="142" to="62"/>
+		<map from="143" to="63"/>
+		<map from="160" to="152"/>
+		<map from="162" to="154"/>
+		<map from="163" to="155"/>
+		<map from="168" to="184"/>
+		<map from="170" to="186"/>
+		<map from="171" to="187"/>
+		<map from="174" to="190"/>
+		<map from="175" to="191"/>
+		<map from="184" to="440"/>
+		<map from="186" to="442"/>
+		<map from="187" to="443"/>
+		<map from="190" to="446"/>
+		<map from="191" to="447"/>
+		<map from="224" to="216"/>
+		<map from="226" to="218"/>
+		<map from="227" to="219"/>
+		<map from="232" to="248"/>
+		<map from="234" to="250"/>
+		<map from="235" to="251"/>
+		<map from="238" to="254"/>
+		<map from="239" to="255"/>
+		<map from="248" to="504"/>
+		<map from="250" to="506"/>
+		<map from="251" to="507"/>
+		<map from="254" to="510"/>
+		<map from="255" to="511"/>
+	<!--|||||||||||||||||||||||||||||||||--></translation>
+
+	<translation name="_TLWang">
+		<map from="0" to="0"/>
+		<map from="1" to="1"/>
+		<map from="2" to="4"/>
+		<map from="3" to="5"/>
+		<map from="4" to="256"/>
+		<map from="5" to="257"/>
+		<map from="6" to="260"/>
+		<map from="7" to="261"/>
+		<map from="8" to="64"/>
+		<map from="9" to="65"/>
+		<map from="10" to="68"/>
+		<map from="11" to="69"/>
+		<map from="12" to="320"/>
+		<map from="13" to="321"/>
+		<map from="14" to="324"/>
+		<map from="15" to="325"/>
+	<!--|||||||||||||||||||||||||||||||||--></translation>
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<image-file><!----><name>tileset_<var v="export_name"/>.png</name>
+					<!----><width expression="x0*x1"><x v="set_width"/><x v="tile_size"/></width>
+					<!----><height expression="x0*x1"><x v="set_height"/><x v="tile_size"/></height><!----><image-contents>	<!--
+		|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--	|-->	<ivar v="_tile.image">
+<!--	|-->		<grid-x expression="x0*x1"><x v="_tile.x"/><x v="tile_size"/></grid-x>
+<!--	|-->		<grid-y expression="x0*x1"><x v="_tile.y"/><x v="tile_size"/></grid-y>
+<!--	|-->	</ivar>
+<!--	|--></image-contents></image-loop><!--
+		|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+		<text-file><!----><name>tileset_<var v="export_name"/>.png.import</name><!----><text-contents><!--
+		|-->[remap]
+<!--	|-->
+<!--	|-->importer="texture"
+<!--	|-->type="StreamTexture"
+<!--	|-->path="res://.import/tileset_<var v="export_name"/>.png-.stex"
+<!--	|-->metadata={
+<!--	|-->"vram_texture": false
+<!--	|-->}
+<!--	|-->
+<!--	|-->[deps]
+<!--	|-->
+<!--	|-->source_file="tileset_<var v="export_name"/>.png"
+<!--	|-->dest_files=[ "res://.import/tileset_<var v="export_name"/>.png-.stex" ]
+<!--	|-->
+<!--	|-->[params]
+<!--	|-->
+<!--	|-->compress/mode=0
+<!--	|-->compress/lossy_quality=0.7
+<!--	|-->compress/hdr_mode=0
+<!--	|-->compress/bptc_ldr=0
+<!--	|-->compress/normal_map=0
+<!--	|-->flags/repeat=0
+<!--	|-->flags/filter=false
+<!--	|-->flags/mipmaps=false
+<!--	|-->flags/anisotropic=false
+<!--	|-->flags/srgb=2
+<!--	|-->process/fix_alpha_border=true
+<!--	|-->process/premult_alpha=false
+<!--	|-->process/HDR_as_SRGB=false
+<!--	|-->process/invert_color=false
+<!--	|-->stream=false
+<!--	|-->size_limit=0
+<!--	|-->detect_3d=true
+<!--	|-->svg/scale=1.0<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<text-file><!----><name>tileset_<var v="export_name"/>.tres</name><!----><text-contents><!--
+		|-->[gd_resource type="TileSet" load_steps=2 format=2]
+<!--	|-->
+<!--	|-->[ext_resource path="tileset_<var v="export_name"/>.png" type="Texture" id=1]
+<!--	|-->
+<!--	|-->[resource]
+<!--	|--><list-loop foreach="misctile"><as i="_misctile"/><as i="_tile"/><text-contents><var v="_misctile.index"/>/name = "tileset_<var v="export_name"/>.png <var v="_misctile.index"/>"
+<!--		|--><var v="_misctile.index"/>/texture = ExtResource( 1 )
+<!--		|--><var v="_misctile.index"/>/tex_offset = Vector2( 0, 0 )
+<!--		|--><var v="_misctile.index"/>/modulate = Color( 1, 1, 1, 1 )
+<!--		|--><var v="_misctile.index"/>/region = Rect2( <nvar expression="x0*x1"><x v="_tile.x"/><x v="tile_size"/></nvar>, <nvar expression="x0*x1"><x v="_tile.y"/><x v="tile_size"/></nvar>, <var v="tile_size"/>, <var v="tile_size"/> )
+<!--		|--><var v="_misctile.index"/>/tile_mode = 0
+<!--		|--><var v="_misctile.index"/>/occluder_offset = Vector2( 0, 0 )
+<!--		|--><var v="_misctile.index"/>/navigation_offset = Vector2( 0, 0 )
+<!--		|--><var v="_misctile.index"/>/shapes = [  ]
+<!--		|--><var v="_misctile.index"/>/z_index = 0
+<!--	|--></text-contents></list-loop><list-loop foreach="blobset"><as i="_blobset"/><as i="_basetile"/><text-contents><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/name = "tileset_<var v="export_name"/>.png <nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>"
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/texture = ExtResource( 1 )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/tex_offset = Vector2( 0, 0 )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/modulate = Color( 1, 1, 1, 1 )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/region = Rect2( 0, 0, <nvar expression="x0*x1"><x v="set_width"/><x v="tile_size"/></nvar>, <nvar expression="x0*x1"><x v="set_height"/><x v="tile_size"/></nvar> )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/tile_mode = 1
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/bitmask_mode = 1
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/bitmask_flags = [ <list-loop foreach="_blobset.member"><as i="_member"/><as i="_tile"/><text-contents>Vector2( <var v="_tile.x"/>, <var v="_tile.y"/> ), <var v="_member.role" tl="_TLBlob"/></text-contents><separator>, </separator></list-loop> ]
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/icon_coordinate = Vector2( <var v="_basetile.x"/>, <var v="_basetile.y"/> )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/tile_size = Vector2( <var v="tile_size"/>, <var v="tile_size"/> )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/spacing = 0
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/occluder_map = [  ]
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/navpoly_map = [  ]
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/priority_map = [  ]
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/autotile/z_index_map = [  ]
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/occluder_offset = Vector2( 0, 0 )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/navigation_offset = Vector2( 0, 0 )
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/shapes = [  ]
+<!--		|--><nvar expression="x0+x1"><x v="misctile_count"/><x v="_blobset.index"/></nvar>/z_index = 0
+<!--	|--></text-contents></list-loop><list-loop foreach="wangset"><as i="_wangset"/><as i="_basetile"/><text-contents><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/name = "tileset_<var v="export_name"/>.png <nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>"
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/texture = ExtResource( 1 )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/tex_offset = Vector2( 0, 0 )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/modulate = Color( 1, 1, 1, 1 )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/region = Rect2( 0, 0, <nvar expression="x0*x1"><x v="set_width"/><x v="tile_size"/></nvar>, <nvar expression="x0*x1"><x v="set_height"/><x v="tile_size"/></nvar> )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/tile_mode = 1
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/bitmask_mode = 0
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/bitmask_flags = [ <list-loop foreach="_wangset.member"><as i="_member"/><as i="_tile"/><text-contents>Vector2( <var v="_tile.x"/>, <var v="_tile.y"/> ), <var v="_member.role" tl="_TLWang"/></text-contents><separator>, </separator></list-loop> ]
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/icon_coordinate = Vector2( <var v="_basetile.x"/>, <var v="_basetile.y"/> )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/tile_size = Vector2( <var v="tile_size"/>, <var v="tile_size"/> )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/spacing = 0
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/occluder_map = [  ]
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/navpoly_map = [  ]
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/priority_map = [  ]
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/autotile/z_index_map = [  ]
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/occluder_offset = Vector2( 0, 0 )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/navigation_offset = Vector2( 0, 0 )
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/shapes = [  ]
+<!--		|--><nvar expression="x0+x1+x2"><x v="misctile_count"/><x v="blobset_count"/><x v="_wangset.index"/></nvar>/z_index = 0
+<!--	|--></text-contents></list-loop><!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

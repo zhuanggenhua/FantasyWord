@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "projectSha256": "7df4de2c767748f81e3c6955f9040117eb5c75da5d17b3d2f96fedb92d44655b",
+  "originalSprites": 154,
+  "placedTiles": 10792,
+  "layers": 146,
+  "allPlacedTilesUseOriginalBaseSources": true,
+  "originalInputsUnchanged": true,
+  "maximumCanvasRoundTripChannelDifference": 1,
+  "unityVerified": false
+}

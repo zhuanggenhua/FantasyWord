@@ -1,0 +1,7024 @@
+{
+  "project": "stoneford-native-v3/project.json",
+  "metadata": {
+    "mapId": "stoneford-waystation",
+    "name": "石渡驿站",
+    "width": 768,
+    "height": 576,
+    "spawn": [
+      20,
+      244
+    ],
+    "buildings": [
+      {
+        "id": "old_watch",
+        "name": "西侧旧哨塔",
+        "x": 48,
+        "y": 32,
+        "width": 40,
+        "height": 72,
+        "geometry": {
+          "InteriorZone": {
+            "x": 61,
+            "y": 56,
+            "width": 13,
+            "height": 48
+          },
+          "ExteriorPoint": {
+            "x": 68,
+            "y": 108,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 68,
+            "y": 86.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 64,
+            "y": 96,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 68,
+            "y": 52,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 56,
+            "y": 40,
+            "width": 24,
+            "height": 16
+          },
+          {
+            "x": 56,
+            "y": 56,
+            "width": 5,
+            "height": 48
+          },
+          {
+            "x": 74,
+            "y": 56,
+            "width": 4,
+            "height": 48
+          },
+          {
+            "x": 61,
+            "y": 96,
+            "width": 3,
+            "height": 8
+          },
+          {
+            "x": 72,
+            "y": 96,
+            "width": 2,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "home_a",
+        "name": "北巷住宅",
+        "x": 96,
+        "y": 120,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 109,
+            "y": 152,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 132,
+            "y": 188,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 132,
+            "y": 166.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 128,
+            "y": 176,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 132,
+            "y": 148,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 104,
+            "y": 136,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 104,
+            "y": 152,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 154,
+            "y": 152,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 109,
+            "y": 176,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 136,
+            "y": 176,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "inn",
+        "name": "驿站旅馆",
+        "x": 192,
+        "y": 136,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 205,
+            "y": 168,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 228,
+            "y": 204,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 228,
+            "y": 182.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 224,
+            "y": 192,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 228,
+            "y": 164,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 200,
+            "y": 152,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 200,
+            "y": 168,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 250,
+            "y": 168,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 205,
+            "y": 192,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 232,
+            "y": 192,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "guild",
+        "name": "商队会所",
+        "x": 328,
+        "y": 120,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 341,
+            "y": 152,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 364,
+            "y": 188,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 364,
+            "y": 166.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 360,
+            "y": 176,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 364,
+            "y": 148,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 336,
+            "y": 136,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 336,
+            "y": 152,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 386,
+            "y": 152,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 341,
+            "y": 176,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 368,
+            "y": 176,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "warehouse",
+        "name": "西侧货栈",
+        "x": 72,
+        "y": 304,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 85,
+            "y": 336,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 108,
+            "y": 372,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 108,
+            "y": 350.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 104,
+            "y": 360,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 108,
+            "y": 332,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 80,
+            "y": 320,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 80,
+            "y": 336,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 130,
+            "y": 336,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 85,
+            "y": 360,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 112,
+            "y": 360,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "market_hall",
+        "name": "集市棚亭",
+        "x": 240,
+        "y": 232,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 248,
+            "y": 264,
+            "width": 56,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 276,
+            "y": 300,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 276,
+            "y": 278.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 272,
+            "y": 288,
+            "width": 8,
+            "height": 8
+          }
+        },
+        "walls": [
+          {
+            "x": 248,
+            "y": 280,
+            "width": 5,
+            "height": 16
+          },
+          {
+            "x": 296,
+            "y": 280,
+            "width": 5,
+            "height": 16
+          }
+        ]
+      },
+      {
+        "id": "smith",
+        "name": "铁匠工坊",
+        "x": 320,
+        "y": 344,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 333,
+            "y": 376,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 356,
+            "y": 412,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 356,
+            "y": 390.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 352,
+            "y": 400,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 356,
+            "y": 372,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 328,
+            "y": 360,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 328,
+            "y": 376,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 378,
+            "y": 376,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 333,
+            "y": 400,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 360,
+            "y": 400,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "home_b",
+        "name": "南侧庭院",
+        "x": 176,
+        "y": 400,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 189,
+            "y": 432,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 212,
+            "y": 468,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 212,
+            "y": 446.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 208,
+            "y": 456,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 212,
+            "y": 428,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 184,
+            "y": 416,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 184,
+            "y": 432,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 234,
+            "y": 432,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 189,
+            "y": 456,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 216,
+            "y": 456,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "home_c",
+        "name": "南岸住宅",
+        "x": 320,
+        "y": 448,
+        "width": 72,
+        "height": 64,
+        "geometry": {
+          "InteriorZone": {
+            "x": 333,
+            "y": 480,
+            "width": 45,
+            "height": 32
+          },
+          "ExteriorPoint": {
+            "x": 356,
+            "y": 516,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 356,
+            "y": 494.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 352,
+            "y": 504,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 356,
+            "y": 476,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 328,
+            "y": 464,
+            "width": 56,
+            "height": 16
+          },
+          {
+            "x": 328,
+            "y": 480,
+            "width": 5,
+            "height": 32
+          },
+          {
+            "x": 378,
+            "y": 480,
+            "width": 4,
+            "height": 32
+          },
+          {
+            "x": 333,
+            "y": 504,
+            "width": 19,
+            "height": 8
+          },
+          {
+            "x": 360,
+            "y": 504,
+            "width": 18,
+            "height": 8
+          }
+        ]
+      },
+      {
+        "id": "east_watch",
+        "name": "东岸路塔",
+        "x": 616,
+        "y": 96,
+        "width": 40,
+        "height": 72,
+        "geometry": {
+          "InteriorZone": {
+            "x": 629,
+            "y": 120,
+            "width": 13,
+            "height": 48
+          },
+          "ExteriorPoint": {
+            "x": 636,
+            "y": 172,
+            "width": 0,
+            "height": 0
+          },
+          "InteriorPoint": {
+            "x": 636,
+            "y": 150.4,
+            "width": 0,
+            "height": 0
+          },
+          "DoorOpening": {
+            "x": 632,
+            "y": 160,
+            "width": 8,
+            "height": 8
+          },
+          "WallProbe": {
+            "x": 636,
+            "y": 116,
+            "width": 0,
+            "height": 0
+          }
+        },
+        "walls": [
+          {
+            "x": 624,
+            "y": 104,
+            "width": 24,
+            "height": 16
+          },
+          {
+            "x": 624,
+            "y": 120,
+            "width": 5,
+            "height": 48
+          },
+          {
+            "x": 642,
+            "y": 120,
+            "width": 4,
+            "height": 48
+          },
+          {
+            "x": 629,
+            "y": 160,
+            "width": 3,
+            "height": 8
+          },
+          {
+            "x": 640,
+            "y": 160,
+            "width": 2,
+            "height": 8
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "name": "地面",
+        "role": "background"
+      },
+      {
+        "name": "河道",
+        "role": "background",
+        "material": "water"
+      },
+      {
+        "name": "商路与广场",
+        "role": "background",
+        "material": "road"
+      },
+      {
+        "name": "桥面",
+        "role": "background"
+      },
+      {
+        "name": "桥栏",
+        "role": "background"
+      },
+      {
+        "name": "低矮植被",
+        "role": "background"
+      },
+      {
+        "name": "西侧旧哨塔 / 室内地板",
+        "role": "background",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "西侧旧哨塔 / 室内墙体",
+        "role": "background",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "北巷住宅 / 室内地板",
+        "role": "background",
+        "buildingId": "home_a"
+      },
+      {
+        "name": "北巷住宅 / 室内墙体",
+        "role": "background",
+        "buildingId": "home_a"
+      },
+      {
+        "name": "驿站旅馆 / 室内地板",
+        "role": "background",
+        "buildingId": "inn"
+      },
+      {
+        "name": "驿站旅馆 / 室内墙体",
+        "role": "background",
+        "buildingId": "inn"
+      },
+      {
+        "name": "商队会所 / 室内地板",
+        "role": "background",
+        "buildingId": "guild"
+      },
+      {
+        "name": "商队会所 / 室内墙体",
+        "role": "background",
+        "buildingId": "guild"
+      },
+      {
+        "name": "西侧货栈 / 室内地板",
+        "role": "background",
+        "buildingId": "warehouse"
+      },
+      {
+        "name": "西侧货栈 / 室内墙体",
+        "role": "background",
+        "buildingId": "warehouse"
+      },
+      {
+        "name": "集市棚亭 / 室内地板",
+        "role": "background",
+        "buildingId": "market_hall"
+      },
+      {
+        "name": "集市棚亭 / 室内墙体",
+        "role": "background",
+        "buildingId": "market_hall"
+      },
+      {
+        "name": "集市棚亭 / 建筑一层立柱",
+        "role": "background",
+        "buildingId": "market_hall"
+      },
+      {
+        "name": "铁匠工坊 / 室内地板",
+        "role": "background",
+        "buildingId": "smith"
+      },
+      {
+        "name": "铁匠工坊 / 室内墙体",
+        "role": "background",
+        "buildingId": "smith"
+      },
+      {
+        "name": "南侧庭院 / 室内地板",
+        "role": "background",
+        "buildingId": "home_b"
+      },
+      {
+        "name": "南侧庭院 / 室内墙体",
+        "role": "background",
+        "buildingId": "home_b"
+      },
+      {
+        "name": "南岸住宅 / 室内地板",
+        "role": "background",
+        "buildingId": "home_c"
+      },
+      {
+        "name": "南岸住宅 / 室内墙体",
+        "role": "background",
+        "buildingId": "home_c"
+      },
+      {
+        "name": "东岸路塔 / 室内地板",
+        "role": "background",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "东岸路塔 / 室内墙体",
+        "role": "background",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "object-50 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-50"
+      },
+      {
+        "name": "object-75 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-75"
+      },
+      {
+        "name": "object-54 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-54"
+      },
+      {
+        "name": "object-55 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-55"
+      },
+      {
+        "name": "object-59 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-59"
+      },
+      {
+        "name": "object-70 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-70"
+      },
+      {
+        "name": "object-73 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-73"
+      },
+      {
+        "name": "object-42 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-42"
+      },
+      {
+        "name": "object-44 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-44"
+      },
+      {
+        "name": "object-48 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-48"
+      },
+      {
+        "name": "object-49 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-49"
+      },
+      {
+        "name": "object-57 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-57"
+      },
+      {
+        "name": "object-60 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-60"
+      },
+      {
+        "name": "object-64 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-64"
+      },
+      {
+        "name": "object-1 / WallWeaponDisplay_Swords",
+        "role": "object",
+        "objectId": "object-1"
+      },
+      {
+        "name": "object-2 / Bench_Long",
+        "role": "object",
+        "objectId": "object-2"
+      },
+      {
+        "name": "object-61 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-61"
+      },
+      {
+        "name": "object-62 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-62"
+      },
+      {
+        "name": "西侧旧哨塔 / 建筑一层",
+        "role": "cover",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "西侧旧哨塔 / 建筑二层",
+        "role": "cover",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "西侧旧哨塔 / 建筑三层",
+        "role": "cover",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "西侧旧哨塔 / 屋顶",
+        "role": "cover",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "西侧旧哨塔 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "old_watch"
+      },
+      {
+        "name": "object-65 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-65"
+      },
+      {
+        "name": "object-26 / WallWeaponDisplay_Swords",
+        "role": "object",
+        "objectId": "object-26"
+      },
+      {
+        "name": "object-56 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-56"
+      },
+      {
+        "name": "object-63 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-63"
+      },
+      {
+        "name": "object-27 / Bench_Long",
+        "role": "object",
+        "objectId": "object-27"
+      },
+      {
+        "name": "object-77 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-77"
+      },
+      {
+        "name": "object-4 / BooksSingleShortShelf",
+        "role": "object",
+        "objectId": "object-4"
+      },
+      {
+        "name": "object-9 / BooksSingleLongShelf",
+        "role": "object",
+        "objectId": "object-9"
+      },
+      {
+        "name": "object-3 / BedSouth",
+        "role": "object",
+        "objectId": "object-3"
+      },
+      {
+        "name": "东岸路塔 / 建筑一层",
+        "role": "cover",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "东岸路塔 / 建筑二层",
+        "role": "cover",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "东岸路塔 / 建筑三层",
+        "role": "cover",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "东岸路塔 / 屋顶",
+        "role": "cover",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "东岸路塔 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "east_watch"
+      },
+      {
+        "name": "object-10 / WideTable_Desk",
+        "role": "object",
+        "objectId": "object-10"
+      },
+      {
+        "name": "object-47 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-47"
+      },
+      {
+        "name": "object-5 / SmallTable",
+        "role": "object",
+        "objectId": "object-5"
+      },
+      {
+        "name": "object-7 / BooksSingleShortShelf",
+        "role": "object",
+        "objectId": "object-7"
+      },
+      {
+        "name": "object-52 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-52"
+      },
+      {
+        "name": "object-6 / BedSouth",
+        "role": "object",
+        "objectId": "object-6"
+      },
+      {
+        "name": "北巷住宅 / 建筑一层",
+        "role": "cover",
+        "buildingId": "home_a"
+      },
+      {
+        "name": "北巷住宅 / 建筑二层",
+        "role": "cover",
+        "buildingId": "home_a"
+      },
+      {
+        "name": "北巷住宅 / 屋顶",
+        "role": "cover",
+        "buildingId": "home_a"
+      },
+      {
+        "name": "北巷住宅 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "home_a"
+      },
+      {
+        "name": "商队会所 / 建筑一层",
+        "role": "cover",
+        "buildingId": "guild"
+      },
+      {
+        "name": "商队会所 / 建筑二层",
+        "role": "cover",
+        "buildingId": "guild"
+      },
+      {
+        "name": "商队会所 / 屋顶",
+        "role": "cover",
+        "buildingId": "guild"
+      },
+      {
+        "name": "商队会所 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "guild"
+      },
+      {
+        "name": "object-8 / SmallTable",
+        "role": "object",
+        "objectId": "object-8"
+      },
+      {
+        "name": "object-58 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-58"
+      },
+      {
+        "name": "驿站旅馆 / 建筑一层",
+        "role": "cover",
+        "buildingId": "inn"
+      },
+      {
+        "name": "驿站旅馆 / 建筑二层",
+        "role": "cover",
+        "buildingId": "inn"
+      },
+      {
+        "name": "驿站旅馆 / 屋顶",
+        "role": "cover",
+        "buildingId": "inn"
+      },
+      {
+        "name": "驿站旅馆 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "inn"
+      },
+      {
+        "name": "object-36 / ShopSign_Tavern",
+        "role": "object",
+        "objectId": "object-36"
+      },
+      {
+        "name": "object-68 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-68"
+      },
+      {
+        "name": "object-78 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-78"
+      },
+      {
+        "name": "object-76 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-76"
+      },
+      {
+        "name": "object-28 / Well",
+        "role": "object",
+        "objectId": "object-28"
+      },
+      {
+        "name": "object-16 / WideTable_Alchemy",
+        "role": "object",
+        "objectId": "object-16"
+      },
+      {
+        "name": "object-15 / WideTable_Butcher",
+        "role": "object",
+        "objectId": "object-15"
+      },
+      {
+        "name": "集市棚亭 / 建筑一层",
+        "role": "cover",
+        "buildingId": "market_hall"
+      },
+      {
+        "name": "集市棚亭 / 屋顶",
+        "role": "cover",
+        "buildingId": "market_hall"
+      },
+      {
+        "name": "集市棚亭 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "market_hall"
+      },
+      {
+        "name": "object-31 / WideTable_Alchemy",
+        "role": "object",
+        "objectId": "object-31"
+      },
+      {
+        "name": "object-45 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-45"
+      },
+      {
+        "name": "object-32 / Bench_Wide",
+        "role": "object",
+        "objectId": "object-32"
+      },
+      {
+        "name": "object-71 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-71"
+      },
+      {
+        "name": "object-11 / WineKeg",
+        "role": "object",
+        "objectId": "object-11"
+      },
+      {
+        "name": "object-12 / WineKeg",
+        "role": "object",
+        "objectId": "object-12"
+      },
+      {
+        "name": "object-13 / WineKeg",
+        "role": "object",
+        "objectId": "object-13"
+      },
+      {
+        "name": "object-14 / WineKeg",
+        "role": "object",
+        "objectId": "object-14"
+      },
+      {
+        "name": "西侧货栈 / 建筑一层",
+        "role": "cover",
+        "buildingId": "warehouse"
+      },
+      {
+        "name": "西侧货栈 / 建筑二层",
+        "role": "cover",
+        "buildingId": "warehouse"
+      },
+      {
+        "name": "西侧货栈 / 屋顶",
+        "role": "cover",
+        "buildingId": "warehouse"
+      },
+      {
+        "name": "西侧货栈 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "warehouse"
+      },
+      {
+        "name": "object-66 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-66"
+      },
+      {
+        "name": "object-41 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-41"
+      },
+      {
+        "name": "object-18 / WeaponsRack_North",
+        "role": "object",
+        "objectId": "object-18"
+      },
+      {
+        "name": "object-29 / WineKeg",
+        "role": "object",
+        "objectId": "object-29"
+      },
+      {
+        "name": "object-30 / WineKeg",
+        "role": "object",
+        "objectId": "object-30"
+      },
+      {
+        "name": "object-19 / SlackTub_Horizontal",
+        "role": "object",
+        "objectId": "object-19"
+      },
+      {
+        "name": "object-17 / Anvil_Horizontal",
+        "role": "object",
+        "objectId": "object-17"
+      },
+      {
+        "name": "object-33 / Anvil_Horizontal",
+        "role": "object",
+        "objectId": "object-33"
+      },
+      {
+        "name": "铁匠工坊 / 建筑一层",
+        "role": "cover",
+        "buildingId": "smith"
+      },
+      {
+        "name": "铁匠工坊 / 建筑二层",
+        "role": "cover",
+        "buildingId": "smith"
+      },
+      {
+        "name": "铁匠工坊 / 屋顶",
+        "role": "cover",
+        "buildingId": "smith"
+      },
+      {
+        "name": "铁匠工坊 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "smith"
+      },
+      {
+        "name": "object-38 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-38"
+      },
+      {
+        "name": "object-72 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-72"
+      },
+      {
+        "name": "object-21 / BooksSingleShortShelf",
+        "role": "object",
+        "objectId": "object-21"
+      },
+      {
+        "name": "object-20 / BedSouth",
+        "role": "object",
+        "objectId": "object-20"
+      },
+      {
+        "name": "object-51 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-51"
+      },
+      {
+        "name": "object-22 / SmallTable",
+        "role": "object",
+        "objectId": "object-22"
+      },
+      {
+        "name": "object-40 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-40"
+      },
+      {
+        "name": "object-34 / PottedPlant_1",
+        "role": "object",
+        "objectId": "object-34"
+      },
+      {
+        "name": "南侧庭院 / 建筑一层",
+        "role": "cover",
+        "buildingId": "home_b"
+      },
+      {
+        "name": "南侧庭院 / 建筑二层",
+        "role": "cover",
+        "buildingId": "home_b"
+      },
+      {
+        "name": "南侧庭院 / 屋顶",
+        "role": "cover",
+        "buildingId": "home_b"
+      },
+      {
+        "name": "南侧庭院 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "home_b"
+      },
+      {
+        "name": "object-74 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-74"
+      },
+      {
+        "name": "object-43 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-43"
+      },
+      {
+        "name": "object-24 / BooksSingleShortShelf",
+        "role": "object",
+        "objectId": "object-24"
+      },
+      {
+        "name": "object-23 / BedSouth",
+        "role": "object",
+        "objectId": "object-23"
+      },
+      {
+        "name": "object-69 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-69"
+      },
+      {
+        "name": "object-35 / PottedPlant_2",
+        "role": "object",
+        "objectId": "object-35"
+      },
+      {
+        "name": "object-25 / SmallTable",
+        "role": "object",
+        "objectId": "object-25"
+      },
+      {
+        "name": "object-39 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-39"
+      },
+      {
+        "name": "object-53 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-53"
+      },
+      {
+        "name": "南岸住宅 / 建筑一层",
+        "role": "cover",
+        "buildingId": "home_c"
+      },
+      {
+        "name": "南岸住宅 / 建筑二层",
+        "role": "cover",
+        "buildingId": "home_c"
+      },
+      {
+        "name": "南岸住宅 / 屋顶",
+        "role": "cover",
+        "buildingId": "home_c"
+      },
+      {
+        "name": "南岸住宅 / 墙面阴影",
+        "role": "cover",
+        "buildingId": "home_c"
+      },
+      {
+        "name": "object-46 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-46"
+      },
+      {
+        "name": "object-67 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-67"
+      },
+      {
+        "name": "object-37 / TreeNoApples",
+        "role": "object",
+        "objectId": "object-37"
+      }
+    ],
+    "solids": [
+      {
+        "shape": "rect",
+        "x": 456,
+        "y": 234,
+        "w": 112,
+        "h": 3
+      },
+      {
+        "shape": "rect",
+        "x": 456,
+        "y": 282,
+        "w": 112,
+        "h": 3
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 442,
+        "w": 104,
+        "h": 3
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 482,
+        "w": 104,
+        "h": 3
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 560,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 560,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 0,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 0,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 464,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 464,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 0,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 560,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 0,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 8,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 560,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 120,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 472,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 416,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 464,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 488,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 560,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 552,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 544,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 232,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 64,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 464,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 0,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 48,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 288,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 360,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 80,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 432,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 152,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 504,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 368,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 408,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 496,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 344,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 320,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 40,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 392,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 112,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 184,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 224,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 296,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 552,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 560,
+        "y": 520,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 56,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 464,
+        "y": 160,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 128,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 200,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 496,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 304,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 568,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 376,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 136,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 208,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 280,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 0,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 352,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 72,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 424,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 144,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 440,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 512,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 560,
+        "y": 480,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 16,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 488,
+        "y": 88,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 384,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 192,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 504,
+        "y": 528,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 480,
+        "y": 336,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 24,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 96,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 168,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 512,
+        "y": 312,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 32,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 104,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 528,
+        "y": 536,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 520,
+        "y": 176,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 328,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 536,
+        "y": 400,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 544,
+        "y": 216,
+        "w": 8,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 56,
+        "y": 40,
+        "w": 24,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 56,
+        "y": 56,
+        "w": 5,
+        "h": 48
+      },
+      {
+        "shape": "rect",
+        "x": 74,
+        "y": 56,
+        "w": 4,
+        "h": 48
+      },
+      {
+        "shape": "rect",
+        "x": 61,
+        "y": 96,
+        "w": 3,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 72,
+        "y": 96,
+        "w": 2,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 104,
+        "y": 136,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 104,
+        "y": 152,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 154,
+        "y": 152,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 109,
+        "y": 176,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 136,
+        "y": 176,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 200,
+        "y": 152,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 200,
+        "y": 168,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 250,
+        "y": 168,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 205,
+        "y": 192,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 232,
+        "y": 192,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 336,
+        "y": 136,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 336,
+        "y": 152,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 386,
+        "y": 152,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 341,
+        "y": 176,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 368,
+        "y": 176,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 80,
+        "y": 320,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 80,
+        "y": 336,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 130,
+        "y": 336,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 85,
+        "y": 360,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 112,
+        "y": 360,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 248,
+        "y": 280,
+        "w": 5,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 296,
+        "y": 280,
+        "w": 5,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 328,
+        "y": 360,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 328,
+        "y": 376,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 378,
+        "y": 376,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 333,
+        "y": 400,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 360,
+        "y": 400,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 184,
+        "y": 416,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 184,
+        "y": 432,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 234,
+        "y": 432,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 189,
+        "y": 456,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 216,
+        "y": 456,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 328,
+        "y": 464,
+        "w": 56,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 328,
+        "y": 480,
+        "w": 5,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 378,
+        "y": 480,
+        "w": 4,
+        "h": 32
+      },
+      {
+        "shape": "rect",
+        "x": 333,
+        "y": 504,
+        "w": 19,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 360,
+        "y": 504,
+        "w": 18,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 624,
+        "y": 104,
+        "w": 24,
+        "h": 16
+      },
+      {
+        "shape": "rect",
+        "x": 624,
+        "y": 120,
+        "w": 5,
+        "h": 48
+      },
+      {
+        "shape": "rect",
+        "x": 642,
+        "y": 120,
+        "w": 4,
+        "h": 48
+      },
+      {
+        "shape": "rect",
+        "x": 629,
+        "y": 160,
+        "w": 3,
+        "h": 8
+      },
+      {
+        "shape": "rect",
+        "x": 640,
+        "y": 160,
+        "w": 2,
+        "h": 8
+      }
+    ],
+    "props": [
+      {
+        "id": "object-1",
+        "name": "WallWeaponDisplay_Swords",
+        "gid": 10000,
+        "x": 64,
+        "y": 56,
+        "width": 5,
+        "height": 5,
+        "sortY": 61,
+        "solid": false,
+        "footprint": {
+          "shape": "rect",
+          "width": 0,
+          "depth": 0,
+          "offset": [
+            2.5,
+            -2
+          ]
+        },
+        "buildingId": "old_watch"
+      },
+      {
+        "id": "object-2",
+        "name": "Bench_Long",
+        "gid": 10001,
+        "x": 56,
+        "y": 72,
+        "width": 5,
+        "height": 8,
+        "sortY": 80,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 3,
+          "depth": 4,
+          "offset": [
+            2.5,
+            -2
+          ]
+        },
+        "buildingId": "old_watch"
+      },
+      {
+        "id": "object-3",
+        "name": "BedSouth",
+        "gid": 10002,
+        "x": 112,
+        "y": 152,
+        "width": 11,
+        "height": 15,
+        "sortY": 167,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 9,
+          "depth": 10,
+          "offset": [
+            5.5,
+            -7
+          ]
+        },
+        "buildingId": "home_a"
+      },
+      {
+        "id": "object-4",
+        "name": "BooksSingleShortShelf",
+        "gid": 10003,
+        "x": 144,
+        "y": 152,
+        "width": 8,
+        "height": 9,
+        "sortY": 161,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 4,
+          "offset": [
+            4,
+            -4
+          ]
+        },
+        "buildingId": "home_a"
+      },
+      {
+        "id": "object-5",
+        "name": "SmallTable",
+        "gid": 10004,
+        "x": 144,
+        "y": 168,
+        "width": 6,
+        "height": 6,
+        "sortY": 174,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 4,
+          "depth": 4,
+          "offset": [
+            3,
+            -3
+          ]
+        },
+        "buildingId": "home_a"
+      },
+      {
+        "id": "object-6",
+        "name": "BedSouth",
+        "gid": 10002,
+        "x": 208,
+        "y": 168,
+        "width": 11,
+        "height": 15,
+        "sortY": 183,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 9,
+          "depth": 10,
+          "offset": [
+            5.5,
+            -7
+          ]
+        },
+        "buildingId": "inn"
+      },
+      {
+        "id": "object-7",
+        "name": "BooksSingleShortShelf",
+        "gid": 10003,
+        "x": 240,
+        "y": 168,
+        "width": 8,
+        "height": 9,
+        "sortY": 177,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 4,
+          "offset": [
+            4,
+            -4
+          ]
+        },
+        "buildingId": "inn"
+      },
+      {
+        "id": "object-8",
+        "name": "SmallTable",
+        "gid": 10004,
+        "x": 240,
+        "y": 184,
+        "width": 6,
+        "height": 6,
+        "sortY": 190,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 4,
+          "depth": 4,
+          "offset": [
+            3,
+            -3
+          ]
+        },
+        "buildingId": "inn"
+      },
+      {
+        "id": "object-9",
+        "name": "BooksSingleLongShelf",
+        "gid": 10005,
+        "x": 336,
+        "y": 152,
+        "width": 16,
+        "height": 9,
+        "sortY": 161,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 13,
+          "depth": 4,
+          "offset": [
+            8,
+            -4
+          ]
+        },
+        "buildingId": "guild"
+      },
+      {
+        "id": "object-10",
+        "name": "WideTable_Desk",
+        "gid": 10006,
+        "x": 368,
+        "y": 160,
+        "width": 16,
+        "height": 9,
+        "sortY": 169,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 12,
+          "depth": 5,
+          "offset": [
+            8,
+            -4
+          ]
+        },
+        "buildingId": "guild"
+      },
+      {
+        "id": "object-11",
+        "name": "WineKeg",
+        "gid": 10007,
+        "x": 88,
+        "y": 336,
+        "width": 9,
+        "height": 14,
+        "sortY": 350,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 7,
+          "depth": 5,
+          "offset": [
+            4.5,
+            -4
+          ]
+        },
+        "buildingId": "warehouse"
+      },
+      {
+        "id": "object-12",
+        "name": "WineKeg",
+        "gid": 10007,
+        "x": 96,
+        "y": 336,
+        "width": 9,
+        "height": 14,
+        "sortY": 350,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 7,
+          "depth": 5,
+          "offset": [
+            4.5,
+            -4
+          ]
+        },
+        "buildingId": "warehouse"
+      },
+      {
+        "id": "object-13",
+        "name": "WineKeg",
+        "gid": 10007,
+        "x": 120,
+        "y": 336,
+        "width": 9,
+        "height": 14,
+        "sortY": 350,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 7,
+          "depth": 5,
+          "offset": [
+            4.5,
+            -4
+          ]
+        },
+        "buildingId": "warehouse"
+      },
+      {
+        "id": "object-14",
+        "name": "WineKeg",
+        "gid": 10007,
+        "x": 120,
+        "y": 344,
+        "width": 9,
+        "height": 14,
+        "sortY": 358,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 7,
+          "depth": 5,
+          "offset": [
+            4.5,
+            -4
+          ]
+        },
+        "buildingId": "warehouse"
+      },
+      {
+        "id": "object-15",
+        "name": "WideTable_Butcher",
+        "gid": 10008,
+        "x": 248,
+        "y": 272,
+        "width": 16,
+        "height": 9,
+        "sortY": 281,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 12,
+          "depth": 5,
+          "offset": [
+            8,
+            -4
+          ]
+        },
+        "buildingId": "market_hall"
+      },
+      {
+        "id": "object-16",
+        "name": "WideTable_Alchemy",
+        "gid": 10009,
+        "x": 280,
+        "y": 264,
+        "width": 16,
+        "height": 12,
+        "sortY": 276,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 12,
+          "depth": 5,
+          "offset": [
+            8,
+            -4
+          ]
+        },
+        "buildingId": "market_hall"
+      },
+      {
+        "id": "object-17",
+        "name": "Anvil_Horizontal",
+        "gid": 10010,
+        "x": 336,
+        "y": 384,
+        "width": 12,
+        "height": 10,
+        "sortY": 394,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 10,
+          "depth": 5,
+          "offset": [
+            6,
+            -4
+          ]
+        },
+        "buildingId": "smith"
+      },
+      {
+        "id": "object-18",
+        "name": "WeaponsRack_North",
+        "gid": 10011,
+        "x": 360,
+        "y": 368,
+        "width": 15,
+        "height": 14,
+        "sortY": 382,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 12,
+          "depth": 4,
+          "offset": [
+            7.5,
+            -4
+          ]
+        },
+        "buildingId": "smith"
+      },
+      {
+        "id": "object-19",
+        "name": "SlackTub_Horizontal",
+        "gid": 10012,
+        "x": 360,
+        "y": 384,
+        "width": 10,
+        "height": 7,
+        "sortY": 391,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 8,
+          "depth": 4,
+          "offset": [
+            5,
+            -3
+          ]
+        },
+        "buildingId": "smith"
+      },
+      {
+        "id": "object-20",
+        "name": "BedSouth",
+        "gid": 10002,
+        "x": 192,
+        "y": 432,
+        "width": 11,
+        "height": 15,
+        "sortY": 447,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 9,
+          "depth": 10,
+          "offset": [
+            5.5,
+            -7
+          ]
+        },
+        "buildingId": "home_b"
+      },
+      {
+        "id": "object-21",
+        "name": "BooksSingleShortShelf",
+        "gid": 10003,
+        "x": 224,
+        "y": 432,
+        "width": 8,
+        "height": 9,
+        "sortY": 441,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 4,
+          "offset": [
+            4,
+            -4
+          ]
+        },
+        "buildingId": "home_b"
+      },
+      {
+        "id": "object-22",
+        "name": "SmallTable",
+        "gid": 10004,
+        "x": 224,
+        "y": 448,
+        "width": 6,
+        "height": 6,
+        "sortY": 454,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 4,
+          "depth": 4,
+          "offset": [
+            3,
+            -3
+          ]
+        },
+        "buildingId": "home_b"
+      },
+      {
+        "id": "object-23",
+        "name": "BedSouth",
+        "gid": 10002,
+        "x": 336,
+        "y": 480,
+        "width": 11,
+        "height": 15,
+        "sortY": 495,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 9,
+          "depth": 10,
+          "offset": [
+            5.5,
+            -7
+          ]
+        },
+        "buildingId": "home_c"
+      },
+      {
+        "id": "object-24",
+        "name": "BooksSingleShortShelf",
+        "gid": 10003,
+        "x": 368,
+        "y": 480,
+        "width": 8,
+        "height": 9,
+        "sortY": 489,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 4,
+          "offset": [
+            4,
+            -4
+          ]
+        },
+        "buildingId": "home_c"
+      },
+      {
+        "id": "object-25",
+        "name": "SmallTable",
+        "gid": 10004,
+        "x": 368,
+        "y": 496,
+        "width": 6,
+        "height": 6,
+        "sortY": 502,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 4,
+          "depth": 4,
+          "offset": [
+            3,
+            -3
+          ]
+        },
+        "buildingId": "home_c"
+      },
+      {
+        "id": "object-26",
+        "name": "WallWeaponDisplay_Swords",
+        "gid": 10000,
+        "x": 632,
+        "y": 120,
+        "width": 5,
+        "height": 5,
+        "sortY": 125,
+        "solid": false,
+        "footprint": {
+          "shape": "rect",
+          "width": 0,
+          "depth": 0,
+          "offset": [
+            2.5,
+            -2
+          ]
+        },
+        "buildingId": "east_watch"
+      },
+      {
+        "id": "object-27",
+        "name": "Bench_Long",
+        "gid": 10001,
+        "x": 624,
+        "y": 136,
+        "width": 5,
+        "height": 8,
+        "sortY": 144,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 3,
+          "depth": 4,
+          "offset": [
+            2.5,
+            -2
+          ]
+        },
+        "buildingId": "east_watch"
+      },
+      {
+        "id": "object-28",
+        "name": "Well",
+        "gid": 10013,
+        "x": 344,
+        "y": 232,
+        "width": 19,
+        "height": 32,
+        "sortY": 264,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            9.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-29",
+        "name": "WineKeg",
+        "gid": 10007,
+        "x": 88,
+        "y": 368,
+        "width": 9,
+        "height": 14,
+        "sortY": 382,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            4.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-30",
+        "name": "WineKeg",
+        "gid": 10007,
+        "x": 96,
+        "y": 368,
+        "width": 9,
+        "height": 14,
+        "sortY": 382,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            4.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-31",
+        "name": "WideTable_Alchemy",
+        "gid": 10009,
+        "x": 200,
+        "y": 296,
+        "width": 16,
+        "height": 12,
+        "sortY": 308,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            8,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-32",
+        "name": "Bench_Wide",
+        "gid": 10014,
+        "x": 344,
+        "y": 320,
+        "width": 9,
+        "height": 5,
+        "sortY": 325,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            4.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-33",
+        "name": "Anvil_Horizontal",
+        "gid": 10010,
+        "x": 392,
+        "y": 384,
+        "width": 12,
+        "height": 10,
+        "sortY": 394,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            6,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-34",
+        "name": "PottedPlant_1",
+        "gid": 10015,
+        "x": 176,
+        "y": 448,
+        "width": 9,
+        "height": 12,
+        "sortY": 460,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            4.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-35",
+        "name": "PottedPlant_2",
+        "gid": 10016,
+        "x": 392,
+        "y": 488,
+        "width": 7,
+        "height": 11,
+        "sortY": 499,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            3.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-36",
+        "name": "ShopSign_Tavern",
+        "gid": 10017,
+        "x": 160,
+        "y": 200,
+        "width": 23,
+        "height": 17,
+        "sortY": 217,
+        "solid": false,
+        "footprint": {
+          "shape": "rect",
+          "width": 6,
+          "depth": 3,
+          "offset": [
+            11.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-37",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 32,
+        "y": 520,
+        "width": 21,
+        "height": 25,
+        "sortY": 545,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-38",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 16,
+        "y": 384,
+        "width": 21,
+        "height": 25,
+        "sortY": 409,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-39",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 8,
+        "y": 480,
+        "width": 21,
+        "height": 25,
+        "sortY": 505,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-40",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 56,
+        "y": 432,
+        "width": 21,
+        "height": 25,
+        "sortY": 457,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-41",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 696,
+        "y": 352,
+        "width": 21,
+        "height": 25,
+        "sortY": 377,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-42",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 368,
+        "y": 24,
+        "width": 21,
+        "height": 25,
+        "sortY": 49,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-43",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 704,
+        "y": 448,
+        "width": 21,
+        "height": 25,
+        "sortY": 473,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-44",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 256,
+        "y": 24,
+        "width": 21,
+        "height": 25,
+        "sortY": 49,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-45",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 8,
+        "y": 296,
+        "width": 21,
+        "height": 25,
+        "sortY": 321,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-46",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 712,
+        "y": 504,
+        "width": 21,
+        "height": 25,
+        "sortY": 529,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-47",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 24,
+        "y": 144,
+        "width": 21,
+        "height": 25,
+        "sortY": 169,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-48",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 104,
+        "y": 24,
+        "width": 21,
+        "height": 25,
+        "sortY": 49,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-49",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 176,
+        "y": 24,
+        "width": 21,
+        "height": 25,
+        "sortY": 49,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-50",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 448,
+        "y": 8,
+        "width": 21,
+        "height": 25,
+        "sortY": 33,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-51",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 96,
+        "y": 424,
+        "width": 21,
+        "height": 25,
+        "sortY": 449,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-52",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 584,
+        "y": 152,
+        "width": 21,
+        "height": 25,
+        "sortY": 177,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-53",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 104,
+        "y": 480,
+        "width": 21,
+        "height": 25,
+        "sortY": 505,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-54",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 664,
+        "y": 16,
+        "width": 21,
+        "height": 25,
+        "sortY": 41,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-55",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 576,
+        "y": 16,
+        "width": 21,
+        "height": 25,
+        "sortY": 41,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-56",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 24,
+        "y": 104,
+        "width": 21,
+        "height": 25,
+        "sortY": 129,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-57",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 216,
+        "y": 24,
+        "width": 21,
+        "height": 25,
+        "sortY": 49,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-58",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 704,
+        "y": 168,
+        "width": 21,
+        "height": 25,
+        "sortY": 193,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-59",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 536,
+        "y": 16,
+        "width": 21,
+        "height": 25,
+        "sortY": 41,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-60",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 328,
+        "y": 24,
+        "width": 21,
+        "height": 25,
+        "sortY": 49,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-61",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 8,
+        "y": 56,
+        "width": 21,
+        "height": 25,
+        "sortY": 81,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-62",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 584,
+        "y": 64,
+        "width": 21,
+        "height": 25,
+        "sortY": 89,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-63",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 584,
+        "y": 104,
+        "width": 21,
+        "height": 25,
+        "sortY": 129,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-64",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 720,
+        "y": 32,
+        "width": 21,
+        "height": 25,
+        "sortY": 57,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-65",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 712,
+        "y": 80,
+        "width": 21,
+        "height": 25,
+        "sortY": 105,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-66",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 16,
+        "y": 344,
+        "width": 21,
+        "height": 25,
+        "sortY": 369,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-67",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 160,
+        "y": 504,
+        "width": 21,
+        "height": 25,
+        "sortY": 529,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-68",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 8,
+        "y": 184,
+        "width": 21,
+        "height": 25,
+        "sortY": 209,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-69",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 48,
+        "y": 472,
+        "width": 21,
+        "height": 25,
+        "sortY": 497,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-70",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 8,
+        "y": 16,
+        "width": 21,
+        "height": 25,
+        "sortY": 41,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-71",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 712,
+        "y": 312,
+        "width": 21,
+        "height": 25,
+        "sortY": 337,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-72",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 696,
+        "y": 400,
+        "width": 21,
+        "height": 25,
+        "sortY": 425,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-73",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 408,
+        "y": 16,
+        "width": 21,
+        "height": 25,
+        "sortY": 41,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-74",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 8,
+        "y": 440,
+        "width": 21,
+        "height": 25,
+        "sortY": 465,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-75",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 616,
+        "y": 8,
+        "width": 21,
+        "height": 25,
+        "sortY": 33,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-76",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 696,
+        "y": 216,
+        "width": 21,
+        "height": 25,
+        "sortY": 241,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-77",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 720,
+        "y": 128,
+        "width": 21,
+        "height": 25,
+        "sortY": 153,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      },
+      {
+        "id": "object-78",
+        "name": "TreeNoApples",
+        "gid": 10018,
+        "x": 584,
+        "y": 200,
+        "width": 21,
+        "height": 25,
+        "sortY": 225,
+        "solid": true,
+        "footprint": {
+          "shape": "rect",
+          "width": 5,
+          "depth": 3,
+          "offset": [
+            10.5,
+            -2
+          ]
+        },
+        "buildingId": null
+      }
+    ],
+    "artSource": "existing"
+  },
+  "steps": [
+    {
+      "op": "call",
+      "function": "moveTilesSandbox",
+      "args": [
+        [
+          {
+            "x": 25,
+            "y": 23
+          },
+          {
+            "x": 26,
+            "y": 23
+          },
+          {
+            "x": 25,
+            "y": 24
+          },
+          {
+            "x": 27,
+            "y": 23
+          },
+          {
+            "x": 26,
+            "y": 24
+          },
+          {
+            "x": 25,
+            "y": 25
+          },
+          {
+            "x": 27,
+            "y": 24
+          },
+          {
+            "x": 26,
+            "y": 25
+          },
+          {
+            "x": 27,
+            "y": 25
+          }
+        ],
+        -5,
+        2,
+        [],
+        84
+      ]
+    },
+    {
+      "op": "save",
+      "name": "checkpoint"
+    },
+    {
+      "op": "reload",
+      "name": "checkpoint"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Image",
+      "rect": [
+        0,
+        0,
+        96,
+        72
+      ],
+      "name": "stoneford-image"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Unity",
+      "rect": [
+        0,
+        0,
+        96,
+        72
+      ],
+      "name": "stoneford-unity"
+    },
+    {
+      "op": "render",
+      "rect": [
+        0,
+        0,
+        96,
+        72
+      ],
+      "name": "native-overview"
+    }
+  ]
+}

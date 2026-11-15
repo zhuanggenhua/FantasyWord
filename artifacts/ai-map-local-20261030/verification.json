@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "actualSize": [
+    3008,
+    941
+  ],
+  "oldPixelsExactlyPreserved": true,
+  "chunks": 2,
+  "tiledVersion": "1.12.2",
+  "tiledNativePixelsIdentical": true,
+  "directions": {
+    "east": {
+      "box": [
+        2672,
+        0,
+        4344,
+        941
+      ],
+      "unknownPixels": 1257176
+    },
+    "north": {
+      "box": [
+        0,
+        -752,
+        1672,
+        189
+      ],
+      "unknownPixels": 1257344
+    },
+    "south": {
+      "box": [
+        0,
+        752,
+        1672,
+        1693
+      ],
+      "unknownPixels": 1257344
+    },
+    "west": {
+      "box": [
+        -1336,
+        0,
+        336,
+        941
+      ],
+      "unknownPixels": 1257176
+    }
+  },
+  "wrongSizeRejectedWithoutMutation": true,
+  "staleJobRejectedWithoutMutation": true,
+  "editedTmxCoordinatesConsumed": true
+}

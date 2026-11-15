@@ -1,0 +1,11 @@
+{
+  "mapSha256": "94d1ef6067855e2480d3b229a9be5473033f02fcfe3cc8e00b96af399232b1eb",
+  "runtimeSha256": "c1fc3d9bf15cfa53fdfeb050ce4252f7ace4c923066ca4e135dea576e7445273",
+  "actorSource": {
+    "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Dungeon\\Sprites\\Animations\\Human\\HumanBaseIdle.png",
+    "sha256": "ee5f610557666d5f9e9965e9789357d95e1f914ec3b3fa275cce00609cb33987",
+    "sprite": "HumanBaseIdle_0"
+  },
+  "previewSha256": "be071f93dc8462f956b7cd0c4789d1c308558dbf34179a4b8af0d78c1365b51e",
+  "buildingGroups": 10
+}

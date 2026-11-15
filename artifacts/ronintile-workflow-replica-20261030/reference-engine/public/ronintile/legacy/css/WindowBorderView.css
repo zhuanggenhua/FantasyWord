@@ -1,0 +1,112 @@
+.windowborder-view {
+    position: absolute;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+}
+
+.windowborder-titlebar-view {
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    height: 40px;
+    border-radius: 2px 2px 0px 0px;
+    background: var(--wastePanel);
+    border-top: 1px solid var(--colorSteel);
+    border-left: 1px solid rgba(211, 189, 79, 0.2);
+    border-right: 1px solid rgba(211, 189, 79, 0.12);
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.75);
+    -webkit-app-region: drag;
+}
+
+.windowborder-titlebar-view:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: var(--hazardStripe);
+    opacity: 0.75;
+}
+
+.windowborder-titlecontent-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    margin: 12px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+    font-family: mainFont;
+    color: var(--color2);
+    white-space: nowrap;
+    max-width: calc(100% - 16px);
+    overflow: hidden;
+}
+
+.windowborder-titleimage-view {
+    width: auto; height: 100%;
+    image-rendering: auto;
+    padding-right: 12px;
+    filter: drop-shadow(0 0 3px rgba(246, 224, 94, 0.28));
+}
+
+.windowborder-optionscontent-view {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    padding-bottom: 8px;
+    padding-right: 7px;
+    margin: 0px;
+    display: flex;
+    flex-direction: row-reverse;
+    -webkit-app-region: no-drag;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.windowborder-option-view {
+    background: var(--rtTabIdle);
+    margin-top: 7px;
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    border-radius: 3px;
+    border: 1px solid var(--colorSteel);
+    box-sizing: border-box;
+    float: right;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-app-region: no-drag
+}
+
+.windowborder-option-zoom-view {
+    margin-top: 7px;
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    border-style: solid;
+    border-color: var(--colorSteel);
+    box-sizing: border-box;
+    border-width: 1px;
+    border-radius: 3px;
+    float: right;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-app-region: no-drag
+}
+
+.windowborder-contentcontainer-view {
+    position: absolute;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+    border-radius: 0px 0px 2px 2px;
+    background-color: var(--colorBG);
+    background-image: var(--wasteTexture);
+    box-shadow: inset 0 0 0 1px rgba(102, 112, 97, 0.22);
+}

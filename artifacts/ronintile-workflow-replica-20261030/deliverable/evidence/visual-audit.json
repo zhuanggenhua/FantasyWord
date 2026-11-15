@@ -1,0 +1,79 @@
+{
+  "status": "pass-for-material-workflow-prototype",
+  "scope": "逐张检查原素材可见、屋顶揭开/恢复、房内地板家具和角色可见、无缺素材标记；旅馆招牌移到室外",
+  "images": [
+    {
+      "path": "map\\overview.png",
+      "sha256": "3ec52a7875cb91377e5ca7300d6633754bad5239047943edf90d03cbb29e2418",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\old_watch-inside.png",
+      "sha256": "1efb56edb943735c338a3f4d76ea14e0efadf805ae6c2303ed63a144b8304668",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\home_a-inside.png",
+      "sha256": "987a4e8556d9610696b4290ddad22ab0d431a5646df3c06535ea39d76841f49e",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\inn-inside.png",
+      "sha256": "e04fc8dcc5c963c13dda64bd9bc37c4721ddbdb3bb1cab62c7284185fcc86ccb",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\guild-inside.png",
+      "sha256": "db34b7928ffdcaab01a4ec5f58d0c0016bcfeb4fa957e5c15468b9a795d7e143",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\warehouse-inside.png",
+      "sha256": "ed51778ad668cf4cde0e714dc21b2a52e1cb73b7c7c248abcf374a942b06aa10",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\market_hall-inside.png",
+      "sha256": "027681e750fe61efd86451fd96bcdaf9dab6e0e14d8e7300917e4447d8f69518",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\smith-inside.png",
+      "sha256": "51fd4a242c4fc9d6479a976b897af04b69f8830150f0fea17377bfa1d66336b5",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\home_b-inside.png",
+      "sha256": "d77bc9473f12af77709c6b1eceb39eb49c03ee78dd482a855126f8a15e15ea9c",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\home_c-inside.png",
+      "sha256": "87bf8c135f1cb9814b26aff95b683ede9edf290486e939e6ec5d164d8bec1c0b",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\east_watch-inside.png",
+      "sha256": "c883a49eb29eb56263f62f905f382f7dd2a61c647ea01f2a28fa4df2d640fd28",
+      "inspected": true
+    },
+    {
+      "path": "map\\preview\\inn-exited.png",
+      "sha256": "6ba667fc3502cdf7520136018a59d26cb8fde6caca524d2ba4e9cd419f8aa795",
+      "inspected": true
+    }
+  ],
+  "selectedForUser": [
+    "map/overview.png",
+    "map/preview/inn-inside.png",
+    "map/preview/inn-exited.png"
+  ],
+  "notProven": [
+    "用户对布局和美术的认可",
+    "最终关卡品质",
+    "Unity运行效果"
+  ],
+  "notes": [
+    "房屋类型复用和简单家具布局保留为流程原型，不称为最终城镇美术。"
+  ]
+}

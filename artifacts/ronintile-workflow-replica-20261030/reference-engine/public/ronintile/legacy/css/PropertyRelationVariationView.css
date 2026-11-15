@@ -1,0 +1,34 @@
+.propertyrelationvariation-scroll-view {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    overflow-y: visible;
+}
+
+.propertyrelationvariation-variation-container-view {
+    margin: 16px;
+    line-height: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.propertyrelationvariation-tile-image-view {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    border-radius: 4px;
+    background: var(--color1);
+    background-size: 32px;
+}
+
+.propertyrelationvariation-text-view {
+    width: 32px;
+    font-size: 18px;
+    margin-left: 7px;
+    font-family: mainFont;
+    color: var(--color2);
+}

@@ -1,0 +1,7 @@
+{
+  "status": "fail",
+  "error": "Error: page.evaluate: TypeError: guid.create is not a function\n    at ExportGUIDBlock.getTextRaw (./js/ExportGUIDBlock.js:13:54)\n    at ExportGUIDBlock.getText (./js/ExportTextVariableBlock.js:42:19)\n    at ExportBlockField.getText (./js/ExportBlockField.js:23:27)\n    at ExportFolder.exportDirectory (./js/ExportFolder.js:41:82)\n    at ExportFolder.exportDirectory (./js/ExportFolder.js:21:26)\n    at ExportFolder.exportContents (./js/ExportFolder.js:51:25)\n    at exportPackageMap (./js/tileroninX.js:5158:19)\n    at eval (eval at evaluate (:290:30), <anonymous>:123:83)\n    at async <anonymous>:316:30",
+  "stack": "page.evaluate: TypeError: guid.create is not a function\n    at ExportGUIDBlock.getTextRaw (./js/ExportGUIDBlock.js:13:54)\n    at ExportGUIDBlock.getText (./js/ExportTextVariableBlock.js:42:19)\n    at ExportBlockField.getText (./js/ExportBlockField.js:23:27)\n    at ExportFolder.exportDirectory (./js/ExportFolder.js:41:82)\n    at ExportFolder.exportDirectory (./js/ExportFolder.js:21:26)\n    at ExportFolder.exportContents (./js/ExportFolder.js:51:25)\n    at exportPackageMap (./js/tileroninX.js:5158:19)\n    at eval (eval at evaluate (:290:30), <anonymous>:123:83)\n    at async <anonymous>:316:30\n    at C:\\Gamedev\\Unity\\Project\\FantasyWord\\scripts\\ai-map-experiment\\ronintile_cli.mjs:75:29",
+  "errors": [],
+  "blockedRequests": []
+}

@@ -1,0 +1,50 @@
+{
+  "goal": "使用原版 Tiled CLI 和 MiniFantasy 原素材，生成有桥头、市场、住宅后巷、旧城区及回环的河渡贸易镇",
+  "status": "complete",
+  "acceptance_criteria": [
+    {
+      "id": "1",
+      "description": "形成可审查的城镇空间设计及有意义的探索路线",
+      "status": "pass",
+      "evidence": ["final/layout.json", "final/design-review.json", "final/README.md"]
+    },
+    {
+      "id": "2",
+      "description": "实际执行官方 Tiled 的规则铺图与渲染并交付可编辑地图",
+      "status": "pass",
+      "evidence": ["final/tiled-report.json", "final/rule-coverage.json", "final/river-trade-town.tmx", "final/reproduction-report.json"]
+    },
+    {
+      "id": "3",
+      "description": "检查建筑完整性、入口、街巷、桥梁和完整画面",
+      "status": "pass",
+      "evidence": ["final/visual-review.json", "final/town-overview.png", "final/design-review.json"]
+    },
+    {
+      "id": "4",
+      "description": "离线寻路和浏览器代表路线验证通过",
+      "status": "pass",
+      "evidence": ["final/nav/nav-report.json", "final/preview/preview-qa.json", "final/design-review.json"]
+    },
+    {
+      "id": "5",
+      "description": "交付 Unity 后续导入包与复现命令，标明未在 Unity 验证",
+      "status": "pass",
+      "evidence": ["final/river-trade-town-unity-import.zip", "final/README.md", "final/package-report.json", "final/reproduction-report.json"]
+    }
+  ],
+  "artifacts": [
+    {"path":"final/town-overview.png","description":"通过静态画面检查的最终原生渲染总览","required":true},
+    {"path":"final/river-trade-town.tmx","description":"Tiled 可编辑地图","required":true},
+    {"path":"final/river-trade-town-unity-import.zip","description":"后续导入素材包，未在 Unity 验证","required":true},
+    {"path":"final/preview/preview.html","description":"浏览器离线行走预览","required":true},
+    {"path":"final/design-review.json","description":"原建筑门口与沿街道路线检查","required":true},
+    {"path":"final/reproduction-report.json","description":"重复生成与独立解包重读的相同渲染证明","required":true},
+    {"path":"final/visual-review.json","description":"AI 静态视觉检查结果与范围","required":true}
+  ],
+  "notes": [
+    "本轮未启动 Unity，未修改第三方原包，未安装 Unity 导入插件。",
+    "10栋建筑、14个互动目标、3条沿铺装路线、独立双桥回路均完成本轮离线检查。",
+    "本任务完成指室外生成流程实验稿，未包含室内、游戏业务或 Unity 项目运行验收。"
+  ]
+}

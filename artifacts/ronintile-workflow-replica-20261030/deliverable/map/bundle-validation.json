@@ -1,0 +1,564 @@
+{
+  "schema": "generate2dmap.map_bundle_report.v1",
+  "status": "pass",
+  "method": "JSON Schema map.schema.json#/$defs/map_bundle_v2 (vendored copy, built-in Draft 2020-12 evaluator), file existence and sha256 of every referenced file, and cross-field rules: unique ids, tile indices against tilesets, wang/blob topology, material colours, portal targets and arrivals, slots and approach points",
+  "notProven": [
+    "reachability, portal arrivals and collision geometry (run map_nav.py check)",
+    "that collision and footprints match the painted art",
+    "engine or editor import (Tiled GUI, Godot, LDtk not verified)"
+  ],
+  "checks": [
+    {
+      "id": "schema",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "files",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "sha256",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "tilesets",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "layers",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "props_and_objects",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "collision",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "material_map",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "portals",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "spawns_anchors_interactions",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "document",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "path": "map-bundle.json",
+      "sha256": "8e280b740182c2b6f37a786225cb081677733b0b6c812e52f707f3d492820d0f",
+      "bytes": 2939887
+    },
+    {
+      "path": "assets/terrain-forge.json",
+      "sha256": "bfe7b470c118295d194ffeb4a71a115031524e8849189932e974b4131ab447ce",
+      "bytes": 7418
+    },
+    {
+      "path": "assets/atlas.png",
+      "sha256": "3c800117612d22fbad2c43a00571b3ca176bf2022ff13228c00deaa8ecad905b",
+      "bytes": 11590
+    },
+    {
+      "path": "assets/object-50.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-75.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-54.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-55.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-59.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-70.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-73.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-42.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-44.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-48.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-49.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-57.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-60.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-64.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-1.png",
+      "sha256": "af34c3db33654b6bcb956bf31666c7e4bba64d9d5c91579d403537f48bcb490d",
+      "bytes": 95
+    },
+    {
+      "path": "assets/object-2.png",
+      "sha256": "cd97b09ba834d88fa03792d9be2040b7360bb5dd1d0e499f010a5e82e3f16fb3",
+      "bytes": 121
+    },
+    {
+      "path": "assets/object-61.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-62.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-65.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-26.png",
+      "sha256": "af34c3db33654b6bcb956bf31666c7e4bba64d9d5c91579d403537f48bcb490d",
+      "bytes": 95
+    },
+    {
+      "path": "assets/object-56.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-63.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-27.png",
+      "sha256": "cd97b09ba834d88fa03792d9be2040b7360bb5dd1d0e499f010a5e82e3f16fb3",
+      "bytes": 121
+    },
+    {
+      "path": "assets/object-77.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-4.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "assets/object-9.png",
+      "sha256": "f01db51270f928260c0fe2a3fa4018e5ca6ef265ff68d70702f0c1e40150a182",
+      "bytes": 316
+    },
+    {
+      "path": "assets/object-3.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "assets/object-10.png",
+      "sha256": "4029373f3cc490d9679399b800ea978506fd2d2634da5b9a441d45d707193959",
+      "bytes": 217
+    },
+    {
+      "path": "assets/object-47.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-5.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "assets/object-7.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "assets/object-52.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-6.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "assets/object-8.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "assets/object-58.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-36.png",
+      "sha256": "ff3b0fb57bc76e2b7bbacfdfbadfafd410291fb2a9a9d64cdc0bc9e620e15aa5",
+      "bytes": 484
+    },
+    {
+      "path": "assets/object-68.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-78.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-76.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-28.png",
+      "sha256": "53a6d63c24bd4506274705dce0c56b28b190394edfcda1de6ab768fdd6759a24",
+      "bytes": 931
+    },
+    {
+      "path": "assets/object-16.png",
+      "sha256": "d5eba5c7d53a2661c9d53dc51ec17140812578b3fb16d8de3ac6b05fc9537f85",
+      "bytes": 341
+    },
+    {
+      "path": "assets/object-15.png",
+      "sha256": "25427fb5ac7333dfb3580b9bb4f98bda0ee8a43e8b8d5e9381ef9d622bcedd68",
+      "bytes": 251
+    },
+    {
+      "path": "assets/object-31.png",
+      "sha256": "d5eba5c7d53a2661c9d53dc51ec17140812578b3fb16d8de3ac6b05fc9537f85",
+      "bytes": 341
+    },
+    {
+      "path": "assets/object-45.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-32.png",
+      "sha256": "0908744c2dd3fa1533c886edc433aafc57495ebab3cb7e310a159006d18c8ec6",
+      "bytes": 114
+    },
+    {
+      "path": "assets/object-71.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-11.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "assets/object-12.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "assets/object-13.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "assets/object-14.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "assets/object-66.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-41.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-18.png",
+      "sha256": "278bbd42014558dcd243f4af14cc6ecf238374ac8e2f399dbf19438b6c56d4a8",
+      "bytes": 290
+    },
+    {
+      "path": "assets/object-29.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "assets/object-30.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "assets/object-19.png",
+      "sha256": "c53827deb58b8219bf699883b7600466374712f72bf0403f64fd98b71ec868cb",
+      "bytes": 138
+    },
+    {
+      "path": "assets/object-17.png",
+      "sha256": "d6d0746e6a1e1b4c1b35574e8fc707c3012b94416ae8726a727b0dda4dce9f6f",
+      "bytes": 222
+    },
+    {
+      "path": "assets/object-33.png",
+      "sha256": "d6d0746e6a1e1b4c1b35574e8fc707c3012b94416ae8726a727b0dda4dce9f6f",
+      "bytes": 222
+    },
+    {
+      "path": "assets/object-38.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-72.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-21.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "assets/object-20.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "assets/object-51.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-22.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "assets/object-40.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-34.png",
+      "sha256": "b49ef24932364e2106799d9ffc98580a933be33ca44ae8981f996341be9f3398",
+      "bytes": 303
+    },
+    {
+      "path": "assets/object-74.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-43.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-24.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "assets/object-23.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "assets/object-69.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-35.png",
+      "sha256": "d569d7ab48e4019c757e165ff423e194a1cb38e80b0067c0a31394ce6c1eaa56",
+      "bytes": 227
+    },
+    {
+      "path": "assets/object-25.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "assets/object-39.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-53.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-46.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-67.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/object-37.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    }
+  ],
+  "outputs": [],
+  "tool": {
+    "name": "map_bundle.py",
+    "version": "0.4.0"
+  },
+  "bundle": {
+    "id": "stoneford-waystation",
+    "version": 2,
+    "world": [
+      768.0,
+      576.0
+    ],
+    "counts": {
+      "tilesets": 1,
+      "layers": 28,
+      "props": 0,
+      "objects": 78,
+      "portals": 0,
+      "spawns": 1,
+      "anchors": 0,
+      "interactions": 20
+    }
+  },
+  "problems": []
+}

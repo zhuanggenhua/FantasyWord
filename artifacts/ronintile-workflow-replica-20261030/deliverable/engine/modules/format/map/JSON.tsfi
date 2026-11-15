@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="JSON">
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<text-file><!----><name><var v="export_name"/>.txt</name><!----><text-contents><!--
+		|-->{
+<!--	|-->	"tile_width": <var v="tile_width"/>,
+<!--	|-->	"tile_height": <var v="tile_height"/>,
+<!--	|-->	"map_width": <var v="map_width"/>,
+<!--	|-->	"map_height": <var v="map_height"/>,
+<!--	|-->	"layers": [
+<!--	|--><list-loop foreach="layer"><as i="_layer"/><text-contents>		{
+<!--		|-->			"name": "<var v="_layer.name"><replace from="\\" to="\\"/><replace from="&quot;" to="\&quot;"/></var>", 
+<!--		|-->			"positions": [
+<!--		|--><list-loop foreach="_layer.position"><as i="_position"/><as i="_tile"/><text-contents>				{ "x":<var v="_position.x"/>, "y":<var v="_position.y"/>, "id":<var v="_tile.index"/> }</text-contents><separator>,
+<!--		|--></separator></list-loop>
+<!--		|-->			]
+<!--	|-->		}</text-contents><separator>,
+<!--	|--></separator></list-loop>
+<!--	|-->	]
+<!--	|-->}<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<image-file><!----><name><var v="export_name"/>.png</name>
+					<!----><width expression="min(x0, 8)*x1"><x v="tile_count"/><x v="tile_width"/></width>
+					<!----><height expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_height"/></height><!----><image-contents><!--
+		|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--	|-->	<ivar v="_tile.image">
+<!--	|-->		<grid-x expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_width"/></grid-x>
+<!--	|-->		<grid-y expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_height"/></grid-y>
+<!--	|-->	</ivar>
+<!--	|--></image-contents></image-loop><!--
+		|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

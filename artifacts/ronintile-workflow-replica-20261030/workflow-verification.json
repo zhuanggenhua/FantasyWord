@@ -1,0 +1,258 @@
+{
+  "status": "pass",
+  "blob": {
+    "status": "pass",
+    "roundTripFields": [
+      "tilewidth",
+      "tileheight",
+      "tileshape",
+      "sources",
+      "tiles",
+      "set",
+      "set_regions",
+      "sandbox_layers",
+      "sandbox"
+    ],
+    "relationGraphEqual": true,
+    "relationIdsMayReorder": true,
+    "placements": 776,
+    "undoRedo": [
+      {
+        "index": 32,
+        "op": "undo",
+        "placementsBefore": 776,
+        "placementsAfter": 768
+      },
+      {
+        "index": 33,
+        "op": "redo",
+        "placementsBefore": 768,
+        "placementsAfter": 776
+      }
+    ],
+    "nativePngEqualsImageExport": true,
+    "atlasReconstructionMaxChannelDifference": 0,
+    "formatsChecked": 14,
+    "formatFiles": {
+      "map-JSON": [
+        "exports\\map-JSON\\map-JSON.png",
+        "exports\\map-JSON\\map-JSON.txt"
+      ],
+      "map-Image": [
+        "exports\\map-Image.png"
+      ],
+      "map-Unity": [
+        "exports\\map-Unity.unitypackage"
+      ],
+      "map-Godot": [
+        "exports\\map-Godot\\layer_0_map-Godot.tscn",
+        "exports\\map-Godot\\layer_1_map-Godot.tscn",
+        "exports\\map-Godot\\map_map-Godot.tscn",
+        "exports\\map-Godot\\tileset_map-Godot.png",
+        "exports\\map-Godot\\tileset_map-Godot.png.import",
+        "exports\\map-Godot\\tileset_map-Godot.tres"
+      ],
+      "map-GMS2": [
+        "exports\\map-GMS2\\mapGMS2.yyp",
+        "exports\\map-GMS2\\rooms\\room_mapGMS2\\room_mapGMS2.yy",
+        "exports\\map-GMS2\\sprites\\sprite_mapGMS2\\b6168f54-d5e8-4e09-b088-645d53288c6e.png",
+        "exports\\map-GMS2\\sprites\\sprite_mapGMS2\\sprite_mapGMS2.yy",
+        "exports\\map-GMS2\\sprites\\sprite_mapGMS2\\layers\\b6168f54-d5e8-4e09-b088-645d53288c6e\\8d0e89ec-5d69-4f1a-9f5a-0fe96d55fc02.png",
+        "exports\\map-GMS2\\tilesets\\tileset_mapGMS2\\output_tileset.png",
+        "exports\\map-GMS2\\tilesets\\tileset_mapGMS2\\tileset_mapGMS2.yy"
+      ],
+      "map-GMS2-2.3.0": [
+        "exports\\map-GMS2-2.3.0\\mapGMS2230.yyp",
+        "exports\\map-GMS2-2.3.0\\rooms\\room_mapGMS2230\\room_mapGMS2230.yy",
+        "exports\\map-GMS2-2.3.0\\sprites\\sprite_mapGMS2230\\f429cd77-9b26-448e-afd1-b86c34ff7983.png",
+        "exports\\map-GMS2-2.3.0\\sprites\\sprite_mapGMS2230\\sprite_mapGMS2230.yy",
+        "exports\\map-GMS2-2.3.0\\sprites\\sprite_mapGMS2230\\layers\\f429cd77-9b26-448e-afd1-b86c34ff7983\\fc894d02-059c-4f70-a051-87ffbdef0e4c.png",
+        "exports\\map-GMS2-2.3.0\\tilesets\\tileset_mapGMS2230\\output_tileset.png",
+        "exports\\map-GMS2-2.3.0\\tilesets\\tileset_mapGMS2230\\tileset_mapGMS2230.yy"
+      ],
+      "map-Defold": [
+        "exports\\map-Defold\\map-Defold.png",
+        "exports\\map-Defold\\map-Defold.tilemap",
+        "exports\\map-Defold\\map-Defold.tilesource"
+      ],
+      "set-JSON": [
+        "exports\\set-JSON\\set-JSON.png",
+        "exports\\set-JSON\\set-JSON.txt"
+      ],
+      "set-Image": [
+        "exports\\set-Image.png"
+      ],
+      "set-Unity": [
+        "exports\\set-Unity.unitypackage"
+      ],
+      "set-Godot": [
+        "exports\\set-Godot\\tileset_set-Godot.png",
+        "exports\\set-Godot\\tileset_set-Godot.png.import",
+        "exports\\set-Godot\\tileset_set-Godot.tres"
+      ],
+      "set-GMS2": [
+        "exports\\set-GMS2\\setGMS2.yyp",
+        "exports\\set-GMS2\\sprites\\sprite_setGMS2\\114d834f-2d9c-447d-b7be-476d935681b8.png",
+        "exports\\set-GMS2\\sprites\\sprite_setGMS2\\sprite_setGMS2.yy",
+        "exports\\set-GMS2\\sprites\\sprite_setGMS2\\layers\\114d834f-2d9c-447d-b7be-476d935681b8\\a43fa3aa-7e5f-4ca2-abd3-21d1d5596c3a.png",
+        "exports\\set-GMS2\\tilesets\\tileset_setGMS2\\output_tileset.png",
+        "exports\\set-GMS2\\tilesets\\tileset_setGMS2\\tileset_setGMS2.yy"
+      ],
+      "set-GMS2-2.3.0": [
+        "exports\\set-GMS2-2.3.0\\setGMS2230.yyp",
+        "exports\\set-GMS2-2.3.0\\sprites\\sprite_setGMS2230\\20041da4-2e6b-42f0-aba0-5f14098680ad.png",
+        "exports\\set-GMS2-2.3.0\\sprites\\sprite_setGMS2230\\sprite_setGMS2230.yy",
+        "exports\\set-GMS2-2.3.0\\sprites\\sprite_setGMS2230\\layers\\20041da4-2e6b-42f0-aba0-5f14098680ad\\7555dac0-c641-48bc-80b5-8620c855a518.png",
+        "exports\\set-GMS2-2.3.0\\tilesets\\tileset_setGMS2230\\output_tileset.png",
+        "exports\\set-GMS2-2.3.0\\tilesets\\tileset_setGMS2230\\tileset_setGMS2230.yy"
+      ],
+      "set-Defold": [
+        "exports\\set-Defold\\set-Defold.png",
+        "exports\\set-Defold\\set-Defold.tilesource"
+      ]
+    },
+    "unityPackages": {
+      "map-Unity.unitypackage": {
+        "files": 87,
+        "guidGroups": 24,
+        "gzipTar": true,
+        "guidMetadataMatches": true
+      },
+      "set-Unity.unitypackage": {
+        "files": 258,
+        "guidGroups": 67,
+        "gzipTar": true,
+        "guidMetadataMatches": true
+      }
+    },
+    "targetEngineRuntimeVerified": false
+  },
+  "wang": {
+    "status": "pass",
+    "roundTripFields": [
+      "tilewidth",
+      "tileheight",
+      "tileshape",
+      "sources",
+      "tiles",
+      "set",
+      "set_regions",
+      "sandbox_layers",
+      "sandbox"
+    ],
+    "relationGraphEqual": true,
+    "relationIdsMayReorder": true,
+    "placements": 776,
+    "undoRedo": [
+      {
+        "index": 32,
+        "op": "undo",
+        "placementsBefore": 776,
+        "placementsAfter": 768
+      },
+      {
+        "index": 33,
+        "op": "redo",
+        "placementsBefore": 768,
+        "placementsAfter": 776
+      }
+    ],
+    "nativePngEqualsImageExport": true,
+    "atlasReconstructionMaxChannelDifference": 0,
+    "formatsChecked": 14,
+    "formatFiles": {
+      "map-JSON": [
+        "exports\\map-JSON\\map-JSON.png",
+        "exports\\map-JSON\\map-JSON.txt"
+      ],
+      "map-Image": [
+        "exports\\map-Image.png"
+      ],
+      "map-Unity": [
+        "exports\\map-Unity.unitypackage"
+      ],
+      "map-Godot": [
+        "exports\\map-Godot\\layer_0_map-Godot.tscn",
+        "exports\\map-Godot\\layer_1_map-Godot.tscn",
+        "exports\\map-Godot\\map_map-Godot.tscn",
+        "exports\\map-Godot\\tileset_map-Godot.png",
+        "exports\\map-Godot\\tileset_map-Godot.png.import",
+        "exports\\map-Godot\\tileset_map-Godot.tres"
+      ],
+      "map-GMS2": [
+        "exports\\map-GMS2\\mapGMS2.yyp",
+        "exports\\map-GMS2\\rooms\\room_mapGMS2\\room_mapGMS2.yy",
+        "exports\\map-GMS2\\sprites\\sprite_mapGMS2\\8039bdc7-e7b0-42ac-bd07-e02a6c69ea04.png",
+        "exports\\map-GMS2\\sprites\\sprite_mapGMS2\\sprite_mapGMS2.yy",
+        "exports\\map-GMS2\\sprites\\sprite_mapGMS2\\layers\\8039bdc7-e7b0-42ac-bd07-e02a6c69ea04\\0e43959a-bd58-4cc2-866f-e3413cc4e358.png",
+        "exports\\map-GMS2\\tilesets\\tileset_mapGMS2\\output_tileset.png",
+        "exports\\map-GMS2\\tilesets\\tileset_mapGMS2\\tileset_mapGMS2.yy"
+      ],
+      "map-GMS2-2.3.0": [
+        "exports\\map-GMS2-2.3.0\\mapGMS2230.yyp",
+        "exports\\map-GMS2-2.3.0\\rooms\\room_mapGMS2230\\room_mapGMS2230.yy",
+        "exports\\map-GMS2-2.3.0\\sprites\\sprite_mapGMS2230\\f1d690ef-bda7-4d42-8013-212117f661ef.png",
+        "exports\\map-GMS2-2.3.0\\sprites\\sprite_mapGMS2230\\sprite_mapGMS2230.yy",
+        "exports\\map-GMS2-2.3.0\\sprites\\sprite_mapGMS2230\\layers\\f1d690ef-bda7-4d42-8013-212117f661ef\\4dfe4d14-4cc0-45e1-8a41-d41ff3329719.png",
+        "exports\\map-GMS2-2.3.0\\tilesets\\tileset_mapGMS2230\\output_tileset.png",
+        "exports\\map-GMS2-2.3.0\\tilesets\\tileset_mapGMS2230\\tileset_mapGMS2230.yy"
+      ],
+      "map-Defold": [
+        "exports\\map-Defold\\map-Defold.png",
+        "exports\\map-Defold\\map-Defold.tilemap",
+        "exports\\map-Defold\\map-Defold.tilesource"
+      ],
+      "set-JSON": [
+        "exports\\set-JSON\\set-JSON.png",
+        "exports\\set-JSON\\set-JSON.txt"
+      ],
+      "set-Image": [
+        "exports\\set-Image.png"
+      ],
+      "set-Unity": [
+        "exports\\set-Unity.unitypackage"
+      ],
+      "set-Godot": [
+        "exports\\set-Godot\\tileset_set-Godot.png",
+        "exports\\set-Godot\\tileset_set-Godot.png.import",
+        "exports\\set-Godot\\tileset_set-Godot.tres"
+      ],
+      "set-GMS2": [
+        "exports\\set-GMS2\\setGMS2.yyp",
+        "exports\\set-GMS2\\sprites\\sprite_setGMS2\\f1978819-a08c-4968-bc85-75a0f934023f.png",
+        "exports\\set-GMS2\\sprites\\sprite_setGMS2\\sprite_setGMS2.yy",
+        "exports\\set-GMS2\\sprites\\sprite_setGMS2\\layers\\f1978819-a08c-4968-bc85-75a0f934023f\\82b33ed7-e94d-4246-8602-66a41ff55405.png",
+        "exports\\set-GMS2\\tilesets\\tileset_setGMS2\\output_tileset.png",
+        "exports\\set-GMS2\\tilesets\\tileset_setGMS2\\tileset_setGMS2.yy"
+      ],
+      "set-GMS2-2.3.0": [
+        "exports\\set-GMS2-2.3.0\\setGMS2230.yyp",
+        "exports\\set-GMS2-2.3.0\\sprites\\sprite_setGMS2230\\996792ef-73c2-4059-9431-4e4751e93bd8.png",
+        "exports\\set-GMS2-2.3.0\\sprites\\sprite_setGMS2230\\sprite_setGMS2230.yy",
+        "exports\\set-GMS2-2.3.0\\sprites\\sprite_setGMS2230\\layers\\996792ef-73c2-4059-9431-4e4751e93bd8\\1d54d3ee-32e9-498e-b332-8b6f28496166.png",
+        "exports\\set-GMS2-2.3.0\\tilesets\\tileset_setGMS2230\\output_tileset.png",
+        "exports\\set-GMS2-2.3.0\\tilesets\\tileset_setGMS2230\\tileset_setGMS2230.yy"
+      ],
+      "set-Defold": [
+        "exports\\set-Defold\\set-Defold.png",
+        "exports\\set-Defold\\set-Defold.tilesource"
+      ]
+    },
+    "unityPackages": {
+      "map-Unity.unitypackage": {
+        "files": 87,
+        "guidGroups": 24,
+        "gzipTar": true,
+        "guidMetadataMatches": true
+      },
+      "set-Unity.unitypackage": {
+        "files": 150,
+        "guidGroups": 40,
+        "gzipTar": true,
+        "guidMetadataMatches": true
+      }
+    },
+    "targetEngineRuntimeVerified": false
+  },
+  "unityRuntimeVerified": false
+}

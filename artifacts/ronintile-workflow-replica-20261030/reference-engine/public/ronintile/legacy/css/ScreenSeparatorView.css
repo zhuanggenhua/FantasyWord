@@ -1,0 +1,51 @@
+:root {
+	--sepStripe: 5.655px;
+	--sepStripes: 11.31px;
+	--sepThicknessBG: 12px;
+  	--sepThickness: 4px;
+}
+
+.screenseparator-H-view {
+	background: var(--rtDeepFill);
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	width: var(--sepThicknessBG);
+	cursor: w-resize;
+}
+.screenseparator-H-view:after {
+	content: '';
+	position: absolute;
+	width: var(--sepThickness);
+	left: var(--sepThickness);
+	height: 100%;
+	background: var(--hazardStripe);
+	background-size: 32px 32px;
+	background-position: 0px 0px;
+}
+
+.screenseparator-V-view {
+	background: var(--rtDeepFill);
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	height: var(--sepThicknessBG);
+	cursor: s-resize;
+}
+.screenseparator-V-view:after {
+	content: '';
+	position: absolute;
+	height: var(--sepThickness);
+	top: var(--sepThickness);
+	width: 100%;
+	background: var(--hazardStripe);
+	background-size: 32px 32px;
+	background-position: 0px 0px;
+}
+
+.screenseparator-container-view {
+	position: absolute;
+	left: 0; right: 0;
+	top: 0; bottom: 0;
+	overflow: hidden;
+}

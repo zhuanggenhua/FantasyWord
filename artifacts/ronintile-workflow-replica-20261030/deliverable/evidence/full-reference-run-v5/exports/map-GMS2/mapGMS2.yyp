@@ -1,0 +1,52 @@
+{
+    "id": "226f4af0-99ca-4e4d-8bd2-c3480e7e8406",
+    "modelName": "GMProject",
+    "mvc": "1.0",
+    "IsDnDProject": true,
+    "configs": [
+        
+    ],
+    "option_ecma": false,
+    "parentProject": {
+        "id": "ae94b5cd-9457-45bb-875d-a044d6819bb9",
+        "modelName": "GMProjectParent",
+        "mvc": "1.0",
+        "alteredResources": [
+            
+        ],
+        "hiddenResources": [
+            
+        ],
+        "projectPath": "${base_project}"
+    },
+    "resources": [
+        {
+            "Key": "5db2f4af-2dfa-41f2-b016-8ed78fc2ec83",
+            "Value": {
+                "id": "77c55b63-01cf-4c1a-b3f8-1f1d9b2d5ff6",
+                "resourcePath": "rooms\\room_mapGMS2\\room_mapGMS2.yy",
+                "resourceType": "GMRoom"
+            }
+        },
+        {
+            "Key": "e1c23db8-f89d-49c0-8bed-78dcf7572197",
+            "Value": {
+                "id": "469e822f-f7ea-40a6-9ca2-518a016f898d",
+                "resourcePath": "sprites\\sprite_mapGMS2\\sprite_mapGMS2.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
+            "Key": "73f19423-3f61-4fb9-8889-e94a315f77a4",
+            "Value": {
+                "id": "38d77cda-2cc3-40c0-aa4e-b070df8f90b7",
+                "resourcePath": "tilesets\\tileset_mapGMS2\\tileset_mapGMS2.yy",
+                "resourceType": "GMTileSet"
+            }
+        }
+    ],
+    "script_order": [
+        
+    ],
+    "tutorial": ""
+}

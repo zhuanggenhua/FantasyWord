@@ -1,0 +1,30 @@
+{
+  "status": "pass",
+  "scope": "城镇室外实验稿的静态画面；不代表玩家设计评价或 Unity 表现验收",
+  "images": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-town-rivertrade-20261028\\final\\town-overview.png",
+      "sha256": "e8edf45db59b8367cb90737821d58e70fe5a88832d083baa39913cde626e455a"
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-town-rivertrade-20261028\\final\\preview\\preview-screen.png",
+      "sha256": "74691a2a6c507509fd519212950f04635a94fae31bbc863485d0f088be048d94"
+    }
+  ],
+  "checks": {
+    "native_and_browser_layout_consistent": "pass",
+    "all_10_buildings_have_complete_roofs_and_fronts": "pass",
+    "two_bridges_have_visible_decks_and_rails": "pass",
+    "residential_gates_and_door_paths_visible": "pass",
+    "market_courtyard_and_old_bank_readable": "pass",
+    "no_tileset_checkerboard_leak": "pass"
+  },
+  "observations": [
+    "市场以棚亭和井组织，住宅院落通过围栏、门口支路与广场区别。",
+    "旧岸以仓库和石塔构成短线，主桥与南桥形成过河回路。"
+  ],
+  "limits": [
+    "建筑沿用示例的有限组合，屋顶变化少；当前是小镇布局样稿。",
+    "NPC、事件、交易和室内尚未生成；动态屋顶遮挡未验证。"
+  ]
+}

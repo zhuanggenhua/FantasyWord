@@ -1,0 +1,27 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "assets/props.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/terrain.tsx": {
+            "scaleInDock": 1
+        },
+        "draft-town.tmj": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 320.5,
+                "y": 239
+            }
+        }
+    },
+    "openFiles": [
+    ],
+    "project": "",
+    "recentFiles": [
+        "draft-town.tmj"
+    ]
+}

@@ -1,0 +1,7 @@
+{
+  "url": "https://frameronin.com/ronintile/assets/index-5sEpM8Gi.js",
+  "sha256": "5d419daadf2a3a5480cb83add497f65b82cdb5ce29ed32bc5afe38d70ca5dee4",
+  "version": "2.1.0-pro",
+  "localReference": "artifacts/ronintile-workflow-replica-20261030/reference-engine",
+  "role": "网页公开原引擎，仅本地执行和对照，不声称独立重写原算法"
+}

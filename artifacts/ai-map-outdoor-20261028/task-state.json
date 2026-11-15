@@ -1,0 +1,118 @@
+{
+  "goal": "使用现有 MiniFantasy 素材通过 CLI 生成不同布局的野外地图并完成离线验收",
+  "status": "complete",
+  "acceptance_criteria": [
+    {
+      "id": "C1",
+      "description": "复用原始素材及其切片，并记录来源与布局输入",
+      "status": "pass",
+      "evidence": [
+        "final/source-audit.json",
+        "final/layout.json",
+        "reference/user-reference.png"
+      ]
+    },
+    {
+      "id": "C2",
+      "description": "生成与用户参考不同构图的野外地图和可编辑地图数据",
+      "status": "pass",
+      "evidence": [
+        "final/map-preview.png",
+        "final/tiled/map.tmj"
+      ]
+    },
+    {
+      "id": "C3",
+      "description": "独立结构检查、寻路检查与浏览器路线验证通过",
+      "status": "pass",
+      "evidence": [
+        "final/bundle-report.json",
+        "final/nav/nav-report.json",
+        "final/preview/preview-qa.json",
+        "final/preview/scene-snapshot.json",
+        "final/tiled/export-report.json"
+      ]
+    },
+    {
+      "id": "C4",
+      "description": "检查最终离线画面，交付预览和复现命令",
+      "status": "pass",
+      "evidence": [
+        "final/visual-review.json",
+        "README.md",
+        "final/determinism-report.json"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\source-audit.json",
+      "description": "final/source-audit.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\layout.json",
+      "description": "final/layout.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\reference\\user-reference.png",
+      "description": "reference/user-reference.png",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\map-preview.png",
+      "description": "final/map-preview.png",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\tiled\\map.tmj",
+      "description": "final/tiled/map.tmj",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\bundle-report.json",
+      "description": "final/bundle-report.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\nav\\nav-report.json",
+      "description": "final/nav/nav-report.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\preview\\preview-qa.json",
+      "description": "final/preview/preview-qa.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\preview\\scene-snapshot.json",
+      "description": "final/preview/scene-snapshot.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\tiled\\export-report.json",
+      "description": "final/tiled/export-report.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\visual-review.json",
+      "description": "final/visual-review.json",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\README.md",
+      "description": "README.md",
+      "required": true
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-outdoor-20261028\\final\\determinism-report.json",
+      "description": "final/determinism-report.json",
+      "required": true
+    }
+  ],
+  "notes": [
+    "本轮用户要求不打开 Unity；不包含 Unity 导入、编译、GameView 或物理运行态验收。",
+    "art_source=existing；AI 生成布局规划，未调用图片生成模型。"
+  ]
+}

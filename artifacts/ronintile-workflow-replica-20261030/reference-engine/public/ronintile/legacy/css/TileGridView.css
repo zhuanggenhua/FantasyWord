@@ -1,0 +1,98 @@
+:root {
+	--selStripe: 5.655px;
+	--selStripes: 11.31px;
+	--tileSelStripeMuted: rgba(24, 26, 20, 0.25);
+}
+
+.tilegrid-view {
+    /* 网格周期由 JS updateBackgroundGrid 按瓦片尺寸写入，避免此处写死 32px 与 tileSize=12 等不一致 */
+    background-color: var(--colorBG);
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background-position: 0px 0px;
+    overflow: hidden;
+}
+.tilegrid-view:focus {
+    outline:none;
+}
+
+.tilegrid-selectionbounds-view {
+	visibility: hidden;
+	border-radius: 4px;
+	border-style: solid;
+	border-width: 4px;
+	border-color: var(--colorSelect);
+	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.75), 0 0 10px rgba(246, 224, 94, 0.35);
+	position: absolute;
+}
+
+.tilegrid-selection-view {
+	position: absolute;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	width: 32px;
+	height: 32px;
+	background: repeating-linear-gradient(135deg, var(--tileSelStripeMuted), var(--tileSelStripeMuted), var(--selStripe), var(--colorSelect) var(--selStripe), var(--colorSelect) var(--selStripes));
+	background-size: 32px 32px;
+	background-position: 0px 0px;
+	--selScrollXA: 0px;
+	--selScrollXB: 0px;
+	--selScrollYA: 8px;
+	--selScrollYB: 24px;
+	animation: tilegrid-selection-anim 1s infinite;
+}
+
+@keyframes tilegrid-selection-anim {
+	0% {
+    	background-position: var(--selScrollXA) var(--selScrollYA);
+	}
+	100% {
+		background-position: var(--selScrollXB) var(--selScrollYB);
+	}
+}
+
+.tilegrid-tile-view {
+	position: absolute;
+}
+
+.tilegrid-region-view {
+	border-radius: 0px 4px 4px 4px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: var(--colorSelect);
+	position: absolute;
+}
+
+.tilegrid-regionbutton-view {
+	width:13px;
+	height:13px;
+	right:-2px;
+	top:-2px;
+	border-radius: 0px 4px 0px 7px;
+	background: var(--colorSelect);
+	position: absolute;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.tilegrid-regionlabel-view {
+	left:-2px;
+	top:0px;
+	transform: translateY(-100%);
+	padding: 2px;
+	padding-right: 4px;
+	padding-left: 4px;
+	border-radius: 7px 7px 0px 0px;
+	background: var(--colorSelect);
+	position: absolute;
+	font-size: 12px;
+	font-family: mainFont;
+	color: var(--colorBG);
+	font-weight: 700;
+	overflow: hidden;
+	box-sizing: border-box;
+	text-overflow: ellipsis;
+	direction: rtl;
+    text-align: left;
+}

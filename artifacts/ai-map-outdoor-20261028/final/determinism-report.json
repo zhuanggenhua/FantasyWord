@@ -1,0 +1,16 @@
+{
+  "same_layout_seed_two_fresh_generations": {
+    "map-bundle.json": {
+      "identical": true,
+      "sha256": "436c318b3063ffbd1fc681d64ae15a8038c3ea717cb4dd5be439b6b51875b829"
+    },
+    "map-native.png": {
+      "identical": true,
+      "sha256": "1cec5b1a9bc1714d84b38c0f5e8372fff0e9081bcd9bbada02d38c4bf17496b0"
+    },
+    "map-preview.png": {
+      "identical": true,
+      "sha256": "6f8ea3449a8341bf4d1afa2e9d30fa93b00a0beb6d59cad472b22113a2d4b8a1"
+    }
+  }
+}

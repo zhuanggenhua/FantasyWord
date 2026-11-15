@@ -1,0 +1,609 @@
+{
+  "schema": "generate2dmap.scene_preview_qa.v1",
+  "status": "pass",
+  "method": "build_scene_preview: bundle files resolved relative to the bundle and checked against their sha256 when given; collision read through forge_nav (the D2 blocking set; tile collision converted into world solids, material classes into BLOCK and one_way pixel planes); tiles layers pre-rendered from tileset manifests; art found in the D6 order and embedded as data URIs; map-runtime.mjs inlined verbatim; the page scanned for anything that loads from outside it; size gate; optional headless-Chromium run (--verify).",
+  "notProven": [
+    "Collision is forge_nav's D2 blocking set and the page walks it with map-runtime.mjs, which mirrors forge_nav rule for rule; their agreement is tested on synthetic fixtures (tests/test_map_runtime_js.py), not on this map. Rotated shapes can differ by one ulp of sin and cos between a browser and Python.",
+    "Without --verify, or when it prints SKIPPED, the page was assembled and scanned but never run in a browser.",
+    "The actor is a debug marker sized from collision.actorRadius, not character art; animation, lights, atmosphere, stage data, camera bounds and occluder masks are not drawn.",
+    "Draw order is whole-object Y-sort by (sortY, x, id); per-pixel occlusion, fades and cut-aways are not simulated.",
+    "Route checks walk the forge_nav grid with the runtime walker at --speed; an engine controller (acceleration, physics colliders, other speeds) may behave differently. one_way material blocks moving down onto it on every map (N11); a top-down map should not use it.",
+    "Footprint samples lie half a nav cell apart (N10): a solid thinner than that can fall between the samples of the footprint's rim; the actor's centre path is tested exactly (thin-gap rule).",
+    "Only headless Chromium is exercised (with --verify); other browsers, devices and touch input are not tested."
+  ],
+  "checks": [
+    {
+      "id": "html-size",
+      "status": "pass",
+      "value": 224979,
+      "threshold": 16000000
+    },
+    {
+      "id": "external-references",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "ascii-only",
+      "status": "pass",
+      "value": true,
+      "threshold": true
+    },
+    {
+      "id": "single-inline-script",
+      "status": "pass",
+      "value": true,
+      "threshold": true
+    },
+    {
+      "id": "runtime-inlined",
+      "status": "pass",
+      "value": "map-runtime.mjs",
+      "threshold": null
+    },
+    {
+      "id": "object-art",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-verify",
+      "status": "pass",
+      "value": "145.0.7632.6",
+      "threshold": null
+    },
+    {
+      "id": "browser-page-errors",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-network-requests",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-assets-loaded",
+      "status": "pass",
+      "value": {
+        "total": 27,
+        "loaded": 27,
+        "failed": []
+      },
+      "threshold": null
+    },
+    {
+      "id": "browser-keyboard-walk",
+      "status": "pass",
+      "value": [
+        {
+          "key": "ArrowRight",
+          "free": true,
+          "moved": 13
+        },
+        {
+          "key": "ArrowLeft",
+          "free": true,
+          "moved": 13
+        },
+        {
+          "key": "ArrowDown",
+          "free": true,
+          "moved": 13
+        },
+        {
+          "key": "ArrowUp",
+          "free": true,
+          "moved": 15
+        }
+      ],
+      "threshold": null
+    },
+    {
+      "id": "browser-routes",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-y-sort",
+      "status": "pass",
+      "value": {
+        "status": "pass",
+        "object": "TreeApples-16",
+        "pixel": [
+          140,
+          29,
+          31
+        ],
+        "behind": {
+          "withActor": [
+            14,
+            75,
+            68,
+            255
+          ],
+          "withoutActor": [
+            14,
+            75,
+            68,
+            255
+          ]
+        },
+        "front": {
+          "withActor": [
+            242,
+            245,
+            234,
+            255
+          ],
+          "withoutActor": [
+            43,
+            48,
+            7,
+            255
+          ]
+        }
+      },
+      "threshold": null
+    },
+    {
+      "id": "build-warnings",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "436c318b3063ffbd1fc681d64ae15a8038c3ea717cb4dd5be439b6b51875b829",
+      "bytes": 463923
+    },
+    {
+      "path": "../assets/TreeNoApples.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/TreeNoApples_Shadow_9.png",
+      "sha256": "8176cf14d2c7891c361628348d85f71c7aa563f4a571dc731b220a878524379a",
+      "bytes": 160
+    },
+    {
+      "path": "../assets/TreeApples.png",
+      "sha256": "6e00faab30818cf4433c532896c3bd26672f2f454f2c3d86817e66544ef6cbec",
+      "bytes": 546
+    },
+    {
+      "path": "../assets/TreeApples_Shadow_10.png",
+      "sha256": "770612606f23b9d54961216d95038478c9e38b2eba7ecb63d0ffa1d025c48209",
+      "bytes": 168
+    },
+    {
+      "path": "../assets/PillarTall1.png",
+      "sha256": "c5183530076d795eefea97b4f2e3e3482ac9b6966c427634fd1e60f1a7c3c27f",
+      "bytes": 307
+    },
+    {
+      "path": "../assets/PillarMedium2.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "../assets/PillarShort1.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "../assets/PillarTall3.png",
+      "sha256": "800ce4b8d88b72df7d3cba32a0ea776ffdfefcd197c27b2ea7ceb0aed9e84c73",
+      "bytes": 399
+    },
+    {
+      "path": "../assets/PillarMedium3.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "../assets/PillarShort2.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "../assets/FlowerRed.png",
+      "sha256": "60c1a7bae2959b0bd3904c3a3da7e05ac0a4da76be24225cb2a36e5e00dfbff6",
+      "bytes": 125
+    },
+    {
+      "path": "../assets/GrassLong2.png",
+      "sha256": "89d34146e74debed2b18436630c2f3d2516050c30ac8066ddb60be0003673a60",
+      "bytes": 99
+    },
+    {
+      "path": "../assets/FlowerPink.png",
+      "sha256": "9d18bf184d9154ce996bd75616c189b14161e21c0e4832eda36429faf3116160",
+      "bytes": 133
+    },
+    {
+      "path": "../assets/GrassLong1.png",
+      "sha256": "ff7e5cb4e4618529ba13ed6fda5e9a1f65a9875b81ee2c0ab7526956e900188c",
+      "bytes": 92
+    },
+    {
+      "path": "../assets/FlowerWhite.png",
+      "sha256": "c0117a19b88e44217f61deea06bf5d04ad0ddf4569172ae3074b957e0dee0afe",
+      "bytes": 107
+    },
+    {
+      "path": "../assets/terrain-tileset.json",
+      "sha256": "b7b0dba6086d1857d8cdf6545c0baa1b15a525026b6bf4bf7d112b6cf358112f",
+      "bytes": 4172
+    },
+    {
+      "path": "../assets/terrain-atlas.png",
+      "sha256": "0146fcf904e92ad639b43bd4d6498d3efc43d937841d2053c3c073e8bbcf9178",
+      "bytes": 5875
+    }
+  ],
+  "outputs": [
+    {
+      "path": "preview.html",
+      "sha256": "96a185a47e9ec9fbf254f772719584df0a18e1403484d1f57d90a0ae3aa3a20e",
+      "bytes": 224979
+    },
+    {
+      "path": "scene-snapshot.json",
+      "sha256": "a0b18a0e1d51c9d36efc19628ed2fa75965d6b40e98b26a36b3fb8ff0e811899",
+      "bytes": 6870
+    },
+    {
+      "path": "preview-screen.png",
+      "sha256": "0d8e4f632f0863f1836fc2f21d388d3518ec107443732961b770b966ea1e6980",
+      "bytes": 55767
+    },
+    {
+      "path": "preview-debug.png",
+      "sha256": "451852a280ec1b57f68af5c28f17b2c938ba62c5136602dfd8e66c12a902ecd9",
+      "bytes": 90810
+    }
+  ],
+  "tool": {
+    "name": "build_scene_preview",
+    "version": "0.4.0"
+  },
+  "preview": {
+    "file": "preview.html",
+    "bytes": 224979,
+    "sha256": "96a185a47e9ec9fbf254f772719584df0a18e1403484d1f57d90a0ae3aa3a20e",
+    "runtime": {
+      "file": "map-runtime.mjs",
+      "version": "1.1.2",
+      "sha256": "c1fc3d9bf15cfa53fdfeb050ce4252f7ace4c923066ca4e135dea576e7445273"
+    },
+    "world": [
+      384,
+      320
+    ],
+    "zoom": 3,
+    "speed": 60.0,
+    "actorHeight": 12.0,
+    "actorRadius": 2,
+    "ySquash": 0.65,
+    "start": "south_entry",
+    "layers": [
+      {
+        "name": "ground",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "water",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "path",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "detail",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "shadow",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "walls_vertical",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "walls_horizontal",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "cliff1",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "cliff2",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "cliff3",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "cliff_top",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "wall_shadow",
+        "source": "tiles",
+        "size": [
+          384,
+          320
+        ]
+      },
+      {
+        "name": "props",
+        "source": "objects"
+      }
+    ],
+    "drawOrder": [
+      "TreeApples-38-shadow",
+      "TreeNoApples-10-shadow",
+      "TreeNoApples-40-shadow",
+      "TreeApples-14-shadow",
+      "TreeNoApples-12-shadow",
+      "TreeNoApples-22-shadow",
+      "TreeNoApples-24-shadow",
+      "TreeApples-16-shadow",
+      "TreeNoApples-32-shadow",
+      "TreeNoApples-36-shadow",
+      "TreeApples-30-shadow",
+      "TreeApples-6-shadow",
+      "TreeApples-18-shadow",
+      "TreeNoApples-8-shadow",
+      "TreeApples-4-shadow",
+      "TreeNoApples-26-shadow",
+      "TreeNoApples-34-shadow",
+      "TreeApples-2-shadow",
+      "TreeNoApples-0-shadow",
+      "TreeNoApples-20-shadow",
+      "TreeNoApples-28-shadow",
+      "FlowerPink-135",
+      "GrassLong2-150",
+      "FlowerPink-55",
+      "GrassLong1-68",
+      "GrassLong1-138",
+      "FlowerRed-93",
+      "TreeApples-16",
+      "TreeNoApples-32",
+      "GrassLong2-152",
+      "GrassLong2-110",
+      "FlowerWhite-163",
+      "GrassLong1-80",
+      "FlowerPink-116",
+      "FlowerRed-63",
+      "GrassLong2-104",
+      "FlowerWhite-114",
+      "TreeNoApples-34",
+      "FlowerPink-126",
+      "GrassLong1-57",
+      "GrassLong1-121",
+      "FlowerWhite-133",
+      "FlowerPink-84",
+      "FlowerPink-132",
+      "GrassLong1-111",
+      "TreeNoApples-0",
+      "FlowerWhite-141",
+      "FlowerWhite-62",
+      "GrassLong2-61",
+      "TreeNoApples-26",
+      "GrassLong2-74",
+      "FlowerPink-65",
+      "FlowerRed-66",
+      "FlowerRed-58",
+      "GrassLong1-120",
+      "GrassLong1-155",
+      "FlowerWhite-128",
+      "GrassLong1-131",
+      "FlowerRed-50",
+      "GrassLong2-123",
+      "GrassLong1-72",
+      "FlowerRed-77",
+      "GrassLong2-134",
+      "FlowerPink-115",
+      "FlowerRed-79",
+      "GrassLong2-102",
+      "GrassLong1-119",
+      "FlowerPink-70",
+      "FlowerRed-160",
+      "TreeApples-4",
+      "FlowerPink-90",
+      "FlowerRed-156",
+      "FlowerPink-140",
+      "GrassLong1-127",
+      "FlowerWhite-130",
+      "FlowerRed-48",
+      "GrassLong2-71",
+      "GrassLong1-67",
+      "GrassLong1-101",
+      "FlowerPink-144",
+      "GrassLong1-136",
+      "FlowerPink-118",
+      "FlowerPink-96",
+      "GrassLong2-157",
+      "GrassLong1-142",
+      "FlowerRed-143",
+      "GrassLong2-146",
+      "TreeApples-38",
+      "TreeNoApples-40",
+      "GrassLong2-92",
+      "FlowerWhite-109",
+      "FlowerRed-161",
+      "TreeNoApples-20",
+      "FlowerPink-147",
+      "FlowerWhite-75",
+      "GrassLong2-73",
+      "FlowerRed-91",
+      "FlowerPink-97",
+      "PillarTall1-42",
+      "TreeApples-30",
+      "GrassLong2-94",
+      "FlowerWhite-125",
+      "FlowerWhite-54",
+      "TreeNoApples-10",
+      "TreeNoApples-12",
+      "GrassLong2-59",
+      "GrassLong1-88",
+      "FlowerRed-137",
+      "TreeNoApples-8",
+      "FlowerRed-129",
+      "GrassLong2-117",
+      "TreeNoApples-36",
+      "GrassLong2-51",
+      "FlowerPink-149",
+      "GrassLong1-154",
+      "FlowerWhite-108",
+      "FlowerRed-98",
+      "GrassLong2-85",
+      "GrassLong2-56",
+      "GrassLong1-81",
+      "FlowerPink-89",
+      "PillarMedium2-43",
+      "TreeNoApples-28",
+      "GrassLong1-53",
+      "FlowerRed-112",
+      "PillarShort1-44",
+      "GrassLong2-49",
+      "GrassLong1-153",
+      "GrassLong1-103",
+      "FlowerWhite-113",
+      "FlowerPink-78",
+      "GrassLong2-76",
+      "FlowerWhite-148",
+      "FlowerWhite-86",
+      "FlowerRed-139",
+      "TreeApples-18",
+      "FlowerPink-95",
+      "GrassLong1-100",
+      "GrassLong2-122",
+      "FlowerWhite-64",
+      "FlowerPink-107",
+      "FlowerPink-52",
+      "TreeNoApples-22",
+      "PillarMedium3-46",
+      "PillarTall3-45",
+      "PillarShort2-47",
+      "FlowerWhite-164",
+      "FlowerWhite-124",
+      "GrassLong1-106",
+      "FlowerPink-83",
+      "FlowerWhite-151",
+      "GrassLong2-69",
+      "FlowerPink-159",
+      "TreeApples-6",
+      "FlowerWhite-105",
+      "GrassLong2-166",
+      "GrassLong2-162",
+      "FlowerWhite-87",
+      "TreeApples-14",
+      "TreeApples-2",
+      "FlowerPink-99",
+      "FlowerPink-60",
+      "FlowerWhite-145",
+      "FlowerPink-165",
+      "GrassLong1-82",
+      "TreeNoApples-24",
+      "FlowerPink-158"
+    ],
+    "objectArt": {
+      "object.image": 167,
+      "props": 0,
+      "prop-pack": 0,
+      "occluder.source": 0,
+      "missing": []
+    },
+    "counts": {
+      "objects": 167,
+      "portals": 0,
+      "spawns": 1,
+      "interactions": 3,
+      "anchors": 3
+    },
+    "images": {
+      "count": 27,
+      "bytes": 37287
+    },
+    "materialMap": null,
+    "collision": {
+      "collisionSolids": 379,
+      "rects": 0,
+      "footprints": 27,
+      "tileSolids": 0,
+      "blockingMaterialClasses": []
+    },
+    "hashes": {
+      "checked": 0,
+      "unchecked": 169
+    }
+  },
+  "warnings": [],
+  "verify": {
+    "status": "pass",
+    "browser": "145.0.7632.6",
+    "routesOk": true,
+    "routes": 3,
+    "failing": [],
+    "ysort": "pass"
+  }
+}

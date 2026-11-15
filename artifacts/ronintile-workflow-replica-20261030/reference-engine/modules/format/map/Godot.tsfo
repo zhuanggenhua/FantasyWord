@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="Godot Assets">
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<image-file><!----><name>tileset_<var v="export_name"/>.png</name>
+					<!----><width expression="min(x0, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+					<!----><height expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents>	<!--
+		|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--	|-->	<ivar v="_tile.image">
+<!--	|-->		<grid-x expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--	|-->		<grid-y expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--	|-->	</ivar>
+<!--	|--></image-contents></image-loop><!--
+		|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+		<text-file><!----><name>tileset_<var v="export_name"/>.png.import</name><!----><text-contents><!--
+		|-->[remap]
+<!--	|-->
+<!--	|-->importer="texture"
+<!--	|-->type="StreamTexture"
+<!--	|-->path="res://.import/tileset_<var v="export_name"/>.png-.stex"
+<!--	|-->metadata={
+<!--	|-->"vram_texture": false
+<!--	|-->}
+<!--	|-->
+<!--	|-->[deps]
+<!--	|-->
+<!--	|-->source_file="tileset_<var v="export_name"/>.png"
+<!--	|-->dest_files=[ "res://.import/tileset_<var v="export_name"/>.png-.stex" ]
+<!--	|-->
+<!--	|-->[params]
+<!--	|-->
+<!--	|-->compress/mode=0
+<!--	|-->compress/lossy_quality=0.7
+<!--	|-->compress/hdr_mode=0
+<!--	|-->compress/bptc_ldr=0
+<!--	|-->compress/normal_map=0
+<!--	|-->flags/repeat=0
+<!--	|-->flags/filter=false
+<!--	|-->flags/mipmaps=false
+<!--	|-->flags/anisotropic=false
+<!--	|-->flags/srgb=2
+<!--	|-->process/fix_alpha_border=true
+<!--	|-->process/premult_alpha=false
+<!--	|-->process/HDR_as_SRGB=false
+<!--	|-->process/invert_color=false
+<!--	|-->stream=false
+<!--	|-->size_limit=0
+<!--	|-->detect_3d=true
+<!--	|-->svg/scale=1.0<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<text-file><!----><name>tileset_<var v="export_name"/>.tres</name><!----><text-contents><!--
+		|-->[gd_resource type="TileSet" load_steps=2 format=2]
+<!--	|-->
+<!--	|-->[ext_resource path="tileset_<var v="export_name"/>.png" type="Texture" id=1]
+<!--	|-->
+<!--	|-->[resource]
+<!--	|--><list-loop foreach="tile"><as i="_tile"/><text-contents><var v="_tile.index"/>/name = "tileset_<var v="export_name"/>.png <var v="_tile.index"/>"
+<!--		|--><var v="_tile.index"/>/texture = ExtResource( 1 )
+<!--		|--><var v="_tile.index"/>/tex_offset = Vector2( 0, 0 )
+<!--		|--><var v="_tile.index"/>/modulate = Color( 1, 1, 1, 1 )
+<!--		|--><var v="_tile.index"/>/region = Rect2( <nvar expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_size"/></nvar>, <nvar expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_size"/></nvar>, <var v="tile_size"/>, <var v="tile_size"/> )
+<!--		|--><var v="_tile.index"/>/tile_mode = 0
+<!--		|--><var v="_tile.index"/>/occluder_offset = Vector2( 0, 0 )
+<!--		|--><var v="_tile.index"/>/navigation_offset = Vector2( 0, 0 )
+<!--		|--><var v="_tile.index"/>/shapes = [  ]
+<!--		|--><var v="_tile.index"/>/z_index = 0
+<!--	|--></text-contents></list-loop><!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<text-file foreach="layer"><as i="_layer"/><!----><name>layer_<var v="_layer.index"/>_<var v="export_name"/>.tscn</name><!----><text-contents><!--
+		|-->[gd_scene load_steps=3 format=2]
+<!--	|-->
+<!--	|-->[ext_resource path="tileset_<var v="export_name"/>.tres" type="TileSet" id=1]
+<!--	|-->
+<!--	|-->[node name="<var v="_layer.index"/>_<var v="_layer.name"><replace from="[.:@\/&quot;]" to=""/><replace from="\\" to="\\"/></var>" type="TileMap"]
+<!--	|-->tile_set = ExtResource( 1 )
+<!--	|-->cell_size = Vector2( <var v="tile_size"/>, <var v="tile_size"/> )
+<!--	|-->format = 1
+<!--	|-->tile_data = PoolIntArray( <list-loop foreach="_layer.position"><as i="_position"/><as i="_tile"/><text-contents><nvar expression="x0+65536*x1"><x v="_position.x"/><x v="_position.y"/></nvar>, <var v="_tile.index"/>, 0</text-contents><separator>, </separator></list-loop> )<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<text-file><!----><name>map_<var v="export_name"/>.tscn</name><!----><text-contents><!--
+		|-->[gd_scene load_steps=2 format=2]
+<!--	|-->
+<!--	|--><list-loop foreach="layer"><as i="_layer"/><text-contents>[ext_resource path="layer_<var v="_layer.index"/>_<var v="export_name"/>.tscn" type="PackedScene" id=<var v="_layer.index"/>]
+<!--	|--></text-contents></list-loop>
+<!--	|-->[node name="map_<var v="export_name"/>" type="Node2D"]
+<!--	|--><list-loop foreach="layer"><as i="_layer"/><text-contents>[node name="<var v="_layer.index"/>_<var v="_layer.name"><replace from="[.:@\/&quot;]" to=""/><replace from="\\" to="\\"/></var>" parent="." instance=ExtResource( <var v="_layer.index"/> )]
+<!--	|--></text-contents></list-loop><!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

@@ -1,0 +1,56 @@
+.propertyedittext-view {
+  margin: 8px;
+	margin-left: 8px;
+	color: var(--color2);
+	display: inline-block;
+	font-size: 12px;
+	font-family: mainFont;
+	display: flex;
+	align-items: center;
+}
+
+.propertyedittext-display-view {
+	position: relative;
+  width: 40px;
+  height: 18px;
+  margin-left: 8px;
+  margin-right: 4px;
+  display: inline-block;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+
+  border-width: 1px;
+  border-radius: 2px;
+  border-style: solid;
+  border-color: var(--colorSteel);
+  background: var(--rtDeepFill);
+}
+
+.propertyedittext-input-view {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 12px;
+  font-family: mainFont;
+  color: var(--color2);
+  background: var(--rtDeepFill);
+  border-width: 0px;
+  width: 100%;
+  text-overflow: ellipsis;
+}
+.propertyedittext-input-view:focus {
+    outline: none;
+}
+.propertyedittext-input-view::selection {
+    background: var(--color2);
+    color: var(--colorSelect);
+}
+
+.propertyedittext-suffix-view {
+  position: absolute;
+  right: 4px;
+  font-size: 12px;
+  font-family: mainFont;
+  color: var(--colorSteel);
+  cursor: text;
+}

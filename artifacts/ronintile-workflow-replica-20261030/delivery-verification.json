@@ -1,0 +1,44 @@
+{
+  "status": "pass",
+  "zip": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\ronintile-material-workflow.zip",
+  "sha256": "8b0f7b59a0b537fdae415441d866349e73965eac9c3154b292a3a0f790c7718a",
+  "bytes": 3901991,
+  "manifestFiles": 442,
+  "unzipHashesEqual": true,
+  "extractedTiled": {
+    "status": "pass",
+    "formats": [
+      {
+        "version": "1.12.2",
+        "input": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Temp\\ronintile-delivery-check-20261030\\map\\stoneford.tmx",
+        "status": "pass",
+        "width": 96,
+        "height": 72,
+        "layers": 148,
+        "tilesets": 1,
+        "nativeMaxChannelDifference": 1
+      },
+      {
+        "version": "1.12.2",
+        "input": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Temp\\ronintile-delivery-check-20261030\\map\\stoneford.tmj",
+        "status": "pass",
+        "width": 96,
+        "height": 72,
+        "layers": 148,
+        "tilesets": 1,
+        "nativeMaxChannelDifference": 1
+      }
+    ]
+  },
+  "extractedBrowser": {
+    "status": "pass",
+    "buildings": 10,
+    "closedBuildingWallChecks": 9,
+    "openCanopy": 1,
+    "pageNavigations": 0,
+    "externalRequests": 0,
+    "errors": 0,
+    "sourceSha256": "93781c5d0ae0631dd919420082e075488355480c636b3a868ee7726ac8353c84"
+  },
+  "unityRuntimeVerified": false
+}

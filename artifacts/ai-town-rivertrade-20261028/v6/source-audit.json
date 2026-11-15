@@ -1,0 +1,3105 @@
+{
+  "tiles": [
+    {
+      "gid": 1,
+      "name": "Cliff5",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        4319082817293394212
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 2,
+      "name": "Cobblestone_10",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7922151148580461626
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 3,
+      "name": "LakeGrass5b",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        7077750735549151254
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 4,
+      "name": "WoodenBeams_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        2414076771554661261
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 5,
+      "name": "WallLargeStones_PointedDoor_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8814405158977946750
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 176,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 6,
+      "name": "WallLargeStones_PointedDoor_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3492146427066969369
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 7,
+      "name": "WallLargeStones_PointedDoor_9",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        6073557398880558037
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 8,
+      "name": "WallLargeStones_PointedDoor_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1204397930086799024
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 176,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 9,
+      "name": "WallLargeStones_PointedDoor_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5217579356923488551
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 10,
+      "name": "WallLargeStones_PointedDoor_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3811508060353931894
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 11,
+      "name": "WallSmallStones_SecondStory_25",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1614158266624699221
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 480,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 12,
+      "name": "WallSmallStones_SecondStory_30",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3940918304880647807
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 520,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 13,
+      "name": "WallSmallStones_SecondStory_31",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -3074117989622390157
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 528,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 14,
+      "name": "WallSmallStones_SecondStory_18",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1587664295198875067
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 480,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 15,
+      "name": "WallSmallStones_SecondStory_23",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -3112892490770673416
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 520,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 16,
+      "name": "WallSmallStones_SecondStory_24",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        9172986358163374447
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 528,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 17,
+      "name": "WallSmallStones_SecondStory_9",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3362537108945150657
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 472,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 18,
+      "name": "WallSmallStones_SecondStory_13",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5716429322279443305
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 504,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 19,
+      "name": "WallSmallStones_SecondStory_17",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -9028551688796367128
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 536,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 20,
+      "name": "RoofNorthToSouth_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        402956051775507825
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 21,
+      "name": "RoofNorthToSouth_7",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        6340500145581478892
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 22,
+      "name": "RoofNorthToSouth_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5563712096673251851
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 23,
+      "name": "RoofNorthToSouth_3",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1915725255664916956
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 24,
+      "name": "RoofNorthToSouth_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7560813221393341316
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 25,
+      "name": "RoofNorthToSouth_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        8202237170588404313
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 26,
+      "name": "RoofNorthToSouth_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        2499335299823174265
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 104,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 27,
+      "name": "RoofNorthToSouth_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        6359545773361294715
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 104,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 28,
+      "name": "RoofNorthToSouth_2",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7178882529098522234
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 104,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 29,
+      "name": "RoofNorthToSouth_Shadows_0",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -5933752153261657467
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 80,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 30,
+      "name": "WallSmallStones_Windows_13",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7990351253419335432
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 31,
+      "name": "WallSmallStones_WindowsAndDoors_13",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1390698071652370978
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 280,
+        "y": 40,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 32,
+      "name": "WallSmallStones_Windows_9",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5564699817499798125
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 272,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 33,
+      "name": "WallSmallStones_SquareDoor_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5514854517434317082
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 34,
+      "name": "WallSmallStones_SquareDoor_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8083888055778996216
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 35,
+      "name": "WallSmallStones_SquareDoor_7",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1399030410003001182
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 256,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 36,
+      "name": "WallSmallStones_Windows_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7792200373492041208
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 37,
+      "name": "WallSmallStones_Windows_15",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8444670061405794728
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 264,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 38,
+      "name": "WallSmallStones_Windows_10",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        453552836506285417
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 39,
+      "name": "WallSmallStones_WindowsAndDoors_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -873079653709443469
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 280,
+        "y": 48,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 40,
+      "name": "WallSmallStones_Windows_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5404489090686477796
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 272,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 41,
+      "name": "WallSmallStones_SquareDoor_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -9184149545361955907
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 42,
+      "name": "WallSmallStones_SquareDoor_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1815525171285141017
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 43,
+      "name": "WallSmallStones_SquareDoor_2",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        2667034356910231209
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 256,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 44,
+      "name": "WallSmallStones_Windows_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7197639671213119259
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 45,
+      "name": "WallSmallStones_Windows_12",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5699296103369272514
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 264,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 46,
+      "name": "WallLargeStones_Windows_13",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        6678986017239662788
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 47,
+      "name": "WallLargeStones_Windows_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3423302585577546618
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 48,
+      "name": "WallLargeStones_WindowsAndDoors_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -6735631551085495172
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 176,
+        "y": 40,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 49,
+      "name": "WallLargeStones_SquareDoor_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5565175856151473183
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 50,
+      "name": "WallLargeStones_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7522013919393247148
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 192,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 51,
+      "name": "WallLargeStones_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -407710342777125542
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 52,
+      "name": "WallLargeStones_Windows_10",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1313037578760868241
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 53,
+      "name": "WallLargeStones_Windows_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -6827070508127648372
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 54,
+      "name": "WallLargeStones_WindowsAndDoors_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4421664843064774258
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 176,
+        "y": 48,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 55,
+      "name": "WallLargeStones_SquareDoor_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        4850959189568245140
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 184,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 56,
+      "name": "WallLargeStones_1",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        4961894652815207221
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 192,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 57,
+      "name": "WallLargeStones_2",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1090871653121035949
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 58,
+      "name": "WallSmallStones_SecondStory_14",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4767493833422384105
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 512,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 59,
+      "name": "WallSmallStones_SecondStory_15",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8095028547089020431
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 520,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 60,
+      "name": "WallSmallStones_SecondStory_16",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1278207612726149856
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 528,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 61,
+      "name": "WallSmallStones_SecondStory_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1409212148551230462
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 472,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 62,
+      "name": "WallSmallStones_SecondStory_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8316366305348447034
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 504,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 63,
+      "name": "WallSmallStones_SecondStory_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        369218337446403437
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 512,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 64,
+      "name": "WallSmallStones_SecondStory_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        485078876043219338
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 520,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 65,
+      "name": "WallSmallStones_SecondStory_7",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        2318949096019229708
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 528,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 66,
+      "name": "WallSmallStones_SecondStory_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5471960994905188665
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 536,
+        "y": 168,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 67,
+      "name": "RoofEastToWest_32",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4493505986195611942
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 157,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 68,
+      "name": "RoofEastToWest_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -2676274990354868799
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 117,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 69,
+      "name": "RoofEastToWest_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -6618548175416436993
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 70,
+      "name": "RoofEastToWest_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5913653946757618520
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 71,
+      "name": "RoofEastToWest_2",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8968899018857531259
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 117,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 72,
+      "name": "RoofEastToWest_33",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        5905776380664353939
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 157,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 73,
+      "name": "RoofEastToWest_17",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -3912384745072059534
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 96,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 74,
+      "name": "RoofEastToWest_19",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7574820712126947566
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 75,
+      "name": "RoofEastToWest_25",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4665022605591449246
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 117,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 76,
+      "name": "RoofEastToWest_3",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4796184119294781849
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 117,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 77,
+      "name": "RoofEastToWest_26",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        6453754387910062381
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 117,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 78,
+      "name": "RoofEastToWest_21",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -1085197036970709
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 79,
+      "name": "RoofEastToWest_23",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        4388415557722862855
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 144,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 80,
+      "name": "RoofEastToWest_18",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -984191710020362623
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 81,
+      "name": "RoofEastToWest_20",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3998927390275073719
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 82,
+      "name": "RoofEastToWest_22",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7839482218737017189
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 125,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 83,
+      "name": "RoofEastToWest_28",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        232278366615407897
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 173,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 84,
+      "name": "RoofEastToWest_12",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5136478226136634539
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 133,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 85,
+      "name": "RoofEastToWest_13",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7986955836692010628
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 133,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 86,
+      "name": "RoofEastToWest_14",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -3434290410901721945
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 133,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 87,
+      "name": "RoofEastToWest_29",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5345763165366763497
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 173,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 88,
+      "name": "RoofEastToWest_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -484837164434269552
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 141,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 89,
+      "name": "RoofEastToWest_11",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -3096530977654707818
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 133,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 90,
+      "name": "RoofEastToWest_15",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        8911671341548899213
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 133,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 91,
+      "name": "RoofEastToWest_7",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -6763946381849559378
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 141,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 92,
+      "name": "RoofEastToWest_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8208036044862609466
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 141,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 93,
+      "name": "RoofEastToWest_Shadows_1",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        1087732011809945839
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 94,
+      "name": "RoofEastToWest_Shadows_5",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        1034725704763912621
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 101,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 95,
+      "name": "RoofEastToWest_Shadows_6",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        331146850900242217
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 101,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 96,
+      "name": "RoofEastToWest_Shadows_3",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -4648372313934952676
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 97,
+      "name": "RoofEastToWest_Shadows_0",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        4732483592719189406
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 98,
+      "name": "RoofEastToWest_Shadows_2",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -2316257385814783305
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 99,
+      "name": "RoofEastToWest_Shadows_4",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -6485244906032259795
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 109,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 100,
+      "name": "WoodenBeams_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        2352532309702474831
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 56,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 101,
+      "name": "WoodenBeams_7",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1213252557782324763
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 56,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 102,
+      "name": "WoodenBeams_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        288265829294520592
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 103,
+      "name": "WoodenBeams_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1511771252432513919
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 104,
+      "name": "WoodenBeams_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        8549982118137584201
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 105,
+      "name": "WoodenBeams_2",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -3140597076854492601
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 106,
+      "name": "WoodenBeams_3",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -9062957617868976976
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 107,
+      "name": "WoodenBeams_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7770196106796603356
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 108,
+      "name": "RoofEastToWest_30",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3573841231247729327
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 165,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 109,
+      "name": "RoofEastToWest_31",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        794118772038166569
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 165,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 110,
+      "name": "WoodenBeams_Shadows_6",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -1101251605710727144
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 96,
+        "y": 48,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 111,
+      "name": "WoodenBeams_Shadows_7",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        6299684443683783352
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 48,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 112,
+      "name": "WoodenBeams_Shadows_4",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        2462287185511442501
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 96,
+        "y": 56,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 113,
+      "name": "WoodenBeams_Shadows_5",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -656421540141691054
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 56,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 114,
+      "name": "WoodenBeams_Shadows_0",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        -3753880158201664446
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 96,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 115,
+      "name": "WoodenBeams_Shadows_2",
+      "sprite": [
+        "69cffd28a6babd1408d3214534a6cf93",
+        3429699016275263081
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png"
+    },
+    {
+      "gid": 116,
+      "name": "Fence_0",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -5397573168801136404
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 40,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 117,
+      "name": "Fence_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        8054514196659142189
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 32,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 118,
+      "name": "Fence_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        9203586485821557984
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 119,
+      "name": "Fence_2",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1177882447611923154
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 40,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 120,
+      "name": "Fence_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        4309086698426710061
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 121,
+      "name": "Fence_3",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -835300670519728832
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 40,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 122,
+      "name": "Fence_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7746973121676557249
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 32,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 123,
+      "name": "Fence_9",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4949906954940877785
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 124,
+      "name": "Grass18",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        6194187767919663805
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 125,
+      "name": "Grass19",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        9217061925416098833
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 126,
+      "name": "Cobblestone_3",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3624225519212747984
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 127,
+      "name": "Cobblestone_4",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -93517011469115099
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 128,
+      "name": "Cobblestone_5",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        6104401432465603842
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 129,
+      "name": "Cobblestone_6",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7141850646600589088
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 152,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 130,
+      "name": "Cobblestone_7",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -7358752905436299378
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 152,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 131,
+      "name": "Cobblestone_8",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -6535155204954269130
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 152,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 132,
+      "name": "Cobblestone_9",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -4654258722056170392
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 133,
+      "name": "Cobblestone_11",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1116870247695931064
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 134,
+      "name": "Cobblestone_12",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        3906371102536286651
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 135,
+      "name": "Cobblestone_13",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -8992123435053375458
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 136,
+      "name": "Cobblestone_14",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        1486276948387871493
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 137,
+      "name": "Cobblestone_15",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        7720079286777165693
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 138,
+      "name": "Cobblestone_16",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        -6043553044113544703
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 139,
+      "name": "Cobblestone_17",
+      "sprite": [
+        "d3a573650e5730a4787951c31d88c8f4",
+        120640912387208707
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 140,
+      "name": "LakeGrass1a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5168040815232592561
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 141,
+      "name": "LakeGrass2a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        3765233093305786911
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 142,
+      "name": "LakeGrass3a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3093023096474644574
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 143,
+      "name": "LakeGrass4a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3123210492697546674
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 144,
+      "name": "LakeGrass5a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8769477312700077242
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 145,
+      "name": "LakeGrass6a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -7470577720828876
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 146,
+      "name": "LakeGrass7a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5142985224987346401
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 147,
+      "name": "LakeGrass8a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        7307207491082985977
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 148,
+      "name": "LakeGrass9a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        6376822986008453909
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 149,
+      "name": "LakeGrass10a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -2202592744467658255
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 150,
+      "name": "LakeGrass11a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5815736184513189670
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 151,
+      "name": "LakeGrass12a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        2186427529521710212
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 152,
+      "name": "LakeGrass13a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -2898857517003678170
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 153,
+      "name": "LakeGrass14a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        723821681983666684
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 154,
+      "name": "LakeGrass15a",
+      "sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        537062328767693549
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png"
+    },
+    {
+      "gid": 10000,
+      "name": "Well",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        -1209480782707865746
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 12,
+        "y": 304,
+        "width": 19,
+        "height": 32
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10001,
+      "name": "WideTable_Butcher",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        5646253133918497986
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 160,
+        "width": 16,
+        "height": 9
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10002,
+      "name": "WideTable_Alchemy",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        -2019049120015645736
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 144,
+        "y": 160,
+        "width": 16,
+        "height": 12
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10003,
+      "name": "WideTable_Desk",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        3985253829144601360
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 160,
+        "width": 16,
+        "height": 9
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10004,
+      "name": "WineKeg",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        -3853824034063239485
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 140,
+        "y": 145,
+        "width": 9,
+        "height": 14
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10005,
+      "name": "Bench_Wide",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        7257610120706037989
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 145,
+        "width": 9,
+        "height": 5
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10006,
+      "name": "Anvil_Horizontal",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        8329976786671494348
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 162,
+        "y": 241,
+        "width": 12,
+        "height": 10
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10007,
+      "name": "ShopSign_Tavern",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        -6045684517192588090
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 9,
+        "y": 281,
+        "width": 23,
+        "height": 17
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10008,
+      "name": "ShopSign_Potions",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        -349693762640560957
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 33,
+        "y": 281,
+        "width": 23,
+        "height": 17
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10009,
+      "name": "ShopSign_Weapons",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        -4423201225985716218
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 57,
+        "y": 281,
+        "width": 23,
+        "height": 17
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10010,
+      "name": "PottedPlant_1",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        7481488362606449352
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 36,
+        "y": 321,
+        "width": 9,
+        "height": 12
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10011,
+      "name": "PottedPlant_2",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        7632836075553106725
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 49,
+        "y": 321,
+        "width": 7,
+        "height": 11
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10012,
+      "name": "PottedPlant_3",
+      "sprite": [
+        "aa3ef75d8ec7c344f81552140d04a1fe",
+        5694307619157401217
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 58,
+        "y": 321,
+        "width": 5,
+        "height": 9
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10013,
+      "name": "PillarMedium2",
+      "sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -702854666901177391
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 67,
+        "y": 51,
+        "width": 11,
+        "height": 13
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10014,
+      "name": "PillarShort1",
+      "sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -439496800248428465
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 99,
+        "y": 51,
+        "width": 10,
+        "height": 9
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10015,
+      "name": "PillarShort2",
+      "sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        2949759686383389126
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 131,
+        "y": 51,
+        "width": 10,
+        "height": 8
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10016,
+      "name": "PillarMedium3",
+      "sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6630695369954485499
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 82,
+        "y": 51,
+        "width": 11,
+        "height": 13
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10017,
+      "name": "TreeNoApples",
+      "sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "gid": 10018,
+      "name": "TreeNoApples_Shadow_9",
+      "sprite": [
+        "da4d732596845594e9b99bf9488ee15f",
+        -5767133754201675963
+      ],
+      "rect": {
+        "serializedVersion": 2,
+        "x": 153,
+        "y": 51,
+        "width": 23,
+        "height": 27
+      },
+      "texture": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\PropsShadow.png"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "old_watch",
+      "name": "西岸旧石塔",
+      "template": "tower",
+      "at": [
+        9,
+        6
+      ],
+      "door": [
+        11.5,
+        15.5
+      ],
+      "role": "地标",
+      "rect": [
+        9,
+        6,
+        5,
+        9
+      ],
+      "source_bounds": [
+        2,
+        9,
+        6,
+        17
+      ],
+      "copied_cells": 39
+    },
+    {
+      "id": "warehouse",
+      "name": "旧仓库",
+      "template": "long_house",
+      "at": [
+        5,
+        18
+      ],
+      "door": [
+        10.5,
+        22.5
+      ],
+      "role": "仓储",
+      "rect": [
+        5,
+        18,
+        11,
+        4
+      ],
+      "source_bounds": [
+        -21,
+        7,
+        -11,
+        10
+      ],
+      "copied_cells": 60
+    },
+    {
+      "id": "inn",
+      "name": "桥头旅馆",
+      "template": "house",
+      "at": [
+        30,
+        10
+      ],
+      "door": [
+        34.5,
+        18.5
+      ],
+      "role": "休息",
+      "rect": [
+        30,
+        10,
+        9,
+        8
+      ],
+      "source_bounds": [
+        -7,
+        2,
+        1,
+        9
+      ],
+      "copied_cells": 80
+    },
+    {
+      "id": "guild",
+      "name": "商会",
+      "template": "house",
+      "at": [
+        48,
+        10
+      ],
+      "door": [
+        52.5,
+        18.5
+      ],
+      "role": "交易",
+      "rect": [
+        48,
+        10,
+        9,
+        8
+      ],
+      "source_bounds": [
+        -7,
+        2,
+        1,
+        9
+      ],
+      "copied_cells": 80
+    },
+    {
+      "id": "east_watch",
+      "name": "东岸石塔",
+      "template": "tower",
+      "at": [
+        64,
+        7
+      ],
+      "door": [
+        66.5,
+        16.5
+      ],
+      "role": "地标",
+      "rect": [
+        64,
+        7,
+        5,
+        9
+      ],
+      "source_bounds": [
+        2,
+        9,
+        6,
+        17
+      ],
+      "copied_cells": 39
+    },
+    {
+      "id": "smith",
+      "name": "铁匠铺",
+      "template": "long_house",
+      "at": [
+        58,
+        17
+      ],
+      "door": [
+        63.5,
+        21.5
+      ],
+      "role": "工坊",
+      "rect": [
+        58,
+        17,
+        11,
+        4
+      ],
+      "source_bounds": [
+        -21,
+        7,
+        -11,
+        10
+      ],
+      "copied_cells": 60
+    },
+    {
+      "id": "market_hall",
+      "name": "市场棚亭",
+      "template": "canopy",
+      "at": [
+        37,
+        24
+      ],
+      "door": [
+        41.5,
+        32.5
+      ],
+      "role": "集市",
+      "rect": [
+        37,
+        24,
+        9,
+        8
+      ],
+      "source_bounds": [
+        -9,
+        12,
+        -1,
+        19
+      ],
+      "copied_cells": 75
+    },
+    {
+      "id": "home_a",
+      "name": "南巷住宅",
+      "template": "house",
+      "at": [
+        40,
+        39
+      ],
+      "door": [
+        44.5,
+        47.5
+      ],
+      "role": "住宅",
+      "rect": [
+        40,
+        39,
+        9,
+        8
+      ],
+      "source_bounds": [
+        -7,
+        2,
+        1,
+        9
+      ],
+      "copied_cells": 80
+    },
+    {
+      "id": "home_b",
+      "name": "沿河工匠住宅",
+      "template": "long_house",
+      "at": [
+        60,
+        43
+      ],
+      "door": [
+        65.5,
+        47.5
+      ],
+      "role": "住宅",
+      "rect": [
+        60,
+        43,
+        11,
+        4
+      ],
+      "source_bounds": [
+        -21,
+        7,
+        -11,
+        10
+      ],
+      "copied_cells": 60
+    },
+    {
+      "id": "home_c",
+      "name": "东巷住宅",
+      "template": "house",
+      "at": [
+        67,
+        32
+      ],
+      "door": [
+        71.5,
+        40.5
+      ],
+      "role": "住宅",
+      "rect": [
+        67,
+        32,
+        9,
+        8
+      ],
+      "source_bounds": [
+        -7,
+        2,
+        1,
+        9
+      ],
+      "copied_cells": 80
+    }
+  ],
+  "source_scene": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Scenes\\Demo - Towns I Outside.unity",
+  "source_scene_sha256": "ff5a680d686bbf0934320f6f48336bcc2063c01e0759ba6ae274385768431e05",
+  "originals": [
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Scenes\\Demo - Forgotten Plains.unity",
+      "sha256": "d33afabc18845d2fd54d26769ef550ce1d94df11dd33cc8c41adcff306ce66d6"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "sha256": "c01a80900cd5fae029363989dbcd86b39bbf356219b865a6d20ccd7ae91fa8a5"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png.meta",
+      "sha256": "8ca0d162dd3aba8d962cccbd7454067b7b82881298d5b6aeff2e43c90a1fe679"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\PropsShadow.png",
+      "sha256": "2fe18a5ed392bacb8544ca166cb893f5a58cb80e8cf4495d2208c1f0fbc5dbef"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\PropsShadow.png.meta",
+      "sha256": "ea66e5412308742c3fa18d04e1c68f43606863d3094fde01e488231ab56db54e"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "sha256": "15fc9e96e950103ac43df2246e71a7eb9a9808ac3ef103cf3fbd9b59d80cbbb1"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png.meta",
+      "sha256": "6ea06f0710e0ed8749480d3e9bf3c6b10587828fe57bd1f875e429c6f6f70d45"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Scenes\\Demo - Towns I Outside.unity",
+      "sha256": "ff5a680d686bbf0934320f6f48336bcc2063c01e0759ba6ae274385768431e05"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png",
+      "sha256": "3123873144ed261c9f26c09c5b7e5c15a30e3b639410058b5cf84db3ba609e2e"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png.meta",
+      "sha256": "b372795d33d0eaed5a6791a377b102cdb2513deb81733d6426c6b9a591215917"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png",
+      "sha256": "7827d39d8883025e2bbbfda050f06c87e5b57fc860d7fea6a320d44377bf6b42"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png.meta",
+      "sha256": "43f14bf28bb864f04ccb91aae6214b5fe1b86ed8e641dc6da9788a52118e4ef4"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png",
+      "sha256": "3dd15a181211a53bfec2afc4d8c00867bc2e188e3db7018a2508a435503a61b3"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\TilesShadows.png.meta",
+      "sha256": "f017b1ba16129cdf83101d4e2ff7a582f61077b3b29cfe7d4aed9be6b1b5b17e"
+    }
+  ],
+  "art_source": "existing"
+}

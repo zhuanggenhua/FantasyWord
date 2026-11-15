@@ -1,0 +1,109 @@
+{
+  "tileSize": 8,
+  "steps": [
+    {
+      "op": "import",
+      "image": "inputs/floor.png",
+      "at": [
+        0,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/road.png",
+      "at": [
+        4,
+        0
+      ]
+    },
+    {
+      "op": "import",
+      "image": "inputs/prop.png",
+      "at": [
+        10,
+        0
+      ]
+    },
+    {
+      "op": "layer",
+      "index": 0,
+      "name": "地面"
+    },
+    {
+      "op": "draw",
+      "tile": [
+        0,
+        0
+      ],
+      "rect": [
+        0,
+        0,
+        16,
+        12
+      ],
+      "layer": 0
+    },
+    {
+      "op": "layer",
+      "name": "物件"
+    },
+    {
+      "op": "stamp",
+      "rect": [
+        10,
+        0,
+        1,
+        1
+      ],
+      "at": [
+        4,
+        4
+      ],
+      "layer": 1,
+      "smart": false
+    },
+    {
+      "op": "save",
+      "name": "checkpoint"
+    },
+    {
+      "op": "reload",
+      "name": "checkpoint"
+    },
+    {
+      "op": "render",
+      "rect": [
+        0,
+        0,
+        16,
+        12
+      ],
+      "name": "map-render"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "JSON",
+      "rect": [
+        0,
+        0,
+        16,
+        12
+      ],
+      "name": "map-json"
+    },
+    {
+      "op": "export",
+      "domain": "map",
+      "format": "Image",
+      "rect": [
+        0,
+        0,
+        16,
+        12
+      ],
+      "name": "map-image"
+    }
+  ]
+}

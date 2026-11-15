@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "portable_tmx_pixel_identical": true,
+  "native_group_move": {
+    "id": "inn",
+    "offset_px": [
+      8,
+      0
+    ],
+    "changed_pixel_bounds": [
+      243,
+      81,
+      317,
+      144
+    ],
+    "wall_colliders_moved": 5,
+    "furniture_moved": 3,
+    "geometry_moved": 5,
+    "other_buildings_unchanged": true
+  },
+  "unity_verified": false
+}

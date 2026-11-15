@@ -1,0 +1,84 @@
+.errordisplay-container-view {
+	position: absolute;
+	visibility: hidden;
+	transform: translateY(-50%);
+}
+
+.errordisplay-view {
+	position: relative;
+	left: 9px;
+	background: var(--colorBG);
+	border-radius: 16px;
+	border-width: 4px;
+	border-style: solid;
+	border-color: var(--colorBG);
+	white-space: nowrap;
+	overflow: hidden;
+	transition: width 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.errordisplay-view:after {
+	pointer-events: none;
+	content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    border-radius: 12px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--colorError);
+}
+
+.errordisplay-arrow-view {
+	position: absolute;
+	left: 0px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 16px;
+	height: 16px;
+}
+
+.errordisplay-content-view {
+	display: flex;
+	align-items: center;
+	margin: 12px;
+	margin-left: 16px;
+	margin-right: 16px;
+	font-size: 12px;
+}
+
+.errordisplay-text-view {
+	display: block;
+	font-size: 12px;
+	font-family: mainFont;
+	color: var(--colorErrorLight);
+}
+
+.errordisplay-icon-view {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+.errordisplay-tile-container-view {
+	display: inline-block;
+    width: 16px;
+	height: 12px;
+	margin-left: 1px;
+	margin-right: 1px;
+	margin-bottom: -2px;
+}
+
+.errordisplay-tile-view {
+	display: block;
+    width: 16px;
+	height: 16px;
+	margin-top: -2px;
+    border-radius: 2px;
+    background: var(--color1);
+    background-size: 16px;
+}

@@ -1,0 +1,683 @@
+{
+  "status": "pass",
+  "engine": {
+    "url": "https://frameronin.com/ronintile/assets/index-5sEpM8Gi.js",
+    "sha256": "5d419daadf2a3a5480cb83add497f65b82cdb5ce29ed32bc5afe38d70ca5dee4",
+    "version": "2.1.0-pro",
+    "localReference": "artifacts/ronintile-workflow-replica-20261030/reference-engine",
+    "role": "网页公开原引擎，仅本地执行和对照，不声称独立重写原算法"
+  },
+  "recipeSha256": "a812a3294a27bf0721250a9dc16abfc685d873d01c164468e8a7875cb718e10b",
+  "sourceAudit": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\deliverable\\native\\project.json",
+      "sha256": "93781c5d0ae0631dd919420082e075488355480c636b3a868ee7726ac8353c84",
+      "bytes": 1528433
+    }
+  ],
+  "hostedEngineSha256": "3e72c145600e5b0dcb39cf313230001bf33123b996e54abb0e9cb0abb5bd76f9",
+  "hostAdaptations": [
+    {
+      "id": "guid-create",
+      "reason": "原网页宿主只实现raw，但ExportGUIDBlock调用create().value",
+      "implementation": "真实UUID及value对象"
+    },
+    {
+      "id": "tar-gzip-stream",
+      "reason": "原网页归档宿主只拼接文本，未生成tar.gz",
+      "implementation": "保留原导出器文件列表，使用Python tarfile生成真实归档并等待写入完成"
+    }
+  ],
+  "version": "2.1.0-pro",
+  "trace": [
+    {
+      "index": 0,
+      "op": "draw",
+      "cells": 1
+    },
+    {
+      "index": 1,
+      "op": "undo",
+      "placementsBefore": 10791,
+      "placementsAfter": 10792
+    },
+    {
+      "index": 2,
+      "op": "redo",
+      "placementsBefore": 10792,
+      "placementsAfter": 10791
+    },
+    {
+      "index": 3,
+      "op": "undo",
+      "placementsBefore": 10791,
+      "placementsAfter": 10792
+    },
+    {
+      "index": 4,
+      "op": "save",
+      "file": "edited.json"
+    },
+    {
+      "index": 5,
+      "op": "reload"
+    },
+    {
+      "index": 6,
+      "op": "export",
+      "domain": "map",
+      "format": "JSON"
+    },
+    {
+      "index": 7,
+      "op": "render",
+      "size": {
+        "width": 768,
+        "height": 576
+      }
+    }
+  ],
+  "summary": {
+    "sources": 212,
+    "tiles": 306,
+    "relations": 603,
+    "placements": 10792,
+    "layers": [
+      {
+        "visible": true,
+        "name": "地面"
+      },
+      {
+        "visible": true,
+        "name": "河道"
+      },
+      {
+        "visible": true,
+        "name": "商路与广场"
+      },
+      {
+        "visible": true,
+        "name": "桥面"
+      },
+      {
+        "visible": true,
+        "name": "桥栏"
+      },
+      {
+        "visible": true,
+        "name": "低矮植被"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "北巷住宅 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "北巷住宅 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "驿站旅馆 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "驿站旅馆 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "商队会所 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "商队会所 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "西侧货栈 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "西侧货栈 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "集市棚亭 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "集市棚亭 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "集市棚亭 / 建筑一层立柱"
+      },
+      {
+        "visible": true,
+        "name": "铁匠工坊 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "铁匠工坊 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "南侧庭院 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "南侧庭院 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "南岸住宅 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "南岸住宅 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 室内地板"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 室内墙体"
+      },
+      {
+        "visible": true,
+        "name": "object-50 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-75 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-54 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-55 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-59 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-70 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-73 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-42 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-44 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-48 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-49 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-57 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-60 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-64 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-1 / WallWeaponDisplay_Swords"
+      },
+      {
+        "visible": true,
+        "name": "object-2 / Bench_Long"
+      },
+      {
+        "visible": true,
+        "name": "object-61 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-62 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 建筑三层"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "西侧旧哨塔 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-65 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-26 / WallWeaponDisplay_Swords"
+      },
+      {
+        "visible": true,
+        "name": "object-56 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-63 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-27 / Bench_Long"
+      },
+      {
+        "visible": true,
+        "name": "object-77 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-4 / BooksSingleShortShelf"
+      },
+      {
+        "visible": true,
+        "name": "object-9 / BooksSingleLongShelf"
+      },
+      {
+        "visible": true,
+        "name": "object-3 / BedSouth"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 建筑三层"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "东岸路塔 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-10 / WideTable_Desk"
+      },
+      {
+        "visible": true,
+        "name": "object-47 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-5 / SmallTable"
+      },
+      {
+        "visible": true,
+        "name": "object-7 / BooksSingleShortShelf"
+      },
+      {
+        "visible": true,
+        "name": "object-52 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-6 / BedSouth"
+      },
+      {
+        "visible": true,
+        "name": "北巷住宅 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "北巷住宅 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "北巷住宅 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "北巷住宅 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "商队会所 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "商队会所 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "商队会所 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "商队会所 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-8 / SmallTable"
+      },
+      {
+        "visible": true,
+        "name": "object-58 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "驿站旅馆 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "驿站旅馆 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "驿站旅馆 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "驿站旅馆 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-36 / ShopSign_Tavern"
+      },
+      {
+        "visible": true,
+        "name": "object-68 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-78 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-76 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-28 / Well"
+      },
+      {
+        "visible": true,
+        "name": "object-16 / WideTable_Alchemy"
+      },
+      {
+        "visible": true,
+        "name": "object-15 / WideTable_Butcher"
+      },
+      {
+        "visible": true,
+        "name": "集市棚亭 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "集市棚亭 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "集市棚亭 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-31 / WideTable_Alchemy"
+      },
+      {
+        "visible": true,
+        "name": "object-45 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-32 / Bench_Wide"
+      },
+      {
+        "visible": true,
+        "name": "object-71 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-11 / WineKeg"
+      },
+      {
+        "visible": true,
+        "name": "object-12 / WineKeg"
+      },
+      {
+        "visible": true,
+        "name": "object-13 / WineKeg"
+      },
+      {
+        "visible": true,
+        "name": "object-14 / WineKeg"
+      },
+      {
+        "visible": true,
+        "name": "西侧货栈 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "西侧货栈 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "西侧货栈 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "西侧货栈 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-66 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-41 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-18 / WeaponsRack_North"
+      },
+      {
+        "visible": true,
+        "name": "object-29 / WineKeg"
+      },
+      {
+        "visible": true,
+        "name": "object-30 / WineKeg"
+      },
+      {
+        "visible": true,
+        "name": "object-19 / SlackTub_Horizontal"
+      },
+      {
+        "visible": true,
+        "name": "object-17 / Anvil_Horizontal"
+      },
+      {
+        "visible": true,
+        "name": "object-33 / Anvil_Horizontal"
+      },
+      {
+        "visible": true,
+        "name": "铁匠工坊 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "铁匠工坊 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "铁匠工坊 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "铁匠工坊 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-38 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-72 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-21 / BooksSingleShortShelf"
+      },
+      {
+        "visible": true,
+        "name": "object-20 / BedSouth"
+      },
+      {
+        "visible": true,
+        "name": "object-51 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-22 / SmallTable"
+      },
+      {
+        "visible": true,
+        "name": "object-40 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-34 / PottedPlant_1"
+      },
+      {
+        "visible": true,
+        "name": "南侧庭院 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "南侧庭院 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "南侧庭院 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "南侧庭院 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-74 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-43 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-24 / BooksSingleShortShelf"
+      },
+      {
+        "visible": true,
+        "name": "object-23 / BedSouth"
+      },
+      {
+        "visible": true,
+        "name": "object-69 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-35 / PottedPlant_2"
+      },
+      {
+        "visible": true,
+        "name": "object-25 / SmallTable"
+      },
+      {
+        "visible": true,
+        "name": "object-39 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-53 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "南岸住宅 / 建筑一层"
+      },
+      {
+        "visible": true,
+        "name": "南岸住宅 / 建筑二层"
+      },
+      {
+        "visible": true,
+        "name": "南岸住宅 / 屋顶"
+      },
+      {
+        "visible": true,
+        "name": "南岸住宅 / 墙面阴影"
+      },
+      {
+        "visible": true,
+        "name": "object-46 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-67 / TreeNoApples"
+      },
+      {
+        "visible": true,
+        "name": "object-37 / TreeNoApples"
+      }
+    ]
+  },
+  "errors": [],
+  "blockedRequests": [],
+  "missingResources": [
+    "/ronintile/legacy/res/icon/ui_icon_option_a3.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a2.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a1.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a4.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a5.png",
+    "/ronintile/legacy/res/placeholder/missing_small.png"
+  ],
+  "unityVerified": false
+}

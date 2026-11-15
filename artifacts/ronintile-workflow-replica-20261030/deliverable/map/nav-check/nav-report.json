@@ -1,0 +1,851 @@
+{
+  "schema": "generate2dmap.nav_report.v1",
+  "status": "pass",
+  "method": "plan Appendix C validity (centre + 8 footprint samples against walk regions, solids, object footprints scaled once, tile collision and material classes) on a grid of cell max(1, round(r/2)) px; 4-neighbour moves open when segmentClear holds between node centres (samples every cell/2, plus the exact thin-gap centre path and one_way direction); BFS from every spawn and portal arrival to every interaction, exit, anchor slot and approach point",
+  "notProven": [
+    "that the collision data matches the painted art",
+    "positions closer than one grid cell to a blocker (the grid samples cell centres)",
+    "runtime movement code: map-runtime.mjs parity is tested during integration",
+    "links to maps not passed with --link"
+  ],
+  "checks": [
+    {
+      "id": "starts_valid",
+      "status": "pass",
+      "value": {
+        "starts": 1,
+        "blocked": []
+      },
+      "threshold": {
+        "blocked": 0
+      }
+    },
+    {
+      "id": "targets_reachable",
+      "status": "pass",
+      "value": {
+        "reachable": 20,
+        "total": 20,
+        "unreachable": []
+      },
+      "threshold": {
+        "unreachable": 0
+      }
+    },
+    {
+      "id": "portals_inside_world",
+      "status": "pass",
+      "value": {
+        "outside": []
+      },
+      "threshold": {
+        "outside": 0
+      }
+    },
+    {
+      "id": "arrivals_outside_triggers",
+      "status": "pass",
+      "value": {
+        "problems": 0
+      },
+      "threshold": {
+        "problems": 0
+      }
+    },
+    {
+      "id": "reciprocal_links",
+      "status": "pass",
+      "value": {
+        "links": [],
+        "notChecked": []
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "thin_gaps",
+      "status": "pass",
+      "value": 0,
+      "threshold": "reported: moves the thin-gap rule closed although every footprint sample was valid"
+    },
+    {
+      "id": "unreachable_walkable_area",
+      "status": "pass",
+      "value": {
+        "pockets": 0,
+        "cells": 0
+      },
+      "threshold": "reported"
+    },
+    {
+      "id": "blocked_rects_union",
+      "status": "pass",
+      "value": {
+        "rects": 355,
+        "blockedCells": 60080
+      },
+      "threshold": "union == blocked cells"
+    },
+    {
+      "id": "footprints_scaled_once",
+      "status": "pass",
+      "value": {
+        "objectSolids": 75
+      },
+      "threshold": "object footprint x scale, never inflated by the actor radius"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "8e280b740182c2b6f37a786225cb081677733b0b6c812e52f707f3d492820d0f",
+      "bytes": 2939887
+    },
+    {
+      "path": "../assets/terrain-forge.json",
+      "sha256": "bfe7b470c118295d194ffeb4a71a115031524e8849189932e974b4131ab447ce",
+      "bytes": 7418
+    },
+    {
+      "path": "../assets/atlas.png",
+      "sha256": "3c800117612d22fbad2c43a00571b3ca176bf2022ff13228c00deaa8ecad905b",
+      "bytes": 11590
+    },
+    {
+      "path": "../assets/object-50.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-75.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-54.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-55.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-59.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-70.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-73.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-42.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-44.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-48.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-49.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-57.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-60.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-64.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-1.png",
+      "sha256": "af34c3db33654b6bcb956bf31666c7e4bba64d9d5c91579d403537f48bcb490d",
+      "bytes": 95
+    },
+    {
+      "path": "../assets/object-2.png",
+      "sha256": "cd97b09ba834d88fa03792d9be2040b7360bb5dd1d0e499f010a5e82e3f16fb3",
+      "bytes": 121
+    },
+    {
+      "path": "../assets/object-61.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-62.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-65.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-26.png",
+      "sha256": "af34c3db33654b6bcb956bf31666c7e4bba64d9d5c91579d403537f48bcb490d",
+      "bytes": 95
+    },
+    {
+      "path": "../assets/object-56.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-63.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-27.png",
+      "sha256": "cd97b09ba834d88fa03792d9be2040b7360bb5dd1d0e499f010a5e82e3f16fb3",
+      "bytes": 121
+    },
+    {
+      "path": "../assets/object-77.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-4.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "../assets/object-9.png",
+      "sha256": "f01db51270f928260c0fe2a3fa4018e5ca6ef265ff68d70702f0c1e40150a182",
+      "bytes": 316
+    },
+    {
+      "path": "../assets/object-3.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "../assets/object-10.png",
+      "sha256": "4029373f3cc490d9679399b800ea978506fd2d2634da5b9a441d45d707193959",
+      "bytes": 217
+    },
+    {
+      "path": "../assets/object-47.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-5.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "../assets/object-7.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "../assets/object-52.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-6.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "../assets/object-8.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "../assets/object-58.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-36.png",
+      "sha256": "ff3b0fb57bc76e2b7bbacfdfbadfafd410291fb2a9a9d64cdc0bc9e620e15aa5",
+      "bytes": 484
+    },
+    {
+      "path": "../assets/object-68.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-78.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-76.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-28.png",
+      "sha256": "53a6d63c24bd4506274705dce0c56b28b190394edfcda1de6ab768fdd6759a24",
+      "bytes": 931
+    },
+    {
+      "path": "../assets/object-16.png",
+      "sha256": "d5eba5c7d53a2661c9d53dc51ec17140812578b3fb16d8de3ac6b05fc9537f85",
+      "bytes": 341
+    },
+    {
+      "path": "../assets/object-15.png",
+      "sha256": "25427fb5ac7333dfb3580b9bb4f98bda0ee8a43e8b8d5e9381ef9d622bcedd68",
+      "bytes": 251
+    },
+    {
+      "path": "../assets/object-31.png",
+      "sha256": "d5eba5c7d53a2661c9d53dc51ec17140812578b3fb16d8de3ac6b05fc9537f85",
+      "bytes": 341
+    },
+    {
+      "path": "../assets/object-45.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-32.png",
+      "sha256": "0908744c2dd3fa1533c886edc433aafc57495ebab3cb7e310a159006d18c8ec6",
+      "bytes": 114
+    },
+    {
+      "path": "../assets/object-71.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-11.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "../assets/object-12.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "../assets/object-13.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "../assets/object-14.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "../assets/object-66.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-41.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-18.png",
+      "sha256": "278bbd42014558dcd243f4af14cc6ecf238374ac8e2f399dbf19438b6c56d4a8",
+      "bytes": 290
+    },
+    {
+      "path": "../assets/object-29.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "../assets/object-30.png",
+      "sha256": "2b20405f8cf6923c078f4ce0b5827690c7695063e6d67036805ffcb116db24db",
+      "bytes": 315
+    },
+    {
+      "path": "../assets/object-19.png",
+      "sha256": "c53827deb58b8219bf699883b7600466374712f72bf0403f64fd98b71ec868cb",
+      "bytes": 138
+    },
+    {
+      "path": "../assets/object-17.png",
+      "sha256": "d6d0746e6a1e1b4c1b35574e8fc707c3012b94416ae8726a727b0dda4dce9f6f",
+      "bytes": 222
+    },
+    {
+      "path": "../assets/object-33.png",
+      "sha256": "d6d0746e6a1e1b4c1b35574e8fc707c3012b94416ae8726a727b0dda4dce9f6f",
+      "bytes": 222
+    },
+    {
+      "path": "../assets/object-38.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-72.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-21.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "../assets/object-20.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "../assets/object-51.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-22.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "../assets/object-40.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-34.png",
+      "sha256": "b49ef24932364e2106799d9ffc98580a933be33ca44ae8981f996341be9f3398",
+      "bytes": 303
+    },
+    {
+      "path": "../assets/object-74.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-43.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-24.png",
+      "sha256": "3a86aff6aa4dfd8de0caf60ea174ff5bef9c41f111e6b15b6ee40d43ad3eb38c",
+      "bytes": 211
+    },
+    {
+      "path": "../assets/object-23.png",
+      "sha256": "f9cef63494c490881574d7023e9a81d1056ac37c0f30e84a88ae68b6135c9270",
+      "bytes": 308
+    },
+    {
+      "path": "../assets/object-69.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-35.png",
+      "sha256": "d569d7ab48e4019c757e165ff423e194a1cb38e80b0067c0a31394ce6c1eaa56",
+      "bytes": 227
+    },
+    {
+      "path": "../assets/object-25.png",
+      "sha256": "704039f41159806e729b6fcd605a900780e44c386b8e1f5f6d482ce9f1bbb084",
+      "bytes": 113
+    },
+    {
+      "path": "../assets/object-39.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-53.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-46.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-67.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/object-37.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    }
+  ],
+  "outputs": [
+    {
+      "path": "nav-grid.json",
+      "sha256": "decb4e03f79e54ddfde9b085a9645156c13544644cf506b417c85e1b7ccd691f",
+      "bytes": 913638
+    },
+    {
+      "path": "nav-debug.png",
+      "sha256": "87544676fb306754b221f74452bec5c2de38300899bb153a3b355bcdb2df4cb1",
+      "bytes": 68947
+    }
+  ],
+  "tool": {
+    "name": "map_nav.py",
+    "version": "0.4.0"
+  },
+  "map": "stoneford-waystation",
+  "cell": 1,
+  "starts": [
+    {
+      "kind": "spawn",
+      "id": "road-entry",
+      "point": [
+        20.0,
+        244.0
+      ],
+      "reachable": true,
+      "steps": 0,
+      "node": [
+        19.5,
+        243.5
+      ],
+      "reason": null
+    }
+  ],
+  "targets": [
+    {
+      "kind": "interaction",
+      "id": "old_watch-ExteriorPoint",
+      "point": [
+        68.0,
+        108.0
+      ],
+      "reachable": true,
+      "steps": 178,
+      "node": [
+        66.5,
+        108.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "old_watch-InteriorPoint",
+      "point": [
+        68.0,
+        86.4
+      ],
+      "reachable": true,
+      "steps": 199,
+      "node": [
+        66.5,
+        87.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "home_a-ExteriorPoint",
+      "point": [
+        132.0,
+        188.0
+      ],
+      "reachable": true,
+      "steps": 162,
+      "node": [
+        130.5,
+        188.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "home_a-InteriorPoint",
+      "point": [
+        132.0,
+        166.4
+      ],
+      "reachable": true,
+      "steps": 183,
+      "node": [
+        130.5,
+        167.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "inn-ExteriorPoint",
+      "point": [
+        228.0,
+        204.0
+      ],
+      "reachable": true,
+      "steps": 242,
+      "node": [
+        226.5,
+        204.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "inn-InteriorPoint",
+      "point": [
+        228.0,
+        182.4
+      ],
+      "reachable": true,
+      "steps": 263,
+      "node": [
+        226.5,
+        183.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "guild-ExteriorPoint",
+      "point": [
+        364.0,
+        188.0
+      ],
+      "reachable": true,
+      "steps": 394,
+      "node": [
+        362.5,
+        188.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "guild-InteriorPoint",
+      "point": [
+        364.0,
+        166.4
+      ],
+      "reachable": true,
+      "steps": 415,
+      "node": [
+        362.5,
+        167.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "warehouse-ExteriorPoint",
+      "point": [
+        108.0,
+        372.0
+      ],
+      "reachable": true,
+      "steps": 209,
+      "node": [
+        107.5,
+        370.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "warehouse-InteriorPoint",
+      "point": [
+        108.0,
+        350.4
+      ],
+      "reachable": true,
+      "steps": 225,
+      "node": [
+        106.5,
+        351.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "market_hall-ExteriorPoint",
+      "point": [
+        276.0,
+        300.0
+      ],
+      "reachable": true,
+      "steps": 305,
+      "node": [
+        275.5,
+        298.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "market_hall-InteriorPoint",
+      "point": [
+        276.0,
+        278.4
+      ],
+      "reachable": true,
+      "steps": 283,
+      "node": [
+        275.5,
+        276.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "smith-ExteriorPoint",
+      "point": [
+        356.0,
+        412.0
+      ],
+      "reachable": true,
+      "steps": 497,
+      "node": [
+        355.5,
+        410.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "smith-InteriorPoint",
+      "point": [
+        356.0,
+        390.4
+      ],
+      "reachable": true,
+      "steps": 513,
+      "node": [
+        354.5,
+        391.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "home_b-ExteriorPoint",
+      "point": [
+        212.0,
+        468.0
+      ],
+      "reachable": true,
+      "steps": 409,
+      "node": [
+        211.5,
+        466.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "home_b-InteriorPoint",
+      "point": [
+        212.0,
+        446.4
+      ],
+      "reachable": true,
+      "steps": 425,
+      "node": [
+        210.5,
+        447.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "home_c-ExteriorPoint",
+      "point": [
+        356.0,
+        516.0
+      ],
+      "reachable": true,
+      "steps": 601,
+      "node": [
+        355.5,
+        514.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "home_c-InteriorPoint",
+      "point": [
+        356.0,
+        494.4
+      ],
+      "reachable": true,
+      "steps": 617,
+      "node": [
+        354.5,
+        495.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "east_watch-ExteriorPoint",
+      "point": [
+        636.0,
+        172.0
+      ],
+      "reachable": true,
+      "steps": 682,
+      "node": [
+        634.5,
+        172.5
+      ],
+      "reason": null
+    },
+    {
+      "kind": "interaction",
+      "id": "east_watch-InteriorPoint",
+      "point": [
+        636.0,
+        150.4
+      ],
+      "reachable": true,
+      "steps": 703,
+      "node": [
+        634.5,
+        151.5
+      ],
+      "reason": null
+    }
+  ],
+  "links": [],
+  "thinGaps": [],
+  "unreachablePockets": [],
+  "bundleNav": {
+    "cell": 1,
+    "grid": "nav-grid.json"
+  },
+  "problems": []
+}

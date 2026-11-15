@@ -1,0 +1,28 @@
+{
+    "activeFile": "draft-town.tmj",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "assets/props.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/terrain.tsx": {
+            "scaleInDock": 1
+        },
+        "draft-town.tmj": {
+            "scale": 0.621953125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 320.76372315035803,
+                "y": 239.56789348071848
+            }
+        }
+    },
+    "openFiles": [
+        "draft-town.tmj"
+    ],
+    "project": "",
+    "recentFiles": [
+        "draft-town.tmj"
+    ]
+}

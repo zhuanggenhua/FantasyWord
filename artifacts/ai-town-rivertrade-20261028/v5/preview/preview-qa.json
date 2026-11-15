@@ -1,0 +1,597 @@
+{
+  "schema": "generate2dmap.scene_preview_qa.v1",
+  "status": "pass",
+  "method": "build_scene_preview: bundle files resolved relative to the bundle and checked against their sha256 when given; collision read through forge_nav (the D2 blocking set; tile collision converted into world solids, material classes into BLOCK and one_way pixel planes); tiles layers pre-rendered from tileset manifests; art found in the D6 order and embedded as data URIs; map-runtime.mjs inlined verbatim; the page scanned for anything that loads from outside it; size gate; optional headless-Chromium run (--verify).",
+  "notProven": [
+    "Collision is forge_nav's D2 blocking set and the page walks it with map-runtime.mjs, which mirrors forge_nav rule for rule; their agreement is tested on synthetic fixtures (tests/test_map_runtime_js.py), not on this map. Rotated shapes can differ by one ulp of sin and cos between a browser and Python.",
+    "Without --verify, or when it prints SKIPPED, the page was assembled and scanned but never run in a browser.",
+    "The actor is a debug marker sized from collision.actorRadius, not character art; animation, lights, atmosphere, stage data, camera bounds and occluder masks are not drawn.",
+    "Draw order is whole-object Y-sort by (sortY, x, id); per-pixel occlusion, fades and cut-aways are not simulated.",
+    "Route checks walk the forge_nav grid with the runtime walker at --speed; an engine controller (acceleration, physics colliders, other speeds) may behave differently. one_way material blocks moving down onto it on every map (N11); a top-down map should not use it.",
+    "Footprint samples lie half a nav cell apart (N10): a solid thinner than that can fall between the samples of the footprint's rim; the actor's centre path is tested exactly (thin-gap rule).",
+    "Only headless Chromium is exercised (with --verify); other browsers, devices and touch input are not tested."
+  ],
+  "checks": [
+    {
+      "id": "html-size",
+      "status": "pass",
+      "value": 247241,
+      "threshold": 16000000
+    },
+    {
+      "id": "external-references",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "ascii-only",
+      "status": "pass",
+      "value": true,
+      "threshold": true
+    },
+    {
+      "id": "single-inline-script",
+      "status": "pass",
+      "value": true,
+      "threshold": true
+    },
+    {
+      "id": "runtime-inlined",
+      "status": "pass",
+      "value": "map-runtime.mjs",
+      "threshold": null
+    },
+    {
+      "id": "object-art",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-verify",
+      "status": "pass",
+      "value": "145.0.7632.6",
+      "threshold": null
+    },
+    {
+      "id": "browser-page-errors",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-network-requests",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-assets-loaded",
+      "status": "pass",
+      "value": {
+        "total": 30,
+        "loaded": 30,
+        "failed": []
+      },
+      "threshold": null
+    },
+    {
+      "id": "browser-keyboard-walk",
+      "status": "pass",
+      "value": [
+        {
+          "key": "ArrowRight",
+          "free": true,
+          "moved": 6.933333333333309
+        },
+        {
+          "key": "ArrowLeft",
+          "free": true,
+          "moved": 6.933333333333309
+        },
+        {
+          "key": "ArrowDown",
+          "free": true,
+          "moved": 6.400000000000318
+        },
+        {
+          "key": "ArrowUp",
+          "free": true,
+          "moved": 6.400000000000318
+        }
+      ],
+      "threshold": null
+    },
+    {
+      "id": "browser-routes",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "browser-y-sort",
+      "status": "pass",
+      "value": {
+        "status": "pass",
+        "object": "prop-11",
+        "pixel": [
+          229,
+          155,
+          157
+        ],
+        "behind": {
+          "withActor": [
+            0,
+            0,
+            0,
+            255
+          ],
+          "withoutActor": [
+            0,
+            0,
+            0,
+            255
+          ]
+        },
+        "front": {
+          "withActor": [
+            27,
+            42,
+            51,
+            255
+          ],
+          "withoutActor": [
+            0,
+            0,
+            0,
+            255
+          ]
+        }
+      },
+      "threshold": null
+    },
+    {
+      "id": "build-warnings",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "d3776145d8da8f7ca1d0de6b2f298179109ab4365eba969ea1701ac4758a50df",
+      "bytes": 913352
+    },
+    {
+      "path": "../assets/prop-018.png",
+      "sha256": "8176cf14d2c7891c361628348d85f71c7aa563f4a571dc731b220a878524379a",
+      "bytes": 160
+    },
+    {
+      "path": "../assets/prop-017.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/prop-013.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "../assets/prop-014.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "../assets/prop-015.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "../assets/prop-016.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "../assets/prop-007.png",
+      "sha256": "d6b779a1337ccc4edaa366a2bbd5d793c56e185a8501dc6d6b8cf5f65701550b",
+      "bytes": 489
+    },
+    {
+      "path": "../assets/prop-008.png",
+      "sha256": "3f5c154a0256ed6459398aa627fb1c794ec1e014400e0a3c0b5f1071f0ab64b5",
+      "bytes": 542
+    },
+    {
+      "path": "../assets/prop-004.png",
+      "sha256": "90883dd6867aa9eb5f1c50bd4596f93b7a6c765dc5d3ff1e682eb5746f252adc",
+      "bytes": 350
+    },
+    {
+      "path": "../assets/prop-002.png",
+      "sha256": "8526472720253b8ea8fd7fa0f45cbad56e9e5a82be0533956de30bda834b4546",
+      "bytes": 339
+    },
+    {
+      "path": "../assets/prop-009.png",
+      "sha256": "24eed5471fce0d719c3892b58c587295bc6ea1d6b9fada4a635c6db2bedc2131",
+      "bytes": 557
+    },
+    {
+      "path": "../assets/prop-006.png",
+      "sha256": "e5f05f6ce5dcf389f0d9e81e964b170a938790734c98f0608a50ae0106467bb7",
+      "bytes": 290
+    },
+    {
+      "path": "../assets/prop-000.png",
+      "sha256": "b6d5a5748e0be4ba4039fa86a158868735ffee1db0d3a2c989795724cda20d13",
+      "bytes": 984
+    },
+    {
+      "path": "../assets/prop-003.png",
+      "sha256": "30118ade0e7ef45077bdbfcad2a678c8bda9bab14c38ccf3f2f10613cd65f586",
+      "bytes": 220
+    },
+    {
+      "path": "../assets/prop-001.png",
+      "sha256": "bc0f29ca6e83b52d0fe13248fc324dd674b911d69ff6cb55e71e3b1799a35322",
+      "bytes": 251
+    },
+    {
+      "path": "../assets/prop-005.png",
+      "sha256": "5b5155496ec64fcbbc3935201a7beec1c08ee82a8910542315d581cd06963d87",
+      "bytes": 119
+    },
+    {
+      "path": "../assets/prop-010.png",
+      "sha256": "c2aeae2575c030b4c95d33ea0f657fc02603a54ed6841e40e79477eaacbddbaa",
+      "bytes": 408
+    },
+    {
+      "path": "../assets/prop-011.png",
+      "sha256": "7da3090eb123687353255383b902443a0d5ec3ef5882c3acb9ae11864ed0029f",
+      "bytes": 257
+    },
+    {
+      "path": "../assets/prop-012.png",
+      "sha256": "812f89e248539c2a08a43a4a183ff0b5fe2415744b99d778c2334b530f030e21",
+      "bytes": 207
+    },
+    {
+      "path": "../assets/terrain-forge.json",
+      "sha256": "23dd4e1f9f447804714db681a71d9b3adce210ef5c83eae0b93873930394a979",
+      "bytes": 5496
+    },
+    {
+      "path": "../assets/terrain.png",
+      "sha256": "a4406116578588821387f11aa987eff6ad8cd5e6f40198018164921e8a0b8fc8",
+      "bytes": 5278
+    }
+  ],
+  "outputs": [
+    {
+      "path": "preview.html",
+      "sha256": "ae5e9ba341802d699ec3cdc7610215836593ed6be6d92d56b63d34ad472cec19",
+      "bytes": 247241
+    },
+    {
+      "path": "scene-snapshot.json",
+      "sha256": "2e6f72747d6aed0c4db38b64e1d51a458c9dec00a25e0c3bfedbc38f251e27fd",
+      "bytes": 9701
+    },
+    {
+      "path": "preview-screen.png",
+      "sha256": "3c60838b4999edfdb1a03bbb2bb9dcf4d573584f3708a4fd569a90fa3921f20a",
+      "bytes": 90858
+    },
+    {
+      "path": "preview-debug.png",
+      "sha256": "66caa168adc1cc0cb42bcaec60dd0a84deb818642fed05b4866e8e8e96f2e6fe",
+      "bytes": 145645
+    }
+  ],
+  "tool": {
+    "name": "build_scene_preview",
+    "version": "0.4.0"
+  },
+  "preview": {
+    "file": "preview.html",
+    "bytes": 247241,
+    "sha256": "ae5e9ba341802d699ec3cdc7610215836593ed6be6d92d56b63d34ad472cec19",
+    "runtime": {
+      "file": "map-runtime.mjs",
+      "version": "1.1.2",
+      "sha256": "c1fc3d9bf15cfa53fdfeb050ce4252f7ace4c923066ca4e135dea576e7445273"
+    },
+    "world": [
+      640,
+      480
+    ],
+    "zoom": 2,
+    "speed": 32.0,
+    "actorHeight": 12.0,
+    "actorRadius": 2,
+    "ySquash": 0.65,
+    "start": "west_entry",
+    "layers": [
+      {
+        "name": "地面",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "水面",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "道路",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "植被细节",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "地面阴影",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "桥梁护栏",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "建筑一层",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "建筑二层",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "建筑三层",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "屋顶",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "墙面阴影",
+        "source": "tiles",
+        "size": [
+          640,
+          480
+        ]
+      },
+      {
+        "name": "props",
+        "source": "objects"
+      }
+    ],
+    "drawOrder": [
+      "prop-107",
+      "prop-135",
+      "prop-137",
+      "prop-33",
+      "prop-45",
+      "prop-65",
+      "prop-85",
+      "prop-91",
+      "prop-143",
+      "prop-37",
+      "prop-129",
+      "prop-63",
+      "prop-99",
+      "prop-139",
+      "prop-35",
+      "prop-89",
+      "prop-67",
+      "prop-73",
+      "prop-131",
+      "prop-105",
+      "prop-43",
+      "prop-121",
+      "prop-123",
+      "prop-115",
+      "prop-103",
+      "prop-109",
+      "prop-119",
+      "prop-77",
+      "prop-31",
+      "prop-41",
+      "prop-111",
+      "prop-81",
+      "prop-97",
+      "prop-49",
+      "prop-61",
+      "prop-117",
+      "prop-59",
+      "prop-95",
+      "prop-101",
+      "prop-83",
+      "prop-93",
+      "prop-71",
+      "prop-47",
+      "prop-51",
+      "prop-53",
+      "prop-75",
+      "prop-87",
+      "prop-69",
+      "prop-39",
+      "prop-125",
+      "prop-27",
+      "prop-29",
+      "prop-55",
+      "prop-79",
+      "prop-113",
+      "prop-127",
+      "prop-133",
+      "prop-141",
+      "prop-57",
+      "prop-138",
+      "prop-88",
+      "prop-102",
+      "prop-108",
+      "prop-30",
+      "prop-60",
+      "prop-70",
+      "prop-74",
+      "prop-68",
+      "prop-120",
+      "prop-110",
+      "prop-96",
+      "prop-116",
+      "prop-94",
+      "prop-92",
+      "prop-50",
+      "prop-26",
+      "prop-62",
+      "prop-22",
+      "prop-112",
+      "prop-36",
+      "prop-23",
+      "prop-64",
+      "prop-54",
+      "prop-24",
+      "prop-32",
+      "prop-124",
+      "prop-25",
+      "prop-11",
+      "prop-12",
+      "prop-136",
+      "prop-78",
+      "prop-19",
+      "prop-20",
+      "prop-3",
+      "prop-98",
+      "prop-132",
+      "prop-10",
+      "prop-13",
+      "prop-9",
+      "prop-1",
+      "prop-5",
+      "prop-6",
+      "prop-4",
+      "prop-2",
+      "prop-104",
+      "prop-7",
+      "prop-8",
+      "prop-128",
+      "prop-42",
+      "prop-17",
+      "prop-16",
+      "prop-18",
+      "prop-84",
+      "prop-21",
+      "prop-142",
+      "prop-130",
+      "prop-122",
+      "prop-56",
+      "prop-44",
+      "prop-28",
+      "prop-15",
+      "prop-14",
+      "prop-90",
+      "prop-126",
+      "prop-106",
+      "prop-34",
+      "prop-52",
+      "prop-38",
+      "prop-140",
+      "prop-66",
+      "prop-72",
+      "prop-58",
+      "prop-46",
+      "prop-134",
+      "prop-114",
+      "prop-118",
+      "prop-76",
+      "prop-40",
+      "prop-80",
+      "prop-48",
+      "prop-100",
+      "prop-82",
+      "prop-86"
+    ],
+    "objectArt": {
+      "object.image": 143,
+      "props": 0,
+      "prop-pack": 0,
+      "occluder.source": 0,
+      "missing": []
+    },
+    "counts": {
+      "objects": 143,
+      "portals": 0,
+      "spawns": 1,
+      "interactions": 14,
+      "anchors": 0
+    },
+    "images": {
+      "count": 30,
+      "bytes": 56186
+    },
+    "materialMap": null,
+    "collision": {
+      "collisionSolids": 358,
+      "rects": 0,
+      "footprints": 81,
+      "tileSolids": 0,
+      "blockingMaterialClasses": []
+    },
+    "hashes": {
+      "checked": 0,
+      "unchecked": 145
+    }
+  },
+  "warnings": [],
+  "verify": {
+    "status": "pass",
+    "browser": "145.0.7632.6",
+    "routesOk": true,
+    "routes": 14,
+    "failing": [],
+    "ysort": "pass"
+  }
+}

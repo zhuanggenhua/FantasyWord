@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "eraseUndoRedoUndoCounts": [
+    [
+      "undo",
+      10791,
+      10792
+    ],
+    [
+      "redo",
+      10792,
+      10791
+    ],
+    [
+      "undo",
+      10791,
+      10792
+    ]
+  ],
+  "allCoreMapFieldsRestored": true,
+  "sourcePreserved": true,
+  "unityPackage": {
+    "files": 847,
+    "guidGroups": 214,
+    "gzipTar": true,
+    "guidMetadataMatches": true
+  }
+}

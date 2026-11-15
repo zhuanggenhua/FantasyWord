@@ -1,0 +1,16 @@
+{"index":0,"op":"draw","status":"started"}
+{"index":0,"op":"draw","status":"pass","cells":1}
+{"index":1,"op":"undo","status":"started"}
+{"index":1,"op":"undo","status":"pass","placementsBefore":10791,"placementsAfter":10792}
+{"index":2,"op":"redo","status":"started"}
+{"index":2,"op":"redo","status":"pass","placementsBefore":10792,"placementsAfter":10791}
+{"index":3,"op":"undo","status":"started"}
+{"index":3,"op":"undo","status":"pass","placementsBefore":10791,"placementsAfter":10792}
+{"index":4,"op":"save","status":"started"}
+{"index":4,"op":"save","status":"pass","file":"edited.json"}
+{"index":5,"op":"reload","status":"started"}
+{"index":5,"op":"reload","status":"pass"}
+{"index":6,"op":"export","status":"started"}
+{"index":6,"op":"export","status":"pass","domain":"map","format":"JSON"}
+{"index":7,"op":"render","status":"started"}
+{"index":7,"op":"render","status":"pass","size":{"width":768,"height":576}}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="JSON">
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<text-file><!----><name><var v="export_name"/>.txt</name><!----><text-contents><!--
+		|-->{
+<!--	|-->	"tile_size": <var v="tile_size"/>,
+<!--	|-->	"blob_sets": [
+<!--	|--><list-loop foreach="blobset"><as i="_blobset"/><as i="_basetile"/><text-contents>		{
+<!--		|-->			"members": [
+<!--		|--><list-loop foreach="_blobset.member"><as i="_member"/><as i="_tile"/><text-contents>				{ "id":<var v="_tile.index"/>, "role":<var v="_member.role"/> }</text-contents><separator>,
+<!--		|--></separator></list-loop>
+<!--		|-->			]
+<!--	|-->		}</text-contents><separator>,
+<!--	|--></separator></list-loop>
+<!--	|-->	],
+<!--	|-->	"wang_sets": [
+<!--	|--><list-loop foreach="wangset"><as i="_wangset"/><as i="_basetile"/><text-contents>		{
+<!--		|-->			"members": [
+<!--		|--><list-loop foreach="_wangset.member"><as i="_member"/><as i="_tile"/><text-contents>				{ "id":<var v="_tile.index"/>, "role":<var v="_member.role"/> }</text-contents><separator>,
+<!--		|--></separator></list-loop>
+<!--		|-->			]
+<!--	|-->		}</text-contents><separator>,
+<!--	|--></separator></list-loop>
+<!--	|-->	]
+<!--	|-->}<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<image-file><!----><name><var v="export_name"/>.png</name>
+					<!----><width expression="min(x0, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+					<!----><height expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+		|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--	|-->	<ivar v="_tile.image">
+<!--	|-->		<grid-x expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--	|-->		<grid-y expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--	|-->	</ivar>
+<!--	|--></image-contents></image-loop><!--
+		|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

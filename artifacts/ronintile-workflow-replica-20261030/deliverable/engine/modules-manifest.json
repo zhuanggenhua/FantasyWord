@@ -1,0 +1,557 @@
+[
+  {
+    "path": "js/BorderGenerator.js",
+    "bytes": 3881,
+    "sha256": "a4f8e92833c8034ed33ae8f875af84fa494b17adea9dfa9b284e1a6061943670"
+  },
+  {
+    "path": "js/BorderGeneratorBlob.js",
+    "bytes": 53088,
+    "sha256": "7809e66c7ce75f52463d89b6a30363beb66eadb08b59dbc581b1807a4c4a402b"
+  },
+  {
+    "path": "js/BorderGeneratorWang.js",
+    "bytes": 49621,
+    "sha256": "899b6c859466841e6656a5572769aa66051101422d4d4d8eeb4f0a69af7288b5"
+  },
+  {
+    "path": "js/BorderSet.js",
+    "bytes": 547,
+    "sha256": "60d6a81c40455934a542d7d22618830dd56ed34becb3cbd585fa008811454b69"
+  },
+  {
+    "path": "js/BorderSetBlob.js",
+    "bytes": 14934,
+    "sha256": "caeb907c5d06ffcb7f15072fd77e3083bdbf04e3410ac063bc8993c9c99df751"
+  },
+  {
+    "path": "js/BorderSetWang.js",
+    "bytes": 10579,
+    "sha256": "2e9915128a620cd6ad69beeb87034b7cb23e66351da8a3343a6ce648ad9d9568"
+  },
+  {
+    "path": "js/CallbackManager.js",
+    "bytes": 922,
+    "sha256": "fb2d6ee659445bf766e7a2403aad54ad116dda5d6385cc06e9ac02f929328303"
+  },
+  {
+    "path": "js/DirectoryTree.js",
+    "bytes": 799,
+    "sha256": "623f34c09b09e0ad9e0cb4bec88953ac68918efcb863443b0a57f80f9d3a8019"
+  },
+  {
+    "path": "js/ErrorDisplayView.js",
+    "bytes": 4905,
+    "sha256": "a0f627162f0147e44d8e997405edf6a820c0d46e8dfdf1b71b9b1936b310ce80"
+  },
+  {
+    "path": "js/ExpandingMenuView.js",
+    "bytes": 5202,
+    "sha256": "b0843e975650f9ac8ec6316cb86a077cc585dbf1442197d74ec1335b14dcd1a1"
+  },
+  {
+    "path": "js/ExportBlock.js",
+    "bytes": 87,
+    "sha256": "f07be61e8ceb1de7f8fac1209a367e94e0d88087754b5a6607b96e2a130b25a3"
+  },
+  {
+    "path": "js/ExportBlockField.js",
+    "bytes": 416,
+    "sha256": "4255fcba94d6761239a4a8d6488e41858e0e9906800b3848a923d17dc76600f3"
+  },
+  {
+    "path": "js/ExportDirectory.js",
+    "bytes": 278,
+    "sha256": "781940c072c511598b3c6bb78af8a605d6650cbd1e15c12f375865bc179ddd3e"
+  },
+  {
+    "path": "js/ExportFile.js",
+    "bytes": 654,
+    "sha256": "1d9a6f022d4f2b11e9dbea368d103917f1fa850d2df48efdf1178fa58feeabb3"
+  },
+  {
+    "path": "js/ExportFolder.js",
+    "bytes": 1990,
+    "sha256": "5df6c0b29119414d90a1375adc2bd5657f3056a356c9a565876d5167e53a7ce2"
+  },
+  {
+    "path": "js/ExportGUIDBlock.js",
+    "bytes": 471,
+    "sha256": "8da6c2b6da606d6cbcbb521316405aba87cd5010e071e136ad6dd411f16e4c2c"
+  },
+  {
+    "path": "js/ExportGridLoopBlock.js",
+    "bytes": 2767,
+    "sha256": "ce8e4ed5d034565b6cc74bf688631ff91a086da36a05e712318fa4a289105729"
+  },
+  {
+    "path": "js/ExportLoopBlock.js",
+    "bytes": 1588,
+    "sha256": "13a921539615f195112a608c496930d0455f402584e529b5152acd92a033586c"
+  },
+  {
+    "path": "js/ExportLoopDirectory.js",
+    "bytes": 1368,
+    "sha256": "ee1d9aa370bda5be7e2a25bd20481ac23228c54af378242c79cd15ad17831af8"
+  },
+  {
+    "path": "js/ExportNumberVariableBlock.js",
+    "bytes": 1249,
+    "sha256": "25bfed254b1f8f9ac15aa351ec316079b6fedc11504d892851ca3d0a83043e9b"
+  },
+  {
+    "path": "js/ExportTextBlock.js",
+    "bytes": 263,
+    "sha256": "a08f3a8242caebc2685d6049a88b6026c32cc6bb48227e5c7f06269a9ba909aa"
+  },
+  {
+    "path": "js/ExportTextFile.js",
+    "bytes": 388,
+    "sha256": "3dc004a285a483ac3fcc3a8ae1e5ed01fb6b7135f18bacfe59337702e37b8620"
+  },
+  {
+    "path": "js/ExportTextVariableBlock.js",
+    "bytes": 1367,
+    "sha256": "41c2e83edb62feb8e9b7a179ca5a525ad0d01c0f4050dc501bd2a2f87b37c80e"
+  },
+  {
+    "path": "js/ExportVisualBlock.js",
+    "bytes": 172,
+    "sha256": "aa69ca5393dc2309c9298ccae16b143f449c184d4189aa4f4f317af1a28083e0"
+  },
+  {
+    "path": "js/ExportVisualBlockField.js",
+    "bytes": 774,
+    "sha256": "548ec0be9c3f91814c6bb9c3c622875a1e58d3d863b396c5d015d2b24d25474f"
+  },
+  {
+    "path": "js/ExportVisualFile.js",
+    "bytes": 1740,
+    "sha256": "5b09bc43f7b6c4f5a15cbe4f12e2b8958815085a3e9823cf3b6b60814cc5c1ca"
+  },
+  {
+    "path": "js/ExportVisualImageBlock.js",
+    "bytes": 497,
+    "sha256": "5310bd8279ce472c92b498149cef4f4a8034723a8f53cee26a06f59baf8b0aaa"
+  },
+  {
+    "path": "js/ExportVisualImageVariableBlock.js",
+    "bytes": 918,
+    "sha256": "2a738a1ab15053d857e6d73de393112553877495e59c1d41d446b02110bc0753"
+  },
+  {
+    "path": "js/ExportVisualLoopBlock.js",
+    "bytes": 1268,
+    "sha256": "8d3f0c00e8c9c405ebef4b12dfae0ae52c47aff8036d2688e22825ee0a49dfc8"
+  },
+  {
+    "path": "js/IconTraySelectView.js",
+    "bytes": 2221,
+    "sha256": "2636aeb7bc582d1a6b2f53ef550ab599a85beffef239d22deee1d99f7856ded1"
+  },
+  {
+    "path": "js/IconTrayView.js",
+    "bytes": 2372,
+    "sha256": "66f10d1142cd15e2075da9d3ced2f3f4d1906ec5db7b16e83a903387758dd753"
+  },
+  {
+    "path": "js/LayerDisplayView.js",
+    "bytes": 428,
+    "sha256": "242203c53aa40767b5d1a4c66f2b2805bb279dcf0751dded392a5b52bf07109c"
+  },
+  {
+    "path": "js/LayerList.js",
+    "bytes": 465,
+    "sha256": "3d1b7dde0126eb835434db9d9c1fc976cdec02305b94698a0d0b2e942aa328e6"
+  },
+  {
+    "path": "js/LayeredTileGrid.js",
+    "bytes": 1347,
+    "sha256": "82b5d8d2820b06d3aacb2ab5f5c977d4926274e0d844737e3c845f9298d94cd7"
+  },
+  {
+    "path": "js/PointerLockHandler.js",
+    "bytes": 5336,
+    "sha256": "09287b4ee6a2e404da3b21a949826c09eab6dcfb028ed0f345b5f46ab3f9205c"
+  },
+  {
+    "path": "js/PropertyCheckboxView.js",
+    "bytes": 2440,
+    "sha256": "abd9a66d5e9aea45e51dfe8c4495fc6683690f5c43d1f8ee4a072c117457657b"
+  },
+  {
+    "path": "js/PropertyCollapserView.js",
+    "bytes": 3053,
+    "sha256": "f1fb9839e590f034c7a77e1856bf6635b388bde4b74cc7ad01fa22da1fd63afd"
+  },
+  {
+    "path": "js/PropertyDiscreteSliderView.js",
+    "bytes": 3186,
+    "sha256": "3eea45c4a6097e28acd447614a2106fb7c279028bc74fedab15deb6ef9481183"
+  },
+  {
+    "path": "js/PropertyEditTextMultiView.js",
+    "bytes": 2459,
+    "sha256": "4e9dd664a9289fe4845ed5b14c43746d2f6350b9b7a7aa65fe7487f8dfe9ea2f"
+  },
+  {
+    "path": "js/PropertyEditTextView.js",
+    "bytes": 4356,
+    "sha256": "02d7b44697675fa57c0fa056e367f3c8f44d7c614f74e6baa459956aca948554"
+  },
+  {
+    "path": "js/PropertyRelationBlobBorderView.js",
+    "bytes": 8936,
+    "sha256": "2eaec80a2db5c107063b11e8a516ac1b0c4775031c304b43e313f28d102fce7e"
+  },
+  {
+    "path": "js/PropertyRelationBlobNeighborView.js",
+    "bytes": 14557,
+    "sha256": "c15909810577b4f498fd3643b17c43080a1d826bf6353d294a1a2f28c75073b1"
+  },
+  {
+    "path": "js/PropertyRelationBlobPre2_0_0View.js",
+    "bytes": 4223,
+    "sha256": "20b5838d6922d4ab8a3676d993d119e818f7f433b4aded234f50e600c2800645"
+  },
+  {
+    "path": "js/PropertyRelationBlobView.js",
+    "bytes": 19985,
+    "sha256": "05acaee2e563e8eefe2dbc8c271336c51f8eb6e8e74bc85345b44575f1b58cf3"
+  },
+  {
+    "path": "js/PropertyRelationPropView.js",
+    "bytes": 10973,
+    "sha256": "f374082880851e355a21955a5ac9137c0c0a90007d4567bcd941a3bdf0c8ac7d"
+  },
+  {
+    "path": "js/PropertyRelationProxyView.js",
+    "bytes": 5028,
+    "sha256": "9de7acf18590fbd297194175cd7dd98ed6eaf441b58c237586f8f98b39183124"
+  },
+  {
+    "path": "js/PropertyRelationVariationView.js",
+    "bytes": 5329,
+    "sha256": "0cf859cfbfcc2781a8034e548b5c68c1b53bc0d82cf20462fa645f45517ce559"
+  },
+  {
+    "path": "js/PropertyRelationView.js",
+    "bytes": 1241,
+    "sha256": "b96bc0524f2e3c03365867596725e4702b3d943cd8db1c10260004ebaf2524fa"
+  },
+  {
+    "path": "js/PropertyRelationWangBorderView.js",
+    "bytes": 8024,
+    "sha256": "c14d94a5921b44403147aba812e11102a9e0aec2fe39380cd7e3aa9841324d0b"
+  },
+  {
+    "path": "js/PropertyRelationWangPre2_0_0View.js",
+    "bytes": 7876,
+    "sha256": "7340c9fea7690459f4227345bf5b44fe43ad4c392c409e8dfe281c003b626376"
+  },
+  {
+    "path": "js/PropertyRelationWangView.js",
+    "bytes": 18854,
+    "sha256": "39bf42b9ab249efd119f9e876264e41f9b1f9bf2c5a54ce5233e79bb4bb29651"
+  },
+  {
+    "path": "js/PropertySeparatorView.js",
+    "bytes": 301,
+    "sha256": "51eb309f5030f892dc0259649758a21b21612bb0b0921a138e8ce151314a7428"
+  },
+  {
+    "path": "js/PropertySourceView.js",
+    "bytes": 19297,
+    "sha256": "66aace161782e218ac75568fb1370b6579aa9381e7c4a1e9a1176ffce36f1938"
+  },
+  {
+    "path": "js/PropertyView.js",
+    "bytes": 105,
+    "sha256": "1a7b43d1f22c2345e5439e9e513febdd46cc5caee28fd0662d0366dbc7f547b8"
+  },
+  {
+    "path": "js/Region.js",
+    "bytes": 897,
+    "sha256": "3b1885d7cccac0ad0a3d16c445e6ca16abd6f65d52cd8a9a0b04eebdbc752354"
+  },
+  {
+    "path": "js/RegionSync.js",
+    "bytes": 3114,
+    "sha256": "6c3d52e2eb29d5e6c94514225b3a9a5a38a92863401126c1fe06a38ffbe4b91d"
+  },
+  {
+    "path": "js/SandboxView.js",
+    "bytes": 46923,
+    "sha256": "612b28008697b16cb6649ebfe58d4a32d16626af9c99142750428c6ac5ab8ec7"
+  },
+  {
+    "path": "js/ScreenRegionView.js",
+    "bytes": 657,
+    "sha256": "80967bbac4474b0a3d07b4b0ee708211f10673e89d1de6b100da703e2696f5c7"
+  },
+  {
+    "path": "js/ScreenSeparatorView.js",
+    "bytes": 6774,
+    "sha256": "c228975779e84c00033200d8f95b9adfedaf8b52ea02797606b7ba9de071eedd"
+  },
+  {
+    "path": "js/Selection.js",
+    "bytes": 1179,
+    "sha256": "621ff6c5eafee2e11d8d0bb903168752b87d81ae1d164f61378c38a48a255202"
+  },
+  {
+    "path": "js/SelectionGroup.js",
+    "bytes": 898,
+    "sha256": "527920fd5204fa3254e1f1805840c513119b1885d30bbdc3173f877d26202bb7"
+  },
+  {
+    "path": "js/SetView.js",
+    "bytes": 40462,
+    "sha256": "1c16d3d3e658b12dce9d0c8a6d02cb8199fb75316180ac66f78a97757e06be78"
+  },
+  {
+    "path": "js/Source.js",
+    "bytes": 1116,
+    "sha256": "7de9fe463b98795ae079d8940ea0f964b30985cc84e6a9adad92f0dee2aaca11"
+  },
+  {
+    "path": "js/SourceDisplayView.js",
+    "bytes": 1694,
+    "sha256": "dbdd30fd04c4415a7652d8e4162faed50f462138e6d05dfe79d23b58a34eb198"
+  },
+  {
+    "path": "js/SourceImage.js",
+    "bytes": 2477,
+    "sha256": "169411d20cf23ff5a524389c07fb99b8ec715526de1b23e5583a50cbfda8deef"
+  },
+  {
+    "path": "js/SourcePropertiesView.js",
+    "bytes": 3057,
+    "sha256": "ba719fe1551a33a253f1b1d5d00c01803cf4ac86950cfb99bf07b578d3a353da"
+  },
+  {
+    "path": "js/Tile.js",
+    "bytes": 17740,
+    "sha256": "72c05c12ae4023b29e54b168dc059eb5c814a65e7dffa72618f1fa725c807d81"
+  },
+  {
+    "path": "js/TileBase.js",
+    "bytes": 938,
+    "sha256": "eb55a36bba09dace3489da838db2099582c097baed619b3f14e5b3213ad5e565"
+  },
+  {
+    "path": "js/TileBorder.js",
+    "bytes": 412,
+    "sha256": "d08a37294ffb1f8b513b16c5e2942748cb666348fa118f9eec0328f4fbebf33e"
+  },
+  {
+    "path": "js/TileDisplayView.js",
+    "bytes": 4652,
+    "sha256": "420a298e9f1eba4beed9277fc186487df1f2d2ff0cfd768a83a6e8e235b1849e"
+  },
+  {
+    "path": "js/TileGrid.js",
+    "bytes": 1189,
+    "sha256": "194e3fe9b3762b6d3870f6fcbe033f56a26311fc23dd9b8e1366e60be0f8635b"
+  },
+  {
+    "path": "js/TileGridIsometricView.js",
+    "bytes": 70711,
+    "sha256": "1640faf25e0bda674b5fb3b16ae143d1597c20d34d00764dbc0a000e1fea1ab5"
+  },
+  {
+    "path": "js/TileGridOrthographicView.js",
+    "bytes": 42284,
+    "sha256": "5bd91254ced3fdb08be1a6a53817a2bbdf057c61e33b987587cce30f2ac5ad86"
+  },
+  {
+    "path": "js/TilePropertiesView.js",
+    "bytes": 33386,
+    "sha256": "c6f1e8c13ce111248f49104efc2fd8aebae8db99b70700495ab31775042c74fc"
+  },
+  {
+    "path": "js/TileRelation.js",
+    "bytes": 172,
+    "sha256": "455f848cb8752430569e72971528a6a5ce5170712a2bc5cdbfb4e27adf64e9b1"
+  },
+  {
+    "path": "js/TileRelationBlob.js",
+    "bytes": 471,
+    "sha256": "8f934dea4cb19364d172997679838d560a3c933a928d087c96ee8605242001fe"
+  },
+  {
+    "path": "js/TileRelationBlobBorder.js",
+    "bytes": 277,
+    "sha256": "1e17d8246c340822dd486e73e263d5ece5229169101db4cfdd0122cc2ab52d79"
+  },
+  {
+    "path": "js/TileRelationBlobPre2_0_0.js",
+    "bytes": 1006,
+    "sha256": "2a60218b8044c8a7e333dc1f3ebae688139fe34828772db414cdbaf7535c141f"
+  },
+  {
+    "path": "js/TileRelationProp.js",
+    "bytes": 192,
+    "sha256": "dfa8510b574aff751b91c16cca3de6d2697a978720694964b830b2ba53fc40e3"
+  },
+  {
+    "path": "js/TileRelationPropBackground.js",
+    "bytes": 209,
+    "sha256": "abeda7b5207029564f7bd4ff0330eb7a1f95d76bcdb42d9f05771bf7b2f4a5b7"
+  },
+  {
+    "path": "js/TileRelationProxy.js",
+    "bytes": 783,
+    "sha256": "b3134eba002f641b3a91ab105d2b85c798f60136455b6a33b5bf23ae9e48dcf4"
+  },
+  {
+    "path": "js/TileRelationWang.js",
+    "bytes": 471,
+    "sha256": "0a7b54d729c26ed2a5462a6aaa04b7513b08859ad267d67b34baa14c1bde5c37"
+  },
+  {
+    "path": "js/TileRelationWangBorder.js",
+    "bytes": 277,
+    "sha256": "6844b66d452f243aa1544caac43c8c2c033f7ce8cb485c3d940c413abb443c66"
+  },
+  {
+    "path": "js/TileRelationWangPre2_0_0.js",
+    "bytes": 1145,
+    "sha256": "f896ebb1fb0c2e6a05961cf2e75d9c9ee8a706467b98dfffe67aca5d1778adda"
+  },
+  {
+    "path": "js/TooltipView.js",
+    "bytes": 496,
+    "sha256": "c67f05b833a18ce3aa45deaddb3e5ec703f37f00512e12d2dd373cda809867dd"
+  },
+  {
+    "path": "js/UserError.js",
+    "bytes": 136,
+    "sha256": "b43b868af234323517a00de8bc18ef547b30af796ab2d88368698f77b5c9bd34"
+  },
+  {
+    "path": "js/WindowBorderView.js",
+    "bytes": 6165,
+    "sha256": "b766b389b870fab22419dcb49ae485a5f8014c7d081652d89f238108a2ef7b68"
+  },
+  {
+    "path": "js/tileroninX.js",
+    "bytes": 214895,
+    "sha256": "531a5fdff1b120c713d5327658f14ff568205052a40f366d9edb674cda78272b"
+  },
+  {
+    "path": "js/tileroninXExport.js",
+    "bytes": 63153,
+    "sha256": "3e9f9bca5096ac016015a6a580b79b81af3212875fbf349a49721de483ff81a3"
+  },
+  {
+    "path": "format/map/Defold.tsfo",
+    "bytes": 2458,
+    "sha256": "ce200527a05c982ae020274d7b662f6c2889bc52ea68377ff89dd380748cfdb8"
+  },
+  {
+    "path": "format/map/GMS2 (2.3.0).tsfo",
+    "bytes": 19610,
+    "sha256": "9f609783d74c6cb99cf329779346fceadc38313539d0b818cd7310ae3843f0e6"
+  },
+  {
+    "path": "format/map/GMS2.tsfo",
+    "bytes": 16250,
+    "sha256": "b4bd2590e300b687fb8d05f7e641631ee09d74341592e87d56ef95d2b995f052"
+  },
+  {
+    "path": "format/map/Godot.tsfi",
+    "bytes": 5081,
+    "sha256": "2c97acff9c438264e814a4f70cd919c51c7d593160a18b8bf428de18900dc9be"
+  },
+  {
+    "path": "format/map/Godot.tsfo",
+    "bytes": 5047,
+    "sha256": "964ed7e0ac498b3465a6d254a3c61b5896a6e71d60f90b34e2cf3b01d5f2b2d4"
+  },
+  {
+    "path": "format/map/Image.tsfi",
+    "bytes": 1113,
+    "sha256": "1ff6e17e6e886ca3aadb39879a50f4a2786453c513ea585c52e2b94ba1dfd560"
+  },
+  {
+    "path": "format/map/Image.tsfo",
+    "bytes": 864,
+    "sha256": "bcd95a551945933acbf56d9a273f02b80e960f9b3de2d9615c6171c9be355110"
+  },
+  {
+    "path": "format/map/JSON.tsfi",
+    "bytes": 1875,
+    "sha256": "9ade922e71310013208ec320526b4b53b18d92e65a00410ab23a3a8754fa395e"
+  },
+  {
+    "path": "format/map/JSON.tsfo",
+    "bytes": 1818,
+    "sha256": "327c6bda1d8936d3b8a545ffab3ab97ae342ace9c1f0741a9f61e2d9f6bf1b1e"
+  },
+  {
+    "path": "format/map/Unity.tsfi",
+    "bytes": 21687,
+    "sha256": "53e7255f1ec85e84143ee818e84e71e7e561cc3a96e2bf5e72e2eba2c80e4e19"
+  },
+  {
+    "path": "format/map/Unity.tsfo",
+    "bytes": 21596,
+    "sha256": "94181465683c1c4ac0d3c33deaa8ac259b4babf19610827e362a0b0f9425fbdb"
+  },
+  {
+    "path": "format/set/Defold.tsfo",
+    "bytes": 1381,
+    "sha256": "812e574405aa6849269b21d13b109a99b66a3eeebc087d105a8bf50fab52c7c7"
+  },
+  {
+    "path": "format/set/GMS2 (2.3.0).tsfo",
+    "bytes": 19112,
+    "sha256": "81674117a05616d6f869014dcaed95e635e4d882bf39deb8bd2b0e62b1a97690"
+  },
+  {
+    "path": "format/set/GMS2.tsfo",
+    "bytes": 14496,
+    "sha256": "b5480567213192706824f8918a117832f72e0fd24eb5b9bb19b1fa0f8342d7bd"
+  },
+  {
+    "path": "format/set/Godot.tsfi",
+    "bytes": 11491,
+    "sha256": "279a494164af345e52e1a05485a267126f818750676958c489bfdafb927c9d14"
+  },
+  {
+    "path": "format/set/Godot.tsfo",
+    "bytes": 11467,
+    "sha256": "2fb9c80af2732b467f9f190c83b40f53307ab70c114f04858b31ecaf7b623442"
+  },
+  {
+    "path": "format/set/Image.tsfi",
+    "bytes": 717,
+    "sha256": "8b16687b916d74686404d41f68023b5e93264ed1cd1e169fe75a07c21a5720fa"
+  },
+  {
+    "path": "format/set/Image.tsfo",
+    "bytes": 711,
+    "sha256": "20ea0760864d9863807f668b205f17c4c4200040837b7da8b11796fff55ef4cd"
+  },
+  {
+    "path": "format/set/JSON.tsfi",
+    "bytes": 2136,
+    "sha256": "999cf4db8b86ece321331419487c6c6677227d1c75656815f98a99a879760dd7"
+  },
+  {
+    "path": "format/set/JSON.tsfo",
+    "bytes": 2079,
+    "sha256": "e6515bd7d9695a861f11b31378b029589f42f71b958fcae550cf809d23f67e7d"
+  },
+  {
+    "path": "format/set/Unity.tsfi",
+    "bytes": 36102,
+    "sha256": "ab112d8ad8ec8273ecda7f45544fd4abfa34983e87a9d00852f36c46d3cfc83e"
+  },
+  {
+    "path": "format/set/Unity.tsfo",
+    "bytes": 36080,
+    "sha256": "7493de098fef1d4bf520dad6bcc11a879110b6c5971ae73aedaa2efbd802ec21"
+  }
+]

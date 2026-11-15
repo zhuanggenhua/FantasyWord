@@ -1,0 +1,25 @@
+.tooltip-view {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 100;
+    background: var(--rtDeepFill);
+    font-size: 12px;
+    color: var(--color2);
+    font-family: mainFont;
+    overflow: hidden;
+    border: 1px solid var(--colorRust);
+    border-radius: 2px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.48);
+    transform: translateX(8px);
+}
+
+.tooltip-content-view {
+    display: flex;
+    align-items: center;
+    margin: 4px;
+    margin-left: 8px;
+    margin-right: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+}

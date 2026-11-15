@@ -1,0 +1,8 @@
+{
+  "status": "pass",
+  "roads": 894,
+  "water": 360,
+  "missing_road_cells": [],
+  "missing_water_cells": [],
+  "source": "river-trade-town.tmj"
+}

@@ -1,0 +1,15 @@
+.icontray-view {
+	background: var(--wastePanel);
+	border-radius: 0px 0px 4px 0px;
+	border-width: 0px 4px 4px 0px;
+	border-style: solid;
+	border-color: var(--rtInset);
+	box-shadow: inset -1px -1px 0 rgba(211, 189, 79, 0.14);
+	position: absolute;
+}
+
+.icontray-icon-view {
+	margin: 8px;
+	display: block;
+	filter: sepia(0.45) contrast(1.16) saturate(0.8);
+}

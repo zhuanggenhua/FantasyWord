@@ -1,0 +1,144 @@
+{
+  "status": "pass",
+  "engine": {
+    "url": "https://frameronin.com/ronintile/assets/index-5sEpM8Gi.js",
+    "sha256": "5d419daadf2a3a5480cb83add497f65b82cdb5ce29ed32bc5afe38d70ca5dee4",
+    "version": "2.1.0-pro",
+    "localReference": "Temp/ronintile-reference-20261030",
+    "role": "网页公开原引擎，仅本地执行和对照，不声称独立重写原算法"
+  },
+  "recipeSha256": "b9e244cdbee9b9977948e8fbfcc2e22474486fe86bce0247bc3d5409fc0d0611",
+  "sourceAudit": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\floor.png",
+      "sha256": "55c82939cd1cec45168ef1ec7e192d809edc1cd6569a8f191dd944f9eb2b6e90",
+      "bytes": 217
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\road.png",
+      "sha256": "79a661b3864a2740342e2984f83ecb8eb446576e21c2215ee6b9ee5835292650",
+      "bytes": 197
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\prop.png",
+      "sha256": "90883dd6867aa9eb5f1c50bd4596f93b7a6c765dc5d3ff1e682eb5746f252adc",
+      "bytes": 350
+    }
+  ],
+  "version": "2.1.0-pro",
+  "trace": [
+    {
+      "index": 0,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        4,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "op": "import",
+      "imageSize": {
+        "width": 9,
+        "height": 14
+      },
+      "tilesImported": 4,
+      "at": [
+        10,
+        0
+      ]
+    },
+    {
+      "index": 0,
+      "op": "layer"
+    },
+    {
+      "index": 4,
+      "op": "draw",
+      "cells": 192
+    },
+    {
+      "index": 1,
+      "op": "layer"
+    },
+    {
+      "index": 6,
+      "op": "stamp",
+      "cells": 1
+    },
+    {
+      "index": 7,
+      "op": "save",
+      "file": "checkpoint.json"
+    },
+    {
+      "index": 8,
+      "op": "reload"
+    },
+    {
+      "index": 9,
+      "op": "render",
+      "size": {
+        "width": 128,
+        "height": 96
+      }
+    },
+    {
+      "index": 10,
+      "op": "export",
+      "domain": "map",
+      "format": "JSON"
+    },
+    {
+      "index": 11,
+      "op": "export",
+      "domain": "map",
+      "format": "Image"
+    }
+  ],
+  "summary": {
+    "sources": 6,
+    "tiles": 6,
+    "relations": 0,
+    "placements": 193,
+    "layers": [
+      {
+        "visible": true,
+        "name": "地面"
+      },
+      {
+        "visible": true,
+        "name": "物件"
+      }
+    ]
+  },
+  "errors": [],
+  "blockedRequests": [],
+  "missingResources": [
+    "/ronintile/legacy/res/icon/ui_icon_option_a3.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a2.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a1.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a4.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a5.png",
+    "/ronintile/legacy/res/placeholder/missing_small.png"
+  ],
+  "unityVerified": false
+}

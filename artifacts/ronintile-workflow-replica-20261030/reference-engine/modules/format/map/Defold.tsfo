@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="Defold Assets">
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<image-file><!----><name><var v="export_name"/>.png</name>
+					<!----><width expression="min(x0, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+					<!----><height expression="ceil(x0/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents>	<!--
+		|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--	|-->	<ivar v="_tile.image">
+<!--	|-->		<grid-x expression="(x0%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--	|-->		<grid-y expression="floor(x0/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--	|-->	</ivar>
+<!--	|--></image-contents></image-loop><!--
+		|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+		<text-file><!----><name><var v="export_name"/>.tilesource</name><!----><text-contents><!--
+		|-->image: "/<var v="export_name"/>.png"
+<!--	|-->tile_width: <var v="tile_size"/>
+<!--	|-->tile_height: <var v="tile_size"/>
+<!--	|-->tile_margin: 0
+<!--	|-->tile_spacing: 0
+<!--	|-->collision: ""
+<!--	|-->material_tag: "tile"
+<!--	|-->extrude_borders: 2
+<!--	|-->inner_padding: 0
+<!--	|--><!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+		<text-file><!----><name><var v="export_name"/>.tilemap</name><!----><text-contents><!--
+		|-->tile_set: "/<var v="export_name"/>.tilesource"
+<!--	|--><list-loop foreach="layer"><as i="_layer"/><text-contents>layers {
+<!--		|-->  id: "<var v="_layer.index"/>_<var v="_layer.name"><replace from="\\" to="\\"/><replace from="&quot;" to="\&quot;"/></var>"
+<!--		|-->  z: <nvar expression="2/max(1, x0-1)*x1-1"><x v="layer_count"/><x v="_layer.index"/></nvar>
+<!--		|-->  is_visible: 1
+<!--		|--><list-loop foreach="_layer.position"><as i="_position"/><as i="_tile"/><text-contents>  cell {
+<!--			|-->    x: <var v="_position.x"/>
+<!--			|-->    y: <nvar expression="x0-1-x1"><x v="map_height"/><x v="_position.y"/></nvar>
+<!--			|-->    tile: <var v="_tile.index"/>
+<!--			|-->    h_flip: 0
+<!--			|-->    v_flip: 0
+<!--			|-->  }
+<!--		|--></text-contents></list-loop>}
+<!--	|--></text-contents></list-loop>material: "/builtins/materials/tile_map.material"
+<!--	|-->blend_mode: BLEND_MODE_ALPHA
+<!--	|--><!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

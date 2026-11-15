@@ -1,0 +1,35 @@
+.propertycollapser-view {
+  	margin-top: 8px;
+  	margin-bottom: 8px;
+}
+
+.propertycollapser-label-view {
+	position: relative;
+	display: inline-block;
+	display: flex;
+	align-items: center;
+}
+
+.propertycollapser-dropdown-view {
+	margin: 6px;
+	display: inline-block;
+}
+
+.propertycollapser-text-view {
+	color: var(--color2);
+	display: inline-block;
+	font-size: 12px;
+	font-family: mainFont;
+	align-items: center;
+}
+
+.propertycollapser-container-view {
+	overflow-y: hidden;
+	transition: height 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.propertycollapser-contents-view {
+	overflow: visible;
+	padding-top: 0.1px;
+	padding-bottom: 0.1px;
+}

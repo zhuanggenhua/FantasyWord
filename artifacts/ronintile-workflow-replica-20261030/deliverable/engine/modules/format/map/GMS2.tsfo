@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="GMS2 Assets">
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<folder><!----><name>sprites</name><!----><directory-contents>
+
+			<folder><!----><name>sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<folder><!----><name>layers</name><!----><directory-contents>
+
+					<folder><!----><name><GUID v="_GUIDSprite"/></name><!----><directory-contents>
+
+						<image-file><!----><name><GUID v="_GUIDLayer"/>.png</name>
+									<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+									<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+						|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--					|-->	<ivar v="_tile.image">
+<!--					|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--					|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--					|-->	</ivar>
+<!--					|--></image-contents></image-loop><!--
+						|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+					<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+				<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+				<image-file><!----><name><GUID v="_GUIDSprite"/>.png</name>
+							<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+							<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+				|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--			|-->	<ivar v="_tile.image">
+<!--			|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--			|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--			|-->	</ivar>
+<!--			|--></image-contents></image-loop><!--
+				|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+				<text-file><!----><name>sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->    "id": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->    "modelName": "GMSprite",
+<!--			|-->    "mvc": "1.12",
+<!--			|-->    "name": "sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->    "For3D": false,
+<!--			|-->    "HTile": false,
+<!--			|-->    "VTile": false,
+<!--			|-->    "bbox_bottom": <nvar expression="ceil((x0+1)/8)*x1-1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "bbox_left": 0,
+<!--			|-->    "bbox_right": <nvar expression="min(x0+1, 8)*x1-1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "bbox_top": 0,
+<!--			|-->    "bboxmode": 0,
+<!--			|-->    "colkind": 1,
+<!--			|-->    "coltolerance": 0,
+<!--			|-->    "edgeFiltering": false,
+<!--			|-->    "frames": [
+<!--			|-->        {
+<!--			|-->            "id": "<GUID v="_GUIDSprite"/>",
+<!--			|-->            "modelName": "GMSpriteFrame",
+<!--			|-->            "mvc": "1.0",
+<!--			|-->            "SpriteId": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->            "compositeImage": {
+<!--			|-->                "id": "<GUID v="_GUIDSpriteCompositeImage"/>",
+<!--			|-->                "modelName": "GMSpriteImage",
+<!--			|-->                "mvc": "1.0",
+<!--			|-->                "FrameId": "<GUID v="_GUIDSprite"/>",
+<!--			|-->                "LayerId": "00000000-0000-0000-0000-000000000000"
+<!--			|-->            },
+<!--			|-->            "images": [
+<!--			|-->                {
+<!--			|-->                    "id": "<GUID v="_GUIDSpriteImage"/>",
+<!--			|-->                    "modelName": "GMSpriteImage",
+<!--			|-->                    "mvc": "1.0",
+<!--			|-->                    "FrameId": "<GUID v="_GUIDSprite"/>",
+<!--			|-->                    "LayerId": "<GUID v="_GUIDLayer"/>"
+<!--			|-->                }
+<!--			|-->            ]
+<!--			|-->        }
+<!--			|-->    ],
+<!--			|-->    "gridX": 0,
+<!--			|-->    "gridY": 0,
+<!--			|-->    "height": <nvar expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "layers": [
+<!--			|-->        {
+<!--			|-->            "id": "<GUID v="_GUIDLayer"/>",
+<!--			|-->            "modelName": "GMImageLayer",
+<!--			|-->            "mvc": "1.0",
+<!--			|-->            "SpriteId": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->            "blendMode": 0,
+<!--			|-->            "isLocked": false,
+<!--			|-->            "name": "default",
+<!--			|-->            "opacity": 100,
+<!--			|-->            "visible": true
+<!--			|-->        }
+<!--			|-->    ],
+<!--			|-->    "origin": 0,
+<!--			|-->    "originLocked": false,
+<!--			|-->    "playbackSpeed": 15,
+<!--			|-->    "playbackSpeedType": 0,
+<!--			|-->    "premultiplyAlpha": false,
+<!--			|-->    "sepmasks": false,
+<!--			|-->    "swatchColours": null,
+<!--			|-->    "swfPrecision": 2.525,
+<!--			|-->    "textureGroupId": "<GUID v="_GUIDTextureGroup"/>",
+<!--			|-->    "type": 0,
+<!--			|-->    "width": <nvar expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "xorig": 0,
+<!--			|-->    "yorig": 0
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name>tilesets</name><!----><directory-contents>
+
+			<folder><!----><name>tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<image-file><!----><name>output_tileset.png</name>
+							<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+							<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+				|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--			|-->	<ivar v="_tile.image">
+<!--			|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--			|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--			|-->	</ivar>
+<!--			|--></image-contents></image-loop><!--
+				|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+				<text-file><!----><name>tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->    "id": "<GUID v="_GUIDTileset"/>",
+<!--			|-->    "modelName": "GMTileSet",
+<!--			|-->    "mvc": "1.11",
+<!--			|-->    "name": "tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->    "auto_tile_sets": [
+<!--			|-->        
+<!--			|-->    ],
+<!--			|-->    "macroPageTiles": {
+<!--			|-->        "SerialiseData": null,
+<!--			|-->        "SerialiseHeight": 0,
+<!--			|-->        "SerialiseWidth": 0,
+<!--			|-->        "TileSerialiseData": [
+<!--			|-->            
+<!--			|-->        ]
+<!--			|-->    },
+<!--			|-->    "out_columns": <nvar expression="min(x0+1, 8)"><x v="tile_count"/></nvar>,
+<!--			|-->    "out_tilehborder": 0,
+<!--			|-->    "out_tilevborder": 0,
+<!--			|-->    "spriteId": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->    "sprite_no_export": true,
+<!--			|-->    "textureGroupId": "<GUID v="_GUIDTextureGroup"/>",
+<!--			|-->    "tile_animation": {
+<!--			|-->        "AnimationCreationOrder": null,
+<!--			|-->        "FrameData": [
+<!--			|--><list-loop foreach="tile"><as i="_tile"/><text-contents>            <var v="_tile.index"/></text-contents><separator>,
+<!--			|--></separator></list-loop>
+<!--			|-->        ],
+<!--			|-->        "SerialiseFrameCount": 1
+<!--			|-->    },
+<!--			|-->    "tile_animation_frames": [
+<!--			|-->        
+<!--			|-->    ],
+<!--			|-->    "tile_animation_speed": 15,
+<!--			|-->    "tile_count": <nvar expression="ceil((x0+1)/8)*min(x0+1, 8)"><x v="tile_count"/></nvar>,
+<!--			|-->    "tileheight": <var v="tile_size"/>,
+<!--			|-->    "tilehsep": 0,
+<!--			|-->    "tilevsep": 0,
+<!--			|-->    "tilewidth": <var v="tile_size"/>,
+<!--			|-->    "tilexoff": 0,
+<!--			|-->    "tileyoff": 0
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name>rooms</name><!----><directory-contents>
+
+			<folder><!----><name>room_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<text-file><!----><name>room_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->    "name": "room_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->    "id": "<GUID v="_GUIDRoom"/>",
+<!--			|-->    "creationCodeFile": "RoomCreationCode.gml",
+<!--			|-->    "inheritCode": false,
+<!--			|-->    "inheritCreationOrder": false,
+<!--			|-->    "inheritLayers": false,
+<!--			|-->    "instanceCreationOrderIDs": [
+<!--			|-->
+<!--			|-->    ],
+<!--			|-->    "IsDnD": true,
+<!--			|-->    "layers": [
+<!--			|--><list-loop foreach="layer" reverse="true"><as i="_layer"/><text-contents>        {
+<!--				|-->            "__type": "GMRTileLayer_Model:#YoYoStudio.MVCFormat",
+<!--				|-->            "name": "<var v="_layer.name"><replace from="\W" to=""/><replace from="^\d" to="_$&amp;"/><replace from="^$" to="Unnamed Layer"/></var>",
+<!--				|-->            "id": "<GUID v="_layer._GUIDLayerId"/>",
+<!--				|-->            "depth": 0,
+<!--				|-->            "grid_x": <var v="tile_size"/>,
+<!--				|-->            "grid_y": <var v="tile_size"/>,
+<!--				|-->            "hierarchyFrozen": false,
+<!--				|-->            "hierarchyVisible": true,
+<!--				|-->            "inheritLayerDepth": false,
+<!--				|-->            "inheritLayerSettings": false,
+<!--				|-->            "inheritSubLayers": false,
+<!--				|-->            "inheritVisibility": false,
+<!--				|-->            "layers": [
+<!--				|-->
+<!--				|-->            ],
+<!--				|-->            "m_parentID": "00000000-0000-0000-0000-000000000000",
+<!--				|-->            "m_serialiseFrozen": false,
+<!--				|-->            "modelName": "GMRTileLayer",
+<!--				|-->            "prev_tileheight": <var v="tile_size"/>,
+<!--				|-->            "prev_tilewidth": <var v="tile_size"/>,
+<!--				|-->            "mvc": "1.0",
+<!--				|-->            "tiles": {
+<!--				|-->                "SerialiseData": null,
+<!--				|-->                "SerialiseHeight": <var v="map_height"/>,
+<!--				|-->                "SerialiseWidth": <var v="map_width"/>,
+<!--				|-->                "TileSerialiseData": [
+<!--				|-->                    <grid-loop foreach="_layer.position"><as i="_position"/><as i="_tile"/><width><x v="map_width"/></width><height><x v="map_height"/></height><grid-x><x v="_position.x"/></grid-x><grid-y><x v="_position.y"/></grid-y><null-contents>2147483648</null-contents><text-contents><nvar expression="x0+1"><x v="_tile.index"/></nvar></text-contents><separator-x>,</separator-x><separator-y>,
+<!--				|-->                    </separator-y></grid-loop>
+<!--				|-->                                    ]
+<!--				|-->            },
+<!--				|-->            "tilesetId": "<GUID v="_GUIDTileset"/>",
+<!--				|-->            "userdefined_depth": false,
+<!--				|-->            "visible": true,
+<!--				|-->            "x": 0,
+<!--				|-->            "y": 0
+<!--			|-->        }</text-contents><separator>,
+<!--			|--></separator></list-loop>
+<!--			|-->    ],
+<!--			|-->    "modelName": "GMRoom",
+<!--			|-->    "parentId": "00000000-0000-0000-0000-000000000000",
+<!--			|-->    "physicsSettings":     {
+<!--			|-->        "id": "<GUID v="_GUIDRoomPhysics"/>",
+<!--			|-->        "inheritPhysicsSettings": false,
+<!--			|-->        "modelName": "GMRoomPhysicsSettings",
+<!--			|-->        "PhysicsWorld": false,
+<!--			|-->        "PhysicsWorldGravityX": 0,
+<!--			|-->        "PhysicsWorldGravityY": 10,
+<!--			|-->        "PhysicsWorldPixToMeters": 0.1,
+<!--			|-->        "mvc": "1.0"
+<!--			|-->    },
+<!--			|-->    "roomSettings":     {
+<!--			|-->        "id": "<GUID v="_GUIDRoomSettings"/>",
+<!--			|-->        "Height": <nvar expression="x0*x1"><x v="map_height"/><x v="tile_size"/></nvar>,
+<!--			|-->        "inheritRoomSettings": false,
+<!--			|-->        "modelName": "GMRoomSettings",
+<!--			|-->        "persistent": false,
+<!--			|-->        "mvc": "1.0",
+<!--			|-->        "Width": <nvar expression="x0*x1"><x v="map_width"/><x v="tile_size"/></nvar>
+<!--			|-->    },
+<!--			|-->    "mvc": "1.0",
+<!--			|-->    "views": [
+<!--			|-->
+<!--			|-->    ],
+<!--			|-->    "viewSettings":     {
+<!--			|-->        "id": "<GUID v="_GUIDRoomView"/>",
+<!--			|-->        "clearDisplayBuffer": true,
+<!--			|-->        "clearViewBackground": false,
+<!--			|-->        "enableViews": false,
+<!--			|-->        "inheritViewSettings": false,
+<!--			|-->        "modelName": "GMRoomViewSettings",
+<!--			|-->        "mvc": "1.0"
+<!--			|-->    }
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<text-file><!----><name><var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yyp</name><!----><text-contents><!--
+		|-->{
+<!--	|-->    "id": "<GUID v="_GUIDProject"/>",
+<!--	|-->    "modelName": "GMProject",
+<!--	|-->    "mvc": "1.0",
+<!--	|-->    "IsDnDProject": true,
+<!--	|-->    "configs": [
+<!--	|-->        
+<!--	|-->    ],
+<!--	|-->    "option_ecma": false,
+<!--	|-->    "parentProject": {
+<!--	|-->        "id": "<GUID v="_GUIDProjectParent"/>",
+<!--	|-->        "modelName": "GMProjectParent",
+<!--	|-->        "mvc": "1.0",
+<!--	|-->        "alteredResources": [
+<!--	|-->            
+<!--	|-->        ],
+<!--	|-->        "hiddenResources": [
+<!--	|-->            
+<!--	|-->        ],
+<!--	|-->        "projectPath": "${base_project}"
+<!--	|-->    },
+<!--	|-->    "resources": [
+<!--	|-->        {
+<!--	|-->            "Key": "<GUID v="_GUIDRoom"/>",
+<!--	|-->            "Value": {
+<!--	|-->                "id": "<GUID v="_GUIDProjectValue"/>",
+<!--	|-->                "resourcePath": "rooms\\room_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>\\room_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",
+<!--	|-->                "resourceType": "GMRoom"
+<!--	|-->            }
+<!--	|-->        },
+<!--	|-->        {
+<!--	|-->            "Key": "<GUID v="_GUIDSpriteYY"/>",
+<!--	|-->            "Value": {
+<!--	|-->                "id": "<GUID v="_GUIDProjectSprite"/>",
+<!--	|-->                "resourcePath": "sprites\\sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>\\sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",
+<!--	|-->                "resourceType": "GMSprite"
+<!--	|-->            }
+<!--	|-->        },
+<!--	|-->        {
+<!--	|-->            "Key": "<GUID v="_GUIDTileset"/>",
+<!--	|-->            "Value": {
+<!--	|-->                "id": "<GUID v="_GUIDProjectTileset"/>",
+<!--	|-->                "resourcePath": "tilesets\\tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>\\tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",
+<!--	|-->                "resourceType": "GMTileSet"
+<!--	|-->            }
+<!--	|-->        }
+<!--	|-->    ],
+<!--	|-->    "script_order": [
+<!--	|-->        
+<!--	|-->    ],
+<!--	|-->    "tutorial": ""
+<!--	|-->}<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

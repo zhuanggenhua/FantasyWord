@@ -1,0 +1,605 @@
+{
+  "status": "pass",
+  "engine": {
+    "url": "https://frameronin.com/ronintile/assets/index-5sEpM8Gi.js",
+    "sha256": "5d419daadf2a3a5480cb83add497f65b82cdb5ce29ed32bc5afe38d70ca5dee4",
+    "version": "2.1.0-pro",
+    "localReference": "Temp/ronintile-reference-20261030",
+    "role": "网页公开原引擎，仅本地执行和对照，不声称独立重写原算法"
+  },
+  "recipeSha256": "0a6151147732caef8e434cbbad5f6c05ac048bf102f76b874f7bda3d776a3c43",
+  "sourceAudit": [
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\floor.png",
+      "sha256": "55c82939cd1cec45168ef1ec7e192d809edc1cd6569a8f191dd944f9eb2b6e90",
+      "bytes": 217
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\road.png",
+      "sha256": "79a661b3864a2740342e2984f83ecb8eb446576e21c2215ee6b9ee5835292650",
+      "bytes": 197
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\prop.png",
+      "sha256": "90883dd6867aa9eb5f1c50bd4596f93b7a6c765dc5d3ff1e682eb5746f252adc",
+      "bytes": 350
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-0.png",
+      "sha256": "4435859e60296bd296ee59fe943145c8109d32762fb07f27ff98d0398cdbe727",
+      "bytes": 222
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-1.png",
+      "sha256": "5ba41310fd6f820790df51c63c4a98440ef038af6b2aa3c552d48e84c96df656",
+      "bytes": 213
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-2.png",
+      "sha256": "faba434aabf3fdf4423f339bca2adb97a83b0449d394a15c5c526f1406054198",
+      "bytes": 248
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-3.png",
+      "sha256": "111e9136e76f6d086f8a48a95c95573cb0b24950f08deb680fe2f0d32e923064",
+      "bytes": 178
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-4.png",
+      "sha256": "79a661b3864a2740342e2984f83ecb8eb446576e21c2215ee6b9ee5835292650",
+      "bytes": 197
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-5.png",
+      "sha256": "354293da7080b5f46205109ab8abee38e8f01cd884cf2cfba1a6c6e0fb09cda5",
+      "bytes": 181
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-6.png",
+      "sha256": "f365d14f53afc73f7c084f4e433457de5b12a737ef890c22411c94afc1bdd081",
+      "bytes": 189
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-7.png",
+      "sha256": "478f416659c2942daafd257da4c97776c8e1213309e7ace0500413c81d8d3085",
+      "bytes": 233
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-8.png",
+      "sha256": "157fc31d1be3e942c09b4f5478d328a2b49590b75a71f047fbf7079788bb1dfa",
+      "bytes": 212
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-9.png",
+      "sha256": "3a0e3904b20c1c14da9870a7717187bb67bfac88f12f497b7a31d0a6f5f0ee35",
+      "bytes": 180
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-10.png",
+      "sha256": "3eddcec9a4f6329ce35495641a6e0b328f64af2fa17637ab2c1f39ccafb38e77",
+      "bytes": 197
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-11.png",
+      "sha256": "8dd315b8535b059c2a4c47cdc849af67c75f757b6457313aa35dbf4999caef23",
+      "bytes": 179
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-12.png",
+      "sha256": "823a77a6bd5a35a0778dfd3f127ac5fe8387a3a3e159bbbeb42aa8737f416fce",
+      "bytes": 215
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-13.png",
+      "sha256": "d6d7f0f5ca53818933c4b3cfb220b11f7194c573d92b0df188198605f3c96621",
+      "bytes": 214
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-14.png",
+      "sha256": "868c4385a3d187a11664749a694268006a47bd2ead9942b85103e994c5d61436",
+      "bytes": 205
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-15.png",
+      "sha256": "9c4e2937e37de0f4ee827122ceaa1865e5f86c64902e4867a17882454ae0993d",
+      "bytes": 215
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-16.png",
+      "sha256": "d31027028799f00adeeca544bd6e9b489a8bfea9b91dbded676b3ba645fb4588",
+      "bytes": 221
+    },
+    {
+      "path": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ronintile-workflow-replica-20261030\\inputs\\cobble-17.png",
+      "sha256": "b2af2050110e95cba0e0e757333419a303ac5805d1e5339f9261d1b3bc5c3c97",
+      "bytes": 189
+    }
+  ],
+  "hostedEngineSha256": "3e72c145600e5b0dcb39cf313230001bf33123b996e54abb0e9cb0abb5bd76f9",
+  "hostAdaptations": [
+    {
+      "id": "guid-create",
+      "reason": "原网页宿主只实现raw，但ExportGUIDBlock调用create().value",
+      "implementation": "真实UUID及value对象"
+    },
+    {
+      "id": "tar-gzip-stream",
+      "reason": "原网页归档宿主只拼接文本，未生成tar.gz",
+      "implementation": "保留原导出器文件列表，使用Python tarfile生成真实归档并等待写入完成"
+    }
+  ],
+  "version": "2.1.0-pro",
+  "trace": [
+    {
+      "index": 0,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        0,
+        0
+      ]
+    },
+    {
+      "index": 1,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        4,
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "op": "import",
+      "imageSize": {
+        "width": 9,
+        "height": 14
+      },
+      "tilesImported": 4,
+      "at": [
+        20,
+        0
+      ]
+    },
+    {
+      "index": 3,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        80,
+        0
+      ]
+    },
+    {
+      "index": 4,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        81,
+        0
+      ]
+    },
+    {
+      "index": 5,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        82,
+        0
+      ]
+    },
+    {
+      "index": 6,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        83,
+        0
+      ]
+    },
+    {
+      "index": 7,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        84,
+        0
+      ]
+    },
+    {
+      "index": 8,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        85,
+        0
+      ]
+    },
+    {
+      "index": 9,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        86,
+        0
+      ]
+    },
+    {
+      "index": 10,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        87,
+        0
+      ]
+    },
+    {
+      "index": 11,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        88,
+        0
+      ]
+    },
+    {
+      "index": 12,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        89,
+        0
+      ]
+    },
+    {
+      "index": 13,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        90,
+        0
+      ]
+    },
+    {
+      "index": 14,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        91,
+        0
+      ]
+    },
+    {
+      "index": 15,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        92,
+        0
+      ]
+    },
+    {
+      "index": 16,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        93,
+        0
+      ]
+    },
+    {
+      "index": 17,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        94,
+        0
+      ]
+    },
+    {
+      "index": 18,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        95,
+        0
+      ]
+    },
+    {
+      "index": 19,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        96,
+        0
+      ]
+    },
+    {
+      "index": 20,
+      "op": "import",
+      "imageSize": {
+        "width": 8,
+        "height": 8
+      },
+      "tilesImported": 1,
+      "at": [
+        97,
+        0
+      ]
+    },
+    {
+      "index": 21,
+      "op": "call",
+      "function": "getTileSet"
+    },
+    {
+      "index": 22,
+      "op": "call",
+      "function": "getTileSet"
+    },
+    {
+      "index": 23,
+      "op": "build-borders",
+      "generatedTiles": 46,
+      "totalTiles": 47
+    },
+    {
+      "index": 24,
+      "op": "relation",
+      "kind": "blob",
+      "slots": 12
+    },
+    {
+      "index": 25,
+      "op": "prop",
+      "components": 4
+    },
+    {
+      "index": 26,
+      "op": "layer",
+      "layerIndex": 0
+    },
+    {
+      "index": 27,
+      "op": "draw",
+      "cells": 768
+    },
+    {
+      "index": 28,
+      "op": "paint",
+      "cells": 140
+    },
+    {
+      "index": 29,
+      "op": "paint",
+      "cells": 85
+    },
+    {
+      "index": 30,
+      "op": "layer",
+      "layerIndex": 1
+    },
+    {
+      "index": 31,
+      "op": "paint",
+      "cells": 2
+    },
+    {
+      "index": 32,
+      "op": "undo",
+      "placementsBefore": 776,
+      "placementsAfter": 768
+    },
+    {
+      "index": 33,
+      "op": "redo",
+      "placementsBefore": 768,
+      "placementsAfter": 776
+    },
+    {
+      "index": 34,
+      "op": "save",
+      "file": "checkpoint.json"
+    },
+    {
+      "index": 35,
+      "op": "reload"
+    },
+    {
+      "index": 36,
+      "op": "render",
+      "size": {
+        "width": 256,
+        "height": 192
+      }
+    },
+    {
+      "index": 37,
+      "op": "export",
+      "domain": "map",
+      "format": "JSON"
+    },
+    {
+      "index": 38,
+      "op": "export",
+      "domain": "map",
+      "format": "Image"
+    },
+    {
+      "index": 39,
+      "op": "export",
+      "domain": "map",
+      "format": "Unity"
+    },
+    {
+      "index": 40,
+      "op": "export",
+      "domain": "map",
+      "format": "Godot"
+    },
+    {
+      "index": 41,
+      "op": "export",
+      "domain": "map",
+      "format": "GMS2"
+    },
+    {
+      "index": 42,
+      "op": "export",
+      "domain": "map",
+      "format": "GMS2 (2.3.0)"
+    },
+    {
+      "index": 43,
+      "op": "export",
+      "domain": "map",
+      "format": "Defold"
+    },
+    {
+      "index": 44,
+      "op": "export",
+      "domain": "set",
+      "format": "JSON"
+    },
+    {
+      "index": 45,
+      "op": "export",
+      "domain": "set",
+      "format": "Image"
+    },
+    {
+      "index": 46,
+      "op": "export",
+      "domain": "set",
+      "format": "Unity"
+    },
+    {
+      "index": 47,
+      "op": "export",
+      "domain": "set",
+      "format": "Godot"
+    },
+    {
+      "index": 48,
+      "op": "export",
+      "domain": "set",
+      "format": "GMS2"
+    },
+    {
+      "index": 49,
+      "op": "export",
+      "domain": "set",
+      "format": "GMS2 (2.3.0)"
+    },
+    {
+      "index": 50,
+      "op": "export",
+      "domain": "set",
+      "format": "Defold"
+    }
+  ],
+  "summary": {
+    "sources": 24,
+    "tiles": 70,
+    "relations": 105,
+    "placements": 776,
+    "layers": [
+      {
+        "visible": true,
+        "name": "地面"
+      },
+      {
+        "visible": true,
+        "name": "物件"
+      }
+    ]
+  },
+  "errors": [],
+  "blockedRequests": [],
+  "missingResources": [
+    "/ronintile/legacy/res/icon/ui_icon_option_a3.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a2.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a1.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a4.png",
+    "/ronintile/legacy/res/icon/ui_icon_option_a5.png",
+    "/ronintile/legacy/res/placeholder/missing_small.png",
+    "/ronintile/legacy/res/placeholder/border_placeholder_blob.png"
+  ],
+  "unityVerified": false
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="Image">
+
+	<image-file><!----><name><var v="export_name"/>.png</name>
+				<!----><width expression="x0*x1"><x v="tile_size"/><x v="map_width"/></width>
+				<!----><height expression="x0*x1"><x v="tile_size"/><x v="map_height"/></height><!----><image-contents><!--
+	|--><image-loop foreach="layer"><as i="_layer"/><image-contents>
+<!--|-->	<image-loop foreach="_layer.position"><as i="_position"/><as i="_tile"/><image-contents>
+<!--|-->		<ivar v="_tile.image">
+<!--|-->			<grid-x expression="x0*x1"><x v="tile_size"/><x v="_position.x"/></grid-x>
+<!--|-->			<grid-y expression="x0*x1"><x v="tile_size"/><x v="_position.y"/></grid-y>
+<!--|-->		</ivar>
+<!--|-->	</image-contents></image-loop>
+<!--|--></image-contents></image-loop><!--
+	|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+</format>

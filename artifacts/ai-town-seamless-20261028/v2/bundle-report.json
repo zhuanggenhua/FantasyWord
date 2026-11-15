@@ -1,0 +1,309 @@
+{
+  "schema": "generate2dmap.map_bundle_report.v1",
+  "status": "pass",
+  "method": "JSON Schema map.schema.json#/$defs/map_bundle_v2 (vendored copy, built-in Draft 2020-12 evaluator), file existence and sha256 of every referenced file, and cross-field rules: unique ids, tile indices against tilesets, wang/blob topology, material colours, portal targets and arrivals, slots and approach points",
+  "notProven": [
+    "reachability, portal arrivals and collision geometry (run map_nav.py check)",
+    "that collision and footprints match the painted art",
+    "engine or editor import (Tiled GUI, Godot, LDtk not verified)"
+  ],
+  "checks": [
+    {
+      "id": "schema",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "files",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "sha256",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "tilesets",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "layers",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "props_and_objects",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "collision",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "material_map",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "portals",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "spawns_anchors_interactions",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    },
+    {
+      "id": "document",
+      "status": "pass",
+      "value": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "threshold": {
+        "errors": 0
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "path": "map-bundle.json",
+      "sha256": "ad82aeb6ac795fa1b4425fe4164e90036fecea12200f5a190903675cf24e9b8d",
+      "bytes": 2190162
+    },
+    {
+      "path": "assets/terrain-forge.json",
+      "sha256": "81a90c9470c5e2595ed1e4f84b91f3f6703e5cebaf8576c5a17a425425a659a3",
+      "bytes": 5216
+    },
+    {
+      "path": "assets/terrain.png",
+      "sha256": "a0d4fbfc9d0ba2ad8964563cfa312d7841a2c415f8b041f26a9ae67418d3a20d",
+      "bytes": 5300
+    },
+    {
+      "path": "assets/prop-000.png",
+      "sha256": "917b025851e7164885c0ac5dfe00cd81edf35f1b206257b15fcb722b22b677bc",
+      "bytes": 158
+    },
+    {
+      "path": "assets/prop-001.png",
+      "sha256": "ed0b30ea7ed33b0298eb4719a052612288a9e55d9bdf12ebca9ce0d7d69ce32e",
+      "bytes": 125
+    },
+    {
+      "path": "assets/prop-002.png",
+      "sha256": "90883dd6867aa9eb5f1c50bd4596f93b7a6c765dc5d3ff1e682eb5746f252adc",
+      "bytes": 350
+    },
+    {
+      "path": "assets/prop-003.png",
+      "sha256": "36b280979d197f86c0a38e03648ffe057802a8c072ea9afefdd625ab5fa4911b",
+      "bytes": 312
+    },
+    {
+      "path": "assets/prop-004.png",
+      "sha256": "06e269a14718e2c6030572b790ca248665f5e0250ebbfac3010184ad6171d53c",
+      "bytes": 230
+    },
+    {
+      "path": "assets/prop-005.png",
+      "sha256": "652caf114fa1476d590c5997c16685dc2940b12b5b0c4edb8822de9da16e0566",
+      "bytes": 119
+    },
+    {
+      "path": "assets/prop-006.png",
+      "sha256": "d8beb80b327d7271eddcb4e0ac0550f9272adaeb9f42ac8b59ca83a2f388d5ac",
+      "bytes": 366
+    },
+    {
+      "path": "assets/prop-007.png",
+      "sha256": "30118ade0e7ef45077bdbfcad2a678c8bda9bab14c38ccf3f2f10613cd65f586",
+      "bytes": 220
+    },
+    {
+      "path": "assets/prop-008.png",
+      "sha256": "e5f05f6ce5dcf389f0d9e81e964b170a938790734c98f0608a50ae0106467bb7",
+      "bytes": 290
+    },
+    {
+      "path": "assets/prop-009.png",
+      "sha256": "17d369f47114bf35c74ea4f64bfa8e21814e7140043e391d97228276f17cdb58",
+      "bytes": 408
+    },
+    {
+      "path": "assets/prop-010.png",
+      "sha256": "96b2a92172e2a30a1a27672116e39ef2afba637f69532f83061a1d4d1f082ab3",
+      "bytes": 145
+    },
+    {
+      "path": "assets/prop-011.png",
+      "sha256": "bc0f29ca6e83b52d0fe13248fc324dd674b911d69ff6cb55e71e3b1799a35322",
+      "bytes": 251
+    },
+    {
+      "path": "assets/prop-012.png",
+      "sha256": "8526472720253b8ea8fd7fa0f45cbad56e9e5a82be0533956de30bda834b4546",
+      "bytes": 339
+    },
+    {
+      "path": "assets/prop-026.png",
+      "sha256": "8176cf14d2c7891c361628348d85f71c7aa563f4a571dc731b220a878524379a",
+      "bytes": 160
+    },
+    {
+      "path": "assets/prop-025.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "assets/prop-021.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "assets/prop-022.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "assets/prop-023.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "assets/prop-024.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "assets/prop-015.png",
+      "sha256": "d6b779a1337ccc4edaa366a2bbd5d793c56e185a8501dc6d6b8cf5f65701550b",
+      "bytes": 489
+    },
+    {
+      "path": "assets/prop-016.png",
+      "sha256": "3f5c154a0256ed6459398aa627fb1c794ec1e014400e0a3c0b5f1071f0ab64b5",
+      "bytes": 542
+    },
+    {
+      "path": "assets/prop-017.png",
+      "sha256": "24eed5471fce0d719c3892b58c587295bc6ea1d6b9fada4a635c6db2bedc2131",
+      "bytes": 557
+    },
+    {
+      "path": "assets/prop-013.png",
+      "sha256": "b6d5a5748e0be4ba4039fa86a158868735ffee1db0d3a2c989795724cda20d13",
+      "bytes": 984
+    },
+    {
+      "path": "assets/prop-014.png",
+      "sha256": "5b5155496ec64fcbbc3935201a7beec1c08ee82a8910542315d581cd06963d87",
+      "bytes": 119
+    },
+    {
+      "path": "assets/prop-018.png",
+      "sha256": "c2aeae2575c030b4c95d33ea0f657fc02603a54ed6841e40e79477eaacbddbaa",
+      "bytes": 408
+    },
+    {
+      "path": "assets/prop-019.png",
+      "sha256": "7da3090eb123687353255383b902443a0d5ec3ef5882c3acb9ae11864ed0029f",
+      "bytes": 257
+    },
+    {
+      "path": "assets/prop-020.png",
+      "sha256": "812f89e248539c2a08a43a4a183ff0b5fe2415744b99d778c2334b530f030e21",
+      "bytes": 207
+    }
+  ],
+  "outputs": [],
+  "tool": {
+    "name": "map_bundle.py",
+    "version": "0.4.0"
+  },
+  "bundle": {
+    "id": "river-trade-town",
+    "version": 2,
+    "world": [
+      640.0,
+      480.0
+    ],
+    "counts": {
+      "tilesets": 1,
+      "layers": 29,
+      "props": 0,
+      "objects": 174,
+      "portals": 0,
+      "spawns": 1,
+      "anchors": 0,
+      "interactions": 24
+    }
+  },
+  "problems": []
+}

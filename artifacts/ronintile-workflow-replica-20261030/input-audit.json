@@ -1,0 +1,53 @@
+[
+  {
+    "output": "floor.png",
+    "source": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png",
+    "meta": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png.meta",
+    "sourceSha256": "7827d39d8883025e2bbbfda050f06c87e5b57fc860d7fea6a320d44377bf6b42",
+    "metaSha256": "43f14bf28bb864f04ccb91aae6214b5fe1b86ed8e641dc6da9788a52118e4ef4",
+    "spriteGuid": "d3a573650e5730a4787951c31d88c8f4",
+    "spriteFileId": -3672974821408913460,
+    "rect": {
+      "serializedVersion": 2,
+      "x": 304,
+      "y": 160,
+      "width": 8,
+      "height": 8
+    },
+    "name": "Floor_Inside_1"
+  },
+  {
+    "output": "road.png",
+    "source": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png",
+    "meta": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Tileset\\Tiles.png.meta",
+    "sourceSha256": "7827d39d8883025e2bbbfda050f06c87e5b57fc860d7fea6a320d44377bf6b42",
+    "metaSha256": "43f14bf28bb864f04ccb91aae6214b5fe1b86ed8e641dc6da9788a52118e4ef4",
+    "spriteGuid": "d3a573650e5730a4787951c31d88c8f4",
+    "spriteFileId": -93517011469115099,
+    "rect": {
+      "serializedVersion": 2,
+      "x": 48,
+      "y": 160,
+      "width": 8,
+      "height": 8
+    },
+    "name": "Cobblestone_4"
+  },
+  {
+    "output": "prop.png",
+    "source": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png",
+    "meta": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Towns I\\Sprites\\Props\\Props.png.meta",
+    "sourceSha256": "3123873144ed261c9f26c09c5b7e5c15a30e3b639410058b5cf84db3ba609e2e",
+    "metaSha256": "b372795d33d0eaed5a6791a377b102cdb2513deb81733d6426c6b9a591215917",
+    "spriteGuid": "aa3ef75d8ec7c344f81552140d04a1fe",
+    "spriteFileId": -3853824034063239485,
+    "rect": {
+      "serializedVersion": 2,
+      "x": 140,
+      "y": 145,
+      "width": 9,
+      "height": 14
+    },
+    "name": "WineKeg"
+  }
+]

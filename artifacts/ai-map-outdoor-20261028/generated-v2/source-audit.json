@@ -1,0 +1,6797 @@
+{
+  "inputs": [
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Scenes\\Demo - Forgotten Plains.unity",
+      "sha256": "d33afabc18845d2fd54d26769ef550ce1d94df11dd33cc8c41adcff306ce66d6"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "sha256": "c01a80900cd5fae029363989dbcd86b39bbf356219b865a6d20ccd7ae91fa8a5"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png.meta",
+      "sha256": "8ca0d162dd3aba8d962cccbd7454067b7b82881298d5b6aeff2e43c90a1fe679"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\PropsShadow.png",
+      "sha256": "2fe18a5ed392bacb8544ca166cb893f5a58cb80e8cf4495d2208c1f0fbc5dbef"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\PropsShadow.png.meta",
+      "sha256": "ea66e5412308742c3fa18d04e1c68f43606863d3094fde01e488231ab56db54e"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "sha256": "15fc9e96e950103ac43df2246e71a7eb9a9808ac3ef103cf3fbd9b59d80cbbb1"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png.meta",
+      "sha256": "6ea06f0710e0ed8749480d3e9bf3c6b10587828fe57bd1f875e429c6f6f70d45"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesExtras.png",
+      "sha256": "c7e94f1c2f8369112d89860e61413fc884d9dbe40648677c67210e2598a91af1"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesExtras.png.meta",
+      "sha256": "d402f3c947d15b04620a8b1584e59eeea2b52fad82073c31bfc0bf2707071a3f"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "sha256": "50654034ce510b08af523a97ef6c4a816436cd3e39650eb9a96577cad811869f"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png.meta",
+      "sha256": "23901302c090b56e71eb9115dc3352d875f0d2ae7be64f66614444e62202c8aa"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Tile Palettes\\Rule Tiles\\DirtPath.asset",
+      "sha256": "a37538d25fed5633f4d1ca3ecd9a3324c8fb46ac24bedea2dd250ad71b8e38c3"
+    },
+    {
+      "path": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Tile Palettes\\Rule Tiles\\LakeGrass.asset",
+      "sha256": "16daa2e212e5ecab65a0176ceadc58df5f003be414e305d0b0ab2e7b9916e063"
+    }
+  ],
+  "sprites": [
+    {
+      "index": 0,
+      "name": "Cliff5",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        4319082817293394212
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 1,
+      "name": "LakeGrass1a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5168040815232592561
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 2,
+      "name": "LakeGrass4a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3123210492697546674
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 3,
+      "name": "LakeGrass4b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        14565115268857
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 232,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 4,
+      "name": "LakeGrass7a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5142985224987346401
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 5,
+      "name": "LakeGrass2a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        3765233093305786911
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 6,
+      "name": "LakeGrass5a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8769477312700077242
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 7,
+      "name": "LakeGrass5b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        7077750735549151254
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 8,
+      "name": "LakeGrass8a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        7307207491082985977
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 9,
+      "name": "LakeGrass2b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -6506514647827721572
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 10,
+      "name": "LakeGrass8b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3163642778822800188
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 11,
+      "name": "LakeGrass10b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -1246188947823022559
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 232,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 12,
+      "name": "LakeGrass13a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -2898857517003678170
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 200,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 13,
+      "name": "LakeGrass7b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -1456378614208964141
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 232,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 14,
+      "name": "LakeGrass3a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3093023096474644574
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 15,
+      "name": "LakeGrass11b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -2715241273640187481
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 240,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 16,
+      "name": "LakeGrass14a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        723821681983666684
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 112,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 17,
+      "name": "LakeGrass6a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -7470577720828876
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 18,
+      "name": "LakeGrass9a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        6376822986008453909
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 216,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 19,
+      "name": "LakeGrass3b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3233832380815565200
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 20,
+      "name": "LakeGrass6b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        9218296383687302457
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 21,
+      "name": "LakeGrass11a",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5815736184513189670
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 208,
+        "y": 120,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 22,
+      "name": "LakeGrass9b",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -8905371680243631910
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 248,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 23,
+      "name": "Path1",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8018067390814807308
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 24,
+      "name": "Path14",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        3623880081268746987
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 25,
+      "name": "Path15",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        5316939577844888454
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 26,
+      "name": "Path11",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        759429649703818656
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 32,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 27,
+      "name": "Path9",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8595849554165390320
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 144,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 28,
+      "name": "Path13",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -1337966704436421353
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 120,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 29,
+      "name": "Path7",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3302856517846097519
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 30,
+      "name": "Path3",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -449969554694646727
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 144,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 31,
+      "name": "Path2",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5929583112215490963
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 32,
+      "name": "Path4",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -230412719083885522
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 33,
+      "name": "Path6",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        491045394357892640
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 144,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 34,
+      "name": "Path12",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        3970487048791556788
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 144,
+        "y": 32,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 35,
+      "name": "Dirt4",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -4347491678797418330
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 36,
+      "name": "Dirt6",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -1748832395696345806
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 72,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 37,
+      "name": "Dirt1",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        2634119036987483898
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 38,
+      "name": "Dirt3",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -8988517981366986819
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 72,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 39,
+      "name": "Grass19",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        9217061925416098833
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 40,
+      "name": "Dirt19",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -7910306303201999464
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 41,
+      "name": "Grass7",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -1391373748628232827
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 42,
+      "name": "Grass8",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        7834792174395292375
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 43,
+      "name": "Grass9",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        4597406943155738836
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 44,
+      "name": "Grass18",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        6194187767919663805
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 45,
+      "name": "Grass4",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -8112496800722139697
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 46,
+      "name": "Grass6",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        1855472826433282859
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 136,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 47,
+      "name": "Cliff34",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -8694713157233325495
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 48,
+      "name": "ExtraGrass_3",
+      "unity_sprite": [
+        "162473a0430db7841a72bcd3c2c1ca47",
+        3135660858758823503
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesExtras.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 0,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 49,
+      "name": "Grass17",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8170302452853305954
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 50,
+      "name": "ExtraGrass_2",
+      "unity_sprite": [
+        "162473a0430db7841a72bcd3c2c1ca47",
+        -5128218447291489202
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesExtras.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 0,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 51,
+      "name": "Grass2",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -6723554196787993037
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 52,
+      "name": "ExtraGrass_1",
+      "unity_sprite": [
+        "162473a0430db7841a72bcd3c2c1ca47",
+        2366441547712947784
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesExtras.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 0,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 53,
+      "name": "Grass16",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -8163881058519588145
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 160,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 54,
+      "name": "ExtraGrass_0",
+      "unity_sprite": [
+        "162473a0430db7841a72bcd3c2c1ca47",
+        -68803787505221607
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesExtras.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 0,
+        "y": 0,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 55,
+      "name": "Grass1",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -696654465008527618
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 56,
+      "name": "Cobblestone9",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        5428996616675934595
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 57,
+      "name": "CliffShadow7_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        -1742114805777440970
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 9,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 58,
+      "name": "CliffShadow6_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        1219598456425788191
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 59,
+      "name": "CliffShadow9_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        -1712294541400741303
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 60,
+      "name": "CliffShadow4_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        8147088152627743078
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 48,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 61,
+      "name": "CliffShadow3_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        -5266519977979817474
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 56,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 62,
+      "name": "CliffShadow5_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        5924815633051773048
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 33,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 63,
+      "name": "Wall_4",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        4482459298659459441
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 64,
+      "name": "Wall_3",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -1480178468262523555
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 24,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 65,
+      "name": "Wall_2",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3076916908359153861
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 32,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 66,
+      "name": "Wall_5",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -76250758586407073
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 67,
+      "name": "Wall_6",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8985720995205051461
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 0,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 68,
+      "name": "Wall_1",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3224202456533794196
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 40,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 69,
+      "name": "Wall_8",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -1260964307869511543
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 0,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 70,
+      "name": "Wall_11",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -9051523260627767429
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 71,
+      "name": "Wall_16",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        5089149202751804329
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 72,
+      "name": "Wall_15",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        5936223391749785790
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 17,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 73,
+      "name": "Wall_13",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        8078921149560878582
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 33,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 74,
+      "name": "Wall_14",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        3123583176092752116
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 33,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 75,
+      "name": "Wall_7",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        5407167949813686853
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 0,
+        "y": 17,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 76,
+      "name": "Wall_18",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        2677867984281861092
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 17,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 77,
+      "name": "Wall_17",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -4412215126660022261
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 78,
+      "name": "Wall_10",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -1028136048825651875
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 25,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 79,
+      "name": "Wall_12",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        659129057290191308
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 33,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 80,
+      "name": "Cliff27",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        6576386867314494571
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 81,
+      "name": "Cliff28",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        3674885954294020099
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 82,
+      "name": "Cliff29",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        2280851931077979430
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 8,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 83,
+      "name": "Cliff7",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8189713782397531181
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 80,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 84,
+      "name": "Cliff8",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        6810361817690676055
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 80,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 85,
+      "name": "Cliff9",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5656346488148160034
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 72,
+        "y": 80,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 86,
+      "name": "Cliff4",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3037922311549652288
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 87,
+      "name": "Cliff6",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5689352404372570758
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 72,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 88,
+      "name": "Cliff14",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -9097735869496629021
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 89,
+      "name": "Cliff13",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5030520507953257148
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 90,
+      "name": "Cliff1",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -7583777823891987096
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 91,
+      "name": "Cliff2",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -628898891973736699
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 92,
+      "name": "Cliff3",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -2273810267464160379
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 72,
+        "y": 96,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 93,
+      "name": "Cliff23",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -6275098772522018600
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 94,
+      "name": "Cliff33",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -8702418200153160368
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 48,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 95,
+      "name": "Cliff21",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        2655180460648200333
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 32,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 96,
+      "name": "Cliff22",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        2390074777560545983
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 97,
+      "name": "Cliff10",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -3249289018024729512
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 56,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 98,
+      "name": "Cliff26",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        8813435448533744725
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 48,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 99,
+      "name": "Cliff25",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -1396358301602513775
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 56,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 100,
+      "name": "Cliff24",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        2617337369539894587
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 101,
+      "name": "Cliff19",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -6424616569833199833
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 64,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 102,
+      "name": "Cliff18",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -6196348735134223376
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 103,
+      "name": "Cliff20",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5734375402147954748
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 16,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 104,
+      "name": "Cliff17",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        5330620465662002547
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 80,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 105,
+      "name": "Cliff16",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        7049501812705623691
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 24,
+        "y": 88,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 106,
+      "name": "Cliff35",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5656879159022141002
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 64,
+        "y": 16,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 107,
+      "name": "Cobblestone22",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        3934320468523223389
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 108,
+      "name": "Cobblestone8",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        1346658296133103896
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 104,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 109,
+      "name": "Cobblestone39",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        4413147969798166273
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 176,
+        "y": 128,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 110,
+      "name": "Cobblestone16",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -5524295968405812971
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 128,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 111,
+      "name": "Cobblestone17",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -4271812543496821812
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 136,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 112,
+      "name": "Cobblestone3",
+      "unity_sprite": [
+        "49ebf7de40457d84495983a6734b2c68",
+        -7451596547521832489
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\Tiles.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 112,
+        "y": 144,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 113,
+      "name": "CliffShadow8_Shadows",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        1106499510479851818
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 40,
+        "y": 33,
+        "width": 8,
+        "height": 8
+      }
+    },
+    {
+      "index": 114,
+      "name": "CliffShadow_2",
+      "unity_sprite": [
+        "1389a4518cee0534ea58db4eb226c532",
+        9135859241469400785
+      ],
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Tileset\\TilesShadows.png",
+      "rect": {
+        "serializedVersion": 2,
+        "x": 8,
+        "y": 72,
+        "width": 8,
+        "height": 8
+      }
+    }
+  ],
+  "chunks": [
+    {
+      "id": "main_plateau",
+      "kind": "plateau",
+      "source_bounds": [
+        -8,
+        1,
+        4,
+        15
+      ],
+      "at": [
+        29,
+        7
+      ],
+      "copied_layer_cells": 406
+    },
+    {
+      "id": "small_plateau",
+      "kind": "plateau",
+      "source_bounds": [
+        -14,
+        5,
+        -11,
+        11
+      ],
+      "at": [
+        17,
+        6
+      ],
+      "copied_layer_cells": 59
+    },
+    {
+      "id": "ruin_courtyard",
+      "kind": "ruin",
+      "source_bounds": [
+        4,
+        -6,
+        12,
+        2
+      ],
+      "at": [
+        27,
+        24
+      ],
+      "copied_layer_cells": 55
+    },
+    {
+      "id": "ruin_wall",
+      "kind": "ruin",
+      "source_bounds": [
+        -16,
+        13,
+        -10,
+        13
+      ],
+      "at": [
+        15,
+        34
+      ],
+      "copied_layer_cells": 7
+    }
+  ],
+  "props": [
+    {
+      "id": "TreeNoApples-0",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-2",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-4",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-6",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-8",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-10",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-12",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-14",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-16",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-18",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-20",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-22",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-24",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-26",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-28",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-30",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-32",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-34",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-36",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeApples-38",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        1339536321328131832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 20,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "TreeNoApples-40",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -3953209486756653526
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 155,
+        "y": 52,
+        "width": 21,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "PillarTall1-42",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -7697879543379296236
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 3,
+        "y": 51,
+        "width": 10,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "PillarMedium2-43",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -702854666901177391
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 67,
+        "y": 51,
+        "width": 11,
+        "height": 13
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "PillarShort1-44",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -439496800248428465
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 99,
+        "y": 51,
+        "width": 10,
+        "height": 9
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "PillarTall3-45",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        838083816341856049
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 34,
+        "y": 51,
+        "width": 13,
+        "height": 25
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "PillarMedium3-46",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6630695369954485499
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 82,
+        "y": 51,
+        "width": 11,
+        "height": 13
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "PillarShort2-47",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        2949759686383389126
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 131,
+        "y": 51,
+        "width": 10,
+        "height": 8
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-48",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-49",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-50",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-51",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-52",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-53",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-54",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-55",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-56",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-57",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-58",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-59",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-60",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-61",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-62",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-63",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-64",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-65",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-66",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-67",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-68",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-69",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-70",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-71",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-72",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-73",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-74",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-75",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-76",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-77",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-78",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-79",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-80",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-81",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-82",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-83",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-84",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-85",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-86",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-87",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-88",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-89",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-90",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-91",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-92",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-93",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-94",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-95",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-96",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-97",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-98",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-99",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-100",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-101",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-102",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-103",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-104",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-105",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-106",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-107",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-108",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-109",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-110",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-111",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-112",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-113",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-114",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-115",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-116",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-117",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-118",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-119",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-120",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-121",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-122",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-123",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-124",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-125",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-126",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-127",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-128",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-129",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-130",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-131",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-132",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-133",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-134",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-135",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-136",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-137",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-138",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-139",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-140",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-141",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-142",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-143",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-144",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-145",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-146",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-147",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-148",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-149",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-150",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-151",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-152",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-153",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-154",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong1-155",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -6474741099014325866
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 97,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-156",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-157",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-158",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-159",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-160",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerRed-161",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        -8278581524229224121
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 74,
+        "y": 1,
+        "width": 3,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-162",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-163",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerWhite-164",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        7733943634869700832
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 92,
+        "y": 1,
+        "width": 3,
+        "height": 5
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "FlowerPink-165",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        6349360267525728516
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 81,
+        "y": 1,
+        "width": 7,
+        "height": 6
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    },
+    {
+      "id": "GrassLong2-166",
+      "unity_sprite": [
+        "be785b53e8101134cb49e391918a7a82",
+        639047068651763350
+      ],
+      "source_rect": {
+        "serializedVersion": 2,
+        "x": 105,
+        "y": 1,
+        "width": 7,
+        "height": 4
+      },
+      "source": "Assets\\Art\\KrishnaPalacio\\MINIFANTASY - Forgotten Plains\\Sprites\\Props\\Props.png"
+    }
+  ],
+  "unity_tile_references": {
+    "ground:29,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,21": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,20": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,19": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,18": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,17": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,16": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,15": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,14": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,13": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:29,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:30,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:31,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:32,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:33,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:34,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:35,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:36,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:37,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:38,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:39,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:40,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:41,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "detail:38,21": {
+      "fileID": 11400000,
+      "guid": "340b108262ca3a946adc44bfc54c57c4",
+      "type": 2
+    },
+    "detail:39,21": {
+      "fileID": 11400000,
+      "guid": "3b26dc91e651e65488dfe5e766bb5518",
+      "type": 2
+    },
+    "detail:38,20": {
+      "fileID": 11400000,
+      "guid": "05301bbc6a393a9498885f25f07e7af9",
+      "type": 2
+    },
+    "detail:39,20": {
+      "fileID": 11400000,
+      "guid": "687f23ea7b0e7384e9cf8d166f57ee34",
+      "type": 2
+    },
+    "detail:33,19": {
+      "fileID": 11400000,
+      "guid": "e3e7c5e9438735847b05de88b6910a83",
+      "type": 2
+    },
+    "detail:38,19": {
+      "fileID": 11400000,
+      "guid": "4116e6b0b1db6e843a4a30fc581d2ec4",
+      "type": 2
+    },
+    "detail:35,14": {
+      "fileID": 11400000,
+      "guid": "b5bb391941ec1c54b9abea01c20a30eb",
+      "type": 2
+    },
+    "detail:36,14": {
+      "fileID": 11400000,
+      "guid": "a7e9e8c996929af48ad0f4fc9415adf6",
+      "type": 2
+    },
+    "detail:37,14": {
+      "fileID": 11400000,
+      "guid": "b9f97152f99838647b92b3d088c11275",
+      "type": 2
+    },
+    "detail:40,14": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:35,13": {
+      "fileID": 11400000,
+      "guid": "2bfc04591d071cc42bc90b3daa3dc9bf",
+      "type": 2
+    },
+    "detail:36,13": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:37,13": {
+      "fileID": 11400000,
+      "guid": "e8810ba8cbdc2fd4583dd3ecd0ce83f9",
+      "type": 2
+    },
+    "detail:41,13": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:31,12": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "detail:35,12": {
+      "fileID": 11400000,
+      "guid": "5f67bfa5fe378c7409081394b9291249",
+      "type": 2
+    },
+    "detail:36,12": {
+      "fileID": 11400000,
+      "guid": "f65f31926de51ed459ea8e7ec539663b",
+      "type": 2
+    },
+    "detail:37,12": {
+      "fileID": 11400000,
+      "guid": "d89fb7c7b1a2ea84ca3773ba8f43489a",
+      "type": 2
+    },
+    "detail:38,12": {
+      "fileID": 11400000,
+      "guid": "b9f97152f99838647b92b3d088c11275",
+      "type": 2
+    },
+    "detail:39,12": {
+      "fileID": 11400000,
+      "guid": "b5bb391941ec1c54b9abea01c20a30eb",
+      "type": 2
+    },
+    "detail:40,12": {
+      "fileID": 11400000,
+      "guid": "5f67bfa5fe378c7409081394b9291249",
+      "type": 2
+    },
+    "detail:41,12": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:35,11": {
+      "fileID": 11400000,
+      "guid": "1485016a96751f042a627d454a818342",
+      "type": 2
+    },
+    "detail:36,11": {
+      "fileID": 11400000,
+      "guid": "1485016a96751f042a627d454a818342",
+      "type": 2
+    },
+    "detail:37,11": {
+      "fileID": 11400000,
+      "guid": "1485016a96751f042a627d454a818342",
+      "type": 2
+    },
+    "detail:39,11": {
+      "fileID": 11400000,
+      "guid": "2bfc04591d071cc42bc90b3daa3dc9bf",
+      "type": 2
+    },
+    "detail:40,11": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:41,11": {
+      "fileID": 11400000,
+      "guid": "614ab7de045667e46b2a68138948437f",
+      "type": 2
+    },
+    "detail:36,10": {
+      "fileID": 11400000,
+      "guid": "5f67bfa5fe378c7409081394b9291249",
+      "type": 2
+    },
+    "detail:37,10": {
+      "fileID": 11400000,
+      "guid": "6e9203a46abd16a4ca40e938bf9d72a6",
+      "type": 2
+    },
+    "detail:38,10": {
+      "fileID": 11400000,
+      "guid": "d89fb7c7b1a2ea84ca3773ba8f43489a",
+      "type": 2
+    },
+    "detail:39,10": {
+      "fileID": 11400000,
+      "guid": "a7e9e8c996929af48ad0f4fc9415adf6",
+      "type": 2
+    },
+    "detail:40,10": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:41,10": {
+      "fileID": 11400000,
+      "guid": "d89fb7c7b1a2ea84ca3773ba8f43489a",
+      "type": 2
+    },
+    "detail:36,9": {
+      "fileID": 11400000,
+      "guid": "5887510603182b446be0efcd27e841ff",
+      "type": 2
+    },
+    "detail:37,9": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:38,9": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:39,9": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:40,9": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:41,9": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:36,8": {
+      "fileID": 11400000,
+      "guid": "5904bf0d3cd9eb342ba31c0030e43083",
+      "type": 2
+    },
+    "detail:37,8": {
+      "fileID": 11400000,
+      "guid": "5887510603182b446be0efcd27e841ff",
+      "type": 2
+    },
+    "detail:38,8": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:39,8": {
+      "fileID": 11400000,
+      "guid": "6e9203a46abd16a4ca40e938bf9d72a6",
+      "type": 2
+    },
+    "detail:40,8": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:41,8": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:29,7": {
+      "fileID": 11400000,
+      "guid": "4a3f4c0099c7651488f43f855e473043",
+      "type": 2
+    },
+    "detail:36,7": {
+      "fileID": 11400000,
+      "guid": "b5bb391941ec1c54b9abea01c20a30eb",
+      "type": 2
+    },
+    "detail:37,7": {
+      "fileID": 11400000,
+      "guid": "a7e9e8c996929af48ad0f4fc9415adf6",
+      "type": 2
+    },
+    "detail:38,7": {
+      "fileID": 11400000,
+      "guid": "a7e9e8c996929af48ad0f4fc9415adf6",
+      "type": 2
+    },
+    "detail:39,7": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:40,7": {
+      "fileID": 11400000,
+      "guid": "a87eeed621254f345854351c914ecaba",
+      "type": 2
+    },
+    "detail:41,7": {
+      "fileID": 11400000,
+      "guid": "614ab7de045667e46b2a68138948437f",
+      "type": 2
+    },
+    "shadow:31,21": {
+      "fileID": 11400000,
+      "guid": "feb3f05666d22674d843fc7803bc1acb",
+      "type": 2
+    },
+    "shadow:31,20": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:39,19": {
+      "fileID": 11400000,
+      "guid": "feb3f05666d22674d843fc7803bc1acb",
+      "type": 2
+    },
+    "shadow:39,18": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:30,14": {
+      "fileID": 11400000,
+      "guid": "939341d32986aec4ebf73304c1059a25",
+      "type": 2
+    },
+    "wall_shadow:31,20": {
+      "fileID": 11400000,
+      "guid": "310972b8141106e4a880d52271324b88",
+      "type": 2
+    },
+    "wall_shadow:39,17": {
+      "fileID": 11400000,
+      "guid": "310972b8141106e4a880d52271324b88",
+      "type": 2
+    },
+    "wall_shadow:30,13": {
+      "fileID": 11400000,
+      "guid": "349b5c2252a09654387b4ad050808fe5",
+      "type": 2
+    },
+    "wall_shadow:31,11": {
+      "fileID": 11400000,
+      "guid": "7a1eae9f822c4184cb65f3c247e906d2",
+      "type": 2
+    },
+    "walls_horizontal:41,21": {
+      "fileID": 11400000,
+      "guid": "7a2dbc33be8ec7d4e817f307b4889797",
+      "type": 2
+    },
+    "walls_horizontal:34,10": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:35,10": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:36,10": {
+      "fileID": 11400000,
+      "guid": "b1f71981081604d42b9becc24aab35ae",
+      "type": 2
+    },
+    "walls_horizontal:37,10": {
+      "fileID": 11400000,
+      "guid": "2760601348b5ee440ad5c593d8faf7a5",
+      "type": 2
+    },
+    "walls_horizontal:34,9": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:35,9": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:36,9": {
+      "fileID": 11400000,
+      "guid": "69722f23f9a4f254db987bec059b7009",
+      "type": 2
+    },
+    "cliff1:32,21": {
+      "fileID": 11400000,
+      "guid": "c51c4903717ba9e4d9b0dbfde4be03c4",
+      "type": 2
+    },
+    "cliff1:33,21": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:34,21": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:35,21": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:36,21": {
+      "fileID": 11400000,
+      "guid": "d984d06781acdb742ba035c552473bdf",
+      "type": 2
+    },
+    "cliff1:29,20": {
+      "fileID": 11400000,
+      "guid": "c51c4903717ba9e4d9b0dbfde4be03c4",
+      "type": 2
+    },
+    "cliff1:30,20": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:31,20": {
+      "fileID": 11400000,
+      "guid": "d984d06781acdb742ba035c552473bdf",
+      "type": 2
+    },
+    "cliff1:32,20": {
+      "fileID": 11400000,
+      "guid": "95bfbf703875d1f4a83014c889ca0a87",
+      "type": 2
+    },
+    "cliff1:33,20": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:34,20": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:35,20": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:36,20": {
+      "fileID": 11400000,
+      "guid": "c932ebcff367b994b85bb6c079db2a0a",
+      "type": 2
+    },
+    "cliff1:32,19": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:33,19": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:34,19": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:35,19": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:36,19": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:40,19": {
+      "fileID": 11400000,
+      "guid": "c51c4903717ba9e4d9b0dbfde4be03c4",
+      "type": 2
+    },
+    "cliff1:41,19": {
+      "fileID": 11400000,
+      "guid": "d984d06781acdb742ba035c552473bdf",
+      "type": 2
+    },
+    "cliff1:32,18": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:33,18": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:34,18": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:35,18": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:36,18": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:40,18": {
+      "fileID": 11400000,
+      "guid": "95bfbf703875d1f4a83014c889ca0a87",
+      "type": 2
+    },
+    "cliff1:41,18": {
+      "fileID": 11400000,
+      "guid": "c932ebcff367b994b85bb6c079db2a0a",
+      "type": 2
+    },
+    "cliff1:32,17": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:33,17": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:34,17": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:35,17": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:36,17": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:37,17": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:38,17": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:39,17": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:40,17": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:41,17": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:32,16": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:33,16": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:34,16": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:35,16": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:36,16": {
+      "fileID": 11400000,
+      "guid": "3901207f7c0f80a4abeacc75ddbaa1dd",
+      "type": 2
+    },
+    "cliff1:37,16": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:38,16": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:39,16": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:40,16": {
+      "fileID": 11400000,
+      "guid": "3911039340ae48548a5d1e9c0e3beb16",
+      "type": 2
+    },
+    "cliff1:41,16": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:32,15": {
+      "fileID": 11400000,
+      "guid": "75ee8c8c44c6c0e419f5df30e94cbd3a",
+      "type": 2
+    },
+    "cliff1:33,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:34,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:35,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:36,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:37,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:38,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:39,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:40,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:41,15": {
+      "fileID": 11400000,
+      "guid": "9342ada1d79d48447803ddd9fed453d5",
+      "type": 2
+    },
+    "cliff2:37,20": {
+      "fileID": 11400000,
+      "guid": "ccc64bbf4b30b494e8c6fc30a2c9a31d",
+      "type": 2
+    },
+    "cliff2:29,19": {
+      "fileID": 11400000,
+      "guid": "f3cd4a6a818a3fa4c807ac1d95f30e47",
+      "type": 2
+    },
+    "cliff2:30,19": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "cliff2:31,19": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "cliff2:32,19": {
+      "fileID": 11400000,
+      "guid": "d984d06781acdb742ba035c552473bdf",
+      "type": 2
+    },
+    "cliff2:36,19": {
+      "fileID": 11400000,
+      "guid": "ccc64bbf4b30b494e8c6fc30a2c9a31d",
+      "type": 2
+    },
+    "cliff2:37,19": {
+      "fileID": 11400000,
+      "guid": "ccc64bbf4b30b494e8c6fc30a2c9a31d",
+      "type": 2
+    },
+    "cliff2:29,18": {
+      "fileID": 11400000,
+      "guid": "95bfbf703875d1f4a83014c889ca0a87",
+      "type": 2
+    },
+    "cliff2:30,18": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff2:31,18": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff2:32,18": {
+      "fileID": 11400000,
+      "guid": "c932ebcff367b994b85bb6c079db2a0a",
+      "type": 2
+    },
+    "cliff2:29,17": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff2:30,17": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:31,17": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:32,17": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff2:29,16": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff2:30,16": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:31,16": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:32,16": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff2:33,16": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff2:34,16": {
+      "fileID": 11400000,
+      "guid": "d984d06781acdb742ba035c552473bdf",
+      "type": 2
+    },
+    "cliff2:29,15": {
+      "fileID": 11400000,
+      "guid": "75ee8c8c44c6c0e419f5df30e94cbd3a",
+      "type": 2
+    },
+    "cliff2:30,15": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff2:31,15": {
+      "fileID": 11400000,
+      "guid": "e144d041beeb3514cb2ec443ecc450e0",
+      "type": 2
+    },
+    "cliff2:32,15": {
+      "fileID": 11400000,
+      "guid": "3901207f7c0f80a4abeacc75ddbaa1dd",
+      "type": 2
+    },
+    "cliff2:33,15": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff2:34,15": {
+      "fileID": 11400000,
+      "guid": "c932ebcff367b994b85bb6c079db2a0a",
+      "type": 2
+    },
+    "cliff2:31,14": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff2:32,14": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:33,14": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:34,14": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff2:31,13": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff2:32,13": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:33,13": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff2:34,13": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff2:31,12": {
+      "fileID": 11400000,
+      "guid": "75ee8c8c44c6c0e419f5df30e94cbd3a",
+      "type": 2
+    },
+    "cliff2:32,12": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff2:33,12": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff2:34,12": {
+      "fileID": 11400000,
+      "guid": "9342ada1d79d48447803ddd9fed453d5",
+      "type": 2
+    },
+    "cliff3:33,18": {
+      "fileID": 11400000,
+      "guid": "9361ac32a9f78fd48acaffae41206f16",
+      "type": 2
+    },
+    "cliff3:32,17": {
+      "fileID": 11400000,
+      "guid": "588c6c583284ba9498bb2e966a531748",
+      "type": 2
+    },
+    "cliff3:33,17": {
+      "fileID": 11400000,
+      "guid": "2bc6c807b8e2db04abbdeae244fc3f10",
+      "type": 2
+    },
+    "cliff3:29,13": {
+      "fileID": 11400000,
+      "guid": "c51c4903717ba9e4d9b0dbfde4be03c4",
+      "type": 2
+    },
+    "cliff3:30,13": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff3:29,12": {
+      "fileID": 11400000,
+      "guid": "f3cd4a6a818a3fa4c807ac1d95f30e47",
+      "type": 2
+    },
+    "cliff3:30,12": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "cliff3:29,11": {
+      "fileID": 11400000,
+      "guid": "f3cd4a6a818a3fa4c807ac1d95f30e47",
+      "type": 2
+    },
+    "cliff3:30,11": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "cliff3:31,11": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "cliff3:32,11": {
+      "fileID": 11400000,
+      "guid": "773a3dbcee1465a42a69cc61868d5ad6",
+      "type": 2
+    },
+    "cliff3:33,11": {
+      "fileID": 11400000,
+      "guid": "8e5f66dfc18a91a45841d333e1fd603f",
+      "type": 2
+    },
+    "cliff3:29,10": {
+      "fileID": 11400000,
+      "guid": "95bfbf703875d1f4a83014c889ca0a87",
+      "type": 2
+    },
+    "cliff3:30,10": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff3:31,10": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff3:32,10": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff3:33,10": {
+      "fileID": 11400000,
+      "guid": "c932ebcff367b994b85bb6c079db2a0a",
+      "type": 2
+    },
+    "cliff3:29,9": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff3:30,9": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff3:31,9": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff3:32,9": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff3:33,9": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff3:29,8": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff3:30,8": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff3:31,8": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff3:32,8": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff3:33,8": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff3:29,7": {
+      "fileID": 11400000,
+      "guid": "75ee8c8c44c6c0e419f5df30e94cbd3a",
+      "type": 2
+    },
+    "cliff3:30,7": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff3:31,7": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff3:32,7": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff3:33,7": {
+      "fileID": 11400000,
+      "guid": "9342ada1d79d48447803ddd9fed453d5",
+      "type": 2
+    },
+    "cliff_top:33,19": {
+      "fileID": 11400000,
+      "guid": "e3e7c5e9438735847b05de88b6910a83",
+      "type": 2
+    },
+    "cliff_top:30,16": {
+      "fileID": 11400000,
+      "guid": "e3e7c5e9438735847b05de88b6910a83",
+      "type": 2
+    },
+    "cliff_top:31,16": {
+      "fileID": 11400000,
+      "guid": "e3e7c5e9438735847b05de88b6910a83",
+      "type": 2
+    },
+    "cliff_top:31,12": {
+      "fileID": 11400000,
+      "guid": "4310a99ca946e7441995043f06ec6208",
+      "type": 2
+    },
+    "cliff_top:32,12": {
+      "fileID": 11400000,
+      "guid": "fb74a38aed90c6744b4ff0f05990a2c7",
+      "type": 2
+    },
+    "cliff_top:32,11": {
+      "fileID": 11400000,
+      "guid": "3c8288fb91dfca34b9211e6a53c3fb0b",
+      "type": 2
+    },
+    "cliff_top:32,10": {
+      "fileID": 11400000,
+      "guid": "d070bc0e87613654692114ba0d4e823f",
+      "type": 2
+    },
+    "cliff_top:30,9": {
+      "fileID": 11400000,
+      "guid": "47dbaa8ef8f791741b4a4de9c306c5d4",
+      "type": 2
+    },
+    "cliff_top:31,9": {
+      "fileID": 11400000,
+      "guid": "8372b5c78f8ca4843a58465e9707d1b0",
+      "type": 2
+    },
+    "cliff_top:32,9": {
+      "fileID": 11400000,
+      "guid": "a050312f5945e164c823a1faf039819b",
+      "type": 2
+    },
+    "cliff_top:30,8": {
+      "fileID": 11400000,
+      "guid": "dfc0fe2fb4b5ec846ac273bec89679f4",
+      "type": 2
+    },
+    "cliff_top:31,8": {
+      "fileID": 11400000,
+      "guid": "29dd4e89c199c7141816144afd68ab35",
+      "type": 2
+    },
+    "cliff_top:32,8": {
+      "fileID": 11400000,
+      "guid": "ec76a7097c1fcfb43ab79cdbc8da4584",
+      "type": 2
+    },
+    "ground:17,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,12": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:17,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,11": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:17,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,10": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:17,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,9": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:17,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,8": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:17,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,7": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:17,6": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:18,6": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:19,6": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "ground:20,6": {
+      "fileID": 11400000,
+      "guid": "ee44f04c19e463d48a8796f568a766fa",
+      "type": 2
+    },
+    "shadow:18,12": {
+      "fileID": 11400000,
+      "guid": "4310a99ca946e7441995043f06ec6208",
+      "type": 2
+    },
+    "shadow:17,11": {
+      "fileID": 11400000,
+      "guid": "feb3f05666d22674d843fc7803bc1acb",
+      "type": 2
+    },
+    "shadow:18,11": {
+      "fileID": 11400000,
+      "guid": "7a1eae9f822c4184cb65f3c247e906d2",
+      "type": 2
+    },
+    "shadow:17,10": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:17,7": {
+      "fileID": 11400000,
+      "guid": "310972b8141106e4a880d52271324b88",
+      "type": 2
+    },
+    "wall_shadow:18,11": {
+      "fileID": 11400000,
+      "guid": "7a1eae9f822c4184cb65f3c247e906d2",
+      "type": 2
+    },
+    "wall_shadow:17,9": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "wall_shadow:17,8": {
+      "fileID": 11400000,
+      "guid": "d151ea20e995d034687987e9471174ef",
+      "type": 2
+    },
+    "cliff1:18,11": {
+      "fileID": 11400000,
+      "guid": "c51c4903717ba9e4d9b0dbfde4be03c4",
+      "type": 2
+    },
+    "cliff1:19,11": {
+      "fileID": 11400000,
+      "guid": "eaa30e20bb002e041881b4474f10b9c1",
+      "type": 2
+    },
+    "cliff1:20,11": {
+      "fileID": 11400000,
+      "guid": "d984d06781acdb742ba035c552473bdf",
+      "type": 2
+    },
+    "cliff1:18,10": {
+      "fileID": 11400000,
+      "guid": "95bfbf703875d1f4a83014c889ca0a87",
+      "type": 2
+    },
+    "cliff1:19,10": {
+      "fileID": 11400000,
+      "guid": "46537d0fe6c9cb248916fac750d414bd",
+      "type": 2
+    },
+    "cliff1:20,10": {
+      "fileID": 11400000,
+      "guid": "c932ebcff367b994b85bb6c079db2a0a",
+      "type": 2
+    },
+    "cliff1:18,9": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:19,9": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:20,9": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:18,8": {
+      "fileID": 11400000,
+      "guid": "ee170bc026c37af4ca5c2b84701ab2b2",
+      "type": 2
+    },
+    "cliff1:19,8": {
+      "fileID": 11400000,
+      "guid": "bbcc4cb0628c0f240b09d375081fbcc1",
+      "type": 2
+    },
+    "cliff1:20,8": {
+      "fileID": 11400000,
+      "guid": "01a690c74a603fc4ba87102f7c0c4403",
+      "type": 2
+    },
+    "cliff1:18,7": {
+      "fileID": 11400000,
+      "guid": "75ee8c8c44c6c0e419f5df30e94cbd3a",
+      "type": 2
+    },
+    "cliff1:19,7": {
+      "fileID": 11400000,
+      "guid": "2fe157c0011b8ad42b1dfa9b141b13a4",
+      "type": 2
+    },
+    "cliff1:20,7": {
+      "fileID": 11400000,
+      "guid": "9342ada1d79d48447803ddd9fed453d5",
+      "type": 2
+    },
+    "cliff2:19,12": {
+      "fileID": 11400000,
+      "guid": "fb74a38aed90c6744b4ff0f05990a2c7",
+      "type": 2
+    },
+    "cliff2:19,11": {
+      "fileID": 11400000,
+      "guid": "3c8288fb91dfca34b9211e6a53c3fb0b",
+      "type": 2
+    },
+    "cliff2:19,10": {
+      "fileID": 11400000,
+      "guid": "d070bc0e87613654692114ba0d4e823f",
+      "type": 2
+    },
+    "cliff2:17,9": {
+      "fileID": 11400000,
+      "guid": "00a59d62388c5c04dbb59d30ef3b538e",
+      "type": 2
+    },
+    "cliff2:17,8": {
+      "fileID": 11400000,
+      "guid": "c45f2c5a271c9e44c96d07055822d23d",
+      "type": 2
+    },
+    "cliff2:18,8": {
+      "fileID": 11400000,
+      "guid": "3c1f6992f57df844bbd37a5d5ff77a6e",
+      "type": 2
+    },
+    "cliff2:19,7": {
+      "fileID": 11400000,
+      "guid": "6e54c54bd25192441a47f389723498b0",
+      "type": 2
+    },
+    "cliff2:19,6": {
+      "fileID": 11400000,
+      "guid": "409b553cfe3e42c42844ef6b14da12b7",
+      "type": 2
+    },
+    "shadow:27,31": {
+      "fileID": 11400000,
+      "guid": "feb3f05666d22674d843fc7803bc1acb",
+      "type": 2
+    },
+    "shadow:27,30": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:27,29": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:33,29": {
+      "fileID": 11400000,
+      "guid": "feb3f05666d22674d843fc7803bc1acb",
+      "type": 2
+    },
+    "shadow:27,28": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:33,28": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:27,27": {
+      "fileID": 11400000,
+      "guid": "310972b8141106e4a880d52271324b88",
+      "type": 2
+    },
+    "shadow:33,27": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:33,26": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "shadow:33,24": {
+      "fileID": 11400000,
+      "guid": "310972b8141106e4a880d52271324b88",
+      "type": 2
+    },
+    "wall_shadow:33,25": {
+      "fileID": 11400000,
+      "guid": "89b560f329c88084c9236c315a35b699",
+      "type": 2
+    },
+    "walls_vertical:28,31": {
+      "fileID": 11400000,
+      "guid": "5bb0ddb521d0e4a4eb00ad9e1faf8f34",
+      "type": 2
+    },
+    "walls_vertical:28,30": {
+      "fileID": 11400000,
+      "guid": "5c9a3c24d6737d1439dd710ec9205ca9",
+      "type": 2
+    },
+    "walls_vertical:28,29": {
+      "fileID": 11400000,
+      "guid": "06d83d2bc3dde83458d8ba2cb7db9bef",
+      "type": 2
+    },
+    "walls_vertical:34,29": {
+      "fileID": 11400000,
+      "guid": "8620761d74c2d344a9c80a332c2c9215",
+      "type": 2
+    },
+    "walls_vertical:28,28": {
+      "fileID": 11400000,
+      "guid": "0f89052df23ed29488d78041bc235376",
+      "type": 2
+    },
+    "walls_vertical:34,28": {
+      "fileID": 11400000,
+      "guid": "5bb0ddb521d0e4a4eb00ad9e1faf8f34",
+      "type": 2
+    },
+    "walls_vertical:28,27": {
+      "fileID": 11400000,
+      "guid": "2a3f3c7379e5ab745ad6a8606ed32a9a",
+      "type": 2
+    },
+    "walls_vertical:34,27": {
+      "fileID": 11400000,
+      "guid": "5c9a3c24d6737d1439dd710ec9205ca9",
+      "type": 2
+    },
+    "walls_vertical:34,26": {
+      "fileID": 11400000,
+      "guid": "06d83d2bc3dde83458d8ba2cb7db9bef",
+      "type": 2
+    },
+    "walls_vertical:34,25": {
+      "fileID": 11400000,
+      "guid": "0f89052df23ed29488d78041bc235376",
+      "type": 2
+    },
+    "walls_vertical:34,24": {
+      "fileID": 11400000,
+      "guid": "2a3f3c7379e5ab745ad6a8606ed32a9a",
+      "type": 2
+    },
+    "walls_horizontal:28,32": {
+      "fileID": 11400000,
+      "guid": "f801c908775ea9c4cbc6e972ec59a0d8",
+      "type": 2
+    },
+    "walls_horizontal:29,32": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:30,32": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:31,32": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:32,32": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:33,32": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:34,32": {
+      "fileID": 11400000,
+      "guid": "b1765c35c2f85cd4094d704c68fd3032",
+      "type": 2
+    },
+    "walls_horizontal:35,32": {
+      "fileID": 11400000,
+      "guid": "96c381834ac26d446a52ab4b5aad8e20",
+      "type": 2
+    },
+    "walls_horizontal:28,31": {
+      "fileID": 11400000,
+      "guid": "7a2dbc33be8ec7d4e817f307b4889797",
+      "type": 2
+    },
+    "walls_horizontal:29,31": {
+      "fileID": 11400000,
+      "guid": "9f0213ac6b8e5a74d9bb59e9ce468ff5",
+      "type": 2
+    },
+    "walls_horizontal:30,31": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:31,31": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:32,31": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:33,31": {
+      "fileID": 11400000,
+      "guid": "b1f71981081604d42b9becc24aab35ae",
+      "type": 2
+    },
+    "walls_horizontal:34,31": {
+      "fileID": 11400000,
+      "guid": "2760601348b5ee440ad5c593d8faf7a5",
+      "type": 2
+    },
+    "walls_horizontal:29,30": {
+      "fileID": 11400000,
+      "guid": "7a2dbc33be8ec7d4e817f307b4889797",
+      "type": 2
+    },
+    "walls_horizontal:30,30": {
+      "fileID": 11400000,
+      "guid": "e9d17aa6872b47d48ae801cd48c3b1fb",
+      "type": 2
+    },
+    "walls_horizontal:31,30": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:32,30": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:33,30": {
+      "fileID": 11400000,
+      "guid": "69722f23f9a4f254db987bec059b7009",
+      "type": 2
+    },
+    "walls_horizontal:27,25": {
+      "fileID": 11400000,
+      "guid": "7a2dbc33be8ec7d4e817f307b4889797",
+      "type": 2
+    },
+    "walls_horizontal:28,25": {
+      "fileID": 11400000,
+      "guid": "9f0213ac6b8e5a74d9bb59e9ce468ff5",
+      "type": 2
+    },
+    "walls_horizontal:29,25": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:30,25": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:31,25": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:32,25": {
+      "fileID": 11400000,
+      "guid": "fd4b541175871ed42998831914ab6e96",
+      "type": 2
+    },
+    "walls_horizontal:33,25": {
+      "fileID": 11400000,
+      "guid": "b1f71981081604d42b9becc24aab35ae",
+      "type": 2
+    },
+    "walls_horizontal:28,24": {
+      "fileID": 11400000,
+      "guid": "7a2dbc33be8ec7d4e817f307b4889797",
+      "type": 2
+    },
+    "walls_horizontal:29,24": {
+      "fileID": 11400000,
+      "guid": "e9d17aa6872b47d48ae801cd48c3b1fb",
+      "type": 2
+    },
+    "walls_horizontal:30,24": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:31,24": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:32,24": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:33,24": {
+      "fileID": 11400000,
+      "guid": "69722f23f9a4f254db987bec059b7009",
+      "type": 2
+    },
+    "walls_horizontal:15,34": {
+      "fileID": 11400000,
+      "guid": "7a2dbc33be8ec7d4e817f307b4889797",
+      "type": 2
+    },
+    "walls_horizontal:16,34": {
+      "fileID": 11400000,
+      "guid": "e9d17aa6872b47d48ae801cd48c3b1fb",
+      "type": 2
+    },
+    "walls_horizontal:17,34": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:18,34": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:19,34": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:20,34": {
+      "fileID": 11400000,
+      "guid": "e06526f0befe174459e8f022b5ed3183",
+      "type": 2
+    },
+    "walls_horizontal:21,34": {
+      "fileID": 11400000,
+      "guid": "69722f23f9a4f254db987bec059b7009",
+      "type": 2
+    }
+  },
+  "reference": "reference/user-reference.png",
+  "reference_sha256": null,
+  "limitations": [
+    "离线拼装，不是 Unity GameView 截图",
+    "高台只校验地面绕行，不包含高度导航",
+    "水体当前只使用静态帧",
+    "未运行 InteliMap：它依赖 Unity 运行环境"
+  ]
+}

@@ -1,0 +1,27 @@
+.tileproperties-view {
+	background-color: var(--colorBG);
+	background-image: var(--wasteTexture);
+	position: relative;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: visible;
+    overflow-y: visible;
+}
+
+.tileproperties-title-view {
+	color: var(--color2);
+	text-transform: uppercase;
+	margin-bottom: 16px;
+	font-size: 12px;
+	font-family: mainFont;
+}
+
+.tileproperties-propertycontainer-view {
+	margin-top: 16px;
+}
+
+.tileproperties-propertygroup-view {
+	margin-left: 8px;
+	margin-right: 8px;
+}

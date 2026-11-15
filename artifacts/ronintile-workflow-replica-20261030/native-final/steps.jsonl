@@ -1,0 +1,12 @@
+{"index":0,"op":"call","status":"started"}
+{"index":0,"op":"call","status":"pass","function":"moveTilesSandbox"}
+{"index":1,"op":"save","status":"started"}
+{"index":1,"op":"save","status":"pass","file":"checkpoint.json"}
+{"index":2,"op":"reload","status":"started"}
+{"index":2,"op":"reload","status":"pass"}
+{"index":3,"op":"export","status":"started"}
+{"index":3,"op":"export","status":"pass","domain":"map","format":"Image"}
+{"index":4,"op":"export","status":"started"}
+{"index":4,"op":"export","status":"pass","domain":"map","format":"Unity"}
+{"index":5,"op":"render","status":"started"}
+{"index":5,"op":"render","status":"pass","size":{"width":768,"height":576}}

@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="tileset_map-Godot.tres" type="TileSet" id=1]
+
+[node name="1_物件" type="TileMap"]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 8, 8 )
+format = 1
+tile_data = PoolIntArray( 262149, 14, 0, 262150, 15, 0, 327685, 16, 0, 327686, 17, 0, 1048598, 14, 0, 1048599, 15, 0, 1114134, 16, 0, 1114135, 17, 0 )

@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<format name="GMS2 Assets">
+
+	<translation name="_TLBlob">
+		<map from="0" to="46"/>
+		<map from="2" to="44"/>
+		<map from="8" to="43"/>
+		<map from="10" to="41"/>
+		<map from="14" to="40"/>
+		<map from="32" to="42"/>
+		<map from="34" to="32"/>
+		<map from="40" to="35"/>
+		<map from="42" to="19"/>
+		<map from="46" to="18"/>
+		<map from="56" to="34"/>
+		<map from="58" to="17"/>
+		<map from="62" to="16"/>
+		<map from="128" to="45"/>
+		<map from="130" to="39"/>
+		<map from="131" to="38"/>
+		<map from="136" to="33"/>
+		<map from="138" to="31"/>
+		<map from="139" to="30"/>
+		<map from="142" to="29"/>
+		<map from="143" to="28"/>
+		<map from="160" to="37"/>
+		<map from="162" to="27"/>
+		<map from="163" to="25"/>
+		<map from="168" to="23"/>
+		<map from="170" to="15"/>
+		<map from="171" to="14"/>
+		<map from="174" to="13"/>
+		<map from="175" to="12"/>
+		<map from="184" to="22"/>
+		<map from="186" to="11"/>
+		<map from="187" to="10"/>
+		<map from="190" to="9"/>
+		<map from="191" to="8"/>
+		<map from="224" to="36"/>
+		<map from="226" to="26"/>
+		<map from="227" to="24"/>
+		<map from="232" to="21"/>
+		<map from="234" to="7"/>
+		<map from="235" to="6"/>
+		<map from="238" to="5"/>
+		<map from="239" to="4"/>
+		<map from="248" to="20"/>
+		<map from="250" to="3"/>
+		<map from="251" to="2"/>
+		<map from="254" to="1"/>
+		<map from="255" to="0"/>
+	<!--|||||||||||||||||||||||||||||||||--></translation>
+
+	<translation name="_TLWang">
+		<map from="0" to="15"/>
+		<map from="1" to="14"/>
+		<map from="2" to="13"/>
+		<map from="3" to="12"/>
+		<map from="4" to="7"/>
+		<map from="5" to="6"/>
+		<map from="6" to="5"/>
+		<map from="7" to="4"/>
+		<map from="8" to="11"/>
+		<map from="9" to="10"/>
+		<map from="10" to="9"/>
+		<map from="11" to="8"/>
+		<map from="12" to="3"/>
+		<map from="13" to="2"/>
+		<map from="14" to="1"/>
+		<map from="15" to="0"/>
+	<!--|||||||||||||||||||||||||||||||||--></translation>
+
+	<folder><!----><name><var v="export_name"/></name><!----><directory-contents>
+
+		<folder><!----><name>sprites</name><!----><directory-contents>
+
+			<folder><!----><name>sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<folder><!----><name>layers</name><!----><directory-contents>
+
+					<folder><!----><name><GUID v="_GUIDSprite"/></name><!----><directory-contents>
+
+						<image-file><!----><name><GUID v="_GUIDLayer"/>.png</name>
+									<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+									<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+						|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--					|-->	<ivar v="_tile.image">
+<!--					|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--					|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--					|-->	</ivar>
+<!--					|--></image-contents></image-loop><!--
+						|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+					<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+				<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+				<image-file><!----><name><GUID v="_GUIDSprite"/>.png</name>
+							<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+							<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+				|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--			|-->	<ivar v="_tile.image">
+<!--			|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--			|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--			|-->	</ivar>
+<!--			|--></image-contents></image-loop><!--
+				|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+				<text-file><!----><name>sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->    "id": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->    "modelName": "GMSprite",
+<!--			|-->    "mvc": "1.12",
+<!--			|-->    "name": "sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->    "For3D": false,
+<!--			|-->    "HTile": false,
+<!--			|-->    "VTile": false,
+<!--			|-->    "bbox_bottom": <nvar expression="ceil((x0+1)/8)*x1-1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "bbox_left": 0,
+<!--			|-->    "bbox_right": <nvar expression="min(x0+1, 8)*x1-1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "bbox_top": 0,
+<!--			|-->    "bboxmode": 0,
+<!--			|-->    "colkind": 1,
+<!--			|-->    "coltolerance": 0,
+<!--			|-->    "edgeFiltering": false,
+<!--			|-->    "frames": [
+<!--			|-->        {
+<!--			|-->            "id": "<GUID v="_GUIDSprite"/>",
+<!--			|-->            "modelName": "GMSpriteFrame",
+<!--			|-->            "mvc": "1.0",
+<!--			|-->            "SpriteId": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->            "compositeImage": {
+<!--			|-->                "id": "<GUID v="_GUIDSpriteCompositeImage"/>",
+<!--			|-->                "modelName": "GMSpriteImage",
+<!--			|-->                "mvc": "1.0",
+<!--			|-->                "FrameId": "<GUID v="_GUIDSprite"/>",
+<!--			|-->                "LayerId": "00000000-0000-0000-0000-000000000000"
+<!--			|-->            },
+<!--			|-->            "images": [
+<!--			|-->                {
+<!--			|-->                    "id": "<GUID v="_GUIDSpriteImage"/>",
+<!--			|-->                    "modelName": "GMSpriteImage",
+<!--			|-->                    "mvc": "1.0",
+<!--			|-->                    "FrameId": "<GUID v="_GUIDSprite"/>",
+<!--			|-->                    "LayerId": "<GUID v="_GUIDLayer"/>"
+<!--			|-->                }
+<!--			|-->            ]
+<!--			|-->        }
+<!--			|-->    ],
+<!--			|-->    "gridX": 0,
+<!--			|-->    "gridY": 0,
+<!--			|-->    "height": <nvar expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "layers": [
+<!--			|-->        {
+<!--			|-->            "id": "<GUID v="_GUIDLayer"/>",
+<!--			|-->            "modelName": "GMImageLayer",
+<!--			|-->            "mvc": "1.0",
+<!--			|-->            "SpriteId": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->            "blendMode": 0,
+<!--			|-->            "isLocked": false,
+<!--			|-->            "name": "default",
+<!--			|-->            "opacity": 100,
+<!--			|-->            "visible": true
+<!--			|-->        }
+<!--			|-->    ],
+<!--			|-->    "origin": 0,
+<!--			|-->    "originLocked": false,
+<!--			|-->    "playbackSpeed": 15,
+<!--			|-->    "playbackSpeedType": 0,
+<!--			|-->    "premultiplyAlpha": false,
+<!--			|-->    "sepmasks": false,
+<!--			|-->    "swatchColours": null,
+<!--			|-->    "swfPrecision": 2.525,
+<!--			|-->    "textureGroupId": "<GUID v="_GUIDTextureGroup"/>",
+<!--			|-->    "type": 0,
+<!--			|-->    "width": <nvar expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></nvar>,
+<!--			|-->    "xorig": 0,
+<!--			|-->    "yorig": 0
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<folder><!----><name>tilesets</name><!----><directory-contents>
+
+			<folder><!----><name>tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var></name><!----><directory-contents>
+
+				<image-file><!----><name>output_tileset.png</name>
+							<!----><width expression="min(x0+1, 8)*x1"><x v="tile_count"/><x v="tile_size"/></width>
+							<!----><height expression="ceil((x0+1)/8)*x1"><x v="tile_count"/><x v="tile_size"/></height><!----><image-contents><!--
+				|--><image-loop foreach="tile"><as i="_tile"/><image-contents>
+<!--			|-->	<ivar v="_tile.image">
+<!--			|-->		<grid-x expression="((x0+1)%8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-x>
+<!--			|-->		<grid-y expression="floor((x0+1)/8)*x1"><x v="_tile.index"/><x v="tile_size"/></grid-y>
+<!--			|-->	</ivar>
+<!--			|--></image-contents></image-loop><!--
+				|||||||||||||||||||||||||||||||||--></image-contents></image-file>
+
+				<text-file><!----><name>tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy</name><!----><text-contents><!--
+				|-->{
+<!--			|-->    "id": "<GUID v="_GUIDTileset"/>",
+<!--			|-->    "modelName": "GMTileSet",
+<!--			|-->    "mvc": "1.11",
+<!--			|-->    "name": "tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>",
+<!--			|-->    "auto_tile_sets": [<list-loop foreach="blobset"><as i="_blobset"/><as i="_basetile"/><text-contents>
+<!--			|-->        {
+<!--			|-->            "id": "<GUID v="_blobset._GUIDAutoTileSet"/>",
+<!--			|-->            "modelName": "GMAutoTileSet",
+<!--			|-->            "mvc": "1.0",
+<!--			|-->            "closed_edge": false,
+<!--			|-->            "name": "autotile_<var v="_blobset.index"/>",
+<!--			|-->            "tiles": [<grid-loop foreach="_blobset.member"><as i="_member"/><as i="_tile"/><width expression="1"/><height expression="47"></height><grid-x expression="0"/><grid-y><x v="_member.role" tl="_TLBlob"/></grid-y><separator-y>,</separator-y><text-contents>
+<!--			|-->                <nvar expression="x0+1"><x v="_tile.index"/></nvar></text-contents><null-contents>
+<!--			|-->                0</null-contents></grid-loop>
+<!--			|-->            ]
+<!--			|-->        }</text-contents><separator>,</separator></list-loop><list-loop foreach="wangset"><as i="_wangset"/><as i="_basetile"/><text-contents>
+<!--			|-->        {
+<!--			|-->            "id": "<GUID v="_wangset._GUIDAutoTileSet"/>",
+<!--			|-->            "modelName": "GMAutoTileSet",
+<!--			|-->            "mvc": "1.0",
+<!--			|-->            "closed_edge": false,
+<!--			|-->            "name": "autotile_<nvar expression="x0+x1"><x v="blobset_count"/><x v="_wangset.index"/></nvar>",
+<!--			|-->            "tiles": [<grid-loop foreach="_wangset.member"><as i="_member"/><as i="_tile"/><width expression="1"/><height expression="16"></height><grid-x expression="0"/><grid-y><x v="_member.role" tl="_TLWang"/></grid-y><separator-y>,</separator-y><text-contents>
+<!--			|-->                <nvar expression="x0+1"><x v="_tile.index"/></nvar></text-contents><null-contents>
+<!--			|-->                0</null-contents></grid-loop>
+<!--			|-->            ]
+<!--			|-->        }</text-contents><separator>,</separator></list-loop>
+<!--			|-->    ],
+<!--			|-->    "macroPageTiles": {
+<!--			|-->        "SerialiseData": null,
+<!--			|-->        "SerialiseHeight": 0,
+<!--			|-->        "SerialiseWidth": 0,
+<!--			|-->        "TileSerialiseData": [
+<!--			|-->            
+<!--			|-->        ]
+<!--			|-->    },
+<!--			|-->    "out_columns": <nvar expression="min(x0+1, 8)"><x v="tile_count"/></nvar>,
+<!--			|-->    "out_tilehborder": 0,
+<!--			|-->    "out_tilevborder": 0,
+<!--			|-->    "spriteId": "<GUID v="_GUIDSpriteYY"/>",
+<!--			|-->    "sprite_no_export": true,
+<!--			|-->    "textureGroupId": "<GUID v="_GUIDTextureGroup"/>",
+<!--			|-->    "tile_animation": {
+<!--			|-->        "AnimationCreationOrder": null,
+<!--			|-->        "FrameData": [
+<!--			|--><list-loop foreach="tile"><as i="_tile"/><text-contents>            <var v="_tile.index"/></text-contents><separator>,
+<!--			|--></separator></list-loop>
+<!--			|-->        ],
+<!--			|-->        "SerialiseFrameCount": 1
+<!--			|-->    },
+<!--			|-->    "tile_animation_frames": [
+<!--			|-->        
+<!--			|-->    ],
+<!--			|-->    "tile_animation_speed": 15,
+<!--			|-->    "tile_count": <nvar expression="ceil((x0+1)/8)*min(x0+1, 8)"><x v="tile_count"/></nvar>,
+<!--			|-->    "tileheight": <var v="tile_size"/>,
+<!--			|-->    "tilehsep": 0,
+<!--			|-->    "tilevsep": 0,
+<!--			|-->    "tilewidth": <var v="tile_size"/>,
+<!--			|-->    "tilexoff": 0,
+<!--			|-->    "tileyoff": 0
+<!--			|-->}<!--
+				|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+			<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+		<text-file><!----><name><var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yyp</name><!----><text-contents><!--
+		|-->{
+<!--	|-->    "id": "<GUID v="_GUIDProject"/>",
+<!--	|-->    "modelName": "GMProject",
+<!--	|-->    "mvc": "1.0",
+<!--	|-->    "IsDnDProject": true,
+<!--	|-->    "configs": [
+<!--	|-->        
+<!--	|-->    ],
+<!--	|-->    "option_ecma": false,
+<!--	|-->    "parentProject": {
+<!--	|-->        "id": "<GUID v="_GUIDProjectParent"/>",
+<!--	|-->        "modelName": "GMProjectParent",
+<!--	|-->        "mvc": "1.0",
+<!--	|-->        "alteredResources": [
+<!--	|-->            
+<!--	|-->        ],
+<!--	|-->        "hiddenResources": [
+<!--	|-->            
+<!--	|-->        ],
+<!--	|-->        "projectPath": "${base_project}"
+<!--	|-->    },
+<!--	|-->    "resources": [
+<!--	|-->        {
+<!--	|-->            "Key": "<GUID v="_GUIDSpriteYY"/>",
+<!--	|-->            "Value": {
+<!--	|-->                "id": "<GUID v="_GUIDProjectSprite"/>",
+<!--	|-->                "resourcePath": "sprites\\sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>\\sprite_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",
+<!--	|-->                "resourceType": "GMSprite"
+<!--	|-->            }
+<!--	|-->        },
+<!--	|-->        {
+<!--	|-->            "Key": "<GUID v="_GUIDTileset"/>",
+<!--	|-->            "Value": {
+<!--	|-->                "id": "<GUID v="_GUIDProjectTileset"/>",
+<!--	|-->                "resourcePath": "tilesets\\tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>\\tileset_<var v="export_name"><replace from="\W" to=""/><replace from="^$" to="map"/></var>.yy",
+<!--	|-->                "resourceType": "GMTileSet"
+<!--	|-->            }
+<!--	|-->        }
+<!--	|-->    ],
+<!--	|-->    "script_order": [
+<!--	|-->        
+<!--	|-->    ],
+<!--	|-->    "tutorial": ""
+<!--	|-->}<!--
+		|||||||||||||||||||||||||||||||||--></text-contents></text-file>
+
+	<!--|||||||||||||||||||||||||||||||||--></directory-contents></folder>
+
+</format>

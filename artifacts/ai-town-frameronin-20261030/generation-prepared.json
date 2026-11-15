@@ -1,0 +1,16 @@
+{
+  "status": "awaiting_api_key_and_budget",
+  "site": "https://frameronin.com/",
+  "mode": "map-stitch-beginner",
+  "mapType": "village-town",
+  "style": "classic-fantasy",
+  "view": "topdown",
+  "aspect": "16:9",
+  "resolution": "4K",
+  "requestsPlanned": {
+    "initial": 1,
+    "adjacentExpansion": 1
+  },
+  "requestsSubmitted": 0,
+  "unityVerified": false
+}

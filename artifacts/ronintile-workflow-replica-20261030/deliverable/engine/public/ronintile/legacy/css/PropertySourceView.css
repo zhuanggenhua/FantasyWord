@@ -1,0 +1,144 @@
+.propertysource-view {
+  margin: 8px;
+	margin-left: 8px;
+	color: var(--color2);
+	display: inline-block;
+	font-size: 12px;
+	font-family: mainFont;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	row-gap: 4px;
+}
+
+.propertysource-scrollbase-view {
+	position: relative;
+    width: 110px;
+    height: 18px;
+    margin-left: 8px;
+    margin-right: 4px;
+    display: inline-block;
+}
+
+.propertysource-scrollcontainer-view {
+	position: absolute;
+    width: 110px;
+    height: 18px;
+    display: inline-block;
+    overflow: hidden;
+
+    border-width: 1px;
+    border-radius: 2px;
+    border-style: solid;
+    border-color: var(--color1);
+
+    outline-width: 4px;
+    outline-style: solid;
+    outline-color: var(--colorBG);
+
+    transition: height 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.propertysource-scroll-view {
+	position: relative;
+    width: 110px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    display: inline-block;
+
+    border-width: 1px 0px 0px 0px;
+    border-style: dashed;
+    border-color: var(--color1);
+
+    background: var(--colorBG);
+
+    overflow: visible;
+    overflow-y: visible;
+}
+.propertysource-scroll-view::after {
+  background-color: var(--colorBG);
+  content: "";
+  display: block;
+  left: 0; top: -1px;
+  height: 1px;
+  position: absolute;
+  width: 12px;
+}
+.propertysource-scroll-view::before {
+  background-color: var(--colorBG);
+  content: "";
+  display: block;
+  right: 0; top: -1px;
+  height: 1px;
+  position: absolute;
+  width: 12px;
+}
+
+.propertysource-scroll-display-view {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    width: 104px;
+    margin: 1px;
+}
+
+.propertysource-dropdown-view {
+	margin: 6px;
+	display: block;
+	margin-left: auto;
+}
+
+.propertysource-icon-view {
+	margin: 2px;
+	display: block;
+}
+
+.propertysource-display-view {
+	position: relative;
+  width: 110px;
+  height: 18px;
+  display: inline-block;
+  display: flex;
+	align-items: center;
+  border-radius: 2px;
+  background-color: var(--color1);
+}
+
+.propertysource-image-view {
+	width: 16px;
+	height: 16px;
+  background-size: 16px 16px;
+	position: relative;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	overflow: hidden;
+	border-radius: 2px;
+	margin: 1px;
+	margin-right: 4px;
+}
+
+:root {
+    --hlStripe: 5.655px;
+    --hlStripes: 11.31px;
+}
+
+@keyframes propertysource-highlight-anim {
+    0% {
+        background-position: 0px 8px;
+    }
+    100% {
+        background-position: 0px 24px;
+    }
+}
+
+.propertysource-highlight-view {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: repeating-linear-gradient(135deg, var(--colorBG), var(--colorBG), var(--hlStripe), var(--color1) var(--hlStripe), var(--color1) var(--hlStripes));
+    background-size: 32px 32px;
+    background-position: 0px 0px;
+    animation: propertysource-highlight-anim 1s infinite;
+    visibility: hidden;
+}

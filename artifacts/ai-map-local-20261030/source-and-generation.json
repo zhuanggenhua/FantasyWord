@@ -1,0 +1,13 @@
+{
+  "source": "https://raw.githubusercontent.com/systemchester/FrameRonin/4472253dbf848289a3631bef4bf4d101f2929490/frontend/src/components/MapStitch.tsx",
+  "sha256": "1c2e7e0244bca86bafc36f08b3826c90653e5ae7a7a62f2d37576aa7e45eb628",
+  "licenseDeclared": false,
+  "reuse": "workflow-reference-only-independent-implementation",
+  "builtinGeneration": true,
+  "requestsSubmitted": 2,
+  "actualEachImageSize": [
+    1672,
+    941
+  ],
+  "unityVerified": false
+}

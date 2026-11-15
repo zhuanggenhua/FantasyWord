@@ -1,0 +1,326 @@
+{
+  "status": "pass",
+  "checks": [
+    {
+      "id": "old_watch",
+      "name": "西岸旧石塔",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 1,
+      "entry_tick": 384,
+      "exit_tick": 579
+    },
+    {
+      "id": "warehouse",
+      "name": "旧仓库",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 4,
+      "entry_tick": 840,
+      "exit_tick": 1005
+    },
+    {
+      "id": "inn",
+      "name": "桥头旅馆",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 3,
+      "entry_tick": 1584,
+      "exit_tick": 1749
+    },
+    {
+      "id": "guild",
+      "name": "商会",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 2,
+      "entry_tick": 2061,
+      "exit_tick": 2226
+    },
+    {
+      "id": "east_watch",
+      "name": "东岸石塔",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 1,
+      "entry_tick": 2607,
+      "exit_tick": 2802
+    },
+    {
+      "id": "smith",
+      "name": "铁匠铺",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 3,
+      "entry_tick": 3086,
+      "exit_tick": 3251
+    },
+    {
+      "id": "market_hall",
+      "name": "市场棚亭",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "open-canopy",
+      "furniture_probes": 2,
+      "entry_tick": 3754,
+      "exit_tick": 3795
+    },
+    {
+      "id": "home_a",
+      "name": "南巷住宅",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 3,
+      "entry_tick": 4263,
+      "exit_tick": 4428
+    },
+    {
+      "id": "home_b",
+      "name": "沿河工匠住宅",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 3,
+      "entry_tick": 4816,
+      "exit_tick": 4981
+    },
+    {
+      "id": "home_c",
+      "name": "东巷住宅",
+      "entered": true,
+      "exited": true,
+      "roof_hide_restore": "pass",
+      "walls": "pass",
+      "furniture_probes": 3,
+      "entry_tick": 5525,
+      "exit_tick": 5690
+    }
+  ],
+  "initial": {
+    "mapId": "river-trade-town",
+    "x": 48.53333282470703,
+    "y": 228,
+    "active": [],
+    "roofVisible": {
+      "old_watch": true,
+      "warehouse": true,
+      "inn": true,
+      "guild": true,
+      "east_watch": true,
+      "smith": true,
+      "market_hall": true,
+      "home_a": true,
+      "home_b": true,
+      "home_c": true
+    },
+    "travelled": 20.53333282470703,
+    "tickCount": 65,
+    "maxStep": 0.5333333333333314,
+    "invalidSteps": 0,
+    "camera": {
+      "x": 0,
+      "y": 148,
+      "scale": 4
+    },
+    "transitions": [],
+    "invalidPositions": [],
+    "portals": 0,
+    "sourceSha256": "23edc0644b57f8c7889d90aaf1f07572c5892af23e798670d67fc3a079ddaa75"
+  },
+  "final": {
+    "mapId": "river-trade-town",
+    "x": 572,
+    "y": 324,
+    "active": [],
+    "roofVisible": {
+      "old_watch": true,
+      "warehouse": true,
+      "inn": true,
+      "guild": true,
+      "east_watch": true,
+      "smith": true,
+      "market_hall": true,
+      "home_a": true,
+      "home_b": true,
+      "home_c": true
+    },
+    "travelled": 2683.2640533502095,
+    "tickCount": 5690,
+    "maxStep": 0.5333333333345536,
+    "invalidSteps": 0,
+    "camera": {
+      "x": 400,
+      "y": 244,
+      "scale": 4
+    },
+    "transitions": [
+      {
+        "tick": 351,
+        "id": "old_watch",
+        "entered": true,
+        "x": 92,
+        "y": 95.73333333333335
+      },
+      {
+        "tick": 572,
+        "id": "old_watch",
+        "entered": false,
+        "x": 92,
+        "y": 96.26666666666661
+      },
+      {
+        "tick": 807,
+        "id": "warehouse",
+        "entered": true,
+        "x": 84,
+        "y": 175.73333333333312
+      },
+      {
+        "tick": 998,
+        "id": "warehouse",
+        "entered": false,
+        "x": 84,
+        "y": 176.26666666666756
+      },
+      {
+        "tick": 1551,
+        "id": "inn",
+        "entered": true,
+        "x": 276,
+        "y": 143.73333333333312
+      },
+      {
+        "tick": 1742,
+        "id": "inn",
+        "entered": false,
+        "x": 276,
+        "y": 144.26666666666748
+      },
+      {
+        "tick": 2028,
+        "id": "guild",
+        "entered": true,
+        "x": 420,
+        "y": 143.73333333333312
+      },
+      {
+        "tick": 2219,
+        "id": "guild",
+        "entered": false,
+        "x": 420,
+        "y": 144.26666666666748
+      },
+      {
+        "tick": 2574,
+        "id": "east_watch",
+        "entered": true,
+        "x": 572,
+        "y": 95.73333333333335
+      },
+      {
+        "tick": 2795,
+        "id": "east_watch",
+        "entered": false,
+        "x": 572,
+        "y": 96.26666666666661
+      },
+      {
+        "tick": 3053,
+        "id": "smith",
+        "entered": true,
+        "x": 508,
+        "y": 167.73333333333312
+      },
+      {
+        "tick": 3244,
+        "id": "smith",
+        "entered": false,
+        "x": 508,
+        "y": 168.26666666666756
+      },
+      {
+        "tick": 3721,
+        "id": "market_hall",
+        "entered": true,
+        "x": 332,
+        "y": 255.73333333333355
+      },
+      {
+        "tick": 3787,
+        "id": "market_hall",
+        "entered": false,
+        "x": 332,
+        "y": 256.00000000000085
+      },
+      {
+        "tick": 4230,
+        "id": "home_a",
+        "entered": true,
+        "x": 356,
+        "y": 375.7333333333336
+      },
+      {
+        "tick": 4421,
+        "id": "home_a",
+        "entered": false,
+        "x": 356,
+        "y": 376.2666666666656
+      },
+      {
+        "tick": 4783,
+        "id": "home_b",
+        "entered": true,
+        "x": 524,
+        "y": 383.7333333333336
+      },
+      {
+        "tick": 4974,
+        "id": "home_b",
+        "entered": false,
+        "x": 524,
+        "y": 384.2666666666656
+      },
+      {
+        "tick": 5492,
+        "id": "home_c",
+        "entered": true,
+        "x": 572,
+        "y": 319.7333333333336
+      },
+      {
+        "tick": 5683,
+        "id": "home_c",
+        "entered": false,
+        "x": 572,
+        "y": 320.2666666666656
+      }
+    ],
+    "invalidPositions": [],
+    "portals": 0,
+    "sourceSha256": "23edc0644b57f8c7889d90aaf1f07572c5892af23e798670d67fc3a079ddaa75"
+  },
+  "input": {
+    "keyboardDistance": 8.533333333333303,
+    "clickReached": true
+  },
+  "errors": [],
+  "externalRequests": [],
+  "pageNavigations": [],
+  "note": "所有移动均通过同一实际步进函数推进；未重置角色位置，未切换地图。"
+}

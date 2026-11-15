@@ -1,0 +1,268 @@
+{
+  "schema": "generate2dmap.tiled_export.v1",
+  "status": "pass",
+  "method": "TMJ and TSX written from the bundle, read back with the built-in reader (TSX via ElementTree) and re-rendered (tile layers, image layers, prop tile objects in draw order); the re-render must equal render_map(bundle) pixel for pixel (preview.png)",
+  "notProven": [
+    "Tiled GUI not verified: opening the map, wang/terrain brushes and the mixed blob wangset in the editor",
+    "Phaser or another engine rendering map.embedded.tmj the same way",
+    "runtime depth sorting by the sortY property (Tiled's own topdown order sorts by image bottom)"
+  ],
+  "checks": [
+    {
+      "id": "tsx_well_formed",
+      "status": "pass",
+      "value": [],
+      "threshold": []
+    },
+    {
+      "id": "rerender_map_tmj",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0
+    },
+    {
+      "id": "rerender_map_embedded_tmj",
+      "status": "pass",
+      "value": 0,
+      "threshold": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "../map-bundle.json",
+      "sha256": "436c318b3063ffbd1fc681d64ae15a8038c3ea717cb4dd5be439b6b51875b829",
+      "bytes": 463923
+    },
+    {
+      "path": "../assets/terrain-tileset.json",
+      "sha256": "b7b0dba6086d1857d8cdf6545c0baa1b15a525026b6bf4bf7d112b6cf358112f",
+      "bytes": 4172
+    },
+    {
+      "path": "../assets/terrain-atlas.png",
+      "sha256": "0146fcf904e92ad639b43bd4d6498d3efc43d937841d2053c3c073e8bbcf9178",
+      "bytes": 5875
+    },
+    {
+      "path": "../assets/TreeNoApples.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "../assets/TreeNoApples_Shadow_9.png",
+      "sha256": "8176cf14d2c7891c361628348d85f71c7aa563f4a571dc731b220a878524379a",
+      "bytes": 160
+    },
+    {
+      "path": "../assets/TreeApples.png",
+      "sha256": "6e00faab30818cf4433c532896c3bd26672f2f454f2c3d86817e66544ef6cbec",
+      "bytes": 546
+    },
+    {
+      "path": "../assets/TreeApples_Shadow_10.png",
+      "sha256": "770612606f23b9d54961216d95038478c9e38b2eba7ecb63d0ffa1d025c48209",
+      "bytes": 168
+    },
+    {
+      "path": "../assets/PillarTall1.png",
+      "sha256": "c5183530076d795eefea97b4f2e3e3482ac9b6966c427634fd1e60f1a7c3c27f",
+      "bytes": 307
+    },
+    {
+      "path": "../assets/PillarMedium2.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "../assets/PillarShort1.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "../assets/PillarTall3.png",
+      "sha256": "800ce4b8d88b72df7d3cba32a0ea776ffdfefcd197c27b2ea7ceb0aed9e84c73",
+      "bytes": 399
+    },
+    {
+      "path": "../assets/PillarMedium3.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "../assets/PillarShort2.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "../assets/FlowerRed.png",
+      "sha256": "60c1a7bae2959b0bd3904c3a3da7e05ac0a4da76be24225cb2a36e5e00dfbff6",
+      "bytes": 125
+    },
+    {
+      "path": "../assets/GrassLong2.png",
+      "sha256": "89d34146e74debed2b18436630c2f3d2516050c30ac8066ddb60be0003673a60",
+      "bytes": 99
+    },
+    {
+      "path": "../assets/FlowerPink.png",
+      "sha256": "9d18bf184d9154ce996bd75616c189b14161e21c0e4832eda36429faf3116160",
+      "bytes": 133
+    },
+    {
+      "path": "../assets/GrassLong1.png",
+      "sha256": "ff7e5cb4e4618529ba13ed6fda5e9a1f65a9875b81ee2c0ab7526956e900188c",
+      "bytes": 92
+    },
+    {
+      "path": "../assets/FlowerWhite.png",
+      "sha256": "c0117a19b88e44217f61deea06bf5d04ad0ddf4569172ae3074b957e0dee0afe",
+      "bytes": 107
+    }
+  ],
+  "outputs": [
+    {
+      "path": "images/FlowerPink.png",
+      "sha256": "9d18bf184d9154ce996bd75616c189b14161e21c0e4832eda36429faf3116160",
+      "bytes": 133
+    },
+    {
+      "path": "images/FlowerRed.png",
+      "sha256": "60c1a7bae2959b0bd3904c3a3da7e05ac0a4da76be24225cb2a36e5e00dfbff6",
+      "bytes": 125
+    },
+    {
+      "path": "images/FlowerWhite.png",
+      "sha256": "c0117a19b88e44217f61deea06bf5d04ad0ddf4569172ae3074b957e0dee0afe",
+      "bytes": 107
+    },
+    {
+      "path": "images/GrassLong1.png",
+      "sha256": "ff7e5cb4e4618529ba13ed6fda5e9a1f65a9875b81ee2c0ab7526956e900188c",
+      "bytes": 92
+    },
+    {
+      "path": "images/GrassLong2.png",
+      "sha256": "89d34146e74debed2b18436630c2f3d2516050c30ac8066ddb60be0003673a60",
+      "bytes": 99
+    },
+    {
+      "path": "images/PillarMedium2.png",
+      "sha256": "0f5d136cfdaa3488c3241be923271743b75a4b3d7b5089a41759ebba176d39f2",
+      "bytes": 249
+    },
+    {
+      "path": "images/PillarMedium3.png",
+      "sha256": "89ef0b7ae8ba7858847c13d854c69742de332976f3e8fb84f0092273f2d1aa27",
+      "bytes": 268
+    },
+    {
+      "path": "images/PillarShort1.png",
+      "sha256": "645f0d701eacd61b873df876a19a181ea5527ed8b81b6099c929a37416ddc3d8",
+      "bytes": 197
+    },
+    {
+      "path": "images/PillarShort2.png",
+      "sha256": "3e909231ea9fdfb2f78e922e7ba5d905b86b09fbad082bf865a4cdce8ee61052",
+      "bytes": 146
+    },
+    {
+      "path": "images/PillarTall1.png",
+      "sha256": "c5183530076d795eefea97b4f2e3e3482ac9b6966c427634fd1e60f1a7c3c27f",
+      "bytes": 307
+    },
+    {
+      "path": "images/PillarTall3.png",
+      "sha256": "800ce4b8d88b72df7d3cba32a0ea776ffdfefcd197c27b2ea7ceb0aed9e84c73",
+      "bytes": 399
+    },
+    {
+      "path": "images/terrain-atlas.png",
+      "sha256": "0146fcf904e92ad639b43bd4d6498d3efc43d937841d2053c3c073e8bbcf9178",
+      "bytes": 5875
+    },
+    {
+      "path": "images/TreeApples.png",
+      "sha256": "6e00faab30818cf4433c532896c3bd26672f2f454f2c3d86817e66544ef6cbec",
+      "bytes": 546
+    },
+    {
+      "path": "images/TreeApples_Shadow_10.png",
+      "sha256": "770612606f23b9d54961216d95038478c9e38b2eba7ecb63d0ffa1d025c48209",
+      "bytes": 168
+    },
+    {
+      "path": "images/TreeNoApples.png",
+      "sha256": "26742c3ce4da44430c6f0af9442e0656c48a05f34d66af4b543fe81091100998",
+      "bytes": 450
+    },
+    {
+      "path": "images/TreeNoApples_Shadow_9.png",
+      "sha256": "8176cf14d2c7891c361628348d85f71c7aa563f4a571dc731b220a878524379a",
+      "bytes": 160
+    },
+    {
+      "path": "map.embedded.tmj",
+      "sha256": "0c8b3a58151421cb01426cc6dba006fd38a38d7a8b3d504dbc9f8a04e02f3ae9",
+      "bytes": 641485
+    },
+    {
+      "path": "map.tmj",
+      "sha256": "da2a1d8942b0fae2c398fc562729ee743e6dbc19692fc70d69f96d07393fb5f5",
+      "bytes": 631816
+    },
+    {
+      "path": "minifantasy.tsx",
+      "sha256": "e4d9949204fb18f359ca5ae3a08f1750a46cf485054e76029dbb0a014ff44731",
+      "bytes": 429
+    },
+    {
+      "path": "preview.png",
+      "sha256": "1cec5b1a9bc1714d84b38c0f5e8372fff0e9081bcd9bbada02d38c4bf17496b0",
+      "bytes": 32827
+    },
+    {
+      "path": "props.tsx",
+      "sha256": "f05142f6c6ef1a7f82112a291919fa3a45d74b1d32bbf15898ac3b435e978b4c",
+      "bytes": 4609
+    }
+  ],
+  "tool": {
+    "name": "export_tiled.py",
+    "version": "0.4.0"
+  },
+  "tiled": {
+    "format": "1.10",
+    "app": "1.11.0",
+    "tilesets": [
+      {
+        "file": "minifantasy.tsx",
+        "name": "minifantasy",
+        "firstgid": 1,
+        "tilecount": 128
+      },
+      {
+        "file": "props.tsx",
+        "name": "props",
+        "firstgid": 129,
+        "tilecount": 15
+      }
+    ],
+    "layers": [
+      "ground",
+      "water",
+      "path",
+      "detail",
+      "shadow",
+      "walls_vertical",
+      "walls_horizontal",
+      "cliff1",
+      "cliff2",
+      "cliff3",
+      "cliff_top",
+      "wall_shadow",
+      "props",
+      "collision",
+      "interactions"
+    ]
+  }
+}

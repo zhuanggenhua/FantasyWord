@@ -1,0 +1,113 @@
+.setview-tray-view {
+	background: var(--wastePanel);
+	border-radius: 0px 0px 4px 0px;
+	border-width: 0px 4px 4px 0px;
+	border-style: solid;
+	border-color: var(--rtInset);
+	box-shadow: inset -1px -1px 0 rgba(211, 189, 79, 0.14);
+	display: flex;
+	position: absolute;
+}
+
+.setview-info-view {
+	background: var(--rtInfoBarGrad);
+	border-radius: 0px 4px 0px 0px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	font-size: 12px;
+	font-family: mainFont;
+	cursor: default;
+	color: var(--color2);
+	padding-bottom: 4px;
+	padding-top: 8px;
+	padding-left: 8px;
+	padding-right: 16px;
+	display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.setview-info-icon-view {
+    width: 16px; height: 16px;
+    margin-left: 0px;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: block;
+}
+
+.setview-info-text-view {
+	cursor: default;
+	margin-left: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	display: inline-block;
+}
+
+.setview-tilesize-steps-view {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-right: 8px;
+}
+
+.setview-tilesize-step-view {
+	height: 20px;
+	min-width: 34px;
+	padding: 0 6px;
+	border: 1px solid var(--colorSteel);
+	border-radius: 3px;
+	background: var(--rtTabIdle);
+	color: var(--color2);
+	font-family: mainFont, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+	font-size: 12px;
+	letter-spacing: 0;
+	cursor: default;
+}
+
+.setview-tilesize-step-view:hover {
+	border-color: var(--colorSelect);
+	color: var(--colorSelect);
+}
+
+.setview-log-view {
+	visibility: hidden;
+	
+	background: var(--wastePanel);
+	overflow: hidden;
+	padding: 0px;
+
+	border-style: solid;
+	border-color: var(--rtInset);
+	border-radius: 4px 0px 0px 0px;
+	border-width: 4px 0px 0px 4px;
+
+	position: absolute;
+	width: 256px;
+	height: 144px;
+	bottom: 0;
+	right: 0;
+}
+
+.setview-log-inside-view {
+	position: absolute;
+	background: var(--rtDeepFill);
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+
+	margin-left: 0px;
+	margin-top: 0px;
+
+	border-style: solid;
+	border-color: var(--rtInset);
+	border-width: 8px 8px 8px 44px;
+
+	word-wrap: break-word;
+	overflow: hidden;
+	overflow-y: scroll;
+
+	font-size: 12px;
+	font-family: mainFont;
+	color: var(--colorError);
+}

@@ -1,0 +1,40 @@
+{
+  "status": "pass",
+  "scope": "当前地图的原生室内总览与实际浏览器进出截图；不代表Unity验收或完整开放世界完成",
+  "mapSha256": "94d1ef6067855e2480d3b229a9be5473033f02fcfe3cc8e00b96af399232b1eb",
+  "images": [
+    {
+      "path": "town-interiors.png",
+      "sha256": "3d98f745469f998e9f076e0243f6bdaf4219c9beb91c58c815d948dfafa04172"
+    },
+    {
+      "path": "preview/inn-outside.png",
+      "sha256": "5128d9a47d89f2f2aa274d51275dbde331e414cf9adce1c676500007fc517af0"
+    },
+    {
+      "path": "preview/inn-inside.png",
+      "sha256": "7805eba2e609892aed2a927f63f065093fde9c2ba5b3cbda4ba145016d8f5a2f"
+    },
+    {
+      "path": "preview/inn-exited.png",
+      "sha256": "5128d9a47d89f2f2aa274d51275dbde331e414cf9adce1c676500007fc517af0"
+    },
+    {
+      "path": "preview/market_hall-inside.png",
+      "sha256": "4e9952b3ad45143bbfd3cac1faff89d8ad6aa9f2b245d71c8f66aa3a8c57a9c1"
+    }
+  ],
+  "checks": {
+    "native_all_ten_interiors_present": "pass",
+    "inn_roof_outside_inside_exit": "pass",
+    "other_roofs_remain_visible": "pass",
+    "player_and_furniture_readable": "pass",
+    "market_crossbeam_no_longer_occludes_floor": "pass",
+    "door_openings_visible": "pass"
+  },
+  "limits": [
+    "仅80x60格小镇和地面层；没有多楼层或大世界流式加载。",
+    "浏览器角色使用现有素材静态帧，正式角色动画未接入。",
+    "未启动Unity；导入后的揭顶表现与物理仍需接入和验证。"
+  ]
+}

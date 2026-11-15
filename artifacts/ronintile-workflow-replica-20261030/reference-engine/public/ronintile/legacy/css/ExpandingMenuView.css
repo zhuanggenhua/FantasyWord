@@ -1,0 +1,48 @@
+.expandingmenu-view {
+	background: var(--wastePanel);
+	border-radius: 0px 4px 4px 4px;
+	border-width: 4px 4px 4px 4px;
+	border-style: solid;
+	white-space: nowrap;
+	overflow: hidden;
+	border-color: var(--rtInset);
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.46);
+	transition: width 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+	visibility: hidden;
+	margin-right: -4px;
+}
+
+.expandingmenu-container-view {
+	position: absolute;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: row;
+}
+
+.expandingmenu-subcontainer-view {
+	position: relative;
+}
+
+.expandingmenu-subicon-view {
+	margin-right: 15px;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	display: inline-block;
+}
+
+.expandingmenu-option-view {
+	margin: 8px;
+	margin-left: 16px;
+	margin-right: 16px;
+	color: var(--color2);
+	display: block;
+	font-size: 12px;
+	font-family: mainFont;
+}
+
+.expandingmenu-separator-view {
+	height: 1px;
+	background: var(--colorRust);
+	display: block;
+}

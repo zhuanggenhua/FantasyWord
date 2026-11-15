@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "map": "C:\\Gamedev\\Unity\\Project\\FantasyWord\\artifacts\\ai-map-local-20261030\\map\\frontier-world.tmx",
+  "chunk": "east",
+  "inputSha256": "3ca24488220e3688fcc0ddabcb757adb1aa0c3cf5a252bfad4670146b2d5cf67",
+  "knownPixelChanges": 0,
+  "modelOverlapDriftRgb": [
+    17.138783462375386,
+    16.363632913314103,
+    10.575062623349021
+  ],
+  "note": "保留旧区域像素不代表接缝美术已通过，需查看实际拼接图"
+}
