@@ -15,6 +15,7 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var visual_body: Node2D
 @export var camera: Camera2D
 var human_presentation: Node2D
+var human_motion_binding: RefCounted
 var movement: RefCounted
 var route: RefCounted
 var binding: RefCounted
@@ -116,6 +117,9 @@ func _process(delta: float) -> void:
 	if binding != null: camera.advance_follow(delta)
 
 func _exit_tree() -> void:
+	if human_motion_binding != null:
+		human_motion_binding.detach()
+		human_motion_binding = null
 	if binding != null:
 		binding.on_disable()
 		binding = null
@@ -161,3 +165,16 @@ func start_human_presentation(data: Dictionary, texture_directory: String) -> No
 		return null
 	human_presentation = presentation
 	return presentation
+
+## 显式正式主图切片：调用前先 start_human_presentation；依赖仍由宿主提供。
+func start_human_logic(owner: Object, data: Dictionary, player_provider: Callable,
+		map_provider: Callable, map_events: Object, ui_guard: Callable) -> bool:
+	if human_motion_binding != null or movement != null: return false
+	var candidate = preload("res://gameplay/clickmovetest/human_motion_binding.gd").new()
+	if not candidate.configure(owner,human_presentation,false): return false
+	if not start_logic(candidate,data,player_provider,map_provider,map_events,ui_guard):
+		candidate.detach()
+		return false
+	candidate.activate()
+	human_motion_binding=candidate
+	return true
