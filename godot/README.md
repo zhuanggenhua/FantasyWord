@@ -71,3 +71,6 @@ node .spec/tools/spec-lint.mjs
 - [NPC 实体观察](ai-perception-port.md)：原遮挡层规则与原生 Godot 碰撞查询接入选敌诊断；尚未认证跨引擎多目标查询顺序。
 - [AI 攻击门禁](ai-attack-gate-port.md)：按原转向、释放顺序和冷却条件验证命令；尚未接真实 NPC 的动作与伤害。
 - [Transit 转向评分](ai-transit-scoring-port.md)：移植通行组的 16 方向评分；未接动态避让和正式地图，不能替代追击及游走。
+- [NPC 普攻命中诊断](validation/scenes/npc-attack.md)：原生自然选敌、转向、20001 和 Timeline 101 命中链。使用独立诊断身体，不代表原演员或受击动画、攻击后追击验收。
+- [Predictive Target 评分](ai-predictive-scoring-port.md)：原预测和按真实距离的限速加入 16 方向评分；仍未接动态世界结果。
+- [攻击后追击验收接口](post-attack-chase-port.md)：按原验证器保留 Dmg、恢复、目标和位移判据，等待原场景真实观察。
