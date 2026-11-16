@@ -68,3 +68,6 @@ node .spec/tools/spec-lint.mjs
 - [移动与战斗联合诊断](validation/scenes/movement-combat.md)：同场景走入命中范围，1 键普攻或 Q/2 蓄力，核对命中和击退。
 - [致命伤害生命周期](deferred-damage-port.md)：同一实际子 Hitbox 命中后，先反映生命归零，后处理行动打断和死亡标记。
 - [NPC 目标生命周期](ai-target-port.md)：源目标识别与丢失逻辑，尚未接 Native NPC 和转向。
+- [NPC 实体观察](ai-perception-port.md)：原遮挡层规则与原生 Godot 碰撞查询接入选敌诊断；尚未认证跨引擎多目标查询顺序。
+- [AI 攻击门禁](ai-attack-gate-port.md)：按原转向、释放顺序和冷却条件验证命令；尚未接真实 NPC 的动作与伤害。
+- [Transit 转向评分](ai-transit-scoring-port.md)：移植通行组的 16 方向评分；未接动态避让和正式地图，不能替代追击及游走。
