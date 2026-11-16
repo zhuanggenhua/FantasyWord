@@ -8,12 +8,13 @@
 radius = 0.39
 height = 0.86
 
-[node name="点击移动启动切片" type="Node2D" node_paths=PackedStringArray("actor", "actor_shape", "visual_body", "camera")]
+[node name="点击移动启动切片" type="Node2D" node_paths=PackedStringArray("actor", "actor_shape", "visual_body", "camera", "aim_pivot")]
 script = ExtResource("1")
 actor = NodePath("玩家角色")
 actor_shape = NodePath("玩家角色/身体碰撞")
 visual_body = NodePath("玩家角色/表现Body")
 camera = NodePath("玩家相机")
+aim_pivot = NodePath("玩家角色/Static Pivot")
 
 [node name="玩家角色" type="AnimatableBody2D" parent="."]
 collision_layer = 256
@@ -26,6 +27,9 @@ shape = SubResource("Capsule")
 
 [node name="表现Body" type="Node2D" parent="玩家角色"]
 position = Vector2(0.75, 3.1)
+
+[node name="Static Pivot" type="Node2D" parent="玩家角色"]
+position = Vector2(0, -0.4)
 
 [node name="玩家相机" type="Camera2D" parent="."]
 position = Vector2(0.75, 3.1)

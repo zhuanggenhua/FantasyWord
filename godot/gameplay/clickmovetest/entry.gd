@@ -7,6 +7,7 @@ const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
+const Aim = preload("res://game_core/movement/idle_pointer_aim.gd")
 const Step = preload("res://game_core/movement/source_fixed_step.gd")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
@@ -14,6 +15,7 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var actor_shape: CollisionShape2D
 @export var visual_body: Node2D
 @export var camera: Camera2D
+@export var aim_pivot: Node2D
 var human_presentation: Node2D
 var human_motion_binding: RefCounted
 var movement: RefCounted
@@ -24,6 +26,9 @@ var command_count := 0
 var last_result: Variant
 var click_observation := Observation.new()
 var keyboard := Keyboard.new()
+var _human_aim: RefCounted
+var _aim_control: Object
+var _aim_was_local := false
 var _ui_guard: Callable
 var _player_provider: Callable
 
@@ -115,8 +120,10 @@ func _process(delta: float) -> void:
 		return {"order": owned and actor.execution.has_move_order(),
 			"position": actor.get_movement_position() if owned else Vector2.ZERO})
 	if binding != null: camera.advance_follow(delta)
+	_update_human_aim()
 
 func _exit_tree() -> void:
+	stop_human_aim()
 	if human_motion_binding != null:
 		human_motion_binding.detach()
 		human_motion_binding = null
@@ -178,3 +185,54 @@ func start_human_logic(owner: Object, data: Dictionary, player_provider: Callabl
 	candidate.activate()
 	human_motion_binding=candidate
 	return true
+
+
+## 原场景 Static Pivot + 显式本地控制宿主。既不猜选玩家，也不打开假 GAS。
+func start_human_aim(owner: Object, control: Object) -> bool:
+	if _human_aim != null or human_motion_binding == null or not human_motion_binding.uses_owner(owner):
+		return false
+	if not is_instance_valid(control) or not is_instance_valid(aim_pivot) or aim_pivot.get_parent() != actor:
+		return false
+	for method in ["accepts_player_input","is_current_controlled","can_be_player_controlled",
+			"refresh_interaction_target","reset_interaction_target","read_active_gameplay_pointer"]:
+		if not control.has_method(method): return false
+	var candidate := Aim.new()
+	# 锁定 Actor/Hero/ClickMoveTest 保留 m_castAbilitiesInPointerDirection=true。
+	if not candidate.configure(actor,owner,aim_pivot,true): return false
+	_aim_control = control
+	_human_aim = candidate
+	return true
+
+func _update_human_aim() -> void:
+	if _human_aim == null or not is_instance_valid(_aim_control) or not _aim_control.accepts_player_input(actor):
+		return
+	if not _aim_control.is_current_controlled(actor) or not _aim_control.can_be_player_controlled(actor):
+		if _aim_was_local: _reset_human_aim_control()
+		return
+	_aim_was_local = true
+	_aim_control.refresh_interaction_target(actor)
+	# Only ask for an input sample when the source target/idle gates allow it.
+	var owner: Object = _human_aim.target_owner
+	if not is_instance_valid(owner) or not owner.can_update_target_direction(): return
+	var point: Variant = null
+	if not actor.has_active_movement_intent():
+		point = _aim_control.read_active_gameplay_pointer()
+	if not _human_aim.try_update(camera,point if point is Vector2 else Vector2.ZERO,point is Vector2):
+		owner.reset_target_direction()
+
+func _reset_human_aim_control() -> void:
+	var owner: Object = _human_aim.target_owner
+	if is_instance_valid(owner): owner.reset_target_direction()
+	if is_instance_valid(actor): actor.reset_movement()
+	if is_instance_valid(_aim_control): _aim_control.reset_interaction_target(actor)
+	_aim_was_local = false
+
+## 宿主应用 SetAcceptsPlayerInput(false) 时调用；保留绑定供以后重新启用。
+func notify_human_aim_input_disabled() -> void:
+	if _human_aim != null: _reset_human_aim_control()
+
+func stop_human_aim() -> void:
+	if _human_aim == null: return
+	_reset_human_aim_control()
+	_human_aim = null
+	_aim_control = null

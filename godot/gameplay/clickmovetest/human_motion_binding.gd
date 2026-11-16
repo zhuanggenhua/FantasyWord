@@ -37,6 +37,9 @@ func detach() -> void:
 	_view=null
 	_active=false
 
+func uses_owner(owner: Object) -> bool:
+	return _active and is_instance_valid(owner) and owner == _owner
+
 func can_move() -> bool:
 	return is_instance_valid(_owner) and _owner.can_move()
 func calculate_move_speed() -> float: return _owner.calculate_move_speed() if is_instance_valid(_owner) else 0.0
