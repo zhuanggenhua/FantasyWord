@@ -70,6 +70,28 @@ static func apply_action_uv_maps(material: ShaderMaterial, body: Texture2D, head
 	material.set_shader_parameter("head_map",head)
 	return {"ok":true}
 
+## 显式映射源 UpdateUVMapTexture 的独立可空双图；不改变严格有效双图入口。
+## null 表示源声明的 opaque black，而不是禁用装备；错误的非空输入不能当作缺图。
+static func apply_nullable_action_uv_maps(material: ShaderMaterial, body: Variant, head: Variant) -> Dictionary:
+	if material == null or material.shader not in [SUBSET,WEAPON_SUBSET]:
+		return {"ok":false,"reason":"动作 UV 必须绑定已有装备材质"}
+	for texture in [body,head]:
+		if texture == null: continue
+		if not texture is Texture2D or texture is AtlasTexture or texture.get_width() <= 0 or texture.get_height() <= 0:
+			return {"ok":false,"reason":"非空动作 UV 必须是有效完整贴图，不能解释为源 null"}
+	# 完成整对校验后才写，避免错误输入导致半写；两图由源分别拥有，不合并缺失状态。
+	material.set_shader_parameter("body_map",_source_black_uv() if body == null else body)
+	material.set_shader_parameter("head_map",_source_black_uv() if head == null else head)
+	return {"ok":true,"body_missing":body == null,"head_missing":head == null}
+
+static var _black_uv: ImageTexture
+static func _source_black_uv() -> ImageTexture:
+	if _black_uv == null:
+		var image := Image.create_empty(1,1,false,Image.FORMAT_RGBA8)
+		image.fill(Color(0,0,0,1))
+		_black_uv = ImageTexture.create_from_image(image)
+	return _black_uv
+
 ## 仅在调用方已确认贴图输入/输出域为当前非 HDR Compatibility 约定时启用。
 ## 此处不检测或替换渲染器，也不推断 Unity 装备或作者颜色。
 const Palette = preload("res://gameplay/presentation/equipment_skin_palette.gd")
