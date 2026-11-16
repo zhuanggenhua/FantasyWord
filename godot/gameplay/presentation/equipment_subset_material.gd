@@ -54,6 +54,22 @@ static func create(main: Texture2D, body: Texture2D, head: Texture2D,
 		if colors.get(key) is Color: material.set_shader_parameter(str(key)+"_color",colors[key])
 	return {"ok":true,"material":material}
 
+## 对应 ApplyAnimationKey / UpdateUVMapTexture 的有效双图分支。
+## 只更新原有材质的动作 UV；不接管 SpriteRenderer 主图、Refresh 槽位或材质生命周期。
+static func apply_action_uv_maps(material: ShaderMaterial, body: Texture2D, head: Texture2D) -> Dictionary:
+	if material == null or material.shader not in [SUBSET,WEAPON_SUBSET]:
+		return {"ok":false,"reason":"动作 UV 必须绑定已有装备材质"}
+	for texture in [body,head]:
+		if texture == null or texture is AtlasTexture or texture.get_width() <= 0 or texture.get_height() <= 0:
+			return {"ok":false,"reason":"此入口只支持有效完整 Body/Head UV 图；缺图清除分支尚未接入"}
+	if body.get_size() != head.get_size():
+		return {"ok":false,"reason":"此入口只支持尺寸一致的动作双 UV 图"}
+	# 动作 owner 可能先于实际 Sprite 改变：允许与当前 main_map 尺寸不同。
+	# 不调用 create/reset，避免提前抹掉尚未 Refresh 的装备层、武器和颜色历史。
+	material.set_shader_parameter("body_map",body)
+	material.set_shader_parameter("head_map",head)
+	return {"ok":true}
+
 ## 仅在调用方已确认贴图输入/输出域为当前非 HDR Compatibility 约定时启用。
 ## 此处不检测或替换渲染器，也不推断 Unity 装备或作者颜色。
 const Palette = preload("res://gameplay/presentation/equipment_skin_palette.gd")
