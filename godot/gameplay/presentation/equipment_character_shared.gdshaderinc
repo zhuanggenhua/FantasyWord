@@ -1,0 +1,286 @@
+// 原 EquipmentUV 的本体合成及显式武器填充阶段；不替代阴影、描边。
+// UV 必须是整张角色图的左上原点坐标；数据贴图禁止颜色空间转换。
+uniform sampler2D main_map : filter_nearest, repeat_disable;
+uniform sampler2D body_map : filter_nearest, repeat_disable;
+uniform sampler2D head_map : filter_nearest, repeat_disable;
+uniform bool body_in_front = false;
+// 仅非 HDR 兼容模式：可见颜色输入/输出为原始 sRGB，palette 向量已线性化。
+// Body/Head 编码数据不参与颜色转换；缺少色域证明时必须保持禁用。
+uniform bool skin_palette_enabled = false;
+// 0 未证明；1 原始 sRGB。暂不接受其他色域。
+uniform int skin_color_domain = 0;
+uniform int skin_color_count = 0;
+uniform vec4 skin_src_colors[16];
+uniform vec4 skin_dst_colors[16];
+
+uniform bool enabled_gloves = false;
+uniform bool enabled_shoes = false;
+uniform bool enabled_left_eye = false;
+uniform bool enabled_right_eye = false;
+uniform vec4 left_hand_color;
+uniform vec4 right_hand_color;
+uniform vec4 left_foot_color;
+uniform vec4 right_foot_color;
+uniform vec4 left_eye_color;
+uniform vec4 right_eye_color;
+uniform bool enabled_bag = false;
+uniform sampler2D bag_map : filter_nearest, repeat_disable;
+uniform vec4 bag_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_pants = false;
+uniform sampler2D pants_map : filter_nearest, repeat_disable;
+uniform vec4 pants_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_cloth = false;
+uniform sampler2D cloth_map : filter_nearest, repeat_disable;
+uniform vec4 cloth_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_cloak = false;
+uniform sampler2D cloak_map : filter_nearest, repeat_disable;
+uniform vec4 cloak_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_helmet = false;
+uniform sampler2D helmet_map : filter_nearest, repeat_disable;
+uniform vec4 helmet_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_beard = false;
+uniform sampler2D beard_map : filter_nearest, repeat_disable;
+uniform vec4 beard_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_face_accessory = false;
+uniform sampler2D face_accessory_map : filter_nearest, repeat_disable;
+uniform vec4 face_accessory_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_hair = false;
+uniform sampler2D hair_map : filter_nearest, repeat_disable;
+uniform vec4 hair_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_eye_decoration = false;
+uniform sampler2D eye_decoration_map : filter_nearest, repeat_disable;
+uniform vec4 eye_decoration_rect = vec4(0.0, 0.0, 1.0, 1.0);
+uniform bool enabled_mask = false;
+uniform sampler2D mask_map : filter_nearest, repeat_disable;
+uniform vec4 mask_rect = vec4(0.0, 0.0, 1.0, 1.0);
+
+
+#ifdef EQUIPMENT_WEAPON_STAGE
+// 默认保持本体子集；显式启用才执行武器及最后的北向背包覆盖。
+uniform bool weapon_fill_enabled = false;
+uniform vec4 char_frame_rect = vec4(0.0,0.0,1.0,1.0);
+uniform bool weapon0_enabled = false;
+uniform sampler2D weapon0_map : filter_nearest, repeat_disable;
+uniform vec4 weapon0_rect = vec4(0.0,0.0,1.0,1.0);
+uniform vec4 weapon0_anchor_frame_uv = vec4(0.5);
+uniform vec2 weapon0_rot_cos_sin = vec2(1.0,0.0);
+uniform bool weapon0_flip_x = false;
+uniform float weapon0_depth_mode = 0.0;
+uniform float weapon0_hand_in_front = 0.0;
+uniform bool weapon1_enabled = false;
+uniform sampler2D weapon1_map : filter_nearest, repeat_disable;
+uniform vec4 weapon1_rect = vec4(0.0,0.0,1.0,1.0);
+uniform vec4 weapon1_anchor_frame_uv = vec4(0.5);
+uniform vec2 weapon1_rot_cos_sin = vec2(1.0,0.0);
+uniform bool weapon1_flip_x = false;
+uniform float weapon1_depth_mode = 0.0;
+uniform float weapon1_hand_in_front = 0.0;
+
+#endif
+
+bool part(float value, float target) { return abs(value - target) < 0.025; }
+// 装备编码 RG 以左下为原点，先映射作者 rect，再转换一次到 Godot 左上坐标。
+vec2 equip_uv(vec2 encoded, vec4 rect) {
+ vec2 bottom = mix(rect.xy, rect.zw, encoded);
+ return vec2(bottom.x, 1.0-bottom.y);
+}
+bool write_bag(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_bag) { return false; }
+ vec4 pixel = texture(bag_map, equip_uv(uv, bag_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 10; return true;
+}
+bool write_pants(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_pants) { return false; }
+ vec4 pixel = texture(pants_map, equip_uv(uv, pants_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 9; return true;
+}
+bool write_cloth(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_cloth) { return false; }
+ vec4 pixel = texture(cloth_map, equip_uv(uv, cloth_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 9; return true;
+}
+bool write_cloak(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_cloak) { return false; }
+ vec4 pixel = texture(cloak_map, equip_uv(uv, cloak_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 2; return true;
+}
+bool write_helmet(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_helmet) { return false; }
+ vec4 pixel = texture(helmet_map, equip_uv(uv, helmet_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 3; return true;
+}
+bool write_beard(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_beard) { return false; }
+ vec4 pixel = texture(beard_map, equip_uv(uv, beard_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 5; return true;
+}
+bool write_face_accessory(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_face_accessory) { return false; }
+ vec4 pixel = texture(face_accessory_map, equip_uv(uv, face_accessory_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 4; return true;
+}
+bool write_hair(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_hair) { return false; }
+ vec4 pixel = texture(hair_map, equip_uv(uv, hair_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 6; return true;
+}
+bool write_eye_decoration(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_eye_decoration) { return false; }
+ vec4 pixel = texture(eye_decoration_map, equip_uv(uv, eye_decoration_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 4; return true;
+}
+bool write_mask(vec2 uv, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!enabled_mask) { return false; }
+ vec4 pixel = texture(mask_map, equip_uv(uv, mask_rect));
+ if (pixel.a <= 0.5) { return false; }
+ value.rgb = pixel.rgb; coverage = 1.0; source_id = 11; return true;
+}
+
+void apply_head(vec4 body, vec4 head, inout vec4 value, inout float coverage, inout int source_id) {
+ if (!part(head.b,0.1) || part(body.b,0.4) || part(body.b,0.5)) { return; }
+ if (write_helmet(head.rg,value,coverage,source_id)) { return; }
+ bool wrote = write_beard(head.rg,value,coverage,source_id);
+ if (!wrote) { wrote = write_face_accessory(head.rg,value,coverage,source_id); }
+ if (!wrote) { wrote = write_hair(head.rg,value,coverage,source_id); }
+ wrote = write_eye_decoration(head.rg,value,coverage,source_id);
+ wrote = write_mask(head.rg,value,coverage,source_id);
+}
+void apply_body(vec4 body, vec4 head, float base_alpha, inout vec4 value, inout float coverage, inout int source_id) {
+ bool left_hand = part(body.b,0.4);
+ bool right_hand = part(body.b,0.5);
+ bool left_foot = part(body.b,0.6);
+ bool right_foot = part(body.b,0.7);
+ bool hand = left_hand || right_hand;
+ bool foot = left_foot || right_foot;
+ bool torso = part(body.b,0.2) || (body_in_front && (hand || foot));
+ if (torso) {
+  if (!body_in_front && part(head.b,0.1) && head.a > 0.5) { return; }
+  bool wrote = false;
+  if (!body_in_front && base_alpha <= 0.5) { wrote = write_bag(body.rg,value,coverage,source_id); }
+  wrote = write_pants(body.rg,value,coverage,source_id);
+  wrote = write_cloth(body.rg,value,coverage,source_id);
+  wrote = write_cloak(body.rg,value,coverage,source_id);
+ } else if (hand && enabled_gloves) {
+  value.rgb = left_hand ? left_hand_color.rgb : right_hand_color.rgb; coverage = 1.0; source_id = 9;
+ } else if (foot && enabled_shoes) {
+  value.rgb = left_foot ? left_foot_color.rgb : right_foot_color.rgb; coverage = 1.0; source_id = 9;
+ } else if (part(body.b,0.3) && enabled_left_eye) {
+  value.rgb = left_eye_color.rgb; coverage = 1.0; source_id = 9;
+ } else if (part(body.b,0.35) && enabled_right_eye) {
+  value.rgb = right_eye_color.rgb; coverage = 1.0; source_id = 9;
+ }
+}
+vec3 skin_srgb_to_linear(vec3 value) {
+ return mix(value / 12.92, pow((value + vec3(0.055)) / 1.055, vec3(2.4)), greaterThan(value, vec3(0.04045)));
+}
+vec3 skin_linear_to_srgb(vec3 value) {
+ return mix(value * 12.92, 1.055 * pow(value, vec3(1.0 / 2.4)) - vec3(0.055), greaterThan(value, vec3(0.0031308)));
+}
+vec3 apply_skin_palette(vec3 raw_srgb, float base_alpha, int source_id) {
+ if (!skin_palette_enabled || skin_color_domain != 1 || source_id != 1 || base_alpha <= 0.5) { return raw_srgb; }
+ vec3 linear_color = skin_srgb_to_linear(raw_srgb);
+ if (dot(linear_color, vec3(0.299,0.587,0.114)) <= 0.15) { return raw_srgb; }
+ int count = clamp(skin_color_count,0,16);
+ for (int i=0; i<16; i++) {
+  if (i >= count) { break; }
+  if (all(lessThan(abs(linear_color - skin_src_colors[i].rgb),vec3(1.0/255.0)))) {
+   return skin_linear_to_srgb(skin_dst_colors[i].rgb);
+  }
+ }
+ return raw_srgb;
+}
+
+
+#ifdef EQUIPMENT_WEAPON_STAGE
+// 保留源底原点角色帧、先旋转再镜像以及严格 alpha 门槛。
+bool sample_weapon(vec2 uv_top, sampler2D weapon_map, vec4 rect, vec4 anchor,
+ vec2 rotation, bool flip_x, bool enabled, out vec4 value) {
+ value = vec4(0.0);
+ if (!enabled) { return false; }
+ vec2 extent = char_frame_rect.zw - char_frame_rect.xy;
+ if (extent.x <= 0.0001 || extent.y <= 0.0001) { return false; }
+ vec2 frame_uv = (vec2(uv_top.x,1.0-uv_top.y) - char_frame_rect.xy) / extent;
+ if (any(lessThan(frame_uv,vec2(0.0))) || any(greaterThan(frame_uv,vec2(1.0)))) { return false; }
+ vec2 offset = frame_uv - anchor.xy;
+ vec2 rotated = vec2(offset.x*rotation.x-offset.y*rotation.y,offset.x*rotation.y+offset.y*rotation.x);
+ if (flip_x) { rotated.x = -rotated.x; }
+ vec2 local_uv = anchor.zw + rotated;
+ if (any(lessThan(local_uv,vec2(0.0))) || any(greaterThan(local_uv,vec2(1.0)))) { return false; }
+ vec4 pixel = texture(weapon_map,equip_uv(local_uv,rect));
+ if (pixel.a <= 0.5) { return false; }
+ value = pixel;
+ return true;
+}
+void apply_weapon_fill(vec2 uv, vec4 body, inout vec4 value, inout int source_id) {
+ if (!weapon_fill_enabled) { return; }
+ vec4 w0;
+ vec4 w1;
+ bool has0 = sample_weapon(uv,weapon0_map,weapon0_rect,weapon0_anchor_frame_uv,weapon0_rot_cos_sin,weapon0_flip_x,weapon0_enabled,w0);
+ bool has1 = sample_weapon(uv,weapon1_map,weapon1_rect,weapon1_anchor_frame_uv,weapon1_rot_cos_sin,weapon1_flip_x,weapon1_enabled,w1);
+ float char_alpha = value.a;
+ if (has0 && weapon0_depth_mode < 0.5) {
+  if (char_alpha <= 0.5) { value.rgb = w0.rgb; source_id = 7; }
+  value.a = max(value.a,w0.a);
+ }
+ if (has1 && weapon1_depth_mode < 0.5) {
+  if (char_alpha <= 0.5) { value.rgb = w1.rgb; source_id = 8; }
+  value.a = max(value.a,w1.a);
+ }
+ bool hand = part(body.b,0.4) || part(body.b,0.5);
+ if (has1 && weapon1_depth_mode > 0.5 && !(hand && weapon1_hand_in_front > 0.5)) {
+  value.rgb = w1.rgb; value.a = max(value.a,w1.a); source_id = 8;
+ }
+ if (has0 && weapon0_depth_mode > 0.5 && !(hand && weapon0_hand_in_front > 0.5)) {
+  value.rgb = w0.rgb; value.a = max(value.a,w0.a); source_id = 7;
+ }
+ // 源第二次背包采样不检查部位、数据图 alpha 或人物覆盖。
+ if (body_in_front) {
+  float coverage = value.a;
+  bool wrote = write_bag(body.rg,value,coverage,source_id);
+  value.a = coverage;
+ }
+}
+
+#endif
+
+void fragment() {
+ vec4 base = texture(main_map,UV);
+ vec4 body = texture(body_map,UV);
+ vec4 head = texture(head_map,UV);
+ vec4 value = base;
+ float body_coverage = 0.0;
+ float head_coverage = 0.0;
+ int body_source = 0;
+ int head_source = 0;
+ if (body_in_front) {
+  apply_head(body,head,value,head_coverage,head_source);
+  apply_body(body,head,base.a,value,body_coverage,body_source);
+ } else {
+  apply_body(body,head,base.a,value,body_coverage,body_source);
+  apply_head(body,head,value,head_coverage,head_source);
+ }
+ // 来源身份独立于 RGB；同色装备不能落回主体肤色。
+ int source_id = 0;
+ if (body_in_front) {
+  source_id = body_coverage > 0.5 ? body_source : (head_coverage > 0.5 ? head_source : 0);
+ } else {
+  source_id = head_coverage > 0.5 ? head_source : (body_coverage > 0.5 ? body_source : 0);
+ }
+ if (source_id == 0 && base.a > 0.5) { source_id = 1; }
+ value.rgb = apply_skin_palette(value.rgb,value.a,source_id);
+ // 独立 charAlpha 先合成本体覆盖，再按原顺序写武器。
+ value.a = max(value.a,max(body_coverage,head_coverage));
+#ifdef EQUIPMENT_WEAPON_STAGE
+ apply_weapon_fill(UV,body,value,source_id);
+#endif
+ COLOR = value;
+}
