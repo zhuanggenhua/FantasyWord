@@ -42,6 +42,10 @@ func advance_movement(fixed_delta: float, ramp_direction: Callable = Callable())
 	execution.handle_push(fixed_delta) # 原 FixedUpdate 顺序：正常移动后才执行推力。
 
 
+func has_active_movement_intent() -> bool:
+	return execution != null and execution.has_active_movement_intent()
+
+
 func get_movement_position() -> Vector2:
 	return Terrain.to_physics(global_position)
 

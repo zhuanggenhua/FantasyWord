@@ -39,6 +39,12 @@ func has_move_order() -> bool:
 	return _result != null
 
 
+func has_active_movement_intent() -> bool:
+	var idle := PackedFloat32Array([_filter._idle])[0]
+	return _direction.length_squared() > PackedFloat32Array([idle * idle])[0] or has_move_order() \
+		or is_pushed() or _last_successful_movement.length_squared() > PackedFloat32Array([0.0001])[0]
+
+
 func get_last_successful_movement() -> Vector2:
 	return _last_successful_movement
 
