@@ -1,6 +1,6 @@
 extends RefCounted
 ## 锁定 31629d5 EquipmentRenderer 的动作数据选择、精灵坐标与 Refresh 连接。
-## 只接已解析的实际动作键。原材质、槽位、武器、头部表现仍由调用方拥有。
+## 支持已解析动作键及源动作 owner 的显式采样。原材质、槽位、武器、头部表现仍由调用方拥有。
 const Cursor = preload("res://game_core/presentation/equipment_frame_cursor.gd")
 const Refresh = preload("res://game_core/presentation/equipment_refresh_order.gd")
 const BODY_FALLBACKS := {
@@ -16,6 +16,71 @@ var original_sprite_direct := false
 var hooks: Dictionary = {}
 var configs: Array = []
 var slots: Dictionary = {}
+
+# Animator 描述由调用方提供，顺序必须保留源 parameters 顺序；不是 body 数据键集合。
+var animation_context_override_key := ""
+var animator_present := false
+var animator_parameters: Array = [] # {name:String,type:"bool"}；其它类型不参与
+var animator_bool_values: Dictionary = {}
+var animation_database_keys: Array = [] # AnimationTypeDatabase 的非空条目 name
+var _valid_anim_params: Array = []
+var _anim_params_cached := false
+var _next_sample_sync_pending := false
+
+func invalidate_animation_owner_cache() -> void:
+	# 对应源 SetFrameData 清空参数缓存；不代替完整帧数据切换/刷新职责。
+	_valid_anim_params.clear()
+	_anim_params_cached = false
+
+func sync_animation_owner(code_key: String) -> void:
+	if frame_data == null:
+		return
+	if not animation_context_override_key.strip_edges().is_empty():
+		apply_animation_key(animation_context_override_key)
+		return
+	if not code_key.strip_edges().is_empty():
+		apply_animation_key(code_key)
+		return
+	if not animator_present:
+		return
+	if not _anim_params_cached:
+		for parameter in animator_parameters:
+			if parameter.get("type") == "bool" and parameter.get("name") in animation_database_keys:
+				_valid_anim_params.append(parameter.name)
+		_anim_params_cached = true
+	for key in _valid_anim_params:
+		if animator_bool_values.get(key, false):
+			apply_animation_key(key)
+			return
+	apply_animation_key("Idle")
+
+func late_sync_from_owner(code_key: String, sprite: Texture2D) -> void:
+	if original_sprite_direct:
+		hooks.apply_original_material.call()
+		return
+	sync_animation_owner(code_key)
+	cursor.late_sync(sprite)
+
+func sync_current_sprite_from_owner(code_key: String, sprite: Texture2D) -> void:
+	# 原显式入口在直显模式也会读动作；空 Sprite 则先 Refresh，不读动作。
+	if sprite != null:
+		sync_animation_owner(code_key)
+	cursor.sync_current_sprite(sprite)
+
+func request_sync_after_next_sample(active_and_enabled: bool) -> bool:
+	# RefCounted 不拥有 Animator 时钟；调用方在下一帧完成采样后消费一次。
+	# 重复请求替代未执行请求，不排多个刷新；禁用时拒绝新增请求。
+	if not active_and_enabled:
+		return false
+	_next_sample_sync_pending = true
+	return true
+
+func sync_after_next_sample(code_key: String, sprite: Texture2D) -> bool:
+	if not _next_sample_sync_pending:
+		return false
+	sync_current_sprite_from_owner(code_key, sprite)
+	_next_sample_sync_pending = false
+	return true
 
 func _init() -> void:
 	cursor.refresh_requested.connect(refresh)
