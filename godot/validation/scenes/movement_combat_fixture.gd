@@ -21,7 +21,7 @@ var _created_actors := 0
 class MovingActor extends ChargedFixture.Actor:
 	var movement_allowed: Callable
 	var is_controlled_actor := false
-	func can_move(): return not movement_allowed.is_valid() or movement_allowed.call()
+	func can_move(): return super.can_move() and (not movement_allowed.is_valid() or movement_allowed.call())
 	func calculate_move_speed(): return 4.0 if is_controlled_actor else 0.0
 	func update_facing_from_intent(value: Vector2):
 		# 原基础预制体MovementBased=0，idleThreshold=.05。

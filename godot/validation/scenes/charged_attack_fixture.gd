@@ -8,6 +8,7 @@ const Clock = preload("res://game_core/combat/attack_hit_frame.gd")
 const Body = preload("res://game_core/movement/native_motion_body.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Step = preload("res://game_core/movement/source_fixed_step.gd")
+const DamageLifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
 
 @export var automatic_clock := true
 var timeline: RefCounted
@@ -20,6 +21,8 @@ var motion_enabled := true
 var _label: Label
 
 class Actor extends Node2D:
+	signal action_interrupt_requested
+	signal death_marked
 	var stats: Dictionary
 	var health: int
 	var max_health: int
@@ -27,8 +30,11 @@ class Actor extends Node2D:
 	var body: AnimatableBody2D
 	var callbacks: Array = []
 	var push_requests := 0
+	var lifecycle := DamageLifecycle.new()
+	var lifecycle_events: Array = []
+	var marked_destroyed := false
 	func source_position() -> Vector2: return body.get_movement_position()
-	func can_move(): return true
+	func can_move(): return not marked_destroyed
 	func calculate_move_speed(): return 0.0
 	func calculate_speed_multiplier(): return 1.0
 	func update_movement_animation(_value): pass
@@ -67,11 +73,28 @@ class Actor extends Node2D:
 			"provoke": func(_source): callbacks.append("provoke"),
 			"has_formal_stats": func(): return true,
 			"current_health": func(): return health,
-			"prepare": func(_source,_input): callbacks.append("prepare"),
+			"prepare": func(_source,input):
+				callbacks.append("prepare")
+				lifecycle.on_prepare_damage(input.silent),
 			"apply_current_health_delta": func(delta, minimum, _maximum, _source):
+				var previous := health
 				health = maxi(minimum, health + delta)
+				# Source dead is derived immediately, independent of delayed death owner.
+				stats.dead = health == 0
+				lifecycle.on_current_health_changed(previous, health)
 				return health,
 			"complete": func(_source,_input,_before,_applied): callbacks.append("complete")}
+
+	func advance_damage_lifecycle() -> void:
+		lifecycle.tick_safe(func(): return health, func(): return marked_destroyed,
+			func():
+				lifecycle_events.append("interrupt")
+				action_interrupt_requested.emit(),
+			func():
+				marked_destroyed = true
+				body.reset_movement()
+				lifecycle_events.append("death")
+				death_marked.emit())
 
 func _ready() -> void:
 	attacker = _actor(Vector2.ZERO, 30, 10, 0)
@@ -131,6 +154,8 @@ func _apply(target: Actor, flat: int, scale: float) -> void:
 
 func _process(delta: float) -> void:
 	if automatic_clock: timeline.advance(delta)
+	for actor in [attacker, defender, outside]:
+		actor.advance_damage_lifecycle()
 	_label.text = "蓄力释放命中诊断：非正式 GAS / 美术场景\n仅执行已经允许激活后的 Timeline 20004 命中切片\n帧 %d | 目标 HP %d / %d | 命中帧次数 %d" % [timeline.frame,defender.health,defender.max_health,hit_count]
 	queue_redraw()
 	if "--verify-attack" in OS.get_cmdline_user_args() and hit_count > 0 and not timeline.playing:

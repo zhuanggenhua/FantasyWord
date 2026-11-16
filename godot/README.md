@@ -66,3 +66,5 @@ node .spec/tools/spec-lint.mjs
 - [蓄力释放诊断](validation/scenes/charged-attack.md)：已允许释放后的原 Timeline 20004、当前生命与真实击退；不含输入资格和蓄力状态机。
 - [技能槽按键蓄力诊断](validation/scenes/ability-slots.md)：以原槽位键按住，松手重新校验后触发蓄力攻击。
 - [移动与战斗联合诊断](validation/scenes/movement-combat.md)：同场景走入命中范围，1 键普攻或 Q/2 蓄力，核对命中和击退。
+- [致命伤害生命周期](deferred-damage-port.md)：同一实际子 Hitbox 命中后，先反映生命归零，后处理行动打断和死亡标记。
+- [NPC 目标生命周期](ai-target-port.md)：源目标识别与丢失逻辑，尚未接 Native NPC 和转向。
