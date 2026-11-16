@@ -31,6 +31,7 @@ static func create(main: Texture2D, body: Texture2D, head: Texture2D,
 			return {"ok":false,"reason":"启用的颜色层缺少作者颜色："+str(key)}
 	var material := ShaderMaterial.new()
 	material.shader = SUBSET
+	_reset_skin_palette(material)
 	material.set_shader_parameter("main_map",main)
 	material.set_shader_parameter("body_map",body)
 	material.set_shader_parameter("head_map",head)
@@ -48,3 +49,38 @@ static func create(main: Texture2D, body: Texture2D, head: Texture2D,
 	for key in COLORS:
 		if colors.get(key) is Color: material.set_shader_parameter(str(key)+"_color",colors[key])
 	return {"ok":true,"material":material}
+
+## 仅在调用方已确认贴图输入/输出域为当前非 HDR Compatibility 约定时启用。
+## 此处不检测或替换渲染器，也不推断 Unity 装备或作者颜色。
+const Palette = preload("res://gameplay/presentation/equipment_skin_palette.gd")
+const SKIN_DOMAIN_UNKNOWN := 0
+const SKIN_DOMAIN_RAW_SRGB := 1
+
+static func apply_skin_palette(material: ShaderMaterial, source: Variant, target: Variant,
+		color_domain: int = SKIN_DOMAIN_UNKNOWN) -> Dictionary:
+	if material == null or material.shader != SUBSET:
+		return {"ok":false,"enabled":false,"reason":"材质未使用本体合成着色器"}
+	# 沿用原 Refresh 的 fail-closed reset；未确认颜色域时绝不染色。
+	_reset_skin_palette(material)
+	var binding := Palette.bind_palette(source,target,true)
+	if not binding.ok or not binding.enabled:
+		return binding
+	if color_domain != SKIN_DOMAIN_RAW_SRGB:
+		return {"ok":false,"enabled":false,"reason":"主贴图采样与本体输出颜色域未确认"}
+	material.set_shader_parameter("skin_src_colors",_color_vectors(binding.source))
+	material.set_shader_parameter("skin_dst_colors",_color_vectors(binding.target))
+	material.set_shader_parameter("skin_color_domain",color_domain)
+	material.set_shader_parameter("skin_color_count",binding.count)
+	material.set_shader_parameter("skin_palette_enabled",true)
+	return binding
+
+static func _reset_skin_palette(material: ShaderMaterial) -> void:
+	material.set_shader_parameter("skin_palette_enabled",false)
+	material.set_shader_parameter("skin_color_count",0)
+	material.set_shader_parameter("skin_color_domain",SKIN_DOMAIN_UNKNOWN)
+
+static func _color_vectors(colors: PackedColorArray) -> PackedVector4Array:
+	var values := PackedVector4Array()
+	for color in colors:
+		values.append(Vector4(color.r,color.g,color.b,color.a))
+	return values
