@@ -74,3 +74,5 @@ node .spec/tools/spec-lint.mjs
 - [NPC 普攻命中诊断](validation/scenes/npc-attack.md)：原生自然选敌、转向、20001 和 Timeline 101 命中链。使用独立诊断身体，不代表原演员或受击动画、攻击后追击验收。
 - [Predictive Target 评分](ai-predictive-scoring-port.md)：原预测和按真实距离的限速加入 16 方向评分；仍未接动态世界结果。
 - [攻击后追击验收接口](post-attack-chase-port.md)：按原验证器保留 Dmg、恢复、目标和位移判据，等待原场景真实观察。
+- [战斗游走意图](ai-combat-wander-port.md)：移植原分支优先级、计时和随机输入顺序，尚未驱动真实 NPC。
+- [受击播放和自动恢复](docs/DAMAGE_ANIMATION_RESTORE.md)：Godot AnimationPlayer 具备原 Dmg 切换、重播和恢复时序；未接 SpriteResolver 和原角色画面。
