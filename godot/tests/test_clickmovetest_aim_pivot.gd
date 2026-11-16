@@ -15,6 +15,8 @@ class Owner extends RefCounted:
 		if v.length_squared() > 0.0025: state.set_look_at_direction(v.normalized())
 	func register_collision(_collider: Object) -> void: pass
 	func can_update_target_direction() -> bool: return allow_aim
+	func can_interact() -> bool: return true
+	func get_target_direction() -> Vector2: return state.get_target_direction()
 	func set_target_direction(v: Vector2) -> void: state.set_target_direction(v,allow_aim)
 	func reset_target_direction() -> void: state.reset_target_direction()
 class Player extends RefCounted:
@@ -24,6 +26,9 @@ class Player extends RefCounted:
 class MapEvents extends RefCounted:
 	signal map_loaded
 	signal map_unloaded
+class InteractionReceiver extends RefCounted:
+	var senders: Array = []
+	func on_interact(owner: Object) -> void: senders.append(owner)
 class ControlHost extends Node:
 	var local := true
 	var accepts := true
@@ -69,6 +74,18 @@ func pointer(world: Vector2) -> void:
 	var event := InputEventMouseMotion.new()
 	event.position = root.get_canvas_transform()*world
 	root.push_input(event,true)
+func interaction_area(scene: Node, world_position: Vector2) -> Area2D:
+	var area := Area2D.new()
+	area.collision_layer = 64
+	area.collision_mask = 0
+	var shape := CollisionShape2D.new()
+	var circle := CircleShape2D.new()
+	circle.radius = 0.04
+	shape.shape = circle
+	area.add_child(shape)
+	scene.add_child(area)
+	area.global_position = world_position
+	return area
 func run() -> void:
 	root.size = Vector2i(800,600)
 	var scene = Entry.instantiate()
@@ -148,6 +165,40 @@ func run() -> void:
 	check(control.resets == 2,"input disable resets immediately, disabled frames do not repeat")
 	scene.stop_human_aim()
 	check(control.resets == 3,"stop follows source explicit disable reset")
+	# The real entry drives the source target refresh before updating idle aim.
+	control.local = true; control.capable = true; control.accepts = true
+	check(not scene.start_human_interaction(owner,func(): pass),"interaction cannot bind without the existing actor/aim owner")
+	check(scene.start_human_aim(owner,control),"restart controlled aim")
+	var audio := [0]
+	check(not scene.start_human_interaction(foreign,func(): pass),"reject a different interaction owner")
+	if not scene.start_human_interaction(owner,func(): audio[0]+=1):
+		printerr("Could not bind authored interaction pivot.");scene.free();control.free();quit(1);return
+	var interaction = scene.human_interaction
+	check(interaction.pivot == scene.aim_pivot and interaction.resolve_target() == null,
+		"same authored interaction pivot; no fake targets registered by entry")
+	var center: Vector2 = scene.aim_pivot.global_position
+	var left := interaction_area(scene, center + Vector2(-0.4,0))
+	var right := interaction_area(scene, center + Vector2(0.5,0))
+	var receiver := InteractionReceiver.new()
+	check(interaction.register_collider(left,left,Vector2.ZERO)
+		and interaction.register_collider(right,right,Vector2.ZERO)
+		and interaction.register_receivers(left,[receiver],func():return true),"explicit test targets/receiver only")
+	await physics_frame
+	await physics_frame
+	owner.set_target_direction(Vector2.RIGHT)
+	pointer(center + Vector2(-0.3,0))
+	var legacy_refresh_count := control.refreshes
+	scene._update_human_aim()
+	check(interaction.current_target == right and owner.get_target_direction().is_equal_approx(Vector2.LEFT)
+		and control.refreshes == legacy_refresh_count,"entry stores old-facing hint before aiming left, with no duplicate host refresh")
+	check(interaction.try_interact() and interaction.current_target == right and interaction.interacted_this_frame
+		and receiver.senders == [owner] and audio[0] == 1,"live interaction re-resolves but preserves the cached UI target")
+	scene._update_human_aim()
+	check(interaction.current_target == left and not interaction.interacted_this_frame,"next entry refresh advances hint and clears latch")
+	scene.notify_human_aim_input_disabled()
+	check(interaction.current_target == null and not interaction.interacted_this_frame,"source owner disable clears preview and latch")
+	scene.stop_human_aim()
+	check(scene.human_interaction == null,"explicit stop detaches resolver from the live entry")
 	scene.free();control.free()
 	if failed == 0: print("PASS authored ClickMoveTest aim pivot: %d checks" % n)
 	quit(0 if failed == 0 else 1)

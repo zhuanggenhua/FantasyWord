@@ -7,6 +7,7 @@ const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
+const Interaction = preload("res://game_core/interaction/character_button_activation.gd")
 const Aim = preload("res://game_core/movement/idle_pointer_aim.gd")
 const Step = preload("res://game_core/movement/source_fixed_step.gd")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
@@ -26,6 +27,7 @@ var command_count := 0
 var last_result: Variant
 var click_observation := Observation.new()
 var keyboard := Keyboard.new()
+var human_interaction: RefCounted
 var _human_aim: RefCounted
 var _aim_control: Object
 var _aim_was_local := false
@@ -203,6 +205,16 @@ func start_human_aim(owner: Object, control: Object) -> bool:
 	_human_aim = candidate
 	return true
 
+## 可选：把原 CharacterButtonActivation 绑定到同一个已启动的权威角色和 Static Pivot。
+## 不登记未从原场景迁移的目标，也不在这里接管按键、角色命令或音频系统。
+func start_human_interaction(owner: Object, audio_request: Callable) -> bool:
+	if human_interaction != null or _human_aim == null or _human_aim.target_owner != owner:
+		return false
+	var candidate := Interaction.new()
+	if not candidate.configure(owner,aim_pivot,audio_request): return false
+	human_interaction = candidate
+	return true
+
 func _update_human_aim() -> void:
 	if _human_aim == null or not is_instance_valid(_aim_control) or not _aim_control.accepts_player_input(actor):
 		return
@@ -210,7 +222,8 @@ func _update_human_aim() -> void:
 		if _aim_was_local: _reset_human_aim_control()
 		return
 	_aim_was_local = true
-	_aim_control.refresh_interaction_target(actor)
+	if human_interaction != null: human_interaction.refresh_current_target()
+	else: _aim_control.refresh_interaction_target(actor)
 	# Only ask for an input sample when the source target/idle gates allow it.
 	var owner: Object = _human_aim.target_owner
 	if not is_instance_valid(owner) or not owner.can_update_target_direction(): return
@@ -224,7 +237,8 @@ func _reset_human_aim_control() -> void:
 	var owner: Object = _human_aim.target_owner
 	if is_instance_valid(owner): owner.reset_target_direction()
 	if is_instance_valid(actor): actor.reset_movement()
-	if is_instance_valid(_aim_control): _aim_control.reset_interaction_target(actor)
+	if human_interaction != null: human_interaction.reset_state()
+	elif is_instance_valid(_aim_control): _aim_control.reset_interaction_target(actor)
 	_aim_was_local = false
 
 ## 宿主应用 SetAcceptsPlayerInput(false) 时调用；保留绑定供以后重新启用。
@@ -234,5 +248,6 @@ func notify_human_aim_input_disabled() -> void:
 func stop_human_aim() -> void:
 	if _human_aim == null: return
 	_reset_human_aim_control()
+	human_interaction = null
 	_human_aim = null
 	_aim_control = null
