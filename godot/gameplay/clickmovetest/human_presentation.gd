@@ -1,5 +1,5 @@
 extends Node2D
-## 原 Human Idle/Walk 的显式私有图集入口；不替代换装材质、影子或其它动作。
+## 原 Human Idle/Walk 与可选 Dmg 的显式私有图集入口；不补造受伤事件。
 const Playback = preload("res://game_core/presentation/directional_sprite_playback.gd")
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
@@ -16,8 +16,8 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 		return _fail("入口须先进入场景树且只能配置一次。")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE or not data.get("textures") is Dictionary or not data.get("actions") is Dictionary:
 		return _fail("缺少锁定来源的私有动画合同。")
-	if data.actions.size() != 2 or not data.actions.has_all(["Idle", "Walk"]):
-		return _fail("本入口只接入已核实的 Idle/Walk。")
+	if data.actions.size() not in [2,3] or not data.actions.has_all(["Idle", "Walk"]) or (data.actions.size() == 3 and not data.actions.has("Dmg")):
+		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg。")
 	var loaded := {}
 	for name in data.textures:
 		if not name is String or name != name.get_file() or not name.ends_with(".png"):
@@ -33,7 +33,7 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 			return _fail("原纹理尺寸不一致。")
 		loaded[name] = ImageTexture.create_from_image(image)
 	var actions := {}
-	for action in ["Idle","Walk"]:
+	for action in data.actions:
 		if not data.actions[action] is Dictionary: return _fail("动作合同必须为字典。")
 		var record: Dictionary = data.actions[action]
 		if not record.get("directions") is Array or record.directions.size() != 4:
@@ -77,9 +77,14 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 	sprite.scale=Vector2.ONE/8.0
 	driver=Driver.new(); add_child(driver)
 	driver.animator=animator
-	driver.action_keys.assign(["Idle","Walk"])
+	driver.action_keys.assign(data.actions.keys())
 	_animation_contract = data.duplicate(true)
 	return driver.try_play_animation("Idle")
+
+## 仅接受外部明确裁决的表现请求；不在此伪造伤害、生命值或输入事件。
+func try_play_damage_animation() -> bool:
+	if driver == null: return false
+	return driver.try_play_damage_animation()
 
 ## 输入为原 owner 的实际动画位移量，而非按键意图。
 func set_movement(source_movement: Vector2) -> void:

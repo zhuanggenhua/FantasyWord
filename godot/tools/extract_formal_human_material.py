@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the private, authored Human Idle/Walk material inputs without copying assets."""
+"""核实私有 Human Idle/Walk（可显式附加 Dmg）原材质输入，不复制原始资产。"""
 import argparse
 import hashlib
 import json
@@ -17,8 +17,8 @@ BASE_PREFAB = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 SCENE = "Assets/Scenes/ClickMoveTest.unity"
 PREFAB = "Assets/Prefabs/Entities/Characters/Heroes/玩家角色.prefab"
 
-def extract(repo, human, generated_uv, appearance_dir):
-    animation = animations(repo, human)
+def extract(repo, human, generated_uv, appearance_dir, include_damage=False):
+    animation = animations(repo, human, include_damage)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab = read(repo, PREFAB).decode()
@@ -69,7 +69,7 @@ def extract(repo, human, generated_uv, appearance_dir):
         return size
 
     actions = {}
-    for name in ("Idle", "Walk"):
+    for name in animation["actions"]:
         main = f"Minifantasy_CreaturesHuman{name}.png"
         main_guid = parse((human / (main + ".meta")).read_bytes())["guid"]
         records = [block for block in authored if f"spritesheet: {{fileID: 2800000, guid: {main_guid}," in block]
@@ -137,7 +137,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     for name in ("repo", "human", "generated-uv", "appearance-dir", "output"):
         p.add_argument("--" + name, type=Path, required=True)
+    p.add_argument("--include-damage", action="store_true", help="同时核实 Dmg 的原帧数据与生成 UV")
     a = p.parse_args()
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir)
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
-    print("Verified authored Human Idle/Walk material inputs.")
+    print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))

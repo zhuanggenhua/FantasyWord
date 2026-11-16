@@ -1,10 +1,9 @@
 extends RefCounted
-## Formal Human Idle/Walk with source base appearance and empty equipment loadout.
+## 原 Human 的已核实动作共用基础外观材质；装备栏保持原空配置。
 const BaseAppearance = preload("res://gameplay/presentation/equipment_base_appearance.gd")
 const SubsetMaterial = preload("res://gameplay/presentation/equipment_subset_material.gd")
 const FrameCursor = preload("res://game_core/presentation/equipment_frame_cursor.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
-const ACTIONS := ["Idle","Walk"]
 const DIRECTIONS := ["SE","SW","NE","NW"]
 const LAYERS := ["hair","beard","eye_decoration"]
 var material: ShaderMaterial
@@ -24,12 +23,12 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 		return _fail("Missing locked Human material contract.")
 	for field in ["textures","actions","appearance"]:
 		if not data.get(field) is Dictionary: return _fail("Incomplete Human material contract.")
-	if data.actions.size() != 2 or not data.actions.has_all(ACTIONS):
-		return _fail("Only the authored Human Idle/Walk actions are admitted.")
+	if data.actions.size() != animation.actions.size() or not data.actions.has_all(animation.actions.keys()):
+		return _fail("材质必须完整覆盖同一展示入口的全部已核实动作。")
 	var actions := {}
 	var look := {}
 	var cache := {}
-	for action in ACTIONS:
+	for action in animation.actions:
 		var spec = data.actions[action]
 		if not spec is Dictionary or not spec.get("frames") is Array:
 			return _fail("Incomplete Human action/material frames.")

@@ -22,4 +22,16 @@ GODOT --headless --path godot --script res://tools/check_formal_human_animation.
 
 ## 尚未验收
 
-共享控制器其余 16 状态、Human 颜色/UV 换装材质、眼睛/头发/胡须装备层、阴影，以及正式 PlayerSystem/GAS owner 到完整角色表现生命周期均不由本切片宣称完成。此入口只供明确选择的源图样本，默认场景不会展示一个缺层角色冒充完整迁移。Unity/Godot 实机相同状态截图、渲染混合/排序等仍需另行对照。
+完整共享控制器状态、动态换装与阴影，以及正式 PlayerSystem/GAS owner 到完整角色表现生命周期均不由本切片宣称完成。基础外观接入记录见既有材质文档；Dmg 增量见下节。此入口只供明确选择的源图样本，默认场景不会展示一个缺层角色冒充完整迁移。Unity/Godot 实机相同状态截图、渲染混合/排序等仍需另行对照。
+
+## 增量：显式 Dmg 表现与基础材质
+
+提取器默认保持原两动作合同；动画和材质提取命令同时增加 `--include-damage` 后，会额外逐字核对原 Dmg 控制器引用、四向库、PNG/meta、FrameData 和 GeneratedUV/Human 的 Body/Head 图。源 Dmg 是 4 帧、8Hz、0.5 秒、非循环；末尾 0.5 秒关键帧重复标签 3，控制器速度 1、无转换。不得用同名 Art UV 代替帧数据引用。
+
+返回的 `HumanPresentation.try_play_damage_animation()` 接受显式表现请求；不产生按键、碰撞伤害、生命值或 GAS 事件。缺少 Dmg 的旧合同返回失败而不生成占位。三动作展示必须绑定覆盖全部三动作的基础材质合同；不能沿用两动作 UV。
+
+恢复仍由既有 CharacterActionAnimatorDriver 独占：请求时默认恢复 Idle；之后原移动 owner 的 SetMovement 可以更新为 Walk/Idle，但不抢占受击。再次受击重播首帧并延期；转向只换方向库；显式新动作取消旧期限；动作锁保持原“请求成功但不切换”语义；非运行预览不自动恢复。未另建计时器。
+
+`tests/test_formal_human_damage.gd` 使用真实 ClickMoveTest 展示入口验证这些分支、四向 16 帧、材质持续复用与 Dmg 独有 UV。默认是合成合同测试；传入五个参数（动画 JSON、材质 JSON、原 PNG 目录、生成 UV 目录、外观目录）可运行私有原图逐像素裁片检查。测试不代表 GPU 或 Unity/Godot 截图一致。
+
+本节只新增原 Dmg 图集/时序/基础外观的显式展示请求，不宣称正式伤害 owner 到表现已接通。完整死亡、打断/GAS、装备/坐骑、阴影和跨引擎画面验收仍未完成。
