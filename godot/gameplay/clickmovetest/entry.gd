@@ -14,6 +14,7 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var actor_shape: CollisionShape2D
 @export var visual_body: Node2D
 @export var camera: Camera2D
+var human_presentation: Node2D
 var movement: RefCounted
 var route: RefCounted
 var binding: RefCounted
@@ -147,3 +148,16 @@ static func valid_rules(data: Dictionary) -> bool:
 
 static func _integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value))
+
+## 可选正式 Human 图集切片；逻辑入口不默默生成素材或启用占位角色。
+## 调用者仍须把权威 owner 的实际位移/身体朝向通知接到返回节点。
+func start_human_presentation(data: Dictionary, texture_directory: String) -> Node2D:
+	if human_presentation != null or not is_instance_valid(visual_body) or not visual_body.is_inside_tree(): return null
+	var presentation = preload("res://gameplay/clickmovetest/human_presentation.gd").new()
+	visual_body.add_child(presentation)
+	if not presentation.configure(data, texture_directory):
+		printerr(presentation.last_error)
+		presentation.free()
+		return null
+	human_presentation = presentation
+	return presentation
