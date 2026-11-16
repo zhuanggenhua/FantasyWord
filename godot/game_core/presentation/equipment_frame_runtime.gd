@@ -27,6 +27,38 @@ var _valid_anim_params: Array = []
 var _anim_params_cached := false
 var _next_sample_sync_pending := false
 
+# 显式传入调用方当前动作和 Sprite；不接管 Animator、坐骑时钟或动作真相。
+func set_animation_context_override(animation_key: Variant, code_key: String, sprite: Texture2D, auto_refresh: bool = true) -> void:
+	assert(animation_key == null or animation_key is String, "动作覆盖仅接受 String 或 null")
+	var normalized := "" if animation_key == null else _trim_dotnet_whitespace(animation_key)
+	if animation_context_override_key == normalized:
+		return
+	animation_context_override_key = normalized
+	sync_animation_owner(code_key)
+	if auto_refresh:
+		sync_current_sprite_from_owner(code_key, sprite)
+
+func clear_animation_context_override(code_key: String, sprite: Texture2D, auto_refresh: bool = true) -> void:
+	if animation_context_override_key.is_empty():
+		return
+	animation_context_override_key = ""
+	sync_animation_owner(code_key)
+	if auto_refresh:
+		sync_current_sprite_from_owner(code_key, sprite)
+
+static func _trim_dotnet_whitespace(value: String) -> String:
+	# 源 string.Trim 使用 Char.IsWhiteSpace；不能用 strip_edges 的 ASCII 控制字符范围代替。
+	var start := 0
+	var end := value.length()
+	while start < end and _is_dotnet_whitespace(value.unicode_at(start)):
+		start += 1
+	while end > start and _is_dotnet_whitespace(value.unicode_at(end - 1)):
+		end -= 1
+	return value.substr(start, end - start)
+
+static func _is_dotnet_whitespace(codepoint: int) -> bool:
+	return (codepoint >= 0x09 and codepoint <= 0x0d) or codepoint in [0x20, 0x85, 0xa0, 0x1680, 0x2028, 0x2029, 0x202f, 0x205f, 0x3000] or (codepoint >= 0x2000 and codepoint <= 0x200a)
+
 func invalidate_animation_owner_cache() -> void:
 	# 对应源 SetFrameData 清空参数缓存；不代替完整帧数据切换/刷新职责。
 	_valid_anim_params.clear()
@@ -35,10 +67,10 @@ func invalidate_animation_owner_cache() -> void:
 func sync_animation_owner(code_key: String) -> void:
 	if frame_data == null:
 		return
-	if not animation_context_override_key.strip_edges().is_empty():
+	if not _trim_dotnet_whitespace(animation_context_override_key).is_empty():
 		apply_animation_key(animation_context_override_key)
 		return
-	if not code_key.strip_edges().is_empty():
+	if not _trim_dotnet_whitespace(code_key).is_empty():
 		apply_animation_key(code_key)
 		return
 	if not animator_present:
@@ -103,7 +135,7 @@ func set_preview_direction(index: int, auto_refresh: bool = true) -> void:
 	cursor.set_preview_direction(index, auto_refresh)
 
 func apply_animation_key(requested_key: String) -> void:
-	if requested_key.strip_edges().is_empty() or frame_data == null:
+	if _trim_dotnet_whitespace(requested_key).is_empty() or frame_data == null:
 		return
 	var next: Dictionary = resolve_body_data(frame_data, requested_key)
 	var should_apply := requested_key != action_key or (not next.is_empty() and not is_same(next, cursor.current_animation))
