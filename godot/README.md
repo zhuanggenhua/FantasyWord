@@ -63,3 +63,4 @@ node .spec/tools/spec-lint.mjs
 本分支只新增 Godot 迁移代码、测试和说明。不重发项目原始第三方素材，也不将测试替身当成最终玩法。
 
 - [普通攻击命中诊断](validation/scenes/basic-attack.md)：原 Timeline 101 的命中帧、子 Hitbox、当前生命与禁推合同；不代表完整战斗。
+- [蓄力释放诊断](validation/scenes/charged-attack.md)：已允许释放后的原 Timeline 20004、当前生命与真实击退；不含输入资格和蓄力状态机。
