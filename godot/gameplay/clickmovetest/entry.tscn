@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://gameplay/clickmovetest/entry.gd" id="1"]
+[ext_resource type="Script" path="res://gameplay/clickmovetest/actor.gd" id="2"]
+[ext_resource type="Script" path="res://game_core/presentation/world_space_camera_follow.gd" id="3"]
+
+[sub_resource type="CapsuleShape2D" id="Capsule"]
+radius = 0.39
+height = 0.86
+
+[node name="点击移动启动切片" type="Node2D" node_paths=PackedStringArray("actor", "actor_shape", "visual_body", "camera")]
+script = ExtResource("1")
+actor = NodePath("玩家角色")
+actor_shape = NodePath("玩家角色/身体碰撞")
+visual_body = NodePath("玩家角色/表现Body")
+camera = NodePath("玩家相机")
+
+[node name="玩家角色" type="AnimatableBody2D" parent="."]
+collision_layer = 256
+collision_mask = 0
+script = ExtResource("2")
+
+[node name="身体碰撞" type="CollisionShape2D" parent="玩家角色"]
+position = Vector2(0, -0.42)
+shape = SubResource("Capsule")
+
+[node name="表现Body" type="Node2D" parent="玩家角色"]
+position = Vector2(0.75, 3.1)
+
+[node name="玩家相机" type="Camera2D" parent="."]
+position = Vector2(0.75, 3.1)
+script = ExtResource("3")

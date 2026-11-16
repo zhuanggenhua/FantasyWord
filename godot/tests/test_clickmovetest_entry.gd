@@ -1,0 +1,25 @@
+extends SceneTree
+const Entry = preload("res://gameplay/clickmovetest/entry.gd")
+const Scene = preload("res://gameplay/clickmovetest/entry.tscn")
+func _initialize() -> void: call_deferred("_run")
+func _run() -> void:
+	var host := Scene.instantiate()
+	root.add_child(host)
+	await process_frame
+	assert(host.movement == null and host.route == null, "缺依赖不自动生成地图或启用移动")
+	assert(host.actor.position == Vector2.ZERO)
+	assert(host.visual_body.position == Vector2(0.75, 3.1))
+	assert(host.camera.position == Vector2(0.75, 3.1))
+	assert(host.actor_shape.get_parent() == host.actor)
+	assert(host.actor_shape.position == Vector2(0, -0.42))
+	assert(is_equal_approx(host.actor_shape.shape.radius, 0.39))
+	assert(is_equal_approx(host.actor_shape.shape.height, 0.86))
+	assert(not host.start_logic(null, {}, Callable(), Callable(), null, Callable()))
+	assert(host.actor.execution == null and host.movement == null)
+	assert(not Entry.valid_rules({}))
+	var malformed := {"schema": 1, "source_commit": Entry.SOURCE, "rule_tilemap": 1361196487, "nearest_radius": 2, "rows": []}
+	malformed.rows.resize(900)
+	assert(not Entry.valid_rules(malformed), "畸形行不能进入导航断言")
+	host.free()
+	print("PASS ClickMoveTest 序列化启动切片与缺依赖门禁；私有地图集成另跑专用入口")
+	quit(0)
