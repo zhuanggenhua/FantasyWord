@@ -1,4 +1,4 @@
-// 原 EquipmentUV 的本体合成及显式武器填充阶段；不替代阴影、描边。
+// 原 EquipmentUV 的本体合成及显式武器、轮廓、阴影子集；不含最终顶点乘色。
 // UV 必须是整张角色图的左上原点坐标；数据贴图禁止颜色空间转换。
 uniform sampler2D main_map : filter_nearest, repeat_disable;
 uniform sampler2D body_map : filter_nearest, repeat_disable;
@@ -337,6 +337,68 @@ void apply_procedural_outline(vec2 uv, int source_id, inout vec4 value) {
  }
 }
 
+// 阴影独立取原始投影覆盖，不使用已绘制轮廓、背包、眼饰或隐藏武器轮廓旗标。
+uniform bool shadow_stage_enabled = false;
+uniform float shadow_enabled = 0.0;
+uniform float shadow_mode = 0.0;
+uniform float shadow_left_x = 0.0;
+uniform float shadow_right_x = 0.0;
+uniform float shadow_center_x = 0.0;
+uniform vec4 shadow_color = vec4(0.0);
+float shadow_caster(vec2 f) {
+ vec2 uv = outline_sheet(f);
+ float alpha = outline_body(uv);
+ vec4 w0 = vec4(0.0); vec4 w1 = vec4(0.0);
+ if (weapon0_is_sequence < 0.5) {
+  bool sampled0 = sample_weapon(uv,weapon0_map,weapon0_rect,weapon0_anchor_frame_uv,weapon0_rot_cos_sin,weapon0_flip_x,weapon0_enabled,w0);
+  alpha = max(alpha,w0.a);
+ }
+ if (weapon1_is_sequence < 0.5) {
+  bool sampled1 = sample_weapon(uv,weapon1_map,weapon1_rect,weapon1_anchor_frame_uv,weapon1_rot_cos_sin,weapon1_flip_x,weapon1_enabled,w1);
+  alpha = max(alpha,w1.a);
+ }
+ return alpha;
+}
+float shadow_ground_probe(float x) {
+ float alpha = 0.0;
+ float step_x = 1.0/outline_frame_size.x;
+ // 原顺序为中心、右、左；只裁每次 X，不裁 Y，也不提前裁三点中心。
+ for (int i=0;i<3;i++) {
+  float tap = i == 0 ? x : (i == 1 ? x+step_x : x-step_x);
+  if (tap >= 0.0 && tap <= 1.0) { alpha = max(alpha,shadow_caster(vec2(tap,outline_base_y))); }
+ }
+ return alpha;
+}
+bool shadow_mask(vec2 f) {
+ vec2 pixel = vec2(1.0)/outline_frame_size;
+ float dy_uv = f.y-outline_base_y;
+ if (shadow_mode < 0.5) {
+  if (dy_uv > 0.5*pixel.y || dy_uv < -1.5*pixel.y) { return false; }
+  float alpha = 0.0;
+  if (dy_uv < -0.5*pixel.y) { alpha = shadow_ground_probe(f.x); }
+  else { alpha = max(shadow_ground_probe(f.x-pixel.x),shadow_ground_probe(f.x+pixel.x)); }
+  return alpha > 0.001;
+ }
+ if (shadow_mode < 1.5) {
+  return !(f.x < shadow_left_x-pixel.x || f.x > shadow_right_x+pixel.x || f.y < outline_base_y-pixel.y || f.y > outline_base_y+pixel.y);
+ }
+ float dx = (f.x-shadow_center_x)/pixel.x;
+ float dy = dy_uv/pixel.y;
+ if (shadow_mode < 2.5) {
+  bool in_rect = dx >= -1.0 && dx <= 2.0 && dy >= -1.0 && dy <= 1.0;
+  bool in_corner = (dx < -0.5 || dx > 1.5) && (dy < -0.5 || dy > 0.5);
+  return in_rect && !in_corner;
+ }
+ return (abs(dx) <= 0.5 && abs(dy) <= 0.5)
+  || (abs(dx) <= 0.5 && (abs(dy-1.0) <= 0.5 || abs(dy+1.0) <= 0.5))
+  || (abs(dy) <= 0.5 && (abs(dx-1.0) <= 0.5 || abs(dx+1.0) <= 0.5));
+}
+void apply_procedural_shadow(vec2 uv, inout vec4 value) {
+ if (!shadow_stage_enabled || value.a > 0.5 || shadow_enabled <= 0.5) { return; }
+ vec2 f = (vec2(uv.x,1.0-uv.y)-outline_frame_rect.xy)/(outline_frame_rect.zw-outline_frame_rect.xy);
+ if (shadow_mask(f) && shadow_color.a > 0.0) { value = shadow_color; }
+}
+
 #endif
 
 void fragment() {
@@ -369,6 +431,7 @@ void fragment() {
 #ifdef EQUIPMENT_WEAPON_STAGE
  apply_weapon_fill(UV,body,value,source_id);
  apply_procedural_outline(UV,source_id,value);
+ apply_procedural_shadow(UV,value);
 #endif
  COLOR = value;
 }

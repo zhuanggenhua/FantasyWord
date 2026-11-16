@@ -200,6 +200,7 @@ static func apply_outline(material: ShaderMaterial, frame_rect: Rect2, frame_siz
 
 static func reset_outline(material: ShaderMaterial) -> void:
 	if material == null or material.shader != WEAPON_SUBSET: return
+	reset_shadow(material)
 	material.set_shader_parameter("outline_stage_enabled",false)
 	material.set_shader_parameter("outline_frame_rect",Vector4(0,0,1,1))
 	material.set_shader_parameter("outline_frame_size",Vector2.ONE)
@@ -211,3 +212,44 @@ static func reset_outline(material: ShaderMaterial) -> void:
 	for i in range(2):
 		for key in ["is_sequence","hide_outline_on_body"]:
 			material.set_shader_parameter("weapon"+str(i)+"_"+key,0.0)
+
+## params 必须是 CPU 阴影写入合并后的完整有效状态，不从当前材质猜历史。
+## 当前桥接要求原共享 _FrameSize/_ShadowBaseY 与同帧轮廓合同一致。
+static func apply_shadow(material: ShaderMaterial, frame_rect: Rect2,
+		params: Dictionary, enabled: float, color: Color) -> Dictionary:
+	if material == null or material.shader != WEAPON_SUBSET:
+		return {"ok":false,"reason":"阴影仅用于显式武器变体"}
+	reset_shadow(material)
+	if not _weapon_rect_valid(frame_rect) or not material.get_shader_parameter("weapon_fill_enabled") or not material.get_shader_parameter("outline_stage_enabled"):
+		return {"ok":false,"reason":"必须先明确绑定同帧填充与轮廓，轮廓请求可全零"}
+	var rect := _weapon_rect_vector(frame_rect)
+	if material.get_shader_parameter("char_frame_rect") != rect or material.get_shader_parameter("outline_frame_rect") != rect:
+		return {"ok":false,"reason":"阴影不能混用其它帧的武器或轮廓输入"}
+	if not is_finite(enabled) or not Vector4(color.r,color.g,color.b,color.a).is_finite():
+		return {"ok":false,"reason":"阴影开关与颜色必须有限"}
+	if not params.get("frame_size") is Vector2:
+		return {"ok":false,"reason":"必须显式提供已验证的阴影帧尺寸"}
+	var size: Vector2 = params.frame_size
+	if not size.is_finite() or size.x <= 0.0 or size.y <= 0.0:
+		return {"ok":false,"reason":"阴影帧尺寸必须有限且为正"}
+	for key in ["mode","base_y","left_x","right_x","center_x"]:
+		var value = params.get(key)
+		if not (value is float or value is int) or not is_finite(float(value)):
+			return {"ok":false,"reason":"缺少完整有限的阴影历史状态："+key}
+	# Unity 轮廓与阴影共用这两个数值，不能把两个阶段分别改成相似效果。
+	if size != material.get_shader_parameter("outline_frame_size") or float(params.base_y) != material.get_shader_parameter("outline_base_y"):
+		return {"ok":false,"reason":"阴影与轮廓的共享尺寸、基线不一致；此历史状态尚未接入"}
+	for key in ["mode","left_x","right_x","center_x"]:
+		material.set_shader_parameter("shadow_"+key,float(params[key]))
+	material.set_shader_parameter("shadow_enabled",enabled)
+	material.set_shader_parameter("shadow_color",Vector4(color.r,color.g,color.b,color.a))
+	material.set_shader_parameter("shadow_stage_enabled",true)
+	return {"ok":true}
+
+static func reset_shadow(material: ShaderMaterial) -> void:
+	if material == null or material.shader != WEAPON_SUBSET: return
+	material.set_shader_parameter("shadow_stage_enabled",false)
+	material.set_shader_parameter("shadow_enabled",0.0)
+	material.set_shader_parameter("shadow_color",Vector4.ZERO)
+	for key in ["mode","left_x","right_x","center_x"]:
+		material.set_shader_parameter("shadow_"+key,0.0)
