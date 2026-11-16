@@ -6,6 +6,13 @@ const Commands = preload("res://game_core/movement/movement_commands.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Follow = preload("res://game_core/presentation/world_space_camera_follow.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
+const BasicGate = preload("res://game_core/combat/basic_semi_auto_gate.gd")
+const PolygonQuery = preload("res://game_core/combat/polygon_hitbox_query.gd")
+const BASIC_POINTS = [Vector2(0.175,-0.25),Vector2(1.125,-0.25),Vector2(1.125,0.55),Vector2(0.175,0.55)]
+const BASIC_ABILITY := 20001
+var basic_gate: RefCounted
+var basic_timeline: RefCounted
+var basic_hit_count := 0
 var keyboard := Keyboard.new()
 var movement: RefCounted
 var camera: Camera2D
@@ -38,7 +45,11 @@ func _actor(source_position: Vector2, hp: int, attack: int, defense: int) -> Cha
 
 func _ready():
 	super._ready()
-	attacker.movement_allowed = func(): return not timeline.playing
+	equipped_slots[0] = BASIC_ABILITY # 原 ClickMoveTestGasBasicAttackValidator 赋予的槽位，不是自动生成装备。
+	basic_timeline = Clock.new(8,30,_basic_hit_frame)
+	basic_gate = BasicGate.new(_can_use_basic,_commit_basic)
+	basic_gate.sequence_stopped.connect(func(): basic_timeline.stop())
+	attacker.movement_allowed = func(): return not timeline.playing and not basic_timeline.playing
 	movement = Movement.new(attacker.body,0.05)
 	movement.set_movement_control_mode(Movement.Mode.CLICK_TO_MOVE)
 	# 父战斗诊断固定镜头不再生效，复用源Follow适配器。
@@ -67,7 +78,53 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 	return Commands.submit_single_character(kind,direction,point,attacker.body,true,
 		attacker.body,true,true,attacker.body,movement,null)
 
+func _dispatch_slot_edge(index: int, pressed: bool) -> void:
+	if index == 0:
+		if equipped_slots.get(0,0) != BASIC_ABILITY: return
+		if pressed:
+			if not interacted_this_frame: basic_gate.request_use()
+		else: basic_gate.release_use()
+		return
+	super._dispatch_slot_edge(index,pressed)
+
+func _can_use_basic() -> bool:
+	return equipped_slots.get(0,0) == BASIC_ABILITY and ability_eligible and not timeline.playing and not basic_timeline.playing
+
+func _commit_basic() -> bool:
+	if not _can_use_basic(): return false
+	basic_timeline.play()
+	return true
+
+func _can_use_charge() -> bool:
+	return super._can_use_charge() and (basic_timeline == null or not basic_timeline.playing)
+
+func _basic_hit_frame() -> void:
+	basic_hit_count += 1
+	var targets := PolygonQuery.query(get_world_2d(),attacker.source_position(),
+		attacker.facing,PackedVector2Array(BASIC_POINTS),128,attacker,
+		func(collider): return collider.get_meta("actor",null))
+	for target in targets:
+		_apply_basic(target,4,1.0)
+		var toward_attacker: Vector2 = attacker.source_position()-target.source_position()
+		var facing: Vector2 = target.facing
+		if facing.length_squared() <= 0.0001: facing = Vector2.RIGHT
+		if toward_attacker.length_squared()>0.0001 and facing.normalized().dot(toward_attacker.normalized())<=-0.35:
+			_apply_basic(target,3,0.0)
+
+func _apply_basic(target, flat: int, scale: float) -> void:
+	var descriptor := {"flat_damage":flat,"scale":scale,"damage_type":Combat.DamageType.PHYSICAL,
+		"critical_behavior":Combat.Resolution.DEFAULT,"miss_behavior":Combat.Resolution.DEFAULT,
+		"ignore_defense":false,"silent":false}
+	var output := Combat.solve_damage_output(attacker.stats,descriptor,true,func():return 50)
+	var hooks: Dictionary = target.hooks()
+	# Effect2003 两段 PushMode=Disabled，不能复用蓄力默认冲击。
+	hooks.impact = func(_input,_velocity): target.callbacks.append("impact_disabled")
+	Apply.execute_damage_output(target.stats,output,true,func():return 50,hooks,
+		target.source_position()-attacker.source_position())
+
 func _process(delta):
 	super._process(delta)
+	if basic_timeline != null and automatic_clock: basic_timeline.advance(delta)
+	if basic_gate != null: basic_gate.advance(delta)
 	if camera != null: camera.advance_follow(delta)
-	_label.text += "\n移动+战斗规则诊断：Tab切换方向模式，WASD/方向键移动；Q/2按住后松开。\n没有原地图，点击停用；无鼠标自动瞄准；释放期间本地映射Event.Attacking移动锁。"
+	_label.text += "\n移动+战斗规则诊断：Tab切换方向模式，WASD/方向键移动；1按住完成普攻，Q/2按住后松开蓄力。\n没有原地图，点击停用；无鼠标自动瞄准；攻击期间本地映射Event.Attacking移动锁。\n普攻为显式测试装备20001/槽0；未接正式技能开销、属性与冷却。"

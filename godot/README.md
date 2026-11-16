@@ -65,4 +65,4 @@ node .spec/tools/spec-lint.mjs
 - [普通攻击命中诊断](validation/scenes/basic-attack.md)：原 Timeline 101 的命中帧、子 Hitbox、当前生命与禁推合同；不代表完整战斗。
 - [蓄力释放诊断](validation/scenes/charged-attack.md)：已允许释放后的原 Timeline 20004、当前生命与真实击退；不含输入资格和蓄力状态机。
 - [技能槽按键蓄力诊断](validation/scenes/ability-slots.md)：以原槽位键按住，松手重新校验后触发蓄力攻击。
-- [移动与蓄力战斗联合诊断](validation/scenes/movement-combat.md)：同场景走入命中范围、松手释放及真实击退。
+- [移动与战斗联合诊断](validation/scenes/movement-combat.md)：同场景走入命中范围，1 键普攻或 Q/2 蓄力，核对命中和击退。

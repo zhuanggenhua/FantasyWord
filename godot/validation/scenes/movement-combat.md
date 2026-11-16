@@ -1,8 +1,8 @@
-# 移动与蓄力释放联合诊断
+# 移动与战斗联合诊断
 
 运行：`godot --path godot res://validation/scenes/movement_combat_fixture.tscn`。默认原移动面板 ClickToMove；
-先 Tab 切为方向模式，再 WASD/方向键移动。槽位2显式诊断装配20004，
-Q或2按住蓄力、松开释放。未加载原地图，所以点击不启用。
+先 Tab 切为方向模式，再 WASD/方向键移动。槽位 1 显式装配普攻 20001，按住 1 直到命中；
+槽位 2 显式装配 20004，Q 或 2 按住蓄力、松开释放。未加载原地图，所以点击不启用。
 显示原始HP与简单规则几何，不是正式可玩回合、原角色美术或默认装备存档。
 
 基线368835e；Unity锁定31629d53a110dd4c87d4c85e6ad5a387fbafb931。
@@ -27,4 +27,4 @@ CharacterBase.StateApi锁移动/技能/目标方向。这里仅以timeline.playi
 
 集成测试通过真实Viewport键盘事件移动入范围，按住不出手、松开Timeline，
 第12帧HP50→29，目标真实物理位移；验证移动更新facing/Hitbox/镜头跟随，
-以及Charging可移动、释放期间锁移动。未引入新的玩法设计。
+以及 Charging 可移动、释放期间锁移动。普攻命中与门控见 [普攻整合范围](../../unified-basic-port.md)。未引入新的玩法设计。

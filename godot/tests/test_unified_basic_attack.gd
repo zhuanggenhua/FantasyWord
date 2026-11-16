@@ -1,0 +1,70 @@
+extends SceneTree
+const Scene = preload("res://validation/scenes/movement_combat_fixture.tscn")
+var checks := 0
+var failures := 0
+func _initialize(): call_deferred("_run")
+func check(ok: bool, why: String):
+	checks += 1
+	if not ok: failures += 1; push_error(why)
+func key(code: Key, down: bool):
+	var e := InputEventKey.new()
+	e.physical_keycode = code
+	e.pressed = down
+	root.push_input(e,true)
+func _run():
+	var f = Scene.instantiate()
+	root.add_child(f)
+	await process_frame
+	await physics_frame
+	await physics_frame
+	key(KEY_TAB,true); key(KEY_TAB,false)
+	key(KEY_D,true)
+	var ticks := 0
+	while f.attacker.source_position().x < -0.15 and ticks < 100:
+		await physics_frame
+		ticks += 1
+	key(KEY_D,false)
+	for i in range(15): await physics_frame
+	check(f.attacker.source_position().x > -0.15,"viewport movement reaches ordinary polygon range")
+	f.defender.facing = Vector2.LEFT # no backstab: faces actual attacker
+	var position_before = f.defender.source_position()
+	key(KEY_1,true)
+	var frames := 0
+	while f.basic_hit_count == 0 and frames < 60:
+		await physics_frame
+		frames += 1
+	check(f.basic_hit_count == 1 and f.defender.health == 37,"held source slot0 hits at frame8 for13")
+	check(f.defender.max_health == 50 and f.defender.push_requests == 0,"Effect2003 preserves maximum and disables push")
+	key(KEY_1,false)
+	for i in range(10): await physics_frame
+	check(f.defender.source_position().distance_to(position_before)<0.0001,"ordinary has no physical knockback")
+	check(not f.basic_timeline.playing,"source release stops basic recovery timeline")
+	key(KEY_Q,true)
+	for i in range(15): await process_frame
+	check(f.charge_gate.is_charging() and f.defender.health == 37,"charged hold still does not damage")
+	key(KEY_Q,false)
+	frames = 0
+	while f.hit_count == 0 and frames < 60:
+		await physics_frame
+		frames += 1
+	check(f.hit_count == 1 and f.defender.health == 16,"same viewport charged release still hits for21")
+	check(f.defender.push_requests == 1,"charged alone invokes default push")
+	f.charge_gate.interrupt()
+	f.charge_gate.advance(0)
+	f.basic_gate.advance(0)
+	f.interacted_this_frame = true
+	key(KEY_1,true); key(KEY_1,false)
+	check(not f.basic_timeline.playing and f.basic_gate.state == f.BasicGate.State.IDLE,"same-frame interaction rejects ordinary fire")
+	f.interacted_this_frame = false
+	f.equipped_slots.erase(0)
+	key(KEY_1,true); key(KEY_1,false)
+	check(not f.basic_timeline.playing,"missing slot0 rejects ordinary")
+	f.equipped_slots[0] = 20001
+	key(KEY_1,true)
+	f.equipped_slots.erase(0)
+	f.basic_gate.advance(0.02)
+	check(not f.basic_timeline.playing,"removed ability is rechecked at deferred commit")
+	f.queue_free()
+	await process_frame
+	if failures == 0: print("PASS unified native viewport basic and charged: %d checks" % checks)
+	quit(1 if failures else 0)
