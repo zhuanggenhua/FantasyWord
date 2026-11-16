@@ -45,3 +45,36 @@ GODOT=/path/to/Godot_v4.7.2-stable_linux.x86_64
 去掉 `--smoke` 可持续运行原生输入和物理循环，但没有美术显示，**不能作为可试玩版本交付**。缺少 `--logic-only` 或私有文件、源版本错误、规则结构不完整会退出失败；不会生成替代资源。自动测试仅投递真实 Viewport 事件，不伪称操作系统硬件输入或截图验收。
 
 全套回归：`GODOT="$GODOT" bash godot/tests/run.sh`。专用私有地图测试和全套测试必须分别执行，不能用一项通过宣称整体迁移完毕。
+
+
+## 点击观察与 UI 命中策略（增量，未完成全部迁移）
+
+依据锁定 Unity `31629d53a110dd4c87d4c85e6ad5a387fbafb931` 的
+`ClickMoveTestControlPanel.OnGameplayClickPerformed`、`UpdatePendingClickInspection`
+及 `UIPointerUtility.IsBlockingUIRaycastResult`，加入以下独立切片：
+
+- `entry.gd` 的 `_input` 在原生 GUI 消费前观察左键按下；原 `_unhandled_input`
+  仍是唯一点击派发入口。松开不记录、不派发。不通过观察补发 GUI 消费的点击。
+- 记录帧、屏幕位置、显式 UI 谓词结果、已绑定单角色输入目标是否仍有效、该角色动作能力、
+  模式和投影。UI 阻挡不跳过观察投影；无已绑定角色时投影无效且位置为零。
+  当前目标合同仅是本入口的单角色绑定，不代表完整 `PlayerSystem.TryGetCurrentInputTarget`。
+  动作能力来自已注入 owner，不代表 GAS 全部接入。
+- 第一次更新仅将等待计数从 1 减为 0；第二次读取届时实际角色订单和运动根位置。
+  新点击覆盖旧待观察点击并重新计数。`order_before_dispatch` 是额外先前状态证据；
+  `order_after_updates` 可能是旧路径仍在执行，绝不是“该次点击已生成新命令”的因果结论。
+- `ui_guard` 必须是纯查询：观察和派发各自查询，不缓存前次结果代替派发门禁。
+  Godot `Control.mouse_filter=STOP` 的原生消费与该显式谓词是两个独立事实。
+- `pointer_blocker_policy.gd` 仅接收源语义命中元数据：对象是否存在、精确名称、
+  `GetComponentsInParent(includeInactive:false)` 已枚举的近到远 CanvasGroup 列表、
+  Graphic 是否存在及 raycastTarget。先判 blocksRaycasts=false，再判 ignoreParentGroups，
+  不另按组件 enabled 过滤。忽略精确名称 Mask，但扫描其余所有命中，不忽略独立下层阻挡。
+  无正式 EventSystem 时返回 false。未实现 Unity RaycastAll、CanvasGroup 的原生节点映射、
+  Selectable 选择或 Godot hover 等价；此策略尚未冒充真实 UI 查询接入。
+
+验证：Godot **4.7.2**；新增纯观察/策略测试。专用 `--logic-only --smoke` 在私有源规则下
+通过真实 Viewport 注入和 Control STOP 验证“GUI 消费仍可观察，派发保持零”，包括显式
+UI 谓词为 true 和 false 的两种情况；并验证延迟实际读回和被拒绝点击保留旧订单。
+这些不是 OS 鼠标硬件测试、原版截图或完整玩法验收；未加入替代视觉资源。
+
+专用烟测的 `ui_guard` 实际调用上述纯策略：Mask 单独存在时不阻挡，加上独立下层命中才阻挡。
+这些命中是测试明确注入的源语义元数据，不是从 Control 消费推断所得，不是原场景射线结果。

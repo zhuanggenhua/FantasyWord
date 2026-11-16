@@ -8,6 +8,7 @@ const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
 const Step = preload("res://game_core/movement/source_fixed_step.gd")
+const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var actor: AnimatableBody2D
 @export var actor_shape: CollisionShape2D
@@ -19,6 +20,7 @@ var binding: RefCounted
 var blocked := false
 var command_count := 0
 var last_result: Variant
+var click_observation := Observation.new()
 var keyboard := Keyboard.new()
 var _ui_guard: Callable
 var _player_provider: Callable
@@ -68,6 +70,19 @@ func _resize_camera() -> void:
 
 func _input(event: InputEvent) -> void:
 	if movement == null: return
+	# 原生 GUI 可能在 _unhandled_input 前消费点击；观察必须先于该阶段。
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var owned := _owns_current_actor()
+		var projected: Variant = ScreenProjection.project(camera, event.position) if owned else null
+		click_observation.observe({
+			"frame": Engine.get_process_frames(), "screen_position": event.position,
+			"over_ui": bool(_ui_guard.call(event.position)),
+			"had_input_target": owned, "could_move": owned and actor.can_move(),
+			"movement_mode": movement.mode,
+			"projection_valid": projected is Vector2,
+			"world_position": projected if projected is Vector2 else Vector2.ZERO,
+			"order_before_dispatch": owned and actor.execution.has_move_order(),
+		})
 	if event is InputEventKey:
 		if event.physical_keycode == KEY_TAB and event.pressed and not event.echo:
 			Commands.on_toggle_performed(_submit)
@@ -93,6 +108,10 @@ func _physics_process(_delta: float) -> void:
 		actor.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
 
 func _process(delta: float) -> void:
+	click_observation.advance(func():
+		var owned := _owns_current_actor()
+		return {"order": owned and actor.execution.has_move_order(),
+			"position": actor.get_movement_position() if owned else Vector2.ZERO})
 	if binding != null: camera.advance_follow(delta)
 
 func _exit_tree() -> void:

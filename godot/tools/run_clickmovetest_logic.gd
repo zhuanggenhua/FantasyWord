@@ -1,5 +1,6 @@
 extends SceneTree
 ## 显式逻辑宿主：没有美术或 GAS，不提供任何替代图像；不得当作正式游玩截图。
+const PointerPolicy = preload("res://game_core/ui/pointer_blocker_policy.gd")
 const Scene = preload("res://gameplay/clickmovetest/entry.tscn")
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
@@ -18,6 +19,7 @@ class Player extends RefCounted:
 class MapEvents extends RefCounted:
 	signal map_loaded
 	signal map_unloaded
+var gui_clicks := 0
 var over_ui := false
 var failed := false
 var checks := 0
@@ -46,7 +48,7 @@ func _run() -> void:
 	_check(host.visual_body.position == Vector2(0.75, 3.1), "表现 Body 独立保留作者偏移")
 	_check(host.camera.position == Vector2(0.75, 3.1), "绑定前保留序列化相机位置")
 	if not host.start_logic(IsolatedOwner.new(), data, func(): return player,
-			func(): return null, events, func(_point): return over_ui):
+			func(): return null, events, _ui_guard):
 		printerr("拒绝启动：锁定规则或显式依赖不完整。")
 		host.free()
 		quit(1)
@@ -61,6 +63,41 @@ func _run() -> void:
 		return
 	var destination := Vector2(4.5, 0)
 	var screen: Vector2 = host.camera.get_canvas_transform() * Terrain.to_physics(destination)
+	# 实际 Viewport/Control 消费输入，不替换为直接调用 _input。
+	var layer := CanvasLayer.new()
+	root.add_child(layer)
+	var blocker := Control.new()
+	blocker.position = screen - Vector2(20, 20)
+	blocker.size = Vector2(40, 40)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	layer.add_child(blocker)
+	blocker.gui_input.connect(func(event):
+		if event is InputEventMouseButton and event.pressed:
+			gui_clicks += 1
+			blocker.accept_event())
+	await process_frame
+	host.set_process(false)
+	over_ui = true
+	_mouse(screen, true)
+	_check(gui_clicks == 1 and host.command_count == 0, "Control STOP 真实消费点击而非命令接受")
+	_check(host.click_observation.latest.over_ui and host.click_observation.latest.projection_valid,
+		"GUI 消费仍先观察且 UI 阻挡不跳过投影")
+	_check(host.click_observation.latest.had_input_target and host.click_observation.latest.could_move,
+		"观察当前绑定目标与动作能力")
+	host._process(0)
+	_check(host.click_observation.pending_frames == 0 and not host.click_observation.latest.has("order_after_updates"),
+		"首次更新只递减")
+	host._process(0)
+	_check(not host.click_observation.latest.order_after_updates and host.click_observation.latest.position_after_updates == host.actor.get_movement_position(),
+		"第二次更新读取实际运动根")
+	_mouse(screen, false)
+	over_ui = false
+	_mouse(screen, true)
+	_check(gui_clicks == 2 and host.command_count == 0 and not host.click_observation.latest.over_ui,
+		"原生 Control 消费与显式 UI 判定分开记录，不宣称等价")
+	_mouse(screen, false)
+	layer.free()
+	host.set_process(true)
 	over_ui = true
 	_mouse(screen, true)
 	_check(host.command_count == 0, "UI 门禁阻止点击提交")
@@ -71,8 +108,21 @@ func _run() -> void:
 	host.blocked = false
 	_mouse(screen, true)
 	_check(host.command_count == 1 and host.actor.execution.has_move_order(), "真实视口点击产生原地图路径")
+	var latest_screen: Vector2 = host.click_observation.latest.screen_position
 	_mouse(screen, false)
+	_check(host.click_observation.latest.screen_position == latest_screen, "松开不覆盖观察")
 	_check(host.command_count == 1, "松开不重复提交")
+	# 新的 UI 拒绝点击可能读到旧路径仍在运行，不能归因为新指令。
+	over_ui = true
+	_mouse(screen + Vector2(1, 0), true)
+	_check(host.command_count == 1 and host.click_observation.latest.order_before_dispatch,
+		"被拒绝新点击保留旧订单，单独记录先前状态")
+	host.set_process(false)
+	host._process(0)
+	host._process(0)
+	_check(host.click_observation.latest.order_after_updates, "延迟订单为实际当前订单，不标作新命令")
+	host.set_process(true)
+	over_ui = false
 	for tick in range(200):
 		await physics_frame
 		if not host.actor.execution.has_move_order(): break
@@ -116,3 +166,12 @@ func _check(ok: bool, detail: String) -> void:
 	if not ok:
 		failed = true
 		push_error(detail)
+
+# 显式命中元数据注入，不冒充 Godot 或 Unity 的真实射线枚举。
+func _ui_guard(_point: Vector2) -> bool:
+	var hits := [{"object_present": true, "name": "Mask", "canvas_groups": [],
+		"graphic_present": true, "raycast_target": true}]
+	if over_ui:
+		hits.append({"object_present": true, "name": "下层独立阻挡", "canvas_groups": [],
+			"graphic_present": true, "raycast_target": true})
+	return PointerPolicy.is_over_ui(hits, true)
