@@ -1,5 +1,14 @@
-// 原 EquipmentUV 的本体合成及显式武器、轮廓、阴影子集；不含最终顶点乘色。
+// 原 EquipmentUV 的本体合成及显式武器、轮廓、阴影子集及显式最终顶点乘色。
 // UV 必须是整张角色图的左上原点坐标；数据贴图禁止颜色空间转换。
+// 只在显式证明颜色域后启用。vertex COLOR 不含默认纹理，
+// fragment 输入 COLOR 则已乘 TEXTURE，不能拿它再乘最终装备合成色。
+uniform bool final_tint_enabled = false;
+uniform vec4 final_material_tint = vec4(1.0);
+varying vec4 final_vertex_color;
+void vertex() {
+ final_vertex_color = COLOR;
+}
+
 uniform sampler2D main_map : filter_nearest, repeat_disable;
 uniform sampler2D body_map : filter_nearest, repeat_disable;
 uniform sampler2D head_map : filter_nearest, repeat_disable;
@@ -433,5 +442,7 @@ void fragment() {
  apply_procedural_outline(UV,source_id,value);
  apply_procedural_shadow(UV,value);
 #endif
+ // 原片元最后乘 v.color * _Color；须在阴影之后，且保留 RGBA。
+ if (final_tint_enabled) { value *= final_vertex_color * final_material_tint; }
  COLOR = value;
 }

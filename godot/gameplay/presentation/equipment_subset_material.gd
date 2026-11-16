@@ -35,6 +35,7 @@ static func create(main: Texture2D, body: Texture2D, head: Texture2D,
 	material.shader = WEAPON_SUBSET if using_weapon_stage else SUBSET
 	_reset_skin_palette(material)
 	reset_weapon_fill(material)
+	reset_final_tint(material)
 	material.set_shader_parameter("main_map",main)
 	material.set_shader_parameter("body_map",body)
 	material.set_shader_parameter("head_map",head)
@@ -253,3 +254,23 @@ static func reset_shadow(material: ShaderMaterial) -> void:
 	material.set_shader_parameter("shadow_color",Vector4.ZERO)
 	for key in ["mode","left_x","right_x","center_x"]:
 		material.set_shader_parameter("shadow_"+key,0.0)
+
+
+## 独立于逐帧填充数据；调用方证明顶点颜色与材质色的原始数值域。
+static func apply_final_tint(material: ShaderMaterial, tint: Color, color_domain: int) -> Dictionary:
+	if material == null or material.shader not in [SUBSET,WEAPON_SUBSET]:
+		return {"ok":false,"reason":"最终乘色仅用于已知装备材质"}
+	reset_final_tint(material)
+	if color_domain != 1:
+		return {"ok":false,"reason":"仅支持已证明的非 HDR 原始 sRGB 数值域"}
+	if not Vector4(tint.r,tint.g,tint.b,tint.a).is_finite():
+		return {"ok":false,"reason":"材质乘色 RGBA 必须有限"}
+	# 不使用 source_color 提示，不额外线性化或截断作者数值。
+	material.set_shader_parameter("final_material_tint",Vector4(tint.r,tint.g,tint.b,tint.a))
+	material.set_shader_parameter("final_tint_enabled",true)
+	return {"ok":true}
+
+static func reset_final_tint(material: ShaderMaterial) -> void:
+	if material == null or material.shader not in [SUBSET,WEAPON_SUBSET]: return
+	material.set_shader_parameter("final_tint_enabled",false)
+	material.set_shader_parameter("final_material_tint",Vector4.ONE)
