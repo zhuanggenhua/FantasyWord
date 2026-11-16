@@ -143,6 +143,7 @@ static func apply_weapon_fill(material: ShaderMaterial, frame_rect: Rect2,
 
 static func reset_weapon_fill(material: ShaderMaterial) -> void:
 	if material == null or material.shader != WEAPON_SUBSET: return
+	reset_outline(material)
 	material.set_shader_parameter("weapon_fill_enabled",false)
 	for i in range(2):
 		var prefix := "weapon"+str(i)+"_"
@@ -159,3 +160,54 @@ static func _weapon_rect_valid(rect: Rect2) -> bool:
 
 static func _weapon_rect_vector(rect: Rect2) -> Vector4:
 	return Vector4(rect.position.x,rect.position.y,rect.end.x,rect.end.y)
+
+## 原轮廓阶段的显式绑定；调用方必须先绑定同一角色帧的武器阶段（允许双空槽）。
+## 槽旗标即使空槽也必须明确提供，禁止沿用上一装备状态；颜色是原始域，不做 tint。
+static func apply_outline(material: ShaderMaterial, frame_rect: Rect2, frame_size: Vector2,
+		baseline: float, slots_flags: Array, flags: Vector3, hit_color: Color, extra_color: Color) -> Dictionary:
+	if material == null or material.shader != WEAPON_SUBSET:
+		return {"ok":false,"reason":"轮廓仅用于显式武器变体"}
+	reset_outline(material)
+	if not _weapon_rect_valid(frame_rect) or not frame_size.is_finite() or frame_size.x <= 0.0 or frame_size.y <= 0.0 or not is_finite(baseline):
+		return {"ok":false,"reason":"缺少作者帧范围、尺寸或基线"}
+	var main: Texture2D = material.get_shader_parameter("main_map")
+	if main == null or not (main.get_size() * frame_rect.size).is_equal_approx(frame_size):
+		return {"ok":false,"reason":"帧像素尺寸与作者整图范围不一致"}
+	if not material.get_shader_parameter("weapon_fill_enabled") or material.get_shader_parameter("char_frame_rect") != _weapon_rect_vector(frame_rect):
+		return {"ok":false,"reason":"必须先绑定同帧填充，不能混用旧帧武器姿态"}
+	if not flags.is_finite() or not Vector4(hit_color.r,hit_color.g,hit_color.b,hit_color.a).is_finite() or not Vector4(extra_color.r,extra_color.g,extra_color.b,extra_color.a).is_finite() or slots_flags.size() != 2:
+		return {"ok":false,"reason":"轮廓请求或颜色、双槽数量无效"}
+	for entry in slots_flags:
+		if not entry is Dictionary: return {"ok":false,"reason":"槽旗标必须为字典"}
+		for key in ["is_sequence","hide_outline_on_body"]:
+			var value = entry.get(key)
+			if not (value is float or value is int) or not is_finite(float(value)):
+				return {"ok":false,"reason":"缺少明确有限的槽旗标："+key}
+	material.set_shader_parameter("outline_frame_rect",_weapon_rect_vector(frame_rect))
+	material.set_shader_parameter("outline_frame_size",frame_size)
+	material.set_shader_parameter("outline_base_y",baseline)
+	material.set_shader_parameter("outline_default",flags.x)
+	material.set_shader_parameter("outline_hit",flags.y)
+	material.set_shader_parameter("outline_extra",flags.z)
+	# 不使用 source_color hint；这是当前原始 sRGB 子集的数值颜色。
+	material.set_shader_parameter("outline_hit_color",Vector4(hit_color.r,hit_color.g,hit_color.b,hit_color.a))
+	material.set_shader_parameter("outline_extra_color",Vector4(extra_color.r,extra_color.g,extra_color.b,extra_color.a))
+	for i in range(2):
+		for key in ["is_sequence","hide_outline_on_body"]:
+			material.set_shader_parameter("weapon"+str(i)+"_"+key,float(slots_flags[i][key]))
+	material.set_shader_parameter("outline_stage_enabled",true)
+	return {"ok":true}
+
+static func reset_outline(material: ShaderMaterial) -> void:
+	if material == null or material.shader != WEAPON_SUBSET: return
+	material.set_shader_parameter("outline_stage_enabled",false)
+	material.set_shader_parameter("outline_frame_rect",Vector4(0,0,1,1))
+	material.set_shader_parameter("outline_frame_size",Vector2.ONE)
+	material.set_shader_parameter("outline_base_y",1.0)
+	for key in ["outline_default","outline_hit","outline_extra"]:
+		material.set_shader_parameter(key,0.0)
+	for key in ["outline_hit_color","outline_extra_color"]:
+		material.set_shader_parameter(key,Vector4.ZERO)
+	for i in range(2):
+		for key in ["is_sequence","hide_outline_on_body"]:
+			material.set_shader_parameter("weapon"+str(i)+"_"+key,0.0)

@@ -250,6 +250,93 @@ void apply_weapon_fill(vec2 uv, vec4 body, inout vec4 value, inout int source_id
  }
 }
 
+// EquipmentUV 812–994、1260–1422：仅程序轮廓，不接阴影或顶点 tint。
+uniform bool outline_stage_enabled = false;
+uniform vec4 outline_frame_rect = vec4(0.0,0.0,1.0,1.0);
+uniform vec2 outline_frame_size = vec2(1.0);
+uniform float outline_base_y = 1.0;
+uniform float outline_default = 0.0;
+uniform float outline_hit = 0.0;
+uniform float outline_extra = 0.0;
+uniform vec4 outline_hit_color = vec4(0.0);
+uniform vec4 outline_extra_color = vec4(0.0);
+uniform float weapon0_is_sequence = 0.0;
+uniform float weapon1_is_sequence = 0.0;
+uniform float weapon0_hide_outline_on_body = 0.0;
+uniform float weapon1_hide_outline_on_body = 0.0;
+vec2 outline_sheet(vec2 frame_uv) {
+ vec2 bottom = mix(outline_frame_rect.xy,outline_frame_rect.zw,frame_uv);
+ return vec2(bottom.x,1.0-bottom.y);
+}
+// 故意不夹到帧内，原源码允许本体/装备查询跨帧相邻像素。
+float outline_body(vec2 uv) {
+ float a = texture(main_map,uv).a;
+ vec2 b = texture(body_map,uv).rg;
+ vec2 h = texture(head_map,uv).rg;
+ if (enabled_pants && texture(pants_map,equip_uv(b,pants_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_cloth && texture(cloth_map,equip_uv(b,cloth_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_cloak && texture(cloak_map,equip_uv(b,cloak_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_helmet && texture(helmet_map,equip_uv(h,helmet_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_hair && texture(hair_map,equip_uv(h,hair_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_beard && texture(beard_map,equip_uv(h,beard_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_face_accessory && texture(face_accessory_map,equip_uv(h,face_accessory_rect)).a > 0.5) { a = 1.0; }
+ if (enabled_mask && texture(mask_map,equip_uv(h,mask_rect)).a > 0.5) { a = 1.0; }
+ return a;
+}
+// x 本体、y 背包、z/w 两武器。武器独立保留 sample_weapon 的帧界限。
+vec4 outline_coverage(vec2 f) {
+ vec2 uv = outline_sheet(f);
+ float body = outline_body(uv);
+ float bag = 0.0;
+ if (enabled_bag && texture(bag_map,equip_uv(texture(body_map,uv).rg,bag_rect)).a > 0.5) { bag = 1.0; }
+ vec4 w0 = vec4(0.0); vec4 w1 = vec4(0.0);
+ bool hide = max(weapon0_hide_outline_on_body,weapon1_hide_outline_on_body) > 0.5;
+ if (!(hide && body > 0.5)) {
+  if (weapon0_is_sequence < 0.5) { bool sampled0 = sample_weapon(uv,weapon0_map,weapon0_rect,weapon0_anchor_frame_uv,weapon0_rot_cos_sin,weapon0_flip_x,weapon0_enabled,w0); }
+  if (weapon1_is_sequence < 0.5) { bool sampled1 = sample_weapon(uv,weapon1_map,weapon1_rect,weapon1_anchor_frame_uv,weapon1_rot_cos_sin,weapon1_flip_x,weapon1_enabled,w1); }
+ }
+ return vec4(body,bag,w0.a,w1.a);
+}
+float outline_priority(int id) {
+ if (id == 10) { return body_in_front ? 100.0 : 0.0; }
+ if (id == 7) { return weapon0_depth_mode > 0.5 ? 80.0 : 10.0; }
+ if (id == 8) { return weapon1_depth_mode > 0.5 ? 70.0 : 5.0; }
+ if (id == 1 || id == 2 || id == 3 || id == 4 || id == 5 || id == 6 || id == 9 || id == 11) { return 50.0; }
+ return -1.0;
+}
+void apply_procedural_outline(vec2 uv, int source_id, inout vec4 value) {
+ if (!outline_stage_enabled || !(outline_default > 0.5 || outline_hit > 0.5 || outline_extra > 0.5)) { return; }
+ vec2 f = (vec2(uv.x,1.0-uv.y)-outline_frame_rect.xy)/(outline_frame_rect.zw-outline_frame_rect.xy);
+ vec2 step_uv = vec2(1.0)/outline_frame_size;
+ if (f.y + 0.5*step_uv.y < outline_base_y) { return; }
+ vec4 center = outline_coverage(f);
+ float current = outline_priority(source_id);
+ float bp = outline_priority(1); float bagp = outline_priority(10); float best = -1.0;
+ bool hide = max(weapon0_hide_outline_on_body,weapon1_hide_outline_on_body) > 0.5;
+ for (int i=0;i<4;i++) {
+  vec2 delta = i == 0 ? vec2(step_uv.x,0.0) : (i == 1 ? vec2(-step_uv.x,0.0) : (i == 2 ? vec2(0.0,step_uv.y) : vec2(0.0,-step_uv.y)));
+  vec2 n = f+delta; vec4 neighbor = outline_coverage(n);
+  if (!(hide && center.x > 0.5) && max(center.z,center.w) <= 0.5) {
+   for (int slot=0;slot<2;slot++) {
+    float wp = outline_priority(7+slot); float wa = slot == 0 ? neighbor.z : neighbor.w;
+    bool blocked = (neighbor.x > 0.5 && bp > wp) || (neighbor.y > 0.5 && bagp > wp);
+    if (wa > 0.5 && !blocked && wp >= current && wp > best) { best = wp; }
+   }
+  }
+  if (center.x <= 0.5 && neighbor.x > 0.5) {
+   vec2 nuv = outline_sheet(n); vec4 b = texture(body_map,nuv); vec4 h = texture(head_map,nuv);
+   bool hand = part(b.b,0.4) || part(b.b,0.5);
+   bool core = hand && ((part(h.b,0.1) && h.a > 0.5) || b.a > 0.5);
+   bool weapon_blocks = hand && (source_id == 7 || source_id == 8);
+   if (!core && !weapon_blocks && bp >= current && bp > best) { best = bp; }
+  }
+  if (center.y <= 0.5 && neighbor.y > 0.5 && bagp >= current && bagp > best) { best = bagp; }
+ }
+ if (best >= 0.0) {
+  value = vec4(outline_hit > 0.5 ? outline_hit_color.rgb : (outline_extra > 0.5 ? outline_extra_color.rgb : vec3(0.0)),1.0);
+ }
+}
+
 #endif
 
 void fragment() {
@@ -281,6 +368,7 @@ void fragment() {
  value.a = max(value.a,max(body_coverage,head_coverage));
 #ifdef EQUIPMENT_WEAPON_STAGE
  apply_weapon_fill(UV,body,value,source_id);
+ apply_procedural_outline(UV,source_id,value);
 #endif
  COLOR = value;
 }
