@@ -3,6 +3,8 @@ extends Node
 ## Caller supplies the migrated action database and real AnimationPlayer clips.
 ## No placeholder animation is created when a state is unavailable.
 
+signal animation_selected(key: String)
+
 const FALLBACK_DAMAGE_RESTORE_DELAY := 0.35
 const MINIMUM_AUTO_RESTORE_DELAY := 0.05
 var animator: AnimationPlayer
@@ -62,6 +64,7 @@ func _try_apply_animation(key: String) -> bool:
 		return true
 	current_animation_key = key
 	cancel_pending_restore()
+	animation_selected.emit(key)
 	animator.play(state)
 	# play() alone may resume an already playing same-key animation.
 	animator.seek(0.0, true)

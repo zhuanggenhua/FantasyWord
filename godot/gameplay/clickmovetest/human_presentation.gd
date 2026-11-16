@@ -8,6 +8,8 @@ var playback: Node
 var driver: Node
 var animator: AnimationPlayer
 var last_error := ""
+var material_binding: RefCounted
+var _animation_contract := {}
 
 func configure(data: Dictionary, texture_directory: String) -> bool:
 	if sprite != null or not is_inside_tree():
@@ -76,6 +78,7 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 	driver=Driver.new(); add_child(driver)
 	driver.animator=animator
 	driver.action_keys.assign(["Idle","Walk"])
+	_animation_contract = data.duplicate(true)
 	return driver.try_play_animation("Idle")
 
 ## 输入为原 owner 的实际动画位移量，而非按键意图。
@@ -85,6 +88,21 @@ func set_movement(source_movement: Vector2) -> void:
 ## 输入为原 owner 已裁决的身体朝向；不能自行用移动向量覆盖锁定朝向。
 func set_facing(source_facing: Vector2) -> void:
 	if playback != null: playback.set_facing_direction(source_facing)
+
+## Attach only the verified base look to the existing live sprite. No automatic entry or assets.
+func bind_base_material(data: Dictionary, uv_directory: String, appearance_directory: String) -> bool:
+	if material_binding != null or sprite == null: return _fail("Human appearance requires a configured, unbound sprite.")
+	var binding = preload("res://gameplay/clickmovetest/human_material_binding.gd").new()
+	if not binding.configure(sprite,playback,driver,_animation_contract,data,uv_directory,appearance_directory):
+		return _fail(binding.last_error)
+	last_error = ""
+	material_binding = binding
+	return true
+
+func _exit_tree() -> void:
+	if material_binding != null:
+		material_binding.disconnect_from_view()
+		material_binding = null
 
 func _fail(message: String) -> bool:
 	last_error=message
