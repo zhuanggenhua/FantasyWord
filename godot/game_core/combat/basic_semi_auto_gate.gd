@@ -112,3 +112,7 @@ func _change(value: int) -> void:
 
 static func _f32(value: float) -> float:
 	return PackedFloat32Array([value])[0]
+
+## 原输入门控的忙碌判定；后摇也是忙碌，不等同于正在蓄力。
+func is_busy() -> bool:
+	return state not in [State.IDLE, State.STOP, State.INTERRUPTED]

@@ -275,9 +275,9 @@ func start_human_equipped_abilities(owner: Object, loadout: RefCounted,
 ## 已解析能力的原调度入口；resolver 与实际 GAS 操作必须由显式正式宿主提供。
 func start_human_resolved_equipped_abilities(owner: Object, loadout: RefCounted,
 		resolve_active: Callable, ability_host: Object,
-		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> bool:
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable, use_source_start_rules: bool = false) -> bool:
 	var dispatch := preload("res://game_core/combat/equipped_ability_dispatch.gd").new()
-	if not dispatch.configure_resolved_fire(loadout,resolve_active,owner,ability_host): return false
+	if not dispatch.configure_resolved_fire(loadout,resolve_active,owner,ability_host,use_source_start_rules): return false
 	if not start_human_abilities(owner,dispatch.fire,dispatch.stop,target_root,target_cell,notify_rejected): return false
 	_equipped_ability_dispatch = dispatch
 	return true

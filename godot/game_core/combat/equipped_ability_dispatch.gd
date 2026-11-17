@@ -33,23 +33,40 @@ func stop(index: int) -> bool:
 
 var _character: Object
 var _ability_host: Object
+var _use_source_start_rules := false
 
 ## 宿主仅提供实际能力操作；不缓存 CanFire、flags 或 GameObject 状态。
 ## 方向由现有角色唯一 owner 持有，SetTargetDirection 自行执行原 gate 和 TargetBased。
-func configure_resolved_fire(loadout: RefCounted, resolve_active: Callable, character: Object, host: Object) -> bool:
+func configure_resolved_fire(loadout: RefCounted, resolve_active: Callable, character: Object, host: Object, use_source_start_rules: bool = false) -> bool:
 	if not is_instance_valid(character) or not is_instance_valid(host): return false
 	for method in ["set_target_direction","get_target_direction","set_look_at_direction"]:
 		if not character.has_method(method): return false
-	for method in ["can_fire","should_update_look_at_direction_on_fire","uses_automatic_runtime_state_management","set_ability_active","fire","stop_fire"]:
+	for method in ["should_update_look_at_direction_on_fire","uses_automatic_runtime_state_management","set_ability_active","fire","stop_fire"]:
 		if not host.has_method(method): return false
+	if use_source_start_rules:
+		for method in ["get_input_gate","get_formal_gas_ability_code","evaluate_start_rule","get_ability_debug_name","report_start_rule_error"]:
+			if not host.has_method(method): return false
+	elif not host.has_method("can_fire"): return false
 	if not configure(loadout,resolve_active,_fire_resolved_source,host.stop_fire): return false
+	_use_source_start_rules = use_source_start_rules
 	_character = character
 	_ability_host = host
 	return true
 
 ## CharacterAbilitySet.FireResolvedAbility：检查失败时无方向或生命周期副作用。
 func _fire_resolved_source(ability: Object, command_context: Variant, activation_context: Variant) -> int:
-	var result: int = _ability_host.can_fire(ability)
+	var result: int
+	if _use_source_start_rules:
+		var gate: Object = _ability_host.get_input_gate(ability)
+		if gate != null and gate.is_busy():
+			result = 0
+		else:
+			result = preload("res://game_core/combat/active_ability_start_rules.gd").evaluate(
+				_ability_host.get_formal_gas_ability_code(ability),
+				_ability_host.evaluate_start_rule.bind(ability),_ability_host.get_ability_debug_name.bind(ability),
+				_ability_host.report_start_rule_error.bind(ability))
+	else:
+		result = _ability_host.can_fire(ability)
 	if result != 0: return result
 	var requested := Vector2.ZERO
 	var has_requested := false
