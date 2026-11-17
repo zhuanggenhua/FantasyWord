@@ -39,3 +39,9 @@ func observe(event: InputEvent) -> void:
 func read_active(map: Map) -> Variant:
 	assert(map in [Map.GAMEPLAY, Map.UI])
 	return _points[map]
+
+## ReadValue differs from activeControl: inactive Unity Point returns (0,0),
+## mapped to this Godot local viewport's bottom-left, not its top-left.
+func read_value_local(map: Map, viewport_rect: Rect2) -> Vector2:
+	assert(map in [Map.GAMEPLAY, Map.UI])
+	return _points[map] if _points[map] is Vector2 else viewport_rect.position + Vector2(0, viewport_rect.size.y)

@@ -29,6 +29,7 @@ var last_result: Variant
 var click_observation := Observation.new()
 var keyboard := Keyboard.new()
 var human_gameplay_actions: RefCounted
+var _normalized_click_bound := false
 var human_commands: RefCounted
 var human_interaction: RefCounted
 var _human_aim: RefCounted
@@ -84,6 +85,7 @@ func _resize_camera() -> void:
 func _input(event: InputEvent) -> void:
 	if _mouse_point_actions != null: _mouse_point_actions.observe(event)
 	if movement == null: return
+	# Raw compatibility diagnostic only, not the normalized Point command sample.
 	# 原生 GUI 可能在 _unhandled_input 前消费点击；观察必须先于该阶段。
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var owned := _owns_current_actor()
@@ -104,6 +106,8 @@ func _input(event: InputEvent) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if movement == null: return
+	# Explicit formal host owns Click; never also submit the legacy button position.
+	if _normalized_click_bound and event is InputEventMouseButton: return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		Commands.on_click_performed(event.position, blocked, camera, actor, _ui_guard,
 			func(cam, _actor, point): return ScreenProjection.project(cam, point), _submit)
@@ -217,6 +221,7 @@ func bind_mouse_point_actions(actions: RefCounted) -> bool:
 	return true
 
 func unbind_mouse_point_actions() -> void:
+	unbind_human_click_action()
 	_mouse_point_actions = null
 
 ## 可选：把原 CharacterButtonActivation 绑定到同一个已启动的权威角色和 Static Pivot。
@@ -254,13 +259,39 @@ func bind_human_gameplay_actions(resolve_context: Callable, interact_blocked: Ca
 	var candidate := preload("res://game_core/input/gameplay_command_actions.gd").new()
 	if not candidate.configure(resolve_context,submit_human_command,interact_blocked,notify_failed): return false
 	human_gameplay_actions = candidate
+	_normalized_click_bound = false
 	return true
+
+## Host dispatches normalized Click explicitly; this does not route raw events.
+func bind_human_click_action(click_blocked: Callable) -> bool:
+	if human_gameplay_actions == null or _mouse_point_actions == null: return false
+	if not human_gameplay_actions.configure_click(click_blocked,_resolve_human_click_world): return false
+	_normalized_click_bound = true
+	return true
+
+func unbind_human_click_action() -> void:
+	_normalized_click_bound = false
+	# Drop the callback too; the remaining Interact/Fire callbacks stay bound.
+	if human_gameplay_actions != null:
+		human_gameplay_actions.unbind_click()
+
+func _resolve_human_click_world() -> Variant:
+	if _mouse_point_actions == null: return null
+	var current_camera = camera
+	var player: Object = _player_provider.call() if _player_provider.is_valid() else null
+	var controlled: Object = player.get_current_controlled_character_or_player_instance() if is_instance_valid(player) and player.has_method("get_current_controlled_character_or_player_instance") else null
+	# Original reads Point even when camera/actor are absent; never check activeControl.
+	var screen: Vector2 = _mouse_point_actions.read_value_local(MousePoints.Map.GAMEPLAY,get_viewport_rect())
+	if not is_instance_valid(current_camera) or not is_instance_valid(controlled): return null
+	if not _ui_guard.is_valid() or bool(_ui_guard.call(screen)): return null
+	return ScreenProjection.project(current_camera,screen)
 
 func receive_human_gameplay_action(action_map: String, action: String, phase: String) -> Variant:
 	if human_gameplay_actions == null: return null
 	return human_gameplay_actions.receive(action_map,action,phase)
 
 func unbind_human_gameplay_actions() -> void:
+	_normalized_click_bound = false
 	human_gameplay_actions = null
 
 ## Already resolved commands only. Player ownership is checked before executor dispatch;
