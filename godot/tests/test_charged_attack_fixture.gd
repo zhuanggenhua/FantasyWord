@@ -1,4 +1,5 @@
 extends SceneTree
+const Hit = preload("res://gameplay/combat/charged_attack_hit.gd")
 const Scene = preload("res://validation/scenes/charged_attack_fixture.tscn")
 var checks := 0
 var failures := 0
@@ -20,11 +21,23 @@ func _run():
 	f.defender.add_hitbox()
 	await physics_frame
 	await physics_frame
+	var observed: Array = []
+	var resolver := func(collider): return collider.get_meta("actor", null)
+	var apply := func(caster, target, effect_id): observed.append([caster, target, effect_id])
+	var hit := Hit.run(f.get_world_2d(), f.attacker, f.attacker.source_position(), f.attacker.facing, resolver, apply)
+	check(hit.ok and observed == [[f.attacker, f.defender, 2004]], "实际施法者、唯一目标和2004交给效果owner")
+	check(f.defender.health == 50 and f.defender.push_requests == 0, "查询器不代持属性或推力，效果由显式owner写入")
+	observed.clear()
+	hit = Hit.run(f.get_world_2d(), f.attacker, Vector2(10, 10), f.attacker.facing, resolver, apply)
+	check(hit.ok and observed.is_empty(), "查询使用命中时传入位置，不偷读诊断演员或缓存位置")
+	hit = Hit.run(f.get_world_2d(), f.attacker, f.attacker.source_position(), f.attacker.facing, resolver, Callable())
+	check(not hit.ok and not hit.error.is_empty(), "没有实际效果owner明确拒绝，不返回假成功")
 	check(f.begin_accepted_release(), "允许后的释放启动")
 	check(not f.begin_accepted_release(), "活动释放不重复")
 	f.timeline.advance(0.19)
 	check(f.hit_count == 0 and f.defender.health == 50,"第12帧前不打击")
 	f.timeline.advance(0.02)
+	check(f.last_hit.ok and f.last_hit.application_count == 1 and f.last_hit.targets == [f.defender], "共享命中入口保留实际目标身份且只派发一次")
 	check(f.defender.health == 29,"7+10*1.5=22，经防御2 floor 得21")
 	check(f.defender.max_health == 50,"仅改当前生命")
 	check(f.hit_count == 1 and f.defender.push_requests == 1,"多个子框去重一次")

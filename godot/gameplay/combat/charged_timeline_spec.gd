@@ -18,11 +18,13 @@ var _temporary_sources: Dictionary={}
 var _actor: WeakRef
 var _timeline: RefCounted
 var _processing := false
+var _position_reader: Callable
 
-func configure(actor: Node2D, timeline: RefCounted) -> bool:
+func configure(actor: Node2D, timeline: RefCounted, position_reader: Callable = Callable()) -> bool:
 	if _actor != null or not is_instance_valid(actor) or timeline == null: return false
-	if not actor.has_method("source_position") or not timeline.has_method("play") or not timeline.has_method("stop"): return false
+	if (not position_reader.is_valid() and not actor.has_method("source_position")) or not timeline.has_method("play") or not timeline.has_method("stop"): return false
 	_actor=weakref(actor);_timeline=timeline
+	_position_reader=position_reader
 	return true
 
 ## 3003 是唯一已接入标签；来源键对应原 BTemporaryTag.source，不因他源移除而丢失。
@@ -46,7 +48,7 @@ func create_activation_context(pending: Variant) -> Variant:
 	var actor: Object=_actor.get_ref() if _actor != null else null
 	if not is_instance_valid(actor): return null
 	if pending != null: return pending
-	var p: Vector2=actor.source_position()
+	var p: Vector2=_position_reader.call() if _position_reader.is_valid() else actor.source_position()
 	return preload("res://game_core/interaction/ability_activation_context.gd").new(Vector3(p.x,p.y,0))
 func request_begin(code: int, context: Variant) -> bool:
 	if code != CODE or _timeline == null or _actor == null or not is_instance_valid(_actor.get_ref()): return false

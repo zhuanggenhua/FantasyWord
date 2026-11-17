@@ -92,6 +92,10 @@ func try_restore_animation(expected: String, fallback: String) -> bool:
 		return true
 	return _try_apply_animation(fallback.strip_edges())
 
+## 原 TryRestoreDefaultAnimation 使用当前移动状态，不是固定 Idle。
+func try_restore_default_animation(expected: String) -> bool:
+	return try_restore_animation(expected, locomotion_key())
+
 func try_lock_animation(key: String) -> bool:
 	key = key.strip_edges()
 	if not _try_apply_animation(key):

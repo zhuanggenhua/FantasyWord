@@ -37,6 +37,8 @@ var _human_aim: RefCounted
 var _aim_control: Object
 var _aim_was_local := false
 var _equipped_ability_dispatch: RefCounted
+var _charged_actor_runtime: Node
+var _charged_timeline: RefCounted
 var _mouse_point_actions: RefCounted
 var _pointer_selection: RefCounted
 var _pointer_over_ui: Callable
@@ -139,6 +141,7 @@ func _process(delta: float) -> void:
 	if binding != null: camera.advance_follow(delta)
 	_update_human_aim()
 	update_ui_pointer_selection()
+	advance_human_charged_combat(delta)
 
 func _exit_tree() -> void:
 	unbind_ui_pointer_selection()
@@ -252,7 +255,7 @@ func start_human_interaction(owner: Object, audio_request: Callable) -> bool:
 ## 请求 direction/world_position 与角色方向状态统一为 Unity 坐标，不接受 Godot 屏幕坐标。
 func start_human_abilities(owner: Object, fire: Callable, stop: Callable,
 		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> bool:
-	if human_commands == null or human_commands.character != owner: return false
+	if _charged_actor_runtime != null or human_commands == null or human_commands.character != owner: return false
 	if not target_root.is_valid() or not target_cell.is_valid(): return false
 	var bound: bool = human_commands.bind_abilities(fire,stop,func(request):
 		# 锁定 ClickMoveTest 的 Actor 根 Z=0；Static Pivot 与 Body 偏移均不能参与。
@@ -281,6 +284,39 @@ func start_human_resolved_equipped_abilities(owner: Object, loadout: RefCounted,
 	if not start_human_abilities(owner,dispatch.fire,dispatch.stop,target_root,target_cell,notify_rejected): return false
 	_equipped_ability_dispatch = dispatch
 	return true
+
+## 在同一实际角色上显式装配已核实的 20004 闭环；不赋予技能、不接管已有能力宿主。
+## hit_task 仍由正式目标/伤害拥有者接入；本入口不创建目标、数值或替代动作。
+func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Callable,
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> Node:
+	if _charged_actor_runtime != null or human_commands == null or human_commands.character != owner: return null
+	if _equipped_ability_dispatch != null or human_commands.has_bound_abilities(): return null
+	if not is_instance_valid(human_presentation) or not is_instance_valid(human_presentation.driver) or not hit_task.is_valid(): return null
+	var driver: Node = human_presentation.driver
+	if driver.resolve_playable_state("ChargedAttack").is_empty(): return null
+	var timeline := preload("res://gameplay/combat/charged_timeline_tasks.gd").new(hit_task, driver)
+	var runtime := preload("res://gameplay/combat/resolved_charged_ability.gd").new()
+	add_child(runtime)
+	if not runtime.configure(actor, owner, timeline, actor.get_movement_position) \
+			or not runtime.take_clock_tick_ownership(timeline) \
+			or not start_human_resolved_equipped_abilities(owner,loadout,runtime.resolve,runtime,target_root,target_cell,notify_rejected,true):
+		runtime.free()
+		return null
+	_charged_actor_runtime = runtime
+	_charged_timeline = timeline
+	return runtime
+
+## 先结算已有请求，再推进唯一命中时钟/输入门控，最后处理 Cue 显示阶段。
+## 不把同一帧跨过的任务请求冒充 Unity 执行线程或画面验收。
+func advance_human_charged_combat(delta: float) -> void:
+	var runtime: Node = _charged_actor_runtime
+	if not is_instance_valid(runtime): return
+	runtime.process_requests()
+	if runtime != _charged_actor_runtime: return
+	runtime.advance_owned_clock(delta)
+	if runtime != _charged_actor_runtime: return
+	runtime.advance_input(delta)
+	if runtime == _charged_actor_runtime: _charged_timeline.flush_display()
 
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
 ## resolve_context 返回 null 或当前输入目标的 {actor, command_context}。
@@ -367,6 +403,11 @@ func notify_human_aim_input_disabled() -> void:
 	if _human_aim != null: _reset_human_aim_control()
 
 func stop_human_aim() -> void:
+	if _charged_timeline != null:
+		_charged_timeline.stop()
+		_charged_timeline = null
+	if is_instance_valid(_charged_actor_runtime): _charged_actor_runtime.queue_free()
+	_charged_actor_runtime = null
 	_equipped_ability_dispatch = null
 	unbind_human_gameplay_actions()
 	if _human_aim == null: return

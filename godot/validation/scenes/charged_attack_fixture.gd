@@ -2,7 +2,7 @@ extends Node2D
 ## 显式伤害诊断，不是 GAS 替代属性系统或正式角色场景。
 const Combat = preload("res://game_core/combat/combat_rules.gd")
 const Apply = preload("res://game_core/combat/formal_damage_application.gd")
-const Query = preload("res://game_core/combat/box_hitbox_query.gd")
+const Hit = preload("res://gameplay/combat/charged_attack_hit.gd")
 const Push = preload("res://game_core/combat/damage_push_policy.gd")
 const Clock = preload("res://game_core/combat/attack_hit_frame.gd")
 const Body = preload("res://game_core/movement/native_motion_body.gd")
@@ -16,6 +16,7 @@ var attacker: Node2D
 var defender: Node2D
 var outside: Node2D
 var hit_count := 0
+var last_hit: Dictionary = {}
 var force_miss := false
 var motion_enabled := true
 var _label: Label
@@ -138,10 +139,15 @@ func begin_accepted_release() -> bool:
 
 func _hit_frame() -> void:
 	hit_count += 1
-	var targets := Query.query(get_world_2d(), attacker.source_position(),
-		attacker.facing, Vector2(0.75,0.15),Vector2(1.15,0.95),0.0,128,attacker,
-		func(collider): return collider.get_meta("actor",null))
-	for target in targets: _apply(target,7,1.5)
+	last_hit = Hit.run(get_world_2d(), attacker, attacker.source_position(),
+		attacker.facing, func(collider): return collider.get_meta("actor", null),
+		_apply_effect)
+	if not last_hit.ok: push_error(last_hit.error)
+
+func _apply_effect(caster: Object, target: Object, effect_id: int) -> void:
+	# 诊断拥有合成属性和固定随机样本，不把它们冒充正式 ClickMoveTest 数据。
+	assert(caster == attacker and effect_id == Hit.EFFECT_ID)
+	_apply(target, 7, 1.5)
 
 func _apply(target: Actor, flat: int, scale: float) -> void:
 	var descriptor := {"flat_damage":flat,"scale":scale,"damage_type":Combat.DamageType.PHYSICAL,

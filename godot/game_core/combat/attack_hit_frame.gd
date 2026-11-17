@@ -21,8 +21,12 @@ func advance(delta: float) -> void:
 	var target := int(_f32(_elapsed * 60.0)) # GASTimer.FrameRate，不是物理帧率。
 	while frame < target:
 		frame += 1
+		_on_frame_crossed(frame)
 		if frame == _hit_frame: _hit.call()
 	if frame >= _life_time:
 		frame += 1
 		playing = false
+## 只报告同一时间轴跨过的帧；具体任务由技能时间轴拥有者调度。
+func _on_frame_crossed(_frame: int) -> void:
+	pass
 static func _f32(value: float) -> float: return PackedFloat32Array([value])[0]

@@ -21,6 +21,10 @@ func bind_abilities(fire: Callable, stop: Callable, activation_context: Callable
 	_fire = fire; _stop = stop; _activation_context = activation_context; _notify_rejected = notify_rejected
 	return true
 
+## 当前命令拥有者已有显式能力绑定时，不允许第二个批次覆盖它。
+func has_bound_abilities() -> bool:
+	return _fire.is_valid() and _stop.is_valid()
+
 func execute(request: Dictionary) -> int:
 	if not is_instance_valid(character): return Failure.INVALID_CONTROLLED_CHARACTER
 	if not enabled: return Failure.NOT_RUNNING

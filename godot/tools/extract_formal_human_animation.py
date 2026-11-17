@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从锁定 Unity Git 对象导出私有 Human Idle/Walk（可显式附加 Dmg）精灵合同，不复制原始资产。"""
+"""从锁定 Unity Git 对象导出私有 Human Idle/Walk（可显式附加 Dmg/ChargedAttack）精灵合同，不复制原始资产。"""
 import argparse, hashlib, json, re, struct, subprocess, zlib
 from pathlib import Path
 import yaml
@@ -12,7 +12,7 @@ def parse(raw):
     text = re.sub(r"^--- !u!\d+ &[-\d]+", "---", text, flags=re.M)
     return yaml.safe_load(text)
 def h(value): return zlib.crc32(str(value).encode()) & 0x3fffffff
-def extract(repo, textures, include_damage=False):
+def extract(repo, textures, include_damage=False, include_charged=False):
     paths = subprocess.check_output(["git", "-c", "core.quotepath=false", "-C", str(repo), "ls-tree", "-r", "--name-only", SOURCE], text=True).splitlines()
     sources = {}
     def source(path):
@@ -27,19 +27,19 @@ def extract(repo, textures, include_damage=False):
         if "AnimatorState" in doc: states.append(doc["AnimatorState"])
     libs = [source(ROOT+f"SpriteLibraries/人类_{d}动画精灵库.asset")["MonoBehaviour"] for d in ("SE","SW","NE","NW")]
     actions = {}; textures_out = {}
-    for action in (("Idle","Walk","Dmg") if include_damage else ("Idle","Walk")):
+    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()):
         clip_path = ROOT + f"SharedClips/{action}.anim"
         clip = source(clip_path)["AnimationClip"]
         clip_guid = source(clip_path+".meta")["guid"]
         matches = [s for s in states if s["m_Name"] == action]
         assert len(matches)==1 and matches[0]["m_Motion"]["guid"] == clip_guid
-        if action == "Dmg":
+        if action in ("Dmg", "ChargedAttack"):
             state = matches[0]
             assert state["m_Speed"] == 1 and state["m_CycleOffset"] == 0
             assert state["m_Transitions"] == [] and state["m_StateMachineBehaviours"] == []
             assert all(state[k] == 0 for k in ("m_SpeedParameterActive", "m_CycleOffsetParameterActive", "m_TimeParameterActive"))
             settings = clip["m_AnimationClipSettings"]
-            assert settings["m_StopTime"] == 0.5 and settings["m_LoopTime"] == 0
+            assert settings["m_StopTime"] == (0.5 if action == "Dmg" else 0.75) and settings["m_LoopTime"] == 0
         curves = clip["m_FloatCurves"]
         assert len(curves)==1 and curves[0]["attribute"] == "m_SpriteHash" and curves[0]["path"] in ("", None)
         keys = curves[0]["curve"]["m_Curve"]
@@ -83,6 +83,10 @@ def extract(repo, textures, include_damage=False):
             bits=struct.unpack("<I",struct.pack("<f",key["value"]))[0]
             assert bits in expected_hashes
             labels.append(expected_hashes[bits])
+        if action == "ChargedAttack":
+            assert [k["time"] for k in keys] == [i / 8 for i in range(7)]
+            assert labels == [0, 1, 2, 3, 4, 5, 5]
+            assert all(len(frames) == 6 for frames in directions)
         settings=clip["m_AnimationClipSettings"]
         assert settings["m_StartTime"]==0 and clip["m_SampleRate"]==8
         actions[action]={"duration":settings["m_StopTime"],"loop":bool(settings["m_LoopTime"]),"times":[k["time"] for k in keys],"labels":labels,"directions":directions}
@@ -90,5 +94,6 @@ def extract(repo, textures, include_damage=False):
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__); p.add_argument("--repo",type=Path,required=True);p.add_argument("--textures",type=Path,required=True);p.add_argument("--output",type=Path,required=True)
     p.add_argument("--include-damage",action="store_true",help="同时核实原 Dmg 四向非循环片段")
-    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    p.add_argument("--include-charged",action="store_true",help="同时核实原 ChargedAttack 四向非循环片段")
+    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("Human 私有合同：四向来源、所有标签和 PNG 哈希已核验。")
