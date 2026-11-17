@@ -13,6 +13,9 @@ var _slot_keys := SlotKeys.new()
 
 func _ready() -> void:
 	super._ready()
+	_setup_charge_runtime()
+
+func _setup_charge_runtime() -> void:
 	charge_gate = HoldRelease.new(_can_use_charge, _commit_released_charge)
 	charge_gate.sequence_stopped.connect(_stop_diagnostic_timeline)
 	if not charge_context.configure(attacker, charge_gate):
