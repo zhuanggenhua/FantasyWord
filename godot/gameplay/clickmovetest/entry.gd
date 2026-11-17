@@ -13,6 +13,13 @@ const Interaction = preload("res://game_core/interaction/character_button_activa
 const Aim = preload("res://game_core/movement/idle_pointer_aim.gd")
 const Step = preload("res://game_core/movement/source_fixed_step.gd")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
+const TrainingTarget = preload("res://gameplay/clickmovetest/training_target.gd")
+const TrainingAttributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
+const ChargedHit = preload("res://gameplay/combat/charged_attack_hit.gd")
+const ChargedDamage = preload("res://gameplay/combat/charged_damage_effect.gd")
+const DamagePush = preload("res://game_core/combat/damage_push_policy.gd")
+# 锁定 GameConfig.asset 的原 Push 门禁；不是诊断的推力记录器。
+const TRAINING_PUSH_FLAGS := {"regular":true, "critical":true, "missed":true, "silent":false}
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var actor: AnimatableBody2D
 @export var actor_shape: CollisionShape2D
@@ -39,6 +46,8 @@ var _aim_was_local := false
 var _equipped_ability_dispatch: RefCounted
 var _charged_actor_runtime: Node
 var _charged_timeline: RefCounted
+var training_target: Node2D
+var training_attributes: RefCounted
 var _mouse_point_actions: RefCounted
 var _pointer_selection: RefCounted
 var _pointer_over_ui: Callable
@@ -132,6 +141,8 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 func _physics_process(_delta: float) -> void:
 	if movement != null:
 		actor.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
+	if is_instance_valid(training_target):
+		training_target.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
 
 func _process(delta: float) -> void:
 	click_observation.advance(func():
@@ -142,6 +153,8 @@ func _process(delta: float) -> void:
 	_update_human_aim()
 	update_ui_pointer_selection()
 	advance_human_charged_combat(delta)
+	if is_instance_valid(training_target):
+		training_target.advance_damage_lifecycle()
 
 func _exit_tree() -> void:
 	unbind_ui_pointer_selection()
@@ -305,6 +318,62 @@ func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Ca
 	_charged_actor_runtime = runtime
 	_charged_timeline = timeline
 	return runtime
+
+## 绑定场景中唯一活动训练假人的受击逻辑。缺少正式控制/生命周期回调时拒绝；
+## 不注册假 AI、不自动加进默认场景、不创建美术或替代碰撞资源。
+func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary, terrain_mask: int) -> Node2D:
+	if training_target != null or not is_inside_tree(): return null
+	for key in ["is_dead", "is_invincible"]:
+		if not target_hooks.get(key) is Callable or not target_hooks[key].is_valid(): return null
+	var sheet := TrainingTarget.initial_sheet()
+	var properties := TrainingAttributes.new()
+	if not properties.configure(PackedInt32Array([sheet.health, sheet.mana, sheet.physical_attack,
+			sheet.magical_attack, sheet.physical_defense, sheet.magical_defense, sheet.agility,
+			sheet.luck, sheet.attack_speed]), sheet.alignment, target_hooks.is_dead, target_hooks.is_invincible):
+		return null
+	var hooks := target_hooks.duplicate()
+	hooks.stats = properties.stats
+	hooks.current_health = properties.current_health
+	hooks.has_formal_stats = properties.has_formal_stats
+	hooks.apply_current_health_delta = properties.apply_current_health_delta
+	var target := TrainingTarget.new()
+	# 相异实际 Actor；按原 PushMode.Default 路径只在一个拥有者提交推力。
+	hooks.impact = func(input,velocity):
+		if is_instance_valid(target) and is_instance_valid(target.body):
+			DamagePush.try_push(input,false,velocity,DamagePush.Mode.DEFAULT,
+				TRAINING_PUSH_FLAGS,target.body.push_motion)
+	if not target.configure(hooks,motion_owner,terrain_mask):
+		target.free()
+		return null
+	add_child(target)
+	training_target = target
+	training_attributes = properties
+	return target
+
+## 兼容现有显式槽位契约：假人只在此入口担任已绑定的受击者。
+## Caster 当前快照、掷骰和 ASC Cell 属于正式宿主；暴击/闪避来自锁定 GameConfig.asset。
+func start_human_charged_training_combat(owner: Object, loadout: RefCounted, caster_stats: Callable,
+		roll: Callable, target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> Node:
+	if not is_instance_valid(training_target) or not caster_stats.is_valid() or not roll.is_valid() \
+			or not target_root.is_valid() or not target_cell.is_valid(): return null
+	var hit_task := _hit_training_target.bind(owner,caster_stats,roll)
+	var resolve_root := func (target):
+		if not is_instance_valid(training_target) or target != training_target: return target_root.call(target)
+		var at: Vector2 = training_target.get_movement_position()
+		return Vector3(at.x,at.y,0)
+	return start_human_charged_combat(owner,loadout,hit_task,resolve_root,target_cell,notify_rejected)
+
+func _hit_training_target(owner: Object, caster_stats: Callable, roll: Callable) -> void:
+	if not is_instance_valid(training_target) or not is_instance_valid(owner) or not is_instance_valid(actor): return
+	var start: Vector2 = actor.get_movement_position()
+	ChargedHit.run(actor.get_world_2d(), actor, start, owner.get_look_at_direction(),
+		func(collider): return training_target if is_instance_valid(training_target) and collider == training_target.hitbox else null,
+		func(_caster,target,effect_id):
+			if effect_id != ChargedHit.EFFECT_ID or not is_instance_valid(target): return
+			var current: Variant = caster_stats.call()
+			if not current is Dictionary or not current.get("snapshot") is Dictionary: return
+			ChargedDamage.execute_damage_phase(current,target.stats,target.hooks(),start,target.get_movement_position(),
+				true,true,roll))
 
 ## 先结算已有请求，再推进唯一命中时钟/输入门控，最后处理 Cue 显示阶段。
 ## 不把同一帧跨过的任务请求冒充 Unity 执行线程或画面验收。
