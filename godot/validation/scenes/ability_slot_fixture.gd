@@ -8,12 +8,17 @@ var equipped_slots := {1: CHARGED_ABILITY}
 var ability_eligible := true
 var interacted_this_frame := false
 var charge_gate: RefCounted
+var charge_context := preload("res://game_core/combat/active_ability_fire_context.gd").new()
 var _slot_keys := SlotKeys.new()
 
 func _ready() -> void:
 	super._ready()
 	charge_gate = HoldRelease.new(_can_use_charge, _commit_released_charge)
 	charge_gate.sequence_stopped.connect(_stop_diagnostic_timeline)
+	if not charge_context.configure(attacker, charge_gate):
+		push_error("蓄力诊断场景缺少实际攻击者或门控绑定。")
+		set_process_input(false)
+		return
 
 func _input(event: InputEvent) -> void:
 	if charge_gate != null and event is InputEventKey:
@@ -26,9 +31,9 @@ func _dispatch_slot_edge(index: int, pressed: bool) -> void:
 	if pressed:
 		# 原 CharacterCommandExecutor 的同帧交互挡住 Fire，但不挡 StopFire。
 		if not interacted_this_frame:
-			charge_gate.request_use()
+			charge_context.fire({"actor":attacker,"issuer_kind":1,"issuer_id":"local"}, null, null)
 	else:
-		charge_gate.release_use()
+		charge_context.stop_fire()
 
 func _can_use_charge() -> bool:
 	# 模拟正式属性、状态、消耗绑定提供的资格断言；这不是这些拥有者的移植。
