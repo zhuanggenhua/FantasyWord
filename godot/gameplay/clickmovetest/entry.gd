@@ -36,6 +36,7 @@ var human_interaction: RefCounted
 var _human_aim: RefCounted
 var _aim_control: Object
 var _aim_was_local := false
+var _equipped_ability_dispatch: RefCounted
 var _mouse_point_actions: RefCounted
 var _pointer_selection: RefCounted
 var _pointer_over_ui: Callable
@@ -253,11 +254,23 @@ func start_human_abilities(owner: Object, fire: Callable, stop: Callable,
 		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> bool:
 	if human_commands == null or human_commands.character != owner: return false
 	if not target_root.is_valid() or not target_cell.is_valid(): return false
-	return human_commands.bind_abilities(fire,stop,func(request):
+	var bound: bool = human_commands.bind_abilities(fire,stop,func(request):
 		# 锁定 ClickMoveTest 的 Actor 根 Z=0；Static Pivot 与 Body 偏移均不能参与。
 		var root := Vector3(actor.global_position.x,-actor.global_position.y,0)
 		return preload("res://game_core/interaction/ability_activation_builder.gd").build(
 			request,root,owner.get_target_direction,target_root,target_cell),notify_rejected)
+	if bound: _equipped_ability_dispatch = null
+	return bound
+
+## 可选正式槽位入口；槽位对象由原角色宿主持有，不创建默认技能或独立副本。
+func start_human_equipped_abilities(owner: Object, loadout: RefCounted,
+		resolve_active: Callable, fire_resolved: Callable, stop_resolved: Callable,
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> bool:
+	var dispatch := preload("res://game_core/combat/equipped_ability_dispatch.gd").new()
+	if not dispatch.configure(loadout,resolve_active,fire_resolved,stop_resolved): return false
+	if not start_human_abilities(owner,dispatch.fire,dispatch.stop,target_root,target_cell,notify_rejected): return false
+	_equipped_ability_dispatch = dispatch
+	return true
 
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
 ## resolve_context 返回 null 或当前输入目标的 {actor, command_context}。
@@ -344,6 +357,7 @@ func notify_human_aim_input_disabled() -> void:
 	if _human_aim != null: _reset_human_aim_control()
 
 func stop_human_aim() -> void:
+	_equipped_ability_dispatch = null
 	unbind_human_gameplay_actions()
 	if _human_aim == null: return
 	_reset_human_aim_control()
