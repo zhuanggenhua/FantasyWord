@@ -1,5 +1,6 @@
 extends Node2D
 ## ClickMoveTest 的可注入启动切片。无正式素材、GAS 和系统宿主时不自行补依赖。
+const PointerSelection = preload("res://game_core/ui/pointer_selection.gd")
 const MousePoints = preload("res://game_core/input/mouse_point_actions.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
@@ -36,6 +37,10 @@ var _human_aim: RefCounted
 var _aim_control: Object
 var _aim_was_local := false
 var _mouse_point_actions: RefCounted
+var _pointer_selection: RefCounted
+var _pointer_over_ui: Callable
+var _ui_raycast: Callable
+var last_ui_selection := "unbound"
 var _ui_guard: Callable
 var _player_provider: Callable
 
@@ -132,8 +137,10 @@ func _process(delta: float) -> void:
 			"position": actor.get_movement_position() if owned else Vector2.ZERO})
 	if binding != null: camera.advance_follow(delta)
 	_update_human_aim()
+	update_ui_pointer_selection()
 
 func _exit_tree() -> void:
+	unbind_ui_pointer_selection()
 	stop_human_aim()
 	if human_motion_binding != null:
 		human_motion_binding.detach()
@@ -344,3 +351,36 @@ func stop_human_aim() -> void:
 	human_interaction = null
 	_human_aim = null
 	_aim_control = null
+
+## 可选原 UI 宿主；命中由原 GraphicRaycaster 等价宿主按既有顺序提供。
+## 不复用 Gameplay 点击阻挡策略，也不为诊断面板创造可选按钮。
+func bind_ui_pointer_selection(authored_components: Dictionary, pointer_over: Callable, raycast: Callable) -> bool:
+	if not is_inside_tree() or not pointer_over.is_valid() or not raycast.is_valid(): return false
+	_pointer_selection = PointerSelection.new(get_viewport(),authored_components)
+	_pointer_over_ui = pointer_over
+	_ui_raycast = raycast
+	return true
+
+func unbind_ui_pointer_selection() -> void:
+	_pointer_selection = null
+	_pointer_over_ui = Callable()
+	_ui_raycast = Callable()
+	last_ui_selection = "unbound"
+
+func update_ui_pointer_selection() -> void:
+	if _pointer_selection == null: return
+	if _mouse_point_actions == null or not _mouse_point_actions.read_active(MousePoints.Map.UI) is Vector2:
+		last_ui_selection = "inactive_point"
+		return
+	if not _pointer_over_ui.is_valid() or not _ui_raycast.is_valid():
+		last_ui_selection = "missing_host"
+		return
+	if not _pointer_over_ui.call():
+		last_ui_selection = "not_over_ui"
+		return
+	# 原源码在 pointer-over 后 ReadValue；期间禁用图时读取默认值，不再重做 activeControl 检查。
+	if _pointer_selection == null or _mouse_point_actions == null or not _ui_raycast.is_valid():
+		last_ui_selection = "missing_host"
+		return
+	var point: Vector2 = _mouse_point_actions.read_value_local(MousePoints.Map.UI,get_viewport_rect())
+	last_ui_selection = _pointer_selection.apply_hits(_ui_raycast.call(point))
