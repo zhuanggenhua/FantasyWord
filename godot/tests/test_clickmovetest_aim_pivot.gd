@@ -5,6 +5,7 @@ class Owner extends RefCounted:
 	signal look_at_direction_changed(value: Vector2)
 	var state := Direction.new()
 	var allow_aim := true
+	var allow_interact := true
 	func _init() -> void: state.look_at_direction_changed.connect(_forward_look)
 	func _forward_look(v: Vector2) -> void: look_at_direction_changed.emit(v)
 	func get_look_at_direction() -> Vector2: return state.get_look_at_direction()
@@ -15,7 +16,7 @@ class Owner extends RefCounted:
 		if v.length_squared() > 0.0025: state.set_look_at_direction(v.normalized())
 	func register_collision(_collider: Object) -> void: pass
 	func can_update_target_direction() -> bool: return allow_aim
-	func can_interact() -> bool: return true
+	func can_interact() -> bool: return allow_interact
 	func get_target_direction() -> Vector2: return state.get_target_direction()
 	func set_target_direction(v: Vector2) -> void: state.set_target_direction(v,allow_aim)
 	func reset_target_direction() -> void: state.reset_target_direction()
@@ -191,14 +192,41 @@ func run() -> void:
 	scene._update_human_aim()
 	check(interaction.current_target == right and owner.get_target_direction().is_equal_approx(Vector2.LEFT)
 		and control.refreshes == legacy_refresh_count,"entry stores old-facing hint before aiming left, with no duplicate host refresh")
-	check(interaction.try_interact() and interaction.current_target == right and interaction.interacted_this_frame
+	control.local = false
+	check(scene.submit_human_command({"kind":0,"actor":owner,"interaction_target":left}) == 2,
+		"fallback actor identity is insufficient without selected input target")
+	control.local = true
+	owner.allow_interact = false
+	check(scene.submit_human_command({"kind":0,"actor":owner,"interaction_target":left}) == 8
+		and receiver.senders.is_empty(),"real entry outer gate rejects explicit target")
+	owner.allow_interact = true
+	check(scene.submit_human_command({"kind":0,"actor":foreign,"interaction_target":left}) == 5,
+		"real entry preserves command actor mismatch")
+	check(scene.submit_human_command({"kind":0,"actor":owner}) == 0 and interaction.current_target == right and interaction.interacted_this_frame
 		and receiver.senders == [owner] and audio[0] == 1,"live interaction re-resolves but preserves the cached UI target")
+	var ability_calls := []
+	var activation_calls := []
+	var notices := []
+	check(scene.human_commands.bind_abilities(func(index, command_context, activation):
+		ability_calls.append([index, command_context, activation])
+		return {"has_ability_source":true,"result":1,"formal_gas_ability_code":20001},
+		func(index): ability_calls.append(["stop",index]); return true,
+		func(request): activation_calls.append(request);return {"explicit_host":true},
+		func(code,result): notices.append([code,result])),"real entry explicit ability boundary")
+	var fire_request := {"kind":6,"actor":owner,"ability_index":0,"command_context":{"source":"test"}}
+	check(scene.submit_human_command(fire_request) == 9 and ability_calls.is_empty() and activation_calls.is_empty(),
+		"real entry interaction latch prevents any ability activation")
+	check(scene.submit_human_command({"kind":7,"actor":owner,"ability_index":0}) == 0
+		and ability_calls == [["stop",0]],"real entry stop fire ignores interaction latch")
 	scene._update_human_aim()
 	check(interaction.current_target == left and not interaction.interacted_this_frame,"next entry refresh advances hint and clears latch")
+	check(scene.submit_human_command(fire_request) == 11 and activation_calls == [fire_request]
+		and ability_calls[1] == [0,fire_request.command_context,{"explicit_host":true}]
+		and notices == [[20001,1]],"real entry forwards original context and actual ability rejection after latch reset")
 	scene.notify_human_aim_input_disabled()
 	check(interaction.current_target == null and not interaction.interacted_this_frame,"source owner disable clears preview and latch")
 	scene.stop_human_aim()
-	check(scene.human_interaction == null,"explicit stop detaches resolver from the live entry")
+	check(scene.human_interaction == null and scene.human_commands == null,"explicit stop detaches resolver from the live entry")
 	scene.free();control.free()
 	if failed == 0: print("PASS authored ClickMoveTest aim pivot: %d checks" % n)
 	quit(0 if failed == 0 else 1)

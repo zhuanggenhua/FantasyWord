@@ -27,6 +27,7 @@ var command_count := 0
 var last_result: Variant
 var click_observation := Observation.new()
 var keyboard := Keyboard.new()
+var human_commands: RefCounted
 var human_interaction: RefCounted
 var _human_aim: RefCounted
 var _aim_control: Object
@@ -213,7 +214,24 @@ func start_human_interaction(owner: Object, audio_request: Callable) -> bool:
 	var candidate := Interaction.new()
 	if not candidate.configure(owner,aim_pivot,audio_request): return false
 	human_interaction = candidate
+	human_commands = preload("res://game_core/interaction/character_command_executor.gd").new()
+	human_commands.character = owner
+	human_commands.interaction = candidate
+	human_commands.movement = movement
+	human_commands.terrain_map = route
 	return true
+
+## Already resolved commands only. Player ownership is checked before executor dispatch;
+## raw input, menu and formal GAS setup remain explicit host responsibilities.
+func submit_human_command(request: Dictionary) -> int:
+	if human_commands == null: return Commands.Failure.NOT_RUNNING
+	if not _owns_current_actor(): return Commands.Failure.ACTOR_MISMATCH
+	if not is_instance_valid(_aim_control) or not _aim_control.is_current_controlled(actor): return Commands.Failure.MISSING_INPUT_TARGET
+	if not is_instance_valid(_aim_control) or not _aim_control.accepts_player_input(actor) or not _aim_control.can_be_player_controlled(actor):
+		return Commands.Failure.CONTROL_LOCKED
+	command_count += 1
+	last_result = human_commands.execute(request)
+	return last_result
 
 func _update_human_aim() -> void:
 	if _human_aim == null or not is_instance_valid(_aim_control) or not _aim_control.accepts_player_input(actor):
@@ -248,6 +266,7 @@ func notify_human_aim_input_disabled() -> void:
 func stop_human_aim() -> void:
 	if _human_aim == null: return
 	_reset_human_aim_control()
+	human_commands = null
 	human_interaction = null
 	_human_aim = null
 	_aim_control = null
