@@ -16,6 +16,8 @@ const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const TrainingTarget = preload("res://gameplay/clickmovetest/training_target.gd")
 const TrainingAttributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
 const ChargedHit = preload("res://gameplay/combat/charged_attack_hit.gd")
+const TrainingHitCue = preload("res://gameplay/clickmovetest/training_hit_feedback_cue.gd")
+const ChargedEffects = preload("res://gameplay/combat/charged_effect_application.gd")
 const ChargedDamage = preload("res://gameplay/combat/charged_damage_effect.gd")
 const DamagePush = preload("res://game_core/combat/damage_push_policy.gd")
 # 锁定 GameConfig.asset 的原 Push 门禁；不是诊断的推力记录器。
@@ -46,6 +48,8 @@ var _aim_was_local := false
 var _equipped_ability_dispatch: RefCounted
 var _charged_actor_runtime: Node
 var _charged_timeline: RefCounted
+var training_hit_cue := TrainingHitCue.new()
+var _training_effects := ChargedEffects.new()
 var training_target: Node2D
 var training_attributes: RefCounted
 var _mouse_point_actions: RefCounted
@@ -157,6 +161,8 @@ func _process(delta: float) -> void:
 		training_target.advance_damage_lifecycle()
 
 func _exit_tree() -> void:
+	_training_effects.clear()
+	training_hit_cue.dispose()
 	unbind_ui_pointer_selection()
 	stop_human_aim()
 	if human_motion_binding != null:
@@ -350,6 +356,11 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	training_attributes = properties
 	return target
 
+## 显式导入源图集；空资源不让角色获得假表现。
+func start_training_target_presentation(animation: Dictionary, texture_directory: String) -> Node2D:
+	if not is_instance_valid(training_target): return null
+	return training_target.start_presentation(animation,texture_directory)
+
 ## 兼容现有显式槽位契约：假人只在此入口担任已绑定的受击者。
 ## Caster 当前快照、掷骰和 ASC Cell 属于正式宿主；暴击/闪避来自锁定 GameConfig.asset。
 func start_human_charged_training_combat(owner: Object, loadout: RefCounted, caster_stats: Callable,
@@ -368,24 +379,30 @@ func _hit_training_target(owner: Object, caster_stats: Callable, roll: Callable)
 	var start: Vector2 = actor.get_movement_position()
 	ChargedHit.run(actor.get_world_2d(), actor, start, owner.get_look_at_direction(),
 		func(collider): return training_target if is_instance_valid(training_target) and collider == training_target.hitbox else null,
-		func(_caster,target,effect_id):
-			if effect_id != ChargedHit.EFFECT_ID or not is_instance_valid(target): return
-			var current: Variant = caster_stats.call()
-			if not current is Dictionary or not current.get("snapshot") is Dictionary: return
-			ChargedDamage.execute_damage_phase(current,target.stats,target.hooks(),start,target.get_movement_position(),
-				true,true,roll))
+		func(caster,target,effect_id):
+			if effect_id == ChargedHit.EFFECT_ID:
+				_training_effects.request(caster,target,_execute_training_damage.bind(caster_stats,roll)))
 
-## 先结算已有请求，再推进唯一命中时钟/输入门控，最后处理 Cue 显示阶段。
-## 不把同一帧跨过的任务请求冒充 Unity 执行线程或画面验收。
+func _execute_training_damage(caster: Node2D, target: Node2D, caster_stats: Callable, roll: Callable) -> void:
+	if caster != actor or target != training_target or not caster_stats.is_valid() or not roll.is_valid(): return
+	var current: Variant = caster_stats.call()
+	if not current is Dictionary or not current.get("snapshot") is Dictionary: return
+	# 目标在第12帧确定，根位置和角色属性由后续瞬时效果重新读取。
+	ChargedDamage.execute_damage_phase(current,target.stats,target.hooks(),caster.get_movement_position(),
+		target.get_movement_position(),true,true,roll)
+
+## SGAbility 的时间轴先提交请求；同次逻辑更新的 SGEffect 再消费。
+## 现有技能更新可以合并多个原时间轴帧，不等同于全局 Unity FixedUpdate。
 func advance_human_charged_combat(delta: float) -> void:
 	var runtime: Node = _charged_actor_runtime
-	if not is_instance_valid(runtime): return
-	runtime.process_requests()
-	if runtime != _charged_actor_runtime: return
-	runtime.advance_owned_clock(delta)
-	if runtime != _charged_actor_runtime: return
-	runtime.advance_input(delta)
-	if runtime == _charged_actor_runtime: _charged_timeline.flush_display()
+	if is_instance_valid(runtime):
+		runtime.process_requests()
+		if runtime == _charged_actor_runtime: runtime.advance_owned_clock(delta)
+	_training_effects.run_effects(training_hit_cue.request)
+	if is_instance_valid(runtime) and runtime == _charged_actor_runtime:
+		runtime.advance_input(delta)
+		if runtime == _charged_actor_runtime: _charged_timeline.flush_display()
+	training_hit_cue.flush_display()
 
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
 ## resolve_context 返回 null 或当前输入目标的 {actor, command_context}。

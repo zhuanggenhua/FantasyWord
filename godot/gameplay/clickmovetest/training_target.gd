@@ -5,12 +5,19 @@ const Body = preload("res://game_core/movement/native_motion_body.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Lifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
+const HumanView = preload("res://gameplay/clickmovetest/human_presentation.gd")
+const MotionBinding = preload("res://gameplay/clickmovetest/human_motion_binding.gd")
+const VISUAL_PREFAB := "dca23ea6afacc0647bfd10c5cefa4099"
+const VISUAL_LIBRARIES := ["62c4a52ab213438419c93cc2d8427623","0602b79d46e41504a8117d1fdcc863b2",
+	"aaefe509e84579b4782b521a1d156e71","9ea72d0165623924d891e3222ac25d48"]
 const SOURCE_POSITION := Vector2(2.5, -2.75)
 const BODY_SIZE := Vector2(.78, .86)
 const BODY_OFFSET := Vector2(0, .42)
 const HIT_SIZE := Vector2(.6, 1)
 const HIT_OFFSET := Vector2(0, .5)
 var body: AnimatableBody2D
+var presentation: Node2D
+var _presentation_motion: RefCounted
 var hitbox: Area2D
 var lifecycle := Lifecycle.new()
 var _bindings: Dictionary = {}
@@ -59,7 +66,7 @@ func _ready() -> void:
 	body.add_child(capsule)
 	add_child(body)
 	body.configure_movement(capsule, Filter.new(Filter.Mode.FREE,false,.05,10,10),
-		_movement_owner, _terrain_mask)
+		self, _terrain_mask)
 	hitbox = Area2D.new()
 	hitbox.name = "训练假人受击盒"
 	hitbox.collision_layer = 128
@@ -73,6 +80,46 @@ func _ready() -> void:
 	hitbox.add_child(hit_shape)
 	body.add_child(hitbox)
 
+## 锁定训练假人的 Runtime DirectionalSpriteLibraryDriver 使用原 Human 四向库，
+## 表现挂在身体局部原点；不使用胶囊的中心偏移。
+func start_presentation(animation: Dictionary, texture_directory: String) -> Node2D:
+	if _presentation_motion != null or not is_instance_valid(body) or not body.is_inside_tree(): return null
+	var provenance: Variant = animation.get("training_target")
+	if not provenance is Dictionary or provenance.get("prefab_guid") != VISUAL_PREFAB \
+			or provenance.get("runtime_libraries") != VISUAL_LIBRARIES: return null
+	var pivot: Variant = provenance.get("body_local_position")
+	if not pivot is Array or pivot.size()!=2 or pivot[0]!=0 or pivot[1]!=0: return null
+	var view := HumanView.new()
+	body.add_child(view)
+	if not view.configure(animation,texture_directory) or view.driver.resolve_playable_state("Dmg").is_empty():
+		view.free()
+		return null
+	var motion := MotionBinding.new()
+	if not motion.configure(_movement_owner,view,false):
+		view.free()
+		return null
+	_presentation_motion = motion
+	presentation = view
+	motion.activate()
+	return view
+
+func _exit_tree() -> void:
+	if _presentation_motion != null:
+		_presentation_motion.detach()
+		_presentation_motion = null
+
+# 原动作拥有者仍裁决移动、碰撞和朝向；表现只收到实际接受的位移。
+func can_move() -> bool: return is_instance_valid(_movement_owner) and _movement_owner.can_move()
+func calculate_move_speed() -> float: return _movement_owner.calculate_move_speed()
+func calculate_speed_multiplier() -> float: return _movement_owner.calculate_speed_multiplier()
+func update_facing_from_intent(value: Vector2) -> void: _movement_owner.update_facing_from_intent(value)
+func register_collision(collider: Object) -> void: _movement_owner.register_collision(collider)
+func update_movement_animation(value: Vector2) -> void:
+	if _presentation_motion != null and is_instance_valid(presentation):
+		_presentation_motion.update_movement_animation(value)
+	elif is_instance_valid(_movement_owner):
+		_movement_owner.update_movement_animation(value)
+
 func get_movement_position() -> Vector2: return body.get_movement_position()
 func source_position() -> Vector2: return get_movement_position()
 
@@ -81,6 +128,9 @@ func hooks() -> Dictionary:
 	result.prepare = func(source, input):
 		lifecycle.on_prepare_damage(input.silent)
 		_bindings.prepare.call(source,input)
+		if not input.silent and is_instance_valid(presentation):
+			if not presentation.try_play_damage_animation():
+				push_error("训练假人的正式 Dmg 动画无法播放")
 	result.apply_current_health_delta = func(delta, minimum, maximum, source):
 		var previous: int = health
 		var value: Variant = _bindings.apply_current_health_delta.call(delta,minimum,maximum,source)

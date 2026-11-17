@@ -2,6 +2,8 @@ extends "res://tests/test_resolved_ability_fire.gd"
 const Attributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
 class TargetMotion extends RefCounted:
+	signal look_at_direction_changed(value: Vector2)
+	var look_at := Vector2.DOWN
 	var destroyed := false
 	var dead := false
 	var invincible := false
@@ -11,6 +13,7 @@ class TargetMotion extends RefCounted:
 	func calculate_speed_multiplier() -> float: return 1
 	func update_movement_animation(_v: Vector2) -> void: pass
 	func update_facing_from_intent(_v: Vector2) -> void: pass
+	func get_look_at_direction() -> Vector2: return look_at
 	func register_collision(_obj: Object) -> void: pass
 	func read_destroyed(): return destroyed
 	func read_dead(): return dead
@@ -72,6 +75,41 @@ func run() -> void:
 	check(target.body.collision_layer==256 and target.hitbox.collision_layer==128,"身体与受击盒不是同层")
 	check(target.stats.alignment==Combat.Alignment.EVIL and target.stats.snapshot.physical_defense==0,
 		"属性快照来自源假人表")
+	var target_dir := directory
+	var target_animation: Dictionary
+	if not asset_dir.is_empty() and not private_dir.is_empty():
+		target_dir = private_dir.path_join("private-human-source")
+		target_animation = read(private_dir.path_join("private-dmg-verification/trainer-animation.json"))
+	else:
+		target_animation = pack[1].duplicate(true)
+		var dmg: Dictionary = target_animation.actions.Idle.duplicate(true)
+		dmg.duration = .5
+		dmg.loop = false
+		target_animation.actions["Dmg"] = dmg
+		target_animation.training_target = {"prefab_guid":target.VISUAL_PREFAB,
+			"runtime_libraries":target.VISUAL_LIBRARIES,"body_local_position":[0,0]}
+	var wrong_target := target_animation.duplicate(true)
+	wrong_target.erase("training_target")
+	check(scene.start_training_target_presentation(wrong_target,target_dir)==null,
+		"相同动画名不代表原训练假人绑定")
+	var target_view: Node2D = scene.start_training_target_presentation(target_animation,target_dir)
+	check(is_instance_valid(target_view),"同一假人身体挂载原动作表现")
+	if not is_instance_valid(target_view):
+		scene.free()
+		control.free()
+		quit(1)
+		return
+	check(target_view.get_parent()==target.body and target_view.position==Vector2.ZERO and target_view.driver.current_animation_key=="Idle",
+		"不把表现偏到碰撞中心，不提前播放 Dmg")
+	if not asset_dir.is_empty():
+		var material := read(private_dir.path_join("private-dmg-verification/material.json"))
+		check(target_view.bind_base_material(material,target_dir,private_dir.path_join("private-formal-player-appearance")),
+			"同一原训练假人绑定原 UV 和无装备初始外观")
+	target_view.animator.callback_mode_process=AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+	target_view.driver.set_process(false)
+	var damage_trace: Array = []
+	target_view.driver.animation_selected.connect(func(key):
+		if key=="Dmg": damage_trace.append([target.health,scene.training_hit_cue.activation_count]))
 	check(scene.training_attributes.max_health()==220 and scene.training_attributes.apply_current_health_delta(1,0,null,null)==null,
 		"不代替治疗或上限")
 	var caster := Attributes.new()
@@ -105,6 +143,18 @@ func run() -> void:
 	var previous: Vector2=target.get_movement_position()
 	scene.advance_human_charged_combat(.02)
 	check(target.health==198 and scene.training_attributes.max_health()==220,"原数值伤害 7+10×1.5，220→198")
+	check(damage_trace==[[220,0]] and target_view.driver.current_animation_key=="Dmg","Dmg 在提交生命变更前真实播放")
+	check(scene.training_hit_cue.activation_count==1 and scene.training_hit_cue.last_activation.cue_id==20001
+		and not scene.training_hit_cue.last_activation.feedback_slot_configured,"耗用瞬时效果后 Display 处理真实 20001 空槽")
+	var first_dmg: Texture2D = target_view.sprite.texture
+	target_view.animator.advance(.14)
+	if not asset_dir.is_empty():
+		check(target_view.playback.current_label==1 and target_view.sprite.texture is AtlasTexture
+			and target_view.sprite.texture!=first_dmg,"原 Dmg 图集帧随实际 AnimationPlayer 改变")
+	target_view.driver.advance_game_time(.49)
+	check(target_view.driver.current_animation_key=="Dmg","恢复不能提前")
+	target_view.driver.advance_game_time(.02)
+	check(target_view.driver.current_animation_key=="Idle","原 .5 秒 Dmg 自然恢复 Idle")
 	check(native_target.trace.size()==3 and native_target.trace[1]==["prepare",22] and native_target.trace[2]==["complete",220,22],
 		"实际结算回调顺序与扣减")
 	check(target.body.is_pushed() and target.lifecycle.pending_interrupt,"唯一原生推力与延迟打断")
@@ -116,7 +166,8 @@ func run() -> void:
 	check(target.get_movement_position().x>previous.x,"原生运动步实际推进假人物理身体")
 	scene.advance_human_charged_combat(.7)
 	scene.advance_human_charged_combat(0)
-	check(target.health==198 and not ability.spec.active and not ability.local_active,"收招仅结算一次")
+	check(target.health==198 and not ability.spec.active and not ability.local_active and scene.training_hit_cue.activation_count==1,
+		"收招不重复结算或播放已用 Cue")
 	var hits: Array=[]
 	scene.training_attributes.current_health_changed.connect(func(a,b,_s):hits.append([a,b]))
 	check(scene.training_attributes.apply_current_health_delta(-400,0,null,caster.stats())==0 and hits==[[198,0]],
