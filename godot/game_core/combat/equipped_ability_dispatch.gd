@@ -7,7 +7,7 @@ var _fire_resolved: Callable
 var _stop_resolved: Callable
 
 ## resolve_active 必须执行原运行时查找和 ActiveAbilityBase 类型判定；失败返回 null。
-## fire_resolved 仍由正式能力宿主执行 CanFire/朝向/生命周期，返回原检查结果整数。
+## fire_resolved 可由正式宿主提供，或使用下方已迁移的 resolved 调度。
 func configure(loadout: RefCounted, resolve_active: Callable, fire_resolved: Callable, stop_resolved: Callable) -> bool:
 	if not loadout is Loadout or not resolve_active.is_valid() or not fire_resolved.is_valid() or not stop_resolved.is_valid(): return false
 	_loadout = loadout
@@ -29,3 +29,60 @@ func stop(index: int) -> bool:
 	if not is_instance_valid(ability): return false
 	_stop_resolved.call(ability)
 	return true
+
+
+var _character: Object
+var _ability_host: Object
+
+## 宿主仅提供实际能力操作；不缓存 CanFire、flags 或 GameObject 状态。
+## 方向由现有角色唯一 owner 持有，SetTargetDirection 自行执行原 gate 和 TargetBased。
+func configure_resolved_fire(loadout: RefCounted, resolve_active: Callable, character: Object, host: Object) -> bool:
+	if not is_instance_valid(character) or not is_instance_valid(host): return false
+	for method in ["set_target_direction","get_target_direction","set_look_at_direction"]:
+		if not character.has_method(method): return false
+	for method in ["can_fire","should_update_look_at_direction_on_fire","uses_automatic_runtime_state_management","set_ability_active","fire","stop_fire"]:
+		if not host.has_method(method): return false
+	if not configure(loadout,resolve_active,_fire_resolved_source,host.stop_fire): return false
+	_character = character
+	_ability_host = host
+	return true
+
+## CharacterAbilitySet.FireResolvedAbility：检查失败时无方向或生命周期副作用。
+func _fire_resolved_source(ability: Object, command_context: Variant, activation_context: Variant) -> int:
+	var result: int = _ability_host.can_fire(ability)
+	if result != 0: return result
+	var requested := Vector2.ZERO
+	var has_requested := false
+	if activation_context != null:
+		var aim: Dictionary = activation_context.try_get_aim_direction()
+		if aim.has_direction:
+			requested = Vector2(aim.direction.x,aim.direction.y)
+			if _source_sqr(requested) > PackedFloat32Array([0.0001])[0]:
+				has_requested = true
+				requested = requested.normalized()
+				_character.set_target_direction(requested)
+	if _ability_host.should_update_look_at_direction_on_fire(ability):
+		var target: Vector2 = _character.get_target_direction()
+		if has_requested: target = requested
+		if _source_sqr(target) > PackedFloat32Array([0.0001])[0]:
+			_character.set_look_at_direction(target)
+	if _ability_host.uses_automatic_runtime_state_management(ability):
+		_ability_host.set_ability_active(ability,true)
+		_ability_host.fire(ability,command_context,activation_context,_completion(ability,_ability_host))
+	else:
+		_ability_host.fire(ability,command_context,activation_context,null)
+	return result
+
+static func _source_sqr(value: Vector2) -> float:
+	return preload("res://game_core/interaction/ability_activation_context.gd").source_sqr_magnitude(Vector3(value.x,value.y,0))
+
+## 捕获同一实例而非槽位；弱引用避免原生 RefCounted 能力保存结束回调时成环。
+## 已释放的对象不再有可关闭状态；不解析替代对象，不修改当前槽位。
+static func _completion(ability: Object, host: Object) -> Callable:
+	var ability_ref: WeakRef = weakref(ability)
+	var host_ref: WeakRef = weakref(host)
+	return func():
+		var live_ability: Object = ability_ref.get_ref()
+		var live_host: Object = host_ref.get_ref()
+		if is_instance_valid(live_ability) and is_instance_valid(live_host):
+			live_host.set_ability_active(live_ability,false)

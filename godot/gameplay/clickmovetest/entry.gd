@@ -272,6 +272,16 @@ func start_human_equipped_abilities(owner: Object, loadout: RefCounted,
 	_equipped_ability_dispatch = dispatch
 	return true
 
+## 已解析能力的原调度入口；resolver 与实际 GAS 操作必须由显式正式宿主提供。
+func start_human_resolved_equipped_abilities(owner: Object, loadout: RefCounted,
+		resolve_active: Callable, ability_host: Object,
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> bool:
+	var dispatch := preload("res://game_core/combat/equipped_ability_dispatch.gd").new()
+	if not dispatch.configure_resolved_fire(loadout,resolve_active,owner,ability_host): return false
+	if not start_human_abilities(owner,dispatch.fire,dispatch.stop,target_root,target_cell,notify_rejected): return false
+	_equipped_ability_dispatch = dispatch
+	return true
+
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
 ## resolve_context 返回 null 或当前输入目标的 {actor, command_context}。
 func bind_human_gameplay_actions(resolve_context: Callable, interact_blocked: Callable, notify_failed: Callable) -> bool:
