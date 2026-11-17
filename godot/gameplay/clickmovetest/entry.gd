@@ -28,6 +28,7 @@ var command_count := 0
 var last_result: Variant
 var click_observation := Observation.new()
 var keyboard := Keyboard.new()
+var human_gameplay_actions: RefCounted
 var human_commands: RefCounted
 var human_interaction: RefCounted
 var _human_aim: RefCounted
@@ -246,6 +247,22 @@ func start_human_abilities(owner: Object, fire: Callable, stop: Callable,
 		return preload("res://game_core/interaction/ability_activation_builder.gd").build(
 			request,root,owner.get_target_direction,target_root,target_cell),notify_rejected)
 
+## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
+## resolve_context 返回 null 或当前输入目标的 {actor, command_context}。
+func bind_human_gameplay_actions(resolve_context: Callable, interact_blocked: Callable, notify_failed: Callable) -> bool:
+	if human_commands == null: return false
+	var candidate := preload("res://game_core/input/gameplay_command_actions.gd").new()
+	if not candidate.configure(resolve_context,submit_human_command,interact_blocked,notify_failed): return false
+	human_gameplay_actions = candidate
+	return true
+
+func receive_human_gameplay_action(action_map: String, action: String, phase: String) -> Variant:
+	if human_gameplay_actions == null: return null
+	return human_gameplay_actions.receive(action_map,action,phase)
+
+func unbind_human_gameplay_actions() -> void:
+	human_gameplay_actions = null
+
 ## Already resolved commands only. Player ownership is checked before executor dispatch;
 ## raw input, menu and formal GAS setup remain explicit host responsibilities.
 func submit_human_command(request: Dictionary) -> int:
@@ -289,6 +306,7 @@ func notify_human_aim_input_disabled() -> void:
 	if _human_aim != null: _reset_human_aim_control()
 
 func stop_human_aim() -> void:
+	unbind_human_gameplay_actions()
 	if _human_aim == null: return
 	_reset_human_aim_control()
 	human_commands = null
