@@ -223,6 +223,31 @@ func run() -> void:
 	check(scene.submit_human_command(fire_request) == 11 and activation_calls == [fire_request]
 		and ability_calls[1] == [0,fire_request.command_context,{"explicit_host":true}]
 		and notices == [[20001,1]],"real entry forwards original context and actual ability rejection after latch reset")
+	var contexts := []
+	var cell_queries := [0]
+	var target_cell := RefCounted.new()
+	check(not scene.start_human_abilities(foreign,func():pass,func():pass,func():pass,func():pass,func():pass),
+		"技能宿主不能换掉已绑定角色")
+	check(scene.start_human_abilities(owner,func(_index,_command,activation):
+		contexts.append(activation)
+		return {"has_ability_source":true,"result":0,"formal_gas_ability_code":20001},
+		func(_index):return true,
+		func(target): return Vector3(target.global_position.x,-target.global_position.y,0),
+		func(_target):cell_queries[0]+=1;return target_cell,
+		func(_code,_result):pass),"真实入口绑定源码激活上下文与显式 Cell 提供方")
+	var native_request := {"kind":6,"actor":owner,"target_character":left,"direction":Vector2(0,2)}
+	interaction.interacted_this_frame = true
+	check(scene.submit_human_command(native_request) == 9 and cell_queries[0] == 0,
+		"交互闩锁阻止上下文构造与 Cell 解析")
+	interaction.interacted_this_frame = false
+	var prior_direction: Vector2 = owner.get_target_direction()
+	check(scene.submit_human_command(native_request) == 0 and contexts.size() == 1,
+		"真实命令路径调用源码上下文构建")
+	var built = contexts[0]
+	check(built.aim_origin == Vector3(scene.actor.global_position.x,-scene.actor.global_position.y,0)
+		and built.main_target == target_cell and built.try_get_aim_direction().direction == Vector3.UP,
+		"Actor 根坐标只翻转一次，与偏移 Pivot 无关，显式方向保留目标 Cell")
+	check(owner.get_target_direction() == prior_direction,"构建上下文不改写角色当前方向")
 	scene.notify_human_aim_input_disabled()
 	check(interaction.current_target == null and not interaction.interacted_this_frame,"source owner disable clears preview and latch")
 	scene.stop_human_aim()

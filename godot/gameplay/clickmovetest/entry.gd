@@ -221,6 +221,19 @@ func start_human_interaction(owner: Object, audio_request: Callable) -> bool:
 	human_commands.terrain_map = route
 	return true
 
+## 可选正式技能宿主：保留真实 Cell 身份，不生成 GAS 或目标组件。
+## target_root(target) 返回目标根的 Unity Vector3；target_cell(target) 返回真实 ASC.Cell 或 null。
+## 请求 direction/world_position 与角色方向状态统一为 Unity 坐标，不接受 Godot 屏幕坐标。
+func start_human_abilities(owner: Object, fire: Callable, stop: Callable,
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> bool:
+	if human_commands == null or human_commands.character != owner: return false
+	if not target_root.is_valid() or not target_cell.is_valid(): return false
+	return human_commands.bind_abilities(fire,stop,func(request):
+		# 锁定 ClickMoveTest 的 Actor 根 Z=0；Static Pivot 与 Body 偏移均不能参与。
+		var root := Vector3(actor.global_position.x,-actor.global_position.y,0)
+		return preload("res://game_core/interaction/ability_activation_builder.gd").build(
+			request,root,owner.get_target_direction,target_root,target_cell),notify_rejected)
+
 ## Already resolved commands only. Player ownership is checked before executor dispatch;
 ## raw input, menu and formal GAS setup remain explicit host responsibilities.
 func submit_human_command(request: Dictionary) -> int:
