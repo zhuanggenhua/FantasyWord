@@ -1,0 +1,75 @@
+extends "res://tests/test_clickmovetest_aim_pivot.gd"
+const Points = preload("res://game_core/input/mouse_point_actions.gd")
+func motion(position: Vector2, relative: Vector2, device: int = 0) -> void:
+	var event := InputEventMouseMotion.new()
+	event.position = position
+	event.relative = relative
+	event.device = device
+	root.push_input(event,true)
+func run() -> void:
+	root.size = Vector2i(800,600)
+	var scene = Entry.instantiate()
+	root.add_child(scene)
+	var control := ControlHost.new()
+	root.add_child(control)
+	var player := Player.new()
+	player.actor = scene.actor
+	var owner := Owner.new()
+	var events := MapEvents.new()
+	var directory := ProjectSettings.globalize_path("user://point-test")
+	var fixture: Array
+	var private_dir := OS.get_environment("FORMAL_HUMAN_PRIVATE")
+	if private_dir.is_empty(): fixture = fixtures(scene,directory)
+	else:
+		directory = private_dir.path_join("private-human-source")
+		fixture = [read(private_dir.path_join("private-clickmove-audit/rules.json")),
+			read(private_dir.path_join("private-formal-human-verification/animation-final.json"))]
+	check(scene.start_human_presentation(fixture[1],directory) != null,"正式入口挂接测试图集")
+	check(scene.start_human_logic(owner,fixture[0],func():return player,func():return null,events,func(_p):return false),"正式逻辑启动")
+	check(scene.start_human_aim(owner,control),"正式瞄准启动")
+	var actions := Points.new(0)
+	check(scene.bind_mouse_point_actions(actions),"显式绑定 Point")
+	await process_frame
+	motion(Vector2(200,100),Vector2.ONE)
+	actions.enable(Points.Map.GAMEPLAY)
+	check(actions.read_active(0) == null,"启用无初始状态检查")
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_RIGHT
+	click.position = Vector2(300,100)
+	root.push_input(click,true)
+	check(actions.read_active(0) == null,"按钮快照不能激活 Point")
+	motion(Vector2(200,100),Vector2.ZERO)
+	check(actions.read_active(0) == null,"静止事件不能激活 Point")
+	var position: Vector2 = root.get_canvas_transform()*Vector2(0,-0.2)
+	motion(position,Vector2.ONE)
+	scene._update_human_aim()
+	check(actions.read_active(0) == position,"Viewport 运动触发 Gameplay")
+	check(owner.get_target_direction().is_equal_approx(Vector2(0,-1)),"实际入口使用 Point 而非宿主伪造样本")
+	check(actions.read_active(1) == null,"UI 独立未启用")
+	await process_frame
+	check(actions.read_active(0) == position,"静止仍为 Performed")
+	actions.enable(0)
+	check(actions.read_active(0) == position,"已启用动作重复 Enable 不重置")
+	actions.disable(0)
+	actions.enable(1)
+	check(actions.read_active(0) == null and actions.read_active(1) == null,"切换禁用旧图且新图无初始检查")
+	motion(Vector2.ZERO,-Vector2.ONE)
+	check(actions.read_active(1) == Vector2.ZERO,"零坐标也保持有效")
+	actions.enable(0)
+	check(actions.read_active(0) == null,"两图独立状态")
+	motion(Vector2(5,5),Vector2.ONE)
+	check(actions.read_active(0) == Vector2(5,5) and actions.read_active(1) == Vector2(5,5),"显式同时启用时独立驱动")
+	actions.disable(0); actions.enable(0)
+	check(actions.read_active(0) == null and actions.read_active(1) == Vector2(5,5),"同图切换 Disable Enable 清空而不影响另一图")
+	motion(Vector2(9,9),Vector2.ONE,1)
+	motion(Vector2(10,10),Vector2.ONE,-1)
+	check(actions.read_active(0) == null,"非配对设备和触屏模拟不驱动")
+	actions.reset_device()
+	check(actions.read_active(0) == null and actions.read_active(1) == null,"设备重置清空动作")
+	scene._update_human_aim()
+	check(owner.get_target_direction() == owner.get_look_at_direction(),"无活动 Point 重置目标方向")
+	motion(Vector2(6,6),Vector2.ONE)
+	check(actions.read_active(0) == Vector2(6,6),"设备重置后需新变化")
+	scene.free(); control.free()
+	if failed: printerr("FAIL mouse Point: %s/%s" % [failed,n]); quit(1)
+	else: print("PASS mouse Point: %s checks" % n); quit(0)

@@ -1,5 +1,6 @@
 extends Node2D
 ## ClickMoveTest 的可注入启动切片。无正式素材、GAS 和系统宿主时不自行补依赖。
+const MousePoints = preload("res://game_core/input/mouse_point_actions.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
@@ -32,6 +33,7 @@ var human_interaction: RefCounted
 var _human_aim: RefCounted
 var _aim_control: Object
 var _aim_was_local := false
+var _mouse_point_actions: RefCounted
 var _ui_guard: Callable
 var _player_provider: Callable
 
@@ -79,6 +81,7 @@ func _resize_camera() -> void:
 	camera.force_update_scroll()
 
 func _input(event: InputEvent) -> void:
+	if _mouse_point_actions != null: _mouse_point_actions.observe(event)
 	if movement == null: return
 	# 原生 GUI 可能在 _unhandled_input 前消费点击；观察必须先于该阶段。
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -206,6 +209,15 @@ func start_human_aim(owner: Object, control: Object) -> bool:
 	_human_aim = candidate
 	return true
 
+## 可选鼠标 Point 入口。调用者显式持有动作图生命周期，不影响既有点击链。
+func bind_mouse_point_actions(actions: RefCounted) -> bool:
+	if actions == null or not actions is MousePoints: return false
+	_mouse_point_actions = actions
+	return true
+
+func unbind_mouse_point_actions() -> void:
+	_mouse_point_actions = null
+
 ## 可选：把原 CharacterButtonActivation 绑定到同一个已启动的权威角色和 Static Pivot。
 ## 不登记未从原场景迁移的目标，也不在这里接管按键、角色命令或音频系统。
 func start_human_interaction(owner: Object, audio_request: Callable) -> bool:
@@ -260,7 +272,7 @@ func _update_human_aim() -> void:
 	if not is_instance_valid(owner) or not owner.can_update_target_direction(): return
 	var point: Variant = null
 	if not actor.has_active_movement_intent():
-		point = _aim_control.read_active_gameplay_pointer()
+		point = _mouse_point_actions.read_active(MousePoints.Map.GAMEPLAY) if _mouse_point_actions != null else _aim_control.read_active_gameplay_pointer()
 	if not _human_aim.try_update(camera,point if point is Vector2 else Vector2.ZERO,point is Vector2):
 		owner.reset_target_direction()
 
