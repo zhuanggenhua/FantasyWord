@@ -31,15 +31,16 @@ func run() -> void:
 	var ground: Node2D = scene.ground_layers
 	check(not scene.bind_ground_layers(directory),"重复装配拒绝，不堆叠第二份地图")
 	check(ground.cell_count(-1)==900 and ground.cell_count(0)==547,"900 个基础格与547个作者覆盖格")
-	check(not ground.source_available(-1) and not ground.source_available(10),"基础地面不当作可删除覆盖，未迁移来源不假装可用")
+	check(not ground.source_available(-1) and not ground.source_available(30) and not ground.source_available(31),"基础地面不当作可删除覆盖，未迁移来源不假装可用")
 	check(scene.bind_surface_presentation(fire_path),"现有地表控制器自动绑定实际逐格透明度")
 	var terrain: RefCounted = scene.surface_elements
+	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，非覆盖装饰未装配")
 	var selected := Vector3i.ZERO
 	var found := false
 	for row in read(rules).rows:
 		var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),0)
 		var state: Dictionary = terrain.sample(cell)
-		if row.walkable and state.cover_source_id==0 and state.base_surface==2 and ground.source_sprite(0,cell)!=null:
+		if row.walkable and state.cover_source_id==0 and state.base_surface==2 and ground.source_sprite(0,cell)!=null and ground.source_sprite(10,cell)!=null:
 			selected=cell
 			found=true
 			break
@@ -52,10 +53,12 @@ func run() -> void:
 	var base: Sprite2D = ground.source_sprite(-1,selected)
 	var base_texture := base.texture
 	var cover_texture := cover.texture
+	var upper: Sprite2D = ground.source_sprite(10,selected)
+	check(upper.z_index==-8,"来源10使用原排序-8而非覆盖优先级10")
 	check(cover.position==Vector2(selected.x+.5,-selected.y-.5) and cover.scale==Vector2(.125,.125)
 		and cover.offset==Vector2(-4,-4),"真实8像素/单位与中心锚点、Y翻转")
 	check(base.z_index==-10 and cover.z_index==-9 and base.self_modulate.a==1 and cover.self_modulate.a==1,"原排序与初始逐格透明度")
-	check(ground.mapped_cover_sources(selected)==[0],"仅返回该格确有作者覆盖的已挂载层")
+	check(ground.mapped_cover_sources(selected)==[0,10],"仅返回该格确有作者覆盖的已挂载层")
 	var point := Vector2(selected.x+.5,selected.y+.5)
 	check(terrain.apply_point(Surface.FIRE,point,1,.1,scene.actor,20010),"原规则点燃真实草格")
 	check(cover.self_modulate.a==1 and scene.surface_fire_tiles.get_used_cells().size()==1,"燃烧中保留草与残火，未过早删除覆盖")
@@ -63,21 +66,34 @@ func run() -> void:
 	check(cover.self_modulate.a==1 and scene.surface_fire_tiles.get_used_cells().is_empty(),"水熄火不隐藏仍有的草覆盖")
 	check(terrain.apply_point(Surface.FIRE,point,1,.1,scene.actor,20010),"水后再次点燃，不自行补素材")
 	for step in 51: terrain.advance(.1)
-	check(terrain.sample(selected).cover_lifecycle==3 and cover.self_modulate.a==0,"五秒燃尽由原状态驱动实际 Sprite 透明度")
+	check(terrain.sample(selected).cover_lifecycle==3 and cover.self_modulate.a==0 and upper.self_modulate.a==0,"五秒燃尽由原状态驱动实际 Sprite 透明度")
 	check(base.self_modulate.a==1 and base.texture==base_texture and cover.texture==cover_texture
 		and ground.cell_count(0)==547 and ground.cell_count(-1)==900,"只隐藏覆盖，不删除瓦片、不替换底图，不合成焦土")
 	check(scene.surface_fire_tiles.get_used_cells().is_empty(),"燃尽删除原临时火焰，不新增 Steam 图")
 	terrain.clear()
-	check(cover.self_modulate.a==1 and base.texture==base_texture,"清除运行时状态恢复同一个作者覆盖格")
+	check(cover.self_modulate.a==1 and upper.self_modulate.a==1 and base.texture==base_texture,"清除运行时状态恢复同一个作者覆盖格")
 	check(terrain.apply_point(Surface.FIRE,point,1,.1,scene.actor,20010),"恢复后可再次点燃")
 	for step in 51: terrain.advance(.1)
 	scene.surface_presentation.disable()
 	check(cover.self_modulate.a==1,"控制器禁用恢复真实逐格透明度")
 	check(scene.surface_presentation.enable(terrain.runtime_cells()) and cover.self_modulate.a==0,"重新启用同步仍燃尽的状态")
+	terrain.clear()
+	for cell in [Vector3i(-7,6,0),Vector3i(-6,6,0),Vector3i(-4,3,0)]:
+		var expected := [10,20] if cell==Vector3i(-4,3,0) else [20]
+		check(ground.mapped_cover_sources(cell)==expected,"原作者上层映射与实际重叠来源")
+		check(ground.source_sprite(20,cell).z_index==-1,"来源20沿用原排序-1")
+		check(terrain.apply_point(Surface.FIRE,Vector2(cell.x+.5,cell.y+.5),1,.1,scene.actor,20010),"来源20真实草点燃")
+		for step in 51: terrain.advance(.1)
+		for source in expected:
+			check(ground.source_sprite(source,cell).self_modulate.a==0,"每个实际映射图层都隐藏，不只最高优先级")
+		terrain.clear()
+		for source in expected:
+			check(ground.source_sprite(source,cell).self_modulate.a==1,"清理恢复所有实际映射草")
+	check(ground.source_sprite(20,Vector3i(-7,13,0))==null and not ground.mapped_cover_sources(Vector3i(-7,13,0)).has(20),"同层随机旁观瓦片不冒充可移除草")
 	events.map_unloaded.emit()
 	check(scene.ground_layers==null and scene.surface_presentation==null and not ground.visible,"卸载取消绑定且立即隐藏地图")
 	scene.queue_free()
 	await process_frame
 	await process_frame
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；未包含其他覆盖图层或 Unity 像素对照" % [n,failed])
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；未包含旁观装饰、来源30/31或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)

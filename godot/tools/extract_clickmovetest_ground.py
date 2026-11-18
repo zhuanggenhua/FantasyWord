@@ -3,7 +3,7 @@
 
 Dirt 按作者 RuleTile 的 Fixed/Single 首个匹配规则求值，再逐格核对场景缓存。
 依据锁定 packages-lock 的 Unity 2D Tilemap Extras 6.0.1 RuleTile.cs。
-仅负责两层的静态图像布局，不复制图片，也不把其他四个覆盖来源当作已迁移。
+仅负责基础两层与来源10/20的161格可移除草，不复制图片；其余层和旁观瓦片未装配。
 """
 import argparse
 from collections import Counter
@@ -29,19 +29,21 @@ def read(checkout, path):
     return git(checkout, 'show', f'{SOURCE}:{path}')
 
 
-def resolve_dirt(rule_asset, cell, authored_cells):
+def resolve_fixed_tile_rule(rule_asset, cell, authored_cells, tile_guid):
     """仅实现这份作者配置实际使用的 Fixed/Single；不猜随机或旋转规则。"""
     sprite = rule_asset['m_DefaultSprite']
     for rule in rule_asset['m_TilingRules']:
         require(rule['m_RuleTransform'] == 0 and rule['m_Output'] == 0, '不是固定单图规则')
-        raw = bytes.fromhex(rule['m_Neighbors'])
+        raw = bytes.fromhex(rule['m_Neighbors'] or '')
         require(len(raw) % 4 == 0, '邻接字节损坏')
         neighbors = struct.unpack('<' + 'i' * (len(raw) // 4), raw)
-        positions = rule['m_NeighborPositions']
+        positions = rule['m_NeighborPositions'] or []
+        # 原 RuleMatches 使用两数组长度的最小值；Grass末规则保留8位置但无邻接。
+        require(all(n in (0,1,2) for n in neighbors), '邻接类型不支持')
         matched = True
         for neighbor, offset in zip(neighbors, positions):
             other = authored_cells.get(tuple(a+b for a,b in zip(cell, xyz(offset))), {})
-            same = other.get('guid') == DIRT_GUID
+            same = other.get('guid') == tile_guid
             if (neighbor == 1 and not same) or (neighbor == 2 and same):
                 matched = False
                 break
@@ -78,12 +80,27 @@ def extract(checkout):
             sprites[f"{guid}:{sprite['internalID']}"] = {'texture': guid,
                 'rect': [rect[k] for k in ('x', 'y', 'width', 'height')],
                 'pivot': [sprite['pivot'][k] for k in ('x', 'y')], 'ppu': 8}
+    upper_guid = 'e41387fb62d13cf40aa1d24ec147cee0'
+    upper_raw = re.sub(r'(m_Neighbors: )([0-9a-f]+)', r'\1"\2"', read(checkout, ROOT + 'Tile Palettes/Rule Tiles/Grass.asset'))
+    upper = get_document(upper_raw, 11400000, 'MonoBehaviour')
+    require(upper['m_Script']['guid'] == '9d1514134bc4fbd41bb739b1b9a49231', '上层草规则身份不符')
+    # 与正式覆盖解析同源，不能因为同层有瓦片就一并当作可燃草。
+    nav = get_document(scene, 1148507052, 'MonoBehaviour')
+    source = next(row for row in nav['m_surfaceLayerSources'] if row['m_sourceId'] == 20)
+    require(source['m_tilemap']['fileID'] == 913349356 and source['m_priority'] == 20
+            and [(m['m_tile']['guid'], m['m_coverKind'], m['m_traits']) for m in source['m_surfaceCoverTileMappings']] == [(upper_guid,1,3)], '来源20作者映射变化')
+    detail_guid = 'e3e7c5e9438735847b05de88b6910a83'
+    detail = get_document(read(checkout, ROOT + 'Tile Palettes/Standard Tiles/Ground/Grass19_Minifantasy_ForgottenPlainsTiles_3.asset'),11400000,'MonoBehaviour')
+    require(detail['m_Transform'] == IDENTITY and detail['m_Color'] == WHITE and detail['m_InstancedGameObject']['fileID'] == 0, '来源10标准草配置变化')
+    source10 = next(row for row in nav['m_surfaceLayerSources'] if row['m_sourceId'] == 10)
+    require(source10['m_tilemap']['fileID'] == 453769794 and source10['m_priority'] == 10
+            and [(m['m_tile']['guid'],m['m_coverKind'],m['m_traits']) for m in source10['m_surfaceCoverTileMappings']] == [(upper_guid,1,3),(detail_guid,1,3)], '来源10映射变化')
     layers, used = [], set()
-    for tilemap_id, renderer_id, source_id, order, count in ((875022404,875022403,-1,-10,900),(1835126662,1835126661,0,-9,547)):
+    for tilemap_id, renderer_id, source_id, order, count in ((875022404,875022403,-1,-10,900),(1835126662,1835126661,0,-9,547),(453769794,453769793,10,-8,267),(913349356,913349355,20,-1,13)):
         cells = tile_cells(scene, tilemap_id)
         tilemap = get_document(scene, tilemap_id, 'Tilemap')
         renderer = get_document(scene, renderer_id, 'TilemapRenderer')
-        require(len(cells) == count and not tilemap['m_AnimatedTiles'] and tilemap['m_Color'] == WHITE
+        require(len(cells) == count and (source_id == 10 or not tilemap['m_AnimatedTiles']) and tilemap['m_Color'] == WHITE
                 and tilemap['m_TileOrientationMatrix'] == IDENTITY and tilemap['m_TileOrientation'] == 0
                 and renderer['m_Enabled'] == 1 and renderer['m_SortingLayerID'] == 0
                 and renderer['m_SortingOrder'] == order and renderer['m_Mode'] == 0
@@ -93,8 +110,18 @@ def extract(checkout):
         for entry in tilemap['m_Tiles']:
             cell, data = tuple(xyz(entry['first'])), entry['second']
             ref = cells[cell]
-            require(ref['guid'] in (DIRT_GUID, GRASS_GUID) and (source_id != 0 or ref['guid'] == GRASS_GUID), '未知地面 Tile')
-            sprite = resolve_dirt(dirt, cell, cells) if ref['guid'] == DIRT_GUID else grass['m_Sprite']
+            indexes[data['m_TileSpriteIndex']] += 1
+            if source_id in (10,20) and ref['guid'] not in ((upper_guid,detail_guid) if source_id == 10 else (upper_guid,)):
+                # 保留全层引用核对，但未求值的随机/旁观瓦片不冒充完成。
+                continue
+            require(ref['guid'] in (DIRT_GUID, GRASS_GUID, upper_guid, detail_guid) and (source_id != 0 or ref['guid'] == GRASS_GUID), '未知地面 Tile')
+            require(not any(tuple(xyz(a['first'])) == cell for a in tilemap['m_AnimatedTiles']), '映射覆盖格含动画，不能静态装配')
+            if ref['guid'] == upper_guid:
+                sprite = resolve_fixed_tile_rule(upper, cell, cells, upper_guid)
+            elif ref['guid'] == DIRT_GUID:
+                sprite = resolve_fixed_tile_rule(dirt, cell, cells, DIRT_GUID)
+            else:
+                sprite = (detail if ref['guid'] == detail_guid else grass)['m_Sprite']
             require(sprite == tilemap['m_TileSpriteArray'][data['m_TileSpriteIndex']]['m_Data'], '作者规则求值与场景缓存不一致，停止该层')
             require(tilemap['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data'] == IDENTITY
                     and tilemap['m_TileColorArray'][data['m_TileColorIndex']]['m_Data'] == WHITE
@@ -102,11 +129,12 @@ def extract(checkout):
             key = f"{sprite['guid']}:{sprite['fileID']}"
             require(key in sprites, '缺少原精灵元数据')
             used.add(key)
-            indexes[data['m_TileSpriteIndex']] += 1
             rows.append({'cell': list(cell), 'sprite':key})
         require(all(indexes[i] == item['m_RefCount'] for i,item in enumerate(tilemap['m_TileSpriteArray'])), '精灵引用数不一致')
+        require(source_id != 10 or len(rows) == 158, '来源10可移除草数量不符')
+        require(source_id != 20 or len(rows) == 3, '来源20可移除草数量不符')
         layers.append({'source_id':source_id,'tilemap_id':tilemap_id,'sorting_order':order,'rows':rows})
-    return {'schema':1,'source_commit':SOURCE,'scope':'base-and-grass-cover',
+    return {'schema':1,'source_commit':SOURCE,'scope':'base-grass-and-mapped-covers-10-20',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},'layers':layers}
 
 
@@ -120,6 +148,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('原基础地面 900 格与 Grass 覆盖 547 格，Dirt 617 格规则求值与原缓存逐格一致。')
+    print('原基础地面900格、Grass覆盖547格、来源10/20可移除草158/3格；旁观瓦片109/10格未装配。')
 
 if __name__ == '__main__': main()

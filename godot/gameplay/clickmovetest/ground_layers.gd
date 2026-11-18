@@ -1,7 +1,7 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
-## 不擦除作者格、不生成焦土，也不另建碰撞/导航。其他覆盖图层尚未装配。
-const MANIFEST_SHA256 := "56dd6bafe264889334ebfabd3fac1f32f4c08d5c894ad47f11b87cdfbf69429c"
+## 不擦除作者格、不生成焦土，也不另建碰撞/导航。来源10/20仅装配作者映射的草，旁观瓦片与来源30/31尚未装配。
+const MANIFEST_SHA256 := "73aa29e272693a9d0ee825b3678c4a129d670d451b4fb1ac6a5bc4a1da13b9d5"
 var _cells: Dictionary = {}
 var _configured := false
 
@@ -53,11 +53,15 @@ func cover_port() -> Dictionary:
 		"set_cover_alpha":set_cover_alpha,"unlock_cover_cell":unlock_cover_cell}
 
 func mapped_cover_sources(cell: Vector3i) -> Array:
-	return [0] if _configured and _cells[0].has(cell) else []
+	var sources: Array = []
+	if not _configured: return sources
+	for source in [0,10,20]:
+		if _cells[source].has(cell): sources.append(source)
+	return sources
 
 func source_available(source: int) -> bool:
-	# 基础地面不属于可移除覆盖；其他四个来源必须由各自真实图层接入。
-	return _configured and source == 0
+	# 基础地面不属于可移除覆盖；来源30/31必须由各自真实图层接入。
+	return _configured and source in [0,10,20]
 
 func set_cover_alpha(source: int, cell: Vector3i, alpha: float) -> void:
 	if not source_available(source) or not _cells[source].has(cell): return
