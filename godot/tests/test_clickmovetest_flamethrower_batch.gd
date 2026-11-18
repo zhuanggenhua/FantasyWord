@@ -52,6 +52,12 @@ func run() -> void:
 	var caster := Attributes.new()
 	check(caster.configure(PackedInt32Array([100,40,10,6,6,4,8,4,100]),Combat.Alignment.GOOD,
 		func():return false,func():return false),"锁定原玩家属性")
+	var player_impact: Array = []
+	var contact_hooks := {"impact":func(_in,velocity):player_impact.append(velocity),
+		"provoke":func(_source):pass,"has_formal_stats":caster.has_formal_stats,"current_health":caster.current_health,
+		"prepare":func(_source,_input):pass,"apply_current_health_delta":caster.apply_current_health_delta,
+		"complete":func(_source,_input,_previous,_damage):pass}
+	check(scene.start_surface_contact_damage(caster.stats,contact_hooks),"实际玩家属性和训练假人装配原地表接触伤害")
 	owner.set_look_at_direction(Vector2.RIGHT)
 	scene.actor.request_move_position(Vector2(1.75,-2.35))
 	await physics_frame
@@ -111,8 +117,33 @@ func run() -> void:
 	scene.advance_human_charged_combat(.30)
 	check(not fire.spec.active and not fire.local_active and not basic.spec.has_attacking_tag() \
 		and view.driver.current_animation_key=="Idle","后摇松手清除源时间轴及其角色标签")
+	var target_at := Vector2(3.5,.5) if source else Vector2(1.5,.5)
+	target.body.request_move_position(target_at)
+	await physics_frame
+	await physics_frame
+	check(target.get_movement_position().distance_to(target_at)<.01 and terrain.sample(Vector3i(floori(target_at.x),0,0)).flags==2,
+		"同一实际角色进入 Q 点燃的另一格")
+	scene.advance_surface_contact(.5,0)
+	scene.run_surface_contact_effects()
+	check(caster.current_health()==100 and target.health==206,"暂停不推进地表伤害时间")
+	scene.advance_surface_contact(.49)
+	scene.run_surface_contact_effects()
+	check(caster.current_health()==100 and target.health==206,"未达到 .5 秒不扣血")
+	scene.advance_surface_contact(.01)
+	check(caster.current_health()==100 and target.health==206,"Update 只提交，正式效果阶段才扣血")
+	scene.run_surface_contact_effects()
+	check(caster.current_health()==99 and target.health==205 and player_impact.is_empty(),
+		"玩家自伤与注册假人各 1 点魔法伤害，自伤不推")
+	check(scene.training_hit_cue.activation_count==1,"地表正式伤害未额外派发普攻 Cue")
+	check(terrain.apply_point(terrain.WATER,Vector2(.5,.5),1,.1),"已有燃烧按原验证器水反应熄灭")
+	scene.advance_surface_contact(.5)
+	scene.run_surface_contact_effects()
+	check(caster.current_health()==99 and target.health==204,"水熄火仅停止该格后续伤害")
+	scene.advance_surface_contact(.5)
 	events.map_unloaded.emit()
-	check(scene.surface_elements==null,"场景离开时丢弃同地图运行时状态")
+	scene.run_surface_contact_effects()
+	check(scene.surface_elements==null and target.health==204,"卸载清空场景待执行效果和运行时")
+	check(scene.surface_contact_damage.accumulated_time==0,"重新绑定地图不继承上一张地图的计时")
 	scene.free()
 	control.free()
 	await process_frame

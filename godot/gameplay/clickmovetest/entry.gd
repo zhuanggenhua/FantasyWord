@@ -6,6 +6,9 @@ const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
+const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
+const FormalDamage = preload("res://game_core/combat/formal_damage_application.gd")
+const CombatRules = preload("res://game_core/combat/combat_rules.gd")
 const SurfaceElements = preload("res://game_core/elements/terrain_element_runtime.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
@@ -69,6 +72,10 @@ var _player_provider: Callable
 var _surface_map_events: Object
 var _terrain_rule_rows: Array = []
 var surface_elements: RefCounted
+var surface_contact_damage: RefCounted
+var _contact_player_stats: Callable
+var _contact_player_hooks: Dictionary = {}
+var _contact_damage_pending: Array[Dictionary] = []
 
 ## 宿主明确选中的玩家、地图事件、动作能力与 UI 门禁均由调用者提供。
 ## 此阶段不宣称提供完整 PlayerSystem、GAS、地图加载或视觉资源。
@@ -119,10 +126,88 @@ func start_surface_elements(assets: Dictionary) -> bool:
 	var candidate := SurfaceElements.new()
 	if not candidate.configure(_terrain_rule_rows,assets): return false
 	surface_elements = candidate
+	if surface_contact_damage != null: surface_contact_damage.on_map_loaded()
 	_surface_map_events.map_unloaded.connect(_on_surface_map_unloaded)
 	return true
 
+## Source damage system is opt-in until the actual scene's formal actor is bound.
+## The player must supply its existing ASC-like stats and hook port; no placeholder HP.
+## Without it the training character still uses its real sheet, lifecycle and hooks.
+func start_surface_contact_damage(player_stats: Callable = Callable(), player_hooks: Dictionary = {}) -> bool:
+	if surface_elements == null or surface_contact_damage != null or not is_inside_tree(): return false
+	if not player_hooks.is_empty():
+		if not player_stats.is_valid(): return false
+		for key in ["impact","provoke","has_formal_stats","current_health","prepare","apply_current_health_delta","complete"]:
+			if not player_hooks.get(key) is Callable or not player_hooks[key].is_valid(): return false
+	var system := SurfaceContact.new()
+	if not system.configure(_active_surface,_current_contact_player,_read_contact_target,
+			_submit_contact_damage,_resolve_contact_character): return false
+	_contact_player_stats = player_stats
+	_contact_player_hooks = player_hooks.duplicate()
+	surface_contact_damage = system
+	if is_instance_valid(training_target): system.register_target(training_target)
+	return true
+
+func _active_surface() -> RefCounted: return surface_elements
+
+func _current_contact_player() -> Object:
+	return actor if _owns_current_actor() else null
+
+func _resolve_contact_character(entity: Object) -> Object:
+	if is_instance_valid(entity) and (entity == actor or entity == training_target): return entity
+	return null
+
+func _contact_stats(entity: Object) -> Dictionary:
+	if not is_instance_valid(entity): return {}
+	if entity == actor and _contact_player_stats.is_valid(): return _contact_player_stats.call()
+	if entity == training_target: return training_target.stats
+	return {}
+
+func _read_contact_target(target: Object) -> Dictionary:
+	var stats := _contact_stats(target)
+	if stats.is_empty(): return {}
+	return {"dead":bool(stats.get("dead",true)), "position":target.get_movement_position()}
+
+func _contact_hooks(target: Object) -> Dictionary:
+	if not is_instance_valid(target): return {}
+	if target == training_target: return training_target.hooks()
+	return _contact_player_hooks if target == actor else {}
+
+func _submit_contact_damage(source: Object, target: Object, payload: Dictionary) -> bool:
+	# Real receiver binding is required; missing caster binding is Entity.Null in Unity.
+	var hooks := _contact_hooks(target)
+	if hooks.is_empty() or not hooks.has_formal_stats.call(): return false
+	var origin: Variant = weakref(source) if is_instance_valid(source) else null
+	_contact_damage_pending.append({"source":origin,"target":weakref(target),"payload":payload})
+	return true
+
+func advance_surface_contact(delta: float, time_scale: float = 1.0) -> void:
+	if surface_contact_damage != null: surface_contact_damage.advance(delta,time_scale)
+
+func run_surface_contact_effects() -> void:
+	# Source world system requests formal GAS effects; never mutate HP in map sampling.
+	# Reentrant submissions belong to the next effect phase.
+	var applying := _contact_damage_pending
+	_contact_damage_pending = []
+	for entry in applying:
+		var source: Object = entry.source.get_ref() if entry.source != null else null
+		var target: Object = entry.target.get_ref()
+		var hooks := _contact_hooks(target)
+		if hooks.is_empty(): continue
+		var defender := _contact_stats(target)
+		if defender.is_empty(): continue
+		var attacker := defender if source == target else _contact_stats(source)
+		var output := CombatRules.solve_damage_output(attacker if not attacker.is_empty() else null,
+			entry.payload.descriptor,false,Callable())
+		if source == target:
+			# Original self-hit still damages, but Movable.TryPush rejects its own source.
+			hooks = hooks.duplicate()
+			hooks.impact = func(_input,_velocity): pass
+		FormalDamage.execute_damage_output(defender,output,false,Callable(),hooks,entry.payload.impact_velocity)
+
 func _on_surface_map_unloaded() -> void:
+	if surface_contact_damage != null: surface_contact_damage.on_map_unloading()
+	_contact_damage_pending.clear()
 	if surface_elements != null: surface_elements.clear()
 	surface_elements = null
 	if is_instance_valid(_surface_map_events) and _surface_map_events.map_unloaded.is_connected(_on_surface_map_unloaded):
@@ -185,13 +270,17 @@ func _process(delta: float) -> void:
 	if binding != null: camera.advance_follow(delta)
 	_update_human_aim()
 	update_ui_pointer_selection()
+	run_surface_contact_effects()
 	advance_human_charged_combat(delta)
 	if surface_elements != null: surface_elements.advance(delta)
+	advance_surface_contact(delta,Engine.time_scale)
 	if is_instance_valid(training_target):
 		training_target.advance_damage_lifecycle()
 
 func _exit_tree() -> void:
 	_on_surface_map_unloaded()
+	if surface_contact_damage != null: surface_contact_damage.stop()
+	surface_contact_damage = null
 	_training_effects.clear()
 	training_hit_cue.dispose()
 	unbind_ui_pointer_selection()
@@ -399,6 +488,7 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	add_child(target)
 	training_target = target
 	training_attributes = properties
+	if surface_contact_damage != null: surface_contact_damage.register_target(target)
 	return target
 
 ## 显式导入源图集；空资源不让角色获得假表现。
