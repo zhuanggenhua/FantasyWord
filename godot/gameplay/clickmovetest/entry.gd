@@ -10,6 +10,7 @@ const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_
 const FormalDamage = preload("res://game_core/combat/formal_damage_application.gd")
 const CombatRules = preload("res://game_core/combat/combat_rules.gd")
 const SurfacePresentation = preload("res://game_core/elements/terrain_surface_presentation.gd")
+const GroundLayers = preload("res://gameplay/clickmovetest/ground_layers.gd")
 const SurfaceFireLayer = preload("res://game_core/presentation/terrain_burning_tile_layer.gd")
 const SurfaceElements = preload("res://game_core/elements/terrain_element_runtime.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
@@ -40,6 +41,7 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var visual_body: Node2D
 @export var camera: Camera2D
 @export var aim_pivot: Node2D
+var ground_layers: Node2D
 var human_presentation: Node2D
 var human_motion_binding: RefCounted
 var movement: RefCounted
@@ -216,8 +218,20 @@ func run_surface_contact_effects() -> void:
 			hooks.impact = func(_input,_velocity): pass
 		FormalDamage.execute_damage_output(defender,output,false,Callable(),hooks,entry.payload.impact_velocity)
 
-## The exact scene uses only Burning; no Steam tile or replacement terrain.
-## Ground ownership port is optional until original cover TileMaps are mounted.
+## 必须在临时火焰层之前绑定，避免已存在的控制器继续持有空回调。
+func bind_ground_layers(directory: String) -> bool:
+	if surface_elements == null or ground_layers != null or surface_presentation != null or not is_inside_tree(): return false
+	var layer := GroundLayers.new()
+	if not layer.configure(directory):
+		layer.free()
+		return false
+	layer.name = "原基础地面与草覆盖"
+	add_child(layer)
+	ground_layers = layer
+	return true
+
+## 原场景只有 Burning 临时瓦片，无 Steam 或替换地貌。
+## 优先连接已装配的真实覆盖层；显式端口可由完整地图宿主提供。
 func bind_surface_presentation(fire_path: String, cover_port: Dictionary = {}) -> bool:
 	if surface_elements == null or surface_presentation != null or not is_inside_tree(): return false
 	var layer := SurfaceFireLayer.new()
@@ -225,6 +239,7 @@ func bind_surface_presentation(fire_path: String, cover_port: Dictionary = {}) -
 		layer.free()
 		return false
 	var ports := cover_port.duplicate()
+	if ports.is_empty() and is_instance_valid(ground_layers): ports = ground_layers.cover_port()
 	if ports.is_empty():
 		ports = {"mapped_cover_sources":func(_cell):return [],"source_available":func(_id):return false,
 			"set_cover_alpha":func(_id,_cell,_alpha):pass,"unlock_cover_cell":func(_id,_cell):pass}
@@ -261,6 +276,10 @@ func _on_surface_map_unloaded() -> void:
 	_contact_damage_pending.clear()
 	if surface_elements != null: surface_elements.clear()
 	_unbind_surface_presentation()
+	if is_instance_valid(ground_layers):
+		ground_layers.hide()
+		ground_layers.queue_free()
+	ground_layers = null
 	surface_elements = null
 	if is_instance_valid(_surface_map_events) and _surface_map_events.map_unloaded.is_connected(_on_surface_map_unloaded):
 		_surface_map_events.map_unloaded.disconnect(_on_surface_map_unloaded)
