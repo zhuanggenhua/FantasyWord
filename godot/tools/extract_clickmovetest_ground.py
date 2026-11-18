@@ -3,7 +3,7 @@
 
 Dirt 按作者 RuleTile 的 Fixed/Single 首个匹配规则求值，再逐格核对场景缓存。
 依据锁定 packages-lock 的 Unity 2D Tilemap Extras 6.0.1 RuleTile.cs。
-仅负责基础地面与来源0/10/20/30/31的映射覆盖，不复制图片；旁观瓦片未装配。
+负责基础地面、映射覆盖与来源10 LakeGrass 动画，不复制图片。
 """
 import argparse
 from collections import Counter
@@ -22,6 +22,9 @@ DIRT_GUID = '5923a633d5be61b4da07719a51278bda'
 GRASS_GUID = 'ee44f04c19e463d48a8796f568a766fa'
 TEXTURES = {'49ebf7de40457d84495983a6734b2c68': 'Tiles.png', '57153bc98c84b584394a27c7ed1998ae': 'RedRuleTiles.png'}
 VEGETATION = 'Assets/GameData/GameCore/SurfaceTiles/ForgottenPlainsVegetation/'
+LAKE = ROOT + 'Tile Palettes/Animated Tiles/Lake/'
+LAKE_NUMBERS = (*range(1,12),13,14)
+TILES_GUID = '49ebf7de40457d84495983a6734b2c68'
 PROPS = {'be785b53e8101134cb49e391918a7a82': 'Props.png',
          'da4d732596845594e9b99bf9488ee15f': 'PropsShadow.png'}
 DEFAULT_TILE_MATERIAL = [{'fileID':10754,'guid':'0000000000000000f000000000000000','type':0}]
@@ -85,6 +88,25 @@ def validate_vegetation_render_state(checkout, scene):
             and re.search(r'(?m)^  - name: Multiply\n    maskTextureChannel: 0\n    blendMode: 1$', renderer), '未知植被 Renderer2D 混合样式')
 
 
+def lake_animations(checkout):
+    assets = {}
+    for number in LAKE_NUMBERS:
+        name = f'LakeGrass {number}'
+        path = LAKE + name + '.asset'
+        meta = yaml.safe_load(read(checkout, path + '.meta'))
+        tile = get_document(read(checkout, path),11400000,'MonoBehaviour')
+        require(tile['m_Name'] == name
+                and tile['m_Script'] == {'fileID':11500000,'guid':'13b75c95f34a00d4e8c04f76b73312e6','type':3}
+                and tile['m_MinSpeed'] == tile['m_MaxSpeed'] == 1
+                and tile['m_AnimationStartTime'] == tile['m_AnimationStartFrame'] == tile['m_TileColliderType'] == 0,
+                '不是锁定 AnimatedTile 6.0.1 的无偏移 LakeGrass')
+        frames = tile['m_AnimatedSprites']
+        require(len(frames) == 2 and frames[0] != frames[1] and all(f['guid'] == TILES_GUID for f in frames), 'LakeGrass 帧来源不符')
+        require(meta['guid'] not in assets, 'LakeGrass 资产重复')
+        assets[meta['guid']] = frames
+    return assets
+
+
 def extract(checkout):
     scene = read(checkout, SCENE)
     expect_rectangular_grid(scene)
@@ -139,6 +161,10 @@ def extract(checkout):
         require(len(mappings) == 5 and sorted((m['m_coverKind'],m['m_traits']) for m in mappings) == [(1,3)]*2 + [(5,3)]*3,
                 '植被覆盖作者映射变化')
         vegetation_sprites[source_id] = {m['m_tile']['guid']:resolve_vegetation(checkout,m['m_tile']) for m in mappings}
+    lake_assets = lake_animations(checkout)
+    require(not set(lake_assets).intersection(m['m_tile']['guid'] for m in source10['m_surfaceCoverTileMappings']),
+            'LakeGrass 不应属于作者映射草')
+    used_lake_assets = set()
     layers, used = [], set()
     for tilemap_id, renderer_id, source_id, order, count in ((875022404,875022403,-1,-10,900),(1835126662,1835126661,0,-9,547),(453769794,453769793,10,-8,267),(913349356,913349355,20,-1,13),(897197880,897197881,30,-8,33),(994996502,994996503,31,-7,33)):
         cells = tile_cells(scene, tilemap_id)
@@ -158,18 +184,32 @@ def extract(checkout):
                 and renderer['m_MaskInteraction'] == 0 and renderer['m_SortOrder'] == 0
                 and renderer['m_Materials'] == (SPRITE_LIT_MATERIAL if is_vegetation else DEFAULT_TILE_MATERIAL),
                 '不是锁定的原地面层材质与排序')
-        rows, indexes = [], Counter()
+        animated = {tuple(xyz(a['first'])):a['second'] for a in tilemap['m_AnimatedTiles']}
+        if source_id == 10:
+            require(len(animated) == len(tilemap['m_AnimatedTiles']) == 35 and tilemap['m_AnimationFrameRate'] == 1,
+                    '湖岸原动画格数量或 Tilemap 帧率变化')
+        rows, indexes, animated_rows = [], Counter(), []
         for entry in tilemap['m_Tiles']:
             cell, data = tuple(xyz(entry['first'])), entry['second']
             ref = cells[cell]
             indexes[data['m_TileSpriteIndex']] += 1
-            if source_id in (10,20) and ref['guid'] not in ((upper_guid,detail_guid) if source_id == 10 else (upper_guid,)):
+            is_lake = source_id == 10 and cell in animated
+            if source_id in (10,20) and not is_lake and ref['guid'] not in ((upper_guid,detail_guid) if source_id == 10 else (upper_guid,)):
                 # 保留全层引用核对，但未求值的随机/旁观瓦片不冒充完成。
                 continue
             allowed = vegetation_sprites[source_id] if is_vegetation else (DIRT_GUID, GRASS_GUID, upper_guid, detail_guid)
-            require(ref['guid'] in allowed and (source_id != 0 or ref['guid'] == GRASS_GUID), '未知地面 Tile')
-            require(not any(tuple(xyz(a['first'])) == cell for a in tilemap['m_AnimatedTiles']), '映射覆盖格含动画，不能静态装配')
-            if is_vegetation:
+            require((is_lake and ref['fileID'] == 11400000 and ref['guid'] in lake_assets)
+                    or (ref['guid'] in allowed and (source_id != 0 or ref['guid'] == GRASS_GUID)), '未知地面 Tile')
+            if is_lake:
+                source_frames = lake_assets[ref['guid']]
+                cached = animated[cell]
+                require(source_frames == cached['m_AnimatedSprites']
+                        and cached['m_AnimationSpeed'] == 1 and cached['m_AnimationTimeOffset'] == cached['m_Flags'] == 0,
+                        '湖岸帧序、速率或偏移与场景缓存不一致')
+                used_lake_assets.add(ref['guid'])
+                # 原 GetTileData 给静态缓存末帧；播放仍从 m_AnimatedSprites 第一帧起。
+                sprite = source_frames[-1]
+            elif is_vegetation:
                 sprite = vegetation_sprites[source_id][ref['guid']]
                 require(sprite['guid'] == tuple(PROPS)[source_id-30], '植被来源图片不符')
             elif ref['guid'] == upper_guid:
@@ -190,16 +230,27 @@ def extract(checkout):
             used.add(key)
             row = {'cell': list(cell), 'sprite':key}
             if is_vegetation: row['translation'] = offsets
-            rows.append(row)
+            if is_lake:
+                keys = [f"{f['guid']}:{f['fileID']}" for f in source_frames]
+                require(all(sprites[k]['rect'][2:] == [8,8] and sprites[k]['pivot'] == [.5,.5] for k in keys),
+                        '湖岸动画帧尺寸或枢轴变化')
+                used.update(keys)
+                animated_rows.append({'cell': list(cell),'frames':keys})
+            else:
+                rows.append(row)
         require(all(indexes[i] == item['m_RefCount'] for i,item in enumerate(tilemap['m_TileSpriteArray'])), '精灵引用数不一致')
         require(source_id != 10 or len(rows) == 158, '来源10可移除草数量不符')
         require(source_id != 20 or len(rows) == 3, '来源20可移除草数量不符')
-        layers.append({'source_id':source_id,'tilemap_id':tilemap_id,'sorting_order':order,'rows':rows})
+        layer = {'source_id':source_id,'tilemap_id':tilemap_id,'sorting_order':order,'rows':rows}
+        if source_id == 10:
+            require(len(animated_rows) == 35 and used_lake_assets == set(lake_assets), '作者湖岸动画缺失')
+            layer['decorations'] = {'frames_per_second': 1, 'rows': animated_rows}
+        layers.append(layer)
     props = {tuple(r['cell']):r['translation'] for r in layers[-2]['rows']}
     shadows = {tuple(r['cell']):r['translation'] for r in layers[-1]['rows']}
     require(props.keys() == shadows.keys() and all(shadows[cell] == [pos[0]-.125,pos[1]] for cell,pos in props.items()),
             '原植被与阴影逐格位移配对变化')
-    return {'schema':2,'source_commit':SOURCE,'scope':'base-and-mapped-covers-0-10-20-30-31',
+    return {'schema':3,'source_commit':SOURCE,'scope':'base-mapped-covers-and-lakegrass-animation',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},'layers':layers}
 
 
@@ -213,6 +264,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('原基础地面900格、Grass覆盖547格、来源10/20可移除草158/3格、来源30/31植被及阴影各33格；旁观瓦片109/10格未装配。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格；旁观静态瓦片74/10格未装配。')
 
 if __name__ == '__main__': main()

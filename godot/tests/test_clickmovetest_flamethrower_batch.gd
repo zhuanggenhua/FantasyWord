@@ -196,10 +196,14 @@ func run() -> void:
 	scene.run_surface_contact_effects()
 	check(caster.current_health()==99 and target.health==204,"水熄火仅停止该格后续伤害")
 	if ground_enabled and tile_enabled and is_instance_valid(scene.ground_layers) and is_instance_valid(effects_layer):
-		for overlap: Vector3i in [Vector3i(5,0,0), Vector3i(3,-2,0)]:
+		for overlap: Vector3i in [Vector3i(5,0,0), Vector3i(3,-2,0), Vector3i(0,-10,0)]:
 			var address := Vector2i(overlap.x,-overlap.y-1)
-			var expected := [0,10] if overlap.y==0 else [0,30,31]
+			var expected := {0:[0,10],-2:[0,30,31],-10:[0]}[overlap.y] as Array
 			check(scene.ground_layers.mapped_cover_sources(overlap)==expected,"同场景原格有实际作者覆盖：%s" % overlap)
+			var decoration: AnimatedSprite2D = scene.ground_layers.lakegrass_sprite(overlap)
+			if overlap.y==-10:
+				check(is_instance_valid(decoration) and decoration.is_playing() and decoration.self_modulate.a==1,
+					"同格原 LakeGrass 动画不加入映射草")
 			var covers: Array[Sprite2D] = []
 			for source_id in expected:
 				var sprite: Sprite2D = scene.ground_layers.source_sprite(source_id,overlap)
@@ -226,6 +230,9 @@ func run() -> void:
 			for step in 51: terrain.advance(.1)
 			check(terrain.sample(overlap).cover_lifecycle==3 and effects_layer.get_cell_source_id(address)==-1
 				and covers.all(func(sprite):return sprite.self_modulate.a==0),"实际 Q 燃尽隐藏而非替换所有作者覆盖格")
+			if overlap.y==-10:
+				check(is_instance_valid(decoration) and decoration.is_playing() and decoration.self_modulate.a==1,
+					"实际 Q 烧尽同格覆盖后湖岸动画仍播放，保留原透明度")
 			terrain.clear()
 			check(covers.all(func(sprite):return sprite.self_modulate.a==1),"重置恢复所有原作者覆盖")
 	scene.advance_surface_contact(.5)

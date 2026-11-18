@@ -34,7 +34,28 @@ func run() -> void:
 	check(not ground.source_available(-1) and ground.source_available(30) and ground.source_available(31),"基础地面不当作可删除覆盖，原植被与阴影可用")
 	check(scene.bind_surface_presentation(fire_path),"现有地表控制器自动绑定实际逐格透明度")
 	var terrain: RefCounted = scene.surface_elements
-	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，非覆盖装饰未装配")
+	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，不包含独立装饰")
+	var lake_cell := Vector3i(0,-10,0)
+	var lake: AnimatedSprite2D = ground.lakegrass_sprite(lake_cell)
+	check(ground.lakegrass_count()==35 and is_instance_valid(lake),"原湖岸 LakeGrass 35 格独立装配")
+	check(ground.source_sprite(10,lake_cell)==null and ground.mapped_cover_sources(lake_cell)==[0],
+		"同格 source10 旁观动画不参与覆盖匹配")
+	if not is_instance_valid(lake):
+		scene.free()
+		quit(1)
+		return
+	var animations := lake.sprite_frames
+	check(lake.position==Vector2(.5,9.5) and lake.scale==Vector2(.125,.125)
+		and lake.offset==Vector2(-4,-4) and lake.z_index==-8,"原矩形、绘制排序、8 PPU 与中心锚点")
+	check(animations.get_frame_count(&"default")==2 and animations.get_animation_loop(&"default")
+		and animations.get_animation_speed(&"default")==1 and lake.is_playing(),"原两帧顺序自动循环，单帧一秒")
+	for i in 2:
+		var atlas := animations.get_frame_texture(&"default",i) as AtlasTexture
+		check(atlas!=null and atlas.region==Rect2(200+32*i,atlas.atlas.get_height()-152,8,8)
+			and animations.get_frame_duration(&"default",i)==1,"实际 LakeGrass1 原图帧 %d，末帧缓存非首帧" % i)
+	check(lake.frame==0,"Godot 附挂后的首帧是作者序列首帧")
+	var seen: Array[int] = []
+	lake.frame_changed.connect(func():seen.append(lake.frame))
 	var selected := Vector3i.ZERO
 	var found := false
 	for row in read(rules).rows:
@@ -119,10 +140,16 @@ func run() -> void:
 	terrain.clear()
 	check(flower.self_modulate.a==1 and shadow.self_modulate.a==1 and grass.self_modulate.a==1
 		and flower.texture==flower_texture and shadow.texture==shadow_texture,"重置恢复同一原图与原色，不以替代精灵复原")
+	# 等真实节点按引擎时钟走完两个帧，区分原静态 cache 和实际播放。
+	var deadline := Time.get_ticks_msec()+4500
+	while seen.size()<2 and Time.get_ticks_msec()<deadline: await process_frame
+	check(seen.slice(0,2)==[1,0],"LakeGrass 自动播放原顺序而非冻结在场景静态缓存")
+	check(lake.self_modulate.a==1,"变换地表状态不影响该独立装饰")
 	events.map_unloaded.emit()
 	check(scene.ground_layers==null and scene.surface_presentation==null and not ground.visible,"卸载取消绑定且立即隐藏地图")
 	scene.queue_free()
 	await process_frame
 	await process_frame
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含旁观装饰或 Unity 像素对照" % [n,failed])
+	check(not is_instance_valid(lake),"卸载释放自主动画，不保留上次场景的相位")
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含剩余静态装饰或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)

@@ -1,9 +1,10 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
-## 不擦除作者格、不生成焦土，也不另建碰撞/导航。仅装配作者映射覆盖；同排序混合与 Unity 线性帧输出另行实测。
-const MANIFEST_SHA256 := "a2269ede2a0d8282833cf2f3d1ae85316cd9cf49c0186c8ebde0d595545ce2da"
+## 不擦除作者格、不生成焦土，也不另建碰撞/导航。湖草动画与可燃覆盖分别注册。
+const MANIFEST_SHA256 := "6f917225436508339bad265af26df8b0f578a3ff1cd9e020c48e51d8f0e464e5"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
+var _lakegrass: Dictionary = {}
 var _configured := false
 
 func configure(directory: String) -> bool:
@@ -47,8 +48,39 @@ func configure(directory: String) -> bool:
 			sprite.z_index = int(layer.sorting_order)
 			add_child(sprite)
 			_cells[source][cell] = sprite
+		if layer.has("decorations"):
+			_add_lakegrass(layer.decorations, int(layer.sorting_order), frames, data.sprites)
 	_configured = true
 	return true
+
+func _add_lakegrass(data: Dictionary, sorting_order: int, textures: Dictionary, metadata: Dictionary) -> void:
+	var shared: Dictionary = {}
+	for row in data.rows:
+		var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),int(row.cell[2]))
+		var key := JSON.stringify(row.frames)
+		if not shared.has(key):
+			var anim := SpriteFrames.new()
+			anim.set_animation_speed(&"default", float(data.frames_per_second))
+			anim.set_animation_loop(&"default", true)
+			for id in row.frames: anim.add_frame(&"default", textures[id])
+			shared[key] = anim
+		var pose: Dictionary = metadata[row.frames[0]]
+		var sprite := AnimatedSprite2D.new()
+		sprite.sprite_frames = shared[key]
+		sprite.centered = false
+		sprite.offset = Vector2(-pose.pivot[0]*pose.rect[2],-(1.0-pose.pivot[1])*pose.rect[3])
+		sprite.scale = Vector2.ONE / float(pose.ppu)
+		sprite.position = Vector2(cell.x+.5,-cell.y-.5)
+		sprite.z_index = sorting_order
+		sprite.autoplay = &"default"
+		add_child(sprite)
+		_lakegrass[cell] = sprite
+
+func lakegrass_sprite(cell: Vector3i) -> AnimatedSprite2D:
+	return _lakegrass.get(cell)
+
+func lakegrass_count() -> int:
+	return _lakegrass.size()
 
 func cover_port() -> Dictionary:
 	return {"mapped_cover_sources":mapped_cover_sources,"source_available":source_available,
