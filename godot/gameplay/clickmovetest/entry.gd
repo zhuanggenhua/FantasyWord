@@ -19,6 +19,8 @@ const Step = preload("res://game_core/movement/source_fixed_step.gd")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const TrainingTarget = preload("res://gameplay/clickmovetest/training_target.gd")
 const TrainingAttributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
+const FireVisual = preload("res://game_core/presentation/flamethrower_cue_visual.gd")
+const FireAudio = preload("res://gameplay/combat/flamethrower_cue_audio.gd")
 const FireTimeline = preload("res://gameplay/combat/flamethrower_timeline.gd")
 const BasicTimeline = preload("res://gameplay/combat/basic_attack_timeline.gd")
 const BasicDamage = preload("res://gameplay/combat/basic_damage_effect.gd")
@@ -58,6 +60,11 @@ var _charged_actor_runtime: Node
 var _charged_timeline: RefCounted
 var _basic_timeline: RefCounted
 var _fire_timeline: RefCounted
+var flamethrower_visual: Node2D
+var flamethrower_audio: Node
+var _fire_cue_actor: WeakRef
+var _fire_cue_png := ""
+var _fire_cue_ogg := ""
 var training_hit_cue := TrainingHitCue.new()
 var _training_effects := ChargedEffects.new()
 var training_target: Node2D
@@ -270,6 +277,7 @@ func _process(delta: float) -> void:
 	if binding != null: camera.advance_follow(delta)
 	_update_human_aim()
 	update_ui_pointer_selection()
+	if is_instance_valid(flamethrower_visual): flamethrower_visual.advance(delta)
 	run_surface_contact_effects()
 	advance_human_charged_combat(delta)
 	if surface_elements != null: surface_elements.advance(delta)
@@ -458,6 +466,56 @@ func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Ca
 	_basic_timeline = basic_timeline
 	_fire_timeline = fire_timeline
 	return runtime
+
+## Bind original presentation after the actual 20010 ability is installed.
+## Exact source assets are supplied privately; missing assets do not fabricate cues.
+func bind_flamethrower_cues(direction_owner: Object, png_path: String, ogg_path: String) -> bool:
+	if _fire_timeline == null or human_commands == null or not is_instance_valid(direction_owner) \
+			or human_commands.character != direction_owner or _fire_cue_actor != null: return false
+	if not direction_owner.has_signal("target_direction_changed") or not direction_owner.has_method("get_target_direction"): return false
+	var visual := FireVisual.new()
+	var asset_valid := visual.configure(png_path)
+	visual.free()
+	if not asset_valid: return false
+	var existing := is_instance_valid(flamethrower_audio)
+	if existing and _fire_cue_ogg != ogg_path: return false
+	var audio: Node = flamethrower_audio if existing else FireAudio.new()
+	if not existing:
+		add_child(audio)
+		if not audio.configure_locked_clip(ogg_path):
+			audio.free()
+			return false
+	if not _fire_timeline.bind_spray_cues(_activate_flamethrower_cues,_remove_flamethrower_visual):
+		if not existing: audio.free()
+		return false
+	flamethrower_audio = audio
+	_fire_cue_ogg = ogg_path
+	_fire_cue_actor = weakref(direction_owner)
+	_fire_cue_png = png_path
+	return true
+
+func _activate_flamethrower_cues() -> void:
+	if _fire_cue_actor == null or not is_instance_valid(actor): return
+	var owner: Object = _fire_cue_actor.get_ref()
+	if not is_instance_valid(owner): return
+	_remove_flamethrower_visual()
+	var visual := FireVisual.new()
+	if visual.configure(_fire_cue_png):
+		actor.add_child(visual)
+		if visual.mount(owner):
+			flamethrower_visual = visual
+		else:
+			visual.free()
+	else:
+		visual.free()
+	if is_instance_valid(flamethrower_audio): flamethrower_audio.activate()
+
+func _remove_flamethrower_visual() -> void:
+	if is_instance_valid(flamethrower_visual):
+		flamethrower_visual.unmount()
+		flamethrower_visual.queue_free()
+	flamethrower_visual = null
+	# CuePlayGameCoreAudio has no stop handler; existing voices run to completion.
 
 ## 绑定场景中唯一活动训练假人的受击逻辑。缺少正式控制/生命周期回调时拒绝；
 ## 不注册假 AI、不自动加进默认场景、不创建美术或替代碰撞资源。
@@ -679,6 +737,9 @@ func stop_human_aim() -> void:
 	if _fire_timeline != null:
 		_fire_timeline.stop()
 		_fire_timeline = null
+	_remove_flamethrower_visual()
+	_fire_cue_actor = null
+	_fire_cue_png = ""
 	if _basic_timeline != null:
 		_basic_timeline.stop()
 		_basic_timeline = null

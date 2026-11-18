@@ -1,6 +1,12 @@
 extends "res://tests/test_basic_training_timeline.gd"
 ## Q 对应归一化 FireAbility1；用同一个 Entry、Actor、原地图状态和训练假人。
 const SurfaceFixture = preload("res://tests/test_clickmovetest_element_surface.gd")
+class SprayFacingOwner extends FacingOwner:
+	signal target_direction_changed(value: Vector2)
+	func _init() -> void:
+		super()
+		state.target_direction_changed.connect(_forward_target)
+	func _forward_target(value: Vector2) -> void: target_direction_changed.emit(value)
 
 func surface_fixture(scene: Node) -> Dictionary:
 	return SurfaceFixture.smoke_contract(scene)
@@ -8,7 +14,7 @@ func run() -> void:
 	var scene = Entry.instantiate()
 	root.add_child(scene)
 	scene.set_process(false)
-	var owner := FacingOwner.new()
+	var owner := SprayFacingOwner.new()
 	var control := ControlHost.new()
 	root.add_child(control)
 	var player := Player.new()
@@ -73,6 +79,13 @@ func run() -> void:
 		printerr("缺少原多技能宿主")
 		quit(1)
 		return
+	var cue_dir := OS.get_environment("FORMAL_FLAMETHROWER_CUE")
+	var cue_enabled := not cue_dir.is_empty()
+	if cue_enabled:
+		check(not scene.bind_flamethrower_cues(owner,cue_dir.path_join("bad.png"),cue_dir.path_join("bad.ogg")),
+			"缺失原素材不生成替代视听")
+		check(scene.bind_flamethrower_cues(owner,cue_dir.path_join("FlamethrowerJet.png"),
+			cue_dir.path_join("Flamethrower_FireSpell03_CC0.ogg")), "同一个实际喷火技能绑定锁定原视听")
 	var basic: Node = charged.resolve(20001)
 	check(is_instance_valid(basic) and basic.spec.attacking_tags == charged.spec.attacking_tags,"不同实例共享唯一角色标签")
 	check(scene.bind_human_gameplay_actions(func():return {"actor":owner,"command_context":{"actor":owner,"issuer_kind":1}},
@@ -95,12 +108,27 @@ func run() -> void:
 	release.call(1)
 	scene.advance_human_charged_combat(.05)
 	check(not fire.spec.active and target.health==220 and changed.is_empty(),"前摇松开取消，不产生伤害或点火")
+	if cue_enabled:
+		check(scene.flamethrower_visual==null and scene.flamethrower_audio.active_voice_count()==0,
+			"出手前取消没有创建喷流或声音")
 	press.call(1)
 	scene.advance_human_charged_combat(.018)
 	check(fire.spec.activate_requested and not fire.spec.active,"时间轴激活在后续能力阶段")
 	scene.advance_human_charged_combat(.018)
 	check(fire.spec.owns_attacking_tag() and target.health==206 and not target.body.is_pushed(),"同一第1帧原多边形造成2003无推力伤害")
 	check(view.driver.current_animation_key=="Attack" and target_view.driver.current_animation_key=="Dmg","同一真实角色动作与假人反应")
+	if cue_enabled:
+		check(is_instance_valid(scene.flamethrower_visual) and scene.flamethrower_visual.get_parent()==scene.actor
+			and scene.flamethrower_audio.active_voice_count()==1,"Q 实际第 1 帧在 ASC 根挂原喷流并发一条音轨")
+		if is_instance_valid(scene.flamethrower_visual):
+			var visual: Node2D = scene.flamethrower_visual
+			check(is_zero_approx(visual.rotation),"初次挂载保留原 ApplyTransform 覆盖旋转的顺序")
+			owner.set_target_direction(Vector2(0,1)) # Source-space +Y.
+			check(is_equal_approx(visual.rotation,-PI*.5),"原表现只监听逻辑目标朝向")
+			owner.set_look_at_direction(Vector2(0,-1))
+			check(is_equal_approx(visual.rotation,-PI*.5),"身体朝向变化不能替换已明示目标朝向")
+			visual.advance(.15)
+			check(visual.current_frame()==2,"原喷流 14 帧每秒，不使用技能 60 帧时钟")
 	check(press.call(2)==Executor.Failure.ABILITY_REJECTED,"攻击期间拦截第二个已装备槽")
 	owner.set_look_at_direction(Vector2.LEFT)
 	scene.advance_human_charged_combat(.15)
@@ -117,6 +145,9 @@ func run() -> void:
 	scene.advance_human_charged_combat(.30)
 	check(not fire.spec.active and not fire.local_active and not basic.spec.has_attacking_tag() \
 		and view.driver.current_animation_key=="Idle","后摇松手清除源时间轴及其角色标签")
+	if cue_enabled:
+		check(scene.flamethrower_visual==null and scene.flamethrower_audio.active_voice_count()==1,
+			"停止技能销毁喷流，但不截断此前已播放的音轨")
 	var target_at := Vector2(3.5,.5) if source else Vector2(1.5,.5)
 	target.body.request_move_position(target_at)
 	await physics_frame
@@ -147,5 +178,6 @@ func run() -> void:
 	scene.free()
 	control.free()
 	await process_frame
-	if failed==0: print("PASS ClickMoveTest Q 喷火阶段：%d 项（原图=%s）" % [n,str(source)])
+	if cue_enabled: await create_timer(.12).timeout # Drain stopped audio mixer references.
+	if failed==0: print("PASS ClickMoveTest Q 喷火阶段：%d 项（原图=%s，原视听=%s）" % [n,str(source),str(cue_enabled)])
 	quit(0 if failed==0 else 1)

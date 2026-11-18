@@ -1,7 +1,7 @@
 extends "res://game_core/combat/attack_hit_frame.gd"
 ## 31629d53 的 20010 原时间轴：只调度，不代持输入、位置、伤害或地表状态。
 ## 命中与地表回调须读取执行帧的实际位置和 Movable 朝向，不能捕获起手快照。
-## 原喷火流 Prefab 与音效尚未接入；本文件只实现已有角色 Attack Cue。
+## 喷流与音效由可选原资产表现主机处理，玩法与私有素材加载解耦。
 const Cue = preload("res://game_core/presentation/cue_play_character_animation.gd")
 const SOURCE_ABILITY := 20010
 const EFFECT_ID := 2003
@@ -18,6 +18,9 @@ var _driver: WeakRef
 var _cue := Cue.new()
 var _cue_live := false
 var _cue_requested := false
+var _start_spray: Callable
+var _stop_spray: Callable
+var _spray_active := false
 
 func _init(hit: Callable, world_element: Callable, driver: Node) -> void:
 	# 单帧基类只提供同一个 float32 时间轴时钟，多命中片段在下方调度。
@@ -25,6 +28,14 @@ func _init(hit: Callable, world_element: Callable, driver: Node) -> void:
 	assert(hit.is_valid() and world_element.is_valid(), "喷火时间轴缺少角色命中或世界元素入口")
 	_world_element = world_element
 	if is_instance_valid(driver): _driver = weakref(driver)
+
+## Only the source mounting/audio host binds this pair; removal must not stop audio.
+func bind_spray_cues(start: Callable, remove: Callable) -> bool:
+	if playing or not start.is_valid() or not remove.is_valid(): return false
+	if _start_spray.is_valid() or _stop_spray.is_valid(): return false
+	_start_spray = start
+	_stop_spray = remove
+	return true
 
 func _on_frame_crossed(current_frame: int) -> void:
 	# 保持原 Tracks 顺序：角色表现、世界元素、角色命中。
@@ -45,6 +56,9 @@ func flush_display() -> bool:
 	_cue_requested = false
 	var started := _cue.on_activate("Attack")
 	if not started: push_error(_cue.last_error)
+	if _start_spray.is_valid():
+		_spray_active = true
+		_start_spray.call()
 	return started
 
 func stop() -> void:
@@ -55,4 +69,7 @@ func _remove_cue() -> void:
 	_cue_requested = false
 	if not _cue_live: return
 	_cue_live = false
+	if _spray_active:
+		_spray_active = false
+		_stop_spray.call()
 	if not _cue.on_remove(): push_error(_cue.last_error)
