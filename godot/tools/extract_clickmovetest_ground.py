@@ -38,6 +38,9 @@ FIXED_DECORATIONS = {10: {
 }}
 CLIFF_SHADOWS_GUID = '1389a4518cee0534ea58db4eb226c532'
 CLIFF_SHADOWS = {CLIFF_SHADOWS_GUID: 'TilesShadows.png'}
+WATER_RULE = ROOT + 'Tile Palettes/Rule Tiles/LakeGrass.asset'
+WATER_GUID = 'c637942d78ef0e54ab3507528f1f9095'
+WATER_MATERIAL = [{'fileID':2100000,'guid':'468767637290477d8433734e8bf00901','type':2}]
 PROPS = {'be785b53e8101134cb49e391918a7a82': 'Props.png',
          'da4d732596845594e9b99bf9488ee15f': 'PropsShadow.png'}
 DEFAULT_TILE_MATERIAL = [{'fileID':10754,'guid':'0000000000000000f000000000000000','type':0}]
@@ -50,27 +53,92 @@ def read(checkout, path):
     return git(checkout, 'show', f'{SOURCE}:{path}')
 
 
-def resolve_fixed_tile_rule(rule_asset, cell, authored_cells, tile_guid):
-    """仅实现这份作者配置实际使用的 Fixed/Single；不猜随机或旋转规则。"""
-    sprite = rule_asset['m_DefaultSprite']
+def first_fixed_rule(rule_asset, cell, authored_cells, tile_guid, output):
+    """执行当前锁定的四边形网格 Fixed Rule，不猜随机或旋转分支。"""
     for rule in rule_asset['m_TilingRules']:
-        require(rule['m_RuleTransform'] == 0 and rule['m_Output'] == 0, '不是固定单图规则')
+        require(rule['m_RuleTransform'] == 0 and rule['m_Output'] == output, '不是指定的固定规则输出')
         raw = bytes.fromhex(rule['m_Neighbors'] or '')
         require(len(raw) % 4 == 0, '邻接字节损坏')
         neighbors = struct.unpack('<' + 'i' * (len(raw) // 4), raw)
         positions = rule['m_NeighborPositions'] or []
-        # 原 RuleMatches 使用两数组长度的最小值；Grass末规则保留8位置但无邻接。
+        # 原 RuleMatches 使用两数组长度的最小值；Grass 末规则保留 8 位置但无邻接。
         require(all(n in (0,1,2) for n in neighbors), '邻接类型不支持')
-        matched = True
         for neighbor, offset in zip(neighbors, positions):
             other = authored_cells.get(tuple(a+b for a,b in zip(cell, xyz(offset))), {})
             same = other.get('guid') == tile_guid
             if (neighbor == 1 and not same) or (neighbor == 2 and same):
-                matched = False
                 break
-        if matched:
-            return rule['m_Sprites'][0]
-    return sprite
+        else:
+            return rule
+    return None
+
+
+def resolve_fixed_tile_rule(rule_asset, cell, authored_cells, tile_guid):
+    rule = first_fixed_rule(rule_asset,cell,authored_cells,tile_guid,0)
+    return rule['m_Sprites'][0] if rule is not None else rule_asset['m_DefaultSprite']
+
+
+def extract_water_base(checkout, scene, sprites, used):
+    """仅原水材质无反射贡献的底图，不合成倒影或加入物理。"""
+    mat = get_document(read(checkout,'Assets/Settings/WaterReflection/WaterReflectionTilemap.mat'),2100000,'Material')
+    require(mat['m_Shader']['guid'] == 'bdc4b0e1ab7a518468bac3f34b5f64ac'
+            and next(x['_Color'] for x in mat['m_SavedProperties']['m_Colors'] if '_Color' in x) == WHITE,
+            '原水材质不是白色不调色底图')
+    go = get_document(scene,2080991800,'GameObject')
+    transform = get_document(scene,2080991801,'Transform')
+    require(go['m_IsActive'] == 1 and transform['m_GameObject']['fileID'] == 2080991800
+            and xyz(transform['m_LocalPosition']) == [0,0,0] and xyz(transform['m_LocalScale']) == [1,1,1]
+            and transform['m_LocalRotation'] == dict(x=0,y=0,z=0,w=1)
+            and transform['m_Father']['fileID'] == 1148507050, '原水层变换变化')
+    tilemap_id = 2080991806
+    water = get_document(scene,tilemap_id,'Tilemap')
+    renderer = get_document(scene,2080991805,'TilemapRenderer')
+    require(water['m_GameObject']['fileID'] == renderer['m_GameObject']['fileID'] == 2080991800
+            and xyz(water['m_TileAnchor']) == [.5,.5,0] and water['m_TileOrientationMatrix'] == IDENTITY
+            and water['m_TileOrientation'] == 0 and water['m_AnimationFrameRate'] == 1 and water['m_Color'] == WHITE
+            and renderer['m_Enabled'] == 1 and renderer['m_SortingLayerID'] == 0 and renderer['m_SortingOrder'] == -9
+            and renderer['m_Mode'] == renderer['m_SortOrder'] == renderer['m_MaskInteraction'] == 0
+            and renderer['m_Materials'] == WATER_MATERIAL, '原水层的 Tilemap 或渲染字段变化')
+    cells = tile_cells(scene,tilemap_id)
+    animated = {tuple(xyz(a['first'])):a['second'] for a in water['m_AnimatedTiles']}
+    require(len(cells) == len(animated) == len(water['m_AnimatedTiles']) == 87
+            and animated.keys() == cells.keys() and not (cells.keys() & tile_cells(scene,1835126662).keys())
+            and all(r['guid']==WATER_GUID and r['fileID']==11400000 for r in cells.values()),
+            '原水域不是锁定的动画格或与同排序草重叠')
+    raw = re.sub(r'(m_Neighbors: )([0-9a-f]+)', r'\1"\2"', read(checkout,WATER_RULE))
+    tile = get_document(raw,11400000,'MonoBehaviour')
+    require(yaml.safe_load(read(checkout,WATER_RULE+'.meta'))['guid'] == WATER_GUID
+            and tile['m_Script']['guid'] == '9d1514134bc4fbd41bb739b1b9a49231'
+            and all(r['m_Output'] == 2 and r['m_RuleTransform'] == r['m_RandomTransform'] == 0
+                    and r['m_MinAnimationSpeed'] == r['m_MaxAnimationSpeed'] == 1
+                    and r['m_GameObject']['fileID'] == 0 and len(r['m_Sprites']) == 2 for r in tile['m_TilingRules']),
+            '原水域作者资产不是定速两帧 Fixed/Animation')
+    rows, counts = [], Counter()
+    for entry in water['m_Tiles']:
+        cell, data = tuple(xyz(entry['first'])), entry['second']
+        rule = first_fixed_rule(tile,cell,cells,WATER_GUID,2)
+        require(rule is not None,'原水域未匹配动画规则')
+        sequence = rule['m_Sprites']
+        cached = animated[cell]
+        require(sequence == cached['m_AnimatedSprites'] and cached['m_AnimationSpeed'] == 1
+                and cached['m_AnimationTimeOffset'] == cached['m_Flags'] == 0,
+                '原水域缓存动画帧序或速率变化')
+        # RuleTile.GetTileData chooses frames[0], unlike standalone AnimatedTile.
+        sprite_index = data['m_TileSpriteIndex']
+        counts[sprite_index] += 1
+        require(sequence[0] == water['m_TileSpriteArray'][sprite_index]['m_Data']
+                and water['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data'] == IDENTITY
+                and water['m_TileColorArray'][data['m_TileColorIndex']]['m_Data'] == WHITE
+                and data['m_TileObjectToInstantiateIndex'] == 65535, '原水格缓存不是已求值的单位变换')
+        keys = [f"{f['guid']}:{f['fileID']}" for f in sequence]
+        require(all(f['guid']==TILES_GUID for f in sequence)
+                and all(sprites[k]['rect'][2:] == [8,8] and sprites[k]['pivot'] == [.5,.5] for k in keys),
+                '水域原图集或枢轴变化')
+        used.update(keys)
+        rows.append({'cell':list(cell),'frames':keys})
+    require(all(counts[i]==r['m_RefCount'] for i,r in enumerate(water['m_TileSpriteArray'])),
+            '原水格精灵引用计数不符')
+    return {'tilemap_id':tilemap_id,'frames_per_second':1,'sorting_order':-9,'rows':rows}
 
 
 def fixed_decorations(checkout, source_id):
@@ -310,8 +378,10 @@ def extract(checkout):
     shadows = {tuple(r['cell']):r['translation'] for r in layers[-1]['rows']}
     require(props.keys() == shadows.keys() and all(shadows[cell] == [pos[0]-.125,pos[1]] for cell,pos in props.items()),
             '原植被与阴影逐格位移配对变化')
-    return {'schema':5,'source_commit':SOURCE,'scope':'base-mapped-covers-lakegrass-and-fixed-decor',
-            'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},'layers':layers}
+    water_base = extract_water_base(checkout,scene,sprites,used)
+    return {'schema':6,'source_commit':SOURCE,'scope':'ground-decor-and-unreflected-water-base',
+            'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},
+            'layers':layers,'water_base':water_base}
 
 
 def main():
@@ -324,6 +394,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；随机装饰59/6格未装配。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；随机装饰59/6格与倒影未装配。')
 
 if __name__ == '__main__': main()

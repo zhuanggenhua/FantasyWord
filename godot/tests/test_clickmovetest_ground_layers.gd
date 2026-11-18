@@ -80,6 +80,35 @@ func run() -> void:
 		and cliff_shadow.position==cliff.position and cliff_shadow.z_index==-1 and cliff.z_index==-8,
 		"悬崖顶阴影来自独立的原阴影图集，保留与下层崖缘同格排序")
 	check(ground.mapped_cover_sources(shadow_cell).is_empty(),"崖缘和上层崖影都不是可燃映射")
+	var water_cell := Vector3i(-8,-10,0)
+	var water := ground.water_base_sprite(water_cell) as AnimatedSprite2D
+	check(ground.water_base_count()==87 and is_instance_valid(water),"原河湖水面底图87格，独立于35格 LakeGrass 装饰")
+	if water==null:
+		scene.free()
+		quit(1)
+		return
+	var visited_water := 0
+	var surviving_coverage := true
+	for row in read(rules).rows:
+		var c := Vector3i(int(row.cell[0]),int(row.cell[1]),int(row.cell[2]))
+		if ground.water_base_sprite(c)==null: continue
+		visited_water+=1
+		surviving_coverage = surviving_coverage and row.surface==4 and not row.walkable \
+			and not scene.route.graph.contains_node(Vector4i(0,c.x,c.y,c.z)) and ground.mapped_cover_sources(c).is_empty()
+	check(visited_water==87 and surviving_coverage,"全体河湖保持原水地表、无作者映射覆盖且不可行走")
+	check(water.position==Vector2(-7.5,9.5) and water.scale==Vector2(.125,.125) and water.offset==Vector2(-4,-4)
+		and water.z_index==-9 and water.material.light_mode==CanvasItemMaterial.LIGHT_MODE_UNSHADED,"原水朝向、锚点、排序及无反射贡献时的不受光底图")
+	check(water.sprite_frames.get_frame_count(&"default")==2 and water.is_playing()
+		and water.sprite_frames.get_animation_speed(&"default")==1,"河湖固定两帧自动播放")
+	for i in 2:
+		var image := water.sprite_frames.get_frame_texture(&"default",i) as AtlasTexture
+		check(image!=null and image.region==Rect2(200+32*i,image.atlas.get_height()-136,8,8),
+			"原 RuleTile 首匹配水帧 %d" % i)
+	check(not terrain.apply_point(Surface.FIRE,Vector2(-7.5,-9.5),1,.1,scene.actor,20010)
+		and scene.surface_fire_tiles.get_used_cells().is_empty(),
+		"原水域没有可燃草，不凭空加残火或改变水域")
+	var water_frames: Array[int] = []
+	water.frame_changed.connect(func():water_frames.append(water.frame))
 	var lake_cell := Vector3i(0,-10,0)
 	var lake: AnimatedSprite2D = ground.lakegrass_sprite(lake_cell)
 	check(ground.lakegrass_count()==35 and is_instance_valid(lake),"原湖岸 LakeGrass 35 格独立装配")
@@ -189,6 +218,8 @@ func run() -> void:
 	var deadline := Time.get_ticks_msec()+4500
 	while seen.size()<2 and Time.get_ticks_msec()<deadline: await process_frame
 	check(seen.slice(0,2)==[1,0],"LakeGrass 自动播放原顺序而非冻结在场景静态缓存")
+	check(water_frames.slice(0,2)==[1,0] and water.self_modulate.a==1,
+		"作者河湖底图实际播放原帧序，不受地表覆盖燃尽与清理影响")
 	check(lake.self_modulate.a==1,"变换地表状态不影响该独立装饰")
 	events.map_unloaded.emit()
 	check(scene.ground_layers==null and scene.surface_presentation==null and not ground.visible,"卸载取消绑定且立即隐藏地图")
@@ -197,7 +228,8 @@ func run() -> void:
 	await process_frame
 	check(not is_instance_valid(lake),"卸载释放自主动画，不保留上次场景的相位")
 	check(not is_instance_valid(road),"地图卸载释放确定性石路精灵")
+	check(not is_instance_valid(water),"地图卸载释放独立的原河湖动画")
 	check(not is_instance_valid(cliff_shadow) and stairs.all(func(stair):return not is_instance_valid(stair)),
 		"地图卸载释放原楼梯和崖影节点")
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含随机装饰、完整物理或 Unity 像素对照" % [n,failed])
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含倒影、随机装饰、完整物理或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)

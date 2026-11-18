@@ -1,10 +1,11 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
 ## 不擦除作者格、不生成焦土，也不另建碰撞/导航。静态装饰、湖草与可燃覆盖分别注册。
-const MANIFEST_SHA256 := "65c5ae6e56770d6eced65a3e936bbac3c79f56e34f1918271bb3561d36b617bd"
+const MANIFEST_SHA256 := "1ec799a3ffa9e42dbb1099b00426ae40a36d5c6a4d0b2a81ee4f7830ca9cc2b2"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}
+var _water_base: Dictionary = {}
 var _static_decorations: Dictionary = {}
 var _configured := false
 
@@ -43,7 +44,13 @@ func configure(directory: String) -> bool:
 			for row in layer.static_decorations:
 				_add_static_tile(row, int(layer.sorting_order), frames, data.sprites, _static_decorations[source])
 		if layer.has("decorations"):
-			_add_lakegrass(layer.decorations, int(layer.sorting_order), frames, data.sprites)
+			_add_animated_tiles(layer.decorations, int(layer.sorting_order), frames, data.sprites, _lakegrass)
+	# Original water compositor at reflection alpha zero: unlit authored base
+	# with unchanged sprite alpha. Actual reflected contributions are separate.
+	var base_material := CanvasItemMaterial.new()
+	base_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	_add_animated_tiles(data.water_base, int(data.water_base.sorting_order), frames, data.sprites,
+		_water_base, base_material)
 	_configured = true
 	return true
 
@@ -68,7 +75,8 @@ func static_decoration_sprite(source: int, cell: Vector3i) -> Sprite2D:
 func static_decoration_count(source: int) -> int:
 	return _static_decorations.get(source, {}).size()
 
-func _add_lakegrass(data: Dictionary, sorting_order: int, textures: Dictionary, metadata: Dictionary) -> void:
+func _add_animated_tiles(data: Dictionary, sorting_order: int, textures: Dictionary,
+		metadata: Dictionary, registry: Dictionary, material_override: Material = null) -> void:
 	var shared: Dictionary = {}
 	for row in data.rows:
 		var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),int(row.cell[2]))
@@ -88,8 +96,15 @@ func _add_lakegrass(data: Dictionary, sorting_order: int, textures: Dictionary, 
 		sprite.position = Vector2(cell.x+.5,-cell.y-.5)
 		sprite.z_index = sorting_order
 		sprite.autoplay = &"default"
+		if material_override != null: sprite.material = material_override
 		add_child(sprite)
-		_lakegrass[cell] = sprite
+		registry[cell] = sprite
+
+func water_base_sprite(cell: Vector3i) -> AnimatedSprite2D:
+	return _water_base.get(cell)
+
+func water_base_count() -> int:
+	return _water_base.size()
 
 func lakegrass_sprite(cell: Vector3i) -> AnimatedSprite2D:
 	return _lakegrass.get(cell)
