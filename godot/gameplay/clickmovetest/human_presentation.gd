@@ -1,5 +1,5 @@
 extends Node2D
-## 原 Human Idle/Walk 与可选 Dmg/ChargedAttack/Attack 的显式私有图集入口；不补造受伤事件。
+## 原 Human Idle/Walk 与可选 Dmg/ChargedAttack/Attack 和原训练假人 SpinDie 的显式私有图集入口；不补造受伤事件。
 const Playback = preload("res://game_core/presentation/directional_sprite_playback.gd")
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
@@ -16,8 +16,13 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 		return _fail("入口须先进入场景树且只能配置一次。")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE or not data.get("textures") is Dictionary or not data.get("actions") is Dictionary:
 		return _fail("缺少锁定来源的私有动画合同。")
-	if not data.actions.has_all(["Idle", "Walk"]) or data.actions.keys().any(func(key): return key not in ["Idle", "Walk", "Dmg", "ChargedAttack", "Attack"]):
-		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg/ChargedAttack/Attack。")
+	if not data.actions.has_all(["Idle", "Walk"]) or data.actions.keys().any(func(key): return key not in ["Idle", "Walk", "Dmg", "ChargedAttack", "Attack", "SpinDie"]):
+		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg/ChargedAttack/Attack/SpinDie。")
+	if data.actions.has("SpinDie"):
+		var target: Variant = data.get("training_target")
+		if not target is Dictionary or target.get("death_animation_key") != "SpinDie" \
+				or target.get("prefab_guid") != "dca23ea6afacc0647bfd10c5cefa4099":
+			return _fail("SpinDie 只接原训练假人已核实的正式死亡动作。")
 	var loaded := {}
 	for name in data.textures:
 		if not name is String or name != name.get_file() or not name.ends_with(".png"):

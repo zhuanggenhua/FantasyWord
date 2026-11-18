@@ -12,16 +12,14 @@ var _sheet := PackedInt32Array()
 var _alignment := -1
 var _health_base := 0
 var _health_current := 0
-var _lifecycle: Callable
 var _invincibility: Callable
 
-func configure(sheet: PackedInt32Array, alignment: int, is_dead: Callable, is_invincible: Callable) -> bool:
+func configure(sheet: PackedInt32Array, alignment: int, is_invincible: Callable) -> bool:
 	if has_formal_stats() or sheet.size() != 9 or sheet[0] <= 0 \
 			or alignment not in [Combat.Alignment.GOOD, Combat.Alignment.EVIL] \
-			or not is_dead.is_valid() or not is_invincible.is_valid(): return false
+			or not is_invincible.is_valid(): return false
 	_sheet = sheet.duplicate()
 	_alignment = alignment
-	_lifecycle = is_dead
 	_invincibility = is_invincible
 	# 初始 CurrentHealth、该资源的 BaseValue 和 MaxHealth 属性同取表初值。
 	_health_base = _sheet[0]
@@ -29,14 +27,14 @@ func configure(sheet: PackedInt32Array, alignment: int, is_dead: Callable, is_in
 	return true
 
 func has_formal_stats() -> bool:
-	return not _sheet.is_empty() and _lifecycle.is_valid() and _invincibility.is_valid()
+	return not _sheet.is_empty() and _invincibility.is_valid()
 
 func stats() -> Dictionary:
 	if not has_formal_stats(): return {}
 	var read := {}
 	for i in SNAPSHOT_KEYS.size():
 		read[SNAPSHOT_KEYS[i]] = _sheet[i+2]
-	return {"snapshot":read, "alignment":_alignment, "dead":_lifecycle.call(), "invincible":_invincibility.call()}
+	return {"snapshot":read, "alignment":_alignment, "dead":_health_current == 0, "invincible":_health_current == 0 or _invincibility.call()}
 
 func current_health() -> int:
 	return _health_current

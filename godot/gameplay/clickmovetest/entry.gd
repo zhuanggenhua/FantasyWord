@@ -586,13 +586,12 @@ func _remove_flamethrower_visual() -> void:
 ## 不注册假 AI、不自动加进默认场景、不创建美术或替代碰撞资源。
 func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary, terrain_mask: int) -> Node2D:
 	if training_target != null or not is_inside_tree(): return null
-	for key in ["is_dead", "is_invincible"]:
-		if not target_hooks.get(key) is Callable or not target_hooks[key].is_valid(): return null
+	if not target_hooks.get("is_invincible") is Callable or not target_hooks.is_invincible.is_valid(): return null
 	var sheet := TrainingTarget.initial_sheet()
 	var properties := TrainingAttributes.new()
 	if not properties.configure(PackedInt32Array([sheet.health, sheet.mana, sheet.physical_attack,
 			sheet.magical_attack, sheet.physical_defense, sheet.magical_defense, sheet.agility,
-			sheet.luck, sheet.attack_speed]), sheet.alignment, target_hooks.is_dead, target_hooks.is_invincible):
+			sheet.luck, sheet.attack_speed]), sheet.alignment, target_hooks.is_invincible):
 		return null
 	var hooks := target_hooks.duplicate()
 	hooks.stats = properties.stats
@@ -608,6 +607,7 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	if not target.configure(hooks,motion_owner,terrain_mask):
 		target.free()
 		return null
+	target.bind_formal_health_changes(properties)
 	add_child(target)
 	training_target = target
 	training_attributes = properties

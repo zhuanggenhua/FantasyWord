@@ -61,7 +61,7 @@ func run() -> void:
 	check(is_instance_valid(target_view),"同一假人身体挂载受击动作")
 	var caster := Attributes.new()
 	check(caster.configure(PackedInt32Array([100,40,10,6,6,4,8,4,100]),Combat.Alignment.GOOD,
-		func():return false,func():return false),"锁定原玩家属性")
+		func():return false),"锁定原玩家属性")
 	var player_impact: Array = []
 	var contact_hooks := {"impact":func(_in,velocity):player_impact.append(velocity),
 		"provoke":func(_source):pass,"has_formal_stats":caster.has_formal_stats,"current_health":caster.current_health,

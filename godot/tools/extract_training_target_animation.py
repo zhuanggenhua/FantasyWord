@@ -15,7 +15,7 @@ def documents(raw):
     text = re.sub(r"^--- !u!\d+ &[-\d]+(?: stripped)?", "---", text, flags=re.M)
     return list(yaml.safe_load_all(text))
 
-def extract_target(repo, textures):
+def extract_target(repo, textures, include_death=False):
     sources = {}
     def source(path):
         raw = read(repo, path)
@@ -41,6 +41,7 @@ def extract_target(repo, textures):
         return matches[0]
     driver = component("CharacterActionAnimatorDriver")
     assert (driver["defaultAnimationKey"],driver["movementAnimationKey"],driver["damageAnimationKey"]) == ("Idle","Walk","Dmg")
+    assert driver["deathAnimationKey"] == "SpinDie"
     direction = component("DirectionalSpriteLibraryDriver")
     expected = ["62c4a52ab213438419c93cc2d8427623","0602b79d46e41504a8117d1fdcc863b2","aaefe509e84579b4782b521a1d156e71","9ea72d0165623924d891e3222ac25d48"]
     assert [direction["defaultAnimationLibraries"][k]["guid"] for k in ("southEast","southWest","northEast","northWest")] == expected
@@ -52,7 +53,7 @@ def extract_target(repo, textures):
     assert equipment["appearance"]["guid"] == "a1ff30d38f2dfa346a3c8920b6183736"
     assert equipment["initialEquipments"] == []
     # 训练假人无这三个继承组件/其参数的覆盖；不得默默采用类似玩家配置。
-    forbidden = ("defaultAnimation", "movementAnimation", "damageAnimation", "characterAnimator", "frameData", "appearance", "defaultAnimationLibraries")
+    forbidden = ("defaultAnimation", "movementAnimation", "damageAnimation", "deathAnimation", "characterAnimator", "frameData", "appearance", "defaultAnimationLibraries")
     assert not any(m["propertyPath"].startswith(forbidden) for m in mods)
     body = documents(source(PREFIX+"0_Character_Base.prefab"))
     transform = next(d["Transform"] for d in body if "Transform" in d and d["Transform"].get("m_GameObject",{}).get("fileID") == 4877509768872866472)
@@ -61,9 +62,10 @@ def extract_target(repo, textures):
     runtime = source("Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Runtime/DirectionalSpriteLibraryDriver.cs").decode()
     assert "SetAnimationLibraries(defaultAnimationLibraries, false)" in runtime
     assert "spriteLibrary.spriteLibraryAsset = asset;" in runtime
-    result = extract(repo, textures, include_damage=True)
+    result = extract(repo, textures, include_damage=True,include_death=include_death)
     result["source_sha256"].update(sources)
     result["training_target"] = {"prefab_guid":"dca23ea6afacc0647bfd10c5cefa4099", "body_local_position":[0,0], "runtime_libraries":expected}
+    if include_death: result["training_target"]["death_animation_key"] = "SpinDie"
     return result
 
 if __name__ == "__main__":
@@ -71,8 +73,9 @@ if __name__ == "__main__":
     parser.add_argument("--repo",type=Path,required=True)
     parser.add_argument("--textures",type=Path,required=True)
     parser.add_argument("--output",type=Path,required=True)
+    parser.add_argument("--include-death",action="store_true")
     args=parser.parse_args()
-    result=extract_target(args.repo,args.textures)
+    result=extract_target(args.repo,args.textures,args.include_death)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("PASS 训练假人继承、运行时方向库、Idle/Walk/Dmg 原始图集合同")

@@ -21,6 +21,9 @@ var _presentation_motion: RefCounted
 var hitbox: Area2D
 var lifecycle := Lifecycle.new()
 var _bindings: Dictionary = {}
+var _external_health_signal := false
+var _death_committed := false
+var _verified_death_animation := false
 var _movement_owner: Object
 var _terrain_mask := 0
 var stats: Dictionary:
@@ -98,6 +101,10 @@ func start_presentation(animation: Dictionary, texture_directory: String) -> Nod
 	if not motion.configure(_movement_owner,view,false):
 		view.free()
 		return null
+	_verified_death_animation = provenance.get("death_animation_key") == "SpinDie"
+	if _verified_death_animation and view.driver.resolve_playable_state("SpinDie").is_empty():
+		view.free()
+		return null
 	_presentation_motion = motion
 	presentation = view
 	motion.activate()
@@ -109,7 +116,7 @@ func _exit_tree() -> void:
 		_presentation_motion = null
 
 # 原动作拥有者仍裁决移动、碰撞和朝向；表现只收到实际接受的位移。
-func can_move() -> bool: return is_instance_valid(_movement_owner) and _movement_owner.can_move()
+func can_move() -> bool: return not _death_committed and is_instance_valid(_movement_owner) and _movement_owner.can_move()
 func calculate_move_speed() -> float: return _movement_owner.calculate_move_speed()
 func calculate_speed_multiplier() -> float: return _movement_owner.calculate_speed_multiplier()
 func update_facing_from_intent(value: Vector2) -> void: _movement_owner.update_facing_from_intent(value)
@@ -123,6 +130,14 @@ func update_movement_animation(value: Vector2) -> void:
 func get_movement_position() -> Vector2: return body.get_movement_position()
 func source_position() -> Vector2: return get_movement_position()
 
+func bind_formal_health_changes(properties: RefCounted) -> void:
+	# CharacterBase subscribes to formal CurrentHealth, not to one attack.
+	_external_health_signal = true
+	properties.current_health_changed.connect(_on_formal_health_changed)
+
+func _on_formal_health_changed(previous: int, current: int, _source: Variant) -> void:
+	lifecycle.on_current_health_changed(previous,current)
+
 func hooks() -> Dictionary:
 	var result := _bindings.duplicate()
 	result.prepare = func(source, input):
@@ -134,14 +149,24 @@ func hooks() -> Dictionary:
 	result.apply_current_health_delta = func(delta, minimum, maximum, source):
 		var previous: int = health
 		var value: Variant = _bindings.apply_current_health_delta.call(delta,minimum,maximum,source)
-		if value is int:
+		if value is int and not _external_health_signal:
 			lifecycle.on_current_health_changed(previous,value)
 		return value
 	return result
 
 func advance_damage_lifecycle() -> void:
 	lifecycle.tick_safe(_bindings.current_health, _bindings.is_destroyed,
-		_bindings.interrupt_actions, _bindings.mark_death)
+		_bindings.interrupt_actions, _finish_death)
+
+func _finish_death() -> void:
+	# Movable.Kill marks the Actor and resets its motion before the formal
+	# terminal animation; CharacterActor.OnDeath runs without waiting.
+	_death_committed = true
+	if is_instance_valid(body): body.reset_movement()
+	if _verified_death_animation and is_instance_valid(presentation):
+		if not presentation.driver.try_lock_animation("SpinDie"):
+			push_error("训练假人的正式 SpinDie 死亡动作无法锁定")
+	_bindings.mark_death.call()
 
 ## 背刺只取逻辑方向，不能用绘制朝向或碰撞体方向代替。
 func has_formal_target_direction() -> bool:

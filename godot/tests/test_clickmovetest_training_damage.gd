@@ -8,7 +8,7 @@ class TargetMotion extends RefCounted:
 	var dead := false
 	var invincible := false
 	var trace: Array = []
-	func can_move() -> bool: return not dead
+	func can_move() -> bool: return true # movement permission now changes on the real target
 	func calculate_move_speed() -> float: return 4
 	func calculate_speed_multiplier() -> float: return 1
 	func update_movement_animation(_v: Vector2) -> void: pass
@@ -88,6 +88,10 @@ func run() -> void:
 		target_animation.actions["Dmg"] = dmg
 		target_animation.training_target = {"prefab_guid":target.VISUAL_PREFAB,
 			"runtime_libraries":target.VISUAL_LIBRARIES,"body_local_position":[0,0]}
+	var exact_death := OS.get_environment("FORMAL_TRAINER_DEATH")
+	if not exact_death.is_empty():
+		target_dir = exact_death
+		target_animation = read(exact_death.path_join("animation-trainer-death.json"))
 	var wrong_target := target_animation.duplicate(true)
 	wrong_target.erase("training_target")
 	check(scene.start_training_target_presentation(wrong_target,target_dir)==null,
@@ -114,7 +118,7 @@ func run() -> void:
 		"不代替治疗或上限")
 	var caster := Attributes.new()
 	check(caster.configure(PackedInt32Array([100,40,10,6,6,4,8,4,100]),Combat.Alignment.GOOD,
-		func():return false,func():return false),"锁定原玩家初值供当前测试的属性拥有者")
+		func():return false),"锁定原玩家初值供当前测试的属性拥有者")
 	scene.actor.request_move_position(Vector2(1.75,-2.35))
 	await physics_frame
 	await physics_frame
@@ -170,10 +174,48 @@ func run() -> void:
 		"收招不重复结算或播放已用 Cue")
 	var hits: Array=[]
 	scene.training_attributes.current_health_changed.connect(func(a,b,_s):hits.append([a,b]))
-	check(scene.training_attributes.apply_current_health_delta(-400,0,null,caster.stats())==0 and hits==[[198,0]],
-		"同一实际生命属性下限与真实变更信号")
-	check(scene.training_attributes.apply_current_health_delta(-1,0,null,caster.stats())==0 and hits==[[198,0]],
-		"钳制后无有效增量不重复变更")
+	# Stage a living target at one hit from death, then use the same actual
+	# normalized action/timeline/effect route to drive the fatal subtraction.
+	check(scene.training_attributes.apply_current_health_delta(-176,0,null,caster.stats())==22,
+		"测试先将实际生命置为一次蓄力可击倒")
+	target.body.request_move_position(Vector2(2.5,-2.75))
+	await physics_frame
+	await process_frame
+	check(press.call()==Executor.Failure.NONE and release.call()==Executor.Failure.NONE,
+		"第二次仍经正式归一化输入")
+	scene.advance_human_charged_combat(.21)
+	check(target.health==0 and hits==[[198,22],[22,0]] and target.lifecycle.pending_death,
+		"实际致命效果记录正式生命变化，延迟处理死亡")
+	check(target.stats.dead and target.stats.invincible and not native_target.dead and is_instance_valid(target.body),
+		"原 dead 当场读零血，死亡收尾仍待安全阶段")
+	var trace_before := native_target.trace.duplicate()
+	scene._execute_training_damage(scene.actor,target,caster.stats,func():return 50)
+	check(native_target.trace==trace_before and hits.size()==2,
+		"同帧后续有来源攻击不再唤起受击或扣血")
+	target.body.move_to(Vector2(5,-2.75))
+	check(target.body.execution.has_move_order(),"安全阶段前存在真实待完成的移动命令")
+	var prior_count := native_target.trace.size()
+	target.advance_damage_lifecycle()
+	target.advance_damage_lifecycle()
+	check(native_target.trace.slice(prior_count)==["interrupt","death"] and native_target.dead
+		and not target.lifecycle.pending_death and is_instance_valid(target.body),
+		"安全阶段先打断再进入宿主死亡回调，重复推进不重放，不擅自删除 Actor")
+	check(not target.can_move() and not target.body.execution.has_move_order(),
+		"保留 Actor 身体但停止其自发移动")
+	if not exact_death.is_empty():
+		check(target_view.driver.locked_key=="SpinDie" and target_view.playback.current_label==0,
+			"正式死亡安全阶段锁定原 SpinDie，不等动画结束才回调")
+		target_view.animator.advance(0.65)
+		check(target_view.playback.current_label==5 and target_view.sprite.texture is AtlasTexture,
+			"实际 AnimationPlayer 进入原 8 FPS SpinDie 第5帧")
+		target_view.driver.advance_game_time(2)
+		target_view.driver.try_play_animation("Idle")
+		target_view.animator.advance(1.0)
+		check(target_view.playback.current_label==11 and target_view.driver.current_animation_key=="SpinDie",
+			"非循环原死亡末帧保留，延迟恢复或待机请求不覆盖")
+	check(scene.training_attributes.apply_current_health_delta(-1,0,null,caster.stats())==0 and hits.size()==2
+		and not target.lifecycle.pending_death,
+		"已零血无有效增量，不再请求死亡")
 	scene.stop_human_aim()
 	scene.free()
 	control.free()

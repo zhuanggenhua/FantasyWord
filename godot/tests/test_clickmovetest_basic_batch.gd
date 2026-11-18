@@ -39,7 +39,7 @@ func run() -> void:
 	check(is_instance_valid(target_view),"同一假人身体挂载受击动作")
 	var caster := Attributes.new()
 	check(caster.configure(PackedInt32Array([100,40,10,6,6,4,8,4,100]),Combat.Alignment.GOOD,
-		func():return false,func():return false),"锁定原玩家属性")
+		func():return false),"锁定原玩家属性")
 	owner.set_look_at_direction(Vector2.RIGHT)
 	scene.actor.request_move_position(Vector2(1.75,-2.35))
 	await physics_frame
