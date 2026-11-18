@@ -47,6 +47,12 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 		for records in record.directions:
 			if not records is Array or records.is_empty():
 				return _fail("方向精灵库为空。")
+			if action == "SpinDie" and not dirs.is_empty():
+				# Unity 四个方向库引用同一组 Sprite；换朝向不会换 Sprite 或重复刷新外观。
+				if records != record.directions[0]:
+					return _fail("SpinDie 方向库未引用同一组原精灵。")
+				dirs.append(dirs[0])
+				continue
 			var frames := []
 			for frame in records:
 				if not frame is Dictionary or not frame.get("rect") is Array or frame.rect.size() != 4 or not loaded.has(frame.get("texture")):

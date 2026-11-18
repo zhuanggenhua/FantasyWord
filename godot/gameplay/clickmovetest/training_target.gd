@@ -85,7 +85,7 @@ func _ready() -> void:
 
 ## 锁定训练假人的 Runtime DirectionalSpriteLibraryDriver 使用原 Human 四向库，
 ## 表现挂在身体局部原点；不使用胶囊的中心偏移。
-func start_presentation(animation: Dictionary, texture_directory: String) -> Node2D:
+func start_presentation(animation: Dictionary, texture_directory: String, source_material: Dictionary = {}) -> Node2D:
 	if _presentation_motion != null or not is_instance_valid(body) or not body.is_inside_tree(): return null
 	var provenance: Variant = animation.get("training_target")
 	if not provenance is Dictionary or provenance.get("prefab_guid") != VISUAL_PREFAB \
@@ -97,6 +97,13 @@ func start_presentation(animation: Dictionary, texture_directory: String) -> Nod
 	if not view.configure(animation,texture_directory) or view.driver.resolve_playable_state("Dmg").is_empty():
 		view.free()
 		return null
+	# 完整私有材质来自同一假人动作合同；传入却无效时不降级成原图直显。
+	if not source_material.is_empty():
+		if not source_material.get("data") is Dictionary or not source_material.get("uv_directory") is String \
+				or not source_material.get("appearance_directory") is String \
+				or not view.bind_base_material(source_material.data,source_material.uv_directory,source_material.appearance_directory):
+			view.free()
+			return null
 	var motion := MotionBinding.new()
 	if not motion.configure(_movement_owner,view,false):
 		view.free()

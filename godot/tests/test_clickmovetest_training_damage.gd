@@ -89,14 +89,27 @@ func run() -> void:
 		target_animation.training_target = {"prefab_guid":target.VISUAL_PREFAB,
 			"runtime_libraries":target.VISUAL_LIBRARIES,"body_local_position":[0,0]}
 	var exact_death := OS.get_environment("FORMAL_TRAINER_DEATH")
+	var exact_material := OS.get_environment("FORMAL_TRAINER_DEATH_MATERIAL")
 	if not exact_death.is_empty():
 		target_dir = exact_death
 		target_animation = read(exact_death.path_join("animation-trainer-death.json"))
+	var material_package := {}
+	if not exact_material.is_empty():
+		material_package = {"data":read(exact_material.path_join("material-trainer-death.json")),
+			"uv_directory":exact_material.path_join("uv"),"appearance_directory":exact_material.path_join("appearance")}
+		var wrong_material := material_package.duplicate(true)
+		wrong_material.data.erase("training_target")
+		check(scene.start_training_target_presentation(target_animation,target_dir,wrong_material)==null,
+			"同名 Human 动作不能代替训练假人的原材质合同")
+		wrong_material = material_package.duplicate(true)
+		wrong_material.data.actions.SpinDie.frames.pop_back()
+		check(scene.start_training_target_presentation(target_animation,target_dir,wrong_material)==null,
+			"缺少末帧配置时不静默降级直显，也不保留无效表现")
 	var wrong_target := target_animation.duplicate(true)
 	wrong_target.erase("training_target")
 	check(scene.start_training_target_presentation(wrong_target,target_dir)==null,
 		"相同动画名不代表原训练假人绑定")
-	var target_view: Node2D = scene.start_training_target_presentation(target_animation,target_dir)
+	var target_view: Node2D = scene.start_training_target_presentation(target_animation,target_dir,material_package)
 	check(is_instance_valid(target_view),"同一假人身体挂载原动作表现")
 	if not is_instance_valid(target_view):
 		scene.free()
@@ -105,7 +118,13 @@ func run() -> void:
 		return
 	check(target_view.get_parent()==target.body and target_view.position==Vector2.ZERO and target_view.driver.current_animation_key=="Idle",
 		"不把表现偏到碰撞中心，不提前播放 Dmg")
-	if not asset_dir.is_empty():
+	var idle_body_map: Texture2D
+	if not material_package.is_empty():
+		var material: ShaderMaterial = target_view.sprite.material
+		idle_body_map = material.get_shader_parameter("body_map")
+		check(material != null and idle_body_map.get_size()==Vector2(512,128),
+			"同一假人启动时就绑定原 Idle 材质，未替换人物或丢失外观")
+	elif not asset_dir.is_empty() and exact_death.is_empty():
 		var material := read(private_dir.path_join("private-dmg-verification/material.json"))
 		check(target_view.bind_base_material(material,target_dir,private_dir.path_join("private-formal-player-appearance")),
 			"同一原训练假人绑定原 UV 和无装备初始外观")
@@ -205,14 +224,40 @@ func run() -> void:
 	if not exact_death.is_empty():
 		check(target_view.driver.locked_key=="SpinDie" and target_view.playback.current_label==0,
 			"正式死亡安全阶段锁定原 SpinDie，不等动画结束才回调")
+		var death_material: ShaderMaterial = target_view.sprite.material
+		if not material_package.is_empty():
+			var body_map: Texture2D = death_material.get_shader_parameter("body_map")
+			var head_map: Texture2D = death_material.get_shader_parameter("head_map")
+			check(body_map!=idle_body_map and body_map.get_size()==Vector2(384,32)
+				and head_map.get_size()==Vector2(384,32)
+				and death_material.get_shader_parameter("main_map")==target_view.sprite.texture.atlas,
+				"进入死亡时本体及两张原 UV 一同切换到 384×32 单行动作")
 		target_view.animator.advance(0.65)
 		check(target_view.playback.current_label==5 and target_view.sprite.texture is AtlasTexture,
 			"实际 AnimationPlayer 进入原 8 FPS SpinDie 第5帧")
+		if not material_package.is_empty():
+			var sampled: AtlasTexture = target_view.sprite.texture
+			check(sampled.region==Rect2(160,0,32,32)
+				and death_material.get_shader_parameter("enabled_hair")
+				and death_material.get_shader_parameter("enabled_beard")
+				and death_material.get_shader_parameter("enabled_eye_decoration"),
+				"实际第 5 帧采样第 0 行，使用作者头部朝向与原基础外观")
+			var same_sprite := true
+			for facing in range(4):
+				target_view.playback.set_direction(facing)
+				same_sprite = same_sprite and target_view.sprite.texture==sampled
+			check(same_sprite,"SpinDie 四个方向库切换仍引用同一组精灵")
 		target_view.driver.advance_game_time(2)
 		target_view.driver.try_play_animation("Idle")
 		target_view.animator.advance(1.0)
 		check(target_view.playback.current_label==11 and target_view.driver.current_animation_key=="SpinDie",
 			"非循环原死亡末帧保留，延迟恢复或待机请求不覆盖")
+		if not material_package.is_empty():
+			check(target_view.sprite.material==death_material
+				and target_view.sprite.texture.region==Rect2(352,0,32,32)
+				and death_material.get_shader_parameter("body_map").get_size()==Vector2(384,32)
+				and death_material.get_shader_parameter("head_map").get_size()==Vector2(384,32),
+				"末帧有原数据且沿用同一材质，不能把未使用行的缺帧误当成运行时缺帧")
 	check(scene.training_attributes.apply_current_health_delta(-1,0,null,caster.stats())==0 and hits.size()==2
 		and not target.lifecycle.pending_death,
 		"已零血无有效增量，不再请求死亡")

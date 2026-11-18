@@ -615,9 +615,10 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	return target
 
 ## 显式导入源图集；空资源不让角色获得假表现。
-func start_training_target_presentation(animation: Dictionary, texture_directory: String) -> Node2D:
+func start_training_target_presentation(animation: Dictionary, texture_directory: String,
+		source_material: Dictionary = {}) -> Node2D:
 	if not is_instance_valid(training_target): return null
-	return training_target.start_presentation(animation,texture_directory)
+	return training_target.start_presentation(animation,texture_directory,source_material)
 
 ## 兼容现有显式槽位契约：假人只在此入口担任已绑定的受击者。
 ## Caster 当前快照、掷骰和 ASC Cell 属于正式宿主；暴击/闪避来自锁定 GameConfig.asset。

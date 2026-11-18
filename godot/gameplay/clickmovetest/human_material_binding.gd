@@ -25,6 +25,9 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 		if not data.get(field) is Dictionary: return _fail("Incomplete Human material contract.")
 	if data.actions.size() != animation.actions.size() or not data.actions.has_all(animation.actions.keys()):
 		return _fail("材质必须完整覆盖同一展示入口的全部已核实动作。")
+	var trainer_death: bool = animation.actions.has("SpinDie")
+	if trainer_death and data.get("training_target") != animation.get("training_target"):
+		return _fail("SpinDie 材质必须来自同一训练假人继承与方向库。")
 	var actions := {}
 	var look := {}
 	var cache := {}
@@ -63,7 +66,8 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 				var r: Array = frame.rect
 				var coordinate := Vector2i(floori(float(r[0])/32.0),floori((float(main_spec.size[1])-r[1]-r[3])/32.0))
 				expected[coordinate] = true
-		if coords != expected: return _fail("Authored frame coordinates do not cover the sampled library.")
+		if coords != expected:
+			return _fail("Authored frame coordinates do not cover the sampled library.")
 		actions[action] = maps
 	for part in ["hair","beard"]:
 		look[part] = {}
