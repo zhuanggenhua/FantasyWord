@@ -53,6 +53,29 @@ func _run() -> void:
 	view.set_movement(Vector2.ZERO)
 	assert(view.animator.current_animation == "Idle")
 	assert(checked == 80)
+	if data.actions.has("Attack"):
+		var attack: Animation = view.animator.get_animation("Attack")
+		assert(attack.length == 0.5 and attack.loop_mode == Animation.LOOP_NONE)
+		assert(attack.track_get_key_count(0) == 5)
+		for key in 5:
+			assert(attack.track_get_key_time(0,key) == key*0.125)
+			assert(view.playback._samples[attack.track_get_key_value(0,key)].label == mini(key,3))
+		view.driver.set_process(false)
+		view.animator.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+		for direction in 4:
+			view.driver.try_play_animation("Idle")
+			assert(view.driver.try_play_animation("Attack"))
+			view.playback.set_direction(direction)
+			for label in 4:
+				if label > 0: view.animator.advance(0.125)
+				assert(view.playback.current_label == label)
+				var tex: AtlasTexture = view.sprite.texture
+				assert(tex.region == Rect2(label*32,direction*32,32,32))
+				var original := Image.load_from_file(args[1].path_join(data.actions.Attack.directions[direction][label].texture))
+				assert(tex.get_image().get_data() == original.get_region(Rect2i(label*32,direction*32,32,32)).get_data())
+			view.animator.advance(0.125)
+			assert(view.playback.current_label == 3)
+		print("PASS 原 Attack：16 个四向原图裁片、5 个精确时间键、非循环末帧；不是完整跨引擎截图验收")
 	host.free()
 	print("PASS formal Human private source: 80 atlas crops, exact clip keys, loop, direction continuity, explicit entry attachment; NOT full render acceptance")
 	quit()

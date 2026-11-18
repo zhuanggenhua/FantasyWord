@@ -143,5 +143,12 @@ func advance_damage_lifecycle() -> void:
 	lifecycle.tick_safe(_bindings.current_health, _bindings.is_destroyed,
 		_bindings.interrupt_actions, _bindings.mark_death)
 
+## 背刺只取逻辑方向，不能用绘制朝向或碰撞体方向代替。
+func has_formal_target_direction() -> bool:
+	return is_instance_valid(_movement_owner) and _movement_owner.has_method("get_target_direction")
+
+func get_target_direction() -> Vector2:
+	return _movement_owner.get_target_direction()
+
 func advance_movement(delta: float, ramp_direction: Callable = Callable()) -> void:
 	body.advance_movement(delta,ramp_direction)

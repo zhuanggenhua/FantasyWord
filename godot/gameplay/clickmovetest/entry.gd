@@ -15,6 +15,9 @@ const Step = preload("res://game_core/movement/source_fixed_step.gd")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const TrainingTarget = preload("res://gameplay/clickmovetest/training_target.gd")
 const TrainingAttributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
+const BasicTimeline = preload("res://gameplay/combat/basic_attack_timeline.gd")
+const BasicDamage = preload("res://gameplay/combat/basic_damage_effect.gd")
+const HitPolygon = preload("res://game_core/combat/polygon_hitbox_query.gd")
 const ChargedHit = preload("res://gameplay/combat/charged_attack_hit.gd")
 const TrainingHitCue = preload("res://gameplay/clickmovetest/training_hit_feedback_cue.gd")
 const ChargedEffects = preload("res://gameplay/combat/charged_effect_application.gd")
@@ -48,6 +51,7 @@ var _aim_was_local := false
 var _equipped_ability_dispatch: RefCounted
 var _charged_actor_runtime: Node
 var _charged_timeline: RefCounted
+var _basic_timeline: RefCounted
 var training_hit_cue := TrainingHitCue.new()
 var _training_effects := ChargedEffects.new()
 var training_target: Node2D
@@ -307,22 +311,29 @@ func start_human_resolved_equipped_abilities(owner: Object, loadout: RefCounted,
 ## 在同一实际角色上显式装配已核实的 20004 闭环；不赋予技能、不接管已有能力宿主。
 ## hit_task 仍由正式目标/伤害拥有者接入；本入口不创建目标、数值或替代动作。
 func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Callable,
-		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> Node:
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable,
+		basic_hit_task: Callable = Callable()) -> Node:
 	if _charged_actor_runtime != null or human_commands == null or human_commands.character != owner: return null
 	if _equipped_ability_dispatch != null or human_commands.has_bound_abilities(): return null
 	if not is_instance_valid(human_presentation) or not is_instance_valid(human_presentation.driver) or not hit_task.is_valid(): return null
 	var driver: Node = human_presentation.driver
 	if driver.resolve_playable_state("ChargedAttack").is_empty(): return null
 	var timeline := preload("res://gameplay/combat/charged_timeline_tasks.gd").new(hit_task, driver)
+	var basic_timeline: RefCounted
+	if basic_hit_task.is_valid():
+		if driver.resolve_playable_state("Attack").is_empty(): return null
+		basic_timeline = BasicTimeline.new(basic_hit_task,driver)
 	var runtime := preload("res://gameplay/combat/resolved_charged_ability.gd").new()
 	add_child(runtime)
 	if not runtime.configure(actor, owner, timeline, actor.get_movement_position) \
 			or not runtime.take_clock_tick_ownership(timeline) \
+			or (basic_timeline != null and not runtime.attach_basic(actor,owner,basic_timeline,actor.get_movement_position)) \
 			or not start_human_resolved_equipped_abilities(owner,loadout,runtime.resolve,runtime,target_root,target_cell,notify_rejected,true):
 		runtime.free()
 		return null
 	_charged_actor_runtime = runtime
 	_charged_timeline = timeline
+	_basic_timeline = basic_timeline
 	return runtime
 
 ## 绑定场景中唯一活动训练假人的受击逻辑。缺少正式控制/生命周期回调时拒绝；
@@ -364,15 +375,20 @@ func start_training_target_presentation(animation: Dictionary, texture_directory
 ## 兼容现有显式槽位契约：假人只在此入口担任已绑定的受击者。
 ## Caster 当前快照、掷骰和 ASC Cell 属于正式宿主；暴击/闪避来自锁定 GameConfig.asset。
 func start_human_charged_training_combat(owner: Object, loadout: RefCounted, caster_stats: Callable,
-		roll: Callable, target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> Node:
+		roll: Callable, target_root: Callable, target_cell: Callable, notify_rejected: Callable,
+		include_basic: bool = false) -> Node:
 	if not is_instance_valid(training_target) or not caster_stats.is_valid() or not roll.is_valid() \
 			or not target_root.is_valid() or not target_cell.is_valid(): return null
+	var basic_hit_task := Callable()
+	if include_basic:
+		if not training_target.has_formal_target_direction(): return null
+		basic_hit_task = _hit_basic_training_target.bind(owner,caster_stats,roll)
 	var hit_task := _hit_training_target.bind(owner,caster_stats,roll)
 	var resolve_root := func (target):
 		if not is_instance_valid(training_target) or target != training_target: return target_root.call(target)
 		var at: Vector2 = training_target.get_movement_position()
 		return Vector3(at.x,at.y,0)
-	return start_human_charged_combat(owner,loadout,hit_task,resolve_root,target_cell,notify_rejected)
+	return start_human_charged_combat(owner,loadout,hit_task,resolve_root,target_cell,notify_rejected,basic_hit_task)
 
 func _hit_training_target(owner: Object, caster_stats: Callable, roll: Callable) -> void:
 	if not is_instance_valid(training_target) or not is_instance_valid(owner) or not is_instance_valid(actor): return
@@ -382,6 +398,34 @@ func _hit_training_target(owner: Object, caster_stats: Callable, roll: Callable)
 		func(caster,target,effect_id):
 			if effect_id == ChargedHit.EFFECT_ID:
 				_training_effects.request(caster,target,_execute_training_damage.bind(caster_stats,roll)))
+
+## Timeline 101 的命中任务使用真实角色和层 128 的子受击盒；
+## 只连接本场景已有目标，不创建技能、角色、属性或方向。
+func _hit_basic_training_target(owner: Object, caster_stats: Callable, roll: Callable) -> void:
+	if not is_instance_valid(training_target) or not is_instance_valid(owner) or not is_instance_valid(actor): return
+	if not training_target.has_formal_target_direction() or not owner.has_method("get_look_at_direction") \
+			or not caster_stats.is_valid() or not roll.is_valid():
+		push_error("原普攻缺少实际玩家出招朝向、目标逻辑方向、当前属性或随机源。")
+		return
+	var start: Vector2 = actor.get_movement_position()
+	var facing: Vector2 = owner.get_look_at_direction()
+	if not start.is_finite() or not facing.is_finite(): return
+	for target in HitPolygon.query(actor.get_world_2d(),start,facing,PackedVector2Array(BasicTimeline.ATTACK_POLYGON),
+			BasicTimeline.HIT_MASK,actor,func(collider):
+				return training_target if is_instance_valid(training_target) and collider == training_target.hitbox else null):
+		_training_effects.request(actor,target,_execute_basic_training_damage.bind(caster_stats,roll))
+
+func _execute_basic_training_damage(caster: Node2D, target: Node2D, caster_stats: Callable, roll: Callable) -> void:
+	if not is_instance_valid(actor) or caster != actor or not is_instance_valid(training_target) or target != training_target:
+		return
+	if not caster_stats.is_valid() or not roll.is_valid(): return
+	var current: Variant = caster_stats.call()
+	if not current is Dictionary or not current.get("snapshot") is Dictionary: return
+	var read_pose := func() -> Dictionary:
+		if not is_instance_valid(caster) or not is_instance_valid(target) or not target.has_formal_target_direction(): return {}
+		return {"source_root":caster.get_movement_position(),"target_root":target.get_movement_position(),
+			"target_direction":target.get_target_direction()}
+	BasicDamage.execute_damage_phase(current,target.stats,target.hooks(),read_pose,true,true,roll)
 
 func _execute_training_damage(caster: Node2D, target: Node2D, caster_stats: Callable, roll: Callable) -> void:
 	if caster != actor or target != training_target or not caster_stats.is_valid() or not roll.is_valid(): return
@@ -402,6 +446,7 @@ func advance_human_charged_combat(delta: float) -> void:
 	if is_instance_valid(runtime) and runtime == _charged_actor_runtime:
 		runtime.advance_input(delta)
 		if runtime == _charged_actor_runtime: _charged_timeline.flush_display()
+		if runtime == _charged_actor_runtime and _basic_timeline != null: _basic_timeline.flush_display()
 	training_hit_cue.flush_display()
 
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
@@ -489,6 +534,9 @@ func notify_human_aim_input_disabled() -> void:
 	if _human_aim != null: _reset_human_aim_control()
 
 func stop_human_aim() -> void:
+	if _basic_timeline != null:
+		_basic_timeline.stop()
+		_basic_timeline = null
 	if _charged_timeline != null:
 		_charged_timeline.stop()
 		_charged_timeline = null

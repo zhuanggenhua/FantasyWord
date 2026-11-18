@@ -35,13 +35,15 @@ func request_use() -> bool:
 	_buffer()
 	return buffered
 
-func release_use() -> void:
+func release_use() -> bool:
 	_trigger_released = true
 	match state:
 		State.WINDUP:
 			interrupt()
 		State.RECOVERY:
 			_stop()
+	# 松手只作打断/停止，不像蓄力一样提交出手。
+	return false
 
 func advance(delta: float) -> void:
 	var elapsed := _f32(_f32(maxf(0.0, delta)) * _time_scale)
