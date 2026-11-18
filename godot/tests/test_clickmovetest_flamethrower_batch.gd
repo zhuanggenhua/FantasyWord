@@ -141,6 +141,23 @@ func run() -> void:
 	var burn: Dictionary = terrain.sample(Vector3i.ZERO)
 	check(scene.actor.get_movement_position().distance_to(start)>1.0 and burn.flags==2
 		and burn.states[2].source_ability==20010,"后续原锥形点火使用实际角色新位置")
+	var fire_tile_path := OS.get_environment("FORMAL_BURNING_TILE_PNG")
+	var tile_enabled := not fire_tile_path.is_empty()
+	var effects_layer: TileMapLayer
+	if tile_enabled:
+		check(not scene.bind_surface_presentation("res://project.godot"),"拒绝非锁定临时 Tile 图")
+		check(scene.bind_surface_presentation(fire_tile_path),"真实 Entry 绑定原地表火焰")
+		effects_layer = scene.surface_fire_tiles
+		if is_instance_valid(effects_layer):
+			var at := Vector2i(0,-1)
+			var atlas: TileSetAtlasSource = effects_layer.tile_set.get_source(0)
+			check(effects_layer.get_cell_source_id(at)==0 and effects_layer.position==Vector2.ZERO
+				and (effects_layer.map_to_local(at)*effects_layer.scale).is_equal_approx(Vector2(.5,-.5)),
+				"启用时刷新已有 Q 点燃格、原 .5/.5 锚点与单位网格")
+			check(atlas.get_tile_animation_frames_count(Vector2i.ZERO)==8
+				and atlas.get_tile_animation_speed(Vector2i.ZERO)==8.0 and effects_layer.z_index==-1
+				and not effects_layer.collision_enabled and not effects_layer.navigation_enabled,
+				"锁定原 8 帧 8FPS 与表现层排序，绝不生成碰撞/寻路")
 	release.call(1)
 	scene.advance_human_charged_combat(.30)
 	check(not fire.spec.active and not fire.local_active and not basic.spec.has_attacking_tag() \
@@ -167,6 +184,10 @@ func run() -> void:
 		"玩家自伤与注册假人各 1 点魔法伤害，自伤不推")
 	check(scene.training_hit_cue.activation_count==1,"地表正式伤害未额外派发普攻 Cue")
 	check(terrain.apply_point(terrain.WATER,Vector2(.5,.5),1,.1),"已有燃烧按原验证器水反应熄灭")
+	if is_instance_valid(effects_layer):
+		check(effects_layer.get_cell_source_id(Vector2i(0,-1))==-1
+			and effects_layer.get_cell_source_id(Vector2i(floori(target_at.x),-1))==0,
+			"原水信号没有 Steam Tile，删除一格火，其余仍保持")
 	scene.advance_surface_contact(.5)
 	scene.run_surface_contact_effects()
 	check(caster.current_health()==99 and target.health==204,"水熄火仅停止该格后续伤害")
@@ -174,6 +195,10 @@ func run() -> void:
 	events.map_unloaded.emit()
 	scene.run_surface_contact_effects()
 	check(scene.surface_elements==null and target.health==204,"卸载清空场景待执行效果和运行时")
+	if is_instance_valid(effects_layer):
+		check(scene.surface_fire_tiles==null and scene.surface_presentation==null
+			and effects_layer.get_used_cells().is_empty() and not effects_layer.visible,
+			"真实场景卸载同步清空效果 Tile 并解除绑定")
 	check(scene.surface_contact_damage.accumulated_time==0,"重新绑定地图不继承上一张地图的计时")
 	scene.free()
 	control.free()

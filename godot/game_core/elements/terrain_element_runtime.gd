@@ -2,6 +2,7 @@ extends RefCounted
 ## ElementReactionSystem 首批点/锥施加：只装配原 Fire / Water、Burning / Wet 及对应到期规则。
 ## 规则与覆盖层由实际地图显式传入；不创建技能、伤害、渲染或持久化。
 signal cell_changed(cell: Vector3i, previous: Dictionary, current: Dictionary, presentation_signal: int)
+signal states_cleared
 const RuleMap = preload("res://game_core/navigation/terrain_rule_map.gd")
 const FIRE := 1
 const WATER := 2
@@ -249,7 +250,14 @@ func _advance_cell(cell: Vector3i) -> void:
 	_update_timed(cell)
 	cell_changed.emit(cell,previous,sample(cell),presentation)
 
+## Source CollectRuntimeStateCells includes completed cover-removal records.
+func runtime_cells() -> Array[Vector3i]:
+	var cells: Array[Vector3i] = []
+	cells.assign(_runtime.keys())
+	return cells
+
 func clear() -> void:
 	_runtime.clear()
 	_timed.clear()
 	_accumulator = 0.0
+	states_cleared.emit()

@@ -9,6 +9,8 @@ const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
 const FormalDamage = preload("res://game_core/combat/formal_damage_application.gd")
 const CombatRules = preload("res://game_core/combat/combat_rules.gd")
+const SurfacePresentation = preload("res://game_core/elements/terrain_surface_presentation.gd")
+const SurfaceFireLayer = preload("res://game_core/presentation/terrain_burning_tile_layer.gd")
 const SurfaceElements = preload("res://game_core/elements/terrain_element_runtime.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
@@ -79,6 +81,8 @@ var _player_provider: Callable
 var _surface_map_events: Object
 var _terrain_rule_rows: Array = []
 var surface_elements: RefCounted
+var surface_presentation: RefCounted
+var surface_fire_tiles: TileMapLayer
 var surface_contact_damage: RefCounted
 var _contact_player_stats: Callable
 var _contact_player_hooks: Dictionary = {}
@@ -212,10 +216,51 @@ func run_surface_contact_effects() -> void:
 			hooks.impact = func(_input,_velocity): pass
 		FormalDamage.execute_damage_output(defender,output,false,Callable(),hooks,entry.payload.impact_velocity)
 
+## The exact scene uses only Burning; no Steam tile or replacement terrain.
+## Ground ownership port is optional until original cover TileMaps are mounted.
+func bind_surface_presentation(fire_path: String, cover_port: Dictionary = {}) -> bool:
+	if surface_elements == null or surface_presentation != null or not is_inside_tree(): return false
+	var layer := SurfaceFireLayer.new()
+	if not layer.configure(fire_path):
+		layer.free()
+		return false
+	var ports := cover_port.duplicate()
+	if ports.is_empty():
+		ports = {"mapped_cover_sources":func(_cell):return [],"source_available":func(_id):return false,
+			"set_cover_alpha":func(_id,_cell,_alpha):pass,"unlock_cover_cell":func(_id,_cell):pass}
+	ports.sample = surface_elements.sample
+	ports.set_tile = layer.set_source_tile
+	ports.clear_tiles = layer.clear
+	var presentation := SurfacePresentation.new()
+	if not presentation.configure([{"state":SurfaceElements.BURNING,
+			"tile":SurfaceFireLayer.FIRE_TILE,"priority":100}],[],ports):
+		layer.free()
+		return false
+	layer.name = "原地表临时效果瓦片层"
+	add_child(layer)
+	surface_fire_tiles = layer
+	surface_presentation = presentation
+	surface_elements.cell_changed.connect(presentation.on_cell_changed)
+	surface_elements.states_cleared.connect(presentation.clear)
+	return presentation.enable(surface_elements.runtime_cells())
+
+func _unbind_surface_presentation() -> void:
+	if surface_presentation != null:
+		if surface_elements != null:
+			surface_elements.cell_changed.disconnect(surface_presentation.on_cell_changed)
+			surface_elements.states_cleared.disconnect(surface_presentation.clear)
+		surface_presentation.disable()
+		surface_presentation = null
+	if is_instance_valid(surface_fire_tiles):
+		surface_fire_tiles.hide()
+		surface_fire_tiles.queue_free()
+	surface_fire_tiles = null
+
 func _on_surface_map_unloaded() -> void:
 	if surface_contact_damage != null: surface_contact_damage.on_map_unloading()
 	_contact_damage_pending.clear()
 	if surface_elements != null: surface_elements.clear()
+	_unbind_surface_presentation()
 	surface_elements = null
 	if is_instance_valid(_surface_map_events) and _surface_map_events.map_unloaded.is_connected(_on_surface_map_unloaded):
 		_surface_map_events.map_unloaded.disconnect(_on_surface_map_unloaded)
@@ -281,6 +326,7 @@ func _process(delta: float) -> void:
 	run_surface_contact_effects()
 	advance_human_charged_combat(delta)
 	if surface_elements != null: surface_elements.advance(delta)
+	if surface_presentation != null: surface_presentation.advance(delta)
 	advance_surface_contact(delta,Engine.time_scale)
 	if is_instance_valid(training_target):
 		training_target.advance_damage_lifecycle()
