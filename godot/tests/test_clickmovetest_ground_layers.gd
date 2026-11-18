@@ -37,8 +37,8 @@ func run() -> void:
 	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，不包含独立装饰")
 	var road_cell := Vector3i(8,6,0)
 	var road := ground.static_decoration_sprite(10,road_cell) as Sprite2D
-	check(ground.static_decoration_count(10)==15 and ground.static_decoration_count(20)==0,
-		"仅已求值的11格普通地面与4格固定石路装配，不包含上层碰撞")
+	check(ground.static_decoration_count(10)==15 and ground.static_decoration_count(20)==4,
+		"来源10/20仅装配已求值的15/4格固定装饰")
 	var fixed_tiles := {
 		Vector3i(-16,-6,0):Vector2i(64,128), Vector3i(-16,-5,0):Vector2i(64,136),
 		Vector3i(-16,-4,0):Vector2i(64,144), Vector3i(-6,10,0):Vector2i(56,16),
@@ -57,6 +57,29 @@ func run() -> void:
 		check(not ground.mapped_cover_sources(cell).has(10),"固定装饰不加入来源10的可删除草：%s" % cell)
 	check(scene.route.graph.contains_node(Vector4i(0,8,6,0)) and not scene.route.graph.contains_node(Vector4i(0,-6,10,0)),
 		"石路和崖壁保留原规则格的可走与不可走区别")
+	var shadow_cell := Vector3i(-6,10,0)
+	var cliff_shadow := ground.static_decoration_sprite(20,shadow_cell) as Sprite2D
+	var stairs: Array[Sprite2D] = []
+	for y in [10,11,12]:
+		var cell := Vector3i(-5,y,0)
+		var stair := ground.static_decoration_sprite(20,cell) as Sprite2D
+		stairs.append(stair)
+		var atlas := stair.texture as AtlasTexture if stair != null else null
+		check(atlas!=null and atlas.region==Rect2(24,atlas.atlas.get_height()-56-8*(y-10),8,8)
+			and stair.position==Vector2(-4.5,-y-.5) and stair.offset==Vector2(-4,-4)
+			and stair.scale==Vector2(.125,.125) and stair.z_index==-1,
+			"来源20楼梯按原 Fixed/Single 匹配、原锚点和排序：%s" % cell)
+		check(not scene.route.graph.contains_node(Vector4i(0,-5,y,0))
+			and not ground.mapped_cover_sources(cell).has(20),
+			"楼梯图像既不加入可走图也不加入可燃映射：%s" % cell)
+	var shadow_frame := cliff_shadow.texture as AtlasTexture if cliff_shadow != null else null
+	var cliff := ground.static_decoration_sprite(10,shadow_cell) as Sprite2D
+	check(shadow_frame!=null and cliff!=null and shadow_frame.atlas!=(cliff.texture as AtlasTexture).atlas
+		and shadow_frame.atlas.get_image().get_size()==Image.load_from_file(directory.path_join("TilesShadows.png")).get_size()
+		and shadow_frame.region==Rect2(16,shadow_frame.atlas.get_height()-56,8,8)
+		and cliff_shadow.position==cliff.position and cliff_shadow.z_index==-1 and cliff.z_index==-8,
+		"悬崖顶阴影来自独立的原阴影图集，保留与下层崖缘同格排序")
+	check(ground.mapped_cover_sources(shadow_cell).is_empty(),"崖缘和上层崖影都不是可燃映射")
 	var lake_cell := Vector3i(0,-10,0)
 	var lake: AnimatedSprite2D = ground.lakegrass_sprite(lake_cell)
 	check(ground.lakegrass_count()==35 and is_instance_valid(lake),"原湖岸 LakeGrass 35 格独立装配")
@@ -174,5 +197,7 @@ func run() -> void:
 	await process_frame
 	check(not is_instance_valid(lake),"卸载释放自主动画，不保留上次场景的相位")
 	check(not is_instance_valid(road),"地图卸载释放确定性石路精灵")
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含随机装饰、来源20额外瓦片或 Unity 像素对照" % [n,failed])
+	check(not is_instance_valid(cliff_shadow) and stairs.all(func(stair):return not is_instance_valid(stair)),
+		"地图卸载释放原楼梯和崖影节点")
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含随机装饰、完整物理或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)

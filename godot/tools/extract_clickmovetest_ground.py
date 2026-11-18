@@ -3,7 +3,7 @@
 
 Dirt 按作者 RuleTile 的 Fixed/Single 首个匹配规则求值，再逐格核对场景缓存。
 依据锁定 packages-lock 的 Unity 2D Tilemap Extras 6.0.1 RuleTile.cs。
-负责基础地面、映射覆盖和已经求值的来源10装饰，不复制图片。
+负责基础地面、映射覆盖和已求值的来源10/20装饰，不复制图片。
 """
 import argparse
 from collections import Counter
@@ -25,14 +25,19 @@ VEGETATION = 'Assets/GameData/GameCore/SurfaceTiles/ForgottenPlainsVegetation/'
 LAKE = ROOT + 'Tile Palettes/Animated Tiles/Lake/'
 LAKE_NUMBERS = (*range(1,12),13,14)
 TILES_GUID = '49ebf7de40457d84495983a6734b2c68'
-SOURCE10_STATIC = {
+FIXED_DECORATIONS = {10: {
     'Standard Tiles/Ground/Dirt8_Minifantasy_ForgottenPlainsTiles_74':1,
     'Standard Tiles/Ground/Dirt19_Minifantasy_ForgottenPlainsTiles_4':7,
     'Standard Tiles/Ground/Dirt5_Minifantasy_ForgottenPlainsTiles_46':1,
     'Standard Tiles/Ground/Dirt2_Minifantasy_ForgottenPlainsTiles_21':1,
     'Standard Tiles/Cliffs/Cliff34_Minifantasy_ForgottenPlainsTiles_510':1,
     'Rule Tiles/CobblestoneGrass 3':4,
-}
+}, 20: {
+    'Standard Tiles/Cliffs/CliffShadow4_Minifantasy_ForgottenPlainsTilesShadows_3':1,
+    'Rule Tiles/CliffStairs':3,
+}}
+CLIFF_SHADOWS_GUID = '1389a4518cee0534ea58db4eb226c532'
+CLIFF_SHADOWS = {CLIFF_SHADOWS_GUID: 'TilesShadows.png'}
 PROPS = {'be785b53e8101134cb49e391918a7a82': 'Props.png',
          'da4d732596845594e9b99bf9488ee15f': 'PropsShadow.png'}
 DEFAULT_TILE_MATERIAL = [{'fileID':10754,'guid':'0000000000000000f000000000000000','type':0}]
@@ -68,21 +73,21 @@ def resolve_fixed_tile_rule(rule_asset, cell, authored_cells, tile_guid):
     return sprite
 
 
-def source10_static_tiles(checkout):
+def fixed_decorations(checkout, source_id):
     tiles = {}
-    for name, count in SOURCE10_STATIC.items():
+    for name, count in FIXED_DECORATIONS[source_id].items():
         path = ROOT + 'Tile Palettes/' + name + '.asset'
         guid = yaml.safe_load(read(checkout, path + '.meta'))['guid']
         raw = re.sub(r'(m_Neighbors: )([0-9a-f]+)', r'\1"\2"', read(checkout, path))
         tile = get_document(raw, 11400000, 'MonoBehaviour')
-        require(guid not in tiles and tile['m_Name'] == name.split('/')[-1], '来源10装饰作者资产不符')
+        require(guid not in tiles and tile['m_Name'] == name.split('/')[-1], '固定装饰作者资产不符')
         rule_tile = name.startswith('Rule Tiles/')
         if rule_tile:
             require(tile['m_Script']['guid'] == '9d1514134bc4fbd41bb739b1b9a49231'
                     and tile['m_DefaultGameObject']['fileID'] == 0
                     and all(r['m_RuleTransform'] == r['m_Output'] == r['m_RandomTransform'] == 0
                             and r['m_GameObject']['fileID'] == 0 for r in tile['m_TilingRules']),
-                    '原石路不是固定单图规则')
+                    '原石路或楼梯不是固定单图规则')
         else:
             require(tile['m_Script'] == {'fileID':13312,'guid':'0000000000000000e000000000000000','type':0}
                     and tile['m_Transform'] == IDENTITY and tile['m_Color'] == WHITE
@@ -149,7 +154,7 @@ def extract(checkout):
             and grass['m_Color'] == WHITE, '地面作者资产不匹配')
     validate_vegetation_render_state(checkout, scene)
     textures, sprites = {}, {}
-    for guid, filename in (TEXTURES | PROPS).items():
+    for guid, filename in (TEXTURES | PROPS | CLIFF_SHADOWS).items():
         path = ROOT + ('Sprites/Props/' if guid in PROPS else 'Sprites/Tileset/') + filename
         metadata = yaml.safe_load(read(checkout, path + '.meta'))
         importer = metadata['TextureImporter']
@@ -192,12 +197,16 @@ def extract(checkout):
         require(len(mappings) == 5 and sorted((m['m_coverKind'],m['m_traits']) for m in mappings) == [(1,3)]*2 + [(5,3)]*3,
                 '植被覆盖作者映射变化')
         vegetation_sprites[source_id] = {m['m_tile']['guid']:resolve_vegetation(checkout,m['m_tile']) for m in mappings}
-    fixed_decor = source10_static_tiles(checkout)
-    require(not set(fixed_decor).intersection(m['m_tile']['guid'] for m in source10['m_surfaceCoverTileMappings']),
-            '固定装饰不应属于作者映射草')
+    fixed_decor = {10:fixed_decorations(checkout,10),20:fixed_decorations(checkout,20)}
+    for index, source_record in ((10,source10),(20,source)):
+        require(not set(fixed_decor[index]).intersection(m['m_tile']['guid'] for m in source_record['m_surfaceCoverTileMappings']),
+                '固定装饰不应属于作者映射草')
     layer10 = get_document(scene,453769791,'GameObject')
     require(layer10['m_IsActive'] == 1 and [c['component']['fileID'] for c in layer10['m_Component']]
             == [453769792,453769794,453769793], '来源10装饰层不应带有物理组件')
+    layer20 = get_document(scene,913349350,'GameObject')
+    require(layer20['m_IsActive'] == 1 and all(file_id in [c['component']['fileID'] for c in layer20['m_Component']]
+            for file_id in (913349351,913349356,913349355)), '来源20不是启用的原装饰层')
     lake_assets = lake_animations(checkout)
     require(not set(lake_assets).intersection(m['m_tile']['guid'] for m in source10['m_surfaceCoverTileMappings']),
             'LakeGrass 不应属于作者映射草')
@@ -208,8 +217,8 @@ def extract(checkout):
         tilemap = get_document(scene, tilemap_id, 'Tilemap')
         renderer = get_document(scene, renderer_id, 'TilemapRenderer')
         is_vegetation = source_id in vegetation_sprites
-        if source_id in (10,30,31):
-            node_id = {10:453769792,30:897197882,31:994996504}[source_id]
+        if source_id in (10,20,30,31):
+            node_id = {10:453769792,20:913349351,30:897197882,31:994996504}[source_id]
             transform = get_document(scene, node_id, 'Transform')
             require(xyz(transform['m_LocalPosition']) == [0,0,0] and xyz(transform['m_LocalScale']) == [1,1,1]
                     and transform['m_LocalRotation'] == dict(x=0,y=0,z=0,w=1)
@@ -231,7 +240,7 @@ def extract(checkout):
             ref = cells[cell]
             indexes[data['m_TileSpriteIndex']] += 1
             is_lake = source_id == 10 and cell in animated
-            is_static = source_id == 10 and ref['guid'] in fixed_decor
+            is_static = ref['guid'] in fixed_decor.get(source_id,{})
             if source_id in (10,20) and not is_lake and not is_static and ref['guid'] not in ((upper_guid,detail_guid) if source_id == 10 else (upper_guid,)):
                 # 保留全层引用核对，但未求值的随机/旁观瓦片不冒充完成。
                 continue
@@ -249,9 +258,10 @@ def extract(checkout):
                 # 原 GetTileData 给静态缓存末帧；播放仍从 m_AnimatedSprites 第一帧起。
                 sprite = source_frames[-1]
             elif is_static:
-                tile, _, is_rule = fixed_decor[ref['guid']]
+                tile, _, is_rule = fixed_decor[source_id][ref['guid']]
                 sprite = resolve_fixed_tile_rule(tile, cell, cells, ref['guid']) if is_rule else tile['m_Sprite']
-                require(sprite['guid'] == TILES_GUID, '固定装饰应使用锁定原地面图集')
+                expected_atlas = CLIFF_SHADOWS_GUID if source_id == 20 and not is_rule else TILES_GUID
+                require(sprite['guid'] == expected_atlas, '固定装饰应使用锁定原地面或崖影图集')
                 static_counts[ref['guid']] += 1
             elif is_vegetation:
                 sprite = vegetation_sprites[source_id][ref['guid']]
@@ -292,14 +302,15 @@ def extract(checkout):
         if source_id == 10:
             require(len(animated_rows) == 35 and used_lake_assets == set(lake_assets), '作者湖岸动画缺失')
             layer['decorations'] = {'frames_per_second': 1, 'rows': animated_rows}
-            require(static_counts == Counter({guid:value[1] for guid,value in fixed_decor.items()}), '固定装饰格数改变')
+        if source_id in fixed_decor:
+            require(static_counts == Counter({guid:value[1] for guid,value in fixed_decor[source_id].items()}), '固定装饰格数改变')
             layer['static_decorations'] = static_rows
         layers.append(layer)
     props = {tuple(r['cell']):r['translation'] for r in layers[-2]['rows']}
     shadows = {tuple(r['cell']):r['translation'] for r in layers[-1]['rows']}
     require(props.keys() == shadows.keys() and all(shadows[cell] == [pos[0]-.125,pos[1]] for cell,pos in props.items()),
             '原植被与阴影逐格位移配对变化')
-    return {'schema':4,'source_commit':SOURCE,'scope':'base-mapped-covers-and-source10-animations-fixed-decor',
+    return {'schema':5,'source_commit':SOURCE,'scope':'base-mapped-covers-lakegrass-and-fixed-decor',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},'layers':layers}
 
 
@@ -313,6 +324,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格；随机装饰59/6格和来源20其余4格未装配。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；随机装饰59/6格未装配。')
 
 if __name__ == '__main__': main()

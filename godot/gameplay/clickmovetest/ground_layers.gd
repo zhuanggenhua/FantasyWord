@@ -1,7 +1,7 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
 ## 不擦除作者格、不生成焦土，也不另建碰撞/导航。静态装饰、湖草与可燃覆盖分别注册。
-const MANIFEST_SHA256 := "d418c26b6c8a674560f34b77ddf71d637742c616e19f35148608fe5cfb8888ff"
+const MANIFEST_SHA256 := "65c5ae6e56770d6eced65a3e936bbac3c79f56e34f1918271bb3561d36b617bd"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}

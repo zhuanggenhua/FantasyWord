@@ -196,9 +196,9 @@ func run() -> void:
 	scene.run_surface_contact_effects()
 	check(caster.current_health()==99 and target.health==204,"水熄火仅停止该格后续伤害")
 	if ground_enabled and tile_enabled and is_instance_valid(scene.ground_layers) and is_instance_valid(effects_layer):
-		for overlap: Vector3i in [Vector3i(5,0,0), Vector3i(3,-2,0), Vector3i(0,-10,0), Vector3i(8,6,0)]:
+		for overlap: Vector3i in [Vector3i(5,0,0), Vector3i(3,-2,0), Vector3i(0,-10,0), Vector3i(8,6,0), Vector3i(-4,3,0)]:
 			var address := Vector2i(overlap.x,-overlap.y-1)
-			var expected := {0:[0,10],-2:[0,30,31],-10:[0],6:[0]}[overlap.y] as Array
+			var expected := {0:[0,10],-2:[0,30,31],-10:[0],6:[0],3:[10,20]}[overlap.y] as Array
 			check(scene.ground_layers.mapped_cover_sources(overlap)==expected,"同场景原格有实际作者覆盖：%s" % overlap)
 			var decoration: AnimatedSprite2D = scene.ground_layers.lakegrass_sprite(overlap)
 			if overlap.y==-10:
@@ -216,12 +216,16 @@ func run() -> void:
 				check(false,"所有原草、植被或阴影精灵实际存在")
 				continue
 			terrain.clear()
-			scene.actor.request_move_position(Vector2(overlap.x-1.5,overlap.y+.5))
-			target.body.request_move_position(Vector2(overlap.x-1.5,overlap.y-4.0))
+			# The west neighbor of (-4,3) is the cliff wall. Cast from the
+			# same original elevation instead of forcing a cross-cliff cone.
+			var facing := Vector2.LEFT if overlap.y==3 else Vector2.RIGHT
+			var caster_x := overlap.x+.5-2.0*facing.x
+			scene.actor.request_move_position(Vector2(caster_x,overlap.y+.5))
+			target.body.request_move_position(Vector2(caster_x,overlap.y-4.0))
 			await physics_frame
 			await physics_frame
-			owner.set_target_direction(Vector2.RIGHT)
-			owner.set_look_at_direction(Vector2.RIGHT)
+			owner.set_target_direction(facing)
+			owner.set_look_at_direction(facing)
 			check(press.call(1)==Executor.Failure.NONE,"同一玩家从键位再次发动原喷火")
 			scene.advance_human_charged_combat(.018)
 			scene.advance_human_charged_combat(.018)
