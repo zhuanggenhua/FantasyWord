@@ -3,7 +3,7 @@
 
 Dirt 按作者 RuleTile 的 Fixed/Single 首个匹配规则求值，再逐格核对场景缓存。
 依据锁定 packages-lock 的 Unity 2D Tilemap Extras 6.0.1 RuleTile.cs。
-仅负责基础两层与来源10/20的161格可移除草，不复制图片；其余层和旁观瓦片未装配。
+仅负责基础地面与来源0/10/20/30/31的映射覆盖，不复制图片；旁观瓦片未装配。
 """
 import argparse
 from collections import Counter
@@ -21,6 +21,11 @@ GRASS = ROOT + 'Tile Palettes/Standard Tiles/Ground/Cliff5_Minifantasy_Forgotten
 DIRT_GUID = '5923a633d5be61b4da07719a51278bda'
 GRASS_GUID = 'ee44f04c19e463d48a8796f568a766fa'
 TEXTURES = {'49ebf7de40457d84495983a6734b2c68': 'Tiles.png', '57153bc98c84b584394a27c7ed1998ae': 'RedRuleTiles.png'}
+VEGETATION = 'Assets/GameData/GameCore/SurfaceTiles/ForgottenPlainsVegetation/'
+PROPS = {'be785b53e8101134cb49e391918a7a82': 'Props.png',
+         'da4d732596845594e9b99bf9488ee15f': 'PropsShadow.png'}
+DEFAULT_TILE_MATERIAL = [{'fileID':10754,'guid':'0000000000000000f000000000000000','type':0}]
+SPRITE_LIT_MATERIAL = [{'fileID':2100000,'guid':'a97c105638bdf8b4a8650670310a4cd3','type':2}]
 IDENTITY = {f'e{y}{x}': int(x == y) for y in range(4) for x in range(4)}
 WHITE = dict(r=1, g=1, b=1, a=1)
 
@@ -52,6 +57,34 @@ def resolve_fixed_tile_rule(rule_asset, cell, authored_cells, tile_guid):
     return sprite
 
 
+def resolve_vegetation(checkout, reference):
+    guid = reference['guid']
+    require(reference['fileID'] == 11400000 and re.fullmatch(r'[0-9a-f]{32}', guid), '未知植被 Tile 引用')
+    prefix = f'{SOURCE}:{VEGETATION}'
+    files = git(checkout, 'grep', '-zl', f'^guid: {guid}$', SOURCE, '--', VEGETATION).rstrip('\0').split('\0')
+    require(len(files) == 1 and files[0].startswith(prefix) and files[0].endswith('.asset.meta'), '植被引用不唯一')
+    tile = get_document(read(checkout, files[0].split(':', 1)[1].removesuffix('.meta')), 11400000, 'MonoBehaviour')
+    require(tile['m_EditorClassIdentifier'] == 'UnityEngine.dll::UnityEngine.Tilemaps.Tile'
+            and tile['m_Script'] == {'fileID':13312,'guid':'0000000000000000e000000000000000','type':0}
+            and tile['m_Transform'] == IDENTITY and tile['m_Color'] == WHITE and tile['m_Flags'] == 0
+            and tile['m_ColliderType'] == 0 and tile['m_InstancedGameObject']['fileID'] == 0, '植被不是原普通静态 Tile')
+    return tile['m_Sprite']
+
+
+def validate_vegetation_render_state(checkout, scene):
+    # 锁定几何与场景材质输入；不从静态设置断言完整 URP 帧像素已一致。
+    light = get_document(scene, 619394801, 'MonoBehaviour')
+    light_guid = '073797afb82c5a1438f328866b10b3f0'
+    require(scene.count(light_guid) == 1 and light['m_Script']['guid'] == light_guid
+            and light['m_Enabled'] == 1 and light['m_LightType'] == 4 and light['m_BlendStyleIndex'] == 0
+            and light['m_Color'] == WHITE and light['m_Intensity'] == 1
+            and str(light['m_ApplyToSortingLayers']).zfill(8) == '00000000'
+            and light['m_NormalMapQuality'] == 2 and light['m_ShadowsEnabled'] == 0, '未知植被光照')
+    renderer = read(checkout, 'Assets/Settings/Renderer2D.asset')
+    require(re.search(r'(?m)^  m_HDREmulationScale: 1$', renderer)
+            and re.search(r'(?m)^  - name: Multiply\n    maskTextureChannel: 0\n    blendMode: 1$', renderer), '未知植被 Renderer2D 混合样式')
+
+
 def extract(checkout):
     scene = read(checkout, SCENE)
     expect_rectangular_grid(scene)
@@ -61,14 +94,16 @@ def extract(checkout):
     require(dirt['m_Script']['guid'] == '9d1514134bc4fbd41bb739b1b9a49231'
             and len(dirt['m_TilingRules']) == 15 and grass['m_Transform'] == IDENTITY
             and grass['m_Color'] == WHITE, '地面作者资产不匹配')
+    validate_vegetation_render_state(checkout, scene)
     textures, sprites = {}, {}
-    for guid, filename in TEXTURES.items():
-        path = ROOT + 'Sprites/Tileset/' + filename
+    for guid, filename in (TEXTURES | PROPS).items():
+        path = ROOT + ('Sprites/Props/' if guid in PROPS else 'Sprites/Tileset/') + filename
         metadata = yaml.safe_load(read(checkout, path + '.meta'))
         importer = metadata['TextureImporter']
         require(metadata['guid'] == guid and importer['spritePixelsToUnits'] == 8
                 and importer['spriteMode'] == 2 and importer['spriteMeshType'] == 1
                 and importer['mipmaps']['sRGBTexture'] == 1 and importer['mipmaps']['enableMipMap'] == 0
+                and not importer['spriteSheet']['secondaryTextures']
                 and importer['textureSettings']['filterMode'] == 0
                 and importer['textureSettings']['wrapU'] == 1 and importer['textureSettings']['wrapV'] == 1, '图片元数据不匹配')
         pointer = read(checkout, path)
@@ -95,17 +130,34 @@ def extract(checkout):
     source10 = next(row for row in nav['m_surfaceLayerSources'] if row['m_sourceId'] == 10)
     require(source10['m_tilemap']['fileID'] == 453769794 and source10['m_priority'] == 10
             and [(m['m_tile']['guid'],m['m_coverKind'],m['m_traits']) for m in source10['m_surfaceCoverTileMappings']] == [(upper_guid,1,3),(detail_guid,1,3)], '来源10映射变化')
+    vegetation_sprites = {}
+    for source_id, tilemap_id, role in ((30,897197880,3),(31,994996502,6)):
+        layer = next(row for row in nav['m_surfaceLayerSources'] if row['m_sourceId'] == source_id)
+        require(layer['m_tilemap']['fileID'] == tilemap_id and layer['m_priority'] == source_id and layer['m_role'] == role,
+                '植被来源身份不符')
+        mappings = layer['m_surfaceCoverTileMappings']
+        require(len(mappings) == 5 and sorted((m['m_coverKind'],m['m_traits']) for m in mappings) == [(1,3)]*2 + [(5,3)]*3,
+                '植被覆盖作者映射变化')
+        vegetation_sprites[source_id] = {m['m_tile']['guid']:resolve_vegetation(checkout,m['m_tile']) for m in mappings}
     layers, used = [], set()
-    for tilemap_id, renderer_id, source_id, order, count in ((875022404,875022403,-1,-10,900),(1835126662,1835126661,0,-9,547),(453769794,453769793,10,-8,267),(913349356,913349355,20,-1,13)):
+    for tilemap_id, renderer_id, source_id, order, count in ((875022404,875022403,-1,-10,900),(1835126662,1835126661,0,-9,547),(453769794,453769793,10,-8,267),(913349356,913349355,20,-1,13),(897197880,897197881,30,-8,33),(994996502,994996503,31,-7,33)):
         cells = tile_cells(scene, tilemap_id)
         tilemap = get_document(scene, tilemap_id, 'Tilemap')
         renderer = get_document(scene, renderer_id, 'TilemapRenderer')
-        require(len(cells) == count and (source_id == 10 or not tilemap['m_AnimatedTiles']) and tilemap['m_Color'] == WHITE
+        is_vegetation = source_id in vegetation_sprites
+        if is_vegetation:
+            node_id = 897197882 if source_id == 30 else 994996504
+            transform = get_document(scene, node_id, 'Transform')
+            require(xyz(transform['m_LocalPosition']) == [0,0,0] and xyz(transform['m_LocalScale']) == [1,1,1]
+                    and transform['m_LocalRotation'] == dict(x=0,y=0,z=0,w=1)
+                    and transform['m_Father']['fileID'] == 1148507050, '不是锁定的植被变换路径')
+        require(len(cells) == count and xyz(tilemap['m_TileAnchor']) == [.5,.5,0] and (source_id == 10 or not tilemap['m_AnimatedTiles']) and tilemap['m_Color'] == WHITE
                 and tilemap['m_TileOrientationMatrix'] == IDENTITY and tilemap['m_TileOrientation'] == 0
                 and renderer['m_Enabled'] == 1 and renderer['m_SortingLayerID'] == 0
                 and renderer['m_SortingOrder'] == order and renderer['m_Mode'] == 0
-                and renderer['m_Materials'] == [{'fileID':10754,'guid':'0000000000000000f000000000000000','type':0}],
-                '不是锁定的静态原生材质地面层')
+                and renderer['m_MaskInteraction'] == 0 and renderer['m_SortOrder'] == 0
+                and renderer['m_Materials'] == (SPRITE_LIT_MATERIAL if is_vegetation else DEFAULT_TILE_MATERIAL),
+                '不是锁定的原地面层材质与排序')
         rows, indexes = [], Counter()
         for entry in tilemap['m_Tiles']:
             cell, data = tuple(xyz(entry['first'])), entry['second']
@@ -114,27 +166,40 @@ def extract(checkout):
             if source_id in (10,20) and ref['guid'] not in ((upper_guid,detail_guid) if source_id == 10 else (upper_guid,)):
                 # 保留全层引用核对，但未求值的随机/旁观瓦片不冒充完成。
                 continue
-            require(ref['guid'] in (DIRT_GUID, GRASS_GUID, upper_guid, detail_guid) and (source_id != 0 or ref['guid'] == GRASS_GUID), '未知地面 Tile')
+            allowed = vegetation_sprites[source_id] if is_vegetation else (DIRT_GUID, GRASS_GUID, upper_guid, detail_guid)
+            require(ref['guid'] in allowed and (source_id != 0 or ref['guid'] == GRASS_GUID), '未知地面 Tile')
             require(not any(tuple(xyz(a['first'])) == cell for a in tilemap['m_AnimatedTiles']), '映射覆盖格含动画，不能静态装配')
-            if ref['guid'] == upper_guid:
+            if is_vegetation:
+                sprite = vegetation_sprites[source_id][ref['guid']]
+                require(sprite['guid'] == tuple(PROPS)[source_id-30], '植被来源图片不符')
+            elif ref['guid'] == upper_guid:
                 sprite = resolve_fixed_tile_rule(upper, cell, cells, upper_guid)
             elif ref['guid'] == DIRT_GUID:
                 sprite = resolve_fixed_tile_rule(dirt, cell, cells, DIRT_GUID)
             else:
                 sprite = (detail if ref['guid'] == detail_guid else grass)['m_Sprite']
             require(sprite == tilemap['m_TileSpriteArray'][data['m_TileSpriteIndex']]['m_Data'], '作者规则求值与场景缓存不一致，停止该层')
-            require(tilemap['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data'] == IDENTITY
+            matrix = tilemap['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data']
+            offsets = [matrix['e03'],matrix['e13']]
+            require(matrix == (IDENTITY | {'e03':offsets[0],'e13':offsets[1]}) and (is_vegetation or offsets == [0,0])
+                    and all(abs(v) <= 1 and int(v*16) == v*16 for v in offsets)
                     and tilemap['m_TileColorArray'][data['m_TileColorIndex']]['m_Data'] == WHITE
                     and data['m_TileObjectToInstantiateIndex'] == 65535, '不支持的逐格变换/色彩/实例')
             key = f"{sprite['guid']}:{sprite['fileID']}"
             require(key in sprites, '缺少原精灵元数据')
             used.add(key)
-            rows.append({'cell': list(cell), 'sprite':key})
+            row = {'cell': list(cell), 'sprite':key}
+            if is_vegetation: row['translation'] = offsets
+            rows.append(row)
         require(all(indexes[i] == item['m_RefCount'] for i,item in enumerate(tilemap['m_TileSpriteArray'])), '精灵引用数不一致')
         require(source_id != 10 or len(rows) == 158, '来源10可移除草数量不符')
         require(source_id != 20 or len(rows) == 3, '来源20可移除草数量不符')
         layers.append({'source_id':source_id,'tilemap_id':tilemap_id,'sorting_order':order,'rows':rows})
-    return {'schema':1,'source_commit':SOURCE,'scope':'base-grass-and-mapped-covers-10-20',
+    props = {tuple(r['cell']):r['translation'] for r in layers[-2]['rows']}
+    shadows = {tuple(r['cell']):r['translation'] for r in layers[-1]['rows']}
+    require(props.keys() == shadows.keys() and all(shadows[cell] == [pos[0]-.125,pos[1]] for cell,pos in props.items()),
+            '原植被与阴影逐格位移配对变化')
+    return {'schema':2,'source_commit':SOURCE,'scope':'base-and-mapped-covers-0-10-20-30-31',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},'layers':layers}
 
 
@@ -148,6 +213,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('原基础地面900格、Grass覆盖547格、来源10/20可移除草158/3格；旁观瓦片109/10格未装配。')
+    print('原基础地面900格、Grass覆盖547格、来源10/20可移除草158/3格、来源30/31植被及阴影各33格；旁观瓦片109/10格未装配。')
 
 if __name__ == '__main__': main()

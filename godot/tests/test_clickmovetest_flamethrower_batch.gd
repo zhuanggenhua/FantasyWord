@@ -196,15 +196,20 @@ func run() -> void:
 	scene.run_surface_contact_effects()
 	check(caster.current_health()==99 and target.health==204,"水熄火仅停止该格后续伤害")
 	if ground_enabled and tile_enabled and is_instance_valid(scene.ground_layers) and is_instance_valid(effects_layer):
-		var overlap := Vector3i(5,0,0)
-		var address := Vector2i(5,-1)
-		var lower: Sprite2D = scene.ground_layers.source_sprite(0,overlap)
-		var upper: Sprite2D = scene.ground_layers.source_sprite(10,overlap)
-		check(is_instance_valid(lower) and is_instance_valid(upper),"同场景原格 (5,0) 有两套实际草精灵")
-		if is_instance_valid(lower) and is_instance_valid(upper):
+		for overlap: Vector3i in [Vector3i(5,0,0), Vector3i(3,-2,0)]:
+			var address := Vector2i(overlap.x,-overlap.y-1)
+			var expected := [0,10] if overlap.y==0 else [0,30,31]
+			check(scene.ground_layers.mapped_cover_sources(overlap)==expected,"同场景原格有实际作者覆盖：%s" % overlap)
+			var covers: Array[Sprite2D] = []
+			for source_id in expected:
+				var sprite: Sprite2D = scene.ground_layers.source_sprite(source_id,overlap)
+				if is_instance_valid(sprite): covers.append(sprite)
+			if covers.size()!=expected.size():
+				check(false,"所有原草、植被或阴影精灵实际存在")
+				continue
 			terrain.clear()
-			scene.actor.request_move_position(Vector2(3.5,.5))
-			target.body.request_move_position(Vector2(3.5,-4.0)) # 这次只核对地表，假人移出射线。
+			scene.actor.request_move_position(Vector2(overlap.x-1.5,overlap.y+.5))
+			target.body.request_move_position(Vector2(overlap.x-1.5,overlap.y-4.0))
 			await physics_frame
 			await physics_frame
 			owner.set_target_direction(Vector2.RIGHT)
@@ -214,16 +219,15 @@ func run() -> void:
 			scene.advance_human_charged_combat(.018)
 			var overlap_sample: Dictionary = terrain.sample(overlap)
 			check(overlap_sample.flags==2 and overlap_sample.states[2].source_ability==20010
-				and effects_layer.get_cell_source_id(address)==0,"Q 的实际锥形派发点燃真实两层草格")
-			check(lower.self_modulate.a==1 and upper.self_modulate.a==1,"点火阶段两个作者覆盖格仍保留")
+				and effects_layer.get_cell_source_id(address)==0,"Q 实际锥形点燃原覆盖格：%s" % overlap)
+			check(covers.all(func(sprite):return sprite.self_modulate.a==1),"点火阶段保留所有作者覆盖格")
 			release.call(1)
 			scene.advance_human_charged_combat(.30)
 			for step in 51: terrain.advance(.1)
-			check(terrain.sample(overlap).cover_lifecycle==3 and lower.self_modulate.a==0
-				and upper.self_modulate.a==0 and effects_layer.get_cell_source_id(address)==-1,
-				"实际 Q 点燃的两个作者覆盖格同时燃尽而非替换")
+			check(terrain.sample(overlap).cover_lifecycle==3 and effects_layer.get_cell_source_id(address)==-1
+				and covers.all(func(sprite):return sprite.self_modulate.a==0),"实际 Q 燃尽隐藏而非替换所有作者覆盖格")
 			terrain.clear()
-			check(lower.self_modulate.a==1 and upper.self_modulate.a==1,"重置恢复相同的两个草精灵")
+			check(covers.all(func(sprite):return sprite.self_modulate.a==1),"重置恢复所有原作者覆盖")
 	scene.advance_surface_contact(.5)
 	events.map_unloaded.emit()
 	scene.run_surface_contact_effects()

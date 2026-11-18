@@ -31,7 +31,7 @@ func run() -> void:
 	var ground: Node2D = scene.ground_layers
 	check(not scene.bind_ground_layers(directory),"重复装配拒绝，不堆叠第二份地图")
 	check(ground.cell_count(-1)==900 and ground.cell_count(0)==547,"900 个基础格与547个作者覆盖格")
-	check(not ground.source_available(-1) and not ground.source_available(30) and not ground.source_available(31),"基础地面不当作可删除覆盖，未迁移来源不假装可用")
+	check(not ground.source_available(-1) and ground.source_available(30) and ground.source_available(31),"基础地面不当作可删除覆盖，原植被与阴影可用")
 	check(scene.bind_surface_presentation(fire_path),"现有地表控制器自动绑定实际逐格透明度")
 	var terrain: RefCounted = scene.surface_elements
 	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，非覆盖装饰未装配")
@@ -40,7 +40,7 @@ func run() -> void:
 	for row in read(rules).rows:
 		var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),0)
 		var state: Dictionary = terrain.sample(cell)
-		if row.walkable and state.cover_source_id==0 and state.base_surface==2 and ground.source_sprite(0,cell)!=null and ground.source_sprite(10,cell)!=null:
+		if row.walkable and state.cover_source_id==0 and state.base_surface==2 and ground.mapped_cover_sources(cell)==[0,10]:
 			selected=cell
 			found=true
 			break
@@ -90,10 +90,39 @@ func run() -> void:
 		for source in expected:
 			check(ground.source_sprite(source,cell).self_modulate.a==1,"清理恢复所有实际映射草")
 	check(ground.source_sprite(20,Vector3i(-7,13,0))==null and not ground.mapped_cover_sources(Vector3i(-7,13,0)).has(20),"同层随机旁观瓦片不冒充可移除草")
+	var flower_cell := Vector3i(3,-2,0)
+	var flower: Sprite2D = ground.source_sprite(30,flower_cell)
+	var shadow: Sprite2D = ground.source_sprite(31,flower_cell)
+	var grass: Sprite2D = ground.source_sprite(0,flower_cell)
+	check(ground.cell_count(30)==33 and ground.cell_count(31)==33,"原植被与阴影各33格完整装配")
+	check(ground.mapped_cover_sources(flower_cell)==[0,30,31],"同格明确映射原草、花、阴影，底图不参与")
+	if flower==null or shadow==null or grass==null:
+		check(false,"必须从原图取到三份覆盖")
+		scene.free()
+		quit(1)
+		return
+	var flower_texture := flower.texture
+	var shadow_texture := shadow.texture
+	check(flower.position==Vector2(3.3125,1.4375) and shadow.position==Vector2(3.1875,1.4375)
+		and flower.scale==Vector2(.125,.125) and shadow.scale==flower.scale,"来源30/31真矩阵，阴影左移1个原图像素")
+	check(flower.z_index==-8 and shadow.z_index==-7 and flower.offset==Vector2(-1.5,-2.5)
+		and shadow.offset==Vector2(-.5,-2.5),"原排序、导入枢轴、矩形")
+	var base_flower: Sprite2D = ground.source_sprite(-1,flower_cell)
+	check(terrain.sample(flower_cell).cover_source_id==0 and terrain.sample(flower_cell).base_surface==2,
+		"实际较低排序优先级来源0在原规则选为有效覆盖，底图Dirt保持独立")
+	check(terrain.apply_point(Surface.FIRE,Vector2(3.5,-1.5),1,.1,scene.actor,20010),"实际花格可燃")
+	check(flower.self_modulate.a==1 and shadow.self_modulate.a==1 and grass.self_modulate.a==1,"燃烧中三份作者覆盖保留")
+	for step in 51: terrain.advance(.1)
+	check(terrain.sample(flower_cell).cover_lifecycle==3 and flower.self_modulate.a==0
+		and shadow.self_modulate.a==0 and grass.self_modulate.a==0 and base_flower.self_modulate.a==1,
+		"原燃尽同时隐藏草、花与阴影，并保留底图")
+	terrain.clear()
+	check(flower.self_modulate.a==1 and shadow.self_modulate.a==1 and grass.self_modulate.a==1
+		and flower.texture==flower_texture and shadow.texture==shadow_texture,"重置恢复同一原图与原色，不以替代精灵复原")
 	events.map_unloaded.emit()
 	check(scene.ground_layers==null and scene.surface_presentation==null and not ground.visible,"卸载取消绑定且立即隐藏地图")
 	scene.queue_free()
 	await process_frame
 	await process_frame
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；未包含旁观装饰、来源30/31或 Unity 像素对照" % [n,failed])
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含旁观装饰或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)

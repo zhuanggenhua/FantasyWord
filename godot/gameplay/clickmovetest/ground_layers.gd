@@ -1,7 +1,8 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
-## 不擦除作者格、不生成焦土，也不另建碰撞/导航。来源10/20仅装配作者映射的草，旁观瓦片与来源30/31尚未装配。
-const MANIFEST_SHA256 := "73aa29e272693a9d0ee825b3678c4a129d670d451b4fb1ac6a5bc4a1da13b9d5"
+## 不擦除作者格、不生成焦土，也不另建碰撞/导航。仅装配作者映射覆盖；同排序混合与 Unity 线性帧输出另行实测。
+const MANIFEST_SHA256 := "a2269ede2a0d8282833cf2f3d1ae85316cd9cf49c0186c8ebde0d595545ce2da"
+const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _configured := false
 
@@ -41,7 +42,8 @@ func configure(directory: String) -> bool:
 			sprite.centered = false
 			sprite.offset = Vector2(-metadata.pivot[0]*metadata.rect[2],-(1.0-metadata.pivot[1])*metadata.rect[3])
 			sprite.scale = Vector2.ONE / float(metadata.ppu)
-			sprite.position = Vector2(cell.x+.5,-cell.y-.5)
+			var shift: Array = row.get("translation", [0,0])
+			sprite.position = Vector2(cell.x+.5+shift[0],-cell.y-.5-shift[1])
 			sprite.z_index = int(layer.sorting_order)
 			add_child(sprite)
 			_cells[source][cell] = sprite
@@ -55,13 +57,13 @@ func cover_port() -> Dictionary:
 func mapped_cover_sources(cell: Vector3i) -> Array:
 	var sources: Array = []
 	if not _configured: return sources
-	for source in [0,10,20]:
+	for source in COVER_SOURCES:
 		if _cells[source].has(cell): sources.append(source)
 	return sources
 
 func source_available(source: int) -> bool:
-	# 基础地面不属于可移除覆盖；来源30/31必须由各自真实图层接入。
-	return _configured and source in [0,10,20]
+	# 基础地面不属于可移除覆盖。
+	return _configured and source in COVER_SOURCES and _cells.has(source)
 
 func set_cover_alpha(source: int, cell: Vector3i, alpha: float) -> void:
 	if not source_available(source) or not _cells[source].has(cell): return
