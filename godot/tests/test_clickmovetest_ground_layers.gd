@@ -35,6 +35,28 @@ func run() -> void:
 	check(scene.bind_surface_presentation(fire_path),"现有地表控制器自动绑定实际逐格透明度")
 	var terrain: RefCounted = scene.surface_elements
 	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，不包含独立装饰")
+	var road_cell := Vector3i(8,6,0)
+	var road := ground.static_decoration_sprite(10,road_cell) as Sprite2D
+	check(ground.static_decoration_count(10)==15 and ground.static_decoration_count(20)==0,
+		"仅已求值的11格普通地面与4格固定石路装配，不包含上层碰撞")
+	var fixed_tiles := {
+		Vector3i(-16,-6,0):Vector2i(64,128), Vector3i(-16,-5,0):Vector2i(64,136),
+		Vector3i(-16,-4,0):Vector2i(64,144), Vector3i(-6,10,0):Vector2i(56,16),
+		Vector3i(8,6,0):Vector2i(160,128), Vector3i(9,6,0):Vector2i(176,128),
+		Vector3i(8,7,0):Vector2i(160,144), Vector3i(9,7,0):Vector2i(176,144)}
+	for dirt_cell in [Vector3i(5,-6,0),Vector3i(12,-5,0),Vector3i(-14,-2,0),Vector3i(-10,-1,0),
+			Vector3i(10,0,0),Vector3i(1,3,0),Vector3i(-10,5,0)]:
+		fixed_tiles[dirt_cell] = Vector2i(40,160)
+	for cell: Vector3i in fixed_tiles:
+		var tile := ground.static_decoration_sprite(10,cell) as Sprite2D
+		var atlas := tile.texture as AtlasTexture if tile != null else null
+		var at: Vector2i = fixed_tiles[cell]
+		check(atlas!=null and atlas.region==Rect2(at.x,atlas.atlas.get_height()-at.y-8,8,8)
+			and tile.position==Vector2(cell.x+.5,-cell.y-.5) and tile.offset==Vector2(-4,-4)
+			and tile.scale==Vector2(.125,.125) and tile.z_index==-8,"来自原作者图集的固定装饰：%s" % cell)
+		check(not ground.mapped_cover_sources(cell).has(10),"固定装饰不加入来源10的可删除草：%s" % cell)
+	check(scene.route.graph.contains_node(Vector4i(0,8,6,0)) and not scene.route.graph.contains_node(Vector4i(0,-6,10,0)),
+		"石路和崖壁保留原规则格的可走与不可走区别")
 	var lake_cell := Vector3i(0,-10,0)
 	var lake: AnimatedSprite2D = ground.lakegrass_sprite(lake_cell)
 	check(ground.lakegrass_count()==35 and is_instance_valid(lake),"原湖岸 LakeGrass 35 格独立装配")
@@ -151,5 +173,6 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	check(not is_instance_valid(lake),"卸载释放自主动画，不保留上次场景的相位")
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含剩余静态装饰或 Unity 像素对照" % [n,failed])
+	check(not is_instance_valid(road),"地图卸载释放确定性石路精灵")
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含随机装饰、来源20额外瓦片或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)

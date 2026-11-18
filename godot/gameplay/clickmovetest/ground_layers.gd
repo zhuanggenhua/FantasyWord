@@ -1,10 +1,11 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
-## 不擦除作者格、不生成焦土，也不另建碰撞/导航。湖草动画与可燃覆盖分别注册。
-const MANIFEST_SHA256 := "6f917225436508339bad265af26df8b0f578a3ff1cd9e020c48e51d8f0e464e5"
+## 不擦除作者格、不生成焦土，也不另建碰撞/导航。静态装饰、湖草与可燃覆盖分别注册。
+const MANIFEST_SHA256 := "d418c26b6c8a674560f34b77ddf71d637742c616e19f35148608fe5cfb8888ff"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}
+var _static_decorations: Dictionary = {}
 var _configured := false
 
 func configure(directory: String) -> bool:
@@ -36,22 +37,36 @@ func configure(directory: String) -> bool:
 		var source := int(layer.source_id)
 		_cells[source] = {}
 		for row in layer.rows:
-			var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),int(row.cell[2]))
-			var metadata: Dictionary = data.sprites[row.sprite]
-			var sprite := Sprite2D.new()
-			sprite.texture = frames[row.sprite]
-			sprite.centered = false
-			sprite.offset = Vector2(-metadata.pivot[0]*metadata.rect[2],-(1.0-metadata.pivot[1])*metadata.rect[3])
-			sprite.scale = Vector2.ONE / float(metadata.ppu)
-			var shift: Array = row.get("translation", [0,0])
-			sprite.position = Vector2(cell.x+.5+shift[0],-cell.y-.5-shift[1])
-			sprite.z_index = int(layer.sorting_order)
-			add_child(sprite)
-			_cells[source][cell] = sprite
+			_add_static_tile(row, int(layer.sorting_order), frames, data.sprites, _cells[source])
+		if layer.has("static_decorations"):
+			_static_decorations[source] = {}
+			for row in layer.static_decorations:
+				_add_static_tile(row, int(layer.sorting_order), frames, data.sprites, _static_decorations[source])
 		if layer.has("decorations"):
 			_add_lakegrass(layer.decorations, int(layer.sorting_order), frames, data.sprites)
 	_configured = true
 	return true
+
+func _add_static_tile(row: Dictionary, sorting_order: int, textures: Dictionary,
+		metadata: Dictionary, registry: Dictionary) -> void:
+	var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),int(row.cell[2]))
+	var pose: Dictionary = metadata[row.sprite]
+	var sprite := Sprite2D.new()
+	sprite.texture = textures[row.sprite]
+	sprite.centered = false
+	sprite.offset = Vector2(-pose.pivot[0]*pose.rect[2],-(1.0-pose.pivot[1])*pose.rect[3])
+	sprite.scale = Vector2.ONE / float(pose.ppu)
+	var shift: Array = row.get("translation", [0,0])
+	sprite.position = Vector2(cell.x+.5+shift[0],-cell.y-.5-shift[1])
+	sprite.z_index = sorting_order
+	add_child(sprite)
+	registry[cell] = sprite
+
+func static_decoration_sprite(source: int, cell: Vector3i) -> Sprite2D:
+	return _static_decorations.get(source, {}).get(cell)
+
+func static_decoration_count(source: int) -> int:
+	return _static_decorations.get(source, {}).size()
 
 func _add_lakegrass(data: Dictionary, sorting_order: int, textures: Dictionary, metadata: Dictionary) -> void:
 	var shared: Dictionary = {}
