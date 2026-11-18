@@ -67,6 +67,12 @@ func refresh_target(position: Vector2, home: Vector2, detected: Array, try_attac
 	if position.distance_to(home) > reset_from_home_radius or distance > reset_from_target_radius:
 		stop_chase(out_of_range_cooldown)
 
+## BehaviourRuntime.Stop：清当前导航及攻击对准等待，不清目标或冷却。
+func stop_controller() -> void:
+	navigation_repath_timer = 0.0
+	path_invalidated.emit()
+	waiting_for_attack_facing = false
+
 func stop_chase(cooldown: float) -> void:
 	retarget_cooldown = f32(cooldown)
 	target = {}

@@ -70,6 +70,11 @@ func run() -> void:
 		control.free()
 		quit(1)
 		return
+	var ai = target.ai_controller
+	check(ai.running and target.formal_provoked.is_connected(ai._on_provoked)
+		and ai.current_target()==null,"活动假人自动启动场景覆盖控制器，初始未锁定目标")
+	var provocations: Array = []
+	target.formal_provoked.connect(func(source,_stats): provocations.append([source,target.health,ai.current_target()]))
 	check(scene.start_training_damage_target(native_target,native_target.hooks(),7752)==null,"不创建第二个场景活动假人")
 	check(target.get_movement_position()==Vector2(2.5,-2.75) and target.health==220,"原始出生点及220生命")
 	check(target.body.collision_layer==256 and target.hitbox.collision_layer==128,"身体与受击盒不是同层")
@@ -162,10 +167,12 @@ func run() -> void:
 	slots.try_assign_formal_gas_ability_code_to_slot(1,20004)
 	check(press.call()==Executor.Failure.NONE and release.call()==Executor.Failure.NONE,"实际进入蓄力释放")
 	scene.advance_human_charged_combat(.19)
-	check(target.health==220 and native_target.trace.is_empty(),"第12帧前无负伤")
+	check(target.health==220 and native_target.trace.is_empty() and ai.current_target()==null,"第12帧前无负伤也不锁定")
 	var previous: Vector2=target.get_movement_position()
 	scene.advance_human_charged_combat(.02)
 	check(target.health==198 and scene.training_attributes.max_health()==220,"原数值伤害 7+10×1.5，220→198")
+	check(provocations==[[scene.actor,220,scene.actor]] and ai.current_target()==scene.actor,
+		"真实蓄力受击在扣血前挑衅并保留命中场景角色，而不是属性快照")
 	check(damage_trace==[[220,0]] and target_view.driver.current_animation_key=="Dmg","Dmg 在提交生命变更前真实播放")
 	check(scene.training_hit_cue.activation_count==1 and scene.training_hit_cue.last_activation.cue_id==20001
 		and not scene.training_hit_cue.last_activation.feedback_slot_configured,"耗用瞬时效果后 Display 处理真实 20001 空槽")
@@ -207,12 +214,24 @@ func run() -> void:
 		"实际致命效果记录正式生命变化，延迟处理死亡")
 	check(target.stats.dead and target.stats.invincible and not native_target.dead and is_instance_valid(target.body),
 		"原 dead 当场读零血，死亡收尾仍待安全阶段")
+	check(provocations==[[scene.actor,220,scene.actor],[scene.actor,22,scene.actor]] and ai.running,
+		"致命攻击仍在零血前通知；停控制器留到安全阶段")
 	var trace_before := native_target.trace.duplicate()
 	scene._execute_training_damage(scene.actor,target,caster.stats,func():return 50)
 	check(native_target.trace==trace_before and hits.size()==2,
 		"同帧后续有来源攻击不再唤起受击或扣血")
 	target.body.move_to(Vector2(5,-2.75))
 	check(target.body.execution.has_move_order(),"安全阶段前存在真实待完成的移动命令")
+	var stop_trace: Array = []
+	ai.behaviour.navigation_repath_timer = .2
+	ai.behaviour.retarget_cooldown = .7
+	ai.behaviour.waiting_for_attack_facing = true
+	var observe_stop := func():
+		stop_trace.append([ai.running,target.formal_provoked.is_connected(ai._on_provoked),
+			target._death_committed,target.body.execution.has_move_order(),ai.behaviour.navigation_repath_timer,native_target.trace.back()])
+	ai.behaviour.path_invalidated.connect(observe_stop)
+	target_view.driver.animation_selected.connect(func(key):
+		if key=="SpinDie": stop_trace.append([key,ai.running,target._death_committed,target.body.execution.has_move_order()]))
 	var prior_count := native_target.trace.size()
 	target.advance_damage_lifecycle()
 	target.advance_damage_lifecycle()
@@ -221,6 +240,14 @@ func run() -> void:
 		"安全阶段先打断再进入宿主死亡回调，重复推进不重放，不擅自删除 Actor")
 	check(not target.can_move() and not target.body.execution.has_move_order(),
 		"保留 Actor 身体但停止其自发移动")
+	check(stop_trace.size()==(2 if not exact_death.is_empty() else 1)
+		and stop_trace[0]==[false,false,false,true,0.0,"interrupt"],
+		"先执行安全打断，然后退订并清路径，再标记死亡并重置移动")
+	check(not ai.running and not ai.behaviour.waiting_for_attack_facing
+		and ai.behaviour.retarget_cooldown==.7 and ai.current_target()==scene.actor,
+		"停止只清本阶段接入的路径/等待状态，不清原保留的目标或重选冷却")
+	if not exact_death.is_empty():
+		check(stop_trace.size()==2 and stop_trace[1]==["SpinDie",false,true,false],"材质动作进入 SpinDie 前已停止 AI 和主动移动")
 	if not exact_death.is_empty():
 		check(target_view.driver.locked_key=="SpinDie" and target_view.playback.current_label==0,
 			"正式死亡安全阶段锁定原 SpinDie，不等动画结束才回调")
@@ -261,6 +288,7 @@ func run() -> void:
 	check(scene.training_attributes.apply_current_health_delta(-1,0,null,caster.stats())==0 and hits.size()==2
 		and not target.lifecycle.pending_death,
 		"已零血无有效增量，不再请求死亡")
+	ai.behaviour.path_invalidated.disconnect(observe_stop)
 	scene.stop_human_aim()
 	scene.free()
 	control.free()

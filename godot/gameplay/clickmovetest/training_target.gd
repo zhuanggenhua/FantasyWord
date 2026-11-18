@@ -1,6 +1,8 @@
 extends Node2D
-## 锁定 ClickMoveTest 活跃训练假人的物理接线；属性、AI、表现仍由显式拥有者提供。
+## 锁定 ClickMoveTest 活跃训练假人的物理接线；属性和表现由显式拥有者提供。
 ## 不创建替代 GAS 属性，不用诊断矩形或绘制占位图冒充作者角色。
+signal formal_provoked(source: Object, source_stats: Dictionary)
+const TrainingAI = preload("res://gameplay/clickmovetest/training_ai_controller.gd")
 const Body = preload("res://game_core/movement/native_motion_body.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Lifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
@@ -20,6 +22,7 @@ var presentation: Node2D
 var _presentation_motion: RefCounted
 var hitbox: Area2D
 var lifecycle := Lifecycle.new()
+var ai_controller := TrainingAI.new()
 var _bindings: Dictionary = {}
 var _external_health_signal := false
 var _death_committed := false
@@ -82,6 +85,8 @@ func _ready() -> void:
 	hit_shape.position = Vector2(HIT_OFFSET.x, -HIT_OFFSET.y)
 	hitbox.add_child(hit_shape)
 	body.add_child(hitbox)
+	# 源场景的活动实例以显式 AIController 覆盖默认控制器；OnEnable 启动。
+	ai_controller.start(self)
 
 ## 锁定训练假人的 Runtime DirectionalSpriteLibraryDriver 使用原 Human 四向库，
 ## 表现挂在身体局部原点；不使用胶囊的中心偏移。
@@ -118,6 +123,7 @@ func start_presentation(animation: Dictionary, texture_directory: String, source
 	return view
 
 func _exit_tree() -> void:
+	ai_controller.stop()
 	if _presentation_motion != null:
 		_presentation_motion.detach()
 		_presentation_motion = null
@@ -145,8 +151,16 @@ func bind_formal_health_changes(properties: RefCounted) -> void:
 func _on_formal_health_changed(previous: int, current: int, _source: Variant) -> void:
 	lifecycle.on_current_health_changed(previous,current)
 
-func hooks() -> Dictionary:
+func hooks(source_actor: Object = null) -> Dictionary:
 	var result := _bindings.duplicate()
+	var source_identity: WeakRef = weakref(source_actor) if is_instance_valid(source_actor) else null
+	result.provoke = func(source_stats):
+		# 执行器在影响/推力后、扣血前调用。未知来源不触发角色事件；
+		# 快照用于当刻目标判定，不可作为 AI 存储的角色身份。
+		var source: Object = source_identity.get_ref() if source_identity != null else null
+		if is_instance_valid(source) and source_stats is Dictionary:
+			formal_provoked.emit(source,source_stats)
+		_bindings.provoke.call(source_stats)
 	result.prepare = func(source, input):
 		lifecycle.on_prepare_damage(input.silent)
 		_bindings.prepare.call(source,input)
@@ -166,8 +180,9 @@ func advance_damage_lifecycle() -> void:
 		_bindings.interrupt_actions, _finish_death)
 
 func _finish_death() -> void:
-	# Movable.Kill marks the Actor and resets its motion before the formal
-	# terminal animation; CharacterActor.OnDeath runs without waiting.
+	# 原 Movable.Kill 先停活动控制器，再标记、重置移动、播放死亡动作。
+	# mark_death 是之后的 CharacterActor.OnDeath 宿主回调。
+	ai_controller.stop()
 	_death_committed = true
 	if is_instance_valid(body): body.reset_movement()
 	if _verified_death_animation and is_instance_valid(presentation):

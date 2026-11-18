@@ -181,9 +181,9 @@ func _read_contact_target(target: Object) -> Dictionary:
 	if stats.is_empty(): return {}
 	return {"dead":bool(stats.get("dead",true)), "position":target.get_movement_position()}
 
-func _contact_hooks(target: Object) -> Dictionary:
+func _contact_hooks(target: Object, source: Object = null) -> Dictionary:
 	if not is_instance_valid(target): return {}
-	if target == training_target: return training_target.hooks()
+	if target == training_target: return training_target.hooks(_resolve_contact_character(source))
 	return _contact_player_hooks if target == actor else {}
 
 func _submit_contact_damage(source: Object, target: Object, payload: Dictionary) -> bool:
@@ -205,7 +205,7 @@ func run_surface_contact_effects() -> void:
 	for entry in applying:
 		var source: Object = entry.source.get_ref() if entry.source != null else null
 		var target: Object = entry.target.get_ref()
-		var hooks := _contact_hooks(target)
+		var hooks := _contact_hooks(target,source)
 		if hooks.is_empty(): continue
 		var defender := _contact_stats(target)
 		if defender.is_empty(): continue
@@ -583,7 +583,7 @@ func _remove_flamethrower_visual() -> void:
 	# CuePlayGameCoreAudio has no stop handler; existing voices run to completion.
 
 ## 绑定场景中唯一活动训练假人的受击逻辑。缺少正式控制/生命周期回调时拒绝；
-## 不注册假 AI、不自动加进默认场景、不创建美术或替代碰撞资源。
+## 不自动加进默认场景，不假造尚未迁移的 AI 移动、攻击或素材。
 func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary, terrain_mask: int) -> Node2D:
 	if training_target != null or not is_inside_tree(): return null
 	if not target_hooks.get("is_invincible") is Callable or not target_hooks.is_invincible.is_valid(): return null
@@ -690,14 +690,14 @@ func _execute_basic_training_damage(caster: Node2D, target: Node2D, caster_stats
 		if not is_instance_valid(caster) or not is_instance_valid(target) or not target.has_formal_target_direction(): return {}
 		return {"source_root":caster.get_movement_position(),"target_root":target.get_movement_position(),
 			"target_direction":target.get_target_direction()}
-	BasicDamage.execute_damage_phase(current,target.stats,target.hooks(),read_pose,true,true,roll)
+	BasicDamage.execute_damage_phase(current,target.stats,target.hooks(caster),read_pose,true,true,roll)
 
 func _execute_training_damage(caster: Node2D, target: Node2D, caster_stats: Callable, roll: Callable) -> void:
 	if caster != actor or target != training_target or not caster_stats.is_valid() or not roll.is_valid(): return
 	var current: Variant = caster_stats.call()
 	if not current is Dictionary or not current.get("snapshot") is Dictionary: return
 	# 目标在第12帧确定，根位置和角色属性由后续瞬时效果重新读取。
-	ChargedDamage.execute_damage_phase(current,target.stats,target.hooks(),caster.get_movement_position(),
+	ChargedDamage.execute_damage_phase(current,target.stats,target.hooks(caster),caster.get_movement_position(),
 		target.get_movement_position(),true,true,roll)
 
 ## SGAbility 的时间轴先提交请求；同次逻辑更新的 SGEffect 再消费。
