@@ -6,6 +6,7 @@ const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
+const SurfaceElements = preload("res://game_core/elements/terrain_element_runtime.gd")
 const Route = preload("res://game_core/navigation/terrain_world_route.gd")
 const Binding = preload("res://game_core/presentation/player_camera_binding.gd")
 const ScreenProjection = preload("res://game_core/presentation/orthographic_screen_projection.gd")
@@ -15,6 +16,7 @@ const Step = preload("res://game_core/movement/source_fixed_step.gd")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const TrainingTarget = preload("res://gameplay/clickmovetest/training_target.gd")
 const TrainingAttributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
+const FireTimeline = preload("res://gameplay/combat/flamethrower_timeline.gd")
 const BasicTimeline = preload("res://gameplay/combat/basic_attack_timeline.gd")
 const BasicDamage = preload("res://gameplay/combat/basic_damage_effect.gd")
 const HitPolygon = preload("res://game_core/combat/polygon_hitbox_query.gd")
@@ -52,6 +54,7 @@ var _equipped_ability_dispatch: RefCounted
 var _charged_actor_runtime: Node
 var _charged_timeline: RefCounted
 var _basic_timeline: RefCounted
+var _fire_timeline: RefCounted
 var training_hit_cue := TrainingHitCue.new()
 var _training_effects := ChargedEffects.new()
 var training_target: Node2D
@@ -63,6 +66,9 @@ var _ui_raycast: Callable
 var last_ui_selection := "unbound"
 var _ui_guard: Callable
 var _player_provider: Callable
+var _surface_map_events: Object
+var _terrain_rule_rows: Array = []
+var surface_elements: RefCounted
 
 ## 宿主明确选中的玩家、地图事件、动作能力与 UI 门禁均由调用者提供。
 ## 此阶段不宣称提供完整 PlayerSystem、GAS、地图加载或视觉资源。
@@ -90,6 +96,8 @@ func start_logic(owner: Object, data: Dictionary, player_provider: Callable,
 			or not is_instance_valid(camera) or not is_instance_valid(visual_body): return false
 	actor.configure_movement(actor_shape, Filter.new(Filter.Mode.FREE, false, 0.05, 10.0, 10.0), owner, 7752)
 	route = candidate
+	_terrain_rule_rows = data.rows.duplicate(true)
+	_surface_map_events = map_events
 	movement = Movement.new(actor, 0.05)
 	movement.set_movement_control_mode(Movement.Mode.CLICK_TO_MOVE)
 	_ui_guard = ui_guard
@@ -102,6 +110,23 @@ func start_logic(owner: Object, data: Dictionary, player_provider: Callable,
 	camera.advance_follow(0.0)
 	get_viewport().size_changed.connect(_resize_camera)
 	return true
+
+## 实际 ClickMoveTest 规则格绑定首批元素运行时；私有作者投影不写入游戏仓库。
+## 点施加复用原验证器语义，由显式战斗入口装配喷火；地表表现不在此绑定。
+func start_surface_elements(assets: Dictionary) -> bool:
+	if not is_inside_tree() or surface_elements != null or route==null or not is_instance_valid(_surface_map_events): return false
+	if int(assets.get("schema",0))!=1 or assets.get("source_commit")!=SOURCE: return false
+	var candidate := SurfaceElements.new()
+	if not candidate.configure(_terrain_rule_rows,assets): return false
+	surface_elements = candidate
+	_surface_map_events.map_unloaded.connect(_on_surface_map_unloaded)
+	return true
+
+func _on_surface_map_unloaded() -> void:
+	if surface_elements != null: surface_elements.clear()
+	surface_elements = null
+	if is_instance_valid(_surface_map_events) and _surface_map_events.map_unloaded.is_connected(_on_surface_map_unloaded):
+		_surface_map_events.map_unloaded.disconnect(_on_surface_map_unloaded)
 
 func _resize_camera() -> void:
 	camera.zoom = ScreenProjection.zoom_for_view_height(get_viewport_rect().size.y, 5.0)
@@ -161,10 +186,12 @@ func _process(delta: float) -> void:
 	_update_human_aim()
 	update_ui_pointer_selection()
 	advance_human_charged_combat(delta)
+	if surface_elements != null: surface_elements.advance(delta)
 	if is_instance_valid(training_target):
 		training_target.advance_damage_lifecycle()
 
 func _exit_tree() -> void:
+	_on_surface_map_unloaded()
 	_training_effects.clear()
 	training_hit_cue.dispose()
 	unbind_ui_pointer_selection()
@@ -312,7 +339,7 @@ func start_human_resolved_equipped_abilities(owner: Object, loadout: RefCounted,
 ## hit_task 仍由正式目标/伤害拥有者接入；本入口不创建目标、数值或替代动作。
 func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Callable,
 		target_root: Callable, target_cell: Callable, notify_rejected: Callable,
-		basic_hit_task: Callable = Callable()) -> Node:
+		basic_hit_task: Callable = Callable(), fire_hit_task: Callable = Callable()) -> Node:
 	if _charged_actor_runtime != null or human_commands == null or human_commands.character != owner: return null
 	if _equipped_ability_dispatch != null or human_commands.has_bound_abilities(): return null
 	if not is_instance_valid(human_presentation) or not is_instance_valid(human_presentation.driver) or not hit_task.is_valid(): return null
@@ -323,17 +350,24 @@ func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Ca
 	if basic_hit_task.is_valid():
 		if driver.resolve_playable_state("Attack").is_empty(): return null
 		basic_timeline = BasicTimeline.new(basic_hit_task,driver)
+	var fire_timeline: RefCounted
+	if fire_hit_task.is_valid():
+		if surface_elements == null or not owner.has_method("get_look_at_direction") \
+				or driver.resolve_playable_state("Attack").is_empty(): return null
+		fire_timeline = FireTimeline.new(fire_hit_task,_apply_flamethrower_cone.bind(owner),driver)
 	var runtime := preload("res://gameplay/combat/resolved_charged_ability.gd").new()
 	add_child(runtime)
 	if not runtime.configure(actor, owner, timeline, actor.get_movement_position) \
 			or not runtime.take_clock_tick_ownership(timeline) \
 			or (basic_timeline != null and not runtime.attach_basic(actor,owner,basic_timeline,actor.get_movement_position)) \
+			or (fire_timeline != null and not runtime.attach_fire(actor,owner,fire_timeline,actor.get_movement_position)) \
 			or not start_human_resolved_equipped_abilities(owner,loadout,runtime.resolve,runtime,target_root,target_cell,notify_rejected,true):
 		runtime.free()
 		return null
 	_charged_actor_runtime = runtime
 	_charged_timeline = timeline
 	_basic_timeline = basic_timeline
+	_fire_timeline = fire_timeline
 	return runtime
 
 ## 绑定场景中唯一活动训练假人的受击逻辑。缺少正式控制/生命周期回调时拒绝；
@@ -376,19 +410,23 @@ func start_training_target_presentation(animation: Dictionary, texture_directory
 ## Caster 当前快照、掷骰和 ASC Cell 属于正式宿主；暴击/闪避来自锁定 GameConfig.asset。
 func start_human_charged_training_combat(owner: Object, loadout: RefCounted, caster_stats: Callable,
 		roll: Callable, target_root: Callable, target_cell: Callable, notify_rejected: Callable,
-		include_basic: bool = false) -> Node:
+		include_basic: bool = false, include_flamethrower: bool = false) -> Node:
 	if not is_instance_valid(training_target) or not caster_stats.is_valid() or not roll.is_valid() \
 			or not target_root.is_valid() or not target_cell.is_valid(): return null
 	var basic_hit_task := Callable()
 	if include_basic:
 		if not training_target.has_formal_target_direction(): return null
 		basic_hit_task = _hit_basic_training_target.bind(owner,caster_stats,roll)
+	var fire_hit_task := Callable()
+	if include_flamethrower:
+		if not training_target.has_formal_target_direction(): return null
+		fire_hit_task = _hit_effect_2003_training_target.bind(owner,caster_stats,roll,FireTimeline.ATTACK_POLYGON,FireTimeline.HIT_MASK)
 	var hit_task := _hit_training_target.bind(owner,caster_stats,roll)
 	var resolve_root := func (target):
 		if not is_instance_valid(training_target) or target != training_target: return target_root.call(target)
 		var at: Vector2 = training_target.get_movement_position()
 		return Vector3(at.x,at.y,0)
-	return start_human_charged_combat(owner,loadout,hit_task,resolve_root,target_cell,notify_rejected,basic_hit_task)
+	return start_human_charged_combat(owner,loadout,hit_task,resolve_root,target_cell,notify_rejected,basic_hit_task,fire_hit_task)
 
 func _hit_training_target(owner: Object, caster_stats: Callable, roll: Callable) -> void:
 	if not is_instance_valid(training_target) or not is_instance_valid(owner) or not is_instance_valid(actor): return
@@ -402,18 +440,31 @@ func _hit_training_target(owner: Object, caster_stats: Callable, roll: Callable)
 ## Timeline 101 的命中任务使用真实角色和层 128 的子受击盒；
 ## 只连接本场景已有目标，不创建技能、角色、属性或方向。
 func _hit_basic_training_target(owner: Object, caster_stats: Callable, roll: Callable) -> void:
+	_hit_effect_2003_training_target(owner,caster_stats,roll,BasicTimeline.ATTACK_POLYGON,BasicTimeline.HIT_MASK)
+
+func _hit_effect_2003_training_target(owner: Object, caster_stats: Callable, roll: Callable,
+		polygon: Array, mask: int) -> void:
 	if not is_instance_valid(training_target) or not is_instance_valid(owner) or not is_instance_valid(actor): return
 	if not training_target.has_formal_target_direction() or not owner.has_method("get_look_at_direction") \
 			or not caster_stats.is_valid() or not roll.is_valid():
-		push_error("原普攻缺少实际玩家出招朝向、目标逻辑方向、当前属性或随机源。")
+		push_error("原 2003 命中缺少实际玩家出招朝向、目标逻辑方向、当前属性或随机源。")
 		return
 	var start: Vector2 = actor.get_movement_position()
 	var facing: Vector2 = owner.get_look_at_direction()
-	if not start.is_finite() or not facing.is_finite(): return
-	for target in HitPolygon.query(actor.get_world_2d(),start,facing,PackedVector2Array(BasicTimeline.ATTACK_POLYGON),
-			BasicTimeline.HIT_MASK,actor,func(collider):
+	if not start.is_finite() or not facing.is_finite() or facing.length_squared() <= .0001: return
+	for target in HitPolygon.query(actor.get_world_2d(),start,facing,PackedVector2Array(polygon),
+			mask,actor,func(collider):
 				return training_target if is_instance_valid(training_target) and collider == training_target.hitbox else null):
 		_training_effects.request(actor,target,_execute_basic_training_damage.bind(caster_stats,roll))
+
+## 每次任务都从场景施法者根和实际 look-at 重新读取，不使用按下 Q 时的指针。
+func _apply_flamethrower_cone(owner: Object) -> void:
+	if surface_elements == null or not is_instance_valid(actor) or not is_instance_valid(owner): return
+	var facing: Vector2 = owner.get_look_at_direction()
+	if not facing.is_finite() or facing.length_squared() <= .0001: return
+	surface_elements.apply_cone(SurfaceElements.FIRE,actor.get_movement_position(),facing,
+		FireTimeline.CONE_RANGE,FireTimeline.HALF_ANGLE,FireTimeline.INTENSITY,FireTimeline.EXPOSURE,
+		actor,FireTimeline.SOURCE_ABILITY)
 
 func _execute_basic_training_damage(caster: Node2D, target: Node2D, caster_stats: Callable, roll: Callable) -> void:
 	if not is_instance_valid(actor) or caster != actor or not is_instance_valid(training_target) or target != training_target:
@@ -447,6 +498,7 @@ func advance_human_charged_combat(delta: float) -> void:
 		runtime.advance_input(delta)
 		if runtime == _charged_actor_runtime: _charged_timeline.flush_display()
 		if runtime == _charged_actor_runtime and _basic_timeline != null: _basic_timeline.flush_display()
+		if runtime == _charged_actor_runtime and _fire_timeline != null: _fire_timeline.flush_display()
 	training_hit_cue.flush_display()
 
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
@@ -534,6 +586,9 @@ func notify_human_aim_input_disabled() -> void:
 	if _human_aim != null: _reset_human_aim_control()
 
 func stop_human_aim() -> void:
+	if _fire_timeline != null:
+		_fire_timeline.stop()
+		_fire_timeline = null
 	if _basic_timeline != null:
 		_basic_timeline.stop()
 		_basic_timeline = null

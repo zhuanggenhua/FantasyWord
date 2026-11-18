@@ -1,5 +1,5 @@
 extends RefCounted
-## 锁定 31629d5 的 20004 与 20001 单实例生命周期；两者无 Cost/Cd，使用同一角色标签 3003。
+## 锁定 31629d5 的 20004、20001 与 20010 单实例生命周期；均无 Cost/Cd，使用同一角色标签 3003。
 ## 只承认该单技能、非重入更新；不是多技能 ECS、通用标签树或另一套输入门控。
 const CODE := 20004
 const ATTACKING := 3003
@@ -26,7 +26,7 @@ var _position_reader: Callable
 
 func configure(actor: Node2D, timeline: RefCounted, position_reader: Callable = Callable(), code: int = CODE,
 		shared_tags: AttackingTags = null) -> bool:
-	if _actor != null or not is_instance_valid(actor) or timeline == null or code not in [CODE,20001]: return false
+	if _actor != null or not is_instance_valid(actor) or timeline == null or code not in [CODE,20001,20010]: return false
 	if (not position_reader.is_valid() and not actor.has_method("source_position")) or not timeline.has_method("play") or not timeline.has_method("stop"): return false
 	_actor=weakref(actor);_timeline=timeline
 	_position_reader=position_reader
@@ -66,7 +66,11 @@ func request_cancel(code: int) -> void:
 	if code==ability_code: cancel_requested=true
 func request_end(code: int) -> void:
 	if code==ability_code: end_requested=true
-func get_ability_debug_name() -> String: return "普通攻击" if ability_code == 20001 else "蓄力释放技能"
+func get_ability_debug_name() -> String:
+	match ability_code:
+		20001: return "普通攻击"
+		20010: return "喷火"
+		_: return "蓄力释放技能"
 func report_error(message: String) -> void: push_error(message)
 
 ## 显式的后续 GAS 更新边界，不强制等一个墙钟帧。回调限于观察，不支持重入/新增请求。
@@ -81,7 +85,7 @@ func process_update() -> void:
 	process_end()
 	_processing=false
 
-## 同一角色两技能由场景宿主按原 SGAbility 顺序分阶段调用。
+## 同一角色多技能由场景宿主按原 SGAbility 顺序分阶段调用。
 func process_activation() -> void:
 	if activate_requested:
 		var result:=check_activation()
