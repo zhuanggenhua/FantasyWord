@@ -1,6 +1,6 @@
 extends RefCounted
 ## 锁定 ClickMoveTest 的活动假人 AIController：启动、挑衅、选敌与停止。
-## 源路径与检测；显式接通唯一活动假人的路线、预测与可追溯战斗游走。
+## 源路径与检测；显式接通唯一活动假人的路线、默认归位和可追溯战斗游走。
 const TargetLifecycle = preload("res://game_core/ai/ai_target_lifecycle.gd")
 const Perception = preload("res://game_core/ai/ai_perception.gd")
 const Navigation = preload("res://game_core/ai/ai_navigation_target.gd")
@@ -64,6 +64,14 @@ func _stop_transit(subject: Node2D) -> void:
 		subject.body.execution.set_steering_motion(1.0,Vector2.ZERO)
 		subject.body.execution.set_movement_direction(Vector2.ZERO,false)
 
+func _transform_right(subject: Node2D) -> Vector2:
+	var game_right := subject.global_transform.x.normalized()
+	return Vector2(game_right.x,-game_right.y)
+
+func _subject_forward(subject: Node2D) -> Vector2:
+	var look: Vector2 = subject.get_transit_look()
+	return look.normalized() if look != Vector2.ZERO else _transform_right(subject)
+
 func _submit_route_steering(subject: Node2D, origin: Vector2, player: AnimatableBody2D) -> void:
 	var max_speed: float = maxf(0.0,subject.calculate_move_speed()*subject.calculate_speed_multiplier())
 	if not is_finite(max_speed):
@@ -71,12 +79,13 @@ func _submit_route_steering(subject: Node2D, origin: Vector2, player: Animatable
 		return
 	var destination: Vector2 = steering_target.position
 	var execution: RefCounted = subject.body.execution
-	var forward := Vector2.ZERO
-	if steering_target.mode == "route":
+	var forward: Vector2
+	if steering_target.mode == "approach":
+		forward = _subject_forward(subject)
+	else:
+		# 远目标未有活动地图仍走 TryResolveSteeringTarget 后的相同前向规则。
 		forward = _transit_average if execution.get_last_successful_movement().length() > 0.0 else destination-origin
-	# Direct approach submits current facing; a path submission uses movement/waypoint first.
-	if forward.length_squared() <= .0001: forward = subject.get_transit_look()
-	if forward.length_squared() <= .0001: forward = Vector2.RIGHT
+		if forward.length_squared() <= .0001: forward = _subject_forward(subject)
 	var target_velocity := Vector2.ZERO
 	if steering_target.final and current_target() == player:
 		var physics_velocity: Variant = player.get_movement_linear_velocity()
@@ -84,16 +93,19 @@ func _submit_route_steering(subject: Node2D, origin: Vector2, player: Animatable
 			_stop_transit(subject)
 			return
 		target_velocity = physics_velocity
-	_transit_submission = {"target":destination,"forward":forward.normalized(),"max_speed":max_speed,
+	_transit_submission = {"target":destination,"forward":forward,"max_speed":max_speed,
 		"group":steering_target.group,"target_velocity":target_velocity,"arrival_stop_radius":steering_target.arrival_stop}
 	# Submit sets current MaxSpeed; ApplyLatestResult uses previous simulation velocity.
 	var previous := _transit.consume(max_speed)
 	execution.set_steering_motion(previous.speed_scale,previous.push_correction)
 	execution.set_movement_direction(previous.safe_direction,false)
 	_transit_average = previous.safe_direction
-	if subject.can_move():
-		var facing: Vector2 = behaviour.target_position-origin if current_target() != null else _transit_average
-		if facing.length() > 0.0: subject.set_transit_look(facing)
+	if subject.body.can_move():
+		if current_target() != null:
+			var toward: Vector2 = behaviour.target_position-origin
+			if toward.length() > 0.0: subject.set_transit_look(toward)
+		elif not behaviour.waiting_for_attack_facing and _transit_average != Vector2.ZERO:
+			subject.set_transit_look(_transit_average)
 
 func _submit_wander_steering(subject: Node2D, origin: Vector2, player: AnimatableBody2D,
 		fixed_delta: float) -> void:
@@ -104,14 +116,12 @@ func _submit_wander_steering(subject: Node2D, origin: Vector2, player: Animatabl
 		_sample_pending = false
 		_stop_transit(subject)
 		return
-	var game_right := subject.global_transform.x.normalized()
-	var right := Vector2(game_right.x,-game_right.y)
 	var execution: RefCounted = subject.body.execution
 	# 原游走不改身体朝向；攻击前对准由先执行的正式攻击判断拥有。
-	var selected := _wander.try_apply(behaviour,origin,fixed_delta,target_velocity,subject.get_transit_look(),right,
+	var selected := _wander.try_apply(behaviour,origin,fixed_delta,target_velocity,subject.get_transit_look(),_transform_right(subject),
 		speed,_wander_random_value,_wander_random_range,_receive_wander_intent,_transit.latest_safe_result,
 		Callable(execution,"set_steering_motion"),Callable(execution,"set_movement_direction").bind(false),
-		subject.can_move,Callable(),subject.set_transit_look)
+		subject.body.can_move,Callable(),subject.set_transit_look)
 	if not selected:
 		_sample_pending = false
 		_stop_transit(subject)
@@ -169,7 +179,9 @@ func current_target() -> Object:
 
 ## 仅接受 Entry 实际玩家身体及其既有正式属性入口，不在控制器内造角色状态。
 func bind_player(player: AnimatableBody2D, read_stats: Callable, map_collision: Node2D, build_path: Callable) -> bool:
-	if not _running or not is_instance_valid(player) or not read_stats.is_valid() or not build_path.is_valid():
+	# 空 Callable 代表明确没有导航地图；无效的非空入口不是这个情况。
+	if not _running or not is_instance_valid(player) or not read_stats.is_valid() \
+			or (not build_path.is_null() and not build_path.is_valid()):
 		return false
 	if not player.is_inside_tree() or not player.has_method("get_movement_position"):
 		return false
@@ -236,6 +248,11 @@ func advance_target_step(fixed_delta: float) -> void:
 	# 旧目标先尝试宿主已绑定的正式能力，再核对目标越界。
 	behaviour.tick(fixed_delta,fixed_delta,origin,_home,[observed] if _detected_player else [],
 		_advance_attack)
+	if not _build_path.is_null() and not _build_path.is_valid():
+		_navigator.invalidate()
+		behaviour.navigation_repath_timer = 0.0
+		_stop_transit(subject)
+		return
 	# Unity Simulation 的执行顺序为 10000：本步产出的碰撞列表供下一步选敌。
 	# 活动路径/靠近分支才生成新的检测帧；no_path 保留上次检测，不伪造位移。
 	steering_target = _navigator.select(behaviour,origin,_build_path)
@@ -244,7 +261,7 @@ func advance_target_step(fixed_delta: float) -> void:
 		if steering_target.active and steering_target.group == Navigation.WANDER and _wander != null:
 			_submit_wander_steering(subject,origin,player,fixed_delta)
 		elif steering_target.active and (steering_target.group == Navigation.TRANSIT and not steering_target.final \
-				or steering_target.group == Navigation.PREDICTIVE and steering_target.final):
+				or steering_target.group in [Navigation.PREDICTIVE,Navigation.DEFAULT] and steering_target.final):
 			_submit_route_steering(subject,origin,player)
 		else:
 			_stop_transit(subject)

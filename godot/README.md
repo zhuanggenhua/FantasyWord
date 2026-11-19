@@ -62,13 +62,21 @@ node .spec/tools/spec-lint.mjs
 
 本分支只新增 Godot 迁移代码、测试和说明。不重发项目原始第三方素材，也不将测试替身当成最终玩法。
 
+### ClickMoveTest 原图移动预览
+
+[从原图移动预览启动](clickmovetest-entry.md#原图移动预览)可用明确授权的原地面与玩家
+Idle/Walk 图集，在同一 Godot 原生窗口操作点击寻路、Tab 和方向键。该入口不取代
+SampleScene，也不启用尚未接齐的正式战斗宿主。
+
 ### ClickMoveTest 原活动训练假人
 
 在锁定 Unity 版本 `31629d53` 的活动实例 `735002000000000003` 上，Godot
 [Entry](gameplay/clickmovetest/entry.gd) 通过明确绑定接通真实玩家身体、实际地图可行格、假人攻击和玩家受击：
 
 - 远处按原导航路径选择 Transit；最后一个路点使用 Predictive Target，读取玩家物理速度，
-  但到达限速仍按当前目标距离。默认组的 Seek 与 Arrive 已迁移为独立求解，尚未接归位身体。
+  但到达限速仍按当前目标距离。失去目标后沿原路径归位，最后用默认组的 Seek、Arrive 控制，
+  面向上一拍可用移动方向并在距出生点约一单位处停下；无地图用原默认组，
+  地图存在却无路径则停止，不能视为同一种情况。
 - 进入原三单位游走范围后，优先使用 Combat Wander。调用方必须提供原 `Random.value`、
   `Random.Range` 的两个取样入口，不静默换用 Godot 的全局随机数。只在游走分支推进
   1.5 秒续期计时；先施加上一次求解的安全速度，本拍结果留到下次使用。普通分支切换不重置计时。

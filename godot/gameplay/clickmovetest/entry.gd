@@ -332,6 +332,14 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 	if not _owns_current_actor():
 		last_result = Commands.Failure.ACTOR_MISMATCH
 		return last_result
+	# 相机可以回退主角，不代表该角色仍接受玩家命令。
+	if is_instance_valid(_aim_control):
+		if not _aim_control.is_current_controlled(actor):
+			last_result = Commands.Failure.MISSING_INPUT_TARGET
+			return last_result
+		if not _aim_control.accepts_player_input(actor) or not _aim_control.can_be_player_controlled(actor):
+			last_result = Commands.Failure.CONTROL_LOCKED
+			return last_result
 	command_count += 1
 	last_result = Commands.submit_single_character(kind, direction, point, actor, true,
 		actor, true, true, actor, movement, route)

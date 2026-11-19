@@ -80,3 +80,20 @@ UI 谓词为 true 和 false 的两种情况；并验证延迟实际读回和被�
 这些命中是测试明确注入的源语义元数据，不是从 Control 消费推断所得，不是原场景射线结果。
 
 鼠标 Point 的可选动作生命周期、来源及未验收边界见 [鼠标 Point 切片](mouse-point-port.md)。
+
+## 原图移动预览
+
+使用 `godot --path godot --script res://tools/run_clickmovetest_source_preview.gd -- --source-preview`。
+不修改 Godot 项目的默认主场景。要启动，须在有权限的本机或云端通过环境变量显式传入下列输入：
+
+- `FORMAL_SURFACE_RULES`：锁定 ClickMoveTest 的地图规则 JSON。
+- `FORMAL_SURFACE_ASSETS`、`FORMAL_GROUND_LAYERS`、`FORMAL_BURNING_TILE_PNG`：原地表登记 JSON、原地面投影目录与实际残火图。
+- `FORMAL_PLAYER_DAMAGE_ANIMATION`、`FORMAL_PLAYER_DAMAGE_MATERIAL`：原玩家独立动画与双 UV 材质合同。
+- `FORMAL_PLAYER_TEXTURES`：角色私有图集目录，须含玩家合同对应的图集、`uv` 与 `appearance`；不能用训练假人合同替代。
+
+没有足够输入时明确拒绝，不会启动占位场景。左键点击原地图移动，Tab 切换控制方式，
+WASD 按原方向移动；相机跟同一演员，动作使用原 Idle/Walk。可加 `--smoke`
+以验证启动和实际 Godot Viewport 键鼠链；注入操作不是实际设备或 Unity 画面对照。
+Mouse Point 有自己的位置入口；本预览点击保留现有 Godot 鼠标事件桥，不等于完整 Unity
+Input Actions / UIRoot。原序列化的 ClickMoveTest MapInfo 未启用相机覆盖或边界；
+本预览未移植正式 SampleScene、GAS 装配、存档、完整地图碰撞或局内装备。

@@ -6,6 +6,7 @@ const Detection = preload("res://game_core/ai/steering_detection.gd")
 const Transit = preload("res://game_core/ai/transit_steering.gd")
 const Predictive = preload("res://game_core/ai/predictive_target_steering.gd")
 const Wander = preload("res://game_core/ai/combat_wander_steering.gd")
+const DefaultTarget = preload("res://game_core/ai/default_target_steering.gd")
 const Navigation = preload("res://game_core/ai/ai_navigation_target.gd")
 const SEMANTIC_RADIUS := 5.0
 const DETECTION_CAPACITY := 128
@@ -61,7 +62,7 @@ func sample(position: Vector2, forward: Vector2, target: Vector2, max_speed: flo
 		arrival_stop_radius: float = -1.0, wander_intent: Dictionary = {},
 		semantic_radius: float = SEMANTIC_RADIUS) -> Dictionary:
 	reset_result()
-	if group not in [Navigation.TRANSIT,Navigation.PREDICTIVE,Navigation.WANDER]:
+	if group not in [Navigation.TRANSIT,Navigation.PREDICTIVE,Navigation.WANDER,Navigation.DEFAULT]:
 		return {"ok":false,"error":"unported_steering_group"}
 	if group == Navigation.WANDER and not wander_intent.has_all(["side_sign","follow_distance"]):
 		return {"ok":false,"error":"missing_combat_wander_intent"}
@@ -72,13 +73,17 @@ func sample(position: Vector2, forward: Vector2, target: Vector2, max_speed: flo
 	_prune(registry)
 	if registry.size() != 1 or not registry.has(body.get_instance_id()):
 		return {"ok":false,"error":"unverified_steering_registry"}
+	# AgentHandle.SubmitIntent 小向量回退至 Rigidbody 的 transform.right。
+	var body_right := body.global_transform.x.normalized()
+	var sample_forward := forward.normalized() if forward.length_squared() > Transit.f32(.0001) \
+		else Vector2(body_right.x,-body_right.y)
 	var registered_agent: Dictionary = {"body":body,"colliders":[body],"agent_id":body.get_instance_id()}
 	# collect_neighbours excludes own body before any state fields are read.
 	var frame := Detection.build_frame(body.get_world_2d(),position,body,[registered_agent],
 		Transit.PROBE_RADIUS,semantic_radius,Transit.NEIGHBOUR_RADIUS,Transit.NEIGHBOUR_RADIUS,DETECTION_CAPACITY)
 	if not frame.ok: return frame
 	if not frame.neighbours.is_empty(): return {"ok":false,"error":"not_singleton"}
-	frame.merge({"position":position,"forward":forward,"target":target,
+	frame.merge({"position":position,"forward":sample_forward,"target":target,
 		"target_velocity":target_velocity,"arrival_stop_radius":arrival_stop_radius})
 	var scored: Dictionary
 	match group:
@@ -87,6 +92,8 @@ func sample(position: Vector2, forward: Vector2, target: Vector2, max_speed: flo
 			scored = Wander.solve(frame,max_speed)
 		Navigation.PREDICTIVE:
 			scored = Predictive.solve(frame,max_speed)
+		Navigation.DEFAULT:
+			scored = DefaultTarget.solve(frame,max_speed)
 		_:
 			scored = Transit.solve(frame,max_speed)
 	# RVO2 linearProgram2 with zero constraints selects the preferred velocity
@@ -95,7 +102,7 @@ func sample(position: Vector2, forward: Vector2, target: Vector2, max_speed: flo
 	var direction := safe.normalized() if safe.length_squared() > Transit.f32(.0001) else Vector2.ZERO
 	latest = {"safe_velocity":safe,"safe_direction":direction,"speed_scale":clampf(safe.length()/maxf(max_speed,.0001),0.0,1.0),
 		"push_correction":Vector2.ZERO,"max_speed":max_speed,"target":target,"origin":position,
-		"group":group,"target_velocity":target_velocity,"arrival_stop_radius":arrival_stop_radius,
+		"group":group,"forward":sample_forward,"target_velocity":target_velocity,"arrival_stop_radius":arrival_stop_radius,
 		"detected_colliders":frame.detected_colliders,"obstacle_count":frame.obstacles.size(),"neighbour_count":0}
 	if group == Navigation.WANDER:
 		latest.wander_intent = wander_intent.duplicate()
