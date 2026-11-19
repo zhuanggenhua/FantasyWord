@@ -7,9 +7,12 @@ const Direction = preload("res://game_core/presentation/movable_direction_state.
 const Attributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
 const Loadout = preload("res://game_core/combat/equipped_ability_loadout.gd")
+const PersistenceRegistry = preload("res://game_core/persistence/persistable_identity_registry.gd")
 const SOURCE_ACTOR := "735002000000000004"
 const SOURCE_PREFAB := "f32187b1edab1484a99d97ef54021bf5"
 const SOURCE_SHEET := "13245a7230bedbe4da633d5325872ce1"
+const SOURCE_PREINSTANCED_IDENTIFIER := "6b7f0021-a37d-413c-ad2e-947903b4e6f5"
+const UNIQUE_PLAYER_IDENTIFIER := "player"
 const BASE_MOVE_SPEED := 4.0
 const BASE_SPEED_MULTIPLIER := 1.0
 # 31629d53：玩家角色配置在初始等级 1 授予 20001，玩家角色.prefab 再声明 20001、20010。
@@ -39,6 +42,7 @@ var _read_pointer: Callable
 var _refresh_interaction: Callable
 var _reset_interaction: Callable
 var _read_destroyed: Callable
+var _persistence_registry: PersistenceRegistry
 var _fresh_loadout: Loadout
 var _fresh_ability_host: WeakRef
 var _binding_initial_loadout := false
@@ -67,6 +71,19 @@ func configure(actor: Node2D, pointer_reader: Callable = Callable(),
 	_selected = true
 	controlled_character_changed.emit(actor)
 	return true
+
+## PlayerSystem.OnSystemStart: after validating the actual loaded primary and
+## configured input, reset control and replace its authored handler with player.
+func register_primary_persistence(registry: PersistenceRegistry) -> bool:
+	var actor := _get_primary()
+	if registry == null or _persistence_registry != null or not is_instance_valid(actor) \
+			or not accepts_player_input(actor) or not can_be_player_controlled(actor):
+		return false
+	if not set_current_controlled(true): return false
+	if not registry.register_custom_instanced(actor,UNIQUE_PLAYER_IDENTIFIER): return false
+	_persistence_registry = registry
+	return true
+
 
 func get_player_provider() -> RefCounted: return self
 
@@ -180,6 +197,10 @@ func _get_primary() -> Node2D:
 	return actor if is_instance_valid(actor) and actor.is_inside_tree() else null
 
 func _on_actor_exiting() -> void:
+	if _persistence_registry != null:
+		var actor: Node2D = _primary.get_ref() if _primary != null else null
+		_persistence_registry.unregister(actor)
+		_persistence_registry = null
 	var was_selected := _selected
 	_primary_exited = true
 	_selected = false

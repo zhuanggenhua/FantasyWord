@@ -52,6 +52,7 @@ var _human_damage_destroyed: Callable
 var _human_interrupt_actions: Callable
 var movement: RefCounted
 var route: RefCounted
+var _terrain_from_map: Callable
 var binding: RefCounted
 var blocked := false
 var command_count := 0
@@ -347,7 +348,7 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 			return last_result
 	command_count += 1
 	last_result = Commands.submit_single_character(kind, direction, point, actor, true,
-		actor, true, true, actor, movement, route)
+		actor, true, true, actor, movement, _resolve_active_terrain())
 	return last_result
 
 func _physics_process(_delta: float) -> void:
@@ -434,6 +435,18 @@ func start_human_presentation(data: Dictionary, texture_directory: String) -> No
 		return null
 	human_presentation = presentation
 	return presentation
+
+## 正式 MapInfo 存在时，执行点击才从同一地图拥有者取得当次导航。
+## 旧夹具仍直接注入其作用域明确的 route，不反向注册场景。
+func bind_active_terrain(resolver: Callable) -> bool:
+	if route == null or _terrain_from_map.is_valid() or not resolver.is_valid(): return false
+	if resolver.call() != route: return false
+	_terrain_from_map = resolver
+	return true
+
+func _resolve_active_terrain() -> RefCounted:
+	return _terrain_from_map.call() if _terrain_from_map.is_valid() else route
+
 
 ## 显式正式主图切片：调用前先 start_human_presentation；依赖仍由宿主提供。
 func start_human_logic(owner: Object, data: Dictionary, player_provider: Callable,
@@ -908,6 +921,8 @@ func submit_human_command(request: Dictionary) -> int:
 	if not is_instance_valid(_aim_control) or not _aim_control.accepts_player_input(actor) or not _aim_control.can_be_player_controlled(actor):
 		return Commands.Failure.CONTROL_LOCKED
 	command_count += 1
+	if request.get("kind")==CharacterExecutor.Kind.CLICK_MOVE:
+		human_commands.terrain_map = _resolve_active_terrain()
 	last_result = human_commands.execute(request)
 	return last_result
 

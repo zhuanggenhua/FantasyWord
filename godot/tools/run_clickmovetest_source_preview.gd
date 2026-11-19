@@ -12,9 +12,9 @@ const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
 
-class MapEvents extends RefCounted:
-	signal map_loaded
-	signal map_unloaded
+const PersistenceRegistry = preload("res://game_core/persistence/persistable_identity_registry.gd")
+const MapRegistry = preload("res://game_core/maps/active_map_registry.gd")
+const MapInfo = preload("res://game_core/maps/registered_map_info.gd")
 
 const REQUIRED_FILES := ["FORMAL_SURFACE_RULES","FORMAL_SURFACE_ASSETS",
 	"FORMAL_BURNING_TILE_PNG"]
@@ -24,7 +24,8 @@ const TRAINER_DIRS := ["FORMAL_TRAINER_ATTACK_TEXTURES"]
 var _scene: Node2D
 var _player: PlayerOwner
 var _trainer_owner: TrainerOwner
-var _map_events := MapEvents.new()
+var _maps := MapRegistry.new()
+var _persistables := PersistenceRegistry.new()
 var _point: Point
 
 
@@ -72,15 +73,34 @@ func _run() -> void:
 	if not _player.configure(_scene.actor,Callable(),Callable(),Callable()):
 		_refuse("缺少原序列化玩家角色或当前输入所有者。")
 		return
+	# Source local actor 735002000000000004 first has an authored pre-instanced
+	# identifier; original primary startup replaces the handler with player.
+	if not _persistables.register_pre_instanced(_scene.actor,PlayerOwner.SOURCE_PREINSTANCED_IDENTIFIER,false) \
+			or not _player.register_primary_persistence(_persistables):
+		_refuse("原玩家正式持久化标识未绑定。")
+		return
 	var art: String = paths.FORMAL_PLAYER_TEXTURES
 	var view: Node2D = _scene.start_human_presentation(animation,art)
 	if not is_instance_valid(view) or not view.bind_base_material(material,art.path_join("uv"),art.path_join("appearance")):
 		_refuse("原玩家角色动画与身体、头部 UV 无法绑定。")
 		return
 	# 原 ClickMoveTest MapInfo 没有相机目标覆盖，也没有启用地图相机边界。
-	if not _scene.start_human_logic(_player,rules,_player.get_player_provider,
-			func():return null,_map_events,_over_native_ui):
+	if not _maps.configure(func(_name):return null,func():return _scene) \
+			or not _scene.start_human_logic(_player,rules,_player.get_player_provider,
+			_maps.resolve_active_map_info,_maps,_over_native_ui):
 		_refuse("原 PlayerSystem、地图规则或镜头绑定未成立。")
+		return
+	# ClickMoveTest: enabled authored MapInfo 6951708 owns terrain 1148507052,
+	# with no checkpoints, camera target, or level bounds. Direct open is not map-loaded.
+	var authored_map := MapInfo.new()
+	if not authored_map.configure(_scene,_scene.route):
+		_refuse("原 ClickMoveTest 地图配置未绑定。")
+		return
+	_maps.register(authored_map)
+	_maps.on_system_start()
+	_scene.binding.start_binding()
+	if not _scene.bind_active_terrain(_maps.get_active_terrain_navigation_map):
+		_refuse("点击导航与原 MapInfo 不属于同一地图。")
 		return
 	if not _scene.start_surface_elements(surface) or not _scene.bind_ground_layers(paths.FORMAL_GROUND_LAYERS) \
 			or not _scene.bind_surface_presentation(paths.FORMAL_BURNING_TILE_PNG):
@@ -95,7 +115,6 @@ func _run() -> void:
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat):
 		_refuse("原活动假人的素材、同图路径或 20001 入口未通过来源与装配检查。")
 		return
-	_map_events.map_loaded.emit()
 	if "--smoke" in args:
 		if player_combat:
 			await _smoke_player_combat()
@@ -182,6 +201,14 @@ func _smoke_player_combat() -> void:
 	if fire.gate.trigger_held:
 		_refuse("源 Q/2 最后松开未进原 StopFire。")
 		return
+	# The authored audio cue is a one-shot. Quit only after its real channel
+	# has recycled the voice, not while the mixer owns its Ogg playback.
+	var deadline := Time.get_ticks_msec()+5000
+	while (fire.spec.active or _scene.flamethrower_audio.active_voice_count()>0) and Time.get_ticks_msec()<deadline:
+		await process_frame
+	if fire.spec.active or _scene.flamethrower_audio.active_voice_count()!=0:
+		_refuse("原喷火录音或技能未自然回收。")
+		return
 	print("PASS 原 ClickMoveTest 玩家技能诊断：出生点、实际 20010 激活、Attack 与 Q/2 释放。")
 	_scene.free()
 	quit()
@@ -260,9 +287,14 @@ func _smoke() -> void:
 	await physics_frame
 	var actor: Node2D = _scene.actor
 	if _scene.camera.follow!=actor or actor.get_movement_position()!=Vector2.ZERO \
-			or _scene.route.graph.node_count()!=649 or _scene.ground_layers.cell_count(-1)!=900 \
+			or _maps.get_active_terrain_navigation_map()!=_scene.route or _scene.route.graph.node_count()!=649 or _scene.ground_layers.cell_count(-1)!=900 \
 			or _scene.human_presentation.driver.current_animation_key!="Idle":
 		_refuse("启动未正确绑定原演员、相机、649 节点规则图或 900 格原地面。")
+		return
+	if _persistables.resolve(PlayerOwner.UNIQUE_PLAYER_IDENTIFIER)!=actor \
+			or _persistables.resolve(PlayerOwner.SOURCE_PREINSTANCED_IDENTIFIER)!=null \
+			or _persistables.automatically_persisted(actor):
+		_refuse("原玩家身份未替换预摆标识或错误进入通用自动存档。")
 		return
 	var destination := Vector2(4.5,0)
 	var screen: Vector2 = root.get_canvas_transform()*Terrain.to_physics(destination)
