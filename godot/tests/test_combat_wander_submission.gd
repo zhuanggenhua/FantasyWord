@@ -7,6 +7,7 @@ var failed := false
 var events: Array = []
 var sent: Dictionary
 var movable := true
+var source_ready := true
 var safe: Dictionary = {"safe_velocity": Vector2(0, 2),
 		"push_correction": Vector2(0.25, 0), "preferred_velocity": Vector2.LEFT}
 var runner := Runner.new()
@@ -20,7 +21,7 @@ func expect(ok: bool, what: String) -> void:
 
 func apply_tick(body_velocity: Variant = null, look := Vector2.ZERO) -> bool:
 	return runner.try_apply(state, Vector2.ZERO, 0.02, body_velocity, look, Vector2.RIGHT, 4.0,
-		func(): events.append("rng"); return 0.8,
+		(func(): events.append("rng"); return 0.8) if source_ready else Callable(),
 		func(lo, hi): events.append(["range", lo, hi]); return 2.0,
 		func(intent): events.append("submit"); sent = intent,
 		func(): events.append("latest"); return safe,
@@ -70,6 +71,12 @@ func _initialize() -> void:
 	expect(not apply_tick() and events.is_empty() and runner.wander.direction_change_timer == timer, "branch exit does not reset or advance timer")
 	runner.reset_intent()
 	expect(runner.wander.current_intent.is_empty() and runner.average_output == Vector2.LEFT, "Stop resets intent but not average")
+	source_ready = false
+	state.target_position = Vector2(3,0)
+	events.clear()
+	expect(apply_tick() and not sent.active and sent.target_position==null
+		and events==["submit",["motion",1.0,Vector2.ZERO],["move",Vector2.ZERO]],
+		"missing source draws withdraw selected wander without replaying safe result or falling into pursuit")
 	if not failed:
 		print("PASS combat wander controller and solver-result boundary: ", count)
 	quit(1 if failed else 0)

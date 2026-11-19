@@ -218,3 +218,15 @@ func get_target_direction() -> Vector2:
 
 func advance_movement(delta: float, ramp_direction: Callable = Callable()) -> void:
 	body.advance_movement(delta,ramp_direction)
+
+
+# 转向前向和身体朝向走正式移动 owner；转向速度方向不替代 LookAt。
+func has_transit_facing_owner() -> bool:
+	return is_instance_valid(_movement_owner) and _movement_owner.has_method("get_look_at_direction") \
+		and _movement_owner.has_method("set_look_at_direction")
+
+func get_transit_look() -> Vector2:
+	return _movement_owner.get_look_at_direction()
+
+func set_transit_look(direction: Vector2) -> void:
+	_movement_owner.set_look_at_direction(direction)

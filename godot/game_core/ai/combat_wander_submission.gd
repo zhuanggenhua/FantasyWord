@@ -10,7 +10,7 @@ var average_output := Vector2.ZERO
 
 # Values resolved for the original ClickMoveTest combat-wander AI configuration.
 var enabled := true
-var wander_range := 3.0
+var wander_range := Wander.CLICK_MOVE_TEST_WANDER_RANGE
 var attack_radius := 1.0
 var speed_multiplier := 1.0
 var semantic_radius := 5.0
@@ -29,6 +29,15 @@ func try_apply(state: Targets, current_position: Vector2, fixed_delta: float,
 	if not Wander.should_use(enabled, has_target, current_position.distance_to(destination), wander_range):
 		return false
 	var intent := wander.tick(fixed_delta, attack_radius, wander_range, random_value, random_range)
+	if intent.is_empty():
+		# The group was selected, but source RNG evidence is unavailable.
+		# Claim this branch and withdraw instead of falling into pursuit.
+		submit.call({"active":false,"target_position":null,"target_velocity":Vector2.ZERO,
+			"forward":transform_right,"group_id":group_id,"semantic_query_radius":semantic_radius,
+			"arrival_stop_radius":-1.0,"max_speed":0.0,"wander_intent":{}})
+		set_motion.call(1.0,Vector2.ZERO)
+		set_movement_direction.call(Vector2.ZERO)
+		return true
 	var forward := transform_right
 	if look != Vector2.ZERO:
 		forward = look.normalized() if look.length() > Wander.f32(0.00001) else Vector2.ZERO

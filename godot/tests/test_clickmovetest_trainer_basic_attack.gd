@@ -33,7 +33,23 @@ func run() -> void:
 		animation.actions.Dmg.duration=.5
 		animation.actions["Attack"]=animation.actions.Dmg.duplicate(true)
 		animation.training_target={"prefab_guid":"dca23ea6afacc0647bfd10c5cefa4099","runtime_libraries":["62c4a52ab213438419c93cc2d8427623","0602b79d46e41504a8117d1fdcc863b2","aaefe509e84579b4782b521a1d156e71","9ea72d0165623924d891e3222ac25d48"],"body_local_position":[0,0]}
-	check(scene.start_logic(owner,pack[0],func():return player,func():return null,events,func(_p):return false),"原 Entry 玩家绑定")
+	var player_animation_file := OS.get_environment("FORMAL_PLAYER_DAMAGE_ANIMATION")
+	var player_material_file := OS.get_environment("FORMAL_PLAYER_DAMAGE_MATERIAL")
+	var player_pack: Dictionary = animation.duplicate(true)
+	player_pack.erase("training_target")
+	player_pack.actions.erase("SpinDie")
+	if not player_animation_file.is_empty(): player_pack = read(player_animation_file)
+	var player_view: Node2D = scene.start_human_presentation(player_pack,art_dir)
+	if not is_instance_valid(player_view):
+		printerr("玩家原动作入口装配失败")
+		scene.free()
+		quit(1)
+		return
+	if not player_material_file.is_empty():
+		check(player_view.bind_base_material(read(player_material_file),art_dir.path_join("uv"),
+			art_dir.path_join("appearance")),"玩家绑定独立原始 Dmg 双 UV")
+	player_view.driver.set_process(false)
+	check(scene.start_human_logic(owner,pack[0],func():return player,func():return null,events,func(_p):return false),"原 Entry 玩家绑定")
 	var trainer_owner := TrainerOwner.new()
 	trainer_owner.look_at=Vector2.LEFT
 	var trainer = scene.start_training_damage_target(trainer_owner,trainer_owner.hooks(),7752)
@@ -49,6 +65,10 @@ func run() -> void:
 		"prepare":func(_s,input):health.append(["prepare",input.damage]),
 		"apply_current_health_delta":stats.apply_current_health_delta,
 		"complete":func(_s,_input,previous,amount):health.append(["complete",previous,amount])}
+	var reaction: Array = []
+	player_view.driver.animation_selected.connect(func(key):reaction.append([key,stats.current_health()]))
+	check(scene.bind_human_damage_lifecycle(func():return false,
+		func():reaction.append(["interrupt",stats.current_health()])), "绑定实际玩家 Dmg 与宿主延迟打断")
 	var read_direction := func():return Vector2(0,1)
 	var roll := func():return 50
 	check(scene.actor.get_node("受击盒").get_meta("actor")==scene.actor,"原玩家受击盒登记同一实际根")
@@ -95,11 +115,31 @@ func run() -> void:
 			and shader.get_shader_parameter("head_map").get_image().get_data()==source_head.get_data(),
 			"假人实际 Attack 绑定原双 UV，不降级成原图直显")
 	ability.advance(.08)
-	check(ability.timeline.frame==7 and stats.current_health()==100 and health.is_empty(),"第8帧前无伤害")
+	check(ability.timeline.frame==7 and stats.current_health()==100 and health.is_empty() and reaction.is_empty(),"第8帧前无伤害及受击动作")
 	ability.advance(.02)
 	check(ability.timeline.frame==8 and stats.current_health()==97
 		and health==[["provoke",Combat.Alignment.EVIL],["prepare",3],["complete",100,3]],
 		"真实玩家子受击盒命中，Effect2003 按原角色防御结算且无背刺/推力")
+	check(reaction==[["Dmg",100]] and player_view.driver.current_animation_key=="Dmg",
+		"实际玩家在扣血之前进入原 Dmg，结算期间不打断动作")
+	if not player_animation_file.is_empty():
+		var player_texture: Texture2D = player_view.sprite.texture
+		var original_dmg := Image.load_from_file(art_dir.path_join("Minifantasy_CreaturesHumanDmg.png"))
+		check(player_texture is AtlasTexture and player_texture.atlas.get_image().get_data()==original_dmg.get_data(),
+			"实际玩家 Dmg 取原本体图集")
+	scene.advance_human_damage_lifecycle()
+	scene.advance_human_damage_lifecycle()
+	check(reaction==[["Dmg",100],["interrupt",97]],"安全阶段在扣血后仅打断一次")
+	scene.human_motion_binding.update_movement_animation(Vector2.RIGHT)
+	var dmg_duration: float = player_view.driver.resolve_current_animation_duration_seconds()
+	player_view.driver.advance_game_time(dmg_duration-.001)
+	check(player_view.driver.current_animation_key=="Dmg" and player_view.driver.pending_fallback_key=="Walk",
+		"移动只更新退出目标，仍保持 Dmg 至原时长")
+	player_view.driver.advance_game_time(.002)
+	check(player_view.driver.current_animation_key=="Walk" and reaction.back()==["Walk",97],
+		"原时长后从 Dmg 恢复到当前 Walk")
+	scene.human_motion_binding.update_movement_animation(Vector2.ZERO)
+	check(player_view.driver.current_animation_key=="Idle","停止移动后由真实表现驱动回到 Idle")
 	check(ability.hit_feedback.activation_count==1 and not ability.hit_feedback.last_activation.feedback_slot_configured,
 		"玩家作者反馈槽为空，原命中 Cue 独立消费一次")
 	if not private_pack.is_empty():

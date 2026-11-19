@@ -52,6 +52,21 @@ func _initialize() -> void:
 		expected = Wander.f32(expected - Wander.f32(0.02))
 		w.tick(0.02, 1.0, 2.0, value, range_value)
 	check(w.direction_change_timer == expected, "binary32 timer per fixed step")
+	w.reset()
+	draws.clear()
+	check(w.tick(.02,1.0,3.0,value,Callable()).is_empty() and draws.is_empty(),
+		"missing native provider does not consume a half-draw")
+	check(w.tick(.02,1.0,3.0,func(): return NAN,range_value).is_empty() and draws.is_empty(),
+		"reject invalid sign without asking for distance")
+	check(w.tick(.02,1.0,3.0,func(): return "0.2",range_value).is_empty(),
+		"do not coerce untrusted nonnumeric sample")
+	check(w.tick(.02,1.0,3.0,func(): return 0.0,func(_lo,_hi): return 1.0)
+		== {"side_sign":-1.0,"follow_distance":1.0},"native float minima are inclusive")
+	var absent := w.tick(1.5,1.0,3.0,func(): return 1.0,func(_lo,_hi): return 3.01)
+	check(absent.is_empty() and w.current_intent.is_empty() and w.direction_change_timer==0.0,
+		"invalid renewal cannot return expired intent")
+	check(w.tick(.02,1.0,3.0,func(): return 1.0,func(_lo,_hi): return 3.0)
+		== {"side_sign":1.0,"follow_distance":3.0},"native float maxima are inclusive")
 	if failures == 0:
 		print("PASS combat wander intent/branch: %d checks" % checks)
 	quit(1 if failures else 0)

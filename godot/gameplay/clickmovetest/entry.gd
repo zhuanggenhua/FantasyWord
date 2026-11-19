@@ -7,6 +7,7 @@ const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
+const DamageLifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
 const FormalDamage = preload("res://game_core/combat/formal_damage_application.gd")
 const CombatRules = preload("res://game_core/combat/combat_rules.gd")
 const SurfacePresentation = preload("res://game_core/elements/terrain_surface_presentation.gd")
@@ -44,6 +45,9 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 var ground_layers: Node2D
 var human_presentation: Node2D
 var human_motion_binding: RefCounted
+var _human_damage_lifecycle := DamageLifecycle.new()
+var _human_damage_destroyed: Callable
+var _human_interrupt_actions: Callable
 var movement: RefCounted
 var route: RefCounted
 var binding: RefCounted
@@ -343,6 +347,7 @@ func _physics_process(_delta: float) -> void:
 		training_target.ai_controller.capture_detection_after_movement()
 
 func _process(delta: float) -> void:
+	advance_human_damage_lifecycle()
 	click_observation.advance(func():
 		var owned := _owns_current_actor()
 		return {"order": owned and actor.execution.has_move_order(),
@@ -626,17 +631,56 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 
 ## 给活动假人连接实际玩家身体和正式属性读取；未绑定时仅保留原挑衅。
 func start_training_target_tracking(player_stats: Callable, map_collision: Node2D) -> bool:
-	if movement == null or not is_instance_valid(training_target) or not _owns_current_actor():
+	if movement == null or route == null or not is_instance_valid(training_target) or not _owns_current_actor():
 		return false
-	if not training_target.ai_controller.bind_player(actor,player_stats,map_collision): return false
+	if not training_target.ai_controller.bind_player(actor,player_stats,map_collision,route.try_build_world_path): return false
 	_training_tracking_stats = player_stats
 	return true
+
+## 唯一活动假人的原路径转向；缺正式朝向、玩家物理速度或世界注册时拒绝启用。
+func start_training_transit_steering() -> bool:
+	if not is_instance_valid(training_target) or not _owns_current_actor(): return false
+	return training_target.ai_controller.bind_transit_steering()
+
+## 同一单体世界接通源码的交替抽样入口；没有调用方提供的抽样值，不绑定新游走。
+func start_training_combat_wander(random_value: Callable, random_range: Callable) -> bool:
+	if not is_instance_valid(training_target) or not _owns_current_actor(): return false
+	return training_target.ai_controller.bind_combat_wander(random_value,random_range)
+
+## 只挂同一真实玩家的 Dmg 与延迟打断；实际玩家宿主持有行动和死亡。
+func bind_human_damage_lifecycle(is_destroyed: Callable, interrupt_actions: Callable) -> bool:
+	if _human_interrupt_actions.is_valid() or not is_destroyed.is_valid() or not interrupt_actions.is_valid():
+		return false
+	if human_motion_binding == null or not is_instance_valid(human_presentation) \
+			or human_presentation.driver.resolve_playable_state("Dmg").is_empty():
+		return false
+	if is_instance_valid(training_target) and is_instance_valid(training_target.formal_attack): return false
+	_human_damage_destroyed = is_destroyed
+	_human_interrupt_actions = interrupt_actions
+	return true
+
+func _prepare_human_training_damage(source: Variant, input: Dictionary, prepare: Callable) -> void:
+	# 宿主记录原受击来源；仅非静默命中送表现和安全阶段，不在扣血前取消动作。
+	prepare.call(source,input)
+	if input.silent: return
+	_human_damage_lifecycle.on_prepare_damage(false)
+	if is_instance_valid(human_presentation) and not human_presentation.try_play_damage_animation():
+		push_error("玩家正式 Dmg 动作无法播放")
+
+func advance_human_damage_lifecycle() -> void:
+	if _human_damage_destroyed.is_valid() and _human_interrupt_actions.is_valid():
+		_human_damage_lifecycle.tick_safe_interrupt(_human_damage_destroyed,_human_interrupt_actions)
 
 ## 同一实际玩家的正式属性接收端；不依赖可选地表系统。
 func start_training_basic_attack(player_direction: Callable, player_hooks: Dictionary, roll: Callable) -> Node:
 	if not is_instance_valid(training_target) or not _training_tracking_stats.is_valid(): return null
+	var hooks := player_hooks
+	var prepare: Variant = hooks.get("prepare")
+	if _human_interrupt_actions.is_valid() and prepare is Callable and prepare.is_valid():
+		hooks = player_hooks.duplicate()
+		hooks.prepare = _prepare_human_training_damage.bind(prepare)
 	return training_target.bind_formal_basic_attack(actor,actor.get_node("受击盒"),
-		_training_tracking_stats,player_direction,player_hooks,roll)
+		_training_tracking_stats,player_direction,hooks,roll)
 
 ## 显式导入源图集；空资源不让角色获得假表现。
 func start_training_target_presentation(animation: Dictionary, texture_directory: String,

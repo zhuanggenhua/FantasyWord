@@ -60,6 +60,12 @@ func cast_motion_hits(direction: Vector2, distance: float) -> Array:
 	return _terrain.cast_hits(get_movement_position(), direction, distance)
 
 
+## Synced kinematic body state from the previous physics step, in Unity XY.
+## Do not use input intent/last requested move: those may not have reached the body.
+func get_movement_linear_velocity() -> Vector2:
+	return Terrain.to_physics(PhysicsServer2D.body_get_state(get_rid(),PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY))
+
+
 func clear_velocity() -> void:
 	# 原 ResetMovement 清线速度；不擅自丢弃已提交目标或声称取消了同帧 MovePosition。
 	PhysicsServer2D.body_set_state(get_rid(), PhysicsServer2D.BODY_STATE_LINEAR_VELOCITY, Vector2.ZERO)

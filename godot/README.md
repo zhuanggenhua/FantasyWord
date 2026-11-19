@@ -62,6 +62,23 @@ node .spec/tools/spec-lint.mjs
 
 本分支只新增 Godot 迁移代码、测试和说明。不重发项目原始第三方素材，也不将测试替身当成最终玩法。
 
+### ClickMoveTest 原活动训练假人
+
+在锁定 Unity 版本 `31629d53` 的活动实例 `735002000000000003` 上，Godot
+[Entry](gameplay/clickmovetest/entry.gd) 通过明确绑定接通真实玩家身体、实际地图可行格、假人攻击和玩家受击：
+
+- 远处按原导航路径选择 Transit；最后一个路点使用 Predictive Target，读取玩家物理速度，
+  但到达限速仍按当前目标距离。默认组的 Seek 与 Arrive 已迁移为独立求解，尚未接归位身体。
+- 进入原三单位游走范围后，优先使用 Combat Wander。调用方必须提供原 `Random.value`、
+  `Random.Range` 的两个取样入口，不静默换用 Godot 的全局随机数。只在游走分支推进
+  1.5 秒续期计时；先施加上一次求解的安全速度，本拍结果留到下次使用。普通分支切换不重置计时。
+- 正式假人普攻按源释放条件对准和起招，Timeline 101 的实际命中作用于玩家受击盒；
+  玩家 Dmg 动作、实际扣血和安全更新阶段的行动中断分别由原对应入口处理。
+
+范围是原场景的单假人固定步和指定素材接入，不是 Godot 正式主场景。原始素材仍须在有权限
+的环境单独提供；多角色避让、Unity 全局随机序列、完整玩家行动所有者和画面逐项验收未完成。
+下列链接保留各独立切片当时的验收范围。
+
 - [普通攻击命中诊断](validation/scenes/basic-attack.md)：原 Timeline 101 的命中帧、子 Hitbox、当前生命与禁推合同；不代表完整战斗。
 - [蓄力释放诊断](validation/scenes/charged-attack.md)：已允许释放后的原 Timeline 20004、当前生命与真实击退；不含输入资格和蓄力状态机。
 - [技能槽按键蓄力诊断](validation/scenes/ability-slots.md)：以原槽位键按住，松手重新校验后触发蓄力攻击。
