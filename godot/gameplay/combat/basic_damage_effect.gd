@@ -15,15 +15,19 @@ static func is_backstab(source_root: Vector2, target_root: Vector2, target_direc
 ## 背刺在基础结算完成后重新读取当前根坐标和目标朝向，不缓存命中帧或位移意图。
 static func execute_damage_phase(source_stats: Dictionary, target_stats: Dictionary,
 		hooks: Dictionary, read_pose: Callable, can_critical: bool, can_miss: bool,
-		roll: Callable) -> void:
+		roll: Callable, read_live_pair: Callable = Callable()) -> void:
 	_apply(source_stats,target_stats,hooks,4,1.0,can_critical,can_miss,roll)
 	if not read_pose.is_valid(): return
 	var pose: Variant = read_pose.call()
 	if not pose is Dictionary or not pose.get("source_root") is Vector2 \
 			or not pose.get("target_root") is Vector2 or not pose.get("target_direction") is Vector2:
 		return
-	if is_backstab(pose.source_root,pose.target_root,pose.target_direction):
-		_apply(source_stats,target_stats,hooks,3,0.0,can_critical,can_miss,roll)
+	if not is_backstab(pose.source_root,pose.target_root,pose.target_direction): return
+	# 条件效果再次解析正式角色；前一段归零后不能把旧的存活快照复制进第二段。
+	var pair: Variant = read_live_pair.call() if read_live_pair.is_valid() else [source_stats,target_stats]
+	if not pair is Array or pair.size()!=2 or not pair[0] is Dictionary or not pair[1] is Dictionary: return
+	if not pair[0].get("snapshot") is Dictionary or not pair[1].get("snapshot") is Dictionary: return
+	_apply(pair[0],pair[1],hooks,3,0.0,can_critical,can_miss,roll)
 
 static func _apply(source: Dictionary, target: Dictionary, hooks: Dictionary, flat: int,
 		scale: float, can_critical: bool, can_miss: bool, roll: Callable) -> void:

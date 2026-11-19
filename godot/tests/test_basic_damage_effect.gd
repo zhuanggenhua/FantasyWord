@@ -24,7 +24,7 @@ func run() -> void:
 		"impact":func(_i,_v): trace.append("undesired_push"),
 		"prepare":func(_s,input): trace.append(input.damage),
 		"apply_current_health_delta":func(delta,_min,_max,_s):
-			hp += delta
+			hp = maxi(0,hp+delta)
 			return hp,
 		"complete":func(_s,_i,previous,applied): trace.append([previous,applied])}
 	var roll := func(): return 50
@@ -40,6 +40,20 @@ func run() -> void:
 	},true,true,roll)
 	check(hp==203 and trace==["provoke",14,[220,14],"provoke",3,[206,3]],
 		"背刺阶段读取基础提交后的状态，并单独结算原三点伤害")
+	hp=1
+	trace.clear()
+	var draws: Array[int]=[]
+	Effect.execute_damage_phase(source,target,hooks,func(): return {
+		"source_root":Vector2.ZERO,"target_root":Vector2.RIGHT,"target_direction":Vector2.RIGHT
+	},true,true,func():
+		draws.append(50)
+		return 50,
+		func():
+			var live := target.duplicate()
+			live.dead = hp==0
+			return [source,live])
+	check(hp==0 and trace==["provoke",14,[1,1]] and draws.size()==3,
+		"首段致死后背刺输出仍判暴击，但新鲜死亡门禁拦截闪避抽样和二次反馈")
 	check(not Effect.is_backstab(Vector2.ZERO,Vector2.ZERO,Vector2.RIGHT),"重合根不构成背刺")
 	check(Effect.is_backstab(Vector2.ZERO,Vector2.RIGHT,Vector2.ZERO),"零方向按源码使用右方")
 	check(not Effect.is_backstab(Vector2.ZERO,Vector2.RIGHT,Vector2.UP),"垂直于攻击方向不是背刺")

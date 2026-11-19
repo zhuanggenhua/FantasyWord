@@ -5,6 +5,7 @@ const Entry = preload("res://gameplay/clickmovetest/entry.tscn")
 const DamageScreenFlash = preload("res://gameplay/clickmovetest/source_damage_screen_flash.gd")
 const EntryScript = preload("res://gameplay/clickmovetest/entry.gd")
 const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
+const SessionDraws = preload("res://gameplay/clickmovetest/source_session_draws.gd")
 const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
@@ -35,6 +36,7 @@ var damage_screen_flash: DamageScreenFlash
 
 var refusal := ""
 var _attempted := false
+var _source_draws: SessionDraws
 
 
 func _ready() -> void:
@@ -70,16 +72,16 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	var player_files: Array = ["FORMAL_PLAYER_COMBAT_ANIMATION","FORMAL_PLAYER_COMBAT_MATERIAL"] if player_combat \
 		else ["FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL"]
 	if _player_death or mount_project_contact: player_files = ["FORMAL_PLAYER_DEATH_ANIMATION","FORMAL_PLAYER_DEATH_MATERIAL"]
-	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death else TRAINER_FILES
+	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death or mount_project_contact else TRAINER_FILES
 	var paths := {}
-	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []) \
+	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic or mount_project_contact else []) \
 			+ (["FORMAL_WATER_REFLECTION_MASK"] if _water_reflection else []) \
 			+ (["FORMAL_PANEL_SILVER","FORMAL_PANEL_CJK"] if panel else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not FileAccess.file_exists(path):
 			return _fail("缺少明确的原作者输入：" + key)
 		paths[key] = path
-	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []) + (["FORMAL_FLAMETHROWER_CUE"] if player_combat or mount_project_contact else []):
+	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic or mount_project_contact else []) + (["FORMAL_FLAMETHROWER_CUE"] if player_combat or mount_project_contact else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not DirAccess.dir_exists_absolute(path):
 			return _fail("缺少明确的原作者资源目录：" + key)
@@ -136,11 +138,15 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if panel and not scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
 		return _fail("原静态测试面板字体与实际玩家入口未绑定。")
 	if mount_project_contact:
-		# 当前正常入口尚未装配其他受击者；无目标命中不会请求角色掷骰。
-		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE,Callable())
+		_source_draws = SessionDraws.new()
+		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range):
+			return _fail("原图活动假人的身份、原素材、地图路径或死亡动作无法装配。")
+		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE,_source_draws.resolve_damage)
 		if not is_instance_valid(combat) or not scene.bind_human_damage_lifecycle(player.is_destroyed,combat.interrupt_owned_actions) \
-				or not scene.bind_source_primary_death(player,material) or not scene.bind_source_player_surface_contact(player):
-			return _fail("原主角能力、SpinDie 或同图地表受击未通过正式装配。")
+				or not scene.bind_source_primary_death(player,material) or not scene.bind_source_player_surface_contact(player) \
+				or not is_instance_valid(scene.start_training_basic_attack(player.get_target_direction,player.damage_hooks(),
+					_source_draws.resolve_damage)):
+			return _fail("原主角、同图假人普攻或地表受击未通过正式装配。")
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 	return true
@@ -168,12 +174,12 @@ func _on_source_player_damage_completed(_source: Variant, input: Dictionary, _pr
 	damage_screen_flash.present(scene.actor,player.get_current_controlled_character_or_player_instance(),input)
 
 
-func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Array, player_material: Dictionary) -> bool:
+func _mount_trainer(paths: Dictionary, files: Array, require_death: bool, random_value: Callable, random_range: Callable) -> bool:
 	var art: String = paths.FORMAL_TRAINER_ATTACK_TEXTURES
 	var animation := _read(paths[files[0]])
 	var material := _read(paths[files[1]])
 	if animation.is_empty() or material.is_empty(): return false
-	if _trainer_death and (animation.get("training_target",{}).get("death_animation_key")!="SpinDie"
+	if require_death and (animation.get("training_target",{}).get("death_animation_key")!="SpinDie"
 			or material.get("training_target")!=animation.get("training_target")):
 		return false
 	trainer_owner = TrainerOwner.new()
@@ -184,8 +190,12 @@ func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Ar
 		return false
 	if not scene.start_training_target_tracking(player.stats,scene) or not scene.start_training_transit_steering():
 		return false
-	# 仅命令行显式诊断复用定向验证的样本；不把 Godot 随机或固定值当成原运行时随机源。
-	if not scene.start_training_combat_wander(func():return .5,func(minimum,_maximum):return minimum):
+	return scene.start_training_combat_wander(random_value,random_range)
+
+
+func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Array, player_material: Dictionary) -> bool:
+	# 显式诊断的固定样本不进入正常启动。
+	if not _mount_trainer(paths,files,_trainer_death,func():return .5,func(minimum,_maximum):return minimum):
 		return false
 	var interrupt := _interrupt_unmounted_player_abilities
 	if player_combat:

@@ -111,4 +111,5 @@ func _apply_damage(source: Node2D, target: Node2D) -> void:
 		if not is_instance_valid(source) or not is_instance_valid(target) or not _player_direction.is_valid(): return {}
 		return {"source_root":source.get_movement_position(),"target_root":target.get_movement_position(),
 			"target_direction":_player_direction.call()}
-	BasicDamage.execute_damage_phase(source.stats,current,_player_hooks,pose,true,true,_roll)
+	BasicDamage.execute_damage_phase(source.stats,current,_player_hooks,pose,true,true,_roll,
+		func(): return [source.stats,_player_stats.call()] if is_instance_valid(source) and is_instance_valid(target) else [])

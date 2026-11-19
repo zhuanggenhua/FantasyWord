@@ -30,11 +30,13 @@ func _run() -> void:
 	var target := Vector2(.5,.5)
 	_check(actor.get_movement_position()==Vector2.ZERO and is_instance_valid(runtime)
 		and is_instance_valid(runtime.resolve(20001)) and is_instance_valid(runtime.resolve(20010))
-		and not is_instance_valid(scene.training_target) and terrain.sample(target_cell).flags==0,
-		"正常出生、已有实际两项能力，没有假人或预烧地表")
+		and is_instance_valid(scene.training_target) and terrain.sample(target_cell).flags==0,
+		"正常出生、已有实际两项能力，原假人在场，地表没有预烧")
 	if failures:
 		quit(1)
 		return
+	# 这条旧测试只验无命中施法。隔离原有假人 AI，不移除或复制任何角色。
+	scene.training_target.ai_controller.stop()
 	# 原 x=1 没有可燃覆盖。用实际鼠标点击原地图移动到这个施法点。
 	_click(safe)
 	for i in range(140):

@@ -970,7 +970,8 @@ func _execute_basic_training_damage(caster: Node2D, target: Node2D, caster_stats
 		if not is_instance_valid(caster) or not is_instance_valid(target) or not target.has_formal_target_direction(): return {}
 		return {"source_root":caster.get_movement_position(),"target_root":target.get_movement_position(),
 			"target_direction":target.get_target_direction()}
-	BasicDamage.execute_damage_phase(current,target.stats,target.hooks(caster),read_pose,true,true,roll)
+	BasicDamage.execute_damage_phase(current,target.stats,target.hooks(caster),read_pose,true,true,roll,
+		func(): return [caster_stats.call(),target.stats] if is_instance_valid(caster) and is_instance_valid(target) else [])
 
 func _execute_training_damage(caster: Node2D, target: Node2D, caster_stats: Callable, roll: Callable) -> void:
 	if caster != actor or target != training_target or not caster_stats.is_valid() or not roll.is_valid(): return

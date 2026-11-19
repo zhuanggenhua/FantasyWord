@@ -94,16 +94,20 @@ player，不触发写存档或合成地图过场。原过场的启动画面透�
 除了下一节的基础输入，还需要 FORMAL_PANEL_SILVER 和 FORMAL_PANEL_CJK 对应原字体，
 以及 FORMAL_WATER_REFLECTION_MASK 对应原遮罩。正常入口装配原诊断面板、原树和主角本体
 倒影，1 为原普攻、Q 或 2 为原喷火；可在原草地上点燃、进入燃烧区并触发真实接触受击与
-致死。启动不预点燃任何格，也不自动生成固定抽样的训练或死亡诊断。
+致死。启动不预点燃任何格。唯一原活动训练假人随地图出现，使用原出生点、体力、路径及普攻，
+可以与同一主角双向结算并进入各自原死亡阶段；不会另外生成诊断替身。
 正常入口用 FORMAL_PLAYER_DEATH_ANIMATION 和 FORMAL_PLAYER_DEATH_MATERIAL 替换下文的
 两个 DAMAGE 合同。对同一个原主角运行两个提取脚本时加 --include-damage --include-attack
 --include-death，图集目录含原 Attack、SpinDie 及其头身 UV。FORMAL_FLAMETHROWER_CUE
-指向原 PNG 与 OGG 私有目录；具体文件名见原玩家技能诊断。
+指向原 PNG 与 OGG 私有目录；具体文件名见原玩家技能诊断。假人另需
+FORMAL_TRAINER_ATTACK_DEATH_ANIMATION、FORMAL_TRAINER_ATTACK_DEATH_MATERIAL（原独立
+假人 Attack/SpinDie 合同）与 FORMAL_TRAINER_ATTACK_TEXTURES。普通场景共享同一非固定随机源，
+保留作者调用、浮点闭区间和整数 1–99；未宣称 Unity 位级随机序列。
 缺失或校验不通过的资源会报具体缺项并退出，绝不加载占位关卡。原始文件只保留在有
 权限的本机或云端，不随仓库公开。
 
 已验证入口是共享的 ClickMoveTest 单人启动、实际地图、点击/WASD、镜头和静态 UI。
-Unity 正式 GameManager 启动全链、SampleScene、完整战斗、存读档、过场切换、Unity
+Unity 正式 GameManager 启动全链、SampleScene、其他战斗与死亡副系统、存读档、过场切换、Unity
 原生同帧画面和构建配置覆盖仍未验收。原图和行为测试不等于整个项目迁移完毕。
 
 ## 原图移动预览
