@@ -75,6 +75,11 @@ func run() -> void:
 	if capture._tree_proxy.visible or capture._tree_quality!=Vector2.ZERO:
 		fail(scene,"达到原远距离上限后不得保留倒影")
 		return
+	scene._on_surface_map_unloaded()
+	scene.advance_static_tree_reflection(0)
+	if scene.water_reflection!=null or scene.ground_layers!=null or not capture.is_queued_for_deletion():
+		fail(scene,"原地图卸载后停止水捕获，不再投影已释放的水层")
+		return
 	scene.free()
 	print("PASS ClickMoveTest 作者 Tree、水面绑定与独立捕获；不含玩家倒影或 Unity 对照。")
 	quit()

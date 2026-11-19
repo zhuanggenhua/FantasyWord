@@ -40,9 +40,10 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	if not "--source-preview" in args or Array(args).any(func(arg):
-			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--water-reflection","--smoke"]):
-		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--water-reflection] [--smoke]；不默认启动测试或新关卡。")
+			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--water-reflection","--control-panel","--smoke"]):
+		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--water-reflection] [--control-panel] [--smoke]；不默认启动测试或新关卡。")
 		return
+	var panel := "--control-panel" in args
 	var trainer_diagnostic := "--trainer-diagnostic" in args
 	var player_combat := "--player-combat-diagnostic" in args
 	_trainer_death = "--trainer-death-diagnostic" in args
@@ -60,7 +61,8 @@ func _run() -> void:
 	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death else TRAINER_FILES
 	var paths := {}
 	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []) \
-			+ (["FORMAL_WATER_REFLECTION_MASK"] if _water_reflection else []):
+			+ (["FORMAL_WATER_REFLECTION_MASK"] if _water_reflection else []) \
+			+ (["FORMAL_PANEL_SILVER","FORMAL_PANEL_CJK"] if panel else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not FileAccess.file_exists(path):
 			_refuse("缺少明确的原作者输入：" + key)
@@ -130,6 +132,9 @@ func _run() -> void:
 		_refuse("原玩家 Point 与 Static Pivot 未绑定。")
 		return
 	_player.player_input_disabled.connect(_scene.notify_human_aim_input_disabled)
+	if panel and not _scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
+		_refuse("原静态测试面板字体与实际玩家入口未绑定。")
+		return
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		_refuse("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 		return

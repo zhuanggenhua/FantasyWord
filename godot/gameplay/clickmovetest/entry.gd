@@ -22,6 +22,7 @@ const ScreenProjection = preload("res://game_core/presentation/orthographic_scre
 const Interaction = preload("res://game_core/interaction/character_button_activation.gd")
 const Aim = preload("res://game_core/movement/idle_pointer_aim.gd")
 const Step = preload("res://game_core/movement/source_fixed_step.gd")
+const ControlPanel = preload("res://gameplay/clickmovetest/control_panel.tscn")
 const Observation = preload("res://gameplay/clickmovetest/click_observation.gd")
 const TrainingTarget = preload("res://gameplay/clickmovetest/training_target.gd")
 const TrainingAttributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
@@ -62,6 +63,7 @@ var blocked := false
 var command_count := 0
 var last_result: Variant
 var click_observation := Observation.new()
+var control_panel: ColorRect
 var keyboard := Keyboard.new()
 var human_gameplay_actions: RefCounted
 var _normalized_click_bound := false
@@ -272,7 +274,7 @@ func bind_player_water_reflection() -> bool:
 	return water_reflection.bind_player(human_presentation)
 
 func advance_static_tree_reflection(delta: float) -> void:
-	if not is_instance_valid(water_reflection): return
+	if not is_instance_valid(water_reflection) or not is_instance_valid(ground_layers): return
 	var viewport := get_viewport()
 	var logical := get_viewport_rect().size
 	var physical := Vector2i(viewport.get_texture().get_size()) if DisplayServer.get_name()!="headless" else Vector2i(logical)
@@ -325,6 +327,9 @@ func _on_surface_map_unloaded() -> void:
 	_contact_damage_pending.clear()
 	if surface_elements != null: surface_elements.clear()
 	_unbind_surface_presentation()
+	if is_instance_valid(water_reflection):
+		water_reflection.queue_free()
+		water_reflection = null
 	if is_instance_valid(ground_layers):
 		ground_layers.hide()
 		ground_layers.queue_free()
@@ -333,9 +338,38 @@ func _on_surface_map_unloaded() -> void:
 	if is_instance_valid(_surface_map_events) and _surface_map_events.map_unloaded.is_connected(_on_surface_map_unloaded):
 		_surface_map_events.map_unloaded.disconnect(_on_surface_map_unloaded)
 
+## 原场景面板与真正的输入/角色一起显式装配，测试夹具与其它场景不自动添加。
+func bind_source_control_panel(silver: String, cjk: String) -> bool:
+	if control_panel!=null or movement==null or not is_instance_valid(_aim_control): return false
+	var layer := CanvasLayer.new()
+	layer.layer = 5
+	layer.name = "ClickMoveTest 屏幕覆盖"
+	add_child(layer)
+	var panel := ControlPanel.instantiate()
+	layer.add_child(panel)
+	if not panel.bind_fonts(silver,cjk):
+		layer.free()
+		return false
+	control_panel = panel
+	control_panel.layout_for_height(get_viewport_rect().size.y)
+	_update_control_panel()
+	return true
+
+func _update_control_panel() -> void:
+	if not is_instance_valid(control_panel): return
+	var owned := _owns_current_actor()
+	control_panel.show_live_state({
+		"has_body":owned,"mode":movement.mode if owned else -1,
+		"had_input_target":owned and _aim_control.is_current_controlled(actor),
+		"could_move":owned and actor.can_move() and _aim_control.can_be_player_controlled(actor),
+		"order":owned and actor.execution.has_move_order(),
+		"position":actor.get_movement_position() if owned else Vector2.ZERO,
+	},click_observation.latest)
+
 func _resize_camera() -> void:
 	camera.zoom = ScreenProjection.zoom_for_view_height(get_viewport_rect().size.y, 5.0)
 	camera.force_update_scroll()
+	if is_instance_valid(control_panel): control_panel.layout_for_height(get_viewport_rect().size.y)
 
 func _input(event: InputEvent) -> void:
 	if _mouse_point_actions != null: _mouse_point_actions.observe(event)
@@ -344,11 +378,17 @@ func _input(event: InputEvent) -> void:
 	# 原生 GUI 可能在 _unhandled_input 前消费点击；观察必须先于该阶段。
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		var owned := _owns_current_actor()
-		var projected: Variant = ScreenProjection.project(camera, event.position) if owned else null
+		var sample: Vector2 = event.position
+		if is_instance_valid(control_panel) and _mouse_point_actions!=null:
+			sample = _mouse_point_actions.read_value_local(MousePoints.Map.GAMEPLAY,get_viewport_rect())
+		var projected: Variant = ScreenProjection.project(camera,sample) if owned else null
+		var has_target: bool = owned and (not is_instance_valid(_aim_control) or _aim_control.is_current_controlled(actor))
+		var could_move: bool = owned and actor.can_move() and (not is_instance_valid(_aim_control) or _aim_control.can_be_player_controlled(actor))
 		click_observation.observe({
-			"frame": Engine.get_process_frames(), "screen_position": event.position,
-			"over_ui": bool(_ui_guard.call(event.position)),
-			"had_input_target": owned, "could_move": owned and actor.can_move(),
+			"frame": Engine.get_process_frames(), "screen_position": sample,
+			"source_screen_position": Vector2(sample.x,get_viewport_rect().size.y-sample.y),
+			"over_ui": bool(_ui_guard.call(sample)),
+			"had_input_target": has_target, "could_move": could_move,
 			"movement_mode": movement.mode,
 			"projection_valid": projected is Vector2,
 			"world_position": projected if projected is Vector2 else Vector2.ZERO,
@@ -401,6 +441,7 @@ func _process(delta: float) -> void:
 		var owned := _owns_current_actor()
 		return {"order": owned and actor.execution.has_move_order(),
 			"position": actor.get_movement_position() if owned else Vector2.ZERO})
+	_update_control_panel()
 	if binding != null: camera.advance_follow(delta)
 	_update_human_aim()
 	update_ui_pointer_selection()
