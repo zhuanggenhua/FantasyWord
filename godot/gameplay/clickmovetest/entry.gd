@@ -73,6 +73,7 @@ var training_hit_cue := TrainingHitCue.new()
 var _training_effects := ChargedEffects.new()
 var training_target: Node2D
 var training_attributes: RefCounted
+var _training_tracking_stats: Callable
 var _mouse_point_actions: RefCounted
 var _pointer_selection: RefCounted
 var _pointer_over_ui: Callable
@@ -89,6 +90,11 @@ var surface_contact_damage: RefCounted
 var _contact_player_stats: Callable
 var _contact_player_hooks: Dictionary = {}
 var _contact_damage_pending: Array[Dictionary] = []
+
+func _ready() -> void:
+	# 与训练假人相同：受击盒将身份交回原玩家根，不能变成独立目标。
+	if is_instance_valid(actor):
+		actor.get_node("受击盒").set_meta("actor",actor)
 
 ## 宿主明确选中的玩家、地图事件、动作能力与 UI 门禁均由调用者提供。
 ## 此阶段不宣称提供完整 PlayerSystem、GAS、地图加载或视觉资源。
@@ -328,10 +334,13 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 	return last_result
 
 func _physics_process(_delta: float) -> void:
+	if is_instance_valid(training_target):
+		training_target.ai_controller.advance_target_step(Step.GAMEPLAY_DELTA_SECONDS)
 	if movement != null:
 		actor.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
 	if is_instance_valid(training_target):
 		training_target.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
+		training_target.ai_controller.capture_detection_after_movement()
 
 func _process(delta: float) -> void:
 	click_observation.advance(func():
@@ -348,6 +357,7 @@ func _process(delta: float) -> void:
 	if surface_presentation != null: surface_presentation.advance(delta)
 	advance_surface_contact(delta,Engine.time_scale)
 	if is_instance_valid(training_target):
+		training_target.advance_formal_basic_attack(delta)
 		training_target.advance_damage_lifecycle()
 
 func _exit_tree() -> void:
@@ -613,6 +623,20 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	training_attributes = properties
 	if surface_contact_damage != null: surface_contact_damage.register_target(target)
 	return target
+
+## 给活动假人连接实际玩家身体和正式属性读取；未绑定时仅保留原挑衅。
+func start_training_target_tracking(player_stats: Callable, map_collision: Node2D) -> bool:
+	if movement == null or not is_instance_valid(training_target) or not _owns_current_actor():
+		return false
+	if not training_target.ai_controller.bind_player(actor,player_stats,map_collision): return false
+	_training_tracking_stats = player_stats
+	return true
+
+## 同一实际玩家的正式属性接收端；不依赖可选地表系统。
+func start_training_basic_attack(player_direction: Callable, player_hooks: Dictionary, roll: Callable) -> Node:
+	if not is_instance_valid(training_target) or not _training_tracking_stats.is_valid(): return null
+	return training_target.bind_formal_basic_attack(actor,actor.get_node("受击盒"),
+		_training_tracking_stats,player_direction,player_hooks,roll)
 
 ## 显式导入源图集；空资源不让角色获得假表现。
 func start_training_target_presentation(animation: Dictionary, texture_directory: String,

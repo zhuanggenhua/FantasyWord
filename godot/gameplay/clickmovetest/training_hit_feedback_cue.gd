@@ -1,5 +1,5 @@
 extends RefCounted
-## 仅承载原训练假人的 20001：目标侧 HitDamageable，作者反馈槽为空。
+## 仅承载本场景原训练假人及玩家均为空反馈槽的 20001：目标侧 HitDamageable。
 ## 不是 Dmg 动画，不生成粒子、音效或替代资源；完整反馈资产运行器尚未迁移。
 ## 来源：31629d53 的 CuePlayGameCoreFeedback / SCueStart / 训练假人配置。
 

@@ -28,6 +28,7 @@ var _external_health_signal := false
 var _death_committed := false
 var _verified_death_animation := false
 var _movement_owner: Object
+var formal_attack: Node
 var _terrain_mask := 0
 var stats: Dictionary:
 	get: return _bindings.stats.call()
@@ -177,7 +178,25 @@ func hooks(source_actor: Object = null) -> Dictionary:
 
 func advance_damage_lifecycle() -> void:
 	lifecycle.tick_safe(_bindings.current_health, _bindings.is_destroyed,
-		_bindings.interrupt_actions, _finish_death)
+		_interrupt_actions, _finish_death)
+
+func bind_formal_basic_attack(player: Node2D, hitbox: Area2D, stats_reader: Callable,
+		direction_reader: Callable, player_hooks: Dictionary, roll: Callable) -> Node:
+	if formal_attack != null: return null
+	var candidate := preload("res://gameplay/clickmovetest/training_formal_attack.gd").new()
+	add_child(candidate)
+	if not candidate.configure(self,_movement_owner,player,hitbox,stats_reader,direction_reader,player_hooks,roll) 			or not ai_controller.bind_formal_attack(candidate.attempt):
+		candidate.free()
+		return null
+	formal_attack = candidate
+	return formal_attack
+
+func advance_formal_basic_attack(delta: float) -> void:
+	if is_instance_valid(formal_attack) and ai_controller.running: formal_attack.advance(delta)
+
+func _interrupt_actions() -> void:
+	_bindings.interrupt_actions.call()
+	if is_instance_valid(formal_attack): formal_attack.interrupt()
 
 func _finish_death() -> void:
 	# 原 Movable.Kill 先停活动控制器，再标记、重置移动、播放死亡动作。

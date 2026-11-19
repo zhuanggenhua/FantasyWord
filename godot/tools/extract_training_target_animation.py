@@ -15,7 +15,7 @@ def documents(raw):
     text = re.sub(r"^--- !u!\d+ &[-\d]+(?: stripped)?", "---", text, flags=re.M)
     return list(yaml.safe_load_all(text))
 
-def extract_target(repo, textures, include_death=False):
+def extract_target(repo, textures, include_death=False, include_attack=False):
     sources = {}
     def source(path):
         raw = read(repo, path)
@@ -27,6 +27,12 @@ def extract_target(repo, textures, include_death=False):
     changes = instance["m_Modification"]
     assert not changes["m_RemovedComponents"] and not changes["m_RemovedGameObjects"]
     mods = changes["m_Modifications"]
+    if include_attack:
+        authored = {m["propertyPath"]: int(m["value"]) for m in mods
+                    if m["target"]["fileID"] == 1265987612345678903
+                    and m["propertyPath"].startswith("m_additionalFormalGasAbilityCodes.")}
+        assert authored == {"m_additionalFormalGasAbilityCodes.Array.size": 1,
+                            "m_additionalFormalGasAbilityCodes.Array.data[0]": 20001}
     # 静态旧库只含四帧 Idle/Run/Hit；运行时会由继承方向驱动替换，不能直接迁移成 Dmg。
     lib = next(m for m in mods if m["propertyPath"] == "m_SpriteLibraryAsset")
     assert lib["objectReference"]["guid"] == "e98f566e251e635449fc9d663904607b"
@@ -62,7 +68,7 @@ def extract_target(repo, textures, include_death=False):
     runtime = source("Assets/Scripts/Gameplay/Runtime/Presentation/EquipmentSystem/Runtime/DirectionalSpriteLibraryDriver.cs").decode()
     assert "SetAnimationLibraries(defaultAnimationLibraries, false)" in runtime
     assert "spriteLibrary.spriteLibraryAsset = asset;" in runtime
-    result = extract(repo, textures, include_damage=True,include_death=include_death)
+    result = extract(repo, textures, include_damage=True,include_death=include_death,include_attack=include_attack)
     result["source_sha256"].update(sources)
     result["training_target"] = {"prefab_guid":"dca23ea6afacc0647bfd10c5cefa4099", "body_local_position":[0,0], "runtime_libraries":expected}
     if include_death: result["training_target"]["death_animation_key"] = "SpinDie"
@@ -74,8 +80,9 @@ if __name__ == "__main__":
     parser.add_argument("--textures",type=Path,required=True)
     parser.add_argument("--output",type=Path,required=True)
     parser.add_argument("--include-death",action="store_true")
+    parser.add_argument("--include-attack",action="store_true")
     args=parser.parse_args()
-    result=extract_target(args.repo,args.textures,args.include_death)
+    result=extract_target(args.repo,args.textures,args.include_death,args.include_attack)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
-    print("PASS 训练假人继承、运行时方向库、Idle/Walk/Dmg 原始图集合同")
+    print("PASS 训练假人原运行时方向库与图集：" + ", ".join(result["actions"]))

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://gameplay/clickmovetest/entry.gd" id="1"]
 [ext_resource type="Script" path="res://gameplay/clickmovetest/actor.gd" id="2"]
@@ -7,6 +7,9 @@
 [sub_resource type="CapsuleShape2D" id="Capsule"]
 radius = 0.39
 height = 0.86
+
+[sub_resource type="RectangleShape2D" id="SourceHitbox"]
+size = Vector2(0.6, 1)
 
 [node name="点击移动启动切片" type="Node2D" node_paths=PackedStringArray("actor", "actor_shape", "visual_body", "camera", "aim_pivot")]
 script = ExtResource("1")
@@ -24,6 +27,14 @@ script = ExtResource("2")
 [node name="身体碰撞" type="CollisionShape2D" parent="玩家角色"]
 position = Vector2(0, -0.42)
 shape = SubResource("Capsule")
+
+[node name="受击盒" type="Area2D" parent="玩家角色"]
+collision_layer = 128
+collision_mask = 0
+
+[node name="矩形" type="CollisionShape2D" parent="玩家角色/受击盒"]
+position = Vector2(0, -0.5)
+shape = SubResource("SourceHitbox")
 
 [node name="表现Body" type="Node2D" parent="玩家角色"]
 position = Vector2(0.75, 3.1)

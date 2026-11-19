@@ -19,8 +19,8 @@ SCENE = "Assets/Scenes/ClickMoveTest.unity"
 PREFAB = "Assets/Prefabs/Entities/Characters/Heroes/玩家角色.prefab"
 TRAINER = "Assets/Prefabs/Entities/Characters/Enemies/测试-训练假人.prefab"
 
-def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False):
-    animation = extract_target(repo, human, include_death=True) if training_target else animations(repo, human, include_damage)
+def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False, include_attack=False):
+    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab_path = TRAINER if training_target else PREFAB
@@ -169,7 +169,8 @@ if __name__ == "__main__":
         p.add_argument("--" + name, type=Path, required=True)
     p.add_argument("--include-damage", action="store_true", help="同时核实 Dmg 的原帧数据与生成 UV")
     p.add_argument("--training-target", action="store_true", help="核实活动训练假人的 Idle/Walk/Dmg/SpinDie")
+    p.add_argument("--include-attack", action="store_true", help="同时核实普攻原帧与两张 UV")
     a = p.parse_args()
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target)
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))

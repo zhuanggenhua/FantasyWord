@@ -55,18 +55,25 @@ func configure_resolved_fire(loadout: RefCounted, resolve_active: Callable, char
 
 ## CharacterAbilitySet.FireResolvedAbility：检查失败时无方向或生命周期副作用。
 func _fire_resolved_source(ability: Object, command_context: Variant, activation_context: Variant) -> int:
-	var result: int
-	if _use_source_start_rules:
-		var gate: Object = _ability_host.get_input_gate(ability)
+	return fire_resolved(ability,_character,_ability_host,_use_source_start_rules,command_context,activation_context)
+
+## 同一正式技能可由装备位或原 NPC 能力集合提交；都执行同一个 CanFire 口径。
+static func can_fire_resolved(ability: Object, host: Object, use_source_start_rules: bool) -> int:
+	if use_source_start_rules:
+		var gate: Object = host.get_input_gate(ability)
 		if gate != null and gate.is_busy():
-			result = 0
+			return 0
 		else:
-			result = preload("res://game_core/combat/active_ability_start_rules.gd").evaluate(
-				_ability_host.get_formal_gas_ability_code(ability),
-				_ability_host.evaluate_start_rule.bind(ability),_ability_host.get_ability_debug_name.bind(ability),
-				_ability_host.report_start_rule_error.bind(ability))
+			return preload("res://game_core/combat/active_ability_start_rules.gd").evaluate(
+				host.get_formal_gas_ability_code(ability),
+				host.evaluate_start_rule.bind(ability),host.get_ability_debug_name.bind(ability),
+				host.report_start_rule_error.bind(ability))
 	else:
-		result = _ability_host.can_fire(ability)
+		return host.can_fire(ability)
+
+static func fire_resolved(ability: Object, character: Object, host: Object,
+		use_source_start_rules: bool, command_context: Variant, activation_context: Variant) -> int:
+	var result := can_fire_resolved(ability,host,use_source_start_rules)
 	if result != 0: return result
 	var requested := Vector2.ZERO
 	var has_requested := false
@@ -77,17 +84,17 @@ func _fire_resolved_source(ability: Object, command_context: Variant, activation
 			if _source_sqr(requested) > PackedFloat32Array([0.0001])[0]:
 				has_requested = true
 				requested = requested.normalized()
-				_character.set_target_direction(requested)
-	if _ability_host.should_update_look_at_direction_on_fire(ability):
-		var target: Vector2 = _character.get_target_direction()
+				character.set_target_direction(requested)
+	if host.should_update_look_at_direction_on_fire(ability):
+		var target: Vector2 = character.get_target_direction()
 		if has_requested: target = requested
 		if _source_sqr(target) > PackedFloat32Array([0.0001])[0]:
-			_character.set_look_at_direction(target)
-	if _ability_host.uses_automatic_runtime_state_management(ability):
-		_ability_host.set_ability_active(ability,true)
-		_ability_host.fire(ability,command_context,activation_context,_completion(ability,_ability_host))
+			character.set_look_at_direction(target)
+	if host.uses_automatic_runtime_state_management(ability):
+		host.set_ability_active(ability,true)
+		host.fire(ability,command_context,activation_context,_completion(ability,host))
 	else:
-		_ability_host.fire(ability,command_context,activation_context,null)
+		host.fire(ability,command_context,activation_context,null)
 	return result
 
 static func _source_sqr(value: Vector2) -> float:
