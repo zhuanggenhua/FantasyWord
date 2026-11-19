@@ -1,8 +1,9 @@
-; 本工程是 FantasyWord 的 Godot 迁移分支，尚未设定正式主场景。
+; FantasyWord 的 Godot 迁移分支；默认直接启动原 ClickMoveTest。
 config_version=5
 
 [application]
 config/name="FantasyWord"
+run/main_scene="res://gameplay/clickmovetest/source_startup.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [rendering]

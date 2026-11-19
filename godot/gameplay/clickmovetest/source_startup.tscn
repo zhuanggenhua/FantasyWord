@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://gameplay/clickmovetest/source_startup.gd" id="1"]
+
+[node name="ClickMoveTestStartup" type="Node"]
+script = ExtResource("1")
+launch_from_project = true

@@ -1,0 +1,237 @@
+extends Node
+## Godot 原图启动宿主：装配同一原角色、输入、地图和私有作者资源。
+## 正常项目入口不启动诊断抽样或替代关卡，CLI 预览复用相同宿主。
+const Entry = preload("res://gameplay/clickmovetest/entry.tscn")
+const DamageScreenFlash = preload("res://gameplay/clickmovetest/source_damage_screen_flash.gd")
+const EntryScript = preload("res://gameplay/clickmovetest/entry.gd")
+const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
+const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
+const Point = preload("res://game_core/input/mouse_point_actions.gd")
+## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
+
+const PersistenceRegistry = preload("res://game_core/persistence/persistable_identity_registry.gd")
+const MapRegistry = preload("res://game_core/maps/active_map_registry.gd")
+const MapInfo = preload("res://game_core/maps/registered_map_info.gd")
+
+const REQUIRED_FILES := ["FORMAL_SURFACE_RULES","FORMAL_SURFACE_ASSETS",
+	"FORMAL_BURNING_TILE_PNG"]
+const REQUIRED_DIRS := ["FORMAL_GROUND_LAYERS","FORMAL_PLAYER_TEXTURES"]
+const TRAINER_FILES := ["FORMAL_TRAINER_ATTACK_ANIMATION","FORMAL_TRAINER_ATTACK_MATERIAL"]
+const TRAINER_DEATH_FILES := ["FORMAL_TRAINER_ATTACK_DEATH_ANIMATION","FORMAL_TRAINER_ATTACK_DEATH_MATERIAL"]
+const TRAINER_DIRS := ["FORMAL_TRAINER_ATTACK_TEXTURES"]
+const MAIN_FEATURES := ["--water-reflection","--control-panel","--damage-screen-flash"]
+
+@export var launch_from_project := false
+var scene: Node2D
+var player: PlayerOwner
+var trainer_owner: TrainerOwner
+var maps := MapRegistry.new()
+var persistables := PersistenceRegistry.new()
+var point: Point
+var _trainer_death := false
+var _player_death := false
+var _water_reflection := false
+var damage_screen_flash: DamageScreenFlash
+
+var refusal := ""
+var _attempted := false
+
+
+func _ready() -> void:
+	if launch_from_project: call_deferred("_launch_main")
+
+
+func _launch_main() -> void:
+	# 锁定 ClickMoveTest 直接进入 Gameplay、正常时间倍率且没有初始存档命令。
+	Engine.time_scale = 1.0
+	if not open(PackedStringArray(MAIN_FEATURES)):
+		printerr("FantasyWord 启动失败：" + refusal)
+		get_tree().quit(1)
+		return
+	print("FantasyWord 已直接进入 ClickMoveTest。左键点击移动；Tab 切换后使用 WASD。")
+
+
+func open(args: PackedStringArray) -> bool:
+	if _attempted or not is_inside_tree():
+		return false
+	_attempted = true
+	var panel := "--control-panel" in args
+	var trainer_diagnostic := "--trainer-diagnostic" in args
+	var player_combat := "--player-combat-diagnostic" in args
+	_trainer_death = "--trainer-death-diagnostic" in args
+	_player_death = "--player-death-diagnostic" in args
+	_water_reflection = "--water-reflection" in args
+	if (_trainer_death or _player_death) and not player_combat:
+		return _fail("死亡诊断需要同图原玩家技能入口。")
+	if player_combat and not trainer_diagnostic:
+		return _fail("玩家技能诊断需要同图原训练假人。")
+	var player_files: Array = ["FORMAL_PLAYER_COMBAT_ANIMATION","FORMAL_PLAYER_COMBAT_MATERIAL"] if player_combat \
+		else ["FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL"]
+	if _player_death: player_files = ["FORMAL_PLAYER_DEATH_ANIMATION","FORMAL_PLAYER_DEATH_MATERIAL"]
+	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death else TRAINER_FILES
+	var paths := {}
+	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []) \
+			+ (["FORMAL_WATER_REFLECTION_MASK"] if _water_reflection else []) \
+			+ (["FORMAL_PANEL_SILVER","FORMAL_PANEL_CJK"] if panel else []):
+		var path := OS.get_environment(key)
+		if path.is_empty() or not FileAccess.file_exists(path):
+			return _fail("缺少明确的原作者输入：" + key)
+		paths[key] = path
+	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []) + (["FORMAL_FLAMETHROWER_CUE"] if player_combat else []):
+		var path := OS.get_environment(key)
+		if path.is_empty() or not DirAccess.dir_exists_absolute(path):
+			return _fail("缺少明确的原作者资源目录：" + key)
+		paths[key] = path
+	var rules := _read(paths.FORMAL_SURFACE_RULES)
+	var surface := _read(paths.FORMAL_SURFACE_ASSETS)
+	var animation := _read(paths[player_files[0]])
+	var material := _read(paths[player_files[1]])
+	if not EntryScript.valid_rules(rules) or surface.is_empty() or animation.is_empty() or material.is_empty() \
+			or animation.has("training_target") or material.has("training_target"):
+		return _fail("原场景规则、地表或玩家动画合同无效；不能借训练假人资料启动玩家。")
+	scene = Entry.instantiate()
+	add_child(scene)
+	player = PlayerOwner.new()
+	if not player.configure(scene.actor,Callable(),Callable(),Callable()):
+		return _fail("缺少原序列化玩家角色或当前输入所有者。")
+	# 原角色 735002000000000004 先持有预摆标识；主角色启动时替换为 player。
+	if not persistables.register_pre_instanced(scene.actor,PlayerOwner.SOURCE_PREINSTANCED_IDENTIFIER,false) \
+			or not player.register_primary_persistence(persistables):
+		return _fail("原玩家正式持久化标识未绑定。")
+	var art: String = paths.FORMAL_PLAYER_TEXTURES
+	if _player_death: animation["primary_death"] = material.get("primary_death")
+	var view: Node2D = scene.start_human_presentation(animation,art)
+	if not is_instance_valid(view) or not view.bind_base_material(material,art.path_join("uv"),art.path_join("appearance")):
+		return _fail("原玩家角色动画与身体、头部 UV 无法绑定。")
+	# 原 ClickMoveTest MapInfo 没有相机目标覆盖，也没有启用地图相机边界。
+	if not maps.configure(func(_name):return null,func():return scene) \
+			or not scene.start_human_logic(player,rules,player.get_player_provider,
+			maps.resolve_active_map_info,maps,_over_native_ui):
+		return _fail("原 PlayerSystem、地图规则或镜头绑定未成立。")
+	# 原 MapInfo 6951708 拥有地形 1148507052，未配置检查点、相机目标或边界。
+	# 直接启动不伪造加载过存档或触发过地图切换。
+	var authored_map := MapInfo.new()
+	if not authored_map.configure(scene,scene.route):
+		return _fail("原 ClickMoveTest 地图配置未绑定。")
+	maps.register(authored_map)
+	maps.on_system_start()
+	scene.binding.start_binding()
+	if not scene.bind_active_terrain(maps.get_active_terrain_navigation_map):
+		return _fail("点击导航与原 MapInfo 不属于同一地图。")
+	if not scene.start_surface_elements(surface) or not scene.bind_ground_layers(paths.FORMAL_GROUND_LAYERS) \
+			or not scene.bind_surface_presentation(paths.FORMAL_BURNING_TILE_PNG):
+		return _fail("原底图、固定装饰或地表效果未通过来源检查。")
+	if _water_reflection and (not scene.bind_static_tree_reflection(paths.FORMAL_WATER_REFLECTION_MASK) \
+			or not scene.bind_player_water_reflection()):
+		return _fail("原树、主角正式换装材质和 87 格水层无法装配倒影。")
+	point = Point.new(0)
+	point.enable(Point.Map.GAMEPLAY)
+	if not scene.bind_mouse_point_actions(point) or not scene.start_human_aim(player,player):
+		return _fail("原玩家 Point 与 Static Pivot 未绑定。")
+	player.player_input_disabled.connect(scene.notify_human_aim_input_disabled)
+	if "--damage-screen-flash" in args:
+		_mount_damage_screen_flash()
+	if panel and not scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
+		return _fail("原静态测试面板字体与实际玩家入口未绑定。")
+	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
+		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
+	return true
+
+
+func _fail(reason: String) -> bool:
+	refusal = reason
+	if is_instance_valid(scene): scene.free()
+	scene = null
+	return false
+
+
+func _mount_damage_screen_flash() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "ClickMoveTest 受伤闪屏"
+	# 原覆盖层层级：场景过渡之后、测试面板之前。本预览尚未挂场景过渡。
+	layer.layer = 4
+	scene.add_child(layer)
+	damage_screen_flash = DamageScreenFlash.new()
+	layer.add_child(damage_screen_flash)
+	player.damage_completed.connect(_on_source_player_damage_completed)
+
+
+func _on_source_player_damage_completed(_source: Variant, input: Dictionary, _previous: int, _applied: int) -> void:
+	damage_screen_flash.present(scene.actor,player.get_current_controlled_character_or_player_instance(),input)
+
+
+func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Array, player_material: Dictionary) -> bool:
+	var art: String = paths.FORMAL_TRAINER_ATTACK_TEXTURES
+	var animation := _read(paths[files[0]])
+	var material := _read(paths[files[1]])
+	if animation.is_empty() or material.is_empty(): return false
+	if _trainer_death and (animation.get("training_target",{}).get("death_animation_key")!="SpinDie"
+			or material.get("training_target")!=animation.get("training_target")):
+		return false
+	trainer_owner = TrainerOwner.new()
+	var trainer: Node2D = scene.start_training_damage_target(trainer_owner,trainer_owner.hooks(),7752)
+	if not is_instance_valid(trainer) or not trainer_owner.bind_target(trainer): return false
+	if not is_instance_valid(scene.start_training_target_presentation(animation,art,
+			{"data":material,"uv_directory":art.path_join("uv"),"appearance_directory":art.path_join("appearance")})):
+		return false
+	if not scene.start_training_target_tracking(player.stats,scene) or not scene.start_training_transit_steering():
+		return false
+	# 仅命令行显式诊断复用定向验证的样本；不把 Godot 随机或固定值当成原运行时随机源。
+	if not scene.start_training_combat_wander(func():return .5,func(minimum,_maximum):return minimum):
+		return false
+	var interrupt := _interrupt_diagnostic_player_abilities
+	if player_combat:
+		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE)
+		if not is_instance_valid(combat): return false
+		interrupt = combat.interrupt_owned_actions
+	if not scene.bind_human_damage_lifecycle(player.is_destroyed,interrupt):
+		return false
+	if _player_death:
+		if not scene.bind_source_primary_death(player,player_material): return false
+	else:
+		player.damage_completed.connect(_end_diagnostic_on_zero_health)
+	return is_instance_valid(scene.start_training_basic_attack(
+		player.get_target_direction,player.damage_hooks(),func():return 50))
+
+
+func _mount_player_combat(cue_dir: String) -> Node:
+	if not scene.start_human_command_execution(player): return null
+	# 原热键只提交槽位，无目标、Cell 或显式朝向。
+	var combat: Node = scene.start_human_fresh_training_combat(player,func():return 50,
+		func(_target):return null,func(_target):return null,func(_code,_reason):pass)
+	if not is_instance_valid(combat) or not scene.bind_human_gameplay_actions(func():
+		if not player.is_current_controlled(scene.actor): return null
+		return {"actor":player,"command_context":{"actor":player,"issuer_kind":1,"issuer_id":"local"}},
+		func():return false,func(_request,_failure):pass) or not scene.bind_human_ability_keyboard():
+		return null
+	if not scene.bind_flamethrower_cues(player,cue_dir.path_join("FlamethrowerJet.png"),
+			cue_dir.path_join("Flamethrower_FireSpell03_CC0.ogg")):
+		return null
+	return combat
+
+
+func _interrupt_diagnostic_player_abilities() -> void:
+	# 原安全阶段只通知能力拥有者；此入口未赋予玩家能力，不清移动或输入。
+	pass
+
+
+func _end_diagnostic_on_zero_health(_source: Variant,_input: Dictionary,_previous: int,_applied: int) -> void:
+	if player.current_health()==0:
+		# 不继续伪造尚无正式来源接线的玩家死亡生命周期。
+		call_deferred("_finish_at_unsupported_death")
+
+
+func _finish_at_unsupported_death() -> void:
+	print("玩家生命归零；诊断结束，未装配正式死亡流程。")
+	if is_instance_valid(scene): scene.free()
+	get_tree().quit()
+
+func _read(path: String) -> Dictionary:
+	var json := JSON.new()
+	if json.parse(FileAccess.get_file_as_string(path))!=OK or not json.data is Dictionary: return {}
+	return json.data
+
+
+func _over_native_ui(_point_in_viewport: Vector2) -> bool:
+	# 此预览没有另造 UIRoot；已有原生 Control 继续在 _unhandled_input 前消费。
+	return is_instance_valid(get_viewport().gui_get_hovered_control())

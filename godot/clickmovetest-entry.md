@@ -81,10 +81,30 @@ UI 谓词为 true 和 false 的两种情况；并验证延迟实际读回和被�
 
 鼠标 Point 的可选动作生命周期、来源及未验收边界见 [鼠标 Point 切片](mouse-point-port.md)。
 
+## 从项目正常启动原 ClickMoveTest
+
+锁定 Unity 31629d53 的全局 EditorBuildSettings 将 ClickMoveTest 列为第一个启用场景；
+该场景从 Gameplay 开始、主角在原点、地图检查点与 Playtest 存档未配置。Godot 的
+project.godot 运行入口复用同一原图装配：导入原作者资源后执行 godot --path godot，
+或从继承同一环境的编辑器按 F5。无需 --script 或 --source-preview。
+初始时间倍率为 1，控制、镜头和移动均使用同一真实主角；玩家身份从预摆标识替换为
+player，不触发写存档或合成地图过场。原过场的启动画面透明且不拦指针，此阶段没有
+搬入切图过渡宿主。
+
+除了下一节的基础输入，还需要 FORMAL_PANEL_SILVER 和 FORMAL_PANEL_CJK 对应原字体，
+以及 FORMAL_WATER_REFLECTION_MASK 对应原遮罩。正常入口装配原诊断面板、静态树和主角
+本体倒影及玩家受伤闪屏，但不自动打开固定抽样的训练假人、测试按键、死亡或其他诊断。
+缺失或校验不通过的资源会报具体缺项并退出，绝不加载占位关卡。原始文件只保留在有
+权限的本机或云端，不随仓库公开。
+
+已验证入口是共享的 ClickMoveTest 单人启动、实际地图、点击/WASD、镜头和静态 UI。
+Unity 正式 GameManager 启动全链、SampleScene、完整战斗、存读档、过场切换、Unity
+原生同帧画面和构建配置覆盖仍未验收。原图和行为测试不等于整个项目迁移完毕。
+
 ## 原图移动预览
 
 使用 `godot --path godot --script res://tools/run_clickmovetest_source_preview.gd -- --source-preview`。
-不修改 Godot 项目的默认主场景。要启动，须在有权限的本机或云端通过环境变量显式传入下列输入：
+这是单独的诊断入口，不改项目正常启动选项。须在有权限的本机或云端通过环境变量传入下列输入：
 
 - `FORMAL_SURFACE_RULES`：锁定 ClickMoveTest 的地图规则 JSON。
 - `FORMAL_SURFACE_ASSETS`、`FORMAL_GROUND_LAYERS`、`FORMAL_BURNING_TILE_PNG`：原地表登记 JSON、原地面投影目录与实际残火图。
