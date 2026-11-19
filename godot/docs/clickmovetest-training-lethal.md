@@ -157,3 +157,20 @@ Unity 同场景画面对比。原图集、私有合同、截图不上传。
 运动表现绑定在 Dmg 中更新恢复到 Walk 而不提前结束受击。玩家本体与原
 双 UV 用独立的玩家作者合同验证，不把假人合同当玩家资源。反馈槽及受击
 音源为空，未加假反馈。该阶段尚不等同完整原场景追击与画面对比。
+
+## 同一原场景的普攻死亡诊断
+
+在 `--source-preview --trainer-diagnostic --player-combat-diagnostic` 之后加
+`--trainer-death-diagnostic`。需要设定 `FORMAL_TRAINER_ATTACK_DEATH_ANIMATION`
+和 `FORMAL_TRAINER_ATTACK_DEATH_MATERIAL`，分别指向同一活动假人含
+Idle、Walk、Dmg、Attack、SpinDie 的原动画与材质合同；纹理仍由
+`FORMAL_TRAINER_ATTACK_TEXTURES` 指定。动画提取命令增加
+`--include-attack --include-death`，材质提取增加 `--training-target --include-attack`。
+旧诊断及默认场景入口不变；普通启动保持真实出生和 220 生命。
+
+增加 `--smoke` 会单独布置一击诊断：玩家按原槽 1，实际碰撞结算在普攻第
+8 帧使假人归零。原 `CharacterBase.Update` 先消费该角色待决受击/死亡，
+再推进其技能；死亡停 AI、重置主动移动、锁定实际 SpinDie、再收尾拥有的攻击。
+假人正处在反击第 7 帧时也不得在安全阶段后再命中。验证保留原身体和受击盒、
+材料切换到单行身体和头部 UV，以及 12 帧动作结束后保留第 11 号帧。
+这不是 Unity 截图验收，也不含掉落、奖励、任务、复活或玩家死亡。

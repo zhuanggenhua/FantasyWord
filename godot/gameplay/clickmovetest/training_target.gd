@@ -211,6 +211,9 @@ func _finish_death() -> void:
 		if not presentation.driver.try_lock_animation("SpinDie"):
 			push_error("训练假人的正式 SpinDie 死亡动作无法锁定")
 	_bindings.mark_death.call()
+	# CharacterBase.Kill 在 Movable 死亡与宿主回调后仍发出 InterruptInstances。
+	# 即使没有非静默受击的待打断标记，假人的实际 Timeline 也不能留在攻击中。
+	if is_instance_valid(formal_attack): formal_attack.interrupt()
 
 ## 背刺只取逻辑方向，不能用绘制朝向或碰撞体方向代替。
 func has_formal_target_direction() -> bool:

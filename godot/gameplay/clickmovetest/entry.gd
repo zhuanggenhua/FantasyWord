@@ -376,8 +376,9 @@ func _process(delta: float) -> void:
 	if surface_presentation != null: surface_presentation.advance(delta)
 	advance_surface_contact(delta,Engine.time_scale)
 	if is_instance_valid(training_target):
-		training_target.advance_formal_basic_attack(delta)
+		# 原 CharacterBase.Update 先消化本角色待处理受击/死亡，死亡后不再推进其技能。
 		training_target.advance_damage_lifecycle()
+		training_target.advance_formal_basic_attack(delta)
 
 func _exit_tree() -> void:
 	_on_surface_map_unloaded()
