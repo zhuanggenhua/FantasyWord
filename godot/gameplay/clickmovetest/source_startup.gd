@@ -44,14 +44,14 @@ func _ready() -> void:
 func _launch_main() -> void:
 	# 锁定 ClickMoveTest 直接进入 Gameplay、正常时间倍率且没有初始存档命令。
 	Engine.time_scale = 1.0
-	if not open(PackedStringArray(MAIN_FEATURES)):
+	if not open(PackedStringArray(MAIN_FEATURES),true):
 		printerr("FantasyWord 启动失败：" + refusal)
 		get_tree().quit(1)
 		return
-	print("FantasyWord 已直接进入 ClickMoveTest。左键点击移动；Tab 切换后使用 WASD。")
+	print("FantasyWord 已直接进入 ClickMoveTest。左键点击移动；Tab 切换后使用 WASD；1 普攻，Q 或 2 喷火。")
 
 
-func open(args: PackedStringArray) -> bool:
+func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if _attempted or not is_inside_tree():
 		return false
 	_attempted = true
@@ -61,13 +61,15 @@ func open(args: PackedStringArray) -> bool:
 	_trainer_death = "--trainer-death-diagnostic" in args
 	_player_death = "--player-death-diagnostic" in args
 	_water_reflection = "--water-reflection" in args
+	if mount_project_contact and (trainer_diagnostic or player_combat or _trainer_death or _player_death):
+		return _fail("正式地表接收不使用诊断生物或固定抽样。")
 	if (_trainer_death or _player_death) and not player_combat:
 		return _fail("死亡诊断需要同图原玩家技能入口。")
 	if player_combat and not trainer_diagnostic:
 		return _fail("玩家技能诊断需要同图原训练假人。")
 	var player_files: Array = ["FORMAL_PLAYER_COMBAT_ANIMATION","FORMAL_PLAYER_COMBAT_MATERIAL"] if player_combat \
 		else ["FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL"]
-	if _player_death: player_files = ["FORMAL_PLAYER_DEATH_ANIMATION","FORMAL_PLAYER_DEATH_MATERIAL"]
+	if _player_death or mount_project_contact: player_files = ["FORMAL_PLAYER_DEATH_ANIMATION","FORMAL_PLAYER_DEATH_MATERIAL"]
 	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death else TRAINER_FILES
 	var paths := {}
 	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []) \
@@ -77,7 +79,7 @@ func open(args: PackedStringArray) -> bool:
 		if path.is_empty() or not FileAccess.file_exists(path):
 			return _fail("缺少明确的原作者输入：" + key)
 		paths[key] = path
-	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []) + (["FORMAL_FLAMETHROWER_CUE"] if player_combat else []):
+	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []) + (["FORMAL_FLAMETHROWER_CUE"] if player_combat or mount_project_contact else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not DirAccess.dir_exists_absolute(path):
 			return _fail("缺少明确的原作者资源目录：" + key)
@@ -99,7 +101,7 @@ func open(args: PackedStringArray) -> bool:
 			or not player.register_primary_persistence(persistables):
 		return _fail("原玩家正式持久化标识未绑定。")
 	var art: String = paths.FORMAL_PLAYER_TEXTURES
-	if _player_death: animation["primary_death"] = material.get("primary_death")
+	if _player_death or mount_project_contact: animation["primary_death"] = material.get("primary_death")
 	var view: Node2D = scene.start_human_presentation(animation,art)
 	if not is_instance_valid(view) or not view.bind_base_material(material,art.path_join("uv"),art.path_join("appearance")):
 		return _fail("原玩家角色动画与身体、头部 UV 无法绑定。")
@@ -133,6 +135,12 @@ func open(args: PackedStringArray) -> bool:
 		_mount_damage_screen_flash()
 	if panel and not scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
 		return _fail("原静态测试面板字体与实际玩家入口未绑定。")
+	if mount_project_contact:
+		# 当前正常入口尚未装配其他受击者；无目标命中不会请求角色掷骰。
+		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE,Callable())
+		if not is_instance_valid(combat) or not scene.bind_human_damage_lifecycle(player.is_destroyed,combat.interrupt_owned_actions) \
+				or not scene.bind_source_primary_death(player,material) or not scene.bind_source_player_surface_contact(player):
+			return _fail("原主角能力、SpinDie 或同图地表受击未通过正式装配。")
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 	return true
@@ -179,9 +187,9 @@ func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Ar
 	# 仅命令行显式诊断复用定向验证的样本；不把 Godot 随机或固定值当成原运行时随机源。
 	if not scene.start_training_combat_wander(func():return .5,func(minimum,_maximum):return minimum):
 		return false
-	var interrupt := _interrupt_diagnostic_player_abilities
+	var interrupt := _interrupt_unmounted_player_abilities
 	if player_combat:
-		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE)
+		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE,func():return 50)
 		if not is_instance_valid(combat): return false
 		interrupt = combat.interrupt_owned_actions
 	if not scene.bind_human_damage_lifecycle(player.is_destroyed,interrupt):
@@ -194,10 +202,10 @@ func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Ar
 		player.get_target_direction,player.damage_hooks(),func():return 50))
 
 
-func _mount_player_combat(cue_dir: String) -> Node:
+func _mount_player_combat(cue_dir: String, damage_roll: Callable) -> Node:
 	if not scene.start_human_command_execution(player): return null
 	# 原热键只提交槽位，无目标、Cell 或显式朝向。
-	var combat: Node = scene.start_human_fresh_training_combat(player,func():return 50,
+	var combat: Node = scene.start_human_fresh_source_combat(player,damage_roll,
 		func(_target):return null,func(_target):return null,func(_code,_reason):pass)
 	if not is_instance_valid(combat) or not scene.bind_human_gameplay_actions(func():
 		if not player.is_current_controlled(scene.actor): return null
@@ -210,8 +218,8 @@ func _mount_player_combat(cue_dir: String) -> Node:
 	return combat
 
 
-func _interrupt_diagnostic_player_abilities() -> void:
-	# 原安全阶段只通知能力拥有者；此入口未赋予玩家能力，不清移动或输入。
+func _interrupt_unmounted_player_abilities() -> void:
+	# 原安全阶段只通知能力拥有者；未挂能力时不伪造取消动作，也不清移动或输入。
 	pass
 
 

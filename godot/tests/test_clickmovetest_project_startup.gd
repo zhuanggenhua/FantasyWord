@@ -53,7 +53,7 @@ func _run() -> void:
 		and is_instance_valid(startup.damage_screen_flash) and startup.damage_screen_flash.color.a==0.0
 		and startup.damage_screen_flash.mouse_filter==Control.MOUSE_FILTER_IGNORE
 		and is_instance_valid(panel) and panel.body.text.contains("还没有收到 Gameplay 点击输入")
-		and not is_instance_valid(scene.training_target),"原主角、倒影、静态面板和空闪屏正常，未偷开假人诊断")
+		and not is_instance_valid(scene.training_target) and is_instance_valid(scene.surface_contact_damage),"原主角、倒影、面板和闪屏及地表接收正常，未打开假人诊断")
 	if failures>0:
 		_finish()
 		return

@@ -72,7 +72,7 @@ func run() -> void:
 		and is_instance_valid(scene.start_training_target_presentation(trainer_animation,trainer_dir,trainer_material)),
 		"训练假人是同世界实际碰撞对象，有原伤害反应，不用替代属性快照")
 	var notifies: Array = []
-	var runtime: Node = scene.start_human_fresh_training_combat(player,func():return 50,
+	var runtime: Node = scene.start_human_fresh_source_combat(player,func():return 50,
 		func(_target):return null,func(_target):return null,func(code,reason):notifies.append([code,reason]))
 	check(is_instance_valid(runtime),"没有 20004 与 ChargedAttack 状态也能绑定")
 	if failed>0:
@@ -157,7 +157,7 @@ func run() -> void:
 	scene.advance_human_charged_combat(.018)
 	scene.advance_human_charged_combat(.018)
 	check(fire.spec.active and fire.spec.owns_attacking_tag(),"供受击中断的当前真实喷火实例")
-	scene._prepare_human_training_damage(trainer,{"silent":false},func(_source,_input):pass)
+	scene._prepare_human_damage(trainer,{"silent":false},func(_source,_input):pass)
 	check(fire.spec.active and not fire.spec.cancel_requested,"非静默受击在准备阶段不抢先取消")
 	scene.advance_human_damage_lifecycle()
 	check(fire.spec.active and fire.spec.cancel_requested and runtime.spec.cancel_requested,

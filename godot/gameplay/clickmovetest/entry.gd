@@ -38,7 +38,7 @@ const ChargedEffects = preload("res://gameplay/combat/charged_effect_application
 const ChargedDamage = preload("res://gameplay/combat/charged_damage_effect.gd")
 const DamagePush = preload("res://game_core/combat/damage_push_policy.gd")
 # 锁定 GameConfig.asset 的原 Push 门禁；不是诊断的推力记录器。
-const TRAINING_PUSH_FLAGS := {"regular":true, "critical":true, "missed":true, "silent":false}
+const SOURCE_GAME_CONFIG_PUSH_FLAGS := {"regular":true, "critical":true, "missed":true, "silent":false}
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var actor: AnimatableBody2D
 @export var actor_shape: CollisionShape2D
@@ -662,7 +662,7 @@ func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Ca
 
 ## 源新玩家组合只装 20001/20010。角色自己的新槽按作者先后解析到这两个真实实例，
 ## 不持有沉默的 20004、不装载其时间轴，保留单一角色技能门禁与一次时钟所有权。
-func start_human_fresh_training_combat(owner: Object, roll: Callable,
+func start_human_fresh_source_combat(owner: Object, roll: Callable,
 		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> Node:
 	if _charged_actor_runtime != null or human_commands == null or human_commands.character != owner:
 		return null
@@ -671,10 +671,12 @@ func start_human_fresh_training_combat(owner: Object, roll: Callable,
 	if not is_instance_valid(owner) or not owner.has_method("stats") \
 			or not owner.has_method("bind_fresh_ability_loadout") or not owner.has_method("bind_fresh_target_direction_guard") \
 			or not owner.has_method("get_look_at_direction") \
-			or not roll.is_valid() or not target_root.is_valid() or not target_cell.is_valid() or not notify_rejected.is_valid():
+			or not target_root.is_valid() or not target_cell.is_valid() or not notify_rejected.is_valid():
 		return null
-	if not is_instance_valid(training_target) or not training_target.has_formal_target_direction() \
-			or surface_elements == null or not is_instance_valid(human_presentation):
+	# 原角色命中查询可能没有外部目标，不能因此切断独立的世界元素轨。
+	if is_instance_valid(training_target) and (not training_target.has_formal_target_direction() or not roll.is_valid()):
+		return null
+	if surface_elements == null or not is_instance_valid(human_presentation):
 		return null
 	var driver: Node = human_presentation.driver
 	if not is_instance_valid(driver) or driver.resolve_playable_state("Attack").is_empty():
@@ -773,7 +775,7 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	hooks.impact = func(input,velocity):
 		if is_instance_valid(target) and is_instance_valid(target.body):
 			DamagePush.try_push(input,false,velocity,DamagePush.Mode.DEFAULT,
-				TRAINING_PUSH_FLAGS,target.body.push_motion)
+				SOURCE_GAME_CONFIG_PUSH_FLAGS,target.body.push_motion)
 	if not target.configure(hooks,motion_owner,terrain_mask):
 		target.free()
 		return null
@@ -843,7 +845,7 @@ func _commit_source_primary_death() -> void:
 	notify_human_aim_input_disabled()
 	_human_interrupt_actions.call()
 
-func _prepare_human_training_damage(source: Variant, input: Dictionary, prepare: Callable) -> void:
+func _prepare_human_damage(source: Variant, input: Dictionary, prepare: Callable) -> void:
 	# 宿主记录原受击来源；仅非静默命中送表现和安全阶段，不在扣血前取消动作。
 	prepare.call(source,input)
 	if input.silent: return
@@ -859,16 +861,38 @@ func advance_human_damage_lifecycle() -> void:
 	else:
 		_human_damage_lifecycle.tick_safe_interrupt(_human_damage_destroyed,_human_interrupt_actions)
 
+## 接收端和角色能力宿主共用源受击准备，扣血与表现完成仍由角色拥有。
+func _with_player_damage_prepare(player_hooks: Dictionary) -> Dictionary:
+	var prepare: Variant = player_hooks.get("prepare")
+	if not _human_interrupt_actions.is_valid() or not prepare is Callable or not prepare.is_valid():
+		return player_hooks
+	var hooks := player_hooks.duplicate()
+	hooks.prepare = _prepare_human_damage.bind(prepare)
+	return hooks
+
+
+## 只给同一原主角接已绑定的正式生命值和真实身体，不能替其他角色建属性。
+func bind_source_player_surface_contact(owner: Object) -> bool:
+	if not is_instance_valid(owner) or owner!=_aim_control or not _owns_current_actor() \
+			or not _human_interrupt_actions.is_valid() or human_motion_binding==null \
+			or not human_motion_binding.uses_owner(owner):
+		return false
+	var hooks := _with_player_damage_prepare(owner.damage_hooks())
+	hooks.impact = _apply_source_player_contact_impact
+	return start_surface_contact_damage(owner.stats,hooks)
+
+
+func _apply_source_player_contact_impact(input: Dictionary, velocity: Vector2) -> void:
+	# 源 Push 即使方向为零仍清理速度，并替换原推力顺序；自伤由效果分派先排除。
+	DamagePush.try_push(input,false,velocity,DamagePush.Mode.DEFAULT,
+		SOURCE_GAME_CONFIG_PUSH_FLAGS,actor.push_motion)
+
+
 ## 同一实际玩家的正式属性接收端；不依赖可选地表系统。
 func start_training_basic_attack(player_direction: Callable, player_hooks: Dictionary, roll: Callable) -> Node:
 	if not is_instance_valid(training_target) or not _training_tracking_stats.is_valid(): return null
-	var hooks := player_hooks
-	var prepare: Variant = hooks.get("prepare")
-	if _human_interrupt_actions.is_valid() and prepare is Callable and prepare.is_valid():
-		hooks = player_hooks.duplicate()
-		hooks.prepare = _prepare_human_training_damage.bind(prepare)
 	return training_target.bind_formal_basic_attack(actor,actor.get_node("受击盒"),
-		_training_tracking_stats,player_direction,hooks,roll)
+		_training_tracking_stats,player_direction,_with_player_damage_prepare(player_hooks),roll)
 
 ## 显式导入源图集；空资源不让角色获得假表现。
 func start_training_target_presentation(animation: Dictionary, texture_directory: String,
