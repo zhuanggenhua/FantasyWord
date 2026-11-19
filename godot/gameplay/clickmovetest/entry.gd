@@ -44,6 +44,8 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var visual_body: Node2D
 @export var camera: Camera2D
 @export var aim_pivot: Node2D
+const WaterReflection = preload("res://gameplay/clickmovetest/water_reflection_capture.gd")
+var water_reflection: WaterReflection
 var ground_layers: Node2D
 var human_presentation: Node2D
 var human_motion_binding: RefCounted
@@ -246,6 +248,37 @@ func bind_ground_layers(directory: String) -> bool:
 	ground_layers = layer
 	return true
 
+## 挂载时才替换现有作者水层材质；没有掩码不启用，也不创建替代水域。
+func bind_static_tree_reflection(mask_path: String) -> bool:
+	if not is_instance_valid(ground_layers) or water_reflection!=null or ground_layers.water_base_count()!=87:
+		return false
+	var capture := WaterReflection.new()
+	add_child(capture)
+	if not capture.configure(mask_path):
+		capture.free()
+		return false
+	var tree: Sprite2D = ground_layers.install_reflection_tree()
+	if tree==null or not capture.bind_tree(tree):
+		capture.free()
+		return false
+	water_reflection = capture
+	ground_layers.set_water_capture_material(capture.water_material())
+	return true
+
+func bind_player_water_reflection() -> bool:
+	if not is_instance_valid(water_reflection) or not is_instance_valid(human_presentation) \
+			or human_presentation.get_parent()!=visual_body or visual_body.get_parent()!=actor:
+		return false
+	return water_reflection.bind_player(human_presentation)
+
+func advance_static_tree_reflection(delta: float) -> void:
+	if not is_instance_valid(water_reflection): return
+	var viewport := get_viewport()
+	var logical := get_viewport_rect().size
+	var physical := Vector2i(viewport.get_texture().get_size()) if DisplayServer.get_name()!="headless" else Vector2i(logical)
+	water_reflection.synchronize_tree(ground_layers.rendered_water_bounds(),get_canvas_transform(),
+		logical,physical,camera.get_screen_center_position(),delta)
+
 ## 原场景只有 Burning 临时瓦片，无 Steam 或替换地貌。
 ## 优先连接已装配的真实覆盖层；显式端口可由完整地图宿主提供。
 func bind_surface_presentation(fire_path: String, cover_port: Dictionary = {}) -> bool:
@@ -381,6 +414,7 @@ func _process(delta: float) -> void:
 		# 原 CharacterBase.Update 先消化本角色待处理受击/死亡，死亡后不再推进其技能。
 		training_target.advance_damage_lifecycle()
 		training_target.advance_formal_basic_attack(delta)
+	advance_static_tree_reflection(delta)
 
 func _exit_tree() -> void:
 	_on_surface_map_unloaded()

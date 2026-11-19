@@ -8,6 +8,9 @@ var _lakegrass: Dictionary = {}
 var _water_base: Dictionary = {}
 var _static_decorations: Dictionary = {}
 var _configured := false
+var _textures: Dictionary = {}
+var _reflection_tree: Node2D
+var _base_water_material: CanvasItemMaterial
 
 func configure(directory: String) -> bool:
 	if _configured: return false
@@ -47,10 +50,11 @@ func configure(directory: String) -> bool:
 			_add_animated_tiles(layer.decorations, int(layer.sorting_order), frames, data.sprites, _lakegrass)
 	# Original water compositor at reflection alpha zero: unlit authored base
 	# with unchanged sprite alpha. Actual reflected contributions are separate.
-	var base_material := CanvasItemMaterial.new()
-	base_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	_base_water_material = CanvasItemMaterial.new()
+	_base_water_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	_add_animated_tiles(data.water_base, int(data.water_base.sorting_order), frames, data.sprites,
-		_water_base, base_material)
+		_water_base, _base_water_material)
+	_textures = textures
 	_configured = true
 	return true
 
@@ -143,3 +147,53 @@ func source_sprite(source: int, cell: Vector3i) -> Sprite2D:
 
 func cell_count(source: int) -> int:
 	return _cells.get(source,{}).size()
+
+## 锁定 ClickMoveTest Tree：独立实际场景对象，不把附近树形 Tile 当作 987751660。
+## 父 SortingGroup 顺序 1；组内 Shadow(-7) 在 Tree(0) 前画且不参加倒影。
+func install_reflection_tree() -> Sprite2D:
+	if not _configured or is_instance_valid(_reflection_tree): return null
+	var foliage := _authored_tree_sprite("be785b53e8101134cb49e391918a7a82",Rect2(155,52,21,25))
+	var shadow := _authored_tree_sprite("da4d732596845594e9b99bf9488ee15f",Rect2(153,51,23,27))
+	if foliage==null or shadow==null:
+		if foliage!=null: foliage.free()
+		if shadow!=null: shadow.free()
+		return null
+	_reflection_tree = Node2D.new()
+	_reflection_tree.name = "原树木 987751656"
+	_reflection_tree.position = Vector2(-.4375,8.1875)
+	_reflection_tree.z_index = 1
+	add_child(_reflection_tree)
+	shadow.name = "原树影 843448604"
+	shadow.position = Vector2(-.125,0)
+	_reflection_tree.add_child(shadow)
+	foliage.name = "原倒影树 987751660"
+	_reflection_tree.add_child(foliage)
+	return foliage
+
+func _authored_tree_sprite(key: String, unity_rect: Rect2) -> Sprite2D:
+	var atlas: Texture2D = _textures.get(key)
+	if atlas==null or unity_rect.end.x>atlas.get_width() or unity_rect.end.y>atlas.get_height(): return null
+	var frame := AtlasTexture.new()
+	frame.atlas = atlas
+	frame.region = Rect2(unity_rect.position.x,atlas.get_height()-unity_rect.end.y,unity_rect.size.x,unity_rect.size.y)
+	frame.filter_clip = true
+	var item := Sprite2D.new()
+	item.texture = frame
+	item.scale = Vector2.ONE/8.0
+	item.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	return item
+
+func set_water_capture_material(value: ShaderMaterial) -> void:
+	# 单一作者水 Renderer 2080991805 的 87 格；不动底地和水生植被。
+	for sprite: AnimatedSprite2D in _water_base.values():
+		sprite.material = value if value!=null else _base_water_material
+
+func rendered_water_bounds() -> Rect2:
+	var result := Rect2()
+	for sprite: AnimatedSprite2D in _water_base.values():
+		if not sprite.is_visible_in_tree(): continue
+		var tex := sprite.sprite_frames.get_frame_texture(sprite.animation,sprite.frame)
+		if tex==null: continue
+		var footprint := sprite.global_transform * Rect2(sprite.offset,tex.get_size())
+		result = footprint if not result.has_area() else result.merge(footprint)
+	return result

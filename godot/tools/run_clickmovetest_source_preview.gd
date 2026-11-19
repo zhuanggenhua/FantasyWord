@@ -30,6 +30,7 @@ var _persistables := PersistenceRegistry.new()
 var _point: Point
 var _trainer_death := false
 var _player_death := false
+var _water_reflection := false
 
 
 func _initialize() -> void:
@@ -39,13 +40,14 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	if not "--source-preview" in args or Array(args).any(func(arg):
-			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--smoke"]):
-		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--smoke]；不默认启动测试或新关卡。")
+			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--water-reflection","--smoke"]):
+		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--water-reflection] [--smoke]；不默认启动测试或新关卡。")
 		return
 	var trainer_diagnostic := "--trainer-diagnostic" in args
 	var player_combat := "--player-combat-diagnostic" in args
 	_trainer_death = "--trainer-death-diagnostic" in args
 	_player_death = "--player-death-diagnostic" in args
+	_water_reflection = "--water-reflection" in args
 	if (_trainer_death or _player_death) and not player_combat:
 		_refuse("死亡诊断需要同图原玩家技能入口。")
 		return
@@ -57,7 +59,8 @@ func _run() -> void:
 	if _player_death: player_files = ["FORMAL_PLAYER_DEATH_ANIMATION","FORMAL_PLAYER_DEATH_MATERIAL"]
 	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death else TRAINER_FILES
 	var paths := {}
-	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []):
+	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []) \
+			+ (["FORMAL_WATER_REFLECTION_MASK"] if _water_reflection else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not FileAccess.file_exists(path):
 			_refuse("缺少明确的原作者输入：" + key)
@@ -117,6 +120,10 @@ func _run() -> void:
 			or not _scene.bind_surface_presentation(paths.FORMAL_BURNING_TILE_PNG):
 		_refuse("原底图、固定装饰或地表效果未通过来源检查。")
 		return
+	if _water_reflection and (not _scene.bind_static_tree_reflection(paths.FORMAL_WATER_REFLECTION_MASK) \
+			or not _scene.bind_player_water_reflection()):
+		_refuse("原树、主角正式换装材质和 87 格水层无法装配倒影。")
+		return
 	_point = Point.new(0)
 	_point.enable(Point.Map.GAMEPLAY)
 	if not _scene.bind_mouse_point_actions(_point) or not _scene.start_human_aim(_player,_player):
@@ -127,7 +134,9 @@ func _run() -> void:
 		_refuse("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 		return
 	if "--smoke" in args:
-		if _player_death:
+		if _water_reflection:
+			await _smoke_water_reflection()
+		elif _player_death:
 			await _smoke_player_death()
 		elif _trainer_death:
 			await _smoke_trainer_death()
@@ -144,6 +153,7 @@ func _run() -> void:
 	if player_combat: print("玩家 1 普攻，Q 或 2 喷火；其余原槽为空。")
 	if _trainer_death: print("原训练假人归零进入 SpinDie。")
 	if _player_death: print("原主角死亡后保留实体及镜头；此原场景没有配置死亡命令。")
+	if _water_reflection: print("原树与主角本体倒影已启用，当前预览没有动态武器或游泳宿主。")
 	print("不含正式主场景、完整战斗、菜单或存档。")
 
 
@@ -365,6 +375,110 @@ func _smoke_player_death() -> void:
 	print("PASS 原 ClickMoveTest 主角死亡：实际反击归零、释放控制、保留原身体、镜头、标识与 SpinDie 末帧。")
 	_scene.free()
 	quit()
+
+
+func _smoke_water_reflection() -> void:
+	var native := DisplayServer.get_name()!="headless"
+	if not native: root.size=Vector2i(800,600)
+	var actor: Node2D = _scene.actor
+	var capture = _scene.water_reflection
+	var view = _scene.human_presentation
+	var layers = _scene.ground_layers
+	if actor.get_movement_position()!=Vector2.ZERO or layers.water_base_count()!=87 or capture._color_target.get_child_count()!=2:
+		_refuse("倒影诊断改变出生点，或捕获了作者未配置的对象。")
+		return
+	_scene.set_process(false)
+	# 只为水面验证把实际角色移动到 (5,-9) 水边，不变更地图或正常出生点。
+	actor.request_move_position(Vector2(4.75,-4.5))
+	await physics_frame
+	await physics_frame
+	_scene.set_physics_process(false)
+	for child in layers.get_children():
+		if child is AnimatedSprite2D:
+			child.pause()
+			child.set_frame_and_progress(0,0)
+	view.animator.callback_mode_process=AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+	view.driver.set_process(false)
+	view.playback.set_direction(0)
+	view.animator.seek(0,true)
+	var center: Vector2 = view.sprite.global_position
+	var initial_anchor: Variant = view.reflection_ground_anchor()
+	if not center.is_equal_approx(Vector2(5.5,7.6)) or initial_anchor==null \
+			or not initial_anchor.is_equal_approx(center+Vector2(0,.3125)):
+		_refuse("原主角脚底或测试水边位置不符：%s / %s。" % [center,initial_anchor])
+		return
+	_scene.camera.global_position=Vector2(5.5,8.2)
+	_scene.camera.force_update_scroll()
+	_scene.advance_static_tree_reflection(0)
+	if capture._player_quality!=Vector2.ONE or not capture._player_proxy.visible \
+			or capture._player_proxy.texture!=view.sprite.texture \
+			or capture._player_proxy.material==view.sprite.material:
+		_refuse("捕获代理未独立跟随实际主角材质和精灵。")
+		return
+	if native:
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var with_capture: Image = capture._color_target.get_texture().get_image()
+		var with_composite := root.get_texture().get_image()
+		layers.set_water_capture_material(null)
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var without_composite := root.get_texture().get_image()
+		layers.set_water_capture_material(capture.water_material())
+		capture._player_proxy.hide()
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var without_capture := root.get_texture().get_image()
+		if not with_capture.get_used_rect().has_area() or without_capture.get_data()!=without_composite.get_data():
+			_refuse("捕获／合成分离失败，移除主角捕获仍影响真实主画布。")
+			return
+		var inverse := _scene.get_canvas_transform().affine_inverse()
+		var checked := _check_water_rgb(with_composite,without_composite,inverse,layers)
+		if checked<=0:
+			_refuse("实际主角倒影未产生水格内部 RGB 变化，或越过水格/改变 alpha：%s。" % checked)
+			return
+		print("原主角水面 RGB 变化：%d px，局限于真实水格。" % checked)
+	if view.driver.resolve_playable_state("Attack")!="":
+		view.driver.try_play_animation("Attack")
+		view.playback.set_direction(1)
+		view.animator.advance(.26)
+		_scene.advance_static_tree_reflection(0)
+		if view.playback.current_label!=2 or not view.reflection_ground_anchor().is_equal_approx(initial_anchor) \
+				or capture._player_proxy.texture!=view.sprite.texture:
+			_refuse("实际 Attack 动作换帧或换方向未延续脚底和捕获身份。")
+			return
+	if view.driver.resolve_playable_state("SpinDie")!="":
+		view.driver.try_lock_animation("SpinDie")
+		view.animator.advance(1.6)
+		_scene.advance_static_tree_reflection(0)
+		if view.playback.current_label!=11 or not view.reflection_ground_anchor().is_equal_approx(initial_anchor) \
+				or capture._player_proxy.texture!=view.sprite.texture:
+			_refuse("实际 SpinDie 末帧的脚底与捕获身份不符。")
+			return
+	capture.set_player_swimming(true)
+	_scene.advance_static_tree_reflection(0)
+	if capture._player_proxy.visible:
+		_refuse("原游泳关闭配置未即时停用完整站立倒影。")
+		return
+	print("PASS 原主角与原树水面捕获；%s。" % ("原生渲染水色验证" if native else "无头不验画面"))
+	_scene.free()
+	quit()
+
+
+func _check_water_rgb(shown: Image, hidden: Image, screen_to_world: Transform2D, layers: Node) -> int:
+	if shown.get_size()!=hidden.get_size(): return -1
+	var count := 0
+	for y in shown.get_height():
+		for x in shown.get_width():
+			var a := shown.get_pixel(x,y)
+			var b := hidden.get_pixel(x,y)
+			if a==b: continue
+			if a.a!=b.a: return -2
+			var world := screen_to_world*Vector2(x+.5,y+.5)
+			if layers.water_base_sprite(Vector3i(floori(world.x),-floori(world.y)-1,0))==null:
+				return -3
+			count+=1
+	return count
 
 
 func _interrupt_diagnostic_player_abilities() -> void:

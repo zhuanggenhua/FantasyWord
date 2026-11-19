@@ -123,6 +123,17 @@ func bind_base_material(data: Dictionary, uv_directory: String, appearance_direc
 	material_binding = binding
 	return true
 
+## EquipmentRenderer.TryGetGroundAnchorWorldPosition；仅支持已经核实的正中 FullRect 人形帧。
+## 原帧高 32，groundPixelY=18；从中心到行像素中心是 2.5 个向下的图集像素。
+func reflection_ground_anchor() -> Variant:
+	if material_binding==null or not is_instance_valid(sprite) or not sprite.texture is AtlasTexture \
+			or not is_instance_valid(driver) or driver.current_animation_key not in ["Idle","Walk","Dmg","Attack","SpinDie"] \
+			or sprite.texture.region.size!=Vector2(32,32) or not sprite.centered or sprite.offset!=Vector2.ZERO:
+		return null
+	var world_bounds := sprite.global_transform * sprite.get_rect()
+	var ground := sprite.global_transform * Vector2(0,-2.5 if sprite.flip_v else 2.5)
+	return Vector2(world_bounds.get_center().x,ground.y)
+
 func _exit_tree() -> void:
 	if material_binding != null:
 		material_binding.disconnect_from_view()
