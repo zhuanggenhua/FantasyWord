@@ -49,6 +49,8 @@ var human_presentation: Node2D
 var human_motion_binding: RefCounted
 var _human_damage_lifecycle := DamageLifecycle.new()
 var _human_damage_destroyed: Callable
+var _source_primary_death_owner: Object
+const HumanPresentation = preload("res://gameplay/clickmovetest/human_presentation.gd")
 var _human_interrupt_actions: Callable
 var movement: RefCounted
 var route: RefCounted
@@ -428,7 +430,7 @@ static func _integer(value: Variant) -> bool:
 ## 调用者仍须把权威 owner 的实际位移/身体朝向通知接到返回节点。
 func start_human_presentation(data: Dictionary, texture_directory: String) -> Node2D:
 	if human_presentation != null or not is_instance_valid(visual_body) or not visual_body.is_inside_tree(): return null
-	var presentation = preload("res://gameplay/clickmovetest/human_presentation.gd").new()
+	var presentation := HumanPresentation.new()
 	visual_body.add_child(presentation)
 	if not presentation.configure(data, texture_directory):
 		printerr(presentation.last_error)
@@ -736,6 +738,35 @@ func bind_human_damage_lifecycle(is_destroyed: Callable, interrupt_actions: Call
 	_human_interrupt_actions = interrupt_actions
 	return true
 
+## 仅接 ClickMoveTest 明确的主角所有者与空死亡动作配置；碰撞体和相机不换宿主。
+func bind_source_primary_death(owner: Object, material: Dictionary) -> bool:
+	var source: Variant = material.get("primary_death")
+	if _source_primary_death_owner!=null or not _human_interrupt_actions.is_valid() \
+			or human_motion_binding==null or not human_motion_binding.uses_owner(owner) \
+			or owner!=_aim_control or not is_instance_valid(human_presentation) \
+			or human_presentation.driver.resolve_playable_state("SpinDie").is_empty() \
+			or material.get("source_commit")!=SOURCE or not source is Dictionary:
+		return false
+	if not HumanPresentation.valid_primary_death(source): return false
+	if not owner.bind_current_health_changed(_queue_source_primary_death): return false
+	_source_primary_death_owner = owner
+	return true
+
+func _queue_source_primary_death(previous: int, current: int, _source: Variant) -> void:
+	_human_damage_lifecycle.on_current_health_changed(previous,current)
+
+func _commit_source_primary_death() -> void:
+	var owner := _source_primary_death_owner
+	if not owner.mark_source_primary_death(actor): return
+	actor.reset_movement()
+	if not human_presentation.driver.try_lock_animation("SpinDie"):
+		push_error("原 ClickMoveTest 主角无法锁定 SpinDie。")
+	# 该诊断没有对话、菜单或库存宿主；锁定场景的死亡动作本身确为空。
+	# NotifyCharacterDied 清掉唯一控制对象，但镜头继续跟随实际主角。
+	owner.set_current_controlled(false)
+	notify_human_aim_input_disabled()
+	_human_interrupt_actions.call()
+
 func _prepare_human_training_damage(source: Variant, input: Dictionary, prepare: Callable) -> void:
 	# 宿主记录原受击来源；仅非静默命中送表现和安全阶段，不在扣血前取消动作。
 	prepare.call(source,input)
@@ -745,7 +776,11 @@ func _prepare_human_training_damage(source: Variant, input: Dictionary, prepare:
 		push_error("玩家正式 Dmg 动作无法播放")
 
 func advance_human_damage_lifecycle() -> void:
-	if _human_damage_destroyed.is_valid() and _human_interrupt_actions.is_valid():
+	if not _human_damage_destroyed.is_valid() or not _human_interrupt_actions.is_valid(): return
+	if is_instance_valid(_source_primary_death_owner):
+		_human_damage_lifecycle.tick_safe(_source_primary_death_owner.current_health,_human_damage_destroyed,
+			_human_interrupt_actions,_commit_source_primary_death)
+	else:
 		_human_damage_lifecycle.tick_safe_interrupt(_human_damage_destroyed,_human_interrupt_actions)
 
 ## 同一实际玩家的正式属性接收端；不依赖可选地表系统。

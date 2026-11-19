@@ -1,5 +1,5 @@
 extends Node2D
-## 原 Human Idle/Walk 与可选 Dmg/ChargedAttack/Attack 和原训练假人 SpinDie 的显式私有图集入口；不补造受伤事件。
+## 原 Human Idle/Walk 与可选 Dmg/ChargedAttack/Attack 和经核实拥有者的 SpinDie 的显式私有图集入口；不补造受伤事件。
 const Playback = preload("res://game_core/presentation/directional_sprite_playback.gd")
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
@@ -11,6 +11,12 @@ var last_error := ""
 var material_binding: RefCounted
 var _animation_contract := {}
 
+static func valid_primary_death(source: Variant) -> bool:
+	return source is Dictionary and source.get("config_guid")=="b669f9c81be34b47bf3d083609477ab5" \
+		and source.get("config_sha256")=="db6a051cac869871f8fc403b305a1fe0a8c41e125ef37faa7f4b8a60f1607a21" \
+		and source.get("action_rid")==-2 and source.get("animation_key")=="SpinDie" \
+		and source.get("actor_file_id")=="735002000000000004"
+
 func configure(data: Dictionary, texture_directory: String) -> bool:
 	if sprite != null or not is_inside_tree():
 		return _fail("入口须先进入场景树且只能配置一次。")
@@ -20,9 +26,11 @@ func configure(data: Dictionary, texture_directory: String) -> bool:
 		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg/ChargedAttack/Attack/SpinDie。")
 	if data.actions.has("SpinDie"):
 		var target: Variant = data.get("training_target")
-		if not target is Dictionary or target.get("death_animation_key") != "SpinDie" \
-				or target.get("prefab_guid") != "dca23ea6afacc0647bfd10c5cefa4099":
-			return _fail("SpinDie 只接原训练假人已核实的正式死亡动作。")
+		var is_trainer: bool = target is Dictionary and target.get("death_animation_key")=="SpinDie" \
+			and target.get("prefab_guid")=="dca23ea6afacc0647bfd10c5cefa4099"
+		var is_primary := valid_primary_death(data.get("primary_death"))
+		if is_primary==is_trainer or (is_primary and data.has("training_target")):
+			return _fail("SpinDie 须来自唯一且已核实的场景角色，不能借用另一角色的合同。")
 	var loaded := {}
 	for name in data.textures:
 		if not name is String or name != name.get_file() or not name.ends_with(".png"):

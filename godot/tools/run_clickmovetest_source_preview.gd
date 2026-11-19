@@ -29,6 +29,7 @@ var _maps := MapRegistry.new()
 var _persistables := PersistenceRegistry.new()
 var _point: Point
 var _trainer_death := false
+var _player_death := false
 
 
 func _initialize() -> void:
@@ -38,20 +39,22 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	if not "--source-preview" in args or Array(args).any(func(arg):
-			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--smoke"]):
-		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic]]] [--smoke]；不默认启动测试或新关卡。")
+			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--smoke"]):
+		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--smoke]；不默认启动测试或新关卡。")
 		return
 	var trainer_diagnostic := "--trainer-diagnostic" in args
 	var player_combat := "--player-combat-diagnostic" in args
 	_trainer_death = "--trainer-death-diagnostic" in args
-	if _trainer_death and not player_combat:
-		_refuse("假人死亡诊断需要同图原玩家技能入口。")
+	_player_death = "--player-death-diagnostic" in args
+	if (_trainer_death or _player_death) and not player_combat:
+		_refuse("死亡诊断需要同图原玩家技能入口。")
 		return
 	if player_combat and not trainer_diagnostic:
 		_refuse("玩家技能诊断需要同图原训练假人。")
 		return
 	var player_files: Array = ["FORMAL_PLAYER_COMBAT_ANIMATION","FORMAL_PLAYER_COMBAT_MATERIAL"] if player_combat \
 		else ["FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL"]
+	if _player_death: player_files = ["FORMAL_PLAYER_DEATH_ANIMATION","FORMAL_PLAYER_DEATH_MATERIAL"]
 	var trainer_files: Array = TRAINER_DEATH_FILES if _trainer_death else TRAINER_FILES
 	var paths := {}
 	for key in REQUIRED_FILES + player_files + (trainer_files if trainer_diagnostic else []):
@@ -87,6 +90,7 @@ func _run() -> void:
 		_refuse("原玩家正式持久化标识未绑定。")
 		return
 	var art: String = paths.FORMAL_PLAYER_TEXTURES
+	if _player_death: animation["primary_death"] = material.get("primary_death")
 	var view: Node2D = _scene.start_human_presentation(animation,art)
 	if not is_instance_valid(view) or not view.bind_base_material(material,art.path_join("uv"),art.path_join("appearance")):
 		_refuse("原玩家角色动画与身体、头部 UV 无法绑定。")
@@ -119,11 +123,13 @@ func _run() -> void:
 		_refuse("原玩家 Point 与 Static Pivot 未绑定。")
 		return
 	_player.player_input_disabled.connect(_scene.notify_human_aim_input_disabled)
-	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files):
+	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		_refuse("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 		return
 	if "--smoke" in args:
-		if _trainer_death:
+		if _player_death:
+			await _smoke_player_death()
+		elif _trainer_death:
 			await _smoke_trainer_death()
 		elif player_combat:
 			await _smoke_player_combat()
@@ -136,11 +142,12 @@ func _run() -> void:
 	if trainer_diagnostic:
 		print("已启用原场景活动训练假人诊断；游走与战斗使用固定样本，不代表 Unity 随机流。")
 	if player_combat: print("玩家 1 普攻，Q 或 2 喷火；其余原槽为空。")
-	if _trainer_death: print("原训练假人归零进入 SpinDie；不装配玩家死亡、掉落或复活。")
+	if _trainer_death: print("原训练假人归零进入 SpinDie。")
+	if _player_death: print("原主角死亡后保留实体及镜头；此原场景没有配置死亡命令。")
 	print("不含正式主场景、完整战斗、菜单或存档。")
 
 
-func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Array) -> bool:
+func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Array, player_material: Dictionary) -> bool:
 	var art: String = paths.FORMAL_TRAINER_ATTACK_TEXTURES
 	var animation := _read(paths[files[0]])
 	var material := _read(paths[files[1]])
@@ -166,7 +173,10 @@ func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Ar
 		interrupt = combat.interrupt_owned_actions
 	if not _scene.bind_human_damage_lifecycle(_player.is_destroyed,interrupt):
 		return false
-	_player.damage_completed.connect(_end_diagnostic_on_zero_health)
+	if _player_death:
+		if not _scene.bind_source_primary_death(_player,player_material): return false
+	else:
+		_player.damage_completed.connect(_end_diagnostic_on_zero_health)
 	return is_instance_valid(_scene.start_training_basic_attack(
 		_player.get_target_direction,_player.damage_hooks(),func():return 50))
 
@@ -275,7 +285,7 @@ func _smoke_trainer_death() -> void:
 	_scene._process(.02)
 	trainer.advance_damage_lifecycle()
 	if death_trace!=[[0,false,"SpinDie",false]] or trainer.can_move() or not is_instance_valid(trainer.hitbox) \
-			or counter.timeline.playing or counter.runtime.spec.active or _player.current_health()!=player_health:
+			or counter.timeline.frame!=7 or counter.timeline.playing or counter.runtime.spec.active or _player.current_health()!=player_health:
 		_refuse("死亡收尾未在原身体上停止 AI 并且只锁定一次 SpinDie。")
 		return
 	var view: Node2D = trainer.presentation
@@ -290,6 +300,69 @@ func _smoke_trainer_death() -> void:
 		_refuse("原 12 帧 SpinDie 未保留末帧。")
 		return
 	print("PASS 原 ClickMoveTest 假人死亡：实际 1 普攻第 8 帧、一次安全收尾、原 SpinDie 双 UV 和末帧。")
+	_scene.free()
+	quit()
+
+
+func _smoke_player_death() -> void:
+	if DisplayServer.get_name()=="headless": root.size=Vector2i(800,600)
+	var trainer: Node2D = _scene.training_target
+	var body: Node2D = _scene.actor
+	if _player.current_health()!=100 or body.get_movement_position()!=Vector2.ZERO \
+			or trainer.get_movement_position()!=trainer.SOURCE_POSITION:
+		_refuse("主角死亡诊断不能改变正式开局数据。")
+		return
+	# 仅布置一次实际物理命中；平常启动不减少玩家生命或移动角色。
+	_scene.set_process(false)
+	body.request_move_position(Vector2(2.5,-3.47))
+	await physics_frame
+	await physics_frame
+	_scene.set_physics_process(false)
+	_player.set_target_direction(Vector2.UP)
+	_trainer_owner.set_target_direction(Vector2.DOWN)
+	_trainer_owner.set_look_at_direction(Vector2.DOWN)
+	var damage := _player.damage_hooks()
+	if damage.apply_current_health_delta.call(-97,0,null,trainer.stats)!=3:
+		_refuse("无法布置只剩一次真实命中的主角。")
+		return
+	var changes: Array = []
+	_player.controlled_character_changed.connect(func(current): changes.append(current))
+	var attack: Node = trainer.formal_attack
+	if not attack._fire(20001):
+		_refuse("同场假人的正式反击无法提交。")
+		return
+	attack.advance(.018)
+	attack.advance(.12)
+	if _player.current_health()!=3 or attack.timeline.frame!=7:
+		_refuse("原反击未到第 8 帧时不能掉血。")
+		return
+	attack.advance(.02)
+	if _player.current_health()!=0 or _player.is_destroyed() or _player.can_be_player_controlled(body) \
+			or not _player.is_current_controlled(body) or not changes.is_empty():
+		_refuse("实际原主角未经历归零与死亡提交之间的独立状态。")
+		return
+	_scene._process(0)
+	_scene.advance_human_damage_lifecycle()
+	var view: Node2D = _scene.human_presentation
+	if not _player.is_destroyed() or _player.is_current_controlled(body) or _player.can_move() \
+			or changes!=[null] or body.execution.has_active_movement_intent() \
+			or _scene.camera.follow!=body or _persistables.resolve("player")!=body:
+		_refuse("安全死亡未清控制或错误替换了原身体、镜头或标识。")
+		return
+	var count: int = _scene.command_count
+	_key(KEY_1,true)
+	_key(KEY_1,false)
+	_key(KEY_D,true)
+	_key(KEY_D,false)
+	var body_map: Texture2D = view.sprite.material.get_shader_parameter("body_map")
+	var head_map: Texture2D = view.sprite.material.get_shader_parameter("head_map")
+	view.animator.advance(1.6)
+	if _scene.command_count!=count or body.execution.has_active_movement_intent() \
+			or view.driver.locked_key!="SpinDie" or view.playback.current_label!=11 \
+			or body_map.get_size()!=Vector2(384,32) or head_map.get_size()!=Vector2(384,32):
+		_refuse("死亡输入仍能执行，或主角缺失原 SpinDie 双 UV 末帧。")
+		return
+	print("PASS 原 ClickMoveTest 主角死亡：实际反击归零、释放控制、保留原身体、镜头、标识与 SpinDie 末帧。")
 	_scene.free()
 	quit()
 

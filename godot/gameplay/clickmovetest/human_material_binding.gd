@@ -25,9 +25,9 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 		if not data.get(field) is Dictionary: return _fail("Incomplete Human material contract.")
 	if data.actions.size() != animation.actions.size() or not data.actions.has_all(animation.actions.keys()):
 		return _fail("材质必须完整覆盖同一展示入口的全部已核实动作。")
-	var trainer_death: bool = animation.actions.has("SpinDie")
-	if trainer_death and data.get("training_target") != animation.get("training_target"):
-		return _fail("SpinDie 材质必须来自同一训练假人继承与方向库。")
+	if animation.actions.has("SpinDie") and (data.get("training_target")!=animation.get("training_target") \
+			or data.get("primary_death")!=animation.get("primary_death")):
+		return _fail("SpinDie 材质必须来自同一实际场景角色与方向库。")
 	var actions := {}
 	var look := {}
 	var cache := {}

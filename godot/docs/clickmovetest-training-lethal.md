@@ -174,3 +174,20 @@ Idle、Walk、Dmg、Attack、SpinDie 的原动画与材质合同；纹理仍由
 假人正处在反击第 7 帧时也不得在安全阶段后再命中。验证保留原身体和受击盒、
 材料切换到单行身体和头部 UV，以及 12 帧动作结束后保留第 11 号帧。
 这不是 Unity 截图验收，也不含掉落、奖励、任务、复活或玩家死亡。
+
+## 同场主角死亡诊断
+
+在同一玩家技能诊断后另加 `--player-death-diagnostic`。训练假人仍用普通
+Attack 包，两个死亡选项可同时启用非 smoke 试玩；同时启用时 `--smoke`
+检验主角死亡。主角单独使用 `FORMAL_PLAYER_DEATH_ANIMATION` 与
+`FORMAL_PLAYER_DEATH_MATERIAL`；向两个 Human 提取工具各传
+`--include-damage --include-attack --include-death`，不使用 `--training-target`。
+私有纹理仍使用 `FORMAL_PLAYER_TEXTURES`。
+
+源 ClickMoveTest 的主角是 PlayerSystem 的本地组件 735002000000000004，
+场景 GameManager 绑定的 GameConfig 把死亡命令设为空（`rid: -2`），
+角色表未配置死亡音效或特效。此入口不添加死亡菜单、重开、掉落、复活或任意
+场景切换。锁定作者数据：训练假人的第 8 帧反击能使原玩家正式生命归零；
+归零立即拒绝指令，下一个安全阶段才清控制、重置移动与锁定原 SpinDie。
+仍保留主角身体、镜头与 `player` 标识，不关闭预览。原对话中断、菜单广播、
+尸体库存、复活以及 Unity 同帧图形对照仍不在此诊断范围。

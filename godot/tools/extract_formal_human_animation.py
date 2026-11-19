@@ -104,5 +104,6 @@ if __name__=="__main__":
     p.add_argument("--include-damage",action="store_true",help="同时核实原 Dmg 四向非循环片段")
     p.add_argument("--include-charged",action="store_true",help="同时核实原 ChargedAttack 四向非循环片段")
     p.add_argument("--include-attack",action="store_true",help="同时核实原 Attack 四向非循环片段")
-    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    p.add_argument("--include-death",action="store_true",help="同时核实原 SpinDie 非循环片段")
+    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("Human 私有合同：四向来源、所有标签和 PNG 哈希已核验。")

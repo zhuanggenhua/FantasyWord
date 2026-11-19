@@ -34,6 +34,7 @@ signal damage_completed(source: Variant, input: Dictionary, previous_health: int
 
 var _primary: WeakRef
 var _primary_exited := false
+var _primary_death_committed := false
 var _selected := false
 var _accepts := true
 var _directions := Direction.new()
@@ -161,7 +162,20 @@ func current_health() -> int: return _attributes.current_health()
 
 func is_destroyed() -> bool:
 	# HP 归零是源 dead，真正销毁须等待外部安全死亡所有者。
-	return not _read_destroyed.is_null() and (not _read_destroyed.is_valid() or bool(_read_destroyed.call()))
+	return _primary_death_committed or (not _read_destroyed.is_null() \
+		and (not _read_destroyed.is_valid() or bool(_read_destroyed.call())))
+
+func bind_current_health_changed(callback: Callable) -> bool:
+	if not is_instance_valid(_get_primary()) or not callback.is_valid() or _attributes.current_health_changed.is_connected(callback):
+		return false
+	_attributes.current_health_changed.connect(callback)
+	return true
+
+## Movable.MarkAsDestroyed 在动作锁定之前；只保留实际主角，不删除绑定和持久标识。
+func mark_source_primary_death(actor: Node2D) -> bool:
+	if actor==null or actor!=_get_primary() or current_health()!=0 or is_destroyed(): return false
+	_primary_death_committed = true
+	return true
 
 func damage_hooks() -> Dictionary:
 	return {"provoke":_on_provoked,"has_formal_stats":_attributes.has_formal_stats,

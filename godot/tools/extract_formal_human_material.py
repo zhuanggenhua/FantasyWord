@@ -17,10 +17,13 @@ APPEARANCE = ROOT + "Appearance/基础人形外观.asset"
 BASE_PREFAB = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 SCENE = "Assets/Scenes/ClickMoveTest.unity"
 PREFAB = "Assets/Prefabs/Entities/Characters/Heroes/玩家角色.prefab"
+GAME_CONFIG = "Assets/GameData/GameCore/GameConfig.asset"
+CONFIG_GUID = "b669f9c81be34b47bf3d083609477ab5"
+BASE_ACTOR = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 TRAINER = "Assets/Prefabs/Entities/Characters/Enemies/测试-训练假人.prefab"
 
-def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False, include_attack=False):
-    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack)
+def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False, include_attack=False, include_death=False):
+    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab_path = TRAINER if training_target else PREFAB
@@ -98,7 +101,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
                   "        spriteFacing:", "      leftEyeClosed:", "      rightEyeClosed:")
         selected = [line for line in block.splitlines() if line.startswith(useful)]
         record = yaml.safe_load("\n".join([block.splitlines()[0]] + [line[2:] for line in selected]))[0]
-        spin_die = training_target and name == "SpinDie"
+        spin_die = name == "SpinDie"
         assert record["frameSize"] == {"x": 32, "y": 32} and record["rowCount"] == (1 if spin_die else 4)
         height = 32 * record["rowCount"]
         assert animation["textures"][main]["size"] == [32 * record["framesPerRow"], height]
@@ -161,6 +164,27 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
     result = {"schema": 1, "source_commit": SOURCE, "textures": textures, "actions": actions, "appearance": look}
     if training_target:
         result["training_target"] = animation["training_target"]
+    elif include_death:
+        # 仅核实 ClickMoveTest 已启用的原 GameManager 与主角。空动作不是菜单。
+        manager = next(s for s in scene.split("--- !u!114 &") if s.startswith("1468008383\n"))
+        assert "m_Enabled: 1" in manager and "FantasyWord.GameCore::FantasyWord.GameCore.GameManager" in manager
+        assert f"m_config: {{fileID: 11400000, guid: {CONFIG_GUID}, type: 2}}" in manager
+        assert parse(read(repo, GAME_CONFIG+".meta"))["guid"] == CONFIG_GUID
+        config_raw = read(repo, GAME_CONFIG)
+        config = parse(config_raw)["MonoBehaviour"]
+        assert config["m_toExecuteOnPlayerDeath"] == {"rid":-2}
+        assert config["references"]["RefIds"] == [{"rid":-2,"type":{"class":None,"ns":None,"asm":None}}]
+        assert "propertyPath: deathAnimationKey" not in prefab and "propertyPath: deathAnimationKey" not in instances[0]
+        driver = next(d["MonoBehaviour"] for d in documents(read(repo, BASE_ACTOR))
+                      if (d.get("MonoBehaviour", {}).get("m_EditorClassIdentifier") or "").endswith(".CharacterActionAnimatorDriver"))
+        assert driver["m_Enabled"] == 1 and driver["deathAnimationKey"] == "SpinDie"
+        assert instances[0].startswith("735002000000000001\n")
+        assert "m_primaryPlayerCharacter: {fileID: 735002000000000004}" in scene
+        actor = next(s for s in scene.split("--- !u!114 &") if s.startswith("735002000000000004 stripped\n"))
+        assert "m_PrefabInstance: {fileID: 735002000000000001}" in actor
+        assert f"m_CorrespondingSourceObject: {{fileID: 8122841227683649615, guid: {prefab_guid}," in actor
+        result["primary_death"] = {"config_guid":CONFIG_GUID,"action_rid":-2,"animation_key":"SpinDie",
+            "actor_file_id":"735002000000000004","config_sha256":hashlib.sha256(config_raw).hexdigest()}
     return result
 
 if __name__ == "__main__":
@@ -170,7 +194,9 @@ if __name__ == "__main__":
     p.add_argument("--include-damage", action="store_true", help="同时核实 Dmg 的原帧数据与生成 UV")
     p.add_argument("--training-target", action="store_true", help="核实活动训练假人的 Idle/Walk/Dmg/SpinDie")
     p.add_argument("--include-attack", action="store_true", help="同时核实普攻原帧与两张 UV")
+    p.add_argument("--include-death", action="store_true", help="核实原 ClickMoveTest 主角的 SpinDie 与空死亡动作")
     a = p.parse_args()
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack)
+    assert not (a.training_target and a.include_death), "主角死亡选项不适用于训练假人"
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))
