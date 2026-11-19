@@ -97,3 +97,14 @@ WASD 按原方向移动；相机跟同一演员，动作使用原 Idle/Walk。�
 Mouse Point 有自己的位置入口；本预览点击保留现有 Godot 鼠标事件桥，不等于完整 Unity
 Input Actions / UIRoot。原序列化的 ClickMoveTest MapInfo 未启用相机覆盖或边界；
 本预览未移植正式 SampleScene、GAS 装配、存档、完整地图碰撞或局内装备。
+
+可加 `--trainer-diagnostic` 在同一预览挂入原场景唯一启用的训练假人。角色来源为
+`31629d53` 中 ClickMoveTest 的 `735002000000000003`（不是禁用的转向测试变体），
+使用原出生点、路径、朝向、属性、感知、游走、归位与预制体追加的能力 20001。
+还须传入 `FORMAL_TRAINER_ATTACK_ANIMATION`、`FORMAL_TRAINER_ATTACK_MATERIAL`
+及 `FORMAL_TRAINER_ATTACK_TEXTURES`，且必须是训练假人的独立动画、双 UV 合同与私有图集。
+玩家与假人各持同一份自身属性；假人受控范围内的命中走玩家的目标朝向、正式伤害回调
+和原 Dmg，不把显示朝向当作背刺依据。此模式固定使用诊断抽样，既不绑定 Unity 的随机流，
+也不自动发给玩家技能。玩家生命归零时结束诊断，不替代正式死亡流程。可同时加
+`--smoke`，从未改动的出生点验证实际路径进入游走，再向同一个玩家注入方向输入；
+另一项追击测试按源验证器摆位后检查原受击与继续追击。二者均不等于 Unity 画面验收。

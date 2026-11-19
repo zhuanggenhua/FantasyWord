@@ -141,6 +141,9 @@ func update_movement_animation(value: Vector2) -> void:
 	elif is_instance_valid(_movement_owner):
 		_movement_owner.update_movement_animation(value)
 
+func uses_movement_owner(owner: Object) -> bool:
+	return is_instance_valid(_movement_owner) and _movement_owner == owner
+
 func get_movement_position() -> Vector2: return body.get_movement_position()
 func source_position() -> Vector2: return get_movement_position()
 

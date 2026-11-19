@@ -4,6 +4,7 @@ extends SceneTree
 const Entry = preload("res://gameplay/clickmovetest/entry.tscn")
 const EntryScript = preload("res://gameplay/clickmovetest/entry.gd")
 const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
+const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
@@ -18,8 +19,11 @@ class MapEvents extends RefCounted:
 const REQUIRED_FILES := ["FORMAL_SURFACE_RULES","FORMAL_SURFACE_ASSETS",
 	"FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL","FORMAL_BURNING_TILE_PNG"]
 const REQUIRED_DIRS := ["FORMAL_GROUND_LAYERS","FORMAL_PLAYER_TEXTURES"]
+const TRAINER_FILES := ["FORMAL_TRAINER_ATTACK_ANIMATION","FORMAL_TRAINER_ATTACK_MATERIAL"]
+const TRAINER_DIRS := ["FORMAL_TRAINER_ATTACK_TEXTURES"]
 var _scene: Node2D
 var _player: PlayerOwner
+var _trainer_owner: TrainerOwner
 var _map_events := MapEvents.new()
 var _point: Point
 
@@ -30,17 +34,19 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
-	if not "--source-preview" in args or Array(args).any(func(arg):return arg not in ["--source-preview","--smoke"]):
-		_refuse("仅接受 --source-preview [--smoke]；不默认启动测试或新关卡。")
+	if not "--source-preview" in args or Array(args).any(func(arg):
+			return arg not in ["--source-preview","--trainer-diagnostic","--smoke"]):
+		_refuse("仅接受 --source-preview [--trainer-diagnostic] [--smoke]；不默认启动测试或新关卡。")
 		return
+	var trainer_diagnostic := "--trainer-diagnostic" in args
 	var paths := {}
-	for key in REQUIRED_FILES:
+	for key in REQUIRED_FILES + (TRAINER_FILES if trainer_diagnostic else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not FileAccess.file_exists(path):
 			_refuse("缺少明确的原作者输入：" + key)
 			return
 		paths[key] = path
-	for key in REQUIRED_DIRS:
+	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not DirAccess.dir_exists_absolute(path):
 			_refuse("缺少明确的原作者资源目录：" + key)
@@ -80,12 +86,93 @@ func _run() -> void:
 		_refuse("原玩家 Point 与 Static Pivot 未绑定。")
 		return
 	_player.player_input_disabled.connect(_scene.notify_human_aim_input_disabled)
+	if trainer_diagnostic and not _mount_trainer_diagnostic(paths):
+		_refuse("原活动假人的素材、同图路径或 20001 入口未通过来源与装配检查。")
+		return
 	_map_events.map_loaded.emit()
 	if "--smoke" in args:
-		await _smoke()
+		if trainer_diagnostic:
+			await _smoke_trainer()
+		else:
+			await _smoke()
 		return
 	print("原 ClickMoveTest 玩家移动预览已启动：鼠标左键点击移动，Tab 切换，WASD 移动。")
-	print("这是原地图和玩家移动切片；不含正式主场景、完整战斗、菜单或存档。")
+	if trainer_diagnostic:
+		print("已启用原场景活动训练假人诊断；游走与战斗使用固定样本，不代表 Unity 随机流。")
+	print("不含正式主场景、完整战斗、菜单或存档。")
+
+
+func _mount_trainer_diagnostic(paths: Dictionary) -> bool:
+	var art: String = paths.FORMAL_TRAINER_ATTACK_TEXTURES
+	var animation := _read(paths.FORMAL_TRAINER_ATTACK_ANIMATION)
+	var material := _read(paths.FORMAL_TRAINER_ATTACK_MATERIAL)
+	if animation.is_empty() or material.is_empty(): return false
+	_trainer_owner = TrainerOwner.new()
+	var trainer: Node2D = _scene.start_training_damage_target(_trainer_owner,_trainer_owner.hooks(),7752)
+	if not is_instance_valid(trainer) or not _trainer_owner.bind_target(trainer): return false
+	if not is_instance_valid(_scene.start_training_target_presentation(animation,art,
+			{"data":material,"uv_directory":art.path_join("uv"),"appearance_directory":art.path_join("appearance")})):
+		return false
+	if not _scene.start_training_target_tracking(_player.stats,_scene) or not _scene.start_training_transit_steering():
+		return false
+	# 仅命令行显式诊断复用定向验证的样本；不把 Godot 随机或固定值当成原运行时随机源。
+	if not _scene.start_training_combat_wander(func():return .5,func(minimum,_maximum):return minimum):
+		return false
+	if not _scene.bind_human_damage_lifecycle(_player.is_destroyed,_interrupt_diagnostic_player_abilities):
+		return false
+	_player.damage_completed.connect(_end_diagnostic_on_zero_health)
+	return is_instance_valid(_scene.start_training_basic_attack(
+		_player.get_target_direction,_player.damage_hooks(),func():return 50))
+
+
+func _interrupt_diagnostic_player_abilities() -> void:
+	# 原安全阶段只通知能力拥有者；此入口未赋予玩家能力，不清移动或输入。
+	pass
+
+
+func _end_diagnostic_on_zero_health(_source: Variant,_input: Dictionary,_previous: int,_applied: int) -> void:
+	if _player.current_health()==0:
+		# 不继续伪造尚无正式来源接线的玩家死亡生命周期。
+		call_deferred("_finish_at_unsupported_death")
+
+
+func _finish_at_unsupported_death() -> void:
+	print("玩家生命归零；诊断结束，未装配正式死亡流程。")
+	if is_instance_valid(_scene): _scene.free()
+	quit()
+
+
+func _smoke_trainer() -> void:
+	if DisplayServer.get_name()=="headless": root.size = Vector2i(800,600)
+	var trainer: Node2D = _scene.training_target
+	# 原启动位置，不采用测试验证器摆位或预置仇恨。
+	if trainer.get_movement_position()!=trainer.SOURCE_POSITION or _scene.actor.get_movement_position()!=Vector2.ZERO:
+		_refuse("原活动假人与玩家出生位置不符。")
+		return
+	var transit := false
+	var wander := false
+	for i in range(110):
+		await physics_frame
+		var frame: Dictionary = trainer.ai_controller.transit_latest
+		transit = transit or frame.get("group")=="transit"
+		wander = frame.get("group")=="combat-wander"
+		if wander: break
+	if not transit or not wander or trainer.ai_controller.current_target()!=_scene.actor \
+			or _scene.camera.follow!=_scene.actor or not is_instance_valid(trainer.formal_attack):
+		_refuse("原图同场未从初始路径进入游走，或同一玩家与能力入口失配。")
+		return
+	_key(KEY_TAB,true)
+	_key(KEY_TAB,false)
+	var previous: Vector2 = _scene.actor.get_movement_position()
+	_key(KEY_D,true)
+	for i in range(16): await physics_frame
+	_key(KEY_D,false)
+	if _scene.actor.get_movement_position().x<=previous.x+.15 or trainer.ai_controller.current_target()!=_scene.actor:
+		_refuse("同场真实新输入未驱动假人所追踪的同一个玩家。")
+		return
+	print("PASS 原 ClickMoveTest 假人诊断：原出生点、实际路径转入游走、同一玩家镜头/输入、20001 装配。")
+	_scene.free()
+	quit()
 
 
 func _read(path: String) -> Dictionary:

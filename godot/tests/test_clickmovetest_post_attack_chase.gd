@@ -1,6 +1,8 @@
 extends "res://tests/test_clickmovetest_trainer_basic_attack.gd"
 ## 原验收器的同场 Dmg → 拉开 → 恢复追击；不等同 Unity PlayMode 或正式宿主验收。
 ## 只用真实 Entry 驱动动作、导航与身体，不手动推进能力时间轴。
+const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
+const SceneTrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
 const Chase = preload("res://validation/post_attack_chase_contract.gd")
 
 
@@ -9,14 +11,10 @@ func run() -> void:
 	Engine.max_fps = 60
 	var scene = Entry.instantiate()
 	root.add_child(scene)
-	var owner := TrackingOwner.new()
-	var player := Player.new()
-	player.actor = scene.actor
+	var player := PlayerOwner.new()
 	var events := MapEvents.new()
-	var trainer_owner := TrainerOwner.new()
-	var stats := Attributes.new()
-	if not stats.configure(PackedInt32Array([100,40,10,6,6,4,8,4,100]),Combat.Alignment.GOOD,
-			func():return false):
+	var trainer_owner := SceneTrainerOwner.new()
+	if not player.configure(scene.actor):
 		_fail_entry(scene,"正式玩家属性无法装配")
 		return
 	var art := OS.get_environment("FORMAL_TRAINER_ATTACK_TEXTURES")
@@ -46,12 +44,12 @@ func run() -> void:
 	player_animation.actions.erase("SpinDie")
 	if exact: player_animation = read(player_file)
 	var player_view: Node2D = scene.start_human_presentation(player_animation,art)
-	if not is_instance_valid(player_view) or not scene.start_human_logic(owner,terrain,
-			func():return player,func():return null,events,func(_p):return false):
+	if not is_instance_valid(player_view) or not scene.start_human_logic(player,terrain,
+			player.get_player_provider,func():return null,events,func(_p):return false):
 		_fail_entry(scene,"实际玩家身体与 Dmg 表现入口无法启动")
 		return
 	var trainer = scene.start_training_damage_target(trainer_owner,trainer_owner.hooks(),7752)
-	if not is_instance_valid(trainer):
+	if not is_instance_valid(trainer) or not trainer_owner.bind_target(trainer):
 		_fail_entry(scene,"缺少实际活动训练假人")
 		return
 	var trainer_material := _material(exact,art,"FORMAL_TRAINER_ATTACK_MATERIAL")
@@ -63,29 +61,30 @@ func run() -> void:
 	if not is_instance_valid(scene.start_training_target_presentation(trainer_animation,art,trainer_material)):
 		_fail_entry(scene,"原假人 Attack 无法绑定")
 		return
-	var world_owner := Node2D.new()
-	scene.add_child(world_owner)
 	var player_start: Vector2 = scene.actor.get_movement_position()
 	# 仅在验收中按原脚本布置；随后让实际检测自然选敌，不注入 AI 目标。
 	trainer.body.request_move_position(Chase.setup_npc_position(player_start))
 	await ticks(3)
 	check(trainer.get_movement_position().is_equal_approx(Chase.setup_npc_position(player_start)),
 		"用源 +Y .72 布置实际身体")
-	if not scene.start_training_target_tracking(stats.stats,world_owner) or not scene.start_training_transit_steering():
+	if not scene.start_training_target_tracking(player.stats,scene) or not scene.start_training_transit_steering():
 		_fail_entry(scene,"实际原路径与单体转向无法绑定")
 		return
 	if not scene.start_training_combat_wander(func():return .5,func(_minimum,_maximum):return 1.0):
 		_fail_entry(scene,"受控闭区间抽样入口无法绑定")
 		return
 	var interrupts: Array[int] = []
-	if not scene.bind_human_damage_lifecycle(func():return false,func():interrupts.append(stats.current_health())):
+	if not scene.bind_human_damage_lifecycle(player.is_destroyed,func():interrupts.append(player.current_health())):
 		_fail_entry(scene,"实际玩家 Dmg 生命周期无法绑定")
 		return
-	var hooks := {"provoke":func(_source):pass,"has_formal_stats":stats.has_formal_stats,
-		"current_health":stats.current_health,"prepare":func(_source,_hit):pass,
-		"apply_current_health_delta":stats.apply_current_health_delta,
-		"complete":func(_source,_hit,_before,_amount):pass}
-	if not is_instance_valid(scene.start_training_basic_attack(func():return Vector2(0,1),hooks,func():return 50)):
+	# 原验证摆位仍使实际瞄准直指 +Y；用真实目标朝向（不是显示朝向）判定背刺。
+	check(trainer_owner.get_look_at_direction()==Vector2.ZERO
+		and trainer_owner.get_target_direction()==Vector2.ZERO,
+		"原假人的初始运动和逻辑朝向为零，不借用测试替身默认朝向")
+	player.set_look_at_direction(Vector2(0,-1))
+	player.set_target_direction(Vector2(0,1))
+	if not is_instance_valid(scene.start_training_basic_attack(
+			player.get_target_direction,player.damage_hooks(),func():return 50)):
 		_fail_entry(scene,"实际假人无法释放 20001")
 		return
 	var wait_frames := 0
@@ -96,7 +95,7 @@ func run() -> void:
 	if player_view.driver.current_animation_key!="Dmg":
 		_fail_entry(scene,"240 帧窗口未观察到真实玩家进入 Dmg")
 		return
-	check(stats.current_health()==97 and trainer.ai_controller.current_target()==scene.actor,
+	check(player.current_health()==97 and trainer.ai_controller.current_target()==scene.actor,
 		"真实 Dmg 且场景中同一玩家收到了三点伤害")
 	var npc_at_relocation: Vector2 = trainer.get_movement_position()
 	var relocation := Chase.relocation(scene.actor.get_movement_position(),npc_at_relocation,
