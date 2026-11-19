@@ -9,7 +9,7 @@ const Combat = preload("res://game_core/combat/combat_rules.gd")
 # apply_current_health_delta(delta, min_value, max_value, source) -> int 或失败 null;
 # complete(source, input, previous_health, applied_damage).
 static func execute_damage_output(defender: Variant, output: Dictionary, can_miss: bool,
-		roll: Callable, hooks: Dictionary, impact_velocity: Variant = null) -> bool:
+		roll: Callable, hooks: Dictionary, impact_velocity: Variant = null, visual_flags: int = 0) -> bool:
 	if defender == null or not Combat.can_target_output(output, defender):
 		return false
 	var source: Variant = output.source
@@ -25,5 +25,10 @@ static func execute_damage_output(defender: Variant, output: Dictionary, can_mis
 		var current: Variant = hooks.apply_current_health_delta.call(-input.damage, 0, null, source)
 		if not current is int:
 			return false
-		hooks.complete.call(source, input, previous, maxi(0, previous - int(current)))
+		# 原效果表现位独立于暴击/闪避；只在扣血后的表现上下文中传递。
+		var completed := input
+		if visual_flags != 0:
+			completed = input.duplicate()
+			completed["visual_flags"] = visual_flags
+		hooks.complete.call(source, completed, previous, maxi(0, previous - int(current)))
 	return (int(input.flags) & Combat.MISS) == 0

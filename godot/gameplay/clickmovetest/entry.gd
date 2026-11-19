@@ -236,7 +236,8 @@ func run_surface_contact_effects() -> void:
 			# Original self-hit still damages, but Movable.TryPush rejects its own source.
 			hooks = hooks.duplicate()
 			hooks.impact = func(_input,_velocity): pass
-		FormalDamage.execute_damage_output(defender,output,false,Callable(),hooks,entry.payload.impact_velocity)
+		FormalDamage.execute_damage_output(defender,output,false,Callable(),hooks,entry.payload.impact_velocity,
+			int(entry.payload.get("visual_flags",0)))
 
 ## 必须在临时火焰层之前绑定，避免已存在的控制器继续持有空回调。
 func bind_ground_layers(directory: String) -> bool:

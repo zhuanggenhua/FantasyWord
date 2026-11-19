@@ -2,6 +2,7 @@ extends SceneTree
 ## 原 ClickMoveTest 单玩家场景预览：私有原图、真实角色、地图、相机和输入。
 ## 不修改 Godot 主场景，不搜索任意角色，也不在这里创建回退素材或完整系统。
 const Entry = preload("res://gameplay/clickmovetest/entry.tscn")
+const DamageScreenFlash = preload("res://gameplay/clickmovetest/source_damage_screen_flash.gd")
 const EntryScript = preload("res://gameplay/clickmovetest/entry.gd")
 const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
@@ -31,6 +32,7 @@ var _point: Point
 var _trainer_death := false
 var _player_death := false
 var _water_reflection := false
+var _damage_screen_flash: DamageScreenFlash
 
 
 func _initialize() -> void:
@@ -40,8 +42,8 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	if not "--source-preview" in args or Array(args).any(func(arg):
-			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--water-reflection","--control-panel","--smoke"]):
-		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--water-reflection] [--control-panel] [--smoke]；不默认启动测试或新关卡。")
+			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--trainer-death-diagnostic","--player-death-diagnostic","--water-reflection","--control-panel","--damage-screen-flash","--smoke"]):
+		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic [--trainer-death-diagnostic] [--player-death-diagnostic]]] [--water-reflection] [--control-panel] [--damage-screen-flash] [--smoke]；不默认启动测试或新关卡。")
 		return
 	var panel := "--control-panel" in args
 	var trainer_diagnostic := "--trainer-diagnostic" in args
@@ -132,6 +134,8 @@ func _run() -> void:
 		_refuse("原玩家 Point 与 Static Pivot 未绑定。")
 		return
 	_player.player_input_disabled.connect(_scene.notify_human_aim_input_disabled)
+	if "--damage-screen-flash" in args:
+		_mount_damage_screen_flash()
 	if panel and not _scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
 		_refuse("原静态测试面板字体与实际玩家入口未绑定。")
 		return
@@ -147,6 +151,8 @@ func _run() -> void:
 			await _smoke_trainer_death()
 		elif player_combat:
 			await _smoke_player_combat()
+		elif trainer_diagnostic and is_instance_valid(_damage_screen_flash):
+			await _smoke_damage_screen_flash()
 		elif trainer_diagnostic:
 			await _smoke_trainer()
 		else:
@@ -160,6 +166,20 @@ func _run() -> void:
 	if _player_death: print("原主角死亡后保留实体及镜头；此原场景没有配置死亡命令。")
 	if _water_reflection: print("原树与主角本体倒影已启用，当前预览没有动态武器或游泳宿主。")
 	print("不含正式主场景、完整战斗、菜单或存档。")
+
+func _mount_damage_screen_flash() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "ClickMoveTest 受伤闪屏"
+	# 原覆盖层层级：场景过渡之后、测试面板之前。本预览尚未挂场景过渡。
+	layer.layer = 4
+	_scene.add_child(layer)
+	_damage_screen_flash = DamageScreenFlash.new()
+	layer.add_child(_damage_screen_flash)
+	_player.damage_completed.connect(_on_source_player_damage_completed)
+
+
+func _on_source_player_damage_completed(_source: Variant, input: Dictionary, _previous: int, _applied: int) -> void:
+	_damage_screen_flash.present(_scene.actor,_player.get_current_controlled_character_or_player_instance(),input)
 
 
 func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool, files: Array, player_material: Dictionary) -> bool:
@@ -500,6 +520,41 @@ func _end_diagnostic_on_zero_health(_source: Variant,_input: Dictionary,_previou
 func _finish_at_unsupported_death() -> void:
 	print("玩家生命归零；诊断结束，未装配正式死亡流程。")
 	if is_instance_valid(_scene): _scene.free()
+	quit()
+
+func _smoke_damage_screen_flash() -> void:
+	if DisplayServer.get_name()=="headless": root.size = Vector2i(800,600)
+	var trainer: Node2D = _scene.training_target
+	var initial := _player.current_health()
+	var observations := []
+	_player.damage_completed.connect(func(_source, _input, previous, applied):
+		observations.append([previous,applied,_player.current_health(),_damage_screen_flash.color]))
+	if _scene.actor.get_movement_position()!=Vector2.ZERO or trainer.get_movement_position()!=trainer.SOURCE_POSITION:
+		_refuse("原闪屏装配改变出生点。")
+		return
+	await process_frame
+	await process_frame
+	if _damage_screen_flash.size!=Vector2(root.size) or _damage_screen_flash.color.a!=0.0 \
+			or _damage_screen_flash.mouse_filter!=Control.MOUSE_FILTER_IGNORE:
+		_refuse("原闪屏没有全屏透明且穿透指针。")
+		return
+	# 仅 smoke 固定站位；伤害必须由原假人的 20001、Effect2003 和玩家正式受击盒产生。
+	_scene.actor.request_move_position(Vector2(2.5,-3.10))
+	for i in range(200):
+		await physics_frame
+		if not observations.is_empty(): break
+	var first: Array = observations.front() if not observations.is_empty() else []
+	if first.is_empty() or first[0]!=initial or first[1]<=0 or first[2]!=initial-first[1] \
+			or first[3].a<=0.0 or first[3].a>DamageScreenFlash.NORMAL.a \
+			or not is_equal_approx(first[3].r,DamageScreenFlash.NORMAL.r):
+		_refuse("实际假人未在同一玩家减血后触发原普通红色闪屏。初始生命=%s，结算=%s，非缩放步长=%s，玩家=%s，假人=%s，攻击帧=%s" % [initial,first,_damage_screen_flash._frame_delta,_scene.actor.get_movement_position(),trainer.get_movement_position(),trainer.formal_attack.timeline.frame])
+		return
+	await create_timer(.20,true,false,true).timeout
+	if _damage_screen_flash.color.a!=0.0:
+		_refuse("实际闪屏未按非缩放计时清除。")
+		return
+	print("PASS 原 ClickMoveTest 假人 20001 实际命中、玩家减血、非阻塞全屏闪现及消退。")
+	_scene.free()
 	quit()
 
 
