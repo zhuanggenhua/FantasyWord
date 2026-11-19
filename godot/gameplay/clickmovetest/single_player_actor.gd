@@ -6,11 +6,16 @@ const PlayerBody = preload("res://gameplay/clickmovetest/actor.gd")
 const Direction = preload("res://game_core/presentation/movable_direction_state.gd")
 const Attributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
+const Loadout = preload("res://game_core/combat/equipped_ability_loadout.gd")
 const SOURCE_ACTOR := "735002000000000004"
 const SOURCE_PREFAB := "f32187b1edab1484a99d97ef54021bf5"
 const SOURCE_SHEET := "13245a7230bedbe4da633d5325872ce1"
 const BASE_MOVE_SPEED := 4.0
 const BASE_SPEED_MULTIPLIER := 1.0
+# 31629d53：玩家角色配置在初始等级 1 授予 20001，玩家角色.prefab 再声明 20001、20010。
+const _LEVEL_ONE_SHEET_ABILITIES := [20001]
+const _PREFAB_EXTRA_ABILITIES := [20001,20010]
+const _ABILITY_SLOT_COUNT := 5
 # 原 0.05f * 0.05f；显式舍入避免脚本文字浮点解析在相等边界产生误差。
 static var _movement_idle_squared: float = PackedFloat32Array([0.002500000176951289])[0]
 
@@ -34,6 +39,9 @@ var _read_pointer: Callable
 var _refresh_interaction: Callable
 var _reset_interaction: Callable
 var _read_destroyed: Callable
+var _fresh_loadout: Loadout
+var _fresh_ability_host: WeakRef
+var _binding_initial_loadout := false
 
 func configure(actor: Node2D, pointer_reader: Callable = Callable(),
 		refresh_interaction: Callable = Callable(), reset_interaction: Callable = Callable(),
@@ -106,7 +114,17 @@ func read_active_gameplay_pointer() -> Variant:
 func can_move() -> bool: return is_instance_valid(_get_primary()) and not is_destroyed()
 func calculate_move_speed() -> float: return BASE_MOVE_SPEED
 func calculate_speed_multiplier() -> float: return BASE_SPEED_MULTIPLIER
-func can_update_target_direction() -> bool: return is_instance_valid(_get_primary()) and not is_destroyed()
+func can_update_target_direction() -> bool:
+	if not is_instance_valid(_get_primary()) or is_destroyed(): return false
+	var host: Object = _fresh_ability_host.get_ref() if _fresh_ability_host != null else null
+	return not is_instance_valid(host) or host.can_update_fresh_target_direction()
+
+func bind_fresh_target_direction_guard(host: Node) -> bool:
+	if _fresh_loadout == null or _fresh_ability_host != null or not is_instance_valid(host) \
+			or not host.has_method("can_update_fresh_target_direction"): return false
+	_fresh_ability_host = weakref(host)
+	return true
+
 func can_interact() -> bool: return is_instance_valid(_get_primary()) and not is_destroyed()
 
 func update_facing_from_intent(value: Vector2) -> void:
@@ -132,6 +150,29 @@ func damage_hooks() -> Dictionary:
 	return {"provoke":_on_provoked,"has_formal_stats":_attributes.has_formal_stats,
 		"current_health":_attributes.current_health,"prepare":_on_damage_prepared,
 		"apply_current_health_delta":_attributes.apply_current_health_delta,"complete":_on_damage_completed}
+
+## CharacterBase.InitializeAbilities → CharacterAbilitySet 的新角色分配切片。
+## 调用方的正式角色能力宿主负责构建/解析活跃实例；本入口不创建 ASC 或幽灵技能。
+## 不自动执行在移动/假人诊断，也不能代替存档的槽位覆盖流程。
+func bind_fresh_ability_loadout(create_or_resolve_owned_active: Callable) -> Loadout:
+	if not is_instance_valid(_get_primary()) or _fresh_loadout != null or _binding_initial_loadout \
+			or not create_or_resolve_owned_active.is_valid():
+		return null
+	_binding_initial_loadout = true
+	var candidate := Loadout.new(_ABILITY_SLOT_COUNT)
+	var requested := {}
+	for code: int in _LEVEL_ONE_SHEET_ABILITIES + _PREFAB_EXTRA_ABILITIES:
+		if requested.has(code): continue
+		requested[code] = true
+		var runtime: Variant = create_or_resolve_owned_active.call(code)
+		if not is_instance_valid(_get_primary()): break
+		if runtime is Object and is_instance_valid(runtime):
+			candidate.try_auto_assign_formal_gas_ability_code(code)
+	_binding_initial_loadout = false
+	if not is_instance_valid(_get_primary()): return null
+	_fresh_loadout = candidate
+	return _fresh_loadout
+
 
 func _get_primary() -> Node2D:
 	if _primary_exited: return null

@@ -43,7 +43,7 @@ func attach_basic(actor: Node2D, character: Object, timeline: RefCounted, positi
 	return true
 
 func attach_fire(actor: Node2D, character: Object, timeline: RefCounted, position_reader: Callable) -> bool:
-	if gate==null or _fire!=null or spec.ability_code!=Spec.CODE: return false
+	if gate==null or _fire!=null or spec.ability_code not in [Spec.CODE,BASIC]: return false
 	var fire_ability: Node = get_script().new()
 	add_child(fire_ability)
 	if not fire_ability.configure(actor,character,timeline,position_reader,FIRE,spec.attacking_tags) \
@@ -77,6 +77,27 @@ func fire(ability: Object,command: Dictionary,activation: Variant,completion: Va
 	if _known(ability): ability.context.fire(command,activation,completion)
 func stop_fire(ability: Object) -> void:
 	if _known(ability): ability.context.stop_fire()
+
+## 新玩家仅拥有这两条 Timeline。原 AttackEvent 以及每个实例的输入阶段分别门禁。
+func can_update_fresh_target_direction() -> bool:
+	if spec.has_attacking_tag() or _locks_fresh_target_direction(): return false
+	return not is_instance_valid(_fire) or not _fire._locks_fresh_target_direction()
+
+func _locks_fresh_target_direction() -> bool:
+	var activation: Variant = context.activation_context
+	var has_aim: bool = activation != null and activation.has_aim_direction
+	if not should_update_look_at_direction_on_fire(self) and not has_aim: return false
+	match spec.ability_code:
+		BASIC: return gate.state in [BasicGate.State.START,BasicGate.State.WINDUP,BasicGate.State.USE]
+		FIRE: return gate.state in [FireGate.State.START,FireGate.State.WINDUP,FireGate.State.USE]
+	return false
+
+## CharacterAbilitySet 通知每个持有的 IActionInterruptReceiver，空闲也由自身 gate 处理。
+## GAS Cancel/End 仍留给后续原安全阶段，既不重置移动也不合成松键。
+func interrupt_owned_actions() -> void:
+	if gate!=null: gate.interrupt()
+	if is_instance_valid(_basic): _basic.interrupt_owned_actions()
+	if is_instance_valid(_fire): _fire.interrupt_owned_actions()
 
 ## 明确分离后续 GAS 请求处理与输入门控 Tick；不得在 Fire 中立即激活。
 func process_requests() -> void:

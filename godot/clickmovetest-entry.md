@@ -108,3 +108,22 @@ Input Actions / UIRoot。原序列化的 ClickMoveTest MapInfo 未启用相机�
 也不自动发给玩家技能。玩家生命归零时结束诊断，不替代正式死亡流程。可同时加
 `--smoke`，从未改动的出生点验证实际路径进入游走，再向同一个玩家注入方向输入；
 另一项追击测试按源验证器摆位后检查原受击与继续追击。二者均不等于 Unity 画面验收。
+
+### 原玩家技能诊断
+
+同时加 `--trainer-diagnostic --player-combat-diagnostic`，从原出生点体验玩家普攻
+（`1`）和喷火（`Q` 或 `2`）。两键同时按住时，喷火直到最后一个键松开才收到停止命令。
+这是单独启用的切片，不改变普通移动、原假人诊断或默认启动。参数使用
+`FORMAL_PLAYER_COMBAT_ANIMATION`、`FORMAL_PLAYER_COMBAT_MATERIAL` 替代上述两个 Dmg 合同：
+用锁定的 31629d53 玩家合同提取脚本同时传入 `--include-damage --include-attack`。
+`FORMAL_FLAMETHROWER_CUE` 指向私有原喷流 PNG 和 OGG；不接受回退素材。
+
+来源是 `CharacterBase.InitializeAbilities` 和 `CharacterAbilitySet`：一级角色表授予 20001，
+预制体追加 20001/20010，成功解析实例后去重填入前两槽，其余槽为空。按键通过原
+`InputSystem.OnFireAbility{N}Performed/Canceled` 的命令合同，只派发给当前实际玩家。
+`ActiveAbilityBase.ShouldLockTargetDirectionDuringInputGateForRuntime` 的前摇锁与
+`CharacterBase.HasFormalActionLock` 的攻击标签分别判定；非静默受击只在安全阶段从
+`InterruptActions` 通知实际持有的两项 Timeline，沿各自的 GAS Cancel/End 请求清理。
+动作时钟、命中、地表和喷流使用原有实现。测试摆位不是原出生点验收，`--smoke` 仍从
+原出生点启动验证玩家技能。此入口不含完整 Action Map/硬件焦点验证、ASC.Cell 指向命令、
+手柄、其他技能、完整角色系统和死亡、Unity 原随机流或双端画面对照。

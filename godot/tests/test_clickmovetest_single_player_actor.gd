@@ -24,6 +24,20 @@ func run() -> void:
 		and owner.is_current_controlled(scene.actor) and owner.accepts_player_input(scene.actor)
 		and owner.can_be_player_controlled(scene.actor) and not owner.configure(scene.actor),
 		"原启动选择显式主角，首次身份通知只来自同一所有者")
+	# 只验证作者定义与实例分配边界；下面两个 RefCounted 是回调的单元测试替身。
+	var requests: Array[int] = []
+	var runtimes := {20001:RefCounted.new(),20010:RefCounted.new()}
+	check(owner.bind_fresh_ability_loadout(Callable())==null,"没有实际技能解析宿主不建立槽位")
+	var slots := owner.bind_fresh_ability_loadout(func(code):
+		requests.append(code)
+		return runtimes.get(code))
+	check(slots!=null and requests==[20001,20010] and slots.get_slot_count()==5,
+		"角色表先于 prefab，重复 20001 不再次请求，严格原五槽")
+	check(slots!=null and slots.get_formal_gas_ability_code(0)==20001
+		and slots.get_formal_gas_ability_code(1)==20010 and slots.get_formal_gas_ability_code(2)==0
+		and not slots.contains_formal_gas_ability_code(20004)
+		and owner.bind_fresh_ability_loadout(func(_code):return null)==null,
+		"已解析实例按首空槽分配，不迁入验证器的 20004，不重新初始化同一拥有者")
 	var properties := owner.stats()
 	check(owner.current_health()==100 and properties.snapshot=={"physical_attack":10,"magical_attack":6,
 		"physical_defense":6,"magical_defense":4,"agility":8,"luck":4}
@@ -101,5 +115,14 @@ func run() -> void:
 	await process_frame
 	check(owner.get_current_controlled_character_or_player_instance()==null and not owner.can_move()
 		and control_events.back()==null,"实体卸载结束切片，身份通知与回退同时清除")
+	var partial_scene = Entry.instantiate()
+	root.add_child(partial_scene)
+	var partial_owner := ActorOwner.new()
+	check(partial_owner.configure(partial_scene.actor),"独立新玩家用于验证技能构建失败")
+	var partial := partial_owner.bind_fresh_ability_loadout(func(code):return runtimes.get(code) if code==20010 else null)
+	check(partial!=null and partial.get_formal_gas_ability_code(0)==20010
+		and partial.get_formal_gas_ability_code(1)==0,
+		"前置技能解析失败不占空槽，后一个有效实例仍按首空槽分配")
+	partial_scene.free()
 	if failed==0: print("PASS ClickMoveTest single player owner: %d checks" % n)
 	quit(0 if failed==0 else 1)

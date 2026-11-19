@@ -5,6 +5,8 @@ const MousePoints = preload("res://game_core/input/mouse_point_actions.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
+const CharacterExecutor = preload("res://game_core/interaction/character_command_executor.gd")
+const SlotKeyboard = preload("res://game_core/combat/ability_slot_keyboard_input.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
 const DamageLifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
@@ -58,6 +60,7 @@ var click_observation := Observation.new()
 var keyboard := Keyboard.new()
 var human_gameplay_actions: RefCounted
 var _normalized_click_bound := false
+var _slot_keyboard: SlotKeyboard
 var human_commands: RefCounted
 var human_interaction: RefCounted
 var _human_aim: RefCounted
@@ -316,6 +319,8 @@ func _input(event: InputEvent) -> void:
 			"order_before_dispatch": owned and actor.execution.has_move_order(),
 		})
 	if event is InputEventKey:
+		if _slot_keyboard != null:
+			_slot_keyboard.handle_key(event,_dispatch_human_ability_key)
 		if event.physical_keycode == KEY_TAB and event.pressed and not event.echo:
 			Commands.on_toggle_performed(_submit)
 		keyboard.handle_key(event, blocked, _submit)
@@ -477,10 +482,18 @@ func start_human_interaction(owner: Object, audio_request: Callable) -> bool:
 		return false
 	var candidate := Interaction.new()
 	if not candidate.configure(owner,aim_pivot,audio_request): return false
+	if human_commands == null and not start_human_command_execution(owner): return false
+	if human_commands.character != owner: return false
 	human_interaction = candidate
-	human_commands = preload("res://game_core/interaction/character_command_executor.gd").new()
-	human_commands.character = owner
 	human_commands.interaction = candidate
+	return true
+
+
+## 原角色命令执行不要求虚构交互对象；已经存在的交互仍在同一执行者仲裁技能。
+func start_human_command_execution(owner: Object) -> bool:
+	if human_commands != null or _human_aim == null or _human_aim.target_owner != owner: return false
+	human_commands = CharacterExecutor.new()
+	human_commands.character = owner
 	human_commands.movement = movement
 	human_commands.terrain_map = route
 	return true
@@ -554,6 +567,48 @@ func start_human_charged_combat(owner: Object, loadout: RefCounted, hit_task: Ca
 	_basic_timeline = basic_timeline
 	_fire_timeline = fire_timeline
 	return runtime
+
+## 源新玩家组合只装 20001/20010。角色自己的新槽按作者先后解析到这两个真实实例，
+## 不持有沉默的 20004、不装载其时间轴，保留单一角色技能门禁与一次时钟所有权。
+func start_human_fresh_training_combat(owner: Object, roll: Callable,
+		target_root: Callable, target_cell: Callable, notify_rejected: Callable) -> Node:
+	if _charged_actor_runtime != null or human_commands == null or human_commands.character != owner:
+		return null
+	if _equipped_ability_dispatch != null or human_commands.has_bound_abilities():
+		return null
+	if not is_instance_valid(owner) or not owner.has_method("stats") \
+			or not owner.has_method("bind_fresh_ability_loadout") or not owner.has_method("bind_fresh_target_direction_guard") \
+			or not owner.has_method("get_look_at_direction") \
+			or not roll.is_valid() or not target_root.is_valid() or not target_cell.is_valid() or not notify_rejected.is_valid():
+		return null
+	if not is_instance_valid(training_target) or not training_target.has_formal_target_direction() \
+			or surface_elements == null or not is_instance_valid(human_presentation):
+		return null
+	var driver: Node = human_presentation.driver
+	if not is_instance_valid(driver) or driver.resolve_playable_state("Attack").is_empty():
+		return null
+	var runtime := preload("res://gameplay/combat/resolved_charged_ability.gd").new()
+	var caster_stats := Callable(owner,"stats")
+	var basic := BasicTimeline.new(_hit_basic_training_target.bind(owner,caster_stats,roll),driver)
+	var fire := FireTimeline.new(_hit_effect_2003_training_target.bind(owner,caster_stats,roll,
+		FireTimeline.ATTACK_POLYGON,FireTimeline.HIT_MASK),_apply_flamethrower_cone.bind(owner),driver)
+	add_child(runtime)
+	if not runtime.configure(actor,owner,basic,actor.get_movement_position,runtime.BASIC) \
+			or not runtime.take_clock_tick_ownership(basic) \
+			or not runtime.attach_fire(actor,owner,fire,actor.get_movement_position):
+		runtime.free()
+		return null
+	var loadout: RefCounted = owner.bind_fresh_ability_loadout(runtime.resolve)
+	if loadout == null or not owner.bind_fresh_target_direction_guard(runtime) \
+			or not start_human_resolved_equipped_abilities(
+			owner,loadout,runtime.resolve,runtime,target_root,target_cell,notify_rejected,true):
+		runtime.free()
+		return null
+	_charged_actor_runtime = runtime
+	_basic_timeline = basic
+	_fire_timeline = fire
+	return runtime
+
 
 ## Bind original presentation after the actual 20010 ability is installed.
 ## Exact source assets are supplied privately; missing assets do not fabricate cues.
@@ -786,7 +841,7 @@ func advance_human_charged_combat(delta: float) -> void:
 	_training_effects.run_effects(training_hit_cue.request)
 	if is_instance_valid(runtime) and runtime == _charged_actor_runtime:
 		runtime.advance_input(delta)
-		if runtime == _charged_actor_runtime: _charged_timeline.flush_display()
+		if runtime == _charged_actor_runtime and _charged_timeline != null: _charged_timeline.flush_display()
 		if runtime == _charged_actor_runtime and _basic_timeline != null: _basic_timeline.flush_display()
 		if runtime == _charged_actor_runtime and _fire_timeline != null: _fire_timeline.flush_display()
 	training_hit_cue.flush_display()
@@ -794,12 +849,22 @@ func advance_human_charged_combat(delta: float) -> void:
 ## 显式归一化 InputSystem 回调；不自造 PlayerInput 动作图切换或 GAS。
 ## resolve_context 返回 null 或当前输入目标的 {actor, command_context}。
 func bind_human_gameplay_actions(resolve_context: Callable, interact_blocked: Callable, notify_failed: Callable) -> bool:
-	if human_commands == null: return false
+	if human_commands == null or _slot_keyboard != null: return false
 	var candidate := preload("res://game_core/input/gameplay_command_actions.gd").new()
 	if not candidate.configure(resolve_context,submit_human_command,interact_blocked,notify_failed): return false
 	human_gameplay_actions = candidate
 	_normalized_click_bound = false
 	return true
+
+## 键盘只接入已绑定的正式能力命令。普通移动预览不安装快捷键。
+func bind_human_ability_keyboard() -> bool:
+	if _slot_keyboard != null or human_gameplay_actions == null or _equipped_ability_dispatch == null:
+		return false
+	_slot_keyboard = SlotKeyboard.new()
+	return true
+
+func _dispatch_human_ability_key(slot: int, down: bool) -> void:
+	receive_human_gameplay_action("Gameplay","FireAbility%d" % (slot+1),"performed" if down else "canceled")
 
 ## Host dispatches normalized Click explicitly; this does not route raw events.
 func bind_human_click_action(click_blocked: Callable) -> bool:
@@ -830,6 +895,7 @@ func receive_human_gameplay_action(action_map: String, action: String, phase: St
 	return human_gameplay_actions.receive(action_map,action,phase)
 
 func unbind_human_gameplay_actions() -> void:
+	_slot_keyboard = null
 	_normalized_click_bound = false
 	human_gameplay_actions = null
 

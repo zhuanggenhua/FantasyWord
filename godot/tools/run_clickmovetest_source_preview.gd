@@ -17,7 +17,7 @@ class MapEvents extends RefCounted:
 	signal map_unloaded
 
 const REQUIRED_FILES := ["FORMAL_SURFACE_RULES","FORMAL_SURFACE_ASSETS",
-	"FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL","FORMAL_BURNING_TILE_PNG"]
+	"FORMAL_BURNING_TILE_PNG"]
 const REQUIRED_DIRS := ["FORMAL_GROUND_LAYERS","FORMAL_PLAYER_TEXTURES"]
 const TRAINER_FILES := ["FORMAL_TRAINER_ATTACK_ANIMATION","FORMAL_TRAINER_ATTACK_MATERIAL"]
 const TRAINER_DIRS := ["FORMAL_TRAINER_ATTACK_TEXTURES"]
@@ -35,18 +35,24 @@ func _initialize() -> void:
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	if not "--source-preview" in args or Array(args).any(func(arg):
-			return arg not in ["--source-preview","--trainer-diagnostic","--smoke"]):
-		_refuse("仅接受 --source-preview [--trainer-diagnostic] [--smoke]；不默认启动测试或新关卡。")
+			return arg not in ["--source-preview","--trainer-diagnostic","--player-combat-diagnostic","--smoke"]):
+		_refuse("仅接受 --source-preview [--trainer-diagnostic [--player-combat-diagnostic]] [--smoke]；不默认启动测试或新关卡。")
 		return
 	var trainer_diagnostic := "--trainer-diagnostic" in args
+	var player_combat := "--player-combat-diagnostic" in args
+	if player_combat and not trainer_diagnostic:
+		_refuse("玩家技能诊断需要同图原训练假人。")
+		return
+	var player_files: Array = ["FORMAL_PLAYER_COMBAT_ANIMATION","FORMAL_PLAYER_COMBAT_MATERIAL"] if player_combat \
+		else ["FORMAL_PLAYER_DAMAGE_ANIMATION","FORMAL_PLAYER_DAMAGE_MATERIAL"]
 	var paths := {}
-	for key in REQUIRED_FILES + (TRAINER_FILES if trainer_diagnostic else []):
+	for key in REQUIRED_FILES + player_files + (TRAINER_FILES if trainer_diagnostic else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not FileAccess.file_exists(path):
 			_refuse("缺少明确的原作者输入：" + key)
 			return
 		paths[key] = path
-	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []):
+	for key in REQUIRED_DIRS + (TRAINER_DIRS if trainer_diagnostic else []) + (["FORMAL_FLAMETHROWER_CUE"] if player_combat else []):
 		var path := OS.get_environment(key)
 		if path.is_empty() or not DirAccess.dir_exists_absolute(path):
 			_refuse("缺少明确的原作者资源目录：" + key)
@@ -54,8 +60,8 @@ func _run() -> void:
 		paths[key] = path
 	var rules := _read(paths.FORMAL_SURFACE_RULES)
 	var surface := _read(paths.FORMAL_SURFACE_ASSETS)
-	var animation := _read(paths.FORMAL_PLAYER_DAMAGE_ANIMATION)
-	var material := _read(paths.FORMAL_PLAYER_DAMAGE_MATERIAL)
+	var animation := _read(paths[player_files[0]])
+	var material := _read(paths[player_files[1]])
 	if not EntryScript.valid_rules(rules) or surface.is_empty() or animation.is_empty() or material.is_empty() \
 			or animation.has("training_target") or material.has("training_target"):
 		_refuse("原场景规则、地表或玩家动画合同无效；不能借训练假人资料启动玩家。")
@@ -86,12 +92,14 @@ func _run() -> void:
 		_refuse("原玩家 Point 与 Static Pivot 未绑定。")
 		return
 	_player.player_input_disabled.connect(_scene.notify_human_aim_input_disabled)
-	if trainer_diagnostic and not _mount_trainer_diagnostic(paths):
+	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat):
 		_refuse("原活动假人的素材、同图路径或 20001 入口未通过来源与装配检查。")
 		return
 	_map_events.map_loaded.emit()
 	if "--smoke" in args:
-		if trainer_diagnostic:
+		if player_combat:
+			await _smoke_player_combat()
+		elif trainer_diagnostic:
 			await _smoke_trainer()
 		else:
 			await _smoke()
@@ -99,10 +107,11 @@ func _run() -> void:
 	print("原 ClickMoveTest 玩家移动预览已启动：鼠标左键点击移动，Tab 切换，WASD 移动。")
 	if trainer_diagnostic:
 		print("已启用原场景活动训练假人诊断；游走与战斗使用固定样本，不代表 Unity 随机流。")
+	if player_combat: print("玩家 1 普攻，Q 或 2 喷火；其余原槽为空。")
 	print("不含正式主场景、完整战斗、菜单或存档。")
 
 
-func _mount_trainer_diagnostic(paths: Dictionary) -> bool:
+func _mount_trainer_diagnostic(paths: Dictionary, player_combat: bool) -> bool:
 	var art: String = paths.FORMAL_TRAINER_ATTACK_TEXTURES
 	var animation := _read(paths.FORMAL_TRAINER_ATTACK_ANIMATION)
 	var material := _read(paths.FORMAL_TRAINER_ATTACK_MATERIAL)
@@ -118,11 +127,64 @@ func _mount_trainer_diagnostic(paths: Dictionary) -> bool:
 	# 仅命令行显式诊断复用定向验证的样本；不把 Godot 随机或固定值当成原运行时随机源。
 	if not _scene.start_training_combat_wander(func():return .5,func(minimum,_maximum):return minimum):
 		return false
-	if not _scene.bind_human_damage_lifecycle(_player.is_destroyed,_interrupt_diagnostic_player_abilities):
+	var interrupt := _interrupt_diagnostic_player_abilities
+	if player_combat:
+		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE)
+		if not is_instance_valid(combat): return false
+		interrupt = combat.interrupt_owned_actions
+	if not _scene.bind_human_damage_lifecycle(_player.is_destroyed,interrupt):
 		return false
 	_player.damage_completed.connect(_end_diagnostic_on_zero_health)
 	return is_instance_valid(_scene.start_training_basic_attack(
 		_player.get_target_direction,_player.damage_hooks(),func():return 50))
+
+
+func _mount_player_combat(cue_dir: String) -> Node:
+	if not _scene.start_human_command_execution(_player): return null
+	# 原热键只提交槽位，无目标、Cell 或显式朝向。
+	var combat: Node = _scene.start_human_fresh_training_combat(_player,func():return 50,
+		func(_target):return null,func(_target):return null,func(_code,_reason):pass)
+	if not is_instance_valid(combat) or not _scene.bind_human_gameplay_actions(func():
+		if not _player.is_current_controlled(_scene.actor): return null
+		return {"actor":_player,"command_context":{"actor":_player,"issuer_kind":1,"issuer_id":"local"}},
+		func():return false,func(_request,_failure):pass) or not _scene.bind_human_ability_keyboard():
+		return null
+	if not _scene.bind_flamethrower_cues(_player,cue_dir.path_join("FlamethrowerJet.png"),
+			cue_dir.path_join("Flamethrower_FireSpell03_CC0.ogg")):
+		return null
+	return combat
+
+
+func _smoke_player_combat() -> void:
+	if DisplayServer.get_name()=="headless": root.size=Vector2i(800,600)
+	if _scene.actor.get_movement_position()!=Vector2.ZERO or _scene.training_target.get_movement_position()!=_scene.training_target.SOURCE_POSITION:
+		_refuse("玩家技能诊断改变了原出生点。")
+		return
+	await process_frame
+	var runtime: Node = _scene._charged_actor_runtime
+	var fire: Node = runtime.resolve(20010)
+	_key(KEY_Q,true)
+	if not fire.gate.trigger_held or runtime.resolve(20004)!=null or _scene.camera.follow!=_scene.actor:
+		_refuse("Q 未进入同一原玩家的 20010 输入门控。")
+		return
+	for i in range(90):
+		await process_frame
+		if fire.spec.active: break
+	if not fire.spec.active or _scene.human_presentation.driver.current_animation_key!="Attack":
+		_refuse("同图原玩家喷火未走实际激活与表现。")
+		return
+	_key(KEY_2,true)
+	_key(KEY_Q,false)
+	if not fire.gate.trigger_held:
+		_refuse("源 Q/2 别名过早停止喷火。")
+		return
+	_key(KEY_2,false)
+	if fire.gate.trigger_held:
+		_refuse("源 Q/2 最后松开未进原 StopFire。")
+		return
+	print("PASS 原 ClickMoveTest 玩家技能诊断：出生点、实际 20010 激活、Attack 与 Q/2 释放。")
+	_scene.free()
+	quit()
 
 
 func _interrupt_diagnostic_player_abilities() -> void:
