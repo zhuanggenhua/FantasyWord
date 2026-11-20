@@ -28,3 +28,12 @@ func handle_key(event: InputEventKey, dispatch: Callable) -> bool:
 			dispatch.call(slot, false)
 			return true
 	return false
+
+## 禁用 Gameplay 时每个活跃 Action 只发一次 canceled，不逐个释放别名键。
+func deactivate(dispatch: Callable) -> void:
+	var canceled: Array[int] = []
+	for slot in range(_held_counts.size()):
+		if _held_counts[slot] > 0: canceled.append(slot)
+	_held_keys.clear()
+	_held_counts.fill(0)
+	for slot in canceled: dispatch.call(slot,false)

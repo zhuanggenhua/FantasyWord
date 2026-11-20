@@ -17,6 +17,8 @@ var _frame_delta := 0.0
 func _ready() -> void:
 	# 每次渲染更新先采样，再由 Entry 的正式伤害回调读取同帧非缩放步长。
 	process_priority = -1
+	# 原闪屏使用 unscaledDeltaTime；菜单暂停玩法时仍完成淡出。
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	if not _clock.is_valid():

@@ -13,6 +13,11 @@ var _voices: Array[AudioStreamPlayer] = []
 var _active: Array[AudioStreamPlayer] = []
 var _paused := false
 
+func _init() -> void:
+	# 原 Menu 只冻结玩法时间，不调用 AudioSystem 的显式通道暂停。
+	# 让已经播放的声部跨越场景树暂停；pause() 仍独立控制通道。
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 func _ready() -> void:
 	for index in PREWARM_COUNT:
 		_create_voice()

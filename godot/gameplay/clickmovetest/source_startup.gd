@@ -7,6 +7,8 @@ const EntryScript = preload("res://gameplay/clickmovetest/entry.gd")
 const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const SessionDraws = preload("res://gameplay/clickmovetest/source_session_draws.gd")
 const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
+const AudioPreferences := preload("res://game_core/audio/source_audio_preferences.gd")
+const PauseRoot := preload("res://gameplay/clickmovetest/source_pause_root.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
 
@@ -29,6 +31,9 @@ var trainer_owner: TrainerOwner
 var maps := MapRegistry.new()
 var persistables := PersistenceRegistry.new()
 var point: Point
+var pause_root: PauseRoot
+var audio_preferences: AudioPreferences
+var _listener_prior := 1.0
 var _trainer_death := false
 var _player_death := false
 var _water_reflection := false
@@ -147,8 +152,51 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 				or not is_instance_valid(scene.start_training_basic_attack(player.get_target_direction,player.damage_hooks(),
 					_source_draws.resolve_damage)):
 			return _fail("原主角、同图假人普攻或地表受击未通过正式装配。")
+		if not _start_source_audio_preferences():
+			return _fail("原音量所有者未能绑定到实际 GameplaySoundFX。")
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
+	var pause_source := OS.get_environment("FORMAL_PAUSE_SOURCE")
+	if mount_project_contact and not pause_source.is_empty() and not _mount_source_pause(pause_source):
+		return _fail("原暂停面板合同或私有素材未通过检查。")
+	return true
+
+func _start_source_audio_preferences() -> bool:
+	var flames: Node = scene.flamethrower_audio
+	if not is_instance_valid(flames): return false
+	var preferences := AudioPreferences.new()
+	_listener_prior = AudioServer.get_bus_volume_linear(0)
+	if not preferences.start("user://fantasyword-source-audio.cfg",_apply_source_listener,
+			{3:flames.set_volume_scale}): return false
+	audio_preferences = preferences
+	return true
+
+func _apply_source_listener(gain: float) -> void:
+	AudioServer.set_bus_volume_linear(0,gain)
+
+func _exit_tree() -> void:
+	if audio_preferences==null: return
+	var saved := audio_preferences.stop()
+	if saved!=OK: push_warning("FantasyWord 音量设置未能保存："+error_string(saved))
+	_apply_source_listener(_listener_prior)
+	audio_preferences = null
+
+func _mount_source_pause(directory: String) -> bool:
+	var menu := PauseRoot.new()
+	var source := _read(directory.path_join("pause-contract.json"))
+	if not menu.bind(scene,point,source,directory,
+			func(): return player.is_current_controlled(scene.actor) \
+					and player.accepts_player_input(scene.actor) and player.can_be_player_controlled(scene.actor) \
+					and player.can_interact(),
+			func():return false):
+		menu.free()
+		return false
+	var settings_path := directory.path_join("settings-contract.json")
+	if FileAccess.file_exists(settings_path) and not menu.bind_settings(_read(settings_path),audio_preferences):
+		menu.free()
+		return false
+	pause_root = menu
+	add_child(menu)
 	return true
 
 

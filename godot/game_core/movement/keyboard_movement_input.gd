@@ -46,6 +46,14 @@ func handle_key(event: InputEventKey, blocked: bool, submit: Callable) -> Varian
 		return Commands.on_move_canceled(submit)
 	return Commands.on_move_performed(_direction, blocked, submit)
 
+## 禁用 Gameplay/Move 时，只取消活跃的方向动作，不把点击路径当成键盘动作。
+func deactivate(submit: Callable) -> Variant:
+	var had_move := _active_group >= 0
+	_held.clear()
+	_active_group = -1
+	_direction = Vector2.ZERO
+	return Commands.on_move_canceled(submit) if had_move else null
+
 func _read_group(index: int) -> Vector2:
 	var keys: Array = GROUPS[index]
 	return Vector2(

@@ -65,6 +65,7 @@ var last_result: Variant
 var click_observation := Observation.new()
 var control_panel: ColorRect
 var keyboard := Keyboard.new()
+var _source_ui_action_layer := false
 var human_gameplay_actions: RefCounted
 var _normalized_click_bound := false
 var _slot_keyboard: SlotKeyboard
@@ -372,7 +373,27 @@ func _resize_camera() -> void:
 	camera.force_update_scroll()
 	if is_instance_valid(control_panel): control_panel.layout_for_height(get_viewport_rect().size.y)
 
+## 菜单栈在暂停前调用，恢复时在重新启用物理前调用。
+## 不更改玩家命令所有权，也不清理不属于当前活跃 Action 的路径或播放。
+func set_source_ui_action_layer(enabled: bool) -> void:
+	if _source_ui_action_layer == enabled: return
+	_source_ui_action_layer = enabled
+	if enabled:
+		keyboard.deactivate(_submit)
+		if _slot_keyboard != null: _slot_keyboard.deactivate(func(slot: int, _down: bool):
+			if human_gameplay_actions != null:
+				human_gameplay_actions.receive("Gameplay","FireAbility%d" % (slot+1),"canceled"))
+	if _mouse_point_actions != null:
+		_mouse_point_actions.disable(MousePoints.Map.GAMEPLAY if enabled else MousePoints.Map.UI)
+		_mouse_point_actions.enable(MousePoints.Map.UI if enabled else MousePoints.Map.GAMEPLAY)
+
+## 仅永久运行的菜单宿主可在 SceneTree 暂停时送入 UI Point。
+func observe_source_ui_pointer(event: InputEvent) -> void:
+	if _source_ui_action_layer and _mouse_point_actions != null:
+		_mouse_point_actions.observe(event)
+
 func _input(event: InputEvent) -> void:
+	if _source_ui_action_layer: return
 	if _mouse_point_actions != null: _mouse_point_actions.observe(event)
 	if movement == null: return
 	# Raw compatibility diagnostic only, not the normalized Point command sample.
@@ -403,7 +424,7 @@ func _input(event: InputEvent) -> void:
 		keyboard.handle_key(event, blocked, _submit)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if movement == null: return
+	if _source_ui_action_layer or movement == null: return
 	# Explicit formal host owns Click; never also submit the legacy button position.
 	if _normalized_click_bound and event is InputEventMouseButton: return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -1041,7 +1062,7 @@ func _resolve_human_click_world() -> Variant:
 	return ScreenProjection.project(current_camera,screen)
 
 func receive_human_gameplay_action(action_map: String, action: String, phase: String) -> Variant:
-	if human_gameplay_actions == null: return null
+	if human_gameplay_actions == null or _source_ui_action_layer: return null
 	return human_gameplay_actions.receive(action_map,action,phase)
 
 func unbind_human_gameplay_actions() -> void:
