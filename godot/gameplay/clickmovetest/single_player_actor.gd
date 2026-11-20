@@ -213,6 +213,16 @@ func inventory_fresh_stats(actor: Node) -> Array[int]:
 
 func current_health() -> int: return _attributes.current_health()
 
+## 原 UIStatBar 从当前目标的正式属性所有者同时读取当前值、上限。
+func resource_bar_values(actor: Node2D) -> PackedInt32Array:
+	if not is_instance_valid(actor) or actor!=_get_primary(): return PackedInt32Array()
+	return PackedInt32Array([_attributes.current_health(),_attributes.max_health(),
+		_attributes.current_mana(),_attributes.max_mana()])
+
+func unbind_current_health_changed(callback: Callable) -> void:
+	if _attributes.current_health_changed.is_connected(callback):
+		_attributes.current_health_changed.disconnect(callback)
+
 func is_destroyed() -> bool:
 	# HP 归零是源 dead，真正销毁须等待外部安全死亡所有者。
 	return _primary_death_committed or (not _read_destroyed.is_null() \

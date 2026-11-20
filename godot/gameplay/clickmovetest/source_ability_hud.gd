@@ -1,7 +1,9 @@
 extends CanvasLayer
-## 原 Screen Space UI → HUD → Ability Bar。只读同一角色槽，不触发技能。
+## 原 Screen Space UI → HUD。与子控件共用经过校验的字形和图集。
 const Player := preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const Abilities := preload("res://gameplay/clickmovetest/source_abilities_view.gd")
+const Atlas := preload("res://gameplay/clickmovetest/source_menu_glyph_atlas.gd")
+const Resources := preload("res://gameplay/clickmovetest/source_resource_bars.gd")
 const Message := preload("res://gameplay/clickmovetest/source_ability_hud_message.gd")
 const Draw := preload("res://gameplay/clickmovetest/source_inventory_sprite.gd")
 const Tile := preload("res://gameplay/clickmovetest/source_menu_tiled_image.gd")
@@ -11,6 +13,7 @@ const ENTRY_IDS := [3500559439943725516,2482055604812022459,306918243132352108,
 	5916395185588694261,4957606854609737821]
 
 var message: Message
+var resource_bars: Resources
 var _owner: Player
 var _actor: Node2D
 var _entries: Array[Control]=[]
@@ -37,9 +40,16 @@ func bind(owner: Player, dir: String, silver_path: String) -> bool:
 	_bar=Control.new()
 	_bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(_bar)
+	var font := Atlas.new()
+	var contract: Variant=JSON.parse_string(FileAccess.get_file_as_string(dir.path_join("pause-contract.json")))
+	if not contract is Dictionary or not font.bind(contract,dir.path_join("pause-font-atlas.bin")): return false
+	# HUD.prefab 顺序：资源条先于失败提示、能力栏。
+	resource_bars=Resources.new()
+	_bar.add_child(resource_bars)
+	if not resource_bars.bind(owner,atlas,font): return false
 	message=Message.new()
 	_bar.add_child(message)
-	if not message.bind(dir,silver_path): return false
+	if not message.bind(font,silver_path): return false
 	# 条目和菜单槽继承同一 Generic/Ability；只复用已校验的公共图块，不取菜单布局。
 	var slot: Dictionary=spec.layout.bar[0]
 	for i in ENTRY_IDS.size():
@@ -102,6 +112,7 @@ func _layout() -> void:
 	_bar.scale=Vector2.ONE*unit
 	var canvas_pixels:=get_viewport().get_final_transform().get_scale().y*unit
 	message.fit(viewport_size.x/unit,canvas_pixels)
+	resource_bars.set_canvas_pixel_scale(canvas_pixels)
 	var count:=0
 	for entry in _entries:
 		if entry.visible: count+=1
@@ -114,7 +125,8 @@ func _layout() -> void:
 			x+=SIDE+GAP
 
 func blocks_map_pointer(screen_point: Vector2) -> bool:
-	# 原 GraphicRaycaster 命中可见提示和已占槽，不命中空槽或整个栏容器。
+	# 原 GraphicRaycaster 逐个命中实际控件，不命中任一栏容器的空白。
+	if resource_bars.blocks_map_pointer(screen_point/_bar.scale): return true
 	if message.is_visible_in_tree() and message.get_rect().has_point(screen_point/_bar.scale): return true
 	for entry in _entries:
 		if entry.is_visible_in_tree() and entry.get_rect().has_point(screen_point/_bar.scale):

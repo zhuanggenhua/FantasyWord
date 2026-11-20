@@ -12,7 +12,7 @@ const REASONS := {Ability.Result.ON_COOLDOWN:"Ability on cooldown",
 	Ability.Result.INCAPACITATED:"You cannot use abilities right now"}
 # 原动态 Silver.ttf 的 hmtx；本提示的实际字符均由 Silver 覆盖。
 const SILVER_DEFAULT := "不个互交位到制前动可在备对开当我打技控放施有标槽没现用界的移组能色装象这那里面"
-var _atlas := Atlas.new()
+var _atlas: Atlas
 var _silver: FontFile
 var _label: Text
 var _spec: Dictionary
@@ -24,9 +24,9 @@ var _fading := false
 var _pixels := 1.0
 var value := ""
 
-func bind(dir: String, silver_path: String) -> bool:
-	var contract: Variant=JSON.parse_string(FileAccess.get_file_as_string(dir.path_join("pause-contract.json")))
-	if not contract is Dictionary or not _atlas.bind(contract,dir.path_join("pause-font-atlas.bin")): return false
+func bind(atlas: Atlas, silver_path: String) -> bool:
+	if atlas==null or atlas.texture==null: return false
+	_atlas=atlas
 	_silver=Text.load_silver(silver_path)
 	if _silver==null: return false
 	var advances := {0x3002:600,0x76ee:1100,0x89d2:1100}

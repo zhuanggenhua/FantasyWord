@@ -12,10 +12,11 @@ var _sheet := PackedInt32Array()
 var _alignment := -1
 var _health_base := 0
 var _health_current := 0
+var _mana_current := 0
 var _invincibility: Callable
 
 func configure(sheet: PackedInt32Array, alignment: int, is_invincible: Callable) -> bool:
-	if has_formal_stats() or sheet.size() != 9 or sheet[0] <= 0 \
+	if has_formal_stats() or sheet.size() != 9 or sheet[0] <= 0 or sheet[1] < 0 \
 			or alignment not in [Combat.Alignment.GOOD, Combat.Alignment.EVIL] \
 			or not is_invincible.is_valid(): return false
 	_sheet = sheet.duplicate()
@@ -24,6 +25,8 @@ func configure(sheet: PackedInt32Array, alignment: int, is_invincible: Callable)
 	# 初始 CurrentHealth、该资源的 BaseValue 和 MaxHealth 属性同取表初值。
 	_health_base = _sheet[0]
 	_health_current = _health_base
+	# 原 FormalAttributeCatalog 分别按同一表项初始化魔力当前值和上限。
+	_mana_current = _sheet[1]
 	return true
 
 func has_formal_stats() -> bool:
@@ -41,6 +44,10 @@ func current_health() -> int:
 
 func max_health() -> int:
 	return 0 if _sheet.is_empty() else _sheet[0]
+
+func current_mana() -> int: return _mana_current
+
+func max_mana() -> int: return 0 if _sheet.is_empty() else _sheet[1]
 
 ## CharacterBase.GetStatValue reads the authored effective base stat;
 ## Health and Mana are maxima, not values of consumable resources.
