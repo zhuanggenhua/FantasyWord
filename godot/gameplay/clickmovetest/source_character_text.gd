@@ -56,14 +56,14 @@ func set_canvas_pixel_scale(pixels: float) -> bool:
 	material=_atlas.face_material(false,float(_size_points)/90.0*pixels)
 	return material!=null
 
-static func _element(atlas: Atlas, code: int, points: float, at: float) -> Dictionary:
+static func _element(atlas: Atlas, code: int, points: float, at: float, additional_silver: Dictionary = {}) -> Dictionary:
 	var static_glyph := atlas.layout_glyph(code,points,Vector2(at,0),false)
 	if not static_glyph.is_empty():
 		static_glyph["face"]=STATIC_FACE*static_glyph.glyph_scale
 		static_glyph["silver"]=false
 		static_glyph["code"]=code
 		return static_glyph
-	var advance: int = SILVER_ADVANCE.get(code,DETAILS_ADVANCE.get(code,0))
+	var advance: int = additional_silver.get(code,SILVER_ADVANCE.get(code,DETAILS_ADVANCE.get(code,0)))
 	if advance==0:
 		if not DETAILS_SILVER.contains(String.chr(code)): return {}
 		advance=1200
@@ -76,12 +76,14 @@ static func layout(atlas: Atlas, text: String, bounds: Rect2, spec: Dictionary) 
 	var h: int = spec.get("horizontal",0)
 	var v: int = spec.get("vertical",0)
 	var overflow: int = spec.get("overflow",0)
+	var hud_message: bool = points==32.0 and h==2 and v==512 and overflow==0 \
+		and spec.get("style")==0 and spec.has("hud_silver_advance") and not text.contains("\n")
 	var quantity: bool = points==32.0 and h==4 and v==1024 and overflow==1 and spec.get("style")==32
 	# Bag item's lower-right Small Caps label accepts digits only (unchanged by style).
 	if quantity:
 		if not text.is_empty() and not text.is_valid_int(): return {}
-	elif spec.get("style")!=0 or points not in [48.0,64.0,120.0] or h not in [1,2,4] \
-			or v not in [256,512] or overflow not in [0,1] or text.contains("\n"): return {}
+	elif not hud_message and (spec.get("style")!=0 or points not in [48.0,64.0,120.0] or h not in [1,2,4] \
+			or v not in [256,512] or overflow not in [0,1] or text.contains("\n")): return {}
 	var glyphs: Array[Dictionary] = []
 	var render_text := text
 	var x := 0.0
@@ -90,10 +92,10 @@ static func layout(atlas: Atlas, text: String, bounds: Rect2, spec: Dictionary) 
 	# Inventory authored no-wrap + Overflow. Keep its left margin and let
 	# the complete term draw past its rect; do not shrink or ellipsize it.
 	var width_eps := INF if overflow==0 and spec.get("overflow_width",false) else bounds.size.x + .0001
-	var height_eps := bounds.size.y + .0001
+	var height_eps := INF if hud_message else bounds.size.y + .0001
 	var candidate := {}
 	for i in range(text.length()):
-		var glyph := _element(atlas,text.unicode_at(i),points,x)
+		var glyph := _element(atlas,text.unicode_at(i),points,x,spec.get("hud_silver_advance",{}))
 		if glyph.is_empty(): return {}
 		var face: Vector2 = glyph.face
 		var next_ascent := maxf(ascent,face.x)

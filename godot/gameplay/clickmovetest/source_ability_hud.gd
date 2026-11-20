@@ -2,6 +2,7 @@ extends CanvasLayer
 ## 原 Screen Space UI → HUD → Ability Bar。只读同一角色槽，不触发技能。
 const Player := preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const Abilities := preload("res://gameplay/clickmovetest/source_abilities_view.gd")
+const Message := preload("res://gameplay/clickmovetest/source_ability_hud_message.gd")
 const Draw := preload("res://gameplay/clickmovetest/source_inventory_sprite.gd")
 const Tile := preload("res://gameplay/clickmovetest/source_menu_tiled_image.gd")
 const SIDE := 96.0
@@ -9,6 +10,7 @@ const GAP := 16.0
 const ENTRY_IDS := [3500559439943725516,2482055604812022459,306918243132352108,
 	5916395185588694261,4957606854609737821]
 
+var message: Message
 var _owner: Player
 var _actor: Node2D
 var _entries: Array[Control]=[]
@@ -17,7 +19,7 @@ var _bar: Control
 var _attack: Texture2D
 var _solid: Texture2D
 
-func bind(owner: Player, dir: String) -> bool:
+func bind(owner: Player, dir: String, silver_path: String) -> bool:
 	if _owner!=null or owner==null: return false
 	var spec:=Abilities.load_layout(dir)
 	if spec.is_empty(): return false
@@ -35,6 +37,9 @@ func bind(owner: Player, dir: String) -> bool:
 	_bar=Control.new()
 	_bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(_bar)
+	message=Message.new()
+	_bar.add_child(message)
+	if not message.bind(dir,silver_path): return false
 	# 条目和菜单槽继承同一 Generic/Ability；只复用已校验的公共图块，不取菜单布局。
 	var slot: Dictionary=spec.layout.bar[0]
 	for i in ENTRY_IDS.size():
@@ -95,6 +100,8 @@ func _layout() -> void:
 	if viewport_size.y<=0.0: return
 	var unit:=viewport_size.y/1080.0
 	_bar.scale=Vector2.ONE*unit
+	var canvas_pixels:=get_viewport().get_final_transform().get_scale().y*unit
+	message.fit(viewport_size.x/unit,canvas_pixels)
 	var count:=0
 	for entry in _entries:
 		if entry.visible: count+=1
@@ -107,7 +114,8 @@ func _layout() -> void:
 			x+=SIDE+GAP
 
 func blocks_map_pointer(screen_point: Vector2) -> bool:
-	# 原 GraphicRaycaster 只命中可见槽位，不命中空槽或整个底部容器。
+	# 原 GraphicRaycaster 命中可见提示和已占槽，不命中空槽或整个栏容器。
+	if message.is_visible_in_tree() and message.get_rect().has_point(screen_point/_bar.scale): return true
 	for entry in _entries:
 		if entry.is_visible_in_tree() and entry.get_rect().has_point(screen_point/_bar.scale):
 			return true

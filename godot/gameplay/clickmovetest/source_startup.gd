@@ -172,7 +172,7 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 			return _fail("原暂停面板合同或私有素材未通过检查。")
 		if FileAccess.file_exists(pause_source.path_join("abilities-layout.json")):
 			var hud := AbilityHUD.new()
-			if not hud.bind(player,pause_source):
+			if not hud.bind(player,pause_source,OS.get_environment("FORMAL_PANEL_SILVER")):
 				hud.free()
 				return _fail("原 HUD 技能栏的图标或作者合同未通过检查。")
 			ability_hud = hud
@@ -306,11 +306,11 @@ func _mount_player_combat(cue_dir: String, damage_roll: Callable) -> Node:
 	if not scene.start_human_command_execution(player): return null
 	# 原热键只提交槽位，无目标、Cell 或显式朝向。
 	var combat: Node = scene.start_human_fresh_source_combat(player,damage_roll,
-		func(_target):return null,func(_target):return null,func(_code,_reason):pass)
+		func(_target):return null,func(_target):return null,_on_source_ability_rejected)
 	if not is_instance_valid(combat) or not scene.bind_human_gameplay_actions(func():
 		if not player.is_current_controlled(scene.actor): return null
 		return {"actor":player,"command_context":{"actor":player,"issuer_kind":1,"issuer_id":"local"}},
-		func():return false,func(_request,_failure):pass) or not scene.bind_human_ability_keyboard():
+		func():return false,_on_source_gameplay_command_failed) or not scene.bind_human_ability_keyboard():
 		return null
 	if not scene.bind_flamethrower_cues(player,cue_dir.path_join("FlamethrowerJet.png"),
 			cue_dir.path_join("Flamethrower_FireSpell03_CC0.ogg")):
@@ -338,6 +338,14 @@ func _read(path: String) -> Dictionary:
 	var json := JSON.new()
 	if json.parse(FileAccess.get_file_as_string(path))!=OK or not json.data is Dictionary: return {}
 	return json.data
+
+
+func _on_source_ability_rejected(code: int, reason: int) -> void:
+	if is_instance_valid(ability_hud): ability_hud.message.on_ability_rejected(code,reason)
+
+
+func _on_source_gameplay_command_failed(request: Dictionary, reason: int) -> void:
+	if is_instance_valid(ability_hud): ability_hud.message.on_command_failed(request,reason)
 
 
 func _over_native_ui(point_in_viewport: Vector2) -> bool:
