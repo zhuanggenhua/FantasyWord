@@ -5,6 +5,7 @@ signal action_requested(action: int)
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
+const Journal := preload("res://gameplay/clickmovetest/source_journal_view.gd")
 const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
 const Details := preload("res://gameplay/clickmovetest/source_item_details_view.gd")
 const Bags := preload("res://game_core/inventory/source_inventory_bags.gd")
@@ -133,6 +134,17 @@ func _open_inventory() -> bool:
 	_resize()
 	return true
 
+func _open_journal() -> bool:
+	var spec := Journal.load_layout(_dir)
+	if spec.is_empty(): return false
+	var view := Journal.new()
+	if not view.bind(spec,_source,_dir) or not stack.push_panel(view):
+		view.free()
+		return false
+	_left_down=false
+	_resize()
+	return true
+
 func _open_character() -> bool:
 	var state := CharacterState.new()
 	if not state.bind(_character_values.bind(_character_profile),_character_money) \
@@ -242,6 +254,8 @@ func _activate(view: Control, action: int) -> void:
 		return
 	if action==1 and not _inventory_layout.is_empty():
 		if not _open_inventory(): return
+	if action==2:
+		if not _open_journal(): return
 	if action==5 and not _character_layout.is_empty():
 		if not _open_character(): return
 	if action==7 and not _settings_source.is_empty():

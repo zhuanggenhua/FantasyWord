@@ -32,7 +32,7 @@ static func layout(atlas: RefCounted, text: String, bounds: Rect2, spec: Diction
 	var bold: bool = spec.get("style")==17
 	var centered: bool = spec.get("horizontal")==2
 	var right_aligned: bool = spec.get("horizontal")==4
-	var top: bool = spec.get("vertical")==256 and spec.get("style")==0 and centered and spec.get("size")==120
+	var top: bool = spec.get("vertical")==256 and spec.get("style")==0 and centered and (spec.get("size")==64 or spec.get("size")==120)
 	if not top and (spec.get("vertical")!=512 or not ((bold and centered and spec.get("size")==80) \
 			or (spec.get("style")==0 and (spec.get("horizontal")==1 or centered or right_aligned) and spec.get("size")==64))):
 		return {}
