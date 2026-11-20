@@ -103,8 +103,13 @@ func run() -> void:
 		check(source_colour(pixels,spear,[Color("#564379"),Color("#aeaeae")])
 			and source_colour(pixels,cloth,[Color("#6a8bb7"),Color("#51659d"),Color("#394080")]),
 			"native actual gear sprites painted in dedicated slots")
+	if FileAccess.file_exists(dir.path_join("item-details-layout.json")):
+		await exercise_details(shell,panel)
+	else:
+		print("SKIP Item Details needs the private locked overlay contract.")
 	move(neutral);tap(KEY_ESCAPE)
 	check(shell.stack.top()==menu and menu.selected_action()==1 and paused,"Back restores same Pause Items focus")
+	if shell.item_details!=null: check(not shell.item_details.visible,"Back closes the shared overlay")
 	tap(KEY_ENTER)
 	var reopened := shell.stack.top() as Inventory
 	check(reopened!=null and reopened!=panel and reopened.model.category==0 and reopened.selected_action()==1,
@@ -132,3 +137,62 @@ func source_colour(pixels: Image, rect: Rect2i, colors: Array) -> bool:
 			for expected: Color in colors:
 				if Vector3(c.r,c.g,c.b).distance_to(Vector3(expected.r,expected.g,expected.b))<.025: return true
 	return false
+
+func exercise_details(shell: CanvasLayer,panel: Inventory) -> void:
+	var details: Control=shell.item_details
+	check(details!=null and details.get_parent()==shell and details.get_index()>shell.stack.get_index(),
+		"shared overlay renders after Menus, not inside Inventory")
+	if details==null: return
+	check(not details.visible,"empty bag focus never opens details")
+	var weapon := panel.action_rect(31).get_center()*.5
+	move(weapon)
+	await process_frame
+	await process_frame
+	check(details.visible and details.shown_type==0 and panel.selected_action()==31,"pointer enters real weapon")
+	check(details._title._line.text.is_empty() and
+		details._description._line.text==details._items[0].description and
+		absf(details._description._line.width-636.6316)<.01,"source title overflows vertically; exact spear description fits")
+	var spec: Dictionary = details._definition.name
+	var measured: Dictionary = details.Text.layout(details._atlas,details._items[0].name,Rect2(801,863,368,56),spec)
+	check(measured.text==details._items[0].name and absf(measured.width-60.6316)<.01,
+		"actual name is present and measured; only the locked 50-unit Ellipsis rect suppresses it")
+	check(details._icon.size==Vector2(50,50) and details._icon.position==Vector2(743.5,863.5)
+		and details._icon._texture==details._items[0].texture,"source header icon independent of inventory sprite size")
+	check(details.intercepts_point(Vector2(480,430)) and not details.intercepts_point(Vector2(350,430)),
+		"only graphics raycast; details listener doesn't fill the window")
+	button(MOUSE_BUTTON_LEFT,true,Vector2(480,450));button(MOUSE_BUTTON_LEFT,false,Vector2(480,450))
+	check(details.visible and panel.selected_action()==31,"clicking nonselectable overlay leaves focus")
+	move(panel.action_rect(36).get_center()*.5)
+	await process_frame
+	await process_frame
+	check(details.visible and panel.selected_action()==31,"off-slot and category hover do not deselect")
+	tap(KEY_DOWN)
+	check(panel.selected_action()==32 and not details.visible and details.shown_type==-1,
+		"keyboard deselect and empty equipment publish close")
+	tap(KEY_DOWN)
+	check(panel.selected_action()==33 and details.visible and details.shown_type==2 and
+		details._title._line.text.is_empty() and details._description._line.text==details._items[2].description
+		and absf(details._description._line.width-257.6842)<.01 and details._icon._texture==details._items[2].texture,
+		"keyboard focuses actual torso and replaces all details")
+	if DisplayServer.get_name()!="headless":
+		await RenderingServer.frame_post_draw
+		var pixels := root.get_texture().get_image()
+		check(source_colour(pixels,Rect2i(372,432,25,24),[Color("#6a8bb7"),Color("#51659d"),Color("#394080")])
+			and not source_colour(pixels,Rect2i(445,437,96,16),[Color(1,.73973227,0,1)])
+			and source_colour(pixels,Rect2i(412,471,137,18),[Color.WHITE]),"native cloth and white description; no invented gold text in clipped name")
+	root.size=Vector2i(880,540)
+	await process_frame
+	await process_frame
+	check(details.visible and details.position.is_equal_approx(Vector2(-40,0))
+		and details.intercepts_point(Vector2(440,430)) and not details.intercepts_point(Vector2(310,430)),
+		"height-matched overlay remains bottom-centred when window narrows")
+	root.size=Vector2i(960,540)
+	await process_frame
+	await process_frame
+	var category := panel.action_rect(36).get_center()*.5
+	button(MOUSE_BUTTON_LEFT,true,category);button(MOUSE_BUTTON_LEFT,false,category)
+	check(panel.selected_action()==36 and not details.visible,"actual category focus closes overlay")
+	move(panel.action_rect(33).get_center()*.5)
+	await process_frame
+	await process_frame
+	check(details.visible,"reselect opens before Back")

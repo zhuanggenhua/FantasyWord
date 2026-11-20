@@ -6,6 +6,7 @@ const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
 const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
+const Details := preload("res://gameplay/clickmovetest/source_item_details_view.gd")
 const Bags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const Character := preload("res://gameplay/clickmovetest/source_character_view.gd")
 const CharacterState := preload("res://game_core/ui/source_character_panel_state.gd")
@@ -33,6 +34,7 @@ var _character_silver := ""
 var _character_actor: Callable
 var _character_values: Callable
 var _character_money: Callable
+var item_details: Details
 var _inventory_layout := {}
 var _inventory_bags: Bags
 var _inventory_actor: Callable
@@ -111,7 +113,20 @@ func _open_inventory() -> bool:
 	var values: Array[int] = _inventory_stats.call(actor)
 	var view := Inventory.new()
 	if not view.bind(_inventory_layout,_source,_dir,_inventory_silver,
-			_inventory_bags,_inventory_owner.call(actor),actor,values) or not stack.push_panel(view):
+			_inventory_bags,_inventory_owner.call(actor),actor,values):
+		view.free()
+		return false
+	if item_details==null:
+		var spec := Details.load_layout(_dir)
+		if not spec.is_empty():
+			var candidate := Details.new()
+			if candidate.bind(spec,_source,_dir,_inventory_silver,view.get_inventory_atlas()):
+				item_details=candidate
+				add_child(item_details)
+			else: candidate.free()
+	if item_details!=null:
+		view.gear_focus_changed.connect(item_details.select_gear)
+	if not stack.push_panel(view):
 		view.free()
 		return false
 	_left_down=false
@@ -147,9 +162,11 @@ func _change_map(layer_id: int) -> void:
 func _resize() -> void:
 	var panel := stack.top()
 	_fit_owner=0
+	var viewport := get_viewport()
+	if item_details!=null:
+		item_details.fit_viewport(viewport.get_visible_rect().size,viewport.get_final_transform().y.length())
 	if panel==null or not panel.has_method("fit_viewport"): return
 	_fit_owner=panel.get_instance_id()
-	var viewport := get_viewport()
 	panel.fit_viewport(viewport.get_visible_rect().size,viewport.get_final_transform().y.length())
 
 func _reset_ui_edges() -> void:
@@ -166,6 +183,10 @@ func _notification(what: int) -> void:
 		if view is View or view is Settings or view is Character or view is Inventory: view.set_pressed(0)
 		_reset_ui_edges()
 
+func _pointer_hit(view: Control,point: Vector2) -> int:
+	if item_details!=null and item_details.intercepts_point(point): return 0
+	return view.reference_hit(view.viewport_to_design(point))
+
 func _input(event: InputEvent) -> void:
 	var current := stack.top()
 	if current == null: return
@@ -178,7 +199,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.device==0 and event.button_index==MOUSE_BUTTON_LEFT:
 		_mouse=event.position
 		get_viewport().set_input_as_handled()
-		var hit: int = view.reference_hit(view.viewport_to_design(_mouse))
+		var hit: int = _pointer_hit(view,_mouse)
 		if event.pressed and not _left_down:
 			_left_down=true
 			view.pointer_down(hit)
@@ -240,8 +261,8 @@ func _process(_dt: float) -> void:
 		_resize()
 	# Independently sample the current hit, even when the same Point stays put.
 	var sample: Variant = _points.read_active(Points.Map.UI)
-	var hover: int = view.reference_hit(view.viewport_to_design(_mouse)) if _mouse.is_finite() else 0
-	var hit: int = view.reference_hit(view.viewport_to_design(sample)) if sample is Vector2 else 0
+	var hover: int = _pointer_hit(view,_mouse) if _mouse.is_finite() else 0
+	var hit: int = _pointer_hit(view,sample) if sample is Vector2 else 0
 	view.sample_point(hover,hit,sample is Vector2)
 	if _nav!=Vector2i.ZERO and Time.get_ticks_usec()>=_next_nav_us:
 		_move_selected(view)

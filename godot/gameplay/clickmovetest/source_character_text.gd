@@ -8,6 +8,9 @@ const ELLIPSIS := 0x2026
 const SILVER_UPEM := 1900.0
 const SILVER_ADVANCE := {0x2026:1200,0x73a9:1200,0x5bb6:1200,0x89d2:1100,0x8272:1200,
 	0x914d:1200,0x7f6e:1200,0x5e94:1200,0x7528:1200,0x70b9:1200}
+# Exact Silver advance widths for the two authored initial descriptions.
+const DETAILS_SILVER := "长矛中距离武器攻击序列包含与带特效基础布衣人形躯干服装"
+const DETAILS_ADVANCE := {0x81ea:1100,0xff1b:700,0x3002:600}
 const SILVER_FACE := Vector2(56.842106,-42.63158)
 const STATIC_FACE := Vector2(67.5,-16.875)
 var _atlas: Atlas
@@ -60,9 +63,12 @@ static func _element(atlas: Atlas, code: int, points: float, at: float) -> Dicti
 		static_glyph["silver"]=false
 		static_glyph["code"]=code
 		return static_glyph
-	if not SILVER_ADVANCE.has(code): return {}
+	var advance: int = SILVER_ADVANCE.get(code,DETAILS_ADVANCE.get(code,0))
+	if advance==0:
+		if not DETAILS_SILVER.contains(String.chr(code)): return {}
+		advance=1200
 	return {"silver":true,"code":code,"pos":Vector2(at,0),
-		"advance":float(SILVER_ADVANCE[code])*points/SILVER_UPEM,"face":SILVER_FACE*(points/90.0)}
+		"advance":float(advance)*points/SILVER_UPEM,"face":SILVER_FACE*(points/90.0)}
 
 static func layout(atlas: Atlas, text: String, bounds: Rect2, spec: Dictionary) -> Dictionary:
 	if atlas==null or not bounds.is_finite() or not bounds.has_area() or spec.get("style")!=0: return {}

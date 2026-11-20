@@ -1,6 +1,7 @@
 extends Control
 ## Authored ClickMoveTest fresh Inventory route. This binds a real empty bag
 ## and real starter slot images; cannot use/equip/transfer a simulated item.
+signal gear_focus_changed(kind: int)
 const Bag := preload("res://game_core/ui/source_inventory_bag_state.gd")
 const Bags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const Atlas := preload("res://gameplay/clickmovetest/source_menu_glyph_atlas.gd")
@@ -146,6 +147,8 @@ func fit_viewport(viewport: Vector2, screen_pixels := 1.0) -> void:
 	_right.position.x=width-SIZE.x
 	for line in _lines: line.set_canvas_pixel_scale(screen_pixels*_screen_scale)
 
+func get_inventory_atlas() -> Texture2D: return _texture
+
 func viewport_to_design(p: Vector2) -> Vector2: return p/_screen_scale
 func selected_action() -> int: return _focus
 func try_handle_back_request() -> bool: return false
@@ -176,6 +179,7 @@ func try_focus_default_target() -> bool:
 func _select(action: int) -> void:
 	_focus=action
 	model.select(action-1 if action>0 and action<GEAR else -1)
+	gear_focus_changed.emit(action-GEAR if _active and action>=GEAR and action<CATEGORY else -1)
 	_sync()
 
 func _sync() -> void:
