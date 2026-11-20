@@ -2,6 +2,7 @@ extends SceneTree
 const Boot := preload("res://gameplay/clickmovetest/source_startup.gd")
 const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
 const Pause := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
+const Gear := preload("res://game_core/inventory/source_character_equipment.gd")
 const Point := preload("res://game_core/input/mouse_point_actions.gd")
 var checks := 0
 var failures := 0
@@ -120,6 +121,7 @@ func run() -> void:
 	check(shell.stack.depth()==0 and not paused and Engine.time_scale==1.0
 		and actor.execution.has_move_order() and startup.point.read_active(Point.Map.UI)==null,
 		"last pop restores gameplay input and existing movement")
+	await exercise_known_bag_items(startup,shell,actor,owner)
 	finish()
 
 func dark_count(pixels: Image, rect: Rect2i) -> int:
@@ -196,3 +198,52 @@ func exercise_details(shell: CanvasLayer,panel: Inventory) -> void:
 	await process_frame
 	await process_frame
 	check(details.visible,"reselect opens before Back")
+
+
+func exercise_known_bag_items(startup: Boot,shell: CanvasLayer,actor: Node,owner: String) -> void:
+	var gear := startup.player.source_equipment()
+	var spear := gear.item_for_guid(Gear.SPEAR)
+	var cloth := gear.item_for_guid(Gear.CLOTH)
+	check(startup.inventory_bags.try_unequip(owner,gear,Gear.Slot.WEAPON)==Gear.Result.VALID
+		and gear.equipped(Gear.Slot.WEAPON)==null and gear.equipped(Gear.Slot.TORSO)==cloth,
+		"先由真实事务入口卸下长矛；没有新增点击换装")
+	tap(KEY_ESCAPE)
+	var menu := shell.stack.top() as Pause
+	if menu==null: check(false,"重新打开原暂停菜单"); return
+	move(Vector2(40,190))
+	await process_frame
+	await process_frame
+	check(menu.selected_action()==1,"重新从真实 Items 路径进入")
+	tap(KEY_ENTER)
+	var panel := shell.stack.top() as Inventory
+	if panel==null: check(false,"已迁移的真实物品应可进入本人背包"); return
+	check(panel.model.category==0 and panel.model.cell(0).is_empty(),"真实长矛不是消耗品，默认分类仍空")
+	var gear_category:=panel.action_rect(38).get_center()*.5
+	button(MOUSE_BUTTON_LEFT,true,gear_category);button(MOUSE_BUTTON_LEFT,false,gear_category)
+	check(panel.model.category==2 and panel.model.cell(0).item==spear and panel.model.cell(0).quantity==1,
+		"装备分类展示本人背包中的同一资源和数量")
+	var item_position:=panel.action_rect(1).get_center()*.5
+	move(item_position)
+	await process_frame
+	await process_frame
+	var details: Control=shell.item_details
+	check(panel.selected_action()==1 and panel._bag_icons[0].visible
+		and panel._bag_quantities[0].visible and panel._bag_quantities[0]._line.text=="1"
+		and details!=null and details.visible and details.shown_type==Gear.Slot.WEAPON,
+		"第一格的原图、数量和共享长矛详情")
+	if DisplayServer.get_name()!="headless":
+		await RenderingServer.frame_post_draw
+		var pixels:=root.get_texture().get_image()
+		var spear_colours:=[Color("#564379"),Color("#aeaeae")]
+		check(source_colour(pixels,Rect2i(496,182,24,24),spear_colours)
+			and not source_colour(pixels,Rect2i(444,182,24,24),[Color("#564379")]),
+			"原生渲染中实际长矛从装备格进入第一背包格")
+		check(source_colour(pixels,Rect2i(517,196,10,17),[Color.WHITE]),"原生渲染中右下角数量字形存在")
+	tap(KEY_ENTER)
+	check(startup.inventory_bags.count(owner,spear)==1 and gear.equipped(Gear.Slot.WEAPON)==null,
+		"这件原始物品无 Use 换装效果，确认不消耗、不偷接穿戴入口")
+	move(Vector2(470,245));tap(KEY_ESCAPE);tap(KEY_ESCAPE)
+	check(not paused and startup.inventory_bags.try_equip(owner,gear,spear)==Gear.Result.VALID
+		and gear.equipped(Gear.Slot.WEAPON)==spear and startup.inventory_bags.entries(owner).is_empty()
+		and startup.player.inventory_fresh_stats(actor)==[100,40,10,6,6,4,8,4],
+		"返回玩法后从相同真实包重新装备，不改变初始属性")

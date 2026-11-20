@@ -149,6 +149,8 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if mount_project_contact:
 		party_money=PartyMoney.new()
 		inventory_bags=InventoryBags.new()
+		if not player.start_source_equipment():
+			return _fail("原玩家初始装备槽未绑定。")
 		_source_draws = SessionDraws.new()
 		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range):
 			return _fail("原图活动假人的身份、原素材、地图路径或死亡动作无法装配。")
@@ -218,7 +220,7 @@ func _mount_source_pause(directory: String) -> bool:
 		return false
 	if FileAccess.file_exists(directory.path_join("inventory-layout.json")) and not menu.bind_inventory(
 			inventory_bags,player.get_current_controlled_character_or_player_instance,primary_bag_owner,
-			player.inventory_fresh_stats,OS.get_environment("FORMAL_PANEL_SILVER")):
+			player.inventory_fresh_stats,player.source_equipment,OS.get_environment("FORMAL_PANEL_SILVER")):
 		menu.free()
 		return false
 	pause_root = menu

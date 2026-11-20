@@ -1,6 +1,7 @@
 extends RefCounted
 ## InventorySystem owner-keyed item rows. Item resources are canonical database
 ## instances, not display names, and the per-category UI cap is not a bag cap.
+const Equipment := preload("res://game_core/inventory/source_character_equipment.gd")
 signal item_added(owner: String, item: Resource, quantity: int, transfer: int)
 signal item_removed(owner: String, item: Resource, quantity: int, transfer: int)
 enum Transfer { EQUIPMENT, CRAFTING, TRADING, USE, CHEST, CHARACTER_DROP, COMMAND, UNKNOWN, CORPSE }
@@ -73,3 +74,25 @@ func remove(owner: String, item: Resource, quantity: int = 1, transfer: int = Tr
 		bag.rows[index].quantity-=removed
 	item_removed.emit(owner,item,removed,transfer)
 	return true
+
+## InventorySystem 先提交角色槽位，再按原顺序写所属背包。
+## 原无效 owner 异常在 Godot API 显式返回，不允许先变更槽位。
+func try_equip(source_owner: String, target: Equipment, item: Resource) -> int:
+	if target==null or not target.live(): return Equipment.Result.INVALID_TARGET
+	if not target.can_change(): return Equipment.Result.ACTION_LOCKED
+	if not _valid(source_owner): return Equipment.Result.INVALID_OWNER
+	if count(source_owner,item)<1: return Equipment.Result.MISSING_ITEM
+	var change := target.try_apply(target.slot_for_item(item),item)
+	if change.result==Equipment.Result.VALID:
+		remove(source_owner,item,1,Transfer.EQUIPMENT)
+		if change.previous!=null: add(source_owner,change.previous,1,Transfer.EQUIPMENT)
+	return change.result
+
+func try_unequip(destination_owner: String, target: Equipment, slot: int) -> int:
+	if not _valid(destination_owner): return Equipment.Result.INVALID_OWNER
+	if target==null or not target.live(): return Equipment.Result.INVALID_TARGET
+	if not target.can_change(): return Equipment.Result.ACTION_LOCKED
+	var change := target.try_apply(slot,null)
+	if change.result==Equipment.Result.VALID and change.previous!=null:
+		add(destination_owner,change.previous,1,Transfer.EQUIPMENT)
+	return change.result

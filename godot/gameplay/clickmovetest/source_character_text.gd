@@ -71,12 +71,17 @@ static func _element(atlas: Atlas, code: int, points: float, at: float) -> Dicti
 		"advance":float(advance)*points/SILVER_UPEM,"face":SILVER_FACE*(points/90.0)}
 
 static func layout(atlas: Atlas, text: String, bounds: Rect2, spec: Dictionary) -> Dictionary:
-	if atlas==null or not bounds.is_finite() or not bounds.has_area() or spec.get("style")!=0: return {}
+	if atlas==null or not bounds.is_finite() or not bounds.has_area(): return {}
 	var points: float = spec.get("size",0)
 	var h: int = spec.get("horizontal",0)
 	var v: int = spec.get("vertical",0)
 	var overflow: int = spec.get("overflow",0)
-	if points not in [48.0,64.0,120.0] or h not in [1,2,4] or v not in [256,512] 			or overflow not in [0,1] or text.contains("\n"): return {}
+	var quantity: bool = points==32.0 and h==4 and v==1024 and overflow==1 and spec.get("style")==32
+	# Bag item's lower-right Small Caps label accepts digits only (unchanged by style).
+	if quantity:
+		if not text.is_empty() and not text.is_valid_int(): return {}
+	elif spec.get("style")!=0 or points not in [48.0,64.0,120.0] or h not in [1,2,4] \
+			or v not in [256,512] or overflow not in [0,1] or text.contains("\n"): return {}
 	var glyphs: Array[Dictionary] = []
 	var render_text := text
 	var x := 0.0
@@ -122,6 +127,7 @@ static func layout(atlas: Atlas, text: String, bounds: Rect2, spec: Dictionary) 
 	if h==2: initial=bounds.get_center().x-x*.5
 	if h==4: initial=bounds.end.x-x
 	var y := bounds.position.y+ascent if v==256 else bounds.get_center().y+(ascent+descent)*.5
+	if v==1024: y=bounds.end.y+descent
 	var baseline := Vector2(initial,y)
 	for glyph in glyphs:
 		if glyph.silver: glyph.pos+=baseline

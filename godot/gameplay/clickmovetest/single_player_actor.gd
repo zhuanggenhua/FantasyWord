@@ -6,6 +6,7 @@ const PlayerBody = preload("res://gameplay/clickmovetest/actor.gd")
 const Direction = preload("res://game_core/presentation/movable_direction_state.gd")
 const Attributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
+const Equipment = preload("res://game_core/inventory/source_character_equipment.gd")
 const Loadout = preload("res://game_core/combat/equipped_ability_loadout.gd")
 const PersistenceRegistry = preload("res://game_core/persistence/persistable_identity_registry.gd")
 const SOURCE_ACTOR := "735002000000000004"
@@ -39,6 +40,8 @@ var _selected := false
 var _accepts := true
 var _directions := Direction.new()
 var _attributes := Attributes.new()
+var _equipment: Equipment
+var _change_equipment_enabled := true
 var _read_pointer: Callable
 var _refresh_interaction: Callable
 var _reset_interaction: Callable
@@ -84,6 +87,24 @@ func register_primary_persistence(registry: PersistenceRegistry) -> bool:
 	if not registry.register_custom_instanced(actor,UNIQUE_PLAYER_IDENTIFIER): return false
 	_persistence_registry = registry
 	return true
+
+
+## 原动作位独立于控制对象、暂停、移动和技能的门禁。
+func set_change_equipment_enabled(enabled: bool) -> void:
+	_change_equipment_enabled=enabled
+
+func _can_change_source_equipment() -> bool:
+	return _change_equipment_enabled
+
+func start_source_equipment() -> bool:
+	if _equipment!=null: return false
+	var gear := Equipment.new()
+	if not gear.start(_get_primary(),current_health,_can_change_source_equipment): return false
+	_equipment=gear
+	return true
+
+func source_equipment() -> Equipment:
+	return _equipment
 
 
 func get_player_provider() -> RefCounted: return self
@@ -183,7 +204,7 @@ func character_menu_fresh_values(target: Object, profile: Dictionary) -> Diction
 		"base_stats":stats}
 
 ## Inventory UIStat reads effective values. This actor's fresh two equipped
-## entries have zero stat modifiers; the host has no unported buff/gear writes.
+## entries have zero stat modifiers; this slice admits no buffs or nonzero gear bonuses.
 func inventory_fresh_stats(actor: Node) -> Array[int]:
 	if not is_instance_valid(actor) or actor!=_get_primary(): return []
 	return _attributes.menu_base_stats()

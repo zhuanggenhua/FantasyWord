@@ -41,6 +41,7 @@ var _inventory_bags: Bags
 var _inventory_actor: Callable
 var _inventory_owner: Callable
 var _inventory_stats: Callable
+var _inventory_equipment: Callable
 var _inventory_silver := ""
 var _prefs: Prefs
 var _fit_owner := 0
@@ -96,8 +97,8 @@ func bind_character(layout_path: String, profile_path: String, silver: String,
 	_character_money=money
 	return true
 
-func bind_inventory(bags: Bags, actor: Callable, owner: Callable, values: Callable, silver: String) -> bool:
-	if _source.is_empty() or _inventory_bags!=null or bags==null or not actor.is_valid() \
+func bind_inventory(bags: Bags, actor: Callable, owner: Callable, values: Callable, equipment: Callable, silver: String) -> bool:
+	if _source.is_empty() or not equipment.is_valid() or _inventory_bags!=null or bags==null or not actor.is_valid() \
 			or not owner.is_valid() or not values.is_valid(): return false
 	_inventory_layout=Inventory.load_layout(_dir)
 	if _inventory_layout.is_empty(): return false
@@ -105,6 +106,7 @@ func bind_inventory(bags: Bags, actor: Callable, owner: Callable, values: Callab
 	_inventory_actor=actor
 	_inventory_owner=owner
 	_inventory_stats=values
+	_inventory_equipment=equipment
 	_inventory_silver=silver
 	return true
 
@@ -114,7 +116,7 @@ func _open_inventory() -> bool:
 	var values: Array[int] = _inventory_stats.call(actor)
 	var view := Inventory.new()
 	if not view.bind(_inventory_layout,_source,_dir,_inventory_silver,
-			_inventory_bags,_inventory_owner.call(actor),actor,values):
+			_inventory_bags,_inventory_owner.call(actor),actor,values,_inventory_equipment.call()):
 		view.free()
 		return false
 	if item_details==null:
@@ -126,7 +128,7 @@ func _open_inventory() -> bool:
 				add_child(item_details)
 			else: candidate.free()
 	if item_details!=null:
-		view.gear_focus_changed.connect(item_details.select_gear)
+		view.item_focus_changed.connect(item_details.select_gear)
 	if not stack.push_panel(view):
 		view.free()
 		return false

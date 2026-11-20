@@ -1,15 +1,15 @@
 extends Control
-## Authored ClickMoveTest fresh Inventory route. This binds a real empty bag
-## and real starter slot images; cannot use/equip/transfer a simulated item.
-signal gear_focus_changed(kind: int)
+## 原 ClickMoveTest 背包/装备槽位读同一正式角色；不新增点击换装入口。
+signal item_focus_changed(kind: int)
 const Bag := preload("res://game_core/ui/source_inventory_bag_state.gd")
+const Gear := preload("res://game_core/inventory/source_character_equipment.gd")
 const Bags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const Atlas := preload("res://gameplay/clickmovetest/source_menu_glyph_atlas.gd")
 const Text := preload("res://gameplay/clickmovetest/source_character_text.gd")
 const Tiled := preload("res://gameplay/clickmovetest/source_menu_tiled_image.gd")
 const Art := preload("res://gameplay/clickmovetest/source_inventory_sprite.gd")
 const Layout := preload("res://gameplay/clickmovetest/source_character_selectables.gd")
-const LAYOUT_SHA := "1cdabd32c79567f138bc99d905421b41bda1eb63b8a9da2ba7376a552cbf44aa"
+const LAYOUT_SHA := "be020724e7cb4d6caa26b9c1164882cf0886c601d4b1060a1fe78a1ed82b58f8"
 const SIZE := Vector2(1920,1080)
 const GEAR := 31
 const CATEGORY := 36
@@ -31,6 +31,11 @@ var _screen_scale := 1.0
 var _focus := 0
 var _hover := 0
 var _pressed := 0
+var _gear: Gear
+var _item_icons := {}
+var _bag_icons: Array[Art] = []
+var _bag_quantities: Array[Text] = []
+var _pixel_scale := 1.0
 
 func _init() -> void:
 	process_mode=Node.PROCESS_MODE_ALWAYS
@@ -43,11 +48,17 @@ static func load_layout(directory: String) -> Dictionary:
 	return data if data is Dictionary else {}
 
 func bind(layout: Dictionary, pause: Dictionary, directory: String, silver_path: String,
-		bags: Bags, owner: String, actor: Node, values: Array[int]) -> bool:
-	if _background!=null or layout.is_empty() or layout.get("source_commit")!=Atlas.SOURCE 			or layout.get("pause_action")!=1 or layout.get("registration")!=3 or values.size()!=8 			or bags==null or not bags.entries(owner).is_empty(): return false
-	# The actual fresh ClickMoveTest bag is empty; unported filled/item-use
-	# routes fail admission, rather than appearing as silent empty slots.
-	if not model.show(bags,owner,actor,func(_item: Resource): return -1): return false
+		bags: Bags, owner: String, actor: Node, values: Array[int], gear: Gear) -> bool:
+	if _background!=null or layout.is_empty() or layout.get("source_commit")!=Atlas.SOURCE \
+			or layout.get("pause_action")!=1 or layout.get("registration")!=3 or values.size()!=8 \
+			or bags==null or gear==null or not gear.live(): return false
+	_gear=gear
+	# 只有两件已迁移作者物品；不把其他分类或资源悄悄映射为假物品。
+	for row in bags.entries(owner):
+		if _gear.slot_for_item(row.item)<0: return false
+	if not model.show(bags,owner,actor,_category_for): return false
+	model.details_opened.connect(_on_bag_details)
+	model.details_closed.connect(func(): item_focus_changed.emit(-1))
 	_layout=layout
 	_silver=Text.load_silver(silver_path)
 	if _silver==null or not _atlas.bind(pause,directory.path_join("pause-font-atlas.bin")): return false
@@ -70,20 +81,26 @@ func bind(layout: Dictionary, pause: Dictionary, directory: String, silver_path:
 		var row: Dictionary=layout.stat_rows[i]
 		_blank(_centre,row.icon)
 		if not _line(_centre,row.label,row.label.text) or not _line(_centre,row.value,str(values[i])): return false
+	for source: Dictionary in layout.gears:
+		var item := _gear.item_for_guid(source.guid)
+		if item==null or _gear.slot_for_item(item)!=int(source.type): return false
+		var path := directory.path_join(source.icon_file)
+		if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=source.icon_sha256: return false
+		var image := Image.load_from_file(path)
+		if image==null or image.get_size()!=Vector2i(32,32): return false
+		_item_icons[item]=ImageTexture.create_from_image(image)
 	for i in range(5):
 		var box := Layout._rect(layout.equipment_rects[i])
 		_targets[GEAR+i]=box
 		_sprite(_centre,box,_texture,layout.sprites.slot,true)
-		var mounted := false
-		for source: Dictionary in layout.gears:
-			if int(source.type)!=i: continue
-			var path := directory.path_join(source.icon_file)
-			if not FileAccess.file_exists(path) or FileAccess.get_sha256(path)!=source.icon_sha256:return false
-			var image := Image.load_from_file(path)
-			if image==null or image.get_size()!=Vector2i(32,32):return false
-			_sprite(_centre,Layout._rect(source.rect),ImageTexture.create_from_image(image),{},false)
-			mounted=true
-		if not mounted:
+		var equipped := _gear.equipped(i)
+		if equipped!=null:
+			var source: Dictionary={}
+			for row: Dictionary in layout.gears:
+				if int(row.type)==i: source=row; break
+			if source.is_empty() or not _item_icons.has(equipped): return false
+			_sprite(_centre,Layout._rect(source.rect),_item_icons[equipped],{},false)
+		else:
 			_sprite(_centre,Rect2(box.get_center()-Vector2(24,24),Vector2(48,48)),
 				_texture,layout.sprites["gear_placeholder_%d"%i],false)
 	# Categories are painted in their actual sibling order (24-unit overlap).
@@ -99,9 +116,42 @@ func bind(layout: Dictionary, pause: Dictionary, directory: String, silver_path:
 		var box := Layout._rect(layout.grid_cells[i].rect)
 		_targets[i+1]=box
 		_sprite(_centre,box,_texture,layout.sprites.slot,true)
+		var offset := Layout._rect(layout.bag_icon)
+		var image := Art.new()
+		image.position=box.position+offset.position
+		image.size=offset.size
+		_centre.add_child(image)
+		_bag_icons.append(image)
+		var amount := Text.new()
+		_centre.add_child(amount)
+		_bag_quantities.append(amount)
 	_cursor=_sprite(_centre,Rect2(),_texture,layout.sprites.cursor,false)
 	_cursor.hide()
 	return true
+
+func _category_for(item: Resource) -> int:
+	return Bag.Category.GEAR if _gear.slot_for_item(item)>=0 else -1
+
+func _on_bag_details(item: Resource) -> void:
+	if _active: item_focus_changed.emit(_gear.slot_for_item(item))
+
+func _refresh_bag_graphics() -> void:
+	var spec: Dictionary=_layout.bag_quantity
+	var offset := Layout._rect(spec.rect)
+	for index in range(30):
+		var row := model.cell(index)
+		var icon := _bag_icons[index]
+		var amount := _bag_quantities[index]
+		var texture: Texture2D=_item_icons.get(row.get("item"))
+		if texture==null:
+			icon.hide()
+			amount.hide()
+			continue
+		var box: Rect2=_targets[index+1]
+		icon.show_sprite(texture,{},false)
+		icon.show()
+		amount.visible=amount.configure(_atlas,_silver,str(row.quantity),
+			Rect2(box.position+offset.position,offset.size),spec,_pixel_scale)
 
 func _group(parent: Control) -> Control:
 	var node := Control.new()
@@ -145,7 +195,10 @@ func fit_viewport(viewport: Vector2, screen_pixels := 1.0) -> void:
 	_background.size=Vector2(width,SIZE.y)
 	_centre.position.x=(width-SIZE.x)*.5
 	_right.position.x=width-SIZE.x
-	for line in _lines: line.set_canvas_pixel_scale(screen_pixels*_screen_scale)
+	_pixel_scale=screen_pixels*_screen_scale
+	for line in _lines: line.set_canvas_pixel_scale(_pixel_scale)
+	for amount in _bag_quantities:
+		if amount.visible: amount.set_canvas_pixel_scale(_pixel_scale)
 
 func get_inventory_atlas() -> Texture2D: return _texture
 
@@ -173,13 +226,22 @@ func apply_stack_interactions(active: bool) -> void:
 func try_focus_default_target() -> bool:
 	if not _active: return false
 	model.set_category(0)
+	_refresh_bag_graphics()
 	_select(1)
 	return true
 
 func _select(action: int) -> void:
+	if _focus==action:
+		_sync()
+		return
+	if _focus>=GEAR and _focus<CATEGORY:
+		item_focus_changed.emit(-1)
 	_focus=action
 	model.select(action-1 if action>0 and action<GEAR else -1)
-	gear_focus_changed.emit(action-GEAR if _active and action>=GEAR and action<CATEGORY else -1)
+	if action>=GEAR and action<CATEGORY and _active:
+		item_focus_changed.emit(_gear.slot_for_item(_gear.equipped(action-GEAR)))
+	elif action==0 or action>=CATEGORY:
+		item_focus_changed.emit(-1)
 	_sync()
 
 func _sync() -> void:
@@ -223,6 +285,7 @@ func set_pressed(action: int) -> void:
 func activate(action: int) -> bool:
 	if not _active or action<CATEGORY or action>LAST: return false
 	if not model.set_category(action-CATEGORY): return false
+	_refresh_bag_graphics()
 	_sync()
 	return true
 

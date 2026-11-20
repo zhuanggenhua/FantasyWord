@@ -126,6 +126,22 @@ def extract(repo):
                 "vertical":fields["m_VerticalAlignment"],"style":0,"color":fields["m_fontColor"],
                 "overflow":fields["m_overflowMode"],"overflow_width":overflow_width}
 
+    icon_id, quantity_id = 1072737266226206790, 1072737267619867054
+    slot_ctl, = [r for r in bag_slot.values() if "m_image" in r and "m_quantity" in r]
+    assert slot_ctl["m_image"]["fileID"] == icon_id and slot_ctl["m_quantity"]["fileID"] == quantity_id
+    def rect_of(record):
+        go = bag_slot[record]["m_GameObject"]
+        rect, = [r for r in bag_slot.values() if r.get("m_GameObject")==go and "m_AnchorMin" in r]
+        return rect_in([0,0,w,h],rect)
+    q = bag_slot[quantity_id]
+    assert q["m_fontAsset"]["guid"]==font_id and q["m_fontSize"]==32 and q["m_fontStyle"]==32
+    assert not q["m_enableAutoSizing"] and not any(q["m_margin"].values())
+    assert q["m_HorizontalAlignment"]==4 and q["m_VerticalAlignment"]==1024
+    assert q["m_overflowMode"]==1 and q["m_TextWrappingMode"]==1
+    bag_quantity = {"rect":rect_of(quantity_id),"size":32,"style":32,"horizontal":4,
+                    "vertical":1024,"overflow":1,"color":q["m_fontColor"]}
+    bag_icon = rect_of(icon_id)
+
     footer=[]
     controls=rect_in(screen,base[2944192064461780042])
     for group,logic,text_id,anchor in (
@@ -187,6 +203,9 @@ def extract(repo):
             ("m_ownsMainInventory","m_ownsWeaponInventory","m_ownsHotbarInventory")]==[1,1,1]
     initial_gear=source_actor[1265987612345678908]["m_initialEquipment"]
     assert "m_initialEquipment" not in raw(HERO).decode()
+    assert [ref["guid"] for ref in initial_gear] == [
+        guid("Assets/Database/Items/Equipment/基础布衣.asset"),
+        guid("Assets/Database/Items/Equipment/长矛.asset")]
     gears=[]
     for slot_name,asset_name,icon_name,kind in (
             ("weapon","长矛","长矛1",0),("torso","基础布衣","精灵-0001",2)):
@@ -196,13 +215,14 @@ def extract(repo):
         item=model(asset)[11400000]
         assert item["m_type"]==kind and item["m_icon"]=={"fileID":21300000,"guid":guid(image),"type":3}
         assert int(item["m_bonusStats"]["m_values"])==0
+        assert item["m_category"]==2 and item["m_onUse"]=={"rid":-2} and not item["m_formalGasAbilityCodes"]
         meta=yaml.safe_load(raw(image+".meta"))["TextureImporter"]
         assert meta["spriteMode"]==1 and meta["textureSettings"]["filterMode"]==0
         pointer=raw(image).decode()
         image_hash=re.search(r"oid sha256:([0-9a-f]{64})",pointer)[1]
         gear_image=rect_in(gear_cells[kind],gear_slot[4471496117604730246])
         gears.append({"type":kind,"icon_sha256":image_hash,"icon_file":f"inventory-{slot_name}.png",
-                     "rect":gear_image,"source_name":item["m_displayName"]})
+                     "rect":gear_image,"source_name":item["m_displayName"],"guid":guid(asset)})
 
     atlas_guid = guid(ATLAS)
     atlas_meta = yaml.safe_load(raw(ATLAS+".meta"))["TextureImporter"]
@@ -220,7 +240,7 @@ def extract(repo):
     sprites = {k:{"id":str(ref["fileID"]),**atlas_rows[ref["fileID"]]} for k,ref in sprite_refs.items()}
     return {"schema":1,"source_commit":SOURCE,"pause_action":1,"registration":3,
         "title":title,"footer":footer,"gears":gears,"content":content,"bag":bag_box,"grid_layout":grid_layout,
-        "grid_cells":grid_cells,"category_strip":category_box,"categories":categories,
+        "grid_cells":grid_cells,"bag_icon":bag_icon,"bag_quantity":bag_quantity,"category_strip":category_box,"categories":categories,
         "equipment_rects":gear_cells,"stat_rows":summary,"sprites":sprites,
         "cursor":{"size_offset":axes(cursor["sizeOffset"]),"position_offset":axes(cursor["positionOffset"]),
                   "color":cursor["color"]},"dependencies":dependencies}
