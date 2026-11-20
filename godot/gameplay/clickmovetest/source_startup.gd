@@ -10,6 +10,7 @@ const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.
 const InventoryBags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const PartyMoney := preload("res://game_core/inventory/source_party_money.gd")
 const AudioPreferences := preload("res://game_core/audio/source_audio_preferences.gd")
+const AbilityHUD := preload("res://gameplay/clickmovetest/source_ability_hud.gd")
 const PauseRoot := preload("res://gameplay/clickmovetest/source_pause_root.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
@@ -34,6 +35,7 @@ var maps := MapRegistry.new()
 var persistables := PersistenceRegistry.new()
 var point: Point
 var pause_root: PauseRoot
+var ability_hud: AbilityHUD
 var audio_preferences: AudioPreferences
 var party_money: PartyMoney
 var inventory_bags: InventoryBags
@@ -165,8 +167,16 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 	var pause_source := OS.get_environment("FORMAL_PAUSE_SOURCE")
-	if mount_project_contact and not pause_source.is_empty() and not _mount_source_pause(pause_source):
-		return _fail("原暂停面板合同或私有素材未通过检查。")
+	if mount_project_contact and not pause_source.is_empty():
+		if not _mount_source_pause(pause_source):
+			return _fail("原暂停面板合同或私有素材未通过检查。")
+		if FileAccess.file_exists(pause_source.path_join("abilities-layout.json")):
+			var hud := AbilityHUD.new()
+			if not hud.bind(player,pause_source):
+				hud.free()
+				return _fail("原 HUD 技能栏的图标或作者合同未通过检查。")
+			ability_hud = hud
+			scene.add_child(hud)
 	return true
 
 ## ClickMoveTest is the admitted primary actor, whose inherited CharacterInventory
@@ -330,6 +340,9 @@ func _read(path: String) -> Dictionary:
 	return json.data
 
 
-func _over_native_ui(_point_in_viewport: Vector2) -> bool:
-	# 此预览没有另造 UIRoot；已有原生 Control 继续在 _unhandled_input 前消费。
-	return is_instance_valid(get_viewport().gui_get_hovered_control())
+func _over_native_ui(point_in_viewport: Vector2) -> bool:
+	# InputSystem 校验本次 Point 的射线；这里不能仅依赖上一次 GUI 悬停。
+	if is_instance_valid(ability_hud) and ability_hud.blocks_map_pointer(point_in_viewport): return true
+	var hovered := get_viewport().gui_get_hovered_control()
+	# HUD 用上面的实时命中规则，不让滞后的原生悬停吞掉空隙点击。
+	return is_instance_valid(hovered) and (not is_instance_valid(ability_hud) or not ability_hud.is_ancestor_of(hovered))

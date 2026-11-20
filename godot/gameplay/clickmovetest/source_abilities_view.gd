@@ -57,6 +57,22 @@ static func load_layout(directory: String) -> Dictionary:
 	var value: Variant=JSON.parse_string(FileAccess.get_file_as_string(path))
 	return value if value is Dictionary else {}
 
+## 两个正式入口共用同一原图切片；不回退到占位图标。
+static func load_attack_icon(contract: Dictionary, dir: String) -> Texture2D:
+	var attack_spec: Dictionary=contract.abilities["20001"].icon
+	var attack_path:=dir.path_join(attack_spec.file)
+	if not FileAccess.file_exists(attack_path) or FileAccess.get_sha256(attack_path)!=attack_spec.sha256:
+		return null
+	var attack_sheet:=Image.load_from_file(attack_path)
+	if attack_sheet==null or attack_sheet.get_size()!=Vector2i(128,128): return null
+	var clip:=Rect2i(Rects._rect(attack_spec.sheet_rect))
+	return ImageTexture.create_from_image(attack_sheet.get_region(clip))
+
+static func create_null_sprite() -> Texture2D:
+	var white:=Image.create_empty(1,1,false,Image.FORMAT_RGBA8)
+	white.fill(Color.WHITE)
+	return ImageTexture.create_from_image(white)
+
 func bind(contract: Dictionary, pause: Dictionary, dir: String, silver_path: String, owner: Player, initial_category: int = ACTIVE_CATEGORY) -> bool:
 	if _owner!=null or owner==null or contract.get("source_commit")!=Atlas.SOURCE \
 			or contract.get("registration")!=2 or contract.get("pause_action")!=4 \
@@ -64,17 +80,9 @@ func bind(contract: Dictionary, pause: Dictionary, dir: String, silver_path: Str
 		return false
 	_silver=Text.load_silver(silver_path)
 	if _silver==null or not _atlas.bind(pause,dir.path_join("pause-font-atlas.bin")): return false
-	var attack_spec: Dictionary=contract.abilities["20001"].icon
-	var attack_path:=dir.path_join(attack_spec.file)
-	if not FileAccess.file_exists(attack_path) or FileAccess.get_sha256(attack_path)!=attack_spec.sha256:
-		return false
-	var attack_sheet:=Image.load_from_file(attack_path)
-	if attack_sheet==null or attack_sheet.get_size()!=Vector2i(128,128): return false
-	var clip:=Rect2i(Rects._rect(attack_spec.sheet_rect))
-	_attack=ImageTexture.create_from_image(attack_sheet.get_region(clip))
-	var white:=Image.create_empty(1,1,false,Image.FORMAT_RGBA8)
-	white.fill(Color.WHITE)
-	_solid=ImageTexture.create_from_image(white)
+	_attack=load_attack_icon(contract,dir)
+	if _attack==null: return false
+	_solid=create_null_sprite()
 
 	if initial_category not in [ACTIVE_CATEGORY,PASSIVE_CATEGORY]: return false
 	category=initial_category
