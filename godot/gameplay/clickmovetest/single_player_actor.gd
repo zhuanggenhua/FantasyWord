@@ -24,6 +24,7 @@ const _ABILITY_SLOT_COUNT := 5
 static var _movement_idle_squared: float = PackedFloat32Array([0.002500000176951289])[0]
 
 signal controlled_character_changed(actor: Node2D)
+signal equipped_abilities_changed(slots: Array)
 signal player_input_disabled
 signal look_at_direction_changed(value: Vector2)
 signal target_direction_changed(value: Vector2)
@@ -48,6 +49,7 @@ var _reset_interaction: Callable
 var _read_destroyed: Callable
 var _persistence_registry: PersistenceRegistry
 var _fresh_loadout: Loadout
+var _fresh_owned_ability_codes: Array[int] = []
 var _fresh_ability_host: WeakRef
 var _binding_initial_loadout := false
 
@@ -243,17 +245,53 @@ func bind_fresh_ability_loadout(create_or_resolve_owned_active: Callable) -> Loa
 	_binding_initial_loadout = true
 	var candidate := Loadout.new(_ABILITY_SLOT_COUNT)
 	var requested := {}
+	var owned: Array[int] = []
 	for code: int in _LEVEL_ONE_SHEET_ABILITIES + _PREFAB_EXTRA_ABILITIES:
 		if requested.has(code): continue
 		requested[code] = true
 		var runtime: Variant = create_or_resolve_owned_active.call(code)
 		if not is_instance_valid(_get_primary()): break
 		if runtime is Object and is_instance_valid(runtime):
+			owned.append(code)
 			candidate.try_auto_assign_formal_gas_ability_code(code)
 	_binding_initial_loadout = false
 	if not is_instance_valid(_get_primary()): return null
 	_fresh_loadout = candidate
+	_fresh_owned_ability_codes = owned
 	return _fresh_loadout
+
+## CharacterBase.Abilities 只投影实际角色的能力实例和同一个可操作的快捷槽。
+## 初始菜单不从槽位反推所有能力；卸槽不会撤销已持有能力。
+func active_ability_menu_codes() -> Array[int]:
+	var codes: Array[int] = []
+	for code in _fresh_owned_ability_codes:
+		if _has_fresh_owned_ability(code): codes.append(code)
+	return codes
+
+func equipped_ability_menu_slots() -> Array:
+	return _fresh_loadout.create_slot_view_snapshot() if _has_fresh_ability_owner() else []
+
+func try_equip_formal_ability_to_slot(code: int, index: int) -> bool:
+	if not _has_fresh_owned_ability(code): return false
+	# 原 CharacterAbilitySet 同一技能已在目标槽时返回成功，不发第二次变化。
+	if _fresh_loadout.get_formal_gas_ability_code(index)==code: return true
+	if not _fresh_loadout.try_assign_formal_gas_ability_code_to_slot(index,code): return false
+	equipped_abilities_changed.emit(equipped_ability_menu_slots())
+	return true
+
+func clear_equipped_ability_slot(index: int) -> bool:
+	if not _has_fresh_ability_owner() or not _fresh_loadout.clear_slot(index): return false
+	equipped_abilities_changed.emit(equipped_ability_menu_slots())
+	return true
+
+func _has_fresh_ability_owner() -> bool:
+	return _fresh_loadout!=null and is_instance_valid(_get_primary()) \
+		and _fresh_ability_host!=null and is_instance_valid(_fresh_ability_host.get_ref())
+
+func _has_fresh_owned_ability(code: int) -> bool:
+	if not _has_fresh_ability_owner() or not _fresh_owned_ability_codes.has(code): return false
+	var host: Node = _fresh_ability_host.get_ref()
+	return is_instance_valid(host.resolve(code))
 
 
 func _get_primary() -> Node2D:

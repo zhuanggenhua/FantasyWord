@@ -3,7 +3,7 @@ extends Control
 ## 这里不使用 NinePatchRect 的默认拉伸，也不负责菜单层级、布局或点击。
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const ATLAS_HASH := "2db1269537f02431a2f433ecca936d72840962f8b8b765e44405839c1dcdc612"
-const IDS := {"Menu Items": "366804271", "Frame": "548018584", "Settings Background": "-1443275623", "Character Background": "-1443275623", "Inventory Background": "-1443275623", "Journal Background": "-1443275623"}
+const IDS := {"Menu Items": "366804271", "Frame": "548018584", "Settings Background": "-1443275623", "Character Background": "-1443275623", "Inventory Background": "-1443275623", "Journal Background": "-1443275623", "Abilities Background": "-1443275623"}
 
 var _texture: ImageTexture
 var _region: Rect2
@@ -38,7 +38,7 @@ func bind(data: Dictionary, path: String, source_name: String) -> bool:
 	var border := _field_vector(sprite.get("border"), ["x","y","z","w"])
 	var expected := Vector4(0,80,8,8) if source_name == "Menu Items" else Vector4(2,58,20,20)
 	var inset := 1.0 if source_name == "Menu Items" else 6.0
-	if source_name in ["Settings Background","Character Background","Inventory Background","Journal Background"]:
+	if source_name in ["Settings Background","Character Background","Inventory Background","Journal Background","Abilities Background"]:
 		expected = Vector4(96,88,24,24)
 		inset = 3.0
 	if rect != expected or border != Vector4(inset,inset,inset,inset): return false
@@ -51,7 +51,7 @@ func bind(data: Dictionary, path: String, source_name: String) -> bool:
 	_region = region
 	_border = border
 	_units_per_texel = float(data.canvas_reference_ppu) / float(data.sprite_ppu) / float(spec.ppu_multiplier)
-	if source_name in ["Character Background","Inventory Background","Journal Background"]: _max_width=4096.0
+	if source_name in ["Character Background","Inventory Background","Journal Background","Abilities Background"]: _max_width=4096.0
 	queue_redraw()
 	return true
 

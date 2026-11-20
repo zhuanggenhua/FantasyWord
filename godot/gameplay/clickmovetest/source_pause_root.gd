@@ -5,6 +5,8 @@ signal action_requested(action: int)
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
+const Abilities := preload("res://gameplay/clickmovetest/source_abilities_view.gd")
+const Player := preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const Journal := preload("res://gameplay/clickmovetest/source_journal_view.gd")
 const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
 const Details := preload("res://gameplay/clickmovetest/source_item_details_view.gd")
@@ -43,6 +45,10 @@ var _inventory_owner: Callable
 var _inventory_stats: Callable
 var _inventory_equipment: Callable
 var _inventory_silver := ""
+var _abilities_layout := {}
+var _abilities_player: Player
+var _abilities_silver := ""
+var _abilities_category := Abilities.ACTIVE_CATEGORY
 var _prefs: Prefs
 var _fit_owner := 0
 var _next_nav_us := 0
@@ -136,6 +142,31 @@ func _open_inventory() -> bool:
 	_resize()
 	return true
 
+func bind_abilities(player: Player, silver: String) -> bool:
+	if _source.is_empty() or _abilities_player!=null or player==null: return false
+	var layout:=Abilities.load_layout(_dir)
+	if layout.is_empty() or player.active_ability_menu_codes()!=[20001,20010]: return false
+	_abilities_player=player
+	_abilities_layout=layout
+	_abilities_silver=silver
+	return true
+
+func _open_abilities() -> bool:
+	var view:=Abilities.new()
+	if not view.bind(_abilities_layout,_source,_dir,_abilities_silver,_abilities_player,_abilities_category):
+		view.free()
+		return false
+	view.category_changed.connect(_remember_abilities_category)
+	if not stack.push_panel(view):
+		view.free()
+		return false
+	_left_down=false
+	_resize()
+	return true
+
+func _remember_abilities_category(category: int) -> void:
+	_abilities_category=category
+
 func _open_journal() -> bool:
 	var spec := Journal.load_layout(_dir)
 	if spec.is_empty(): return false
@@ -194,7 +225,7 @@ func _reset_ui_edges() -> void:
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 		var view := stack.top()
-		if view is View or view is Settings or view is Character or view is Inventory: view.set_pressed(0)
+		if view is View or view is Settings or view is Character or view is Inventory or view is Abilities: view.set_pressed(0)
 		_reset_ui_edges()
 
 func _pointer_hit(view: Control,point: Vector2) -> int:
@@ -205,7 +236,7 @@ func _input(event: InputEvent) -> void:
 	var current := stack.top()
 	if current == null: return
 	_entry.observe_source_ui_pointer(event)
-	if not (current is View or current is Settings or current is Character or current is Inventory): return
+	if not (current is View or current is Settings or current is Character or current is Inventory or current is Abilities): return
 	var view := current
 	if event is InputEventMouseMotion and event.device==0:
 		_mouse=event.position
@@ -248,16 +279,18 @@ func _input(event: InputEvent) -> void:
 
 func _move_selected(view: Control) -> void:
 	if view is View: view.move_vertical(_nav.y)
-	elif view is Settings or view is Character or view is Inventory: view.move_selection(_nav)
+	elif view is Settings or view is Character or view is Inventory or view is Abilities: view.move_selection(_nav)
 
 func _activate(view: Control, action: int) -> void:
-	if view is Settings or view is Character or view is Inventory:
+	if view is Settings or view is Character or view is Inventory or view is Abilities:
 		view.activate(action)
 		return
 	if action==1 and not _inventory_layout.is_empty():
 		if not _open_inventory(): return
 	if action==2:
 		if not _open_journal(): return
+	if action==4 and not _abilities_layout.is_empty():
+		if not _open_abilities(): return
 	if action==5 and not _character_layout.is_empty():
 		if not _open_character(): return
 	if action==7 and not _settings_source.is_empty():
@@ -271,7 +304,7 @@ func _activate(view: Control, action: int) -> void:
 
 func _process(_dt: float) -> void:
 	var view := stack.top()
-	if not (view is View or view is Settings or view is Character or view is Inventory): return
+	if not (view is View or view is Settings or view is Character or view is Inventory or view is Abilities): return
 	if view.get_instance_id()!=_fit_owner:
 		_left_down=false
 		_resize()

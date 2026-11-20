@@ -223,6 +223,10 @@ func _mount_source_pause(directory: String) -> bool:
 			player.inventory_fresh_stats,player.source_equipment,OS.get_environment("FORMAL_PANEL_SILVER")):
 		menu.free()
 		return false
+	if FileAccess.file_exists(directory.path_join("abilities-layout.json")) and not menu.bind_abilities(
+			player,OS.get_environment("FORMAL_PANEL_SILVER")):
+		menu.free()
+		return false
 	pause_root = menu
 	add_child(menu)
 	return true
