@@ -131,6 +131,10 @@ func _run() -> void:
 	_check(is_instance_valid(scene.flamethrower_visual) and scene.flamethrower_visual.visible,"North 实际触发原喷火，而不仅是命令数")
 	_key(KEY_Q,false)
 	_check(scene.command_count==before+2,"同槽最后一个按键释放才取消")
+	# The original cue intentionally outlives the cast. Let the native audio
+	# mixer drain its stopped playback before tearing down this test scene.
+	scene.flamethrower_audio.stop_channel()
+	await create_timer(.2).timeout
 	_finish()
 
 func _finish() -> void:

@@ -69,8 +69,8 @@ func bind(entry: Node, points: RefCounted, source: Dictionary, directory: String
 	if not valid: return false
 	if not stack.configure(_open,can_open,_change_map,dialogue_playing): return false
 	_entry = entry
-	if _entry.has_method("observe_source_ui_ability_controls"):
-		stack.ui_input_observed.connect(_entry.observe_source_ui_ability_controls)
+	if _entry.has_method("observe_source_ui_gameplay_controls"):
+		stack.ui_input_observed.connect(_entry.observe_source_ui_gameplay_controls)
 	_points = points
 	_source = source
 	_dir = directory

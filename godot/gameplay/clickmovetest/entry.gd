@@ -67,6 +67,7 @@ var click_observation := Observation.new()
 var control_panel: ColorRect
 var keyboard := Keyboard.new()
 var _source_ui_action_layer := false
+var _source_move_initial_pending := false
 var human_gameplay_actions: RefCounted
 var _normalized_click_bound := false
 var _slot_keyboard: SlotKeyboard
@@ -380,8 +381,9 @@ func _resize_camera() -> void:
 func set_source_ui_action_layer(enabled: bool) -> void:
 	if _source_ui_action_layer == enabled: return
 	_source_ui_action_layer = enabled
+	_source_move_initial_pending = not enabled
 	if enabled:
-		keyboard.deactivate(_submit)
+		keyboard.deactivate(_submit,true)
 		if _slot_keyboard != null: _slot_keyboard.deactivate(func(slot: int, _down: bool):
 			if human_gameplay_actions != null:
 				human_gameplay_actions.receive("Gameplay","FireAbility%d" % (slot+1),"canceled"))
@@ -401,19 +403,28 @@ func source_interact_submit_edge(event: InputEvent) -> int:
 func uses_source_interact_submit() -> bool:
 	return _source_interact_submit!=null
 
-func observe_source_ui_ability_controls(event: InputEvent) -> void:
-	if _source_ui_action_layer and _slot_keyboard != null:
-		_slot_keyboard.observe(event,false)
+func observe_source_ui_gameplay_controls(event: InputEvent) -> void:
+	if not _source_ui_action_layer: return
+	if _slot_keyboard != null: _slot_keyboard.observe(event,false)
+	keyboard.observe_move(event,false)
+	keyboard.observe_toggle(event,false)
+
+func _sample_source_move_enabled() -> void:
+	if not _source_move_initial_pending or movement == null: return
+	_source_move_initial_pending = false
+	keyboard.sample_enabled_action(blocked,_submit)
 
 func _notification(what: int) -> void:
 	if what != NOTIFICATION_WM_WINDOW_FOCUS_OUT: return
 	if _source_interact_submit != null: _source_interact_submit.reset_device_state()
 	if _slot_keyboard != null: _slot_keyboard.reset_device_state(_dispatch_human_ability_key)
+	keyboard.deactivate(_submit)
 
 func _input(event: InputEvent) -> void:
 	if _source_ui_action_layer: return
 	if _mouse_point_actions != null: _mouse_point_actions.observe(event)
 	if movement == null: return
+	_sample_source_move_enabled()
 	var interact_edge:=source_interact_submit_edge(event)
 	if interact_edge!=InteractSubmit.Edge.OTHER:
 		if interact_edge==InteractSubmit.Edge.FIRST_PRESS:
@@ -442,10 +453,8 @@ func _input(event: InputEvent) -> void:
 		})
 	if _slot_keyboard != null:
 		_slot_keyboard.observe(event,true,_dispatch_human_ability_key)
-	if event is InputEventKey:
-		if event.physical_keycode == KEY_TAB and event.pressed and not event.echo:
-			Commands.on_toggle_performed(_submit)
-		keyboard.handle_key(event, blocked, _submit)
+	keyboard.observe_toggle(event,true,_submit)
+	keyboard.observe_move(event,true,blocked,_submit)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _source_ui_action_layer or movement == null: return
@@ -473,6 +482,7 @@ func _submit(kind: int, direction: Vector2, point: Variant) -> int:
 	return last_result
 
 func _physics_process(_delta: float) -> void:
+	_sample_source_move_enabled()
 	if is_instance_valid(training_target):
 		training_target.ai_controller.advance_target_step(Step.GAMEPLAY_DELTA_SECONDS)
 	if movement != null:
