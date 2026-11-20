@@ -42,6 +42,14 @@ func current_health() -> int:
 func max_health() -> int:
 	return 0 if _sheet.is_empty() else _sheet[0]
 
+## CharacterBase.GetStatValue reads the authored effective base stat;
+## Health and Mana are maxima, not values of consumable resources.
+func menu_base_stats() -> Array[int]:
+	var result: Array[int] = []
+	if not has_formal_stats(): return result
+	for i in range(8): result.append(_sheet[i])
+	return result
+
 func apply_current_health_delta(delta: int, minimum: Variant, maximum: Variant, source: Variant) -> Variant:
 	# 正式执行器的伤害调用：只允许负增量、下限0、没有额外上限。
 	# 未迁移治疗/耗蓝/活动修饰，以拒绝而不是第二套公式处理。

@@ -158,6 +158,30 @@ func reset_target_direction() -> void: _directions.reset_target_direction()
 func update_movement_animation(velocity: Vector2) -> void: accepted_movement.emit(velocity)
 func register_collision(collider: Object) -> void: collision_reported.emit(collider)
 func stats() -> Dictionary: return _attributes.stats()
+## The numbered ClickMoveTest actor has no migrated level-up/save mutations.
+## Admit only its pinned fresh profile, and read stats from the same live owner
+## used for combat. This does not inspect an unrelated actor or HUD HP value.
+func character_menu_fresh_values(target: Object, profile: Dictionary) -> Dictionary:
+	if not is_instance_valid(target) or target!=_get_primary() or profile.get("source_commit")!= \
+			"31629d53a110dd4c87d4c85e6ad5a387fbafb931" or profile.get("actor_file_id")!="735002000000000004" \
+			or profile.get("sheet_guid")!="13245a7230bedbe4da633d5325872ce1": return {}
+	var authored: Variant = profile.get("fresh")
+	if not authored is Dictionary or authored.get("level")!=1 or authored.get("minimum_level")!=1 \
+			or authored.get("points_per_level")!=5 or authored.get("used_points")!=0 \
+			or authored.get("experience")!=0 or authored.get("next_level_experience")!=0 \
+			or authored.get("display_name")!="玩家角色配置": return {}
+	var stats_array := _attributes.menu_base_stats()
+	var expected: Variant = authored.get("base_stats")
+	if stats_array.size()!=8 or not expected is Array or expected.size()!=9: return {}
+	for i in range(8):
+		if expected[i]!=stats_array[i]: return {}
+	var stats: Array = []
+	for stat in stats_array: stats.append(stat)
+	return {"display_name":str(authored.display_name),"level":int(authored.level),"experience":int(authored.experience),
+		"next_level_experience":int(authored.next_level_experience),
+		"available_points":int(authored.points_per_level)*(int(authored.level)-int(authored.minimum_level))-int(authored.used_points),
+		"base_stats":stats}
+
 func current_health() -> int: return _attributes.current_health()
 
 func is_destroyed() -> bool:

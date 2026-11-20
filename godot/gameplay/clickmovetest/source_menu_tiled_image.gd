@@ -3,12 +3,13 @@ extends Control
 ## 这里不使用 NinePatchRect 的默认拉伸，也不负责菜单层级、布局或点击。
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const ATLAS_HASH := "2db1269537f02431a2f433ecca936d72840962f8b8b765e44405839c1dcdc612"
-const IDS := {"Menu Items": "366804271", "Frame": "548018584", "Settings Background": "-1443275623"}
+const IDS := {"Menu Items": "366804271", "Frame": "548018584", "Settings Background": "-1443275623", "Character Background": "-1443275623"}
 
 var _texture: ImageTexture
 var _region: Rect2
 var _border: Vector4 # L, bottom, R, top (Unity)
 var _units_per_texel: float
+var _max_width := 1920.0
 
 func _init() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -37,7 +38,7 @@ func bind(data: Dictionary, path: String, source_name: String) -> bool:
 	var border := _field_vector(sprite.get("border"), ["x","y","z","w"])
 	var expected := Vector4(0,80,8,8) if source_name == "Menu Items" else Vector4(2,58,20,20)
 	var inset := 1.0 if source_name == "Menu Items" else 6.0
-	if source_name == "Settings Background":
+	if source_name in ["Settings Background","Character Background"]:
 		expected = Vector4(96,88,24,24)
 		inset = 3.0
 	if rect != expected or border != Vector4(inset,inset,inset,inset): return false
@@ -50,6 +51,7 @@ func bind(data: Dictionary, path: String, source_name: String) -> bool:
 	_region = region
 	_border = border
 	_units_per_texel = float(data.canvas_reference_ppu) / float(data.sprite_ppu) / float(spec.ppu_multiplier)
+	if source_name=="Character Background": _max_width=4096.0
 	queue_redraw()
 	return true
 
@@ -86,7 +88,7 @@ func patches(destination_size: Vector2) -> Array[Dictionary]:
 	# The only supported shapes are within the source menu's bounded draw domain.
 	# No fallback to a stretched panel or unbounded mesh allocation.
 	if _texture == null or not destination_size.is_finite() or destination_size.x <= 0.0 \
-			or destination_size.y <= 0.0 or destination_size.x > 1920.0 or destination_size.y > 1080.0:
+			or destination_size.y <= 0.0 or destination_size.x > _max_width or destination_size.y > 1080.0:
 		return result
 	var xs := _axis(destination_size.x, _region.size.x, _border.x, _border.z, _units_per_texel)
 	var ys := _axis(destination_size.y, _region.size.y, _border.y, _border.w, _units_per_texel)

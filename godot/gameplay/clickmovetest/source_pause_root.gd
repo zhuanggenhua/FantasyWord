@@ -5,6 +5,10 @@ signal action_requested(action: int)
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
+const Character := preload("res://gameplay/clickmovetest/source_character_view.gd")
+const CharacterState := preload("res://game_core/ui/source_character_panel_state.gd")
+const CHARACTER_STATE_HASH := "be2fcc2fd913ba41c638951000e143db3f2a8c057a082eddf89be6a8de379892"
+const CHARACTER_LAYOUT_HASH := "441a56f27bc3df0d5a423ac3fb9cfb2c6bcc5499c9e21121de853c72548c68cb"
 const Prefs := preload("res://game_core/audio/source_audio_preferences.gd")
 const Points := preload("res://game_core/input/mouse_point_actions.gd")
 const SUBMIT := [KEY_F,KEY_ENTER,KEY_SPACE]
@@ -21,6 +25,12 @@ var _held_submit := {}
 var _held_dirs := {}
 var _nav := Vector2i.ZERO
 var _settings_source := {}
+var _character_layout := {}
+var _character_profile := {}
+var _character_silver := ""
+var _character_actor: Callable
+var _character_values: Callable
+var _character_money: Callable
 var _prefs: Prefs
 var _fit_owner := 0
 var _next_nav_us := 0
@@ -53,6 +63,38 @@ func bind_settings(definition: Dictionary, prefs: Prefs) -> bool:
 	if not valid: return false
 	_settings_source=definition
 	_prefs=prefs
+	return true
+
+func bind_character(layout_path: String, profile_path: String, silver: String,
+		actor: Callable, values: Callable, money: Callable) -> bool:
+	if _source.is_empty() or not _character_layout.is_empty() or not actor.is_valid() or not values.is_valid() \
+			or not money.is_valid() or not FileAccess.file_exists(layout_path) or not FileAccess.file_exists(profile_path) \
+			or FileAccess.get_sha256(layout_path)!=CHARACTER_LAYOUT_HASH \
+			or FileAccess.get_sha256(profile_path)!=CHARACTER_STATE_HASH or not FileAccess.file_exists(silver) \
+			or FileAccess.get_sha256(silver)!=Character.Text.SILVER_HASH:
+		return false
+	var layout: Variant = JSON.parse_string(FileAccess.get_file_as_string(layout_path))
+	var profile: Variant = JSON.parse_string(FileAccess.get_file_as_string(profile_path))
+	if not layout is Dictionary or not profile is Dictionary or profile.get("pause_action")!=5 \
+			or profile.get("registration")!=1: return false
+	_character_layout=layout
+	_character_profile=profile
+	_character_silver=silver
+	_character_actor=actor
+	_character_values=values
+	_character_money=money
+	return true
+
+func _open_character() -> bool:
+	var state := CharacterState.new()
+	if not state.bind(_character_values.bind(_character_profile),_character_money) \
+			or not state.show(_character_actor.call()): return false
+	var panel := Character.new()
+	if not panel.bind(_character_layout,_source,_dir,_character_silver,state) or not stack.push_panel(panel):
+		panel.free()
+		return false
+	_left_down=false
+	_resize()
 	return true
 
 func _ready() -> void:
@@ -88,14 +130,14 @@ func _reset_ui_edges() -> void:
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 		var view := stack.top()
-		if view is View or view is Settings: view.set_pressed(0)
+		if view is View or view is Settings or view is Character: view.set_pressed(0)
 		_reset_ui_edges()
 
 func _input(event: InputEvent) -> void:
 	var current := stack.top()
 	if current == null: return
 	_entry.observe_source_ui_pointer(event)
-	if not (current is View or current is Settings): return
+	if not (current is View or current is Settings or current is Character): return
 	var view := current
 	if event is InputEventMouseMotion and event.device==0:
 		_mouse=event.position
@@ -138,12 +180,14 @@ func _input(event: InputEvent) -> void:
 
 func _move_selected(view: Control) -> void:
 	if view is View: view.move_vertical(_nav.y)
-	elif view is Settings: view.move_selection(_nav)
+	elif view is Settings or view is Character: view.move_selection(_nav)
 
 func _activate(view: Control, action: int) -> void:
-	if view is Settings:
+	if view is Settings or view is Character:
 		view.activate(action)
 		return
+	if action==5 and not _character_layout.is_empty():
+		if not _open_character(): return
 	if action==7 and not _settings_source.is_empty():
 		var panel := Settings.new()
 		if not panel.bind(_settings_source,_source,_dir,_prefs) or not stack.push_panel(panel):
@@ -155,7 +199,7 @@ func _activate(view: Control, action: int) -> void:
 
 func _process(_dt: float) -> void:
 	var view := stack.top()
-	if not (view is View or view is Settings): return
+	if not (view is View or view is Settings or view is Character): return
 	if view.get_instance_id()!=_fit_owner:
 		_left_down=false
 		_resize()

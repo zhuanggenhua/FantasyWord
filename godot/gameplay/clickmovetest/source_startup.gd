@@ -7,6 +7,7 @@ const EntryScript = preload("res://gameplay/clickmovetest/entry.gd")
 const PlayerOwner = preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const SessionDraws = preload("res://gameplay/clickmovetest/source_session_draws.gd")
 const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
+const PartyMoney := preload("res://game_core/inventory/source_party_money.gd")
 const AudioPreferences := preload("res://game_core/audio/source_audio_preferences.gd")
 const PauseRoot := preload("res://gameplay/clickmovetest/source_pause_root.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
@@ -33,6 +34,7 @@ var persistables := PersistenceRegistry.new()
 var point: Point
 var pause_root: PauseRoot
 var audio_preferences: AudioPreferences
+var party_money: PartyMoney
 var _listener_prior := 1.0
 var _trainer_death := false
 var _player_death := false
@@ -143,6 +145,7 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if panel and not scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
 		return _fail("原静态测试面板字体与实际玩家入口未绑定。")
 	if mount_project_contact:
+		party_money=PartyMoney.new()
 		_source_draws = SessionDraws.new()
 		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range):
 			return _fail("原图活动假人的身份、原素材、地图路径或死亡动作无法装配。")
@@ -193,6 +196,12 @@ func _mount_source_pause(directory: String) -> bool:
 		return false
 	var settings_path := directory.path_join("settings-contract.json")
 	if FileAccess.file_exists(settings_path) and not menu.bind_settings(_read(settings_path),audio_preferences):
+		menu.free()
+		return false
+	var character_layout := directory.path_join("character-layout.json")
+	if FileAccess.file_exists(character_layout) and not menu.bind_character(character_layout,
+			directory.path_join("character-contract.json"),OS.get_environment("FORMAL_PANEL_SILVER"),
+			player.get_current_controlled_character_or_player_instance,player.character_menu_fresh_values,party_money.money):
 		menu.free()
 		return false
 	pause_root = menu
