@@ -81,7 +81,7 @@ func _run() -> void:
 	_tap(KEY_ENTER); _tap(KEY_SPACE)
 	_pad(true); _pad(false)
 	_check(scene.command_count==count+4 and message.visible,"Enter、Space、手柄南键走同一原命令")
-	_pad(true,JOY_BUTTON_B); _pad(false,JOY_BUTTON_B)
+	_pad(true,JOY_BUTTON_BACK); _pad(false,JOY_BUTTON_BACK)
 	_pad(true,JOY_BUTTON_A,1); _pad(false,JOY_BUTTON_A,1)
 	_check(scene.command_count==count+4,"其他方向和未绑定手柄不抢该设备的交互")
 	_key(KEY_F,true)

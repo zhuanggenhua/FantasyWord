@@ -2,6 +2,7 @@ extends Node
 ## 迁移 UIManager 菜单栈的 Gameplay ↔ Menu 路径。
 ## 宿主注入已注册面板、玩家命令门禁及动作图切换；不自动生成面板或处理对话状态层。
 enum ActionLayer { GAMEPLAY, UI }
+signal ui_input_observed(event: InputEvent)
 var _stack: Array[Control] = []
 var _request_root: Callable
 var _may_open: Callable
@@ -86,19 +87,28 @@ func _valid_panel(panel: Control) -> bool:
 
 func _input(event: InputEvent) -> void:
 	if not _configured: return
+	var in_ui := not _stack.is_empty()
+	if in_ui: ui_input_observed.emit(event)
 	var key := ""
-	if event is InputEventKey and event.physical_keycode==KEY_ESCAPE:
+	if event is InputEventJoypadButton and event.device == 0:
+		if event.button_index == JOY_BUTTON_START: key = "pad_start"
+		elif event.button_index == JOY_BUTTON_B: key = "pad_east"
+	elif event is InputEventKey and event.physical_keycode==KEY_ESCAPE:
 		key = "escape"
 	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_RIGHT and event.device>=0:
 		key = "right_mouse"
 	if key.is_empty(): return
-	get_viewport().set_input_as_handled()
+	# Start opens Gameplay only. East is UI Cancel, but in Gameplay its event
+	# must reach the real FireAbility3 route. Track both even on the other map.
+	var on_map := (in_ui and key != "pad_start") or (not in_ui and key != "pad_east")
+	if on_map: get_viewport().set_input_as_handled()
 	if not event.pressed:
 		_cancel_held.erase(key)
 		_physical_cancel.erase(key)
 		return
 	if event.is_echo() or _physical_cancel.has(key): return
 	_physical_cancel[key] = true
+	if not on_map: return
 	var first_edge := _cancel_held.is_empty()
 	_cancel_held[key] = true
 	if not first_edge: return

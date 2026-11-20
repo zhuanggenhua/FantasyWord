@@ -401,9 +401,14 @@ func source_interact_submit_edge(event: InputEvent) -> int:
 func uses_source_interact_submit() -> bool:
 	return _source_interact_submit!=null
 
+func observe_source_ui_ability_controls(event: InputEvent) -> void:
+	if _source_ui_action_layer and _slot_keyboard != null:
+		_slot_keyboard.observe(event,false)
+
 func _notification(what: int) -> void:
-	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT and _source_interact_submit!=null:
-		_source_interact_submit.reset_device_state()
+	if what != NOTIFICATION_WM_WINDOW_FOCUS_OUT: return
+	if _source_interact_submit != null: _source_interact_submit.reset_device_state()
+	if _slot_keyboard != null: _slot_keyboard.reset_device_state(_dispatch_human_ability_key)
 
 func _input(event: InputEvent) -> void:
 	if _source_ui_action_layer: return
@@ -435,9 +440,9 @@ func _input(event: InputEvent) -> void:
 			"world_position": projected if projected is Vector2 else Vector2.ZERO,
 			"order_before_dispatch": owned and actor.execution.has_move_order(),
 		})
+	if _slot_keyboard != null:
+		_slot_keyboard.observe(event,true,_dispatch_human_ability_key)
 	if event is InputEventKey:
-		if _slot_keyboard != null:
-			_slot_keyboard.handle_key(event,_dispatch_human_ability_key)
 		if event.physical_keycode == KEY_TAB and event.pressed and not event.echo:
 			Commands.on_toggle_performed(_submit)
 		keyboard.handle_key(event, blocked, _submit)
