@@ -2,6 +2,7 @@ extends SceneTree
 const Boot := preload("res://gameplay/clickmovetest/source_startup.gd")
 const Pause := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
+const Gamepad := preload("res://game_core/input/source_gamepad_navigate.gd")
 const Dpad := preload("res://game_core/input/source_dpad_navigate.gd")
 var checks := 0
 var failures := 0
@@ -19,6 +20,14 @@ func _button(id: JoyButton, down: bool, device := 0) -> InputEventJoypadButton:
 
 func _pad(id: JoyButton, down: bool, device := 0) -> void:
 	root.push_input(_button(id,down,device),true)
+
+func _axis_event(id: JoyAxis, value: float, device := 0) -> InputEventJoypadMotion:
+	var e:=InputEventJoypadMotion.new()
+	e.axis=id; e.axis_value=value; e.device=device
+	return e
+
+func _axis(id: JoyAxis, value: float, device := 0) -> void:
+	root.push_input(_axis_event(id,value,device),true)
 
 func _tap(id: JoyButton) -> void:
 	_pad(id,true); _pad(id,false)
@@ -60,6 +69,130 @@ func _unit() -> void:
 	d.observe(_button(JOY_BUTTON_DPAD_RIGHT,true),true)
 	_check(d.take_direction()==Vector2i.RIGHT,"失焦清理物理值和未处理动作")
 
+func _unit_stick() -> void:
+	var g:=Gamepad.new()
+	_check(g.observe(_axis_event(JOY_AXIS_LEFT_X,.52),false) and g.take_direction()==null,
+		"在 Gameplay 记录物理轴，不发布菜单 Navigate")
+	g.observe(_axis_event(JOY_AXIS_TRIGGER_LEFT,.8),true)
+	_check(g.take_direction()==null and not g.observe(_axis_event(JOY_AXIS_LEFT_X,.8,1),true),
+		"扳机和其他设备不是原 Navigate 方向")
+	g.observe(_axis_event(JOY_AXIS_LEFT_X,.521),true)
+	_check(g.take_direction()==Vector2i.ZERO,"半轴阈值下仍可发布原零向量")
+	g.observe(_axis_event(JOY_AXIS_LEFT_X,.53),true)
+	_check(g.take_direction()==Vector2i.RIGHT,"默认数字半轴大约 .525 触发")
+	g.observe(_button(JOY_BUTTON_DPAD_LEFT,true),true)
+	g.observe(_axis_event(JOY_AXIS_LEFT_X,.53),true)
+	_check(g.take_direction()==Vector2i.LEFT,"不变的轴记录不覆盖真实 D-pad")
+	g.observe(_axis_event(JOY_AXIS_LEFT_X,.531),true)
+	_check(g.take_direction()==Vector2i.RIGHT,"同一数字区的新原始轴记录仍覆盖 D-pad")
+	g.observe(_axis_event(JOY_AXIS_RIGHT_Y,-.8),true)
+	_check(g.take_direction()==Vector2i.UP,"两只摇杆共享复合向量并以纵向平手优先")
+	g.reset_device()
+	g.observe(_axis_event(JOY_AXIS_RIGHT_Y,.2),true)
+	_check(g.take_direction()==Vector2i.ZERO,"失焦清除左右杆和待派发方向")
+
+func _stick_cases(boot: Boot) -> void:
+	var stack:=boot.pause_root.stack
+	_axis(JOY_AXIS_RIGHT_Y,.8)
+	_tap(JOY_BUTTON_START)
+	var pause:=stack.top() as Pause
+	if pause==null:
+		_check(false,"Start 未打开原暂停（摇杆）"); return
+	await _settle()
+	await _focus_then_leave(pause,3)
+	_axis(JOY_AXIS_RIGHT_Y,.8)
+	await _settle()
+	_check(pause.selected_action()==3,"预偏转和重复原始状态均无初始菜单 Move")
+	_tap(JOY_BUTTON_A)
+	_axis(JOY_AXIS_RIGHT_Y,.81)
+	await _settle()
+	var settings:=stack.top() as Settings
+	_check(settings!=null and stack.depth()==2,"右杆变化先移到真实 Settings，再执行同帧南键")
+	if settings==null: return
+	_axis(JOY_AXIS_RIGHT_Y,0)
+	await _settle()
+	var before: float=settings._prefs.volume(-1)
+	_axis(JOY_AXIS_LEFT_X,.52)
+	_axis(JOY_AXIS_RIGHT_X,.9,1)
+	await _settle()
+	_check(settings.selected_action()==1,"半轴低于阈值或别的设备均不改变真实焦点")
+	_axis(JOY_AXIS_LEFT_X,.53)
+	_tap(JOY_BUTTON_A)
+	await _settle()
+	_check(settings.selected_action()==2 and is_equal_approx(settings._prefs.volume(-1),minf(1.0,before+.1)),
+		"左杆跨阈值并提交后，原 Master 数值真的增加一档")
+	_axis(JOY_AXIS_RIGHT_X,.83)
+	_axis(JOY_AXIS_LEFT_X,0)
+	await _settle()
+	_check(settings.selected_action()==2,"同向由右杆继续保持，不重新启动移动")
+	_axis(JOY_AXIS_LEFT_X,-.8)
+	await _settle()
+	_check(settings.selected_action()==2,"异侧摇杆方向对抗时抵消")
+	_axis(JOY_AXIS_RIGHT_X,0)
+	await _settle()
+	_check(settings.selected_action()==1,"松开一侧后剩余的左向移动实际焦点")
+	_axis(JOY_AXIS_LEFT_X,.8)
+	_axis(JOY_AXIS_RIGHT_Y,.84)
+	await _settle()
+	_check(settings.selected_action()==3,"跨杆同更新斜向优先 Down，只有一次移动")
+	_axis(JOY_AXIS_LEFT_X,0)
+	_axis(JOY_AXIS_RIGHT_Y,0)
+	await _settle()
+	_axis(JOY_AXIS_LEFT_X,.2)
+	_axis(JOY_AXIS_LEFT_Y,.2)
+	await _settle()
+	_check(settings.selected_action()==3,"小斜向不是玩法径向阈值，不移动菜单")
+	_axis(JOY_AXIS_LEFT_X,0); _axis(JOY_AXIS_LEFT_Y,0)
+	await _settle()
+
+	var started:=Time.get_ticks_usec()
+	_pad(JOY_BUTTON_DPAD_DOWN,true)
+	await _settle()
+	_check(settings.selected_action()==5,"D-pad 输入仍覆盖摇杆零方向")
+	var repeated:=await _wait_for(settings,7,started+1200000)
+	_check(repeated!=0,"真实连发开始后才能检查摇杆原始零向量")
+	_axis(JOY_AXIS_LEFT_X,.25)
+	_axis(JOY_AXIS_LEFT_X,.25)
+	var next:=await _wait_for(settings,9,Time.get_ticks_usec()+230000)
+	_check(next==0 and settings.selected_action()==7,"零向量覆盖仍按住的 D-pad 并终止连发")
+	_pad(JOY_BUTTON_DPAD_DOWN,false)
+	await _settle()
+	_axis(JOY_AXIS_RIGHT_X,.8)
+	await _settle()
+	_check(settings.selected_action()==8,"右杆重新发送方向")
+	_pad(JOY_BUTTON_DPAD_LEFT,true)
+	await _settle()
+	_check(settings.selected_action()==7,"D-pad 不与仍偏转的右杆合成")
+	_axis(JOY_AXIS_RIGHT_X,.8)
+	await _settle()
+	_check(settings.selected_action()==7,"同原始值不能从真实 D-pad 抢回方向")
+	_axis(JOY_AXIS_RIGHT_X,.81)
+	await _settle()
+	_check(settings.selected_action()==8,"同数字区的真实原始变化可从 D-pad 重新接管")
+	_pad(JOY_BUTTON_DPAD_LEFT,false)
+	_axis(JOY_AXIS_RIGHT_X,0)
+	await _settle()
+	_tap(JOY_BUTTON_B)
+	_check(stack.top()==pause and pause.selected_action()==7,"East 仍只退出真实一层并恢复焦点")
+	var original_pause_id := pause.get_instance_id()
+	_axis(JOY_AXIS_RIGHT_Y,.8)
+	_tap(JOY_BUTTON_B)
+	_tap(JOY_BUTTON_START)
+	var reopened:=stack.top() as Pause
+	if reopened==null:
+		_check(false,"快速重开失败"); return
+	await _settle()
+	await _focus_then_leave(reopened,3)
+	_axis(JOY_AXIS_RIGHT_Y,.8)
+	await _settle()
+	_check(reopened.get_instance_id()!=original_pause_id and reopened.selected_action()==3,"关闭清待派发和连发，新面板不重采样物理轴")
+	_axis(JOY_AXIS_RIGHT_Y,.81)
+	await _settle()
+	_check(reopened.selected_action()==7,"快速重开后确有原始变化才重新移动")
+	_axis(JOY_AXIS_RIGHT_Y,0)
+	_tap(JOY_BUTTON_B)
+	_check(not paused and stack.depth()==0,"复位关闭后返回 Gameplay")
+
 func _wait_for(panel: Control, action: int, deadline: int) -> int:
 	while Time.get_ticks_usec()<deadline:
 		await process_frame
@@ -68,9 +201,10 @@ func _wait_for(panel: Control, action: int, deadline: int) -> int:
 
 func _run() -> void:
 	_unit()
+	_unit_stick()
 	var fixture:=OS.get_environment("FORMAL_PAUSE_SOURCE")
 	if fixture.is_empty() or not FileAccess.file_exists(fixture.path_join("settings-contract.json")):
-		print("SKIP 真实 Pause 与 Settings 需要私有源资源；仅验原 D-pad 合成合同。")
+		print("SKIP 真实 Pause 与 Settings 需要私有源资源；仅验原手柄方向合成合同。")
 		_finish(); return
 	root.size=Vector2i(960,540)
 	_check(change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))==OK,"真实 F5 入口")
@@ -146,9 +280,10 @@ func _run() -> void:
 		_check(stack.top()==pause and pause.selected_action()==7,"独立 Cancel 返回一层并恢复根原记忆焦点")
 	_tap(JOY_BUTTON_B)
 	_check(not paused and stack.depth()==0,"独立 Cancel 可正常返回 Gameplay")
+	await _stick_cases(boot)
 	_finish()
 
 func _finish() -> void:
-	print("%s 原手柄 D-pad 暂停导航：%d/%d（%s）"%[
+	print("%s 原手柄十字键与双摇杆暂停导航：%d/%d（%s）"%[
 		"PASS" if failures==0 else "FAIL",checks-failures,checks,DisplayServer.get_name()])
 	quit(int(failures!=0))

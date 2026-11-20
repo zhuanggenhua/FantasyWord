@@ -2,7 +2,7 @@ extends CanvasLayer
 ## The source root and menu navigation/input owner. It does not invent any
 ## child scene when the actual registration is not ported yet.
 signal action_requested(action: int)
-const DpadNavigate := preload("res://game_core/input/source_dpad_navigate.gd")
+const GamepadNavigate := preload("res://game_core/input/source_gamepad_navigate.gd")
 const InteractSubmit := preload("res://game_core/input/source_shared_interact_submit.gd")
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
@@ -31,7 +31,7 @@ var _mouse := Vector2.INF
 var _left_down := false
 var _held_submit := {}
 var _held_dirs := {}
-var _dpad := DpadNavigate.new()
+var _gamepad_navigation := GamepadNavigate.new()
 var _pending_pad_submit := 0
 var _nav := Vector2i.ZERO
 var _settings_source := {}
@@ -227,7 +227,7 @@ func _reset_ui_edges() -> void:
 	_held_dirs.clear()
 	_nav = Vector2i.ZERO
 	_next_nav_us = 0
-	_dpad.clear_pending()
+	_gamepad_navigation.clear_pending()
 	_pending_pad_submit = 0
 
 func _notification(what: int) -> void:
@@ -235,7 +235,7 @@ func _notification(what: int) -> void:
 		var view := stack.top()
 		if view is View or view is Settings or view is Character or view is Inventory or view is Abilities: view.set_pressed(0)
 		_reset_ui_edges()
-		_dpad.reset_device()
+		_gamepad_navigation.reset_device()
 
 func _pointer_hit(view: Control,point: Vector2) -> int:
 	if item_details!=null and item_details.intercepts_point(point): return 0
@@ -243,8 +243,10 @@ func _pointer_hit(view: Control,point: Vector2) -> int:
 
 func _input(event: InputEvent) -> void:
 	var current := stack.top()
-	if _dpad.observe(event,current!=null):
-		if current!=null: get_viewport().set_input_as_handled()
+	if _gamepad_navigation.observe(event,current!=null):
+		# Keep stick axes visible to the gameplay observer while paused,
+		# so its distinct Value action can seed the latest state on resume.
+		if current!=null and event is InputEventJoypadButton: get_viewport().set_input_as_handled()
 		return
 	if current == null: return
 	_entry.observe_source_ui_pointer(event)
@@ -290,7 +292,7 @@ func _input(event: InputEvent) -> void:
 	elif DIRS.has(key):
 		get_viewport().set_input_as_handled()
 		if _held_dirs.has(key)==event.pressed: return
-		_dpad.clear_pending()
+		_gamepad_navigation.clear_pending()
 		if event.pressed: _held_dirs[key]=DIRS[key]
 		else: _held_dirs.erase(key)
 		var values := _held_dirs.values()
@@ -336,7 +338,7 @@ func _process(_dt: float) -> void:
 	var view := stack.top()
 	var submit := _pending_pad_submit
 	_pending_pad_submit=0
-	var pad_direction: Variant = _dpad.take_direction()
+	var pad_direction: Variant = _gamepad_navigation.take_direction()
 	if not (view is View or view is Settings or view is Character or view is Inventory or view is Abilities): return
 	if view.get_instance_id()!=_fit_owner:
 		_left_down=false
