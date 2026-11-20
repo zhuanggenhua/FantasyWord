@@ -95,6 +95,8 @@ func _run() -> void:
 	_check(menu.stack.depth()==1 and scene.command_count==count+5,"保持一项物理控制时不会穿入 UI Submit")
 	_key(KEY_ENTER,false)
 	_pad(true)
+	await process_frame
+	await process_frame
 	_check(menu.stack.top() is Inventory and scene.command_count==count+5,
 		"全松后新按的共用南键在 UI 只提交选中的 Inventory")
 	_tap(KEY_ESCAPE)

@@ -1,7 +1,8 @@
 extends CanvasLayer
-## The source root and keyboard/mouse input owner. It does not invent any
+## The source root and menu navigation/input owner. It does not invent any
 ## child scene when the actual registration is not ported yet.
 signal action_requested(action: int)
+const DpadNavigate := preload("res://game_core/input/source_dpad_navigate.gd")
 const InteractSubmit := preload("res://game_core/input/source_shared_interact_submit.gd")
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
@@ -30,6 +31,8 @@ var _mouse := Vector2.INF
 var _left_down := false
 var _held_submit := {}
 var _held_dirs := {}
+var _dpad := DpadNavigate.new()
+var _pending_pad_submit := 0
 var _nav := Vector2i.ZERO
 var _settings_source := {}
 var _character_layout := {}
@@ -224,12 +227,15 @@ func _reset_ui_edges() -> void:
 	_held_dirs.clear()
 	_nav = Vector2i.ZERO
 	_next_nav_us = 0
+	_dpad.clear_pending()
+	_pending_pad_submit = 0
 
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 		var view := stack.top()
 		if view is View or view is Settings or view is Character or view is Inventory or view is Abilities: view.set_pressed(0)
 		_reset_ui_edges()
+		_dpad.reset_device()
 
 func _pointer_hit(view: Control,point: Vector2) -> int:
 	if item_details!=null and item_details.intercepts_point(point): return 0
@@ -237,6 +243,9 @@ func _pointer_hit(view: Control,point: Vector2) -> int:
 
 func _input(event: InputEvent) -> void:
 	var current := stack.top()
+	if _dpad.observe(event,current!=null):
+		if current!=null: get_viewport().set_input_as_handled()
+		return
 	if current == null: return
 	_entry.observe_source_ui_pointer(event)
 	var supports_action := current is View or current is Settings or current is Character or current is Inventory or current is Abilities
@@ -244,8 +253,12 @@ func _input(event: InputEvent) -> void:
 		var edge: int = _entry.source_interact_submit_edge(event)
 		if edge!=InteractSubmit.Edge.OTHER:
 			get_viewport().set_input_as_handled()
-			if supports_action and edge==InteractSubmit.Edge.FIRST_PRESS and current.selected_action()!=0:
-				_activate(current,current.selected_action())
+			if supports_action and edge==InteractSubmit.Edge.FIRST_PRESS:
+				if event is InputEventJoypadButton:
+					# The UI module dispatches Move before Submit in the same update.
+					_pending_pad_submit=current.get_instance_id()
+				elif current.selected_action()!=0:
+					_activate(current,current.selected_action())
 			return
 	if not supports_action: return
 	var view := current
@@ -276,17 +289,23 @@ func _input(event: InputEvent) -> void:
 			if first and view.selected_action()!=0: _activate(view,view.selected_action())
 	elif DIRS.has(key):
 		get_viewport().set_input_as_handled()
+		if _held_dirs.has(key)==event.pressed: return
+		_dpad.clear_pending()
 		if event.pressed: _held_dirs[key]=DIRS[key]
 		else: _held_dirs.erase(key)
 		var values := _held_dirs.values()
 		var direction := Vector2i(int(Vector2i.RIGHT in values)-int(Vector2i.LEFT in values),
 			int(Vector2i.DOWN in values)-int(Vector2i.UP in values))
 		if direction.x!=0 and direction.y!=0: direction.x=0 # source tie chooses vertical
-		if direction!=_nav:
-			_nav=direction
-			if _nav!=Vector2i.ZERO:
-				_move_selected(view)
-				_next_nav_us=Time.get_ticks_usec()+500000
+		_set_navigation(view,direction,Time.get_ticks_usec())
+
+func _set_navigation(view: Control,direction: Vector2i,now: int) -> void:
+	if direction==_nav: return
+	_nav=direction
+	_next_nav_us=0
+	if _nav!=Vector2i.ZERO:
+		_move_selected(view)
+		_next_nav_us=now+500000
 
 func _move_selected(view: Control) -> void:
 	if view is View: view.move_vertical(_nav.y)
@@ -315,6 +334,9 @@ func _activate(view: Control, action: int) -> void:
 
 func _process(_dt: float) -> void:
 	var view := stack.top()
+	var submit := _pending_pad_submit
+	_pending_pad_submit=0
+	var pad_direction: Variant = _dpad.take_direction()
 	if not (view is View or view is Settings or view is Character or view is Inventory or view is Abilities): return
 	if view.get_instance_id()!=_fit_owner:
 		_left_down=false
@@ -324,6 +346,10 @@ func _process(_dt: float) -> void:
 	var hover: int = _pointer_hit(view,_mouse) if _mouse.is_finite() else 0
 	var hit: int = _pointer_hit(view,sample) if sample is Vector2 else 0
 	view.sample_point(hover,hit,sample is Vector2)
-	if _nav!=Vector2i.ZERO and Time.get_ticks_usec()>=_next_nav_us:
+	var now := Time.get_ticks_usec()
+	if pad_direction is Vector2i: _set_navigation(view,pad_direction,now)
+	if _nav!=Vector2i.ZERO and now>=_next_nav_us:
 		_move_selected(view)
-		_next_nav_us=Time.get_ticks_usec()+100000
+		_next_nav_us=now+100000
+	if submit==view.get_instance_id() and view.selected_action()!=0:
+		_activate(view,view.selected_action())

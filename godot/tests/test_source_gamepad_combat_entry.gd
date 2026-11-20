@@ -99,6 +99,8 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	_pad(JOY_BUTTON_A,true); _pad(JOY_BUTTON_A,false)
+	await process_frame
+	await process_frame
 	_check(menu.stack.depth()==2 and menu.stack.top() is Inventory,"打开真实背包作为二级菜单")
 	_pad(JOY_BUTTON_B,true); _pad(JOY_BUTTON_B,true)
 	_check(paused and menu.stack.top()==pause,"一次 East 只关一层")
