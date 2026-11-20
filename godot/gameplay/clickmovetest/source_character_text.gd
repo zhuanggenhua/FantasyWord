@@ -76,7 +76,9 @@ static func layout(atlas: Atlas, text: String, bounds: Rect2, spec: Dictionary) 
 	var x := 0.0
 	var ascent := 0.0
 	var descent := 0.0
-	var width_eps := bounds.size.x + .0001
+	# Inventory authored no-wrap + Overflow. Keep its left margin and let
+	# the complete term draw past its rect; do not shrink or ellipsize it.
+	var width_eps := INF if overflow==0 and spec.get("overflow_width",false) else bounds.size.x + .0001
 	var height_eps := bounds.size.y + .0001
 	var candidate := {}
 	for i in range(text.length()):

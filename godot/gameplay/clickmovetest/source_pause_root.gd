@@ -5,6 +5,8 @@ signal action_requested(action: int)
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
+const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
+const Bags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const Character := preload("res://gameplay/clickmovetest/source_character_view.gd")
 const CharacterState := preload("res://game_core/ui/source_character_panel_state.gd")
 const CHARACTER_STATE_HASH := "be2fcc2fd913ba41c638951000e143db3f2a8c057a082eddf89be6a8de379892"
@@ -31,6 +33,12 @@ var _character_silver := ""
 var _character_actor: Callable
 var _character_values: Callable
 var _character_money: Callable
+var _inventory_layout := {}
+var _inventory_bags: Bags
+var _inventory_actor: Callable
+var _inventory_owner: Callable
+var _inventory_stats: Callable
+var _inventory_silver := ""
 var _prefs: Prefs
 var _fit_owner := 0
 var _next_nav_us := 0
@@ -85,6 +93,31 @@ func bind_character(layout_path: String, profile_path: String, silver: String,
 	_character_money=money
 	return true
 
+func bind_inventory(bags: Bags, actor: Callable, owner: Callable, values: Callable, silver: String) -> bool:
+	if _source.is_empty() or _inventory_bags!=null or bags==null or not actor.is_valid() \
+			or not owner.is_valid() or not values.is_valid(): return false
+	_inventory_layout=Inventory.load_layout(_dir)
+	if _inventory_layout.is_empty(): return false
+	_inventory_bags=bags
+	_inventory_actor=actor
+	_inventory_owner=owner
+	_inventory_stats=values
+	_inventory_silver=silver
+	return true
+
+func _open_inventory() -> bool:
+	var actor: Node = _inventory_actor.call()
+	if not is_instance_valid(actor): return false
+	var values: Array[int] = _inventory_stats.call(actor)
+	var view := Inventory.new()
+	if not view.bind(_inventory_layout,_source,_dir,_inventory_silver,
+			_inventory_bags,_inventory_owner.call(actor),actor,values) or not stack.push_panel(view):
+		view.free()
+		return false
+	_left_down=false
+	_resize()
+	return true
+
 func _open_character() -> bool:
 	var state := CharacterState.new()
 	if not state.bind(_character_values.bind(_character_profile),_character_money) \
@@ -130,14 +163,14 @@ func _reset_ui_edges() -> void:
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 		var view := stack.top()
-		if view is View or view is Settings or view is Character: view.set_pressed(0)
+		if view is View or view is Settings or view is Character or view is Inventory: view.set_pressed(0)
 		_reset_ui_edges()
 
 func _input(event: InputEvent) -> void:
 	var current := stack.top()
 	if current == null: return
 	_entry.observe_source_ui_pointer(event)
-	if not (current is View or current is Settings or current is Character): return
+	if not (current is View or current is Settings or current is Character or current is Inventory): return
 	var view := current
 	if event is InputEventMouseMotion and event.device==0:
 		_mouse=event.position
@@ -180,12 +213,14 @@ func _input(event: InputEvent) -> void:
 
 func _move_selected(view: Control) -> void:
 	if view is View: view.move_vertical(_nav.y)
-	elif view is Settings or view is Character: view.move_selection(_nav)
+	elif view is Settings or view is Character or view is Inventory: view.move_selection(_nav)
 
 func _activate(view: Control, action: int) -> void:
-	if view is Settings or view is Character:
+	if view is Settings or view is Character or view is Inventory:
 		view.activate(action)
 		return
+	if action==1 and not _inventory_layout.is_empty():
+		if not _open_inventory(): return
 	if action==5 and not _character_layout.is_empty():
 		if not _open_character(): return
 	if action==7 and not _settings_source.is_empty():
@@ -199,7 +234,7 @@ func _activate(view: Control, action: int) -> void:
 
 func _process(_dt: float) -> void:
 	var view := stack.top()
-	if not (view is View or view is Settings or view is Character): return
+	if not (view is View or view is Settings or view is Character or view is Inventory): return
 	if view.get_instance_id()!=_fit_owner:
 		_left_down=false
 		_resize()

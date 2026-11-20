@@ -216,6 +216,11 @@ func _mount_source_pause(directory: String) -> bool:
 			player.get_current_controlled_character_or_player_instance,player.character_menu_fresh_values,party_money.money):
 		menu.free()
 		return false
+	if FileAccess.file_exists(directory.path_join("inventory-layout.json")) and not menu.bind_inventory(
+			inventory_bags,player.get_current_controlled_character_or_player_instance,primary_bag_owner,
+			player.inventory_fresh_stats,OS.get_environment("FORMAL_PANEL_SILVER")):
+		menu.free()
+		return false
 	pause_root = menu
 	add_child(menu)
 	return true

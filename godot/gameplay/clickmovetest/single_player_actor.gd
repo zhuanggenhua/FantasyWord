@@ -182,6 +182,12 @@ func character_menu_fresh_values(target: Object, profile: Dictionary) -> Diction
 		"available_points":int(authored.points_per_level)*(int(authored.level)-int(authored.minimum_level))-int(authored.used_points),
 		"base_stats":stats}
 
+## Inventory UIStat reads effective values. This actor's fresh two equipped
+## entries have zero stat modifiers; the host has no unported buff/gear writes.
+func inventory_fresh_stats(actor: Node) -> Array[int]:
+	if not is_instance_valid(actor) or actor!=_get_primary(): return []
+	return _attributes.menu_base_stats()
+
 func current_health() -> int: return _attributes.current_health()
 
 func is_destroyed() -> bool:

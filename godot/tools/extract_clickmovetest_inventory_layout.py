@@ -6,14 +6,15 @@ describes the fresh panel geometry; does not export art or run Unity.
 """
 import argparse
 import hashlib
+import re
 import json
 from pathlib import Path
 
 import yaml
 
-from extract_clickmovetest_character import BASE
+from extract_clickmovetest_character import ACTOR, BASE, HERO, extract as extract_actor
 from extract_clickmovetest_character_layout import fixed_children, override
-from extract_clickmovetest_pause import ATLAS, CONFIG, ROOT, SOURCE, docs, read, rect_in
+from extract_clickmovetest_pause import ATLAS, CONFIG, FONT, ROOT, SOURCE, docs, read, rect_in
 
 PANEL = "Assets/GameRes/UI/Panels/UIInventory.prefab"
 PARTS = "Assets/Prefabs/UI/MenuParts/Inventory/"
@@ -113,6 +114,40 @@ def extract(repo):
     categories = [{"category":i,"term":"[INVALID_SHORTNAME]","icon":None,
                    "rect":[category_box[0]+i*(cat_w+cat_gap),category_box[1]+(category_box[3]-delta(k)[1])/2,cat_w,delta(k)[1]]}
                   for i,k in enumerate(specs)]
+    font_id = guid(FONT)
+    def label(fields, box, text, anchor="center", overflow_width=False):
+        assert fields["m_fontAsset"]["guid"]==font_id and fields["m_fontSize"] in (48,64,120)
+        assert fields["m_fontStyle"]==0 and not fields["m_enableAutoSizing"]
+        margin = fields["m_margin"]
+        assert not any(margin[k] for k in "yzw") and margin["x"] in (0,8)
+        x,y,w,h=box
+        return {"text":text,"rect":[x+margin["x"],y,w-margin["x"],h],"anchor":anchor,
+                "size":fields["m_fontSize"],"horizontal":fields["m_HorizontalAlignment"],
+                "vertical":fields["m_VerticalAlignment"],"style":0,"color":fields["m_fontColor"],
+                "overflow":fields["m_overflowMode"],"overflow_width":overflow_width}
+
+    footer=[]
+    controls=rect_in(screen,base[2944192064461780042])
+    for group,logic,text_id,anchor in (
+            (4105550822655348061,7229279712121902982,3950320686320582774,"bottom_left"),
+            (7796335642725989680,3979155824425089242,8205313523415547342,"bottom_right")):
+        entries=[base[c["fileID"]] for c in base[group]["m_Children"]]
+        boxes=fixed_children(rect_in(controls,base[group]),[delta(c) for c in entries],base[logic],False)
+        for rect,box in zip(entries,boxes,strict=True):
+            if rect["m_GameObject"]==base[text_id]["m_GameObject"]:
+                footer.append(label(base[text_id],box,base[text_id]["m_text"],anchor))
+    title=label(title,rect_in(safe,base[8269007978594452267]),title["m_text"])
+    for item in categories:
+        content_box=rect_in(item["rect"],category[5871650647517770253])
+        sub=category[5871650647517770253]["m_Children"]
+        parts=fixed_children(content_box,[delta(category[r["fileID"]]) for r in sub],category[473637049216613506],False)
+        fields=category[5038416503769030392]
+        assert fields["m_overflowMode"]==fields["m_TextWrappingMode"]==0
+        item["label"]=label(fields,parts[1],item["term"],overflow_width=True)
+        # Image remains enabled when the source term assigns a null sprite.
+        assert category[3711826119504248644]["m_Enabled"]==1
+        item["icon_rect"]=parts[0]
+
     gear_refs = gear[gear_root]["m_Children"]
     gear_instances = [instance(gear,ref["fileID"],PARTS+"Equipment Slot.prefab") for ref in gear_refs]
     g_visual = [override(gear_slot[4471496117887711044],pref,4471496117887711044)["m_equipmentType"]
@@ -138,6 +173,37 @@ def extract(repo):
     summary = [{"row":box,"icon":parts[0],"label":parts[1],"value":parts[2]}
                for box in stat_boxes for parts in [fixed_children(box,stat_parts,stat_group,False)]]
 
+    for i,row in enumerate(summary):
+        term=override(stat[7043914046944094596],stat_instances[i],7043914046944094596)
+        assert term["m_textFormat"]=="{0}" and term["m_displayMode"]==1
+        assert stat[2782235941109594428]["m_Sprite"]=={"fileID":0}
+        row["label"]=label(stat[2782235940283705178], row["label"],"[INVALID_SHORTNAME]")
+        row["value"]=label(stat[2782235940155862593], row["value"],"0")
+
+    actor_state=extract_actor(repo)
+    dependencies.update(actor_state["dependencies"])
+    source_actor=model(ACTOR)
+    assert [next(r[k] for r in source_actor.values() if k in r) for k in
+            ("m_ownsMainInventory","m_ownsWeaponInventory","m_ownsHotbarInventory")]==[1,1,1]
+    initial_gear=source_actor[1265987612345678908]["m_initialEquipment"]
+    assert "m_initialEquipment" not in raw(HERO).decode()
+    gears=[]
+    for slot_name,asset_name,icon_name,kind in (
+            ("weapon","长矛","长矛1",0),("torso","基础布衣","精灵-0001",2)):
+        asset="Assets/Database/Items/Equipment/"+asset_name+".asset"
+        image="Assets/ThirdParty/MiniFantasyUV/ImportedSource/Art/equip/"+icon_name+".png"
+        assert {"fileID":11400000,"guid":guid(asset),"type":2} in initial_gear
+        item=model(asset)[11400000]
+        assert item["m_type"]==kind and item["m_icon"]=={"fileID":21300000,"guid":guid(image),"type":3}
+        assert int(item["m_bonusStats"]["m_values"])==0
+        meta=yaml.safe_load(raw(image+".meta"))["TextureImporter"]
+        assert meta["spriteMode"]==1 and meta["textureSettings"]["filterMode"]==0
+        pointer=raw(image).decode()
+        image_hash=re.search(r"oid sha256:([0-9a-f]{64})",pointer)[1]
+        gear_image=rect_in(gear_cells[kind],gear_slot[4471496117604730246])
+        gears.append({"type":kind,"icon_sha256":image_hash,"icon_file":f"inventory-{slot_name}.png",
+                     "rect":gear_image,"source_name":item["m_displayName"]})
+
     atlas_guid = guid(ATLAS)
     atlas_meta = yaml.safe_load(raw(ATLAS+".meta"))["TextureImporter"]
     assert atlas_meta["spritePixelsToUnits"]==16 and atlas_meta["textureSettings"]["filterMode"]==0
@@ -153,7 +219,7 @@ def extract(repo):
     atlas_rows = {s["internalID"]:{"rect":s["rect"],"border":s["border"]} for s in atlas_meta["spriteSheet"]["sprites"]}
     sprites = {k:{"id":str(ref["fileID"]),**atlas_rows[ref["fileID"]]} for k,ref in sprite_refs.items()}
     return {"schema":1,"source_commit":SOURCE,"pause_action":1,"registration":3,
-        "title":title["m_text"],"content":content,"bag":bag_box,"grid_layout":grid_layout,
+        "title":title,"footer":footer,"gears":gears,"content":content,"bag":bag_box,"grid_layout":grid_layout,
         "grid_cells":grid_cells,"category_strip":category_box,"categories":categories,
         "equipment_rects":gear_cells,"stat_rows":summary,"sprites":sprites,
         "cursor":{"size_offset":axes(cursor["sizeOffset"]),"position_offset":axes(cursor["positionOffset"]),
