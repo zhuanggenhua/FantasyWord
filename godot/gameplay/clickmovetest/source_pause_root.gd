@@ -2,6 +2,7 @@ extends CanvasLayer
 ## The source root and keyboard/mouse input owner. It does not invent any
 ## child scene when the actual registration is not ported yet.
 signal action_requested(action: int)
+const InteractSubmit := preload("res://game_core/input/source_shared_interact_submit.gd")
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
@@ -236,7 +237,15 @@ func _input(event: InputEvent) -> void:
 	var current := stack.top()
 	if current == null: return
 	_entry.observe_source_ui_pointer(event)
-	if not (current is View or current is Settings or current is Character or current is Inventory or current is Abilities): return
+	var supports_action := current is View or current is Settings or current is Character or current is Inventory or current is Abilities
+	if _entry.uses_source_interact_submit():
+		var edge: int = _entry.source_interact_submit_edge(event)
+		if edge!=InteractSubmit.Edge.OTHER:
+			get_viewport().set_input_as_handled()
+			if supports_action and edge==InteractSubmit.Edge.FIRST_PRESS and current.selected_action()!=0:
+				_activate(current,current.selected_action())
+			return
+	if not supports_action: return
 	var view := current
 	if event is InputEventMouseMotion and event.device==0:
 		_mouse=event.position

@@ -6,6 +6,7 @@ const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const CharacterExecutor = preload("res://game_core/interaction/character_command_executor.gd")
+const InteractSubmit := preload("res://game_core/input/source_shared_interact_submit.gd")
 const SlotKeyboard = preload("res://game_core/combat/ability_slot_keyboard_input.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
@@ -69,6 +70,7 @@ var _source_ui_action_layer := false
 var human_gameplay_actions: RefCounted
 var _normalized_click_bound := false
 var _slot_keyboard: SlotKeyboard
+var _source_interact_submit: InteractSubmit
 var human_commands: RefCounted
 var human_interaction: RefCounted
 var _human_aim: RefCounted
@@ -392,10 +394,27 @@ func observe_source_ui_pointer(event: InputEvent) -> void:
 	if _source_ui_action_layer and _mouse_point_actions != null:
 		_mouse_point_actions.observe(event)
 
+## 唯一物理门禁跨 Gameplay/UI；按下只能由其当时所属的动作图消费。
+func source_interact_submit_edge(event: InputEvent) -> int:
+	return InteractSubmit.Edge.OTHER if _source_interact_submit==null else _source_interact_submit.observe(event)
+
+func uses_source_interact_submit() -> bool:
+	return _source_interact_submit!=null
+
+func _notification(what: int) -> void:
+	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT and _source_interact_submit!=null:
+		_source_interact_submit.reset_device_state()
+
 func _input(event: InputEvent) -> void:
 	if _source_ui_action_layer: return
 	if _mouse_point_actions != null: _mouse_point_actions.observe(event)
 	if movement == null: return
+	var interact_edge:=source_interact_submit_edge(event)
+	if interact_edge!=InteractSubmit.Edge.OTHER:
+		if interact_edge==InteractSubmit.Edge.FIRST_PRESS:
+			receive_human_gameplay_action("Gameplay","Interact","performed")
+		get_viewport().set_input_as_handled()
+		return
 	# Raw compatibility diagnostic only, not the normalized Point command sample.
 	# 原生 GUI 可能在 _unhandled_input 前消费点击；观察必须先于该阶段。
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
@@ -1027,6 +1046,13 @@ func bind_human_gameplay_actions(resolve_context: Callable, interact_blocked: Ca
 	_normalized_click_bound = false
 	return true
 
+## 原 ClickMoveTest 的正式交互命令。不让诊断或缺少角色组件的场景响应。
+func bind_source_interact_submit() -> bool:
+	if _source_interact_submit!=null or human_interaction==null or human_gameplay_actions==null:
+		return false
+	_source_interact_submit=InteractSubmit.new()
+	return true
+
 ## 键盘只接入已绑定的正式能力命令。普通移动预览不安装快捷键。
 func bind_human_ability_keyboard() -> bool:
 	if _slot_keyboard != null or human_gameplay_actions == null or _equipped_ability_dispatch == null:
@@ -1066,6 +1092,7 @@ func receive_human_gameplay_action(action_map: String, action: String, phase: St
 	return human_gameplay_actions.receive(action_map,action,phase)
 
 func unbind_human_gameplay_actions() -> void:
+	_source_interact_submit = null
 	_slot_keyboard = null
 	_normalized_click_bound = false
 	human_gameplay_actions = null

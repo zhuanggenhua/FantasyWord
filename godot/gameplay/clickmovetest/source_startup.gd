@@ -164,6 +164,10 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 			return _fail("原主角、同图假人普攻或地表受击未通过正式装配。")
 		if not _start_source_audio_preferences():
 			return _fail("原音量所有者未能绑定到实际 GameplaySoundFX。")
+		# ClickMoveTest 与两条角色 prefab 链均无 Interaction 层目标。
+		# 装配角色原组件但不造对象、不播放来源未到位的成功音效。
+		if not scene.start_human_interaction(player,_on_unadmitted_interact_success) or not scene.bind_source_interact_submit():
+			return _fail("原角色 Static Pivot 或同一交互命令宿主未绑定。")
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 	var pause_source := OS.get_environment("FORMAL_PAUSE_SOURCE")
@@ -317,6 +321,9 @@ func _mount_player_combat(cue_dir: String, damage_roll: Callable) -> Node:
 		return null
 	return combat
 
+
+func _on_unadmitted_interact_success() -> void:
+	push_error("ClickMoveTest 没有已获准的交互接收件；不得假造频道 2 的原成功音效。")
 
 func _interrupt_unmounted_player_abilities() -> void:
 	# 原安全阶段只通知能力拥有者；未挂能力时不伪造取消动作，也不清移动或输入。
