@@ -50,33 +50,43 @@ func run() -> void:
 	var plane := ColorRect.new()
 	plane.size=Vector2(8,8)
 	viewport.add_child(plane)
-	for front in [false,true]:
-		var bound := Binder.create(ImageTexture.create_from_image(main),ImageTexture.create_from_image(body),ImageTexture.create_from_image(head),front,enabled,layers,colors)
-		if not bound.ok:
-			push_error(bound.reason)
-			quit(1)
-			return
-		plane.material=bound.material
-		await process_frame
-		await RenderingServer.frame_post_draw
-		var actual := viewport.get_texture().get_image()
-		for y in 8:
-			for x in 8:
-				var b := body.get_pixel(x,y)
-				var h := head.get_pixel(x,y)
-				var parts := {&"torso":x==1,&"left_eye":x==2,&"right_eye":x==3,&"left_hand":x==4,&"right_hand":x==5,&"left_foot":x==6,&"right_foot":x==7,&"head":y%3!=0}
-				body_rg=Vector2(b.r,b.g)
-				head_rg=Vector2(h.r,h.g)
-				var expected := Mix.compose(main.get_pixel(x,y),parts,h.a,front,enabled,colors,sample_body,sample_head)
-				var target: Color=expected.color
-				target.a=expected.coverage
-				var got := actual.get_pixel(x,y)
-				checks+=1
-				# 透明像素 RGB 不可用于判断帧缓冲混合，非透明像素逐通道检查。
-				if abs(got.a-target.a)>0.01 or (target.a>0.99 and (Vector3(got.r,got.g,got.b)-Vector3(target.r,target.g,target.b)).length()>0.015):
-					failures+=1
-					push_error("图形像素不符 front=%s x=%s y=%s actual=%s expected=%s"%[front,x,y,got,target])
+	# Both shader variants must draw a north-facing Bag without an enabled weapon.
+	for using_weapon_variant in [false, true]:
+		for front in [false, true]:
+			await _verify_variant(viewport, plane, main, body, head, enabled, colors, front, using_weapon_variant)
 	viewport.queue_free()
 	await process_frame
 	if failures==0: print("PASS equipment_subset_gpu: ",checks)
 	quit(1 if failures else 0)
+
+func _verify_variant(viewport: SubViewport, plane: ColorRect, main: Image, body: Image, head: Image,
+		enabled: Dictionary, colors: Dictionary, front: bool, using_weapon_variant: bool) -> void:
+	var bound := Binder.create(ImageTexture.create_from_image(main),ImageTexture.create_from_image(body),ImageTexture.create_from_image(head),front,enabled,layers,colors,using_weapon_variant)
+	if not bound.ok:
+		push_error(bound.reason)
+		failures += 1
+		return
+	plane.material=bound.material
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var actual := viewport.get_texture().get_image()
+	for y in 8:
+		for x in 8:
+			var b := body.get_pixel(x,y)
+			var h := head.get_pixel(x,y)
+			var parts := {&"torso":x==1,&"left_eye":x==2,&"right_eye":x==3,&"left_hand":x==4,&"right_hand":x==5,&"left_foot":x==6,&"right_foot":x==7,&"head":y%3!=0}
+			body_rg=Vector2(b.r,b.g)
+			head_rg=Vector2(h.r,h.g)
+			var expected := Mix.compose(main.get_pixel(x,y),parts,h.a,front,enabled,colors,sample_body,sample_head)
+			var target: Color=expected.color
+			target.a=expected.coverage
+			if front:
+				var bag := sample_body(&"bag")
+				if bag.a > 0.5:
+					target = Color(bag.r, bag.g, bag.b, 1.0)
+			var got := actual.get_pixel(x,y)
+			checks+=1
+			# 透明像素 RGB 不可用于判断帧缓冲混合，非透明像素逐通道检查。
+			if abs(got.a-target.a)>0.01 or (target.a>0.99 and (Vector3(got.r,got.g,got.b)-Vector3(target.r,target.g,target.b)).length()>0.015):
+				failures+=1
+				push_error("图形像素不符 front=%s x=%s y=%s actual=%s expected=%s"%[front,x,y,got,target])

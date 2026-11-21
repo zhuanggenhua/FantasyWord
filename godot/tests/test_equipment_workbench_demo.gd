@@ -54,7 +54,62 @@ func _run() -> void:
 	_check("待机 | 方向 东南" in details.text and mat.get_shader_parameter("enabled_cloth"), "重选人类还原该角色的原默认")
 	if _demo.find_child("CloakCategory", true, false) != null:
 		await _check_cloak(human, mat, details)
+	if not OS.get_environment("FANTASYWORD_WORKBENCH_BAG").is_empty():
+		_check(_demo.find_child("BagCategory", true, false) != null, "完整小背包合同启用原背包类别")
+		await _check_bag(human, mat, details)
 	_finish()
+
+func _check_bag(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
+	_check(mat.shader.resource_path.ends_with("/equipment_character_subset.gdshader"), "无武器材质仍应保留原背包层")
+	await _click("CloakCategory")
+	await _click("EquipTravelCloak")
+	await _click("BagCategory")
+	_check("背包\n当前为空" in details.text and not mat.get_shader_parameter("enabled_bag"), "原人类默认无背包")
+	var graphics := DisplayServer.get_name() != "headless"
+	for i in 4:
+		await _click(["SE", "SW", "NE", "NW"][i])
+		human.animator.pause()
+		human.animator.seek(0.0, true)
+		var base: Array[Color] = []
+		var before := PackedByteArray()
+		if graphics:
+			before = await _avatar_pixels(human)
+			base = _bag_witness_pixels(human)
+		await _click("EquipBag")
+		_check("小背包" in details.text and "生命 +2" in details.text and "魔力 +3" in details.text, "原小背包选项及属性")
+		var rect := Vector4(0, (3 - i) / 4.0, 0.2, (4 - i) / 4.0)
+		_check(mat.get_shader_parameter("enabled_bag") and mat.get_shader_parameter("bag_rect").is_equal_approx(rect)
+			and mat.get_shader_parameter("body_in_front") == (i >= 2), "对应当前帧躯干朝向和原图集矩形")
+		_check(mat.get_shader_parameter("enabled_cloak") and mat.get_shader_parameter("enabled_cloth"), "背包未覆盖两槽状态")
+		if graphics:
+			var worn: PackedByteArray = await _avatar_pixels(human)
+			var after := _bag_witness_pixels(human)
+			_check(worn != before, "实渲染此方向能看到背包")
+			if i == 0:
+				_check(_near_color(after[1], base[1]) and not _near_color(after[1], Color8(163, 95, 53)), "南向有覆盖的同一处不会被背包贴图盖住")
+			if i == 2:
+				_check(_near_color(base[0], Color8(128, 0, 36)) and _near_color(after[0], Color8(208, 126, 53)), "无武器时北向晚绘制覆盖同一处披风，像素取自原背包")
+		await _click("RemoveBag")
+		_check("当前为空" in details.text and not mat.get_shader_parameter("enabled_bag") and mat.get_shader_parameter("enabled_cloak")
+			and mat.get_shader_parameter("enabled_cloth"), "只卸下背包")
+		if graphics:
+			_check(before == await _avatar_pixels(human), "四向卸下恢复该原帧像素")
+	await _click("EquipBag")
+	await _click("Human")
+	_check(not mat.get_shader_parameter("enabled_bag") and not mat.get_shader_parameter("enabled_cloak")
+		and mat.get_shader_parameter("enabled_cloth"), "人类重置移除背包和披风，恢复默认布衣")
+
+func _bag_witness_pixels(human: Node2D) -> Array[Color]:
+	var pixels: Array[Color] = []
+	var sprite := human.sprite as Sprite2D
+	var image := root.get_texture().get_image()
+	for texel in [Vector2(13.5, 15.5), Vector2(14.5, 16.5)]:
+		var q: Vector2 = sprite.get_global_transform_with_canvas() * (sprite.get_rect().position + texel)
+		pixels.append(image.get_pixel(floori(q.x), floori(q.y)))
+	return pixels
+
+func _near_color(value: Color, target: Color) -> bool:
+	return Vector3(value.r, value.g, value.b).distance_to(Vector3(target.r, target.g, target.b)) < 0.01
 
 func _check_cloak(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	var textures: Dictionary = _demo._cloak._textures

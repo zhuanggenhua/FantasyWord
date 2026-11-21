@@ -86,8 +86,11 @@ func select(index: int) -> void:
 	selected = index
 	_on_sample(_playback.current_action, _playback.current_label, _playback.current_direction, null)
 
+func torso_for_sample(action: String, label: int, direction: int) -> Variant:
+	return _frames.get(action, {}).get(Vector2i(label, direction))
+
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:
-	var row: Variant = _frames.get(action, {}).get(Vector2i(label, direction))
+	var row: Variant = torso_for_sample(action, label, direction)
 	var texture: Texture2D
 	last_texture_guid = ""
 	if selected >= 0 and row is Vector2i:

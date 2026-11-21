@@ -251,12 +251,6 @@ void apply_weapon_fill(vec2 uv, vec4 body, inout vec4 value, inout int source_id
  if (has0 && weapon0_depth_mode > 0.5 && !(hand && weapon0_hand_in_front > 0.5)) {
   value.rgb = w0.rgb; value.a = max(value.a,w0.a); source_id = 7;
  }
- // 源第二次背包采样不检查部位、数据图 alpha 或人物覆盖。
- if (body_in_front) {
-  float coverage = value.a;
-  bool wrote = write_bag(body.rg,value,coverage,source_id);
-  value.a = coverage;
- }
 }
 
 // EquipmentUV 812–994、1260–1422：仅程序轮廓，不接阴影或顶点 tint。
@@ -439,6 +433,14 @@ void fragment() {
  value.a = max(value.a,max(body_coverage,head_coverage));
 #ifdef EQUIPMENT_WEAPON_STAGE
  apply_weapon_fill(UV,body,value,source_id);
+#endif
+ // Unity 的北向背包第二遍在武器之后，即使没武器也采样，不检查部位或底图覆盖。
+ if (body_in_front) {
+  float coverage = value.a;
+  bool wrote = write_bag(body.rg,value,coverage,source_id);
+  value.a = coverage;
+ }
+#ifdef EQUIPMENT_WEAPON_STAGE
  apply_procedural_outline(UV,source_id,value);
  apply_procedural_shadow(UV,value);
 #endif
