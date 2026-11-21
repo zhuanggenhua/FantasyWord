@@ -14,12 +14,14 @@ func check(ok: bool, label: String) -> void:
 		printerr("FAIL ",label)
 
 func tap(k: Key) -> void:
-	var event := InputEventKey.new()
-	event.physical_keycode=k
-	event.pressed=true
-	root.push_input(event,true)
-	event.pressed=false
-	root.push_input(event,true)
+	for down in [true,false]:
+		var event := InputEventKey.new()
+		event.physical_keycode=k
+		event.pressed=down
+		root.push_input(event,true)
+		if k==KEY_DOWN or (not down and k==KEY_ENTER):
+			await process_frame
+			await process_frame
 
 func click(b: MouseButton,p: Vector2) -> void:
 	var event := InputEventMouseButton.new()
@@ -53,7 +55,7 @@ func run() -> void:
 	click(MOUSE_BUTTON_LEFT,neutral)
 	var actor: Node = startup.scene.actor
 	check(actor.execution.has_move_order(),"real move order before menus")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	var menu := shell.stack.top() as Pause
 	check(menu!=null and paused,"actual Escape opens source Pause")
 	if menu==null: finish(); return
@@ -77,8 +79,8 @@ func run() -> void:
 			and journal._viewports[0].get_child_count()==0 and journal._viewports[1].get_child_count()==0,
 		"empty source lists inside two invisible clips with no shown scrollbar or quest placeholders")
 	check(not journal.try_focus_default_target(),"empty source list has no default button or synthetic choice")
-	tap(KEY_ENTER)
-	tap(KEY_DOWN)
+	await tap(KEY_ENTER)
+	await tap(KEY_DOWN)
 	click(MOUSE_BUTTON_LEFT,neutral)
 	check(shell.stack.top()==journal and paused and actor.execution.has_move_order(),
 		"empty Journal ignores submit, movement, and background click")
@@ -99,11 +101,11 @@ func run() -> void:
 	click(MOUSE_BUTTON_RIGHT,neutral)
 	check(shell.stack.top()==menu and menu.selected_action()==2 and paused,"right Back restores Journal icon focus")
 	await process_frame
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(shell.stack.top() is Journal,"keyboard can reopen same actual entry after return")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==menu and menu.selected_action()==2,"Escape restores parent focus")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.depth()==0 and not paused and Engine.time_scale==1.0 and actor.execution.has_move_order(),
 		"final Back restores existing gameplay order and time")
 	finish()

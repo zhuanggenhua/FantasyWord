@@ -32,7 +32,14 @@ func move(p: Vector2) -> void:
 	root.push_input(event,true)
 func tap(k: Key) -> void:
 	key(k,true)
+	if k in [KEY_W,KEY_S,KEY_A,KEY_D,KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT]:
+		await process_frame
+		await process_frame
 	key(k,false)
+	if k!=KEY_ESCAPE:
+		await process_frame
+		await process_frame
+
 func finish() -> void:
 	print("%s ClickMoveTest Character normal entry: %d/%d"%["PASS" if failures==0 else "FAIL",count-failures,count])
 	quit(1 if failures else 0)
@@ -59,13 +66,13 @@ func run() -> void:
 	var actor = startup.scene.actor
 	var ordered: bool = actor.execution.has_move_order()
 	check(ordered,"normal gameplay Point dispatch before opening")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	var menu := shell.stack.top() as Pause
 	check(menu!=null and menu.selected_action()==0 and paused,"Pause opens without invented default")
 	if menu==null:
 		finish()
 		return
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(shell.stack.top()==menu,"blank focus cannot submit a Character request")
 	var original := Vector2(40,150)
 	move(original)
@@ -73,6 +80,8 @@ func run() -> void:
 	await process_frame
 	check(menu.selected_action()==5,"real source Point chooses Character icon")
 	key(KEY_ENTER,true)
+	await process_frame
+	await process_frame
 	var panel := shell.stack.top() as Character
 	check(panel!=null and not menu.visible and shell.stack.depth()==2 and paused,"pause action 5 mounts real registered Character")
 	if panel==null:
@@ -86,14 +95,14 @@ func run() -> void:
 	key(KEY_F,true);key(KEY_F,false);key(KEY_ENTER,false)
 	check(panel.character_data()==state,"held submit alias cannot chain into child")
 	move(neutral)
-	tap(KEY_RIGHT);tap(KEY_RIGHT)
+	await tap(KEY_RIGHT);await tap(KEY_RIGHT)
 	check(panel.selected_action()==17,"keyboard traverses row pair to Apply")
-	tap(KEY_LEFT)
+	await tap(KEY_LEFT)
 	check(panel.selected_action()==14,"Apply left moves to Agility plus")
-	tap(KEY_RIGHT);tap(KEY_UP)
+	await tap(KEY_RIGHT);await tap(KEY_UP)
 	check(panel.selected_action()==2,"Apply up moves to Health plus")
-	tap(KEY_ENTER)
-	tap(KEY_LEFT);tap(KEY_ENTER)
+	await tap(KEY_ENTER)
+	await tap(KEY_LEFT);await tap(KEY_ENTER)
 	check(panel.character_data()==state and panel.selected_action()==1,
 		"zero-point keyboard minus and plus mutate neither state nor focus eligibility")
 	var apply_at := Vector2(693.75,378.5)
@@ -127,17 +136,18 @@ func run() -> void:
 			and panel._background.patches(panel._background.size).size()>240
 			and panel.reference_hit(panel.viewport_to_design(apply_at+Vector2(120,0)))==17,
 			"wide Match Height canvas genuinely tiled and centered controls")
-	move(neutral)
-	tap(KEY_ESCAPE)
+	var previous_panel_id := panel.get_instance_id()
+	move(Vector2(280,504))
+	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==menu and menu.visible and menu.selected_action()==5 and paused,
 		"Back restores same live Pause and remembered Character")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	var reopened := shell.stack.top() as Character
-	check(reopened!=null and reopened!=panel and reopened.selected_action()==1
+	check(reopened!=null and reopened.get_instance_id()!=previous_panel_id and reopened.selected_action()==1
 		and reopened.character_data()==state,"reopen selects Health decrease and recomputes actor data")
 	button(MOUSE_BUTTON_RIGHT,true,neutral);button(MOUSE_BUTTON_RIGHT,false,neutral)
 	check(shell.stack.top()==menu and menu.selected_action()==5,"fresh right-click returns to Character entry")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.depth()==0 and not paused and Engine.time_scale==1.0
 		and actor.execution.has_move_order() and startup.point.read_active(Point.Map.UI)==null,
 		"final close resumes ordinary gameplay, prior route and switches action map")

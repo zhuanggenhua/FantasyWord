@@ -18,7 +18,15 @@ func key(code: Key, on: bool) -> void:
 	event.physical_keycode=code; event.pressed=on
 	root.push_input(event,true)
 func tap(code: Key) -> void:
-	key(code,true); key(code,false)
+	key(code,true)
+	if code in [KEY_W,KEY_S,KEY_A,KEY_D,KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT]:
+		await process_frame
+		await process_frame
+	key(code,false)
+	if code!=KEY_ESCAPE:
+		await process_frame
+		await process_frame
+
 func button(code: MouseButton, on: bool, p: Vector2) -> void:
 	var event := InputEventMouseButton.new()
 	event.device=0; event.button_index=code; event.pressed=on; event.position=p
@@ -49,7 +57,7 @@ func run() -> void:
 	var owner := startup.primary_bag_owner(actor)
 	var neutral := Vector2(470,245)
 	move(neutral);button(MOUSE_BUTTON_LEFT,true,neutral);button(MOUSE_BUTTON_LEFT,false,neutral)
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	var menu := shell.stack.top() as Pause
 	check(menu!=null and paused,"original Pause opens")
 	if menu==null: finish(); return
@@ -58,7 +66,7 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	check(menu.selected_action()==1,"regular pointer finds authored Items entry")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	var panel := shell.stack.top() as Inventory
 	check(panel!=null and shell.stack.depth()==2 and not menu.visible,"action 1 / registration 3 mounts Inventory on existing stack")
 	if panel==null: finish(); return
@@ -68,16 +76,16 @@ func run() -> void:
 		and panel.cursor_rect()==Rect2(960.5,332,112,112),"6x5 original grid and cursor extents")
 	check(panel.action_rect(31)==Rect2(864.5,340,96,96) and panel.action_rect(33)==Rect2(864.5,548,96,96)
 		and startup.player.inventory_fresh_stats(actor)==[100,40,10,6,6,4,8,4],"original equip geometry and live eight stat values")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(startup.inventory_bags.entries(owner).is_empty(),"empty submit does not perform item use")
-	tap(KEY_UP)
+	await tap(KEY_UP)
 	check(panel.selected_action()==36 and panel.model.category==0 and not panel.cursor_rect().has_area(),
 		"auto navigation from first grid button enters category but cursor not installed there")
-	tap(KEY_RIGHT)
+	await tap(KEY_RIGHT)
 	check(panel.selected_action()==37 and panel.model.category==0,"category focus does not change active category")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(panel.model.category==1,"explicit submit changes actual projection")
-	tap(KEY_DOWN)
+	await tap(KEY_DOWN)
 	check(panel.selected_action()==3 and panel.model.selected==2,"category down uses uGUI rect-edge score to source grid")
 	var cat_centre := panel.action_rect(38).get_center()*.5
 	move(cat_centre)
@@ -108,16 +116,17 @@ func run() -> void:
 		await exercise_details(shell,panel)
 	else:
 		print("SKIP Item Details needs the private locked overlay contract.")
-	move(neutral);tap(KEY_ESCAPE)
+	var prior_panel_id := panel.get_instance_id()
+	move(Vector2(400,500));await tap(KEY_ESCAPE)
 	check(shell.stack.top()==menu and menu.selected_action()==1 and paused,"Back restores same Pause Items focus")
 	if shell.item_details!=null: check(not shell.item_details.visible,"Back closes the shared overlay")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	var reopened := shell.stack.top() as Inventory
-	check(reopened!=null and reopened!=panel and reopened.model.category==0 and reopened.selected_action()==1,
+	check(reopened!=null and reopened.get_instance_id()!=prior_panel_id and reopened.model.category==0 and reopened.selected_action()==1,
 		"reopen resets source default and rereads real owner")
 	button(MOUSE_BUTTON_RIGHT,true,neutral);button(MOUSE_BUTTON_RIGHT,false,neutral)
 	check(shell.stack.top()==menu and menu.selected_action()==1,"Right-button Back does not change parent focus")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.depth()==0 and not paused and Engine.time_scale==1.0
 		and actor.execution.has_move_order() and startup.point.read_active(Point.Map.UI)==null,
 		"last pop restores gameplay input and existing movement")
@@ -168,10 +177,10 @@ func exercise_details(shell: CanvasLayer,panel: Inventory) -> void:
 	await process_frame
 	await process_frame
 	check(details.visible and panel.selected_action()==31,"off-slot and category hover do not deselect")
-	tap(KEY_DOWN)
+	await tap(KEY_DOWN)
 	check(panel.selected_action()==32 and not details.visible and details.shown_type==-1,
 		"keyboard deselect and empty equipment publish close")
-	tap(KEY_DOWN)
+	await tap(KEY_DOWN)
 	check(panel.selected_action()==33 and details.visible and details.shown_type==2 and
 		details._title._line.text.is_empty() and details._description._line.text==details._items[2].description
 		and absf(details._description._line.width-257.6842)<.01 and details._icon._texture==details._items[2].texture,
@@ -207,14 +216,14 @@ func exercise_known_bag_items(startup: Boot,shell: CanvasLayer,actor: Node,owner
 	check(startup.inventory_bags.try_unequip(owner,gear,Gear.Slot.WEAPON)==Gear.Result.VALID
 		and gear.equipped(Gear.Slot.WEAPON)==null and gear.equipped(Gear.Slot.TORSO)==cloth,
 		"先由真实事务入口卸下长矛；没有新增点击换装")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	var menu := shell.stack.top() as Pause
 	if menu==null: check(false,"重新打开原暂停菜单"); return
 	move(Vector2(40,190))
 	await process_frame
 	await process_frame
 	check(menu.selected_action()==1,"重新从真实 Items 路径进入")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	var panel := shell.stack.top() as Inventory
 	if panel==null: check(false,"已迁移的真实物品应可进入本人背包"); return
 	check(panel.model.category==0 and panel.model.cell(0).is_empty(),"真实长矛不是消耗品，默认分类仍空")
@@ -239,10 +248,10 @@ func exercise_known_bag_items(startup: Boot,shell: CanvasLayer,actor: Node,owner
 			and not source_colour(pixels,Rect2i(444,182,24,24),[Color("#564379")]),
 			"原生渲染中实际长矛从装备格进入第一背包格")
 		check(source_colour(pixels,Rect2i(517,196,10,17),[Color.WHITE]),"原生渲染中右下角数量字形存在")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(startup.inventory_bags.count(owner,spear)==1 and gear.equipped(Gear.Slot.WEAPON)==null,
 		"这件原始物品无 Use 换装效果，确认不消耗、不偷接穿戴入口")
-	move(Vector2(470,245));tap(KEY_ESCAPE);tap(KEY_ESCAPE)
+	move(Vector2(470,245));await tap(KEY_ESCAPE);await tap(KEY_ESCAPE)
 	check(not paused and startup.inventory_bags.try_equip(owner,gear,spear)==Gear.Result.VALID
 		and gear.equipped(Gear.Slot.WEAPON)==spear and startup.inventory_bags.entries(owner).is_empty()
 		and startup.player.inventory_fresh_stats(actor)==[100,40,10,6,6,4,8,4],

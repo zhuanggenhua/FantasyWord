@@ -21,7 +21,14 @@ func key(k: Key, down: bool) -> void:
 	root.push_input(event,true)
 
 func tap(k: Key) -> void:
-	key(k,true); key(k,false)
+	key(k,true)
+	if k in [KEY_W,KEY_S,KEY_A,KEY_D,KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT]:
+		await process_frame
+		await process_frame
+	key(k,false)
+	if k!=KEY_ESCAPE:
+		await process_frame
+		await process_frame
 
 func point(p: Vector2) -> void:
 	var event:=InputEventMouseMotion.new()
@@ -86,7 +93,7 @@ func run() -> void:
 	click(Vector2(508,500))
 	check(startup.scene.command_count==command_before and startup.scene.click_observation.latest.over_ui,
 		"从真实 Gameplay Point 点击已占槽只拦截，不下达移动或启动技能")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	var pause:=shell.stack.top() as Pause
 	check(pause!=null,"正式原 Pause")
 	if pause==null: finish(); return
@@ -123,20 +130,20 @@ func run() -> void:
 				var c:=image.get_pixel(x,y)
 				if c.r<.30 and c.g<.21 and c.b<.25: ink+=1
 		check(ink>20,"原生文字像素存在，不只是数据合同")
-	tap(KEY_DOWN)
+	await tap(KEY_DOWN)
 	check(panel.selected_action()==12 and panel._description.truncated
 		and panel._spec.abilities["20010"].damage.size()==14,"喷火显示原文本并按可视区域省略，保留 14 条单位效果")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(panel.equip_from==12 and panel.selected_action()==21
 		and panel._equip_art[0].visible and panel._equip_art[1].visible
 		and not panel._allows(12),"无活动 UI Point 时进入选槽，箭头和禁用列表出现")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==panel and panel.equip_from==0 and panel.selected_action()==12
 		and not panel._equip_art[0].visible,"选槽 Esc 只取消分配，回原项而不弹菜单")
-	tap(KEY_UP); tap(KEY_ENTER)
-	for i in range(4): tap(KEY_RIGHT)
+	await tap(KEY_UP); await tap(KEY_ENTER)
+	for i in range(4): await tap(KEY_RIGHT)
 	check(panel.equip_from==11 and panel.selected_action()==25,"原五格可用键盘导航")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	check(codes(owner)==[0,20010,0,0,20001] and not panel._bar_icons[0].visible
 		and panel._bar_icons[4]._texture==panel._attack and panel.equip_from==0,
 		"正式菜单换槽更新真实能力，不创建第二份栏位")
@@ -151,9 +158,9 @@ func run() -> void:
 	check(panel.category==2 and not panel._row_icons[0].visible and panel.selected_action()==2
 		and panel._description.displayed_lines[0].begins_with("Passive abilities"),
 		"被动分类确认为空并显示作者说明")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==pause,"回到父菜单后原技能面板已关闭")
-	tap(KEY_ENTER)
+	await tap(KEY_ENTER)
 	panel=shell.stack.top() as Abilities
 	check(panel!=null and panel.category==2 and panel.selected_action()==1 and not panel._row_icons[0].visible,
 		"快速重开复用原分类偏好，无被动条目时退回首个原可选项")
@@ -178,9 +185,9 @@ func run() -> void:
 	check(codes(owner)==[0,0,0,0,20001] and owner.active_ability_menu_codes()==[20001,20010],
 		"未在选择态点击槽位清除；不撤销已持有技能")
 	point(Vector2(469,240))
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==pause and pause.selected_action()==4 and paused,"Back 返回 Pause，恢复真实 Abilities 入口焦点")
-	tap(KEY_ESCAPE)
+	await tap(KEY_ESCAPE)
 	check(not paused and Engine.time_scale==1.0,"再退一层才恢复玩法")
 	check(visible_slots(hud)==[5] and hud._entries[4].position==Vector2(912,957)
 		and not hud.blocks_map_pointer(Vector2(509,500)),"清槽后仅余普攻并重排居中，旧点击区不残留")

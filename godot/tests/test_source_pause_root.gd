@@ -17,6 +17,16 @@ func key(k: Key, on: bool) -> void:
 	event.physical_keycode=k
 	event.pressed=on
 	root.push_input(event,true)
+func settle() -> void:
+	await process_frame
+	await process_frame
+
+func direction(k: Key) -> void:
+	key(k,true)
+	await settle()
+	key(k,false)
+	await settle()
+
 func button(b: MouseButton, on: bool, p: Vector2) -> void:
 	var event := InputEventMouseButton.new()
 	event.device=0
@@ -72,6 +82,7 @@ func run() -> void:
 		"Match Height maps reference geometry")
 	key(KEY_S,true); key(KEY_S,false)
 	key(KEY_ENTER,true); key(KEY_ENTER,false)
+	await settle()
 	check(panel.selected_action()==0 and actions.is_empty(),"no default selected control for nav or submit")
 	move(Vector2(40,350))
 	await process_frame
@@ -99,6 +110,7 @@ func run() -> void:
 	else:
 		check(actions==[7] and shell.stack.depth()==1,"without Settings contract, no fake submenu")
 		key(KEY_ENTER,true); key(KEY_F,true); key(KEY_ENTER,false); key(KEY_F,false)
+		await settle()
 		check(actions==[7,7],"Submit aliases dispatch only once")
 	root.size=Vector2i(1200,540)
 	await process_frame
@@ -148,18 +160,19 @@ func check_settings(startup: Boot, settings: Settings) -> void:
 	check(is_equal_approx(prefs.volume(-1),master+adjustment*.1)
 		and is_equal_approx(AudioServer.get_bus_volume_linear(0),prefs.volume(-1))
 		and settings._values[0]._line.text==prefs.display(-1),"real button writes live master and label")
-	key(KEY_RIGHT if adjustment<0 else KEY_LEFT,true)
-	key(KEY_RIGHT if adjustment<0 else KEY_LEFT,false)
+	await direction(KEY_RIGHT if adjustment<0 else KEY_LEFT)
 	check(settings.selected_action()==(2 if adjustment<0 else 1),"automatic horizontal neighbor")
 	var selected := settings.selected_action()
 	key(KEY_ENTER,true); key(KEY_F,true); key(KEY_ENTER,false); key(KEY_F,false)
+	await settle()
 	check(is_equal_approx(prefs.volume(-1),master),"Submit physical aliases make only one change")
-	for i in range(4): key(KEY_DOWN,true); key(KEY_DOWN,false)
+	for i in range(4): await direction(KEY_DOWN)
 	check(settings.selected_action()==selected+8,"automatic vertical nearest neighbor")
-	key(KEY_DOWN,true); key(KEY_DOWN,false)
+	await direction(KEY_DOWN)
 	check(settings.selected_action()==selected+8,"no focus wrap at final row")
-	if selected==1: key(KEY_RIGHT,true); key(KEY_RIGHT,false)
+	if selected==1: await direction(KEY_RIGHT)
 	key(KEY_ENTER,true); key(KEY_ENTER,false)
+	await settle()
 	var next := minf(channel+.1,1.0)
 	check(is_equal_approx(prefs.volume(3),next) and is_equal_approx(prefs.volume(-1),master)
 		and settings._values[4]._line.text==prefs.display(3),"last row changes only source GameplaySoundFX")

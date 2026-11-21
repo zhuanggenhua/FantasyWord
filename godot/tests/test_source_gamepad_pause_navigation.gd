@@ -2,6 +2,7 @@ extends SceneTree
 const Boot := preload("res://gameplay/clickmovetest/source_startup.gd")
 const Pause := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
+const MenuNav := preload("res://game_core/input/source_menu_navigate.gd")
 const Gamepad := preload("res://game_core/input/source_gamepad_navigate.gd")
 const Dpad := preload("res://game_core/input/source_dpad_navigate.gd")
 var checks := 0
@@ -199,6 +200,84 @@ func _stick_cases(boot: Boot) -> void:
 	_tap(JOY_BUTTON_B)
 	_check(not paused and stack.depth()==0,"复位关闭后返回 Gameplay")
 
+func _key_event(k: Key, down: bool) -> InputEventKey:
+	var e:=InputEventKey.new()
+	e.keycode=k; e.physical_keycode=k; e.pressed=down
+	return e
+
+func _key(k: Key, down: bool) -> void: root.push_input(_key_event(k,down),true)
+
+func _keyboard_contract() -> void:
+	var nav:=MenuNav.new()
+	nav.observe(_key_event(KEY_W,true),false)
+	_check(nav.take_direction()==null,"Gameplay 仅记录预按 W，没有 UI 初采样")
+	nav.observe(_key_event(KEY_DOWN,true),true)
+	_check(nav.take_direction()==Vector2i.DOWN,"晚到箭头向下不被仍按住的 W 抵消")
+	nav.observe(_key_event(KEY_DOWN,false),true)
+	_check(nav.take_direction()==Vector2i.ZERO,"箭头回零不切回未产生回调的 W")
+	nav.observe(_key_event(KEY_W,true),true)
+	_check(nav.take_direction()==null,"按下重复不伪造底层变化")
+	nav.observe(_key_event(KEY_D,true),true)
+	_check(nav.take_direction()==Vector2i.UP,"WASD 自己的两个方向仍组合，斜向纵向优先")
+	nav.observe(_button(JOY_BUTTON_DPAD_LEFT,true),true)
+	nav.observe(_key_event(KEY_RIGHT,true),true)
+	_check(nav.take_direction()==Vector2i.RIGHT,"统一按实际顺序处理最近手柄或键盘变化")
+	nav.reset_device()
+	nav.observe(_key_event(KEY_D,true),true)
+	_check(nav.take_direction()==Vector2i.RIGHT,"失焦清物理键和待处理导航")
+
+func _keyboard_cases(boot: Boot) -> void:
+	var stack:=boot.pause_root.stack
+	_tap(JOY_BUTTON_START)
+	var pause:=stack.top() as Pause
+	if pause==null: _check(false,"真实 Pause 键盘入口"); return
+	await _focus_then_leave(pause,3)
+	_key(KEY_S,true); _key(KEY_S,false)
+	await _settle()
+	_check(pause.selected_action()==3,"同更新中按下松开，PassThrough 最终为零")
+	for submit_first: bool in [true,false]:
+		await _focus_then_leave(pause,3)
+		if submit_first: _key(KEY_ENTER,true); _key(KEY_ENTER,false)
+		_key(KEY_S,true)
+		if not submit_first: _key(KEY_ENTER,true); _key(KEY_ENTER,false)
+		await _settle()
+		var settings:=stack.top() as Settings
+		_check(settings!=null and pause.selected_action()==0,"两种事件顺序都先导航再提交真实 Settings")
+		_key(KEY_S,false)
+		await _settle()
+		if settings==null: return
+		var before:float=settings._prefs.volume(-1)
+		_key(KEY_RIGHT,true)
+		_key(KEY_ENTER,true); _key(KEY_F,true); _key(KEY_ENTER,false); _key(KEY_F,false)
+		await _settle()
+		_check(settings.selected_action()==2 and is_equal_approx(settings._prefs.volume(-1),minf(before+.1,1)),
+			"原键盘确认别名只让已导航的 Master 增加一档")
+		_key(KEY_RIGHT,false)
+		await _settle()
+		_key(KEY_S,true)
+		await _settle()
+		_check(settings.selected_action()==4,"WASD 向下先进入第二行")
+		_key(KEY_UP,true)
+		await _settle()
+		_check(settings.selected_action()==2,"箭头 Up 覆盖仍按住的 WASD Down")
+		_key(KEY_UP,false)
+		await _settle()
+		_key(KEY_S,true)
+		await _settle()
+		_check(settings.selected_action()==2,"箭头归零和重复 S 不重新派发旧方向")
+		_key(KEY_S,false)
+		_pad(JOY_BUTTON_DPAD_LEFT,true)
+		_key(KEY_DOWN,true)
+		await _settle()
+		_check(settings.selected_action()==4,"实际最后的键盘绑定覆盖同更新的 D-pad")
+		_pad(JOY_BUTTON_DPAD_LEFT,false)
+		_key(KEY_DOWN,false)
+		await _settle()
+		_tap(JOY_BUTTON_B)
+		_check(stack.top()==pause and pause.selected_action()==7,"原东键独立恢复根记忆焦点")
+	_tap(JOY_BUTTON_B)
+	_check(not paused,"完成原 Pause 键盘导航返回玩法")
+
 func _wait_for(panel: Control, action: int, deadline: int) -> int:
 	while Time.get_ticks_usec()<deadline:
 		await process_frame
@@ -208,6 +287,7 @@ func _wait_for(panel: Control, action: int, deadline: int) -> int:
 func _run() -> void:
 	_unit()
 	_unit_stick()
+	_keyboard_contract()
 	var fixture:=OS.get_environment("FORMAL_PAUSE_SOURCE")
 	if fixture.is_empty() or not FileAccess.file_exists(fixture.path_join("settings-contract.json")):
 		print("SKIP 真实 Pause 与 Settings 需要私有源资源；仅验原手柄方向合成合同。")
@@ -287,6 +367,7 @@ func _run() -> void:
 	_tap(JOY_BUTTON_B)
 	_check(not paused and stack.depth()==0,"独立 Cancel 可正常返回 Gameplay")
 	await _stick_cases(boot)
+	if not paused: await _keyboard_cases(boot)
 	if paused: _finish(); return
 	var previous:=boot.get_instance_id()
 	_check(change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))==OK,"重新加载真实项目不继承旧场景缓存")
@@ -300,6 +381,6 @@ func _run() -> void:
 	_finish()
 
 func _finish() -> void:
-	print("%s 原手柄十字键与双摇杆暂停导航：%d/%d（%s）"%[
+	print("%s 原暂停菜单手柄与键盘导航：%d/%d（%s）"%[
 		"PASS" if failures==0 else "FAIL",checks-failures,checks,DisplayServer.get_name()])
 	quit(int(failures!=0))

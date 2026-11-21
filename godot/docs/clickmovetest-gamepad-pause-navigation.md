@@ -1,4 +1,4 @@
-# ClickMoveTest：原 Pause 手柄导航
+# ClickMoveTest：原 Pause 导航
 锁定 Unity `31629d53a110dd4c87d4c85e6ad5a387fbafb931` 的
 `Assets/InputSystem_Actions.inputactions` 中 `UI/Navigate` 为
 PassThrough，绑定 `<Gamepad>/dpad`，且不做初始状态检查。Input System
@@ -9,7 +9,7 @@ PassThrough，绑定 `<Gamepad>/dpad`，且不做初始状态检查。Input Syst
 切图后的真实输入变化使用四键的当前组合。处理本帧移动后才使用
 同面板手柄南键的已触发提交，和两个事件的接收先后无关。
 独立的 Menu Cancel 路由（East）并未改成延迟提交。
-按键盘原路径保持同步；仍活跃的鼠标 Point 按 `InputSystem.cs`
+仍活跃的鼠标 Point 按 `InputSystem.cs`
 的每帧射线在匹配真实图形时可以重新选中，鼠标移走不清已选焦点。
 
 测试由原项目 F5 入口打开真实 Pause，使用 Godot 视口手柄事件：
@@ -36,3 +36,21 @@ D-pad、同区间重新接管、快速重开保留物理但清空待处理导航
 Master 增加后南键实际改变一档，以及暂停期间更新左轴的玩法恢复回归。
 Godot 每轴独立事件只验同一游戏更新内的最终方向；不把事件注入当作
 实体手柄或 Unity 多轴输入包的逐条时序证明。
+
+
+## WASD、方向键和统一提交时机
+
+原 `Assets/InputSystem_Actions.inputactions` 给键盘声明了两个独立
+PassThrough 2DVector：WASD 与方向键。不是从八颗键合成一个向量；
+发生真实物理变化的那组独立发布，含零，最后收到的原绑定获准导航。
+因此 S 和方向键 Up 同时保持时，不会拼成零；最后释放一组只发布它的零，
+不强制切回仍按住的另一组。同一游戏更新内按下和松开以末值为准。
+关闭动作图清空队列，但仍跟踪物理值；冷启不采样旧键。
+键盘 F/Enter/Space 与手柄南键仍共用原动作门禁，提交保持到本次更新，
+在 Move 后使用当前同面板的选中项。Cancel 仍是独立立即返回路由。
+
+真实 F5 Pause 用同帧两种输入顺序验证进入 Settings，
+测试原主音量实际只变一档、键盘方向组先后覆盖和同时与 D-pad 的覆盖。
+Inventory、Character、Abilities、Journal 使用正常跨帧键盘输入复测，
+不把同一无更新瞬间的 press/release 当作人手可见导航。
+尚未声称 Unity 与 Godot 的设备自动切换、系统按键事件包、全场景截图一致。
