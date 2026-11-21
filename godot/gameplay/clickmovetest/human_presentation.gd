@@ -4,6 +4,7 @@ const Playback = preload("res://game_core/presentation/directional_sprite_playba
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
 const Gear = preload("res://game_core/inventory/source_character_equipment.gd")
 const Weapons = preload("res://gameplay/equipment_workbench/weapons_preview.gd")
+const PrimaryEffects = preload("res://gameplay/clickmovetest/primary_frame_effects.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_PNG_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 var sprite: Sprite2D
@@ -157,29 +158,36 @@ func _refresh_source_cloth() -> void:
 	current.set_shader_parameter("cloth_rect",Vector4(0,0,1,1))
 	current.set_shader_parameter("enabled_cloth",equipped)
 
-func bind_source_spear(gear: Gear, directory: String) -> bool:
+func bind_source_standing_render(gear: Gear, directory: String, effects_path := "") -> bool:
 	var body := get_parent()
 	if _source_spear!=null or body==null or gear==null or material_binding==null \
 			or material_binding.material.shader!=Weapons.SubsetMaterial.WEAPON_SUBSET \
 			or not gear.belongs_to(body.get_parent()) or gear.item_for_guid(Gear.SPEAR)==null \
 			or not _animation_contract.actions.has_all(["Idle","Walk","Attack","Dmg","SpinDie"]) \
 			or not valid_primary_death(_animation_contract.get("primary_death")):
-		return _fail("长矛须接到原主角、原动作库和原武器材质。")
+		return _fail("站立材质须接到原主角、原动作库和原武器材质。")
 	var binding := Weapons.new()
-	if not binding.load_source(directory,true):
+	if not directory.is_empty() and not binding.load_source(directory,true):
 		return _fail("缺少经核对的原长矛图和人物锚点合同。")
+	var effects: PrimaryEffects
+	if not effects_path.is_empty():
+		effects = PrimaryEffects.new()
+		if not effects.load_source(effects_path):
+			return _fail("缺少正式主角的原轮廓和阴影帧合同。")
 	_source_spear = binding
 	_source_spear_gear = gear
-	binding.bind(material_binding.material,playback)
+	binding.bind(material_binding.material,playback,effects)
 	gear.loadout_changed.connect(_refresh_source_spear)
 	_refresh_source_spear()
+	if not binding.binding_error.is_empty():
+		return _fail(binding.binding_error)
 	last_error = ""
 	return true
 
 func _refresh_source_spear() -> void:
 	var equipped := _source_spear_gear.equipped(Gear.Slot.WEAPON)==_source_spear_gear.item_for_guid(Gear.SPEAR)
 	# Actual actor's equipment owns the state. No Workbench option changes it.
-	_source_spear.select(0,0 if equipped else -1)
+	_source_spear.select(0,0 if equipped and not _source_spear.options.is_empty() else -1)
 
 ## EquipmentRenderer.TryGetGroundAnchorWorldPosition；仅支持已经核实的正中 FullRect 人形帧。
 ## 原帧高 32，groundPixelY=18；从中心到行像素中心是 2.5 个向下的图集像素。

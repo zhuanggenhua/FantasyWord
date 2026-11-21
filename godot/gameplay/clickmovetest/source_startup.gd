@@ -117,7 +117,8 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if _player_death or mount_project_contact: animation["primary_death"] = material.get("primary_death")
 	var view: Node2D = scene.start_human_presentation(animation,art)
 	var spear := OS.get_environment("FORMAL_PLAYER_SPEAR_SOURCE") if mount_project_contact else ""
-	if not is_instance_valid(view) or not view.bind_base_material(material,art.path_join("uv"),art.path_join("appearance"),not spear.is_empty()):
+	var effects := OS.get_environment("FORMAL_PLAYER_EFFECTS_SOURCE") if mount_project_contact else ""
+	if not is_instance_valid(view) or not view.bind_base_material(material,art.path_join("uv"),art.path_join("appearance"),not spear.is_empty() or not effects.is_empty()):
 		return _fail("原玩家角色动画与身体、头部 UV 无法绑定。")
 	# 原 ClickMoveTest MapInfo 没有相机目标覆盖，也没有启用地图相机边界。
 	if not maps.configure(func(_name):return null,func():return scene) \
@@ -157,7 +158,7 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 		var cloth_png := OS.get_environment("FORMAL_PLAYER_CLOTH_PNG")
 		if not cloth_png.is_empty() and not view.bind_source_cloth(player.source_equipment(),cloth_png):
 			return _fail(view.last_error)
-		if not spear.is_empty() and not view.bind_source_spear(player.source_equipment(),spear):
+		if (not spear.is_empty() or not effects.is_empty()) and not view.bind_source_standing_render(player.source_equipment(),spear,effects):
 			return _fail(view.last_error)
 		_source_draws = SessionDraws.new()
 		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range):

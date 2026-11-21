@@ -35,3 +35,9 @@ GODOT --headless --path godot --script res://tools/check_formal_human_animation.
 `tests/test_formal_human_damage.gd` 使用真实 ClickMoveTest 展示入口验证这些分支、四向 16 帧、材质持续复用与 Dmg 独有 UV。默认是合成合同测试；传入五个参数（动画 JSON、材质 JSON、原 PNG 目录、生成 UV 目录、外观目录）可运行私有原图逐像素裁片检查。测试不代表 GPU 或 Unity/Godot 截图一致。
 
 本节只新增原 Dmg 图集/时序/基础外观的显式展示请求，不宣称正式伤害 owner 到表现已接通。完整死亡、打断/GAS、装备/坐骑、阴影和跨引擎画面验收仍未完成。
+
+### 正式主角轮廓与地面程序阴影
+
+用 `python godot/tools/extract_formal_human_effects.py <锁定 Unity 仓库> <私有角色图目录> <私有输出.json>` 核对正常主角实际精灵帧，在正式入口将产物设为 `FORMAL_PLAYER_EFFECTS_SOURCE`。不要求同时提供私有长矛图；已提供的合同不符时，不使用推断数据。合同、原素材和取证截图均不入库。
+
+运行时沿用本体、装备合成后的原轮廓及阴影片元规则。按实际精灵图集坐标读取 Idle、Walk、Dmg、Attack、SpinDie 共 124 帧；地面基线使用原第 18 行像素中心。保留 Walk 离地、Dmg 帧旗标切换、攻击序列不参与轮廓探针，以及 SpinDie 无脚时只覆盖模式并保留先前参数的行为。卸矛不清除轮廓或阴影。此处不包含独立的 Blob Shadow 节点、训练假人轮廓或 Unity/Godot 同视口截图验收。

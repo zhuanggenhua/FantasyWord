@@ -20,6 +20,7 @@ var _frames: Dictionary = {}
 var _material: ShaderMaterial
 var _playback: Node
 var binding_error := ""
+var _frame_effects: RefCounted
 
 func load_source(dir: String, formal_spear := false) -> bool:
 	var manifest := dir.path_join("player-spear.json" if formal_spear else "weapons.json")
@@ -68,7 +69,8 @@ func _sprite(row: Variant) -> Variant:
 static func _anchor(row: Variant) -> Variant:
 	return null if row == null else {"position":Vector2i(int(row[0]),int(row[1])),"direction":int(row[2])}
 
-func bind(material: ShaderMaterial, playback: Node) -> void:
+func bind(material: ShaderMaterial, playback: Node, frame_effects: RefCounted = null) -> void:
+	_frame_effects = frame_effects
 	_material = material
 	_playback = playback
 	_playback.sample_resolved.connect(_on_sample)
@@ -79,6 +81,7 @@ func disconnect_from_view() -> void:
 		_playback.sample_resolved.disconnect(_on_sample)
 	_playback=null
 	_material=null
+	_frame_effects=null
 
 func ids_for(slot: int) -> Array[int]:
 	var result: Array[int] = []
@@ -103,7 +106,7 @@ func _update_now() -> void:
 
 func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -> void:
 	var frame: Variant = _frames.get(action,{}).get(Vector2i(label,direction))
-	if frame == null or not sample is AtlasTexture or worn == [-1,-1]:
+	if not sample is AtlasTexture or (_frame_effects == null and (frame == null or worn == [-1,-1])):
 		SubsetMaterial.reset_weapon_fill(_material)
 		return
 	var atlas := sample as AtlasTexture
@@ -111,15 +114,17 @@ func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -
 	var bounds: Rect2 = atlas.region
 	# Godot atlas regions are top-origin; the original shader contract is bottom-origin.
 	var normalized := Rect2(Vector2(bounds.position.x,tex_size.y-bounds.end.y)/tex_size,bounds.size/tex_size)
-	var facing: int = frame[0]
 	var slots: Array = [{},{}]
+	var slot_flags := [{"is_sequence":0.0,"hide_outline_on_body":0.0},{"is_sequence":0.0,"hide_outline_on_body":0.0}]
 	for i in 2:
-		if worn[i] < 0: continue
+		if frame == null or worn[i] < 0: continue
+		var facing: int = frame[0]
 		var option := options[worn[i]]
 		var configured: bool = option.sequence.has(action)
 		var seq: Dictionary = option.sequence[action][facing][label] if configured else {}
 		var result := Pose.resolve(facing,i==0,bounds.size,frame[i+1],option,configured,seq)
 		if not result.enabled: continue
+		slot_flags[i].is_sequence = float(result.is_sequence)
 		var sprite: Dictionary = result.sprite
 		var size: Vector2 = sprite.texture.get_size()
 		var rect: Rect2 = sprite.rect
@@ -127,6 +132,8 @@ func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -
 			"anchor_frame_uv":result.anchor_frame_uv,"hand_local_uv":result.hand_local_uv,"rot_cos_sin":result.rot_cos_sin,
 			"flip_x":result.flip_x,"depth_mode":float(result.slot_is_front),"hand_in_front":float(result.hand_in_front)}
 	var outcome := SubsetMaterial.apply_weapon_fill(_material,normalized,slots)
+	if outcome.ok and _frame_effects != null:
+		outcome = _frame_effects.apply(_material,action,atlas,normalized,slot_flags)
 	binding_error = "" if outcome.ok else outcome.reason
 
 func icon(option: int) -> ImageTexture:
