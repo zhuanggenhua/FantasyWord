@@ -1,11 +1,12 @@
 extends Control
-## 独立迁移原 EquipmentSystemDemo 的人类服装预览，不接入正式角色或库存。
+## 独立迁移原 EquipmentSystemDemo 的人类服装与披风预览，不接入正式角色或库存。
 const HumanPresentation = preload("res://gameplay/clickmovetest/human_presentation.gd")
+const CloakPreview = preload("res://gameplay/equipment_workbench/cloak_preview.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c91cef1"
 const CJK_SHA := "763146584cf0710223441356b4395e279021b0806c196614377a7a0174ae074a"
-const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击"}
+const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击", "Dmg":"受伤"}
 const DIRECTIONS := ["东南", "西南", "东北", "西北"]
 const REF_SIZE := Vector2(1600, 900)
 const SLOT_IDLE := Color(0.22, 0.26, 0.31)
@@ -26,6 +27,13 @@ var _remove: Button
 var _equip: Button
 var _remove_badge: Label
 var _equip_badge: Label
+var _cloak: CloakPreview
+var _cloth_slots: GridContainer
+var _cloak_slots: GridContainer
+var _categories: Array[Button] = []
+var _cloak_buttons: Array[Button] = []
+var _cloak_badges: Array[Label] = []
+var _category := 0
 var _actions: Array[Button] = []
 var _directions: Array[Button] = []
 
@@ -55,8 +63,12 @@ func _load_source(source_dir: String) -> bool:
 	var animation := _read(source_dir.path_join("animation.json"))
 	var materials := _read(source_dir.path_join("material.json"))
 	var actions: Variant = animation.get("actions")
-	if not actions is Dictionary or actions.size() != ACTIONS.size() or not actions.has_all(ACTIONS.keys()):
+	if not actions is Dictionary or not actions.has_all(["Idle", "Walk", "Attack"]) or actions.size() != (4 if actions.has("Dmg") else 3):
 		return _fail("缺少本阶段人类原待机、行走和攻击的完整四向动画。")
+	if actions.has("Dmg"):
+		_cloak = CloakPreview.new()
+		if not _cloak.load_source(source_dir):
+			return _fail("缺少原披风图集或人类躯干帧合同。")
 	var image := Image.new()
 	if FileAccess.get_sha256(cloth_path) != CLOTH_SHA or image.load(cloth_path) != OK or image.get_size() != Vector2i(32, 32):
 		return _fail("未提供与原布衣一致的私有贴图。")
@@ -73,6 +85,7 @@ func _load_source(source_dir: String) -> bool:
 	_material.set_shader_parameter("cloth_map", _cloth)
 	_material.set_shader_parameter("cloth_rect", Vector4(0, 0, 1, 1))
 	_set_cloth(true)
+	if _cloak != null: _cloak.bind(_material, _human.playback)
 	return true
 
 func _mount_ui() -> void:
@@ -103,10 +116,11 @@ func _mount_ui() -> void:
 	action_row.columns = 3
 	action_row.add_theme_constant_override("h_separation", 8)
 	action_scroll.add_child(action_row)
-	for key in ["Idle", "Walk", "Wait", "Attack"]:
+	for key in ["Idle", "Walk", "Wait", "Attack", "Dmg"]:
 		if key == "Wait":
 			_button(action_row, "等待", Vector2(88, 32)).disabled = true
 			continue
+		if key == "Dmg" and _cloak == null: continue
 		var button := _button(action_row, ACTIONS[key], Vector2(88, 32))
 		button.name = key
 		button.pressed.connect(_select_action.bind(key))
@@ -129,28 +143,42 @@ func _mount_ui() -> void:
 	right.add_child(categories)
 	_button(categories, "形象", Vector2(96, 34)).disabled = true
 	var category := _button(categories, "服装", Vector2(96, 34))
-	category.pressed.connect(_refresh)
-	_style(category, SLOT_ACTIVE)
+	category.name = "ClothCategory"
+	category.pressed.connect(_select_category.bind(0))
+	_categories.append(category)
+	if _cloak != null:
+		var cloak_category := _button(categories, "披风", Vector2(96, 34))
+		cloak_category.name = "CloakCategory"
+		cloak_category.pressed.connect(_select_category.bind(1))
+		_categories.append(cloak_category)
 	_header(right, "装备列表")
 	var scroll := ScrollContainer.new()
 	right.add_child(scroll)
 	scroll.custom_minimum_size.y = 340
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	var slots := GridContainer.new()
-	slots.columns = 4
-	slots.add_theme_constant_override("h_separation", 4)
-	slots.add_theme_constant_override("v_separation", 8)
-	scroll.add_child(slots)
-	_remove = _button(slots, "卸下", Vector2(108, 96))
+	var lists := VBoxContainer.new()
+	scroll.add_child(lists)
+	_cloth_slots = _slot_grid(lists)
+	_remove = _button(_cloth_slots, "卸下", Vector2(108, 96))
 	_remove.name = "RemoveCloth"
 	_equip_slot_icon(_remove, _empty_slot_icon())
 	_remove.pressed.connect(_set_cloth.bind(false))
-	_equip = _button(slots, "布衣", Vector2(108, 96))
+	_equip = _button(_cloth_slots, "布衣", Vector2(108, 96))
 	_equip.name = "EquipCloth"
 	_equip.pressed.connect(_set_cloth.bind(true))
 	_equip_slot_icon(_equip, _cloth)
 	_remove_badge = _badge(_remove, "当前为空")
 	_equip_badge = _badge(_equip, "已装备")
+	if _cloak != null:
+		_cloak_slots = _slot_grid(lists)
+		for index in range(-1, _cloak.options.size()):
+			var option: Dictionary = _cloak.options[index] if index >= 0 else {}
+			var button := _button(_cloak_slots, option.get("name", "卸下"), Vector2(108, 96))
+			button.name = ["RemoveCloak", "EquipTravelCloak", "EquipHeavyCloak"][index + 1]
+			_equip_slot_icon(button, _cloak.icon_for(index) if index >= 0 else _empty_slot_icon())
+			button.pressed.connect(_select_cloak.bind(index))
+			_cloak_buttons.append(button)
+			_cloak_badges.append(_badge(button, "已装备" if index >= 0 else "当前为空"))
 	_header(right, "当前装备")
 	var detail_box := PanelContainer.new()
 	detail_box.custom_minimum_size.y = 156
@@ -159,6 +187,22 @@ func _mount_ui() -> void:
 	_details = _label(detail_box, "", 14)
 	_details.name = "CurrentDetails"
 	_details.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+
+func _slot_grid(parent: Container) -> GridContainer:
+	var slots := GridContainer.new()
+	slots.columns = 4
+	slots.add_theme_constant_override("h_separation", 4)
+	slots.add_theme_constant_override("v_separation", 8)
+	parent.add_child(slots)
+	return slots
+
+func _select_category(index: int) -> void:
+	_category = index
+	_refresh()
+
+func _select_cloak(index: int) -> void:
+	_cloak.select(index)
+	_refresh()
 
 func _label_column(title: String, width: float) -> VBoxContainer:
 	var panel := PanelContainer.new()
@@ -193,10 +237,13 @@ func _reset_human() -> void:
 	_human.driver.try_play_animation("Idle")
 	_human.animator.seek(0.0, true)
 	_human.playback.set_direction(0)
+	if _cloak != null: _cloak.select(-1)
 	_set_cloth(true)
 
 func _select_action(key: String) -> void:
 	if ACTIONS.has(key) and _human.driver.try_play_animation(key):
+		# Workbench SelectAnimation uses SetAnimation, not the gameplay damage auto-return.
+		_human.driver.cancel_pending_restore()
 		_refresh()
 
 func _select_direction(index: int) -> void:
@@ -219,9 +266,21 @@ func _refresh() -> void:
 	_style(_equip, SLOT_EQUIPPED if worn else SLOT_IDLE)
 	_remove_badge.visible = not worn
 	_equip_badge.visible = worn
+	var category_text := "布衣\n服装\n生命 +6" if worn else "服装\n当前为空"
+	for i in _categories.size():
+		_style(_categories[i], SLOT_ACTIVE if i == _category else SLOT_IDLE)
+	_cloth_slots.visible = _category == 0
+	if _cloak != null:
+		_cloak_slots.visible = _category == 1
+		for i in _cloak_buttons.size():
+			var current_slot := _cloak.selected + 1 == i
+			_style(_cloak_buttons[i], (SLOT_ACTIVE if i == 0 else SLOT_EQUIPPED) if current_slot else SLOT_IDLE)
+			_cloak_badges[i].visible = current_slot
+		if _category == 1:
+			category_text = "披风\n当前为空" if _cloak.selected < 0 else _cloak.details_for(_cloak.selected)
 	_details.text = "角色 人类 | 形象 基础人形外观\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		ACTIONS[current], DIRECTIONS[direction], ACTIONS[current],
-		"布衣\n服装\n生命 +6" if worn else "服装\n当前为空"]
+		category_text]
 
 func _header(parent: Control, value: String) -> void:
 	_label(parent, value, 20).custom_minimum_size.y = 28
