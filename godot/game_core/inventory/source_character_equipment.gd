@@ -1,6 +1,6 @@
 extends RefCounted
 ## 锁定 ClickMoveTest 的 CharacterEquipment：初始长矛、基础布衣皆不提供属性或附加能力。
-## 只接这两种已核验资源；并不启用穿脱表现、存档、坐骑或任意装备。
+## 正式入口仍只初始化这两件。独立坐骑验收可显式注册战马，不写玩法库存。
 signal loadout_changed
 
 enum Slot { WEAPON, HEAD, TORSO, HANDS, FEET, MOUNT }
@@ -8,7 +8,8 @@ enum Result { VALID, NOT_ENOUGH_HEALTH, NOT_ENOUGH_MANA, INVALID_TARGET, MISSING
 
 const SPEAR := "e75ab3eda87066246bf3a27034a417bd"
 const CLOTH := "34d275c797e85434d84f523ede167208"
-const _PINNED_SLOTS := {CLOTH:Slot.TORSO,SPEAR:Slot.WEAPON}
+const WAR_HORSE := "a9a7433e642af8744b2e309dc15ce611"
+const _PINNED_SLOTS := {CLOTH:Slot.TORSO,SPEAR:Slot.WEAPON,WAR_HORSE:Slot.MOUNT}
 
 var _items := {}
 var _slots := {}
@@ -16,16 +17,16 @@ var _actor: WeakRef
 var _read_health: Callable
 var _can_change: Callable
 
-func start(actor: Node, read_health: Callable, can_change: Callable) -> bool:
+func start(actor: Node, read_health: Callable, can_change: Callable, mount_validation := false) -> bool:
 	if _actor!=null or not is_instance_valid(actor) or not actor.is_inside_tree() \
 			or not read_health.is_valid() or not can_change.is_valid(): return false
 	_actor=weakref(actor)
 	_read_health=read_health
 	_can_change=can_change
-	for guid: String in _PINNED_SLOTS:
+	for guid: String in ([WAR_HORSE] if mount_validation else [CLOTH, SPEAR]):
 		var item := Resource.new()
 		_items[guid]=item
-		_slots[_PINNED_SLOTS[guid]]=item
+		if not mount_validation: _slots[_PINNED_SLOTS[guid]]=item
 	return true
 
 func live() -> bool:
@@ -59,6 +60,6 @@ func try_apply(slot: int, item: Resource) -> Dictionary:
 		_slots.erase(slot)
 	else:
 		_slots[slot]=item
-	# 这两件装备没有有效属性/技能差量；槽位事件仍然先于 InventorySystem 转包。
+	# 已锁定的正式装备资源没有属性/技能差量；槽位事件仍然先于 InventorySystem 转包。
 	loadout_changed.emit()
 	return {"result":Result.VALID,"previous":previous}

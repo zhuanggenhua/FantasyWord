@@ -5,6 +5,9 @@ const CloakPreview = preload("res://gameplay/equipment_workbench/cloak_preview.g
 const BagPreview = preload("res://gameplay/equipment_workbench/bag_preview.gd")
 const Headwear = preload("res://gameplay/equipment_workbench/headwear_preview.gd")
 const Weapons = preload("res://gameplay/equipment_workbench/weapons_preview.gd")
+const MountedPresentation = preload("res://gameplay/equipment_workbench/mounted_presentation.gd")
+const Equipment = preload("res://game_core/inventory/source_character_equipment.gd")
+const MOUNT_CATEGORY := 100
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c91cef1"
@@ -49,6 +52,15 @@ var _categories: Dictionary = {}
 var _cloak_buttons: Array[Button] = []
 var _cloak_badges: Array[Label] = []
 var _category := 0
+var _mount_source := ""
+var _mount_owner: Equipment
+var _mounted_view: MountedPresentation
+var _mount_slots: GridContainer
+var _mount_equip: Button
+var _mount_remove: Button
+var _mount_equip_badge: Label
+var _mount_remove_badge: Label
+var _player: Button
 var _actions: Array[Button] = []
 var _directions: Array[Button] = []
 
@@ -104,7 +116,8 @@ func _load_source(source_dir: String) -> bool:
 		return _fail("未提供与原布衣一致的私有贴图。")
 	_cloth = ImageTexture.create_from_image(image)
 	_human = HumanPresentation.new()
-	_human.name = "EquipmentSystemDemoCharacter"
+	_mount_source = OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_VALIDATION")
+	_human.name = "EquipmentSystemDemoCharacter" if _mount_source.is_empty() else "MountValidationPlayer"
 	add_child(_human)
 	if not _human.configure(animation, art) or not _human.bind_base_material(materials, art.path_join("uv"), art.path_join("appearance"), _weapons != null):
 		var reason: String = _human.last_error
@@ -119,6 +132,22 @@ func _load_source(source_dir: String) -> bool:
 	if _bag != null: _bag.bind(_material, _human.playback, _cloak.torso_for_sample)
 	if _headwear != null: _human.material_binding.set_workbench_headwear({})
 	if _weapons != null: _weapons.bind(_material, _human.playback)
+	if not _mount_source.is_empty():
+		# 对应 Unity 另起正式角色的独立验收；普通工作台不拥有 Mount 槽。
+		_mounted_view = MountedPresentation.new()
+		_mounted_view.name = "MountedCharacterPresentation"
+		_human.add_child(_mounted_view)
+		_mounted_view.z_index = 1
+		if not _mounted_view.configure(_mount_source, _human.driver, _human.playback):
+			_human.free()
+			_human = null
+			return _fail("原战马本体、骑手图集或帧合同不匹配。")
+		_mount_owner = Equipment.new()
+		if not _mount_owner.start(_human, func(): return 1, func(): return true, true):
+			_human.free()
+			_human = null
+			return _fail("坐骑验证角色的正式 Mount 槽初始化失败。")
+		_mount_owner.loadout_changed.connect(_apply_mount_slot)
 	return true
 
 func _mount_ui() -> void:
@@ -130,6 +159,7 @@ func _mount_ui() -> void:
 	background.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 
 	_canvas = Control.new()
+	if _mount_owner != null: _canvas.z_index = 2
 	_canvas.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(_canvas)
 	_canvas.size = REF_SIZE
@@ -138,6 +168,7 @@ func _mount_ui() -> void:
 	title.size = Vector2(320, 40)
 	var left := _label_column("角色", 316)
 	var player := _button(left, "人类", Vector2(84, 92))
+	_player = player
 	player.name = "Human"
 	player.pressed.connect(_reset_human)
 	_header(left, "动作")
@@ -187,6 +218,7 @@ func _mount_ui() -> void:
 		_add_category(categories, 8, "武器", "WeaponCategory")
 		_add_category(categories, 9, "盾牌", "ShieldCategory")
 	if _bag != null: _add_category(categories, 2, "背包", "BagCategory")
+	if _mount_owner != null: _add_category(categories, MOUNT_CATEGORY, "坐骑", "MountCategory")
 	_header(right, "装备列表")
 	var scroll := ScrollContainer.new()
 	right.add_child(scroll)
@@ -245,6 +277,18 @@ func _mount_ui() -> void:
 				badges[id] = _badge(button,"当前为空" if id < 0 else "已装备")
 			_weapon_buttons.append(buttons)
 			_weapon_badges.append(badges)
+	if _mount_owner != null:
+		_mount_slots = _slot_grid(lists)
+		_mount_remove = _button(_mount_slots, "卸下", Vector2(108, 96))
+		_mount_remove.name = "RemoveMount"
+		_equip_slot_icon(_mount_remove, _empty_slot_icon())
+		_mount_remove.pressed.connect(_select_mount.bind(false))
+		_mount_remove_badge = _badge(_mount_remove, "当前为空")
+		_mount_equip = _button(_mount_slots, "战马", Vector2(108, 96))
+		_mount_equip.name = "EquipWarHorse"
+		# 原目录没有指定战马图标。
+		_mount_equip.pressed.connect(_select_mount.bind(true))
+		_mount_equip_badge = _badge(_mount_equip, "已装备")
 	_header(right, "当前装备")
 	var detail_box := PanelContainer.new()
 	detail_box.custom_minimum_size.y = 156
@@ -292,6 +336,25 @@ func _remove_headwear(kind: int) -> void:
 
 func _select_weapon(slot: int, id: int) -> void:
 	_weapons.select(slot, id)
+	_refresh()
+
+func _has_ordinary_equipment() -> bool:
+	return bool(_material.get_shader_parameter("enabled_cloth")) \
+		or (_cloak != null and _cloak.selected >= 0) or (_bag != null and _bag.worn) \
+		or (_headwear != null and [5, 6, 7].any(func(kind): return _headwear.equipped_in(kind) >= 0)) \
+		or (_weapons != null and _weapons.worn != [-1, -1])
+
+func _select_mount(equip: bool) -> void:
+	if equip and _has_ordinary_equipment():
+		return # 此验收刻意不把缺骑乘 UV 的穿着角色当无装备直显。
+	var horse := _mount_owner.item_for_guid(Equipment.WAR_HORSE) if equip else null
+	_mount_owner.try_apply(Equipment.Slot.MOUNT, horse)
+
+func _apply_mount_slot() -> void:
+	var equipped := _mount_owner.equipped(Equipment.Slot.MOUNT) != null
+	if _mounted_view.visible != equipped:
+		_human.sprite.visible = not equipped
+		_mounted_view.set_active(equipped)
 	_refresh()
 
 func _slot_grid(parent: Container) -> GridContainer:
@@ -416,6 +479,21 @@ func _refresh() -> void:
 				_style(_weapon_buttons[slot][id],(SLOT_ACTIVE if id < 0 else SLOT_EQUIPPED) if equipped else SLOT_IDLE)
 				_weapon_badges[slot][id].visible = equipped
 			if _category == 8 + slot: category_text = _weapons.details(slot)
+	if _mount_owner != null:
+		var mounted := _mounted_view.visible
+		_mount_slots.visible = _category == MOUNT_CATEGORY
+		_mount_remove_badge.visible = not mounted
+		_mount_equip_badge.visible = mounted
+		_mount_equip.disabled = _has_ordinary_equipment()
+		_style(_mount_remove, SLOT_IDLE if mounted else SLOT_ACTIVE)
+		_style(_mount_equip, SLOT_EQUIPPED if mounted else SLOT_IDLE)
+		_player.disabled = mounted
+		for kind: int in _categories:
+			_categories[kind].disabled = mounted and kind != MOUNT_CATEGORY
+		if _category == MOUNT_CATEGORY:
+			category_text = "战马\n坐骑\n已装备" if mounted else "坐骑\n当前为空"
+			if _mount_equip.disabled:
+				category_text += "\n无装备骑手验收：请先卸下普通装备。"
 	_details.text = "角色 人类 | 形象 基础人形外观\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		ACTIONS[current], DIRECTIONS[direction], ACTIONS[current],
 		category_text]
