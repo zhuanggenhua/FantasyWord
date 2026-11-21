@@ -117,6 +117,18 @@ func run() -> void:
 	escape(false)
 	escape(true)
 	check(menu.depth()==1,"释放再按可重复打开")
+	var forced := TestPanel.new()
+	forced.can_close=false
+	forced.consume_back=true
+	state.dialogue=true
+	check(menu.push_panel(forced),"准备拒绝手动返回的子菜单")
+	menu.close_all()
+	check(menu.depth()==0 and not paused and Engine.time_scale==1.0 and forced.back_count==0
+		and maps.slice(-2)==[MenuStack.ActionLayer.UI,MenuStack.ActionLayer.GAMEPLAY],
+		"程序请求逐层关闭，不走手动返回门禁，最后一层只恢复一次")
+	var map_count := maps.size()
+	menu.close_all()
+	check(map_count==maps.size(),"空栈重复关闭不重复切换动作图")
 	menu.free()
 	check(not paused and Engine.time_scale==1.0,"退出场景不会遗留暂停时钟")
 	if not failures and not OS.get_environment("FORMAL_SURFACE_RULES").is_empty():

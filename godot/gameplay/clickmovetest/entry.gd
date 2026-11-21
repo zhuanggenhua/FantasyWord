@@ -54,6 +54,8 @@ var human_presentation: Node2D
 var human_motion_binding: RefCounted
 var _human_damage_lifecycle := DamageLifecycle.new()
 var _human_damage_destroyed: Callable
+## 对应 CharacterActor.OnDeath，早于 CharacterBase 的装备转移和失控验证。
+signal source_primary_killed
 var _source_primary_death_owner: Object
 var _source_primary_death_bags: InventoryBags
 var _source_primary_death_identifier := ""
@@ -910,6 +912,8 @@ func _commit_source_primary_death() -> void:
 	actor.reset_movement()
 	if not human_presentation.driver.try_lock_animation("SpinDie"):
 		push_error("原 ClickMoveTest 主角无法锁定 SpinDie。")
+	# 原尝试播放后仍立即调用 OnDeath；空的附加命令不跳过关闭菜单。
+	source_primary_killed.emit()
 	if _source_primary_death_bags!=null:
 		_source_primary_death_bags.transfer_character_equipment_to_corpse(
 			actor,_source_primary_death_identifier,owner.source_equipment())

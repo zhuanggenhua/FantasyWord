@@ -100,6 +100,11 @@ func pop_current() -> bool:
 	_transitioning = false
 	return true
 
+## 原 CloseAllMenusRequested 逐层 Pop，不走 Cancel 或由面板否决。
+func close_all() -> void:
+	while pop_current():
+		pass
+
 func _valid_panel(panel: Control) -> bool:
 	return panel.process_mode in [Node.PROCESS_MODE_INHERIT, Node.PROCESS_MODE_ALWAYS, Node.PROCESS_MODE_WHEN_PAUSED] \
 		and panel.has_method("apply_stack_interactions") and panel.has_method("try_focus_default_target") \

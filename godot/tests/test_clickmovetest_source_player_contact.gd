@@ -1,5 +1,6 @@
 extends SceneTree
 ## 在正式启动的真实地图上提交正式 Fire；不擅自给正常玩法添一个自动点火者。
+const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
 const Startup := preload("res://gameplay/clickmovetest/source_startup.gd")
 var checks := 0
 var failures := 0
@@ -114,13 +115,56 @@ func _run() -> void:
 	player._attributes.apply_current_health_delta(3-health,0,null,null)
 	_check(player.current_health()==1 and not player.is_destroyed(),"致死验证预置同一属性剩一命")
 	scene.advance_surface_contact(.5)
+	var check_menus := OS.get_environment("FW_TEST_SOURCE_DEATH_MENU")=="1"
+	var shell := startup.pause_root
+	var menu_root: Control
+	var child_panel: Control
+	var close_events := []
+	if check_menus:
+		# 只交错已经排队的地表效果和 UI；不让暂停时的地表时钟推进。
+		if shell==null:
+			_check(false,"死亡菜单测例需要原根与背包面板")
+			quit(1)
+			return
+		_escape_edge()
+		menu_root=shell.stack.top()
+		if menu_root==null:
+			_check(false,"原 ESC 实际挂载根菜单")
+			quit(1)
+			return
+		# 原 Items 行参考坐标；由实际 Pointer 路由发布，非测试直调子菜单。
+		var item_position := Vector2(40,190)*root.get_visible_rect().size.y/540.0
+		for down in [true,false]:
+			var mouse := InputEventMouseButton.new()
+			mouse.device=0
+			mouse.button_index=MOUSE_BUTTON_LEFT
+			mouse.pressed=down
+			mouse.position=item_position
+			root.push_input(mouse,true)
+		child_panel=shell.stack.top()
+		_check(shell.stack.depth()==2 and child_panel is Inventory and paused
+			and Engine.time_scale==0.0 and scene._source_ui_action_layer,
+			"原暂停根、背包页和 UI 动作图均已挂载")
+		scene.source_primary_killed.connect(func():
+			close_events.append([shell.stack.depth(),paused,gear.equipped(gear.Slot.WEAPON),
+				transfers.size(),scene.human_presentation.driver.current_animation_key]))
 	scene.run_surface_contact_effects()
 	_check(contacts.size()==3 and contacts.back().slice(1,4)==[1,1,0]
 		and not player.is_destroyed() and flash.color.a>0.0
 		and transfers.is_empty() and bags.count(primary_owner,spear)==2
 		and bags.entries(corpse).is_empty() and gear.equipped(gear.Slot.WEAPON)==spear,
 		"致死接触先正式结算并闪屏，再等待安全死亡阶段")
+	if check_menus: _check(paused and shell.stack.depth()==2,"归零仍未进入死亡阶段，暂不关闭菜单")
 	scene.advance_human_damage_lifecycle()
+	if check_menus:
+		_check(close_events==[[0,false,spear,2,"SpinDie"]]
+			and Engine.time_scale==1.0 and not scene._source_ui_action_layer,
+			"锁定原死亡动作后清空菜单、恢复动作图，并且装备尚未开始转移")
+		_check(shell.stack.cached_root()==menu_root and not menu_root.visible
+			and is_instance_valid(child_panel) and child_panel.is_queued_for_deletion(),
+			"根仅隐藏缓存，背包页按原逐层关闭路径释放")
+		_escape_edge()
+		_check(shell.stack.depth()==0,"已失去控制的尸体不能重开暂停菜单")
 	_check(player.is_destroyed() and not player.is_current_controlled(actor)
 		and scene.camera.follow==actor and startup.persistables.resolve("player")==actor
 		and scene.human_presentation.driver.current_animation_key=="SpinDie",
@@ -168,6 +212,13 @@ func _run() -> void:
 		print("燃烧致死闪屏原生像素样本：",match_count)
 	if not failures: print("PASS 原场景玩家地表受击：%d 项（%s）" % [checks,DisplayServer.get_name()])
 	quit(1 if failures else 0)
+
+func _escape_edge() -> void:
+	for down in [true,false]:
+		var key := InputEventKey.new()
+		key.physical_keycode=KEY_ESCAPE
+		key.pressed=down
+		root.push_input(key,true)
 
 func _check(ok: bool, label: String) -> void:
 	checks+=1

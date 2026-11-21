@@ -252,6 +252,7 @@ func _mount_source_pause(directory: String) -> bool:
 		return false
 	pause_root = menu
 	add_child(menu)
+	scene.source_primary_killed.connect(menu.stack.close_all)
 	return true
 
 
