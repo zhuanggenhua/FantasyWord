@@ -114,10 +114,10 @@ func set_facing(source_facing: Vector2) -> void:
 	if playback != null: playback.set_facing_direction(source_facing)
 
 ## Attach only the verified base look to the existing live sprite. No automatic entry or assets.
-func bind_base_material(data: Dictionary, uv_directory: String, appearance_directory: String) -> bool:
+func bind_base_material(data: Dictionary, uv_directory: String, appearance_directory: String, workbench_weapon_stage := false) -> bool:
 	if material_binding != null or sprite == null: return _fail("Human appearance requires a configured, unbound sprite.")
 	var binding = preload("res://gameplay/clickmovetest/human_material_binding.gd").new()
-	if not binding.configure(sprite,playback,driver,_animation_contract,data,uv_directory,appearance_directory):
+	if not binding.configure(sprite,playback,driver,_animation_contract,data,uv_directory,appearance_directory,workbench_weapon_stage):
 		return _fail(binding.last_error)
 	last_error = ""
 	material_binding = binding

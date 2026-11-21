@@ -59,7 +59,70 @@ func _run() -> void:
 		await _check_bag(human, mat, details)
 	if not OS.get_environment("FANTASYWORD_WORKBENCH_HEADWEAR").is_empty():
 		await _check_headwear(human, mat, details)
+	if not OS.get_environment("FANTASYWORD_WORKBENCH_WEAPONS").is_empty():
+		await _check_weapons(human, mat, details)
 	_finish()
+
+func _check_weapons(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
+	_check(mat.shader.resource_path.ends_with("equipment_weapon_subset.gdshader"), "工作台显式启用原双槽武器材质")
+	await _click("Human")
+	var graphics := DisplayServer.get_name() != "headless"
+	var bare := PackedByteArray()
+	if graphics: bare = await _avatar_pixels(human)
+	_check(not mat.get_shader_parameter("weapon_fill_enabled"), "空槽不启动可选武器填充")
+	await _click("WeaponCategory")
+	await _click("EquipSpear")
+	_check("长矛" in details.text and "力量 +2" in details.text and "智力 +1" in details.text and mat.get_shader_parameter("weapon0_enabled"), "长矛进入独立主手且显示原增益")
+	var spear_only := PackedByteArray()
+	if graphics:
+		spear_only = await _avatar_pixels(human)
+		_check(bare != spear_only, "静态长矛实际改变原人形渲染")
+	await _click("ShieldCategory")
+	await _click("EquipShield")
+	_check("重盾" in details.text and "体质 +2" in details.text and "生命 +8" in details.text and mat.get_shader_parameter("weapon1_enabled"), "重盾进入独立副手且显示原增益")
+	if graphics: _check(spear_only != await _avatar_pixels(human), "同一待机帧同时渲染实际副手重盾")
+	var shield_maps: Array[Texture2D] = []
+	for i in 4:
+		await _click(["SE", "SW", "NE", "NW"][i])
+		var anchor_main: Vector4 = mat.get_shader_parameter("weapon0_anchor_frame_uv")
+		var x := 17.5 if i % 2 == 0 else 14.5
+		shield_maps.append(mat.get_shader_parameter("weapon1_map"))
+		_check(is_equal_approx(anchor_main.x, x/32.0) and is_equal_approx(anchor_main.y, 1.0-17.5/32.0)
+			and mat.get_shader_parameter("weapon0_flip_x") == (i%2==1)
+			and mat.get_shader_parameter("weapon0_depth_mode") == float(i>=2)
+			and mat.get_shader_parameter("weapon1_depth_mode") == float(i<2)
+			and mat.get_shader_parameter("weapon1_hand_in_front") == float(i>=2), "源待机四向锚点、静态翻转与前后关系")
+	_check(shield_maps[0] != shield_maps[1] and shield_maps[1] != shield_maps[2] and shield_maps[2] != shield_maps[3], "重盾四向使用实际四张原图")
+	await _click("Walk")
+	human.animator.pause()
+	for d in ["SE","SW","NE","NW"]:
+		await _click(d)
+		for frame in 4:
+			human.animator.seek(frame * 0.125,true)
+			_check(human.playback.current_label == frame and mat.get_shader_parameter("weapon0_enabled")
+				and mat.get_shader_parameter("weapon1_enabled") == (frame % 2 == 0)
+				and ((mat.get_shader_parameter("weapon1_map") == null) == (frame % 2 == 1))
+				and "重盾" in details.text, "行走锚点存在才显示重盾，但仍装备：" + d + str(frame))
+	await _click("Attack")
+	await _click("NE")
+	human.animator.pause()
+	human.animator.seek(0.125,true)
+	var front_map: Texture2D = mat.get_shader_parameter("weapon0_map")
+	_check(front_map != null and mat.get_shader_parameter("weapon0_depth_mode") == 1.0 and not mat.get_shader_parameter("weapon0_flip_x"), "东北攻击帧 1 使用原前层序列")
+	human.animator.seek(0.25,true)
+	var back_map: Texture2D = mat.get_shader_parameter("weapon0_map")
+	_check(human.playback.current_label == 2 and back_map != null and back_map != front_map
+		and mat.get_shader_parameter("weapon0_depth_mode") == 0.0 and mat.get_shader_parameter("weapon1_enabled"), "东北攻击帧 2 切到原后层图，保留重盾")
+	_check(_demo._weapons.binding_error.is_empty(), "无绑定或帧坐标错误")
+	await _click("RemoveShield")
+	_check(mat.get_shader_parameter("weapon0_enabled") and not mat.get_shader_parameter("weapon1_enabled")
+		and "当前为空" in details.text, "单卸盾牌不移除主手")
+	await _click("WeaponCategory")
+	await _click("RemoveSpear")
+	_check(not mat.get_shader_parameter("weapon0_enabled") and not mat.get_shader_parameter("weapon_fill_enabled"), "卸主手清掉当前序列材质")
+	await _click("Human")
+	if graphics: _check(bare == await _avatar_pixels(human), "同一待机帧武器卸下后恢复基准像素")
+	_check(mat.get_shader_parameter("enabled_cloth"), "原布衣仍在")
 
 func _check_headwear(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	var mask_tab := _demo.find_child("MaskCategory", true, false) as Button
@@ -154,7 +217,10 @@ func _avatar_texel(human: Node2D, texel_center: Vector2) -> Color:
 	return root.get_texture().get_image().get_pixel(floori(q.x),floori(q.y))
 
 func _check_bag(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
-	_check(mat.shader.resource_path.ends_with("/equipment_character_subset.gdshader"), "无武器材质仍应保留原背包层")
+	if OS.get_environment("FANTASYWORD_WORKBENCH_WEAPONS").is_empty():
+		_check(mat.shader.resource_path.ends_with("/equipment_character_subset.gdshader"), "无武器材质仍应保留原背包层")
+	else:
+		_check(not mat.get_shader_parameter("weapon_fill_enabled"), "已加载武器材质但武器未装备，北向背包仍绘制")
 	await _click("CloakCategory")
 	await _click("EquipTravelCloak")
 	await _click("BagCategory")

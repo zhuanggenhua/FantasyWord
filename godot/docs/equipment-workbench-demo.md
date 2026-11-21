@@ -1,4 +1,4 @@
-# 原换装工作台：人类服装、披风、背包与头部装备预览
+# 原换装工作台：人类装备预览
 锁定源为 Unity `31629d53a110dd4c87d4c85e6ad5a387fbafb931` 的 `Assets/Scenes/EquipmentSystemDemo.unity`、`UIEquipmentWorkbench.prefab`、`换装工作台目录.asset`、`布衣.asset` 和 `EquipmentWorkbenchController/RuntimeUI`。这是原有的独立场景，不改变默认 F5 的 ClickMoveTest，也没有入口混入正式游戏菜单。
 
 ## 运行
@@ -35,12 +35,23 @@ export FANTASYWORD_WORKBENCH_HEADWEAR=/path/to/private-headwear-source
 ```
 提取器只生成精确材质合同，不复制素材。图集大小按原实际 PNG 高宽，逐字校验材质引用的文件、SHA 和 Unity Sprite ID；两个铁盔共享 512×608 原图集，使用不同列。
 
+### 可选长矛与重盾合同
+私有目录需要原 `长矛1.png`、`shield2.png` 至 `shield5.png`（MiniFantasyUV ImportedSource）与原人类目录的 `Slash_sword_f.png`、`Slash_sword_b.png`。
+后一对是「长矛」实际序列 GUID 引用，不以同名或相似的突刺资源替换。
+```sh
+python godot/tools/extract_workbench_weapons.py /path/to/Unity-repository /path/to/private-weapon-source
+export FANTASYWORD_WORKBENCH_WEAPONS=/path/to/private-weapon-source
+```
+提取器核对原图、图集 Sprite ID、作者方向和每帧锚点，生成的私有合同不入库。只有原工作台给齐合同才使用武器填充材质，正式 ClickMoveTest 默认不受影响。
+
 ## 迁移及验收范围
 人类进场默认东南待机、穿布衣。通过实际按钮卸下及重穿，驱动渲染器的布衣层，详情和状态徽章同步。卸下显示「当前为空」，重穿显示「已装备」与预览目录的「生命 +6」，不写玩家库存、生命数值、装备栏或存档。支持选择原待机、行走、攻击与四向动画；重选人类恢复初始外观。披风类别迁移来源目录中的旅行披风（体质 +1、魔力 +2）和厚斗篷（体质 +2、生命 +4）。二者虽同 numeric ID，仍按各自原视觉资源替换同一个披风槽，不改布衣。厚斗篷跟随原 Dmg 前两帧的 Torso Left 变体，末两帧回 Base；后向缺帧及 Right 无 SE 按原回退。工作台受伤预览停留末帧，不触发玩法伤害或自动回待机。重选人类恢复原默认布衣和空披风。装备按钮预览图取该披风原有效图；未迁移完整原图标合成与全量界面。
 
 小背包沿用原独立装备槽和详情「生命 +2、魔力 +3」。默认无背包；穿脱不改布衣和披风。南向仅在原躯干透明底图时走早绘制；北向根据原躯干朝向在武器之后再画一次，不要求启用武器。工作台图标取原 SE 裁片，按原 alpha 裁切后缩放居中。Godot 原生窗口附加验证四向穿脱、同帧像素复原和北向背包实际盖过披风；两个着色器版本另有无武器合成回归。
 
 头部工作台保留源三列分类网格和独立头盔、帽子、面罩页。角饰头盔、铁盔 I/II、轻帽和护目镜依原类型互相替换，空分类的卸下不移除其它分类。头盔/帽子共用 Helmet 层，面罩独立；原人类头发、胡须按选项分别保留或隐藏，并在每次原头部帧采样时重新求值。四向护目镜贴图、铁盔的不同 atlas 列、行动后发须保留和移除后复原已纳入 Godot 原生测试；不改变正式场景的默认外观或装备逻辑。
+
+长矛与重盾按原主手/副手分开穿脱，显示原属性。原行走标签 1、3 缺副手锚点时只隐藏盾牌，标签 0、2 恢复，主手不消失且并未卸下装备。原东北攻击标签 1 到 2 的长矛从前层原图切到后层原图，副手保留。测试同时覆盖静态待机四向、武器组合后的原生帧像素与卸下复原。未接入战斧、圆盾或正式库存与战斗。
 
 等待、其他动作、其他角色/形象及装备、坐骑、工作台完整轮廓与整屏布局、Unity 同场画面逐项对比仍未验收。
 

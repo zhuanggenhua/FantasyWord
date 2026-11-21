@@ -18,7 +18,7 @@ var _playback: Node
 var _driver: Node
 
 func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictionary,
-		data: Dictionary, uv_directory: String, appearance_directory: String) -> bool:
+		data: Dictionary, uv_directory: String, appearance_directory: String, workbench_weapon_stage := false) -> bool:
 	if material != null or sprite.material != null or not sprite.texture is AtlasTexture:
 		return _fail("Expected an unbound, sampled Human AtlasTexture.")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE:
@@ -92,7 +92,7 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 	if not actions.has(action) or action != playback.current_action:
 		return _fail("Human action owner and initial sprite are not synchronized.")
 	var atlas: Texture2D = sprite.texture.atlas
-	var setup: Dictionary = SubsetMaterial.create(atlas,actions[action].body,actions[action].head,false,{},{},{})
+	var setup: Dictionary = SubsetMaterial.create(atlas,actions[action].body,actions[action].head,false,{},{},{},workbench_weapon_stage)
 	if not setup.ok: return _fail(str(setup.reason))
 	_actions = actions
 	_appearance = look

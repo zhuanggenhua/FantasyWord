@@ -4,6 +4,7 @@ const HumanPresentation = preload("res://gameplay/clickmovetest/human_presentati
 const CloakPreview = preload("res://gameplay/equipment_workbench/cloak_preview.gd")
 const BagPreview = preload("res://gameplay/equipment_workbench/bag_preview.gd")
 const Headwear = preload("res://gameplay/equipment_workbench/headwear_preview.gd")
+const Weapons = preload("res://gameplay/equipment_workbench/weapons_preview.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c91cef1"
@@ -37,6 +38,10 @@ var _bag_badges: Array[Label] = []
 var _cloth_slots: GridContainer
 var _cloak_slots: GridContainer
 var _headwear: Headwear
+var _weapons: Weapons
+var _weapon_lists: Array[GridContainer] = []
+var _weapon_buttons: Array = []
+var _weapon_badges: Array = []
 var _head_lists: Dictionary = {}
 var _head_buttons: Dictionary = {}
 var _head_badges: Dictionary = {}
@@ -89,6 +94,11 @@ func _load_source(source_dir: String) -> bool:
 		_headwear = Headwear.new()
 		if not _headwear.load_source(head_dir):
 			return _fail("缺少锁定原头部装备图集或方向合同。")
+	var weapons_dir := OS.get_environment("FANTASYWORD_WORKBENCH_WEAPONS")
+	if not weapons_dir.is_empty():
+		_weapons = Weapons.new()
+		if not _weapons.load_source(weapons_dir):
+			return _fail("缺少锁定原武器、盾牌图集或人类锚点合同。")
 	var image := Image.new()
 	if FileAccess.get_sha256(cloth_path) != CLOTH_SHA or image.load(cloth_path) != OK or image.get_size() != Vector2i(32, 32):
 		return _fail("未提供与原布衣一致的私有贴图。")
@@ -96,7 +106,7 @@ func _load_source(source_dir: String) -> bool:
 	_human = HumanPresentation.new()
 	_human.name = "EquipmentSystemDemoCharacter"
 	add_child(_human)
-	if not _human.configure(animation, art) or not _human.bind_base_material(materials, art.path_join("uv"), art.path_join("appearance")):
+	if not _human.configure(animation, art) or not _human.bind_base_material(materials, art.path_join("uv"), art.path_join("appearance"), _weapons != null):
 		var reason: String = _human.last_error
 		_human.free()
 		_human = null
@@ -108,6 +118,7 @@ func _load_source(source_dir: String) -> bool:
 	if _cloak != null: _cloak.bind(_material, _human.playback)
 	if _bag != null: _bag.bind(_material, _human.playback, _cloak.torso_for_sample)
 	if _headwear != null: _human.material_binding.set_workbench_headwear({})
+	if _weapons != null: _weapons.bind(_material, _human.playback)
 	return true
 
 func _mount_ui() -> void:
@@ -172,6 +183,9 @@ func _mount_ui() -> void:
 	if _headwear != null:
 		for kind: int in Headwear.CATEGORIES:
 			_add_category(categories, kind, Headwear.CATEGORIES[kind], ["HelmetCategory", "HatCategory", "MaskCategory"][kind - 5])
+	if _weapons != null:
+		_add_category(categories, 8, "武器", "WeaponCategory")
+		_add_category(categories, 9, "盾牌", "ShieldCategory")
 	if _bag != null: _add_category(categories, 2, "背包", "BagCategory")
 	_header(right, "装备列表")
 	var scroll := ScrollContainer.new()
@@ -213,6 +227,22 @@ func _mount_ui() -> void:
 	if _headwear != null:
 		for kind: int in Headwear.CATEGORIES:
 			_mount_headwear_slots(lists, kind)
+	if _weapons != null:
+		for slot in 2:
+			var gear := _slot_grid(lists)
+			_weapon_lists.append(gear)
+			var buttons: Array[Button] = []
+			var badges: Array[Label] = []
+			for index in 2:
+				var item: Dictionary = _weapons.options[slot]
+				var button := _button(gear, "卸下" if index == 0 else item.name, Vector2(108, 96))
+				button.name = [["RemoveSpear", "EquipSpear"], ["RemoveShield", "EquipShield"]][slot][index]
+				button.pressed.connect(_select_weapon.bind(slot, index == 1))
+				_equip_slot_icon(button, _empty_slot_icon() if index == 0 else _weapons.icon(slot))
+				buttons.append(button)
+				badges.append(_badge(button, "当前为空" if index == 0 else "已装备"))
+			_weapon_buttons.append(buttons)
+			_weapon_badges.append(badges)
 	_header(right, "当前装备")
 	var detail_box := PanelContainer.new()
 	detail_box.custom_minimum_size.y = 156
@@ -256,6 +286,10 @@ func _select_headwear(id: int) -> void:
 func _remove_headwear(kind: int) -> void:
 	_headwear.unequip(kind)
 	_human.material_binding.set_workbench_headwear(_headwear.render_entry())
+	_refresh()
+
+func _select_weapon(slot: int, use: bool) -> void:
+	_weapons.select(slot, use)
 	_refresh()
 
 func _slot_grid(parent: Container) -> GridContainer:
@@ -316,6 +350,7 @@ func _reset_human() -> void:
 	if _headwear != null:
 		_headwear.select_option(-1)
 		_human.material_binding.set_workbench_headwear({})
+	if _weapons != null: _weapons.reset()
 	_set_cloth(true)
 
 func _select_action(key: String) -> void:
@@ -371,6 +406,14 @@ func _refresh() -> void:
 				_style(_head_buttons[kind][id], (SLOT_ACTIVE if id < 0 else SLOT_EQUIPPED) if id == equipped else SLOT_IDLE)
 				_head_badges[kind][id].visible = id == equipped
 			if _category == kind: category_text = _headwear.details(kind)
+	if _weapons != null:
+		for slot in 2:
+			_weapon_lists[slot].visible = _category == 8 + slot
+			for i in 2:
+				var equipped := _weapons.worn[slot] == (i == 1)
+				_style(_weapon_buttons[slot][i], (SLOT_ACTIVE if i == 0 else SLOT_EQUIPPED) if equipped else SLOT_IDLE)
+				_weapon_badges[slot][i].visible = equipped
+			if _category == 8 + slot: category_text = _weapons.details(slot)
 	_details.text = "角色 人类 | 形象 基础人形外观\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		ACTIONS[current], DIRECTIONS[direction], ACTIONS[current],
 		category_text]
