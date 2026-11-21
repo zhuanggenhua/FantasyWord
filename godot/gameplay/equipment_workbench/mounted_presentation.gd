@@ -1,6 +1,7 @@
 extends Node2D
-## 原 MountedCharacterPresentation 无装备直显切片。调用方持有正式 Mount 槽，
+## 原 MountedCharacterPresentation 直显与基础布衣切片。调用方持有正式 Mount 槽，
 ## 此节点只消费动作/朝向和资产，不修改站立渲染器的贴图或材质。
+const RiderCloth = preload("res://gameplay/equipment_workbench/mounted_rider_cloth.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CONTRACT_SHA := "f2d63ee8da382560e2509c13cf9731a51322603ce0409a374060509703904ff5"
 
@@ -14,6 +15,8 @@ var used_fallback := false
 var mount_frame_name := ""
 var rider_frame_name := ""
 var _actions := {}
+var _cloth: RiderCloth
+var _wears_cloth := false
 var _driver: Node
 var _playback: Node
 
@@ -49,6 +52,29 @@ func configure(path: String, driver: Node, playback: Node) -> bool:
 	set_active(false)
 	return true
 
+func configure_cloth(path: String, cloth: Texture2D, appearance: Callable) -> bool:
+	var binding := RiderCloth.new()
+	var sample: AtlasTexture = _actions.Stand.directions[0][0][1].texture
+	if not binding.configure(path, sample, cloth, appearance):
+		return false
+	_cloth = binding
+	return true
+
+func supports_cloth() -> bool:
+	return _cloth != null
+
+func set_cloth(worn: bool) -> void:
+	if _wears_cloth == worn:
+		return
+	_wears_cloth = worn
+	_refresh_rider_material()
+
+func _refresh_rider_material() -> void:
+	if _wears_cloth and supports_cloth() and frame_index >= 0 and visible:
+		rider_sprite.material = _cloth.apply_sample(action, rider_sprite.texture)
+	else:
+		rider_sprite.material = null
+
 func _layer(record: Dictionary, textures: Dictionary) -> Dictionary:
 	var texture := AtlasTexture.new()
 	texture.atlas = textures[record.atlas]
@@ -81,6 +107,7 @@ func set_active(enabled: bool) -> void:
 	else:
 		mount_sprite.texture = null
 		rider_sprite.texture = null
+		rider_sprite.material = null
 
 func _process(delta: float) -> void:
 	tick(str(_driver.current_animation_key), int(_playback.current_direction), delta)
@@ -109,3 +136,4 @@ func tick(request: String, direction: int, delta: float) -> void:
 	mount_frame_name = pair[0].name
 	rider_sprite.texture = pair[1].texture
 	rider_frame_name = pair[1].name
+	_refresh_rider_material()

@@ -151,15 +151,13 @@ func _refresh() -> void:
 		material.set_shader_parameter(channel + "_map", slice.map)
 		material.set_shader_parameter(channel + "_rect", slice.rect)
 		material.set_shader_parameter("enabled_" + channel, true)
-	for layer in LAYERS:
-		var entry = flags[layer]
-		if entry == null: continue
-		material.set_shader_parameter(layer+"_map",entry.texture)
-		material.set_shader_parameter(layer+"_rect",Vector4(0,0,1,1))
-		material.set_shader_parameter("enabled_"+layer,true)
-	for side in ["left","right"]:
-		material.set_shader_parameter(side+"_eye_color",flags[side+"_eye_color"])
-		material.set_shader_parameter("enabled_"+side+"_eye",flags["enable_"+side+"_eye"])
+	BaseAppearance.apply_material_layers(material, flags)
+
+## 骑乘使用同一基础人形外观，但绝不读站立精灵、动画或其当前衣甲。
+func apply_mounted_base_appearance(target: ShaderMaterial, row: int, frame: Dictionary) -> void:
+	var flags := BaseAppearance.resolve(row, frame, _appearance)
+	target.set_shader_parameter("body_in_front", flags.body_in_front)
+	BaseAppearance.apply_material_layers(target, flags)
 
 func disconnect_from_view() -> void:
 	if is_instance_valid(_playback) and _playback.sample_resolved.is_connected(_sample):

@@ -49,3 +49,15 @@ static func directional_sprite(facing: int, sprites: Dictionary) -> Variant:
 			return sprites.get("sw") if sprites.get("sw") != null else sprites.get("se")
 		_:
 			return sprites.get("se")
+
+## 原 Refresh 的基础层材质写入；不修改衣物、武器或 UV 图。
+static func apply_material_layers(material: ShaderMaterial, flags: Dictionary) -> void:
+	for layer in ["hair", "beard", "eye_decoration"]:
+		var entry = flags[layer]
+		material.set_shader_parameter("enabled_" + layer, entry != null)
+		if entry == null: continue
+		material.set_shader_parameter(layer + "_map", entry.texture)
+		material.set_shader_parameter(layer + "_rect", Vector4(0, 0, 1, 1))
+	for side in ["left", "right"]:
+		material.set_shader_parameter(side + "_eye_color", flags[side + "_eye_color"])
+		material.set_shader_parameter("enabled_" + side + "_eye", flags["enable_" + side + "_eye"])

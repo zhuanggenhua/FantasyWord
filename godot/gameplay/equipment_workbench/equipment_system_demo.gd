@@ -142,6 +142,13 @@ func _load_source(source_dir: String) -> bool:
 			_human.free()
 			_human = null
 			return _fail("原战马本体、骑手图集或帧合同不匹配。")
+		var rider_cloth_dir := OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_CLOTH")
+		if not rider_cloth_dir.is_empty() and not _mounted_view.configure_cloth(
+				rider_cloth_dir, _cloth, _human.material_binding.apply_mounted_base_appearance):
+			_human.free()
+			_human = null
+			return _fail("原战马骑手的帧数据、换装 UV 或布衣配置不匹配。")
+		_mounted_view.set_cloth(_cloth_worn())
 		_mount_owner = Equipment.new()
 		if not _mount_owner.start(_human, func(): return 1, func(): return true, true):
 			_human.free()
@@ -338,15 +345,18 @@ func _select_weapon(slot: int, id: int) -> void:
 	_weapons.select(slot, id)
 	_refresh()
 
-func _has_ordinary_equipment() -> bool:
-	return bool(_material.get_shader_parameter("enabled_cloth")) \
+func _cloth_worn() -> bool:
+	return bool(_material.get_shader_parameter("enabled_cloth"))
+
+func _has_unsupported_mount_equipment() -> bool:
+	return (_cloth_worn() and not _mounted_view.supports_cloth()) \
 		or (_cloak != null and _cloak.selected >= 0) or (_bag != null and _bag.worn) \
 		or (_headwear != null and [5, 6, 7].any(func(kind): return _headwear.equipped_in(kind) >= 0)) \
 		or (_weapons != null and _weapons.worn != [-1, -1])
 
 func _select_mount(equip: bool) -> void:
-	if equip and _has_ordinary_equipment():
-		return # 此验收刻意不把缺骑乘 UV 的穿着角色当无装备直显。
+	if equip and _has_unsupported_mount_equipment():
+		return # 未迁移的装备不假装直显或悄悄脱下。
 	var horse := _mount_owner.item_for_guid(Equipment.WAR_HORSE) if equip else null
 	_mount_owner.try_apply(Equipment.Slot.MOUNT, horse)
 
@@ -430,6 +440,7 @@ func _select_direction(index: int) -> void:
 
 func _set_cloth(worn: bool) -> void:
 	_material.set_shader_parameter("enabled_cloth", worn)
+	if _mounted_view != null: _mounted_view.set_cloth(worn)
 	if ready_for_preview: _refresh()
 
 func _refresh() -> void:
@@ -484,16 +495,16 @@ func _refresh() -> void:
 		_mount_slots.visible = _category == MOUNT_CATEGORY
 		_mount_remove_badge.visible = not mounted
 		_mount_equip_badge.visible = mounted
-		_mount_equip.disabled = _has_ordinary_equipment()
+		_mount_equip.disabled = _has_unsupported_mount_equipment()
 		_style(_mount_remove, SLOT_IDLE if mounted else SLOT_ACTIVE)
 		_style(_mount_equip, SLOT_EQUIPPED if mounted else SLOT_IDLE)
 		_player.disabled = mounted
 		for kind: int in _categories:
-			_categories[kind].disabled = mounted and kind != MOUNT_CATEGORY
+			_categories[kind].disabled = mounted and kind != MOUNT_CATEGORY and (kind != 0 or not _mounted_view.supports_cloth())
 		if _category == MOUNT_CATEGORY:
-			category_text = "战马\n坐骑\n已装备" if mounted else "坐骑\n当前为空"
+			category_text = "战马\n坐骑\n无加成" if mounted else "坐骑\n当前为空"
 			if _mount_equip.disabled:
-				category_text += "\n无装备骑手验收：请先卸下普通装备。"
+				category_text += "\n请先卸下未接入骑乘表现的装备。"
 	_details.text = "角色 人类 | 形象 基础人形外观\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		ACTIONS[current], DIRECTIONS[direction], ACTIONS[current],
 		category_text]

@@ -65,6 +65,19 @@ godot --path godot res://gameplay/equipment_workbench/equipment_system_demo.tscn
 
 `godot --path godot --script res://tests/test_workbench_mount_validation.gd` 验证按钮、真实槽写入/卸下、四向连续两帧、循环与回退；原生窗口另外核对马身和骑手两个实际图层的颜色。独立验收不代表正式玩法骑乘、骑手专用 Body/Head UV、其他坐骑或 Unity GameView 同场对照通过。
 
+### 战马骑手基础布衣绑定
+
+若同时提供锁定 `GeneratedUV/Mounts/HumanWarHorse/` 的四张 `HumanWarHorse_{Idle,Walk}_{Body,Head}UV.png`，可在同一独立入口验证原版普通装备叠加分支。把它们放在战马四张图同一个私有目录，再执行：
+
+```sh
+python godot/tools/extract_workbench_mounted_cloth.py /path/to/Unity-repository /path/to/private-mount-source
+export FANTASYWORD_WORKBENCH_MOUNT_CLOTH=/path/to/private-mount-source
+```
+
+启用后可穿默认基础布衣上马；也可在骑乘中点「服装 → 布衣／卸下」。马身始终使用原图；布衣更新的是当前骑手材质、原骑乘帧对应的 Body/Head UV 和基础外观，不重新计时或重设坐骑槽。卸下布衣回到原图直显，保留布衣下马则恢复站立换装。
+
+原作者给这套骑乘 Body UV 的布衣采样区与原布衣非透明区不重合。四方向、两动作共 64 帧均验证没有布衣颜色贡献；不修改作者 UV 或补画布衣。原生像素探针验证实际骑手右眼的着色结果，且开关布衣层没有凭空染色。这里仅迁移基础布衣的材质与装备流程，不宣称布衣可见、正式玩法骑乘、轮廓/阴影、其他骑乘装备或 Unity 同屏差分已通过。合同和原资源不提交。
+
 ## 迁移及验收范围
 人类进场默认东南待机、穿布衣。通过实际按钮卸下及重穿，驱动渲染器的布衣层，详情和状态徽章同步。卸下显示「当前为空」，重穿显示「已装备」与预览目录的「生命 +6」，不写玩家库存、生命数值、装备栏或存档。支持选择原待机、行走、攻击与四向动画；重选人类恢复初始外观。披风类别迁移来源目录中的旅行披风（体质 +1、魔力 +2）和厚斗篷（体质 +2、生命 +4）。二者虽同 numeric ID，仍按各自原视觉资源替换同一个披风槽，不改布衣。厚斗篷跟随原 Dmg 前两帧的 Torso Left 变体，末两帧回 Base；后向缺帧及 Right 无 SE 按原回退。工作台受伤预览停留末帧，不触发玩法伤害或自动回待机。重选人类恢复原默认布衣和空披风。装备按钮预览图取该披风原有效图；未迁移完整原图标合成与全量界面。
 
@@ -74,6 +87,6 @@ godot --path godot res://gameplay/equipment_workbench/equipment_system_demo.tscn
 
 长矛与重盾按原主手/副手分开穿脱，显示原属性。原行走标签 1、3 缺副手锚点时只隐藏盾牌，标签 0、2 恢复，主手不消失且并未卸下装备。原东北攻击标签 1 到 2 的长矛从前层原图切到后层原图，副手保留。测试同时覆盖静态待机四向、武器组合后的原生帧像素与卸下复原。战斧和长矛在主手互换，圆盾和重盾在副手互换，不影响另一手。同项再次点击保留穿戴；卸下只清所在槽。战斧东北攻击标签 0、1 的原切片 x 顺序是 32、0，按确切 fileID 绑定。圆盾没有后向图，东北回退东南、西北回退西南，已经配置西南所以不镜像。原生测试区分了实际战斧两帧和圆盾两个后向的图像颜色。战斧虽另有原 SlashAttack 序列，但本展示场景尚未移植该人物动作；武器/盾牌未接正式库存和战斗。
 
-等待、其他动作、其他角色/形象及装备、骑乘换装及正式玩法坐骑、工作台完整轮廓与整屏布局、Unity 同场画面逐项对比仍未验收。
+等待、其他动作、其他角色/形象及装备、其他骑乘换装、正式玩法坐骑、工作台完整轮廓与整屏布局、Unity 同场画面逐项对比仍未验收。
 
 `godot --path godot --script res://tests/test_equipment_workbench_demo.gd`：给齐私有输入时驱动真实 Godot Viewport 鼠标按钮；非 headless 额外比较同一实际显示帧的穿脱衣服和披风像素差分及复原。披风覆盖两种选项替换、独立穿脱、四向 Dmg 的 16 个采样、末帧维持及 Right 回退。干净环境验证没有私有素材时不放置假角色，默认入口仍为 ClickMoveTest。局部像素差分仅验证工作台真实改变渲染，不代表整屏布局与 Unity 像素一致。
