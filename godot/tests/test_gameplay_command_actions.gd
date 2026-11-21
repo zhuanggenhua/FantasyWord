@@ -53,6 +53,22 @@ func run() -> void:
 	check(scene.receive_human_gameplay_action("Gameplay","FireAbility1","performed") == Executor.Failure.BLOCKED_BY_STATE,"real same-frame interaction latch")
 	check(scene.receive_human_gameplay_action("Gameplay","FireAbility1","canceled") == 0,"Stop unaffected by interaction latch")
 	scene.human_interaction.interacted_this_frame = false
+	var opened := [0]
+	check(scene.bind_source_pause_command(func(): opened[0]+=1),"绑定实际角色的原暂停请求")
+	check(scene.receive_human_gameplay_action("Gameplay","OpenGameMenu","canceled")==null
+		and scene.receive_human_gameplay_action("UI","OpenGameMenu","performed")==null and opened[0]==0,
+		"松键或 UI 图层不提交 Gameplay 菜单命令")
+	check(scene.receive_human_gameplay_action("Gameplay","OpenGameMenu","performed")==Executor.Failure.BLOCKED_BY_STATE
+		and failures[-1][0].kind==Executor.Kind.OPEN_GAME_MENU and opened[0]==0,
+		"角色原 Interact 动作门禁阻止菜单并报告真实失败")
+	owner.allow_interact = true
+	check(scene.receive_human_gameplay_action("Gameplay","OpenGameMenu","performed")==0 and opened[0]==1,
+		"实际角色执行器向注册方发送一次成功请求")
+	has_target[0] = false
+	check(scene.receive_human_gameplay_action("Gameplay","OpenGameMenu","performed")==Executor.Failure.MISSING_INPUT_TARGET
+		and failures[-1][0].kind==Executor.Kind.OPEN_GAME_MENU and opened[0]==1,
+		"无当前角色仲裁失败，不借用镜头角色打开菜单")
+	has_target[0] = true
 	var host := KeyboardHost.new(); host.scene = scene; root.add_child(host)
 	await process_frame
 	var before := fires.size(); var before_stop := stops.size()

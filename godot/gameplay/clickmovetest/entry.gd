@@ -1084,6 +1084,11 @@ func bind_human_gameplay_actions(resolve_context: Callable, interact_blocked: Ca
 	_normalized_click_bound = false
 	return true
 
+## 正式暂停入口和技能、交互共用同一个当前角色命令执行者。
+func bind_source_pause_command(request_registered_pause: Callable) -> bool:
+	return human_gameplay_actions!=null and human_commands!=null \
+		and human_commands.bind_game_menu(request_registered_pause)
+
 ## 原 ClickMoveTest 的正式交互命令。不让诊断或缺少角色组件的场景响应。
 func bind_source_interact_submit() -> bool:
 	if _source_interact_submit!=null or human_interaction==null or human_gameplay_actions==null:

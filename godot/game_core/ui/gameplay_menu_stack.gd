@@ -1,13 +1,12 @@
 extends Node
 ## 迁移 UIManager 菜单栈的 Gameplay ↔ Menu 路径。
-## 宿主注入已注册面板、玩家命令门禁及动作图切换；不自动生成面板或处理对话状态层。
+## 宿主注入正式的 Gameplay 动作回调与动作图切换；不自动生成面板或处理对话状态层。
 enum ActionLayer { GAMEPLAY, UI }
 signal ui_input_observed(event: InputEvent)
 var _stack: Array[Control] = []
 var _cached_root: Control
 var _cached_root_process_mode := Node.PROCESS_MODE_INHERIT
-var _request_root: Callable
-var _may_open: Callable
+var _gameplay_open_performed: Callable
 var _change_map: Callable
 var _dialogue_playing: Callable
 var _cancel_held: Dictionary = {}
@@ -18,13 +17,11 @@ var _transitioning := false
 func _init() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-func configure(request_root: Callable, may_open: Callable, change_map: Callable,
-		dialogue_playing: Callable) -> bool:
-	if _configured or not request_root.is_valid() or not may_open.is_valid() \
+func configure(gameplay_open_performed: Callable, change_map: Callable, dialogue_playing: Callable) -> bool:
+	if _configured or not gameplay_open_performed.is_valid() \
 			or not change_map.is_valid() or not dialogue_playing.is_valid():
 		return false
-	_request_root = request_root
-	_may_open = may_open
+	_gameplay_open_performed = gameplay_open_performed
 	_change_map = change_map
 	_dialogue_playing = dialogue_playing
 	_configured = true
@@ -140,7 +137,7 @@ func _input(event: InputEvent) -> void:
 	# The destination Button has no initial state check. A new physical press
 	# is required instead of opening and closing on the same held control.
 	if _stack.is_empty():
-		if bool(_may_open.call()): _request_root.call()
+		_gameplay_open_performed.call()
 	elif not bool(_dialogue_playing.call()) and not bool(top().try_handle_back_request()) \
 			and bool(top().allows_stack_close()):
 		pop_current()

@@ -43,6 +43,10 @@ func receive(action_map: String, action: String, phase: String) -> Variant:
 	elif action == "Interact":
 		if phase != "performed" or bool(_blocked.call()): return null
 		kind = Commands.Kind.INTERACT
+	elif action == "OpenGameMenu":
+		# 物理动作图的释放门禁已由入口所有者处理。
+		if phase != "performed": return null
+		kind = Commands.Kind.OPEN_GAME_MENU
 	elif slot >= 0 and phase in ["performed", "canceled"]:
 		kind = Commands.Kind.FIRE_ABILITY if phase == "performed" else Commands.Kind.STOP_FIRE_ABILITY
 	else: return null

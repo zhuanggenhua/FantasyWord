@@ -82,7 +82,7 @@ func _run() -> void:
 					ink+=1
 		_check(ink>30,"手柄实际失败在原生窗口绘出槽位提示")
 	_pad(JOY_BUTTON_START,true)
-	_check(paused and menu.stack.top() is Pause and scene.command_count==count+2,"Start 打开原暂停，取消已有技能只一次")
+	_check(paused and menu.stack.top() is Pause and scene.command_count==count+3,"Start 提交一次原菜单命令，取消已有技能只一次")
 	_pad(JOY_BUTTON_B,true)
 	_pad(JOY_BUTTON_START,true)
 	_pad(JOY_BUTTON_START,false)
@@ -106,13 +106,13 @@ func _run() -> void:
 	_check(paused and menu.stack.top()==pause,"一次 East 只关一层")
 	_pad(JOY_BUTTON_B,false)
 	_pad(JOY_BUTTON_B,true); _pad(JOY_BUTTON_B,true)
-	_check(not paused and scene.command_count==count+2,"East 从 UI 返回时不误发第三槽")
+	_check(not paused and scene.command_count==count+3,"East 从 UI 返回时不误发第三槽")
 	_pad(JOY_BUTTON_B,false)
-	_check(scene.command_count==count+2,"UI 开始的 East 释放不误发取消")
+	_check(scene.command_count==count+3,"UI 开始的 East 释放不误发取消")
 	_pad(JOY_BUTTON_B,true); _pad(JOY_BUTTON_B,false)
 	_pad(JOY_BUTTON_LEFT_SHOULDER,true); _pad(JOY_BUTTON_LEFT_SHOULDER,false)
 	_pad(JOY_BUTTON_RIGHT_SHOULDER,true); _pad(JOY_BUTTON_RIGHT_SHOULDER,false)
-	_check(scene.command_count==count+8 and message.value=="这个槽位没有装备技能。","返回后 East、双肩发原空槽命令")
+	_check(scene.command_count==count+9 and message.value=="这个槽位没有装备技能。","返回后 East、双肩发原空槽命令")
 	_pad(JOY_BUTTON_X,true)
 	for i in range(35):
 		await physics_frame

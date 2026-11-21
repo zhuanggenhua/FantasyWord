@@ -225,9 +225,7 @@ func _mount_source_pause(directory: String) -> bool:
 	var menu := PauseRoot.new()
 	var source := _read(directory.path_join("pause-contract.json"))
 	if not menu.bind(scene,point,source,directory,
-			func(): return player.is_current_controlled(scene.actor) \
-					and player.accepts_player_input(scene.actor) and player.can_be_player_controlled(scene.actor) \
-					and player.can_interact(),
+			func(): scene.receive_human_gameplay_action("Gameplay","OpenGameMenu","performed"),
 			func():return false):
 		menu.free()
 		return false
@@ -248,6 +246,9 @@ func _mount_source_pause(directory: String) -> bool:
 		return false
 	if FileAccess.file_exists(directory.path_join("abilities-layout.json")) and not menu.bind_abilities(
 			player,OS.get_environment("FORMAL_PANEL_SILVER")):
+		menu.free()
+		return false
+	if not scene.bind_source_pause_command(menu.open_registered_pause):
 		menu.free()
 		return false
 	pause_root = menu

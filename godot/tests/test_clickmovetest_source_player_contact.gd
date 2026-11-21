@@ -165,6 +165,11 @@ func _run() -> void:
 			"根仅隐藏缓存，背包页按原逐层关闭路径释放")
 		_escape_edge()
 		_check(shell.stack.depth()==0,"已失去控制的尸体不能重开暂停菜单")
+		if is_instance_valid(startup.ability_hud):
+			var menu_message = startup.ability_hud.message
+			_check(menu_message.visible and menu_message.value=="当前没有可控制角色。"
+				and not paused and not scene._source_ui_action_layer,
+				"真实死亡后的新 Esc 走正式菜单命令失败及原 HUD，不改变时钟或动作图")
 	_check(player.is_destroyed() and not player.is_current_controlled(actor)
 		and scene.camera.follow==actor and startup.persistables.resolve("player")==actor
 		and scene.human_presentation.driver.current_animation_key=="SpinDie",

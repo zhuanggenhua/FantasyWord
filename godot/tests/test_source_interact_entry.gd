@@ -86,35 +86,36 @@ func _run() -> void:
 	_check(scene.command_count==count+4,"其他方向和未绑定手柄不抢该设备的交互")
 	_key(KEY_F,true)
 	_tap(KEY_ESCAPE)
-	_check(paused and menu.stack.top() is PauseView and menu.stack.depth()==1,"按住交互时实际切到暂停菜单")
+	_check(paused and menu.stack.top() is PauseView and menu.stack.depth()==1
+		and scene.command_count==count+6,"一次正式 OpenGameMenu 命令在按住交互时仍能进入暂停")
 	_move(Vector2(40,190))
 	await process_frame
 	await process_frame
 	_check(menu.stack.top().selected_action()==1,"Point 真正选中原 Inventory 入口")
 	_key(KEY_ENTER,true); _key(KEY_F,false)
-	_check(menu.stack.depth()==1 and scene.command_count==count+5,"保持一项物理控制时不会穿入 UI Submit")
+	_check(menu.stack.depth()==1 and scene.command_count==count+6,"保持一项物理控制时不会穿入 UI Submit")
 	_key(KEY_ENTER,false)
 	_pad(true)
 	await process_frame
 	await process_frame
-	_check(menu.stack.top() is Inventory and scene.command_count==count+5,
+	_check(menu.stack.top() is Inventory and scene.command_count==count+6,
 		"全松后新按的共用南键在 UI 只提交选中的 Inventory")
 	_tap(KEY_ESCAPE)
 	_check(paused and menu.stack.top() is PauseView and menu.stack.depth()==1,"实际返回暂停根")
 	_tap(KEY_ESCAPE)
-	_check(not paused and menu.stack.top()==null and scene.command_count==count+5,"按着原确认键恢复时不误交互")
+	_check(not paused and menu.stack.top()==null and scene.command_count==count+6,"按着原确认键恢复时不误交互")
 	_key(KEY_SPACE,true)
 	_pad(false)
 	_key(KEY_SPACE,false)
-	_check(scene.command_count==count+5,"从 UI 返回后直至所有共享控制松开才会再按")
+	_check(scene.command_count==count+6,"从 UI 返回后直至所有共享控制松开才会再按")
 	_tap(KEY_F)
-	_check(scene.command_count==count+6 and message.value=="没有可交互对象。","恢复后真实新按重新解析正式目标")
+	_check(scene.command_count==count+7 and message.value=="没有可交互对象。","恢复后真实新按重新解析正式目标")
 	_check(player.set_current_controlled(false),"实际解除原控制角色")
 	_tap(KEY_F)
-	_check(scene.command_count==count+6 and message.value=="当前没有可控制角色。","无当前目标由实际 InputSystem 路径报告，不用上次角色")
+	_check(scene.command_count==count+7 and message.value=="当前没有可控制角色。","无当前目标由实际 InputSystem 路径报告，不用上次角色")
 	_check(player.set_current_controlled(true),"实际重新选择主角")
 	_tap(KEY_3)
-	_check(scene.command_count==count+8 and message.value=="这个槽位没有装备技能。","同一角色原技能按下和松手仍独立，不被交互失败标为本帧成功")
+	_check(scene.command_count==count+9 and message.value=="这个槽位没有装备技能。","同一角色原技能按下和松手仍独立，不被交互失败标为本帧成功")
 	_exit()
 
 func _check(ok: bool, label: String) -> void:

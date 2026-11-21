@@ -55,9 +55,9 @@ func run() -> void:
 	var state := {"may_open":false,"mount":false,"requests":0,"dialogue":false}
 	var maps: Array[int] = []
 	check(menu.configure(func():
+		if not state.may_open: return
 		state.requests += 1
 		if state.mount: menu.push_panel(TestPanel.new()),
-		func():return state.may_open,
 		func(map):maps.append(map),
 		func():return state.dialogue),"注册明确的宿主与命令门禁")
 	escape(true)
@@ -155,8 +155,8 @@ func _check_source_entry() -> void:
 	startup.add_child(MenuPointer.new(scene))
 	var menu := MenuStack.new()
 	startup.add_child(menu)
-	check(menu.configure(func(): menu.push_panel(TestPanel.new()),
-		func():return startup.player.is_current_controlled(actor) and startup.player.can_interact(),
+	check(menu.configure(func():
+		if startup.player.is_current_controlled(actor) and startup.player.can_interact(): menu.push_panel(TestPanel.new()),
 		func(layer): scene.set_source_ui_action_layer(layer==MenuStack.ActionLayer.UI),
 		func():return false),"真实启动宿主注入控制角色门禁及两套 Point")
 	var motion := InputEventMouseMotion.new()

@@ -8,6 +8,7 @@ var enabled := true
 var interaction: RefCounted
 var movement: RefCounted
 var terrain_map: RefCounted
+var _request_game_menu: Callable
 var _fire: Callable
 var _stop: Callable
 var _activation_context: Callable
@@ -25,6 +26,12 @@ func bind_abilities(fire: Callable, stop: Callable, activation_context: Callable
 func has_bound_abilities() -> bool:
 	return _fire.is_valid() and _stop.is_valid()
 
+## 仅注册原 Pause 请求宿主，不接管菜单栈生命周期。
+func bind_game_menu(request_game_menu: Callable) -> bool:
+	if _request_game_menu.is_valid() or not request_game_menu.is_valid(): return false
+	_request_game_menu = request_game_menu
+	return true
+
 func execute(request: Dictionary) -> int:
 	if not is_instance_valid(character): return Failure.INVALID_CONTROLLED_CHARACTER
 	if not enabled: return Failure.NOT_RUNNING
@@ -41,6 +48,12 @@ func execute(request: Dictionary) -> int:
 			# Explicit targets bypass resolver selection, never this outer action gate.
 			if interaction == null or not character.can_interact(): return Failure.INTERACTION_LOCKED
 			return Failure.NONE if interaction.try_interact(request.get("interaction_target")) else Failure.BLOCKED_BY_STATE
+		Kind.OPEN_GAME_MENU:
+			if not character.can_interact(): return Failure.BLOCKED_BY_STATE
+			if not _request_game_menu.is_valid(): return Failure.INVALID_COMMAND
+			# 原执行者发布请求后成功，是否挂载面板由菜单注册方决定。
+			_request_game_menu.call()
+			return Failure.NONE
 		Kind.FIRE_ABILITY:
 			if interaction != null and interaction.interacted_this_frame: return Failure.BLOCKED_BY_STATE
 			# Unbound formal host is an unsupported slice, not a fabricated MissingAbility result.

@@ -60,14 +60,14 @@ func _init() -> void:
 	add_child(stack)
 
 func bind(entry: Node, points: RefCounted, source: Dictionary, directory: String,
-		can_open: Callable, dialogue_playing: Callable) -> bool:
+		gameplay_open_performed: Callable, dialogue_playing: Callable) -> bool:
 	if _entry != null or not is_instance_valid(entry) or points==null: return false
 	# Admit all private artifacts before enabling any input owner.
 	var probe := View.new()
 	var valid := probe.bind(source,directory)
 	probe.free()
 	if not valid: return false
-	if not stack.configure(_open,can_open,_change_map,dialogue_playing): return false
+	if not stack.configure(gameplay_open_performed,_change_map,dialogue_playing): return false
 	_entry = entry
 	if _entry.has_method("observe_source_ui_gameplay_controls"):
 		stack.ui_input_observed.connect(_entry.observe_source_ui_gameplay_controls)
@@ -196,7 +196,7 @@ func _open_character() -> bool:
 func _ready() -> void:
 	get_viewport().size_changed.connect(_resize)
 
-func _open() -> void:
+func open_registered_pause() -> void:
 	var cached := stack.cached_root()
 	if cached!=null:
 		if stack.push_panel(cached,true): _resize()
