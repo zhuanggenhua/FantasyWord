@@ -22,6 +22,11 @@ func _run() -> void:
 	var player := startup.player
 	var actor: Node2D = scene.actor
 	var flash := startup.damage_screen_flash
+	# 使用闪屏自带的时钟注入口，避免软件渲染超过 0.15 秒时首帧即结束。
+	# 正式伤害仍由同一个场景接收器发布，生产时钟不变。
+	var flash_time: float = flash._clock.call()
+	flash._clock = func(): return flash_time
+	flash._last_tick = flash_time
 	var terrain: RefCounted = scene.surface_elements
 	_check(is_instance_valid(scene.surface_contact_damage)
 		and scene._source_primary_death_owner==player and not scene.bind_source_player_surface_contact(player),
@@ -31,6 +36,23 @@ func _run() -> void:
 		return
 	scene.set_process(false)
 	var health := player.current_health()
+	var bags := startup.inventory_bags
+	var gear := player.source_equipment()
+	var shirt := gear.item_for_guid(gear.CLOTH)
+	var spear := gear.item_for_guid(gear.SPEAR)
+	var primary_owner := startup.primary_bag_owner(actor)
+	var corpse := bags.corpse_owner("player")
+	var trainer_owner := bags.character_owner(scene.training_target.SOURCE_IDENTIFIER)
+	var party := bags.party_owner()
+	# 原开局背包为空；仅测试预置已持有的物品，检验死亡保留数量与库存隔离。
+	bags.add(primary_owner,spear,2)
+	bags.add(party,spear)
+	bags.add(trainer_owner,shirt)
+	var transfers := []
+	bags.item_removed.connect(func(owner,item,count,transfer):
+		transfers.append(["remove",owner,item,count,transfer,player.is_destroyed()]))
+	bags.item_added.connect(func(owner,item,count,transfer):
+		transfers.append(["add",owner,item,count,transfer,player.is_destroyed()]))
 	var contacts := []
 	var starts := []
 	scene.human_presentation.driver.animation_selected.connect(func(key):
@@ -94,13 +116,32 @@ func _run() -> void:
 	scene.advance_surface_contact(.5)
 	scene.run_surface_contact_effects()
 	_check(contacts.size()==3 and contacts.back().slice(1,4)==[1,1,0]
-		and not player.is_destroyed() and flash.color.a>0.0,
+		and not player.is_destroyed() and flash.color.a>0.0
+		and transfers.is_empty() and bags.count(primary_owner,spear)==2
+		and bags.entries(corpse).is_empty() and gear.equipped(gear.Slot.WEAPON)==spear,
 		"致死接触先正式结算并闪屏，再等待安全死亡阶段")
 	scene.advance_human_damage_lifecycle()
 	_check(player.is_destroyed() and not player.is_current_controlled(actor)
 		and scene.camera.follow==actor and startup.persistables.resolve("player")==actor
 		and scene.human_presentation.driver.current_animation_key=="SpinDie",
 		"原死亡动作、禁用当前控制、镜头和持久化身份均保留同一身体")
+	var corpse_transfer := bags.Transfer.CORPSE
+	_check(transfers.size()==4 and transfers.slice(0,2)==[
+		["remove",primary_owner,spear,2,corpse_transfer,false],
+		["add",corpse,spear,2,corpse_transfer,false]],
+		"原背包数量和事件在 Movable 销毁之前转到已注册的 player 尸体")
+	var equipment_rows_ok := transfers.slice(2).all(func(row):
+		return row[0]=="add" and row[1]==corpse and row[3]==1 and row[4]==corpse_transfer and row[5])
+	_check(equipment_rows_ok
+		and bags.count(corpse,spear)==3 and bags.count(corpse,shirt)==1
+		and bags.entries(primary_owner).is_empty()
+		and gear.equipped(gear.Slot.WEAPON)==null and gear.equipped(gear.Slot.TORSO)==null,
+		"原强制卸下的两件装备在销毁后入同一尸体，原背包同物品合计三件")
+	_check(bags.count(party,spear)==1 and bags.count(trainer_owner,shirt)==1
+		and bags.entries(bags.corpse_owner(player.SOURCE_PREINSTANCED_IDENTIFIER)).is_empty(),
+		"队伍和假人不参与转移，场景预放 UUID 不是主角尸体键")
+	scene.advance_human_damage_lifecycle()
+	_check(transfers.size()==4 and bags.count(corpse,spear)==3,"重复安全阶段不再转移")
 	scene.advance_surface_contact(1.5)
 	scene.run_surface_contact_effects()
 	_check(player.current_health()==0 and contacts.size()==3 and actor==scene.actor,

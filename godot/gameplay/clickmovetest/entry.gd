@@ -10,6 +10,7 @@ const InteractSubmit := preload("res://game_core/input/source_shared_interact_su
 const SlotKeyboard = preload("res://game_core/combat/ability_slot_keyboard_input.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
+const InventoryBags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const DamageLifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
 const FormalDamage = preload("res://game_core/combat/formal_damage_application.gd")
 const CombatRules = preload("res://game_core/combat/combat_rules.gd")
@@ -54,6 +55,8 @@ var human_motion_binding: RefCounted
 var _human_damage_lifecycle := DamageLifecycle.new()
 var _human_damage_destroyed: Callable
 var _source_primary_death_owner: Object
+var _source_primary_death_bags: InventoryBags
+var _source_primary_death_identifier := ""
 const HumanPresentation = preload("res://gameplay/clickmovetest/human_presentation.gd")
 var _human_interrupt_actions: Callable
 var movement: RefCounted
@@ -872,7 +875,8 @@ func bind_human_damage_lifecycle(is_destroyed: Callable, interrupt_actions: Call
 	return true
 
 ## 仅接 ClickMoveTest 明确的主角所有者与空死亡动作配置；碰撞体和相机不换宿主。
-func bind_source_primary_death(owner: Object, material: Dictionary) -> bool:
+func bind_source_primary_death(owner: Object, material: Dictionary,
+		bags: InventoryBags = null, identifier := "") -> bool:
 	var source: Variant = material.get("primary_death")
 	if _source_primary_death_owner!=null or not _human_interrupt_actions.is_valid() \
 			or human_motion_binding==null or not human_motion_binding.uses_owner(owner) \
@@ -881,8 +885,16 @@ func bind_source_primary_death(owner: Object, material: Dictionary) -> bool:
 			or material.get("source_commit")!=SOURCE or not source is Dictionary:
 		return false
 	if not HumanPresentation.valid_primary_death(source): return false
+	# 正常入口使用实际注册身份和同一角色装备；诊断入口明确不装库存。
+	if bags!=null:
+		var gear: RefCounted = owner.source_equipment()
+		if identifier.is_empty() or gear==null or not gear.belongs_to(actor): return false
+	elif not identifier.is_empty():
+		return false
 	if not owner.bind_current_health_changed(_queue_source_primary_death): return false
 	_source_primary_death_owner = owner
+	_source_primary_death_bags = bags
+	_source_primary_death_identifier = identifier
 	return true
 
 func _queue_source_primary_death(previous: int, current: int, _source: Variant) -> void:
@@ -890,11 +902,18 @@ func _queue_source_primary_death(previous: int, current: int, _source: Variant) 
 
 func _commit_source_primary_death() -> void:
 	var owner := _source_primary_death_owner
+	if owner.current_health()!=0 or owner.is_destroyed(): return
+	# CharacterBase.Kill 在 Movable 销毁与死亡动作之前转移背包；装备在其后转移。
+	if _source_primary_death_bags!=null:
+		_source_primary_death_bags.transfer_character_inventory_to_corpse(_source_primary_death_identifier)
 	if not owner.mark_source_primary_death(actor): return
 	actor.reset_movement()
 	if not human_presentation.driver.try_lock_animation("SpinDie"):
 		push_error("原 ClickMoveTest 主角无法锁定 SpinDie。")
-	# 该诊断没有对话、菜单或库存宿主；锁定场景的死亡动作本身确为空。
+	if _source_primary_death_bags!=null:
+		_source_primary_death_bags.transfer_character_equipment_to_corpse(
+			actor,_source_primary_death_identifier,owner.source_equipment())
+	# 锁定场景的附加死亡命令为空，不添加菜单、转场或复活。
 	# NotifyCharacterDied 清掉唯一控制对象，但镜头继续跟随实际主角。
 	owner.set_current_controlled(false)
 	notify_human_aim_input_disabled()

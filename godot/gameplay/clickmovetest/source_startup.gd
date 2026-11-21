@@ -166,7 +166,8 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 			return _fail("原图活动假人的身份、原素材、地图路径或死亡动作无法装配。")
 		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE,_source_draws.resolve_damage)
 		if not is_instance_valid(combat) or not scene.bind_human_damage_lifecycle(player.is_destroyed,combat.interrupt_owned_actions) \
-				or not scene.bind_source_primary_death(player,material) or not scene.bind_source_player_surface_contact(player) \
+				or not scene.bind_source_primary_death(player,material,inventory_bags,persistables.identifier_for(scene.actor)) \
+				or not scene.bind_source_player_surface_contact(player) \
 				or not is_instance_valid(scene.start_training_basic_attack(player.get_target_direction,player.damage_hooks(),
 					_source_draws.resolve_damage)):
 			return _fail("原主角、同图假人普攻或地表受击未通过正式装配。")
