@@ -17,6 +17,7 @@ var rider_frame_name := ""
 var _actions := {}
 var _cloth: RiderCloth
 var _wears_cloth := false
+var _wears_anchorless_weapon := false
 var _driver: Node
 var _playback: Node
 
@@ -69,9 +70,20 @@ func set_cloth(worn: bool) -> void:
 	_wears_cloth = worn
 	_refresh_rider_material()
 
+func supports_anchorless_weapons() -> bool:
+	return supports_cloth() and _cloth.supports_anchorless_weapons()
+
+func set_anchorless_weapon_presence(worn: bool) -> void:
+	if _wears_anchorless_weapon == worn:
+		return
+	_wears_anchorless_weapon = worn
+	_refresh_rider_material()
+
 func _refresh_rider_material() -> void:
-	if _wears_cloth and supports_cloth() and frame_index >= 0 and visible:
-		rider_sprite.material = _cloth.apply_sample(action, rider_sprite.texture)
+	var use_overlay := (_wears_cloth and supports_cloth()) \
+		or (_wears_anchorless_weapon and supports_anchorless_weapons())
+	if use_overlay and frame_index >= 0 and visible:
+		rider_sprite.material = _cloth.apply_sample(action, rider_sprite.texture, _wears_cloth)
 	else:
 		rider_sprite.material = null
 

@@ -343,7 +343,13 @@ func _remove_headwear(kind: int) -> void:
 
 func _select_weapon(slot: int, id: int) -> void:
 	_weapons.select(slot, id)
+	if _can_use_mounted_weapon_categories():
+		_mounted_view.set_anchorless_weapon_presence(_weapons.worn != [-1, -1])
 	_refresh()
+
+func _can_use_mounted_weapon_categories() -> bool:
+	return _mounted_view != null and _mounted_view.supports_anchorless_weapons() \
+		and _weapons != null and _weapons.supports_anchorless_war_horse()
 
 func _cloth_worn() -> bool:
 	return bool(_material.get_shader_parameter("enabled_cloth"))
@@ -352,7 +358,7 @@ func _has_unsupported_mount_equipment() -> bool:
 	return (_cloth_worn() and not _mounted_view.supports_cloth()) \
 		or (_cloak != null and _cloak.selected >= 0) or (_bag != null and _bag.worn) \
 		or (_headwear != null and [5, 6, 7].any(func(kind): return _headwear.equipped_in(kind) >= 0)) \
-		or (_weapons != null and _weapons.worn != [-1, -1])
+		or (_weapons != null and _weapons.worn != [-1, -1] and not _can_use_mounted_weapon_categories())
 
 func _select_mount(equip: bool) -> void:
 	if equip and _has_unsupported_mount_equipment():
@@ -426,6 +432,7 @@ func _reset_human() -> void:
 		_headwear.select_option(-1)
 		_human.material_binding.set_workbench_headwear({})
 	if _weapons != null: _weapons.reset()
+	if _mounted_view != null: _mounted_view.set_anchorless_weapon_presence(false)
 	_set_cloth(true)
 
 func _select_action(key: String) -> void:
@@ -500,7 +507,9 @@ func _refresh() -> void:
 		_style(_mount_equip, SLOT_EQUIPPED if mounted else SLOT_IDLE)
 		_player.disabled = mounted
 		for kind: int in _categories:
-			_categories[kind].disabled = mounted and kind != MOUNT_CATEGORY and (kind != 0 or not _mounted_view.supports_cloth())
+			var allowed_on_mount := kind == MOUNT_CATEGORY or (kind == 0 and _mounted_view.supports_cloth()) \
+				or (kind in [8, 9] and _can_use_mounted_weapon_categories())
+			_categories[kind].disabled = mounted and not allowed_on_mount
 		if _category == MOUNT_CATEGORY:
 			category_text = "战马\n坐骑\n无加成" if mounted else "坐骑\n当前为空"
 			if _mount_equip.disabled:

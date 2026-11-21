@@ -100,6 +100,9 @@ def extract_outline_shadow(repo, cloth_contract):
         records = []
         for m in re.finditer(r"^    - frameIndex: (\d+)\n      rowIndex: (\d+)\n(.*?)(?=^    - frameIndex: |\Z)", block, re.M | re.S):
             frame, row, record = m.groups()
+            # No stand-in anchors: static weapon graphics are explicitly
+            # disabled on all of these authored frames in EquipmentRenderer.
+            assert re.search(r"^      anchors: \[\]$", record, re.M)
             mask = re.search(r"^      limbMask:\n(.*?)^      leftEyeClosed:", record, re.M | re.S)[1]
             feet = parse(("limbMask:\n" + mask).encode())["limbMask"]
             hit = bool(int(re.search(r"^      hitOutlineFrame: (\d+)", record, re.M)[1]))

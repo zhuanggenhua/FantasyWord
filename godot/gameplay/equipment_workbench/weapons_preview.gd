@@ -54,6 +54,12 @@ func load_source(dir: String) -> bool:
 			"slot":int(option.type)-8,"is_shield":int(option.type)==9})
 	return true
 
+func supports_anchorless_war_horse() -> bool:
+	# The mounted animation override uses Idle/Walk, even if the character
+	# requested an unsupported Attack. Never look up the standing sequence.
+	return not options.is_empty() and options.all(func(item: Dictionary) -> bool:
+		return not item.sequence.has("Idle") and not item.sequence.has("Walk"))
+
 func _sprite(row: Variant) -> Variant:
 	if row == null: return null
 	return {"texture":_textures[row.texture],"rect":Rect2(row.rect[0],row.rect[1],row.rect[2],row.rect[3])}

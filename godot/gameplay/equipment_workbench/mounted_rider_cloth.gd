@@ -1,5 +1,5 @@
 extends RefCounted
-## 独立骑手材质：只接受已核实的战马骑手 UV 和基础布衣。
+## 独立骑手材质：只接受已核实的战马骑手 UV、基础布衣及无锚点武器上下文。
 ## 马身保持作者原 Sprite，站立材质不借给骑手使用。
 const Subset = preload("res://gameplay/presentation/equipment_subset_material.gd")
 const Shadow = preload("res://gameplay/presentation/equipment_shadow_coverage.gd")
@@ -53,7 +53,12 @@ func configure(path: String, first_sprite: AtlasTexture, cloth: Texture2D, appea
 	_appearance = appearance
 	return true
 
-func apply_sample(action: String, sample: AtlasTexture) -> ShaderMaterial:
+func supports_anchorless_weapons() -> bool:
+	# The frame-effects contract pins the same 64 authored frames whose anchors
+	# are all empty. Its extractor verifies that before admitting this mode.
+	return not _frame_effects.is_empty()
+
+func apply_sample(action: String, sample: AtlasTexture, cloth_worn: bool) -> ShaderMaterial:
 	var maps: Dictionary = _actions[action]
 	_cursor.configure_animation(maps)
 	_cursor.sync_current_sprite(sample)
@@ -62,6 +67,7 @@ func apply_sample(action: String, sample: AtlasTexture) -> ShaderMaterial:
 		push_error("战马骑手的实际原帧与骑乘 UV 合同不匹配。")
 		return null
 	_material.set_shader_parameter("main_map", sample.atlas)
+	_material.set_shader_parameter("enabled_cloth", cloth_worn)
 	Subset.apply_nullable_action_uv_maps(_material, maps.body, maps.head)
 	_appearance.call(_material, _cursor.row_index, frame)
 	if not _frame_effects.is_empty() and not _apply_outline_shadow(action, sample):
@@ -79,7 +85,8 @@ func _apply_outline_shadow(action: String, sample: AtlasTexture) -> bool:
 	if params.is_empty() or not Subset.apply_weapon_fill(_material, rect, [{}, {}]).ok:
 		return false
 	# The preview defaults enable normal outline and shadow. The locked
-	# 64 frames have no hit flag; neither equipment slot has a weapon.
+	# 64 frames have no hit flag. Both shader weapon slots stay cleared:
+	# even when equipped, Idle/Walk are static and the source has no anchors.
 	if not Subset.apply_outline(_material, rect, params.frame_size, params.base_y,
 			[EMPTY_SLOT, EMPTY_SLOT], Vector3(1.0, 0.0, 0.0),
 			Color(0.7059, 0.0353, 0.0353, 1.0), Color.WHITE).ok:

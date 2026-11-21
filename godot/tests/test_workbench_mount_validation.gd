@@ -98,6 +98,9 @@ func _run() -> void:
 		and riding.rider_sprite.texture == null, "卸下只清坐骑槽并恢复原步行渲染器")
 	if with_cloth:
 		await check_mounted_cloth(player, riding, owner, standing_material)
+		var has_frames := FileAccess.file_exists(OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_CLOTH").path_join("outline-shadow-frames.json"))
+		if has_frames and not OS.get_environment("FANTASYWORD_WORKBENCH_WEAPONS").is_empty():
+			await check_mounted_weapons(player, riding, owner, standing_material)
 	finish()
 
 func check_mounted_cloth(player: Node2D, riding: Node2D, owner: Equipment, standing_material: Material) -> void:
@@ -181,6 +184,103 @@ func check_mounted_cloth(player: Node2D, riding: Node2D, owner: Equipment, stand
 	await click("RemoveMount")
 	check(player.sprite.visible and player.sprite.material == standing_material
 		and standing_material.get_shader_parameter("enabled_cloth"), "穿布衣下马恢复站立外观和原材质")
+
+func check_mounted_weapons(player: Node2D, riding: Node2D, owner: Equipment, standing: ShaderMaterial) -> void:
+	await click("Idle")
+	await click("SE")
+	await click("MountCategory")
+	await click("EquipWarHorse")
+	riding.set_process(false)
+	riding.tick("Walk",0,0)
+	riding.tick("Idle",0,0)
+	var render: ShaderMaterial = riding.rider_sprite.material
+	if not check_can_read_mount(render): return
+	var native := DisplayServer.get_name() != "headless"
+	var overlay_reference := PackedByteArray()
+	if native:
+		await RenderingServer.frame_post_draw
+		overlay_reference = frame_pixels(riding.rider_sprite)
+	await click("ClothCategory")
+	await click("RemoveCloth")
+	var bare_reference := PackedByteArray()
+	if native:
+		await RenderingServer.frame_post_draw
+		bare_reference = frame_pixels(riding.rider_sprite)
+	check(riding.rider_sprite.material == null, "空普通槽时原版直显")
+	await click("MountCategory")
+	# The category buttons remain genuine Workbench receivers.
+	check(not button("WeaponCategory").disabled and not button("ShieldCategory").disabled
+		and button("CloakCategory").disabled, "只开放已核实的骑乘主副手类别")
+	var horse_token := owner.equipped(Equipment.Slot.MOUNT)
+	var horse: Texture2D = riding.mount_sprite.texture
+	var rider: Texture2D = riding.rider_sprite.texture
+	for row in [["WeaponCategory", "EquipSpear", "RemoveSpear", 0], ["WeaponCategory", "EquipAxe", "RemoveSpear", 0],
+			["ShieldCategory", "EquipShield", "RemoveShield", 1], ["ShieldCategory", "EquipRoundShield", "RemoveShield", 1]]:
+		await click(row[0])
+		await click(row[1])
+		check(demo._weapons.worn[row[3]] >= 0
+			and demo._weapon_badges[row[3]][demo._weapons.worn[row[3]]].visible,
+			"无武器像素不等于卸下：原装备槽及当前徽章 %s" % row[1])
+		check(riding.rider_sprite.material == render and not render.get_shader_parameter("enabled_cloth")
+			and both_mounted_slots_hidden(render), "单件装备触发换装材质，但两静态武器槽无原锚点而清空")
+		check(riding.frame_index == 0 and riding.elapsed == 0.0 and riding.mount_sprite.texture == horse
+			and riding.mount_sprite.material == null and riding.rider_sprite.texture == rider,
+			"装备只刷新当前原帧，并不重新开始坐骑周期")
+		if native:
+			await RenderingServer.frame_post_draw
+			check(frame_pixels(riding.rider_sprite)==overlay_reference and overlay_reference!=bare_reference,
+				"同一原帧无武器像素，原眼色、轮廓与地面阴影实际生效")
+		await click("Attack")
+		riding.tick("Attack", 0, 0.0)
+		check(riding.used_fallback and riding.action == "Stand" and both_mounted_slots_hidden(render),
+			"Attack 回退使用 Idle 骑乘帧，不借步行 Attack 武器序列")
+		if native:
+			await RenderingServer.frame_post_draw
+			check(frame_pixels(riding.rider_sprite)==overlay_reference, "真实回退画面无步行武器序列")
+		await click(row[2])
+		check(riding.rider_sprite.material==null and owner.equipped(Equipment.Slot.MOUNT)==horse_token,
+			"卸下最后普通装备恢复原图，不卸坐骑")
+		if native:
+			await RenderingServer.frame_post_draw
+			check(frame_pixels(riding.rider_sprite)==bare_reference, "卸装后同一帧原图像素恢复")
+		await click("Idle")
+	await click("WeaponCategory")
+	await click("EquipSpear")
+	await click("ShieldCategory")
+	await click("EquipRoundShield")
+	await click("WeaponCategory")
+	await click("RemoveSpear")
+	check(riding.rider_sprite.material == render and both_mounted_slots_hidden(render),
+		"主手卸下但副手仍装备，骑手换装材质保留")
+	await click("EquipSpear")
+	await click("Walk")
+	for dir in 4:
+		riding.tick("Walk", (dir+1)%4, 0.0)
+		riding.tick("Walk", dir, 0.0)
+		for f in 4:
+			if f > 0: riding.tick("Walk", dir, 0.201)
+			check(riding.rider_sprite.material == render and riding.frame_index == f and both_mounted_slots_hidden(render),
+				"四向 Walk 每真实帧都禁用无锚点主副手")
+	await click("MountCategory")
+	await click("RemoveMount")
+	await click("Attack")
+	check(player.sprite.visible and player.sprite.material == standing and standing.get_shader_parameter("weapon0_enabled")
+		and demo._weapons.worn[0] >= 0 and demo._weapons.worn[1] >= 0,
+		"带主副手下马，保留原装备并恢复站立序列武器渲染")
+	await click("EquipWarHorse")
+	riding.set_process(false)
+	check(riding.visible and riding.rider_sprite.material == render and both_mounted_slots_hidden(render),
+		"带已装备主副手再次上马，不能继承站立武器序列")
+
+func check_can_read_mount(material: ShaderMaterial) -> bool:
+	check(material != null, "骑乘原换装材质供武器上下文测试")
+	return material != null
+
+func both_mounted_slots_hidden(mat: ShaderMaterial) -> bool:
+	for slot in 2:
+		if mat.get_shader_parameter("weapon%d_enabled" % slot) or mat.get_shader_parameter("weapon%d_map" % slot) != null:
+			return false
+	return mat.get_shader_parameter("outline_stage_enabled") and mat.get_shader_parameter("shadow_stage_enabled")
 
 func check_frame_effects(riding: Node2D, mat: ShaderMaterial) -> void:
 	# Independent top-origin source-pixel witnesses, not outputs from the Godot shader.
