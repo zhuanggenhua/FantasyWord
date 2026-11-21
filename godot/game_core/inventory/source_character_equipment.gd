@@ -33,6 +33,9 @@ func live() -> bool:
 	var actor: Node=_actor.get_ref() if _actor!=null else null
 	return is_instance_valid(actor) and actor.is_inside_tree() and _read_health.is_valid() and _can_change.is_valid()
 
+func belongs_to(actor: Node) -> bool:
+	return live() and _actor.get_ref()==actor
+
 func can_change() -> bool:
 	return live() and bool(_can_change.call())
 

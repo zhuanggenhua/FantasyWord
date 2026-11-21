@@ -153,6 +153,9 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 		inventory_bags=InventoryBags.new()
 		if not player.start_source_equipment():
 			return _fail("原玩家初始装备槽未绑定。")
+		var cloth_png := OS.get_environment("FORMAL_PLAYER_CLOTH_PNG")
+		if not cloth_png.is_empty() and not view.bind_source_cloth(player.source_equipment(),cloth_png):
+			return _fail(view.last_error)
 		_source_draws = SessionDraws.new()
 		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range):
 			return _fail("原图活动假人的身份、原素材、地图路径或死亡动作无法装配。")

@@ -2,7 +2,9 @@ extends Node2D
 ## 原 Human Idle/Walk 与可选 Dmg/ChargedAttack/Attack 和经核实拥有者的 SpinDie 的显式私有图集入口；不补造受伤事件。
 const Playback = preload("res://game_core/presentation/directional_sprite_playback.gd")
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
+const Gear = preload("res://game_core/inventory/source_character_equipment.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
+const CLOTH_PNG_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 var sprite: Sprite2D
 var playback: Node
 var driver: Node
@@ -10,6 +12,8 @@ var animator: AnimationPlayer
 var last_error := ""
 var material_binding: RefCounted
 var _animation_contract := {}
+var _source_cloth_gear: Gear
+var _source_cloth: ImageTexture
 
 static func valid_primary_death(source: Variant) -> bool:
 	return source is Dictionary and source.get("config_guid")=="b669f9c81be34b47bf3d083609477ab5" \
@@ -123,6 +127,33 @@ func bind_base_material(data: Dictionary, uv_directory: String, appearance_direc
 	material_binding = binding
 	return true
 
+## CharacterEquipmentPresentation 的基础布衣切片：监听同一个正式演员，
+## 不修改背包、不切换动画、不将设计工作台的状态当成玩法装备。
+func bind_source_cloth(gear: Gear, cloth_png: String) -> bool:
+	var body := get_parent()
+	if _source_cloth_gear!=null or material_binding==null or body==null or gear==null \
+			or not gear.belongs_to(body.get_parent()) or gear.item_for_guid(Gear.CLOTH)==null:
+		return _fail("布衣必须绑定同一正式演员的装备和现有原材质。")
+	if not FileAccess.file_exists(cloth_png) or FileAccess.get_sha256(cloth_png)!=CLOTH_PNG_SHA:
+		return _fail("基础布衣原图哈希不符。")
+	var image := Image.load_from_file(cloth_png)
+	if image==null or image.get_size()!=Vector2i(32,32):
+		return _fail("基础布衣原精灵必须是 32×32。")
+	_source_cloth = ImageTexture.create_from_image(image)
+	_source_cloth_gear = gear
+	gear.loadout_changed.connect(_refresh_source_cloth)
+	_refresh_source_cloth()
+	last_error = ""
+	return true
+
+func _refresh_source_cloth() -> void:
+	var equipped := _source_cloth_gear.equipped(Gear.Slot.TORSO)==_source_cloth_gear.item_for_guid(Gear.CLOTH)
+	var current: ShaderMaterial = material_binding.material
+	# 原 Clothing 四向共用同一 Sprite，整张 32×32，且没有偏向变体。
+	current.set_shader_parameter("cloth_map",_source_cloth if equipped else null)
+	current.set_shader_parameter("cloth_rect",Vector4(0,0,1,1))
+	current.set_shader_parameter("enabled_cloth",equipped)
+
 ## EquipmentRenderer.TryGetGroundAnchorWorldPosition；仅支持已经核实的正中 FullRect 人形帧。
 ## 原帧高 32，groundPixelY=18；从中心到行像素中心是 2.5 个向下的图集像素。
 func reflection_ground_anchor() -> Variant:
@@ -135,6 +166,10 @@ func reflection_ground_anchor() -> Variant:
 	return Vector2(world_bounds.get_center().x,ground.y)
 
 func _exit_tree() -> void:
+	if _source_cloth_gear!=null:
+		_source_cloth_gear.loadout_changed.disconnect(_refresh_source_cloth)
+		_source_cloth_gear=null
+		_source_cloth=null
 	if material_binding != null:
 		material_binding.disconnect_from_view()
 		material_binding = null

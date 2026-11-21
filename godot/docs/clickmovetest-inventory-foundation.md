@@ -9,4 +9,6 @@
 - 背包服务复用原主角的装备槽真相：`InventorySystem.cs:499–555` 先校验 ChangeEquipment 与库存，角色组件再校验资源下限、设置槽位且发一次变化通知，最后才扣来源包或回指定包。空槽卸下不会增包。同一原资源的替换先扣一件再把旧件归还同一个来源包；无效 owner 显式返回错误而不是抛 C# 异常，不改槽位。
 - 原初始装备按继承资产的布衣、长矛顺序绑定；两件装备均无属性差量、附加技能或点击使用效果。复进原 Pause → Items 时，装备栏、背包格、数量和焦点详情都由当前角色和同一物品身份驱动。没有把确认按钮改成穿脱，没有添加当前 Unity 数据不存在的效果。类别仍默认 Consumable。
 - 运行 `godot --headless --path godot --script res://tests/test_source_inventory_bags.gd`、`res://tests/test_source_inventory_entry.gd` 和 `res://tests/test_source_equipment_transaction.gd`。无私有合同的运行明确跳过实景入口检查。云桌面可验证原生渲染、来源图标与菜单交互，不等同对照 Unity 截图。
-- **不是完整 Inventory 或换装表现**：仅两件原始零加成装备的事务与菜单投影。任意装备、装备附加属性/技能、叠加锁、物品使用及其对白、掉落、存档、坐骑、角色身上的动态外观、外部 HUD、手柄全局导航和 Unity 像素比对未验收；测试是从正式角色直接发起服务请求，不是新增玩家换装交互。
+- 设置私有 `FORMAL_PLAYER_CLOTH_PNG` 后，正常 ClickMoveTest 启动将主角的同一装备槽绑定到原人形材质。源 `0_CharacterActor_Base.prefab` 的 `CharacterEquipmentPresentation` 在启用和装备变化时刷新；原基础布衣引用一个 Clothing 表现资产，四方向都用同一 32×32 Sprite，无变体。只接入该槽和该原图，不从独立换装工作台读状态。未提供原图时保留既有启动方式，提供不匹配的原图时拒绝该装配。
+- `tests/test_source_cloth_presentation.gd` 在真实 Entry 演员、装备及背包服务上运行，`FORMAL_CLOTH_TEST_CONTRACTS` 指向已抽取的原站立动画和材质合同（`animation.json`、`material.json`），`FORMAL_PLAYER_TEXTURES` 指向对应图集、UV 与外观目录。Godot 原生窗口在同一待机帧取样验证卸下确实改变像素、重新穿上完全恢复；装备锁不改画面、行走切换不重设布衣。该测试不装配完整 F5 场景，也未做 Unity 同屏比对。
+- **不是完整 Inventory 或换装表现**：已接两件原始零加成装备的事务与菜单投影，以及原基础布衣的材质联动。长矛角色外观、其他装备、附加属性/技能、叠加锁、物品使用及其对白、掉落、存档、坐骑、外部 HUD、手柄全局导航和 Unity 像素比对未验收。测试由服务发起装备变化，不是新增玩家换装交互。
