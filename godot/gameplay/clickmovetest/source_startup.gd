@@ -161,7 +161,8 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 		if (not spear.is_empty() or not effects.is_empty()) and not view.bind_source_standing_render(player.source_equipment(),spear,effects):
 			return _fail(view.last_error)
 		_source_draws = SessionDraws.new()
-		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range):
+		if not _mount_trainer(paths,trainer_files,true,_source_draws.value,_source_draws.inclusive_range,
+				OS.get_environment("FORMAL_TRAINER_EFFECTS_SOURCE")):
 			return _fail("原图活动假人的身份、原素材、地图路径或死亡动作无法装配。")
 		var combat := _mount_player_combat(paths.FORMAL_FLAMETHROWER_CUE,_source_draws.resolve_damage)
 		if not is_instance_valid(combat) or not scene.bind_human_damage_lifecycle(player.is_destroyed,combat.interrupt_owned_actions) \
@@ -275,7 +276,8 @@ func _on_source_player_damage_completed(_source: Variant, input: Dictionary, _pr
 	damage_screen_flash.present(scene.actor,player.get_current_controlled_character_or_player_instance(),input)
 
 
-func _mount_trainer(paths: Dictionary, files: Array, require_death: bool, random_value: Callable, random_range: Callable) -> bool:
+func _mount_trainer(paths: Dictionary, files: Array, require_death: bool, random_value: Callable,
+		random_range: Callable, effects := "") -> bool:
 	var art: String = paths.FORMAL_TRAINER_ATTACK_TEXTURES
 	var animation := _read(paths[files[0]])
 	var material := _read(paths[files[1]])
@@ -286,8 +288,14 @@ func _mount_trainer(paths: Dictionary, files: Array, require_death: bool, random
 	trainer_owner = TrainerOwner.new()
 	var trainer: Node2D = scene.start_training_damage_target(trainer_owner,trainer_owner.hooks(),7752)
 	if not is_instance_valid(trainer) or not trainer_owner.bind_target(trainer): return false
-	if not is_instance_valid(scene.start_training_target_presentation(animation,art,
-			{"data":material,"uv_directory":art.path_join("uv"),"appearance_directory":art.path_join("appearance")})):
+	var trainer_material := {"data":material,"uv_directory":art.path_join("uv"),"appearance_directory":art.path_join("appearance")}
+	if not effects.is_empty():
+		var gear := player.source_equipment()
+		if gear==null or inventory_bags==null: return false
+		trainer_material.merge({"effects":effects,"bags":inventory_bags,
+			"items":{gear.CLOTH:gear.item_for_guid(gear.CLOTH),gear.SPEAR:gear.item_for_guid(gear.SPEAR)},
+			"cloth":OS.get_environment("FORMAL_PLAYER_CLOTH_PNG"),"spear":OS.get_environment("FORMAL_PLAYER_SPEAR_SOURCE")})
+	if not is_instance_valid(scene.start_training_target_presentation(animation,art,trainer_material)):
 		return false
 	if not scene.start_training_target_tracking(player.stats,scene) or not scene.start_training_transit_steering():
 		return false

@@ -41,3 +41,9 @@ GODOT --headless --path godot --script res://tools/check_formal_human_animation.
 用 `python godot/tools/extract_formal_human_effects.py <锁定 Unity 仓库> <私有角色图目录> <私有输出.json>` 核对正常主角实际精灵帧，在正式入口将产物设为 `FORMAL_PLAYER_EFFECTS_SOURCE`。不要求同时提供私有长矛图；已提供的合同不符时，不使用推断数据。合同、原素材和取证截图均不入库。
 
 运行时沿用本体、装备合成后的原轮廓及阴影片元规则。按实际精灵图集坐标读取 Idle、Walk、Dmg、Attack、SpinDie 共 124 帧；地面基线使用原第 18 行像素中心。保留 Walk 离地、Dmg 帧旗标切换、攻击序列不参与轮廓探针，以及 SpinDie 无脚时只覆盖模式并保留先前参数的行为。卸矛不清除轮廓或阴影。此处不包含独立的 Blob Shadow 节点、训练假人轮廓或 Unity/Godot 同视口截图验收。
+
+### 正常关卡活动假人的装备表现和死亡转移
+
+在原素材工作区配齐 `FORMAL_PLAYER_CLOTH_PNG` 和 `FORMAL_PLAYER_SPEAR_SOURCE` 后，可给正常入口设置 `FORMAL_TRAINER_EFFECTS_SOURCE`，指向上一节生成的同一人类帧合同。锁定的活动假人通过原角色基类继承布衣、长矛和同一人类五组原动作；不是工作台角色。两角色共享物品数据库身份，但不共享装备槽、材质或阴影状态。假人用原非致命受击和攻击动作更新材质；死亡先移普通背包，再锁定 SpinDie，随后经装备事件将原装备转入对应的尸体背包，不影响主角。这里仅接通当前假人的运行时归属；尚未接入尸体交互、拾取 UI、主角死亡装备转移或存档恢复。
+
+另有一个独立的原 Blob Shadow 对象。原图、根节点局部位置和透明度已核对，但原渲染器引用的排序层 ID 不存在于锁定版的 TagManager。实际遮挡顺序尚缺同版本 Unity 运行画面证据，此批不接入该对象，也不以程序阴影冒充。

@@ -2,6 +2,7 @@ extends SceneTree
 ## 由正式项目入口加载唯一原活动假人；不使用 CLI 诊断或替身血条。
 const Startup := preload("res://gameplay/clickmovetest/source_startup.gd")
 const Terrain := preload("res://game_core/movement/terrain_cast.gd")
+const Gear := preload("res://game_core/inventory/source_character_equipment.gd")
 const Draws := preload("res://gameplay/clickmovetest/source_session_draws.gd")
 var checks := 0
 var failures := 0
@@ -38,6 +39,37 @@ func _run() -> void:
 	var scene := start.scene
 	var trainer: Node2D=scene.training_target
 	var actor: Node2D=scene.actor
+	var render_check:=not OS.get_environment("FORMAL_TRAINER_EFFECTS_SOURCE").is_empty()
+	var mat: ShaderMaterial=trainer.presentation.sprite.material
+	var spear: Resource
+	var cloth: Resource
+	var corpse: String
+	var corpse_inputs: Array = []
+	var changes: Array = []
+	var observe_slots: Callable
+	var observe_corpse: Callable
+	if render_check:
+		var own: Gear=trainer.source_gear
+		if own==null:
+			_check(false,"缺少同一正式假人的真实装备槽")
+			_finish();return
+		spear=own.equipped(Gear.Slot.WEAPON)
+		cloth=own.equipped(Gear.Slot.TORSO)
+		corpse=start.inventory_bags.corpse_owner(trainer.SOURCE_IDENTIFIER)
+		_check(own.belongs_to(trainer) and own!=start.player.source_equipment() and spear!=null and cloth!=null
+			and spear==start.player.source_equipment().item_for_guid(Gear.SPEAR)
+			and cloth==start.player.source_equipment().item_for_guid(Gear.CLOTH)
+			and mat!=scene.human_presentation.sprite.material and mat.get_shader_parameter("weapon0_enabled")
+			and mat.get_shader_parameter("enabled_cloth") and mat.get_shader_parameter("outline_stage_enabled")
+			and mat.get_shader_parameter("shadow_stage_enabled") and start.inventory_bags.entries(corpse).is_empty(),
+			"假人自己的初装槽、服装和长矛，共享物品身份，不共享主角槽或材质")
+		observe_corpse=func(owner: String,item: Resource,qty: int,reason: int):
+			if owner==corpse: corpse_inputs.append([item,qty,reason,trainer.presentation.driver.current_animation_key])
+		start.inventory_bags.item_added.connect(observe_corpse)
+		observe_slots=func():
+			changes.append([own.equipped(Gear.Slot.TORSO),own.equipped(Gear.Slot.WEAPON),
+				bool(mat.get_shader_parameter("enabled_cloth")),bool(mat.get_shader_parameter("weapon0_enabled"))])
+		own.loadout_changed.connect(observe_slots)
 	var health:=start.player.current_health()
 	var trainer_start: Vector2=trainer.get_movement_position()
 	var controller: Object=trainer.ai_controller
@@ -80,6 +112,38 @@ func _run() -> void:
 	scene.advance_human_charged_combat(.1)
 	start.player.set_target_direction(Vector2.RIGHT)
 	start.player.set_look_at_direction(Vector2.RIGHT)
+	if render_check:
+		trainer.presentation.playback.set_direction(0)
+		scene._execute_basic_training_damage(actor,trainer,start.player.stats,func():return 50)
+		_check(trainer.health<220 and trainer.health>0 and trainer.presentation.driver.current_animation_key=="Dmg"
+			and mat.get_shader_parameter("outline_hit")==1.0 and mat.get_shader_parameter("weapon0_enabled")
+			and mat.get_shader_parameter("enabled_cloth"),"正式非致命受击触发 Dmg 轮廓，装备仍在")
+		if DisplayServer.get_name()!="headless":
+			trainer.presentation.animator.speed_scale=0
+			trainer.presentation.driver.set_process(false)
+			# Test-only framing: the fixture repositioned the actors while the
+			# normal follow camera was paused. Restore it after pixel sampling.
+			var camera_position: Vector2=scene.camera.global_position
+			scene.camera.global_position=trainer.presentation.sprite.global_position
+			scene.camera.reset_smoothing()
+			scene.camera.force_update_scroll()
+			var overlay_was_visible: bool=start.damage_screen_flash.visible
+			start.damage_screen_flash.hide()
+			var red:=await _actor_crop(trainer.presentation.sprite)
+			mat.set_shader_parameter("outline_hit",0.0)
+			var black:=await _actor_crop(trainer.presentation.sprite)
+			var toggled:=_red_to_black(red,black)
+			start.damage_screen_flash.visible=overlay_was_visible
+			scene.camera.global_position=camera_position
+			scene.camera.reset_smoothing()
+			scene.camera.force_update_scroll()
+			_check(toggled>=20,"原生关卡同一假人受击帧红黑轮廓切换像素 %d"%toggled)
+			print("原假人红到黑同帧像素：",toggled)
+			trainer.presentation.animator.speed_scale=1
+			trainer.presentation.driver.set_process(true)
+		scene.advance_human_damage_lifecycle()
+		# Source may still have the test blow's recovery/interrupt pending.
+		trainer.advance_damage_lifecycle()
 	var old_health: int=trainer.health
 	scene.training_attributes.apply_current_health_delta(1-old_health,0,null,null)
 	var outgoing := []
@@ -102,7 +166,41 @@ func _run() -> void:
 	_check(not trainer.ai_controller.running and trainer.presentation.driver.current_animation_key=="SpinDie"
 		and trainer==scene.training_target and trainer.is_inside_tree(),
 		"原安全死亡停止 AI 并保留 SpinDie 身体，不发明复活")
+	if render_check:
+		trainer.advance_damage_lifecycle()
+		var bags:=start.inventory_bags
+		var own: Gear=trainer.source_gear
+		_check(changes==[[null,spear,false,false],[null,null,false,false]]
+			and corpse_inputs==[[cloth,1,bags.Transfer.CORPSE,"SpinDie"],[spear,1,bags.Transfer.CORPSE,"SpinDie"]]
+			and bags.count(corpse,spear)==1 and bags.count(corpse,cloth)==1
+			and own.equipped(Gear.Slot.WEAPON)==null and own.equipped(Gear.Slot.TORSO)==null
+			and start.player.source_equipment().equipped(Gear.Slot.WEAPON)==spear
+			and mat.get_shader_parameter("outline_stage_enabled") and mat.get_shader_parameter("shadow_stage_enabled"),
+			"死亡先锁 SpinDie，再按原事件移两件到此尸体背包，不影响主角")
+		own.loadout_changed.disconnect(observe_slots)
+		bags.item_added.disconnect(observe_corpse)
 	_finish()
+
+func _actor_crop(sprite: Sprite2D) -> Image:
+	await RenderingServer.frame_post_draw
+	var image := root.get_texture().get_image()
+	var bounds := sprite.get_global_transform_with_canvas()*sprite.get_rect()
+	var region := Rect2i(bounds.position.floor(),bounds.size.ceil()).intersection(Rect2i(Vector2i.ZERO,image.get_size()))
+	if not region.has_area(): return Image.new()
+	var crop := image.get_region(region)
+	crop.convert(Image.FORMAT_RGBA8)
+	return crop
+
+func _red_to_black(a: Image,b: Image) -> int:
+	if a.get_size()!=b.get_size(): return 0
+	var count:=0
+	for y in a.get_height():
+		for x in a.get_width():
+			var first:=a.get_pixel(x,y)
+			var second:=b.get_pixel(x,y)
+			if first.r8>=178 and first.r8<=182 and first.g8<=11 and first.b8<=11 \
+					and second.r8<=1 and second.g8<=1 and second.b8<=1: count+=1
+	return count
 
 func _mouse(at: Vector2) -> void:
 	var event:=InputEventMouseMotion.new()

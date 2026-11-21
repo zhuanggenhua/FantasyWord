@@ -7,6 +7,7 @@ signal item_removed(owner: String, item: Resource, quantity: int, transfer: int)
 enum Transfer { EQUIPMENT, CRAFTING, TRADING, USE, CHEST, CHARACTER_DROP, COMMAND, UNKNOWN, CORPSE }
 const PARTY_OWNER := "Party:default"
 const CHARACTER_PREFIX := "Character:"
+const CORPSE_PREFIX := "Corpse:"
 var _bags: Dictionary = {}
 
 func party_owner() -> String: return PARTY_OWNER
@@ -18,8 +19,15 @@ func character_owner(persistent_identifier: String) -> String:
 func is_character_owner(owner: String) -> bool:
 	return owner.begins_with(CHARACTER_PREFIX) and owner.length()>CHARACTER_PREFIX.length()
 
+func corpse_owner(persistent_identifier: String) -> String:
+	var normalized := persistent_identifier.strip_edges()
+	return "" if normalized.is_empty() else CORPSE_PREFIX+normalized
+
+func _is_corpse_owner(owner: String) -> bool:
+	return owner.begins_with(CORPSE_PREFIX) and owner.length()>CORPSE_PREFIX.length()
+
 func _valid(owner: String) -> bool:
-	return owner==PARTY_OWNER or is_character_owner(owner)
+	return owner==PARTY_OWNER or is_character_owner(owner) or _is_corpse_owner(owner)
 
 func _bag(owner: String) -> Dictionary:
 	if not _bags.has(owner): _bags[owner]={"indices":{},"rows":[],"free":[]}
@@ -96,3 +104,17 @@ func try_unequip(destination_owner: String, target: Equipment, slot: int) -> int
 	if change.result==Equipment.Result.VALID and change.previous!=null:
 		add(destination_owner,change.previous,1,Transfer.EQUIPMENT)
 	return change.result
+
+func transfer_character_inventory_to_corpse(identifier: String) -> void:
+	var source := character_owner(identifier)
+	var destination := corpse_owner(identifier)
+	if source.is_empty() or destination.is_empty(): return
+	for row in entries(source):
+		if remove(source,row.item,row.quantity,Transfer.CORPSE):
+			add(destination,row.item,row.quantity,Transfer.CORPSE)
+
+func transfer_character_equipment_to_corpse(actor: Node, identifier: String, gear: Equipment) -> void:
+	var destination := corpse_owner(identifier)
+	if destination.is_empty() or gear==null or not gear.belongs_to(actor): return
+	for item in gear.force_unequip_for_lifecycle():
+		add(destination,item,1,Transfer.CORPSE)

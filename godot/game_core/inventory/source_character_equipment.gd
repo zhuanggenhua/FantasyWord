@@ -17,14 +17,19 @@ var _actor: WeakRef
 var _read_health: Callable
 var _can_change: Callable
 
-func start(actor: Node, read_health: Callable, can_change: Callable, mount_validation := false) -> bool:
+func start(actor: Node, read_health: Callable, can_change: Callable, mount_validation := false,
+		canonical_items: Dictionary = {}) -> bool:
 	if _actor!=null or not is_instance_valid(actor) or not actor.is_inside_tree() \
 			or not read_health.is_valid() or not can_change.is_valid(): return false
+	var initial := [WAR_HORSE] if mount_validation else [CLOTH, SPEAR]
+	if not canonical_items.is_empty():
+		for guid: String in initial:
+			if not canonical_items.get(guid) is Resource: return false
 	_actor=weakref(actor)
 	_read_health=read_health
 	_can_change=can_change
-	for guid: String in ([WAR_HORSE] if mount_validation else [CLOTH, SPEAR]):
-		var item := Resource.new()
+	for guid: String in initial:
+		var item: Resource = Resource.new() if canonical_items.is_empty() else canonical_items[guid]
 		_items[guid]=item
 		if not mount_validation: _slots[_PINNED_SLOTS[guid]]=item
 	return true
@@ -66,3 +71,14 @@ func try_apply(slot: int, item: Resource) -> Dictionary:
 	# 已锁定的正式装备资源没有属性/技能差量；槽位事件仍然先于 InventorySystem 转包。
 	loadout_changed.emit()
 	return {"result":Result.VALID,"previous":previous}
+
+## Scope: these locked equipment items contribute no stats or abilities.
+## Source lifecycle uses a slot snapshot and emits one event per removal.
+func force_unequip_for_lifecycle() -> Array[Resource]:
+	var removed: Array[Resource] = []
+	if not live(): return removed
+	for slot in _slots.keys():
+		removed.append(_slots[slot])
+		_slots.erase(slot)
+		loadout_changed.emit()
+	return removed

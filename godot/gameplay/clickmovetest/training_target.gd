@@ -7,11 +7,14 @@ const Body = preload("res://game_core/movement/native_motion_body.gd")
 const Filter = preload("res://game_core/movement/motion_filter.gd")
 const Lifecycle = preload("res://game_core/combat/deferred_damage_lifecycle.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
+const Bags = preload("res://game_core/inventory/source_inventory_bags.gd")
+const Gear = preload("res://game_core/inventory/source_character_equipment.gd")
 const HumanView = preload("res://gameplay/clickmovetest/human_presentation.gd")
 const MotionBinding = preload("res://gameplay/clickmovetest/human_motion_binding.gd")
 const VISUAL_PREFAB := "dca23ea6afacc0647bfd10c5cefa4099"
 const VISUAL_LIBRARIES := ["62c4a52ab213438419c93cc2d8427623","0602b79d46e41504a8117d1fdcc863b2",
 	"aaefe509e84579b4782b521a1d156e71","9ea72d0165623924d891e3222ac25d48"]
+const SOURCE_IDENTIFIER := "5c992e86-45d1-4152-ab59-4e245f2b5d9a"
 const SOURCE_POSITION := Vector2(2.5, -2.75)
 const BODY_SIZE := Vector2(.78, .86)
 const BODY_OFFSET := Vector2(0, .42)
@@ -20,6 +23,8 @@ const HIT_OFFSET := Vector2(0, .5)
 var body: AnimatableBody2D
 var presentation: Node2D
 var _presentation_motion: RefCounted
+var source_gear: Gear
+var _source_bags: Bags
 var hitbox: Area2D
 var lifecycle := Lifecycle.new()
 var ai_controller := TrainingAI.new()
@@ -105,11 +110,25 @@ func start_presentation(animation: Dictionary, texture_directory: String, source
 		return null
 	# 完整私有材质来自同一假人动作合同；传入却无效时不降级成原图直显。
 	if not source_material.is_empty():
+		var effects: String = source_material.get("effects", "")
 		if not source_material.get("data") is Dictionary or not source_material.get("uv_directory") is String \
 				or not source_material.get("appearance_directory") is String \
-				or not view.bind_base_material(source_material.data,source_material.uv_directory,source_material.appearance_directory):
+				or not view.bind_base_material(source_material.data,source_material.uv_directory,source_material.appearance_directory,not effects.is_empty()):
 			view.free()
 			return null
+		if not effects.is_empty():
+			var gear := Gear.new()
+			var bags: Bags = source_material.get("bags")
+			var canonical: Dictionary = source_material.get("items",{})
+			if bags==null or canonical.is_empty() \
+					or not gear.start(self,func():return health,func():return not _death_committed,false,canonical) \
+					or not view.bind_source_cloth(gear,source_material.get("cloth","")) \
+					or not view.bind_source_trainer_render(gear,source_material.get("spear",""),effects):
+				printerr(view.last_error)
+				view.free()
+				return null
+			source_gear = gear
+			_source_bags = bags
 	var motion := MotionBinding.new()
 	if not motion.configure(_movement_owner,view,false):
 		view.free()
@@ -204,6 +223,7 @@ func _interrupt_actions() -> void:
 func _finish_death() -> void:
 	# 原 Movable.Kill 先停活动控制器，再标记、重置移动、播放死亡动作。
 	# mark_death 是之后的 CharacterActor.OnDeath 宿主回调。
+	if _source_bags!=null: _source_bags.transfer_character_inventory_to_corpse(SOURCE_IDENTIFIER)
 	ai_controller.stop()
 	_death_committed = true
 	if is_instance_valid(body): body.reset_movement()
@@ -211,6 +231,7 @@ func _finish_death() -> void:
 		if not presentation.driver.try_lock_animation("SpinDie"):
 			push_error("训练假人的正式 SpinDie 死亡动作无法锁定")
 	_bindings.mark_death.call()
+	if _source_bags!=null: _source_bags.transfer_character_equipment_to_corpse(self,SOURCE_IDENTIFIER,source_gear)
 	# CharacterBase.Kill 在 Movable 死亡与宿主回调后仍发出 InterruptInstances。
 	# 即使没有非静默受击的待打断标记，假人的实际 Timeline 也不能留在攻击中。
 	if is_instance_valid(formal_attack): formal_attack.interrupt()

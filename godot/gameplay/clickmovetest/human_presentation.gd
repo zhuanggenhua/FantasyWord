@@ -159,13 +159,26 @@ func _refresh_source_cloth() -> void:
 	current.set_shader_parameter("enabled_cloth",equipped)
 
 func bind_source_standing_render(gear: Gear, directory: String, effects_path := "") -> bool:
+	if not valid_primary_death(_animation_contract.get("primary_death")):
+		return _fail("站立材质须接到原主角的实际动作库。")
+	return _bind_actor_standing_render(gear,directory,effects_path)
+
+## The original trainer inherits CharacterEquipment and EquipmentRenderer
+## from the same authored base, but owns its slots and material separately.
+func bind_source_trainer_render(gear: Gear, directory: String, effects_path: String) -> bool:
+	var owner: Variant = _animation_contract.get("training_target")
+	if not owner is Dictionary or owner.get("prefab_guid")!="dca23ea6afacc0647bfd10c5cefa4099" \
+			or owner.get("death_animation_key")!="SpinDie" or directory.is_empty() or effects_path.is_empty():
+		return _fail("须提供正式训练假人动作库和原长矛、轮廓及阴影合同。")
+	return _bind_actor_standing_render(gear,directory,effects_path)
+
+func _bind_actor_standing_render(gear: Gear, directory: String, effects_path: String) -> bool:
 	var body := get_parent()
 	if _source_spear!=null or body==null or gear==null or material_binding==null \
 			or material_binding.material.shader!=Weapons.SubsetMaterial.WEAPON_SUBSET \
 			or not gear.belongs_to(body.get_parent()) or gear.item_for_guid(Gear.SPEAR)==null \
-			or not _animation_contract.actions.has_all(["Idle","Walk","Attack","Dmg","SpinDie"]) \
-			or not valid_primary_death(_animation_contract.get("primary_death")):
-		return _fail("站立材质须接到原主角、原动作库和原武器材质。")
+			or not _animation_contract.actions.has_all(["Idle","Walk","Attack","Dmg","SpinDie"]):
+		return _fail("站立材质须接到同一角色的原装备与动作库。")
 	var binding := Weapons.new()
 	if not directory.is_empty() and not binding.load_source(directory,true):
 		return _fail("缺少经核对的原长矛图和人物锚点合同。")
@@ -173,7 +186,7 @@ func bind_source_standing_render(gear: Gear, directory: String, effects_path := 
 	if not effects_path.is_empty():
 		effects = PrimaryEffects.new()
 		if not effects.load_source(effects_path):
-			return _fail("缺少正式主角的原轮廓和阴影帧合同。")
+			return _fail("缺少同一人类帧数据库的原轮廓和阴影合同。")
 	_source_spear = binding
 	_source_spear_gear = gear
 	binding.bind(material_binding.material,playback,effects)
