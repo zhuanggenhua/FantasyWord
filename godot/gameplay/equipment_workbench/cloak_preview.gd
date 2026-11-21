@@ -117,8 +117,8 @@ func icon_for(index: int) -> ImageTexture:
 
 func details_for(index: int) -> String:
 	var option: Dictionary = options[index]
-	var lines: Array[String] = [option.name, "披风", option.description]
+	var lines: Array[String] = [option.name, "斗篷", option.description]
 	for stat in option.stats:
-		var name: String = ["体质", "生命", "力量", "敏捷", "魔力"][int(stat.stat)]
+		var name: String = ["体质", "生命", "力量", "智力", "魔力"][int(stat.stat)]
 		lines.append("%s %+d" % [name, int(stat.value)])
 	return "\n".join(lines)

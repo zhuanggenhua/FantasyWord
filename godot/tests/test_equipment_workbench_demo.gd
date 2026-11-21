@@ -57,7 +57,101 @@ func _run() -> void:
 	if not OS.get_environment("FANTASYWORD_WORKBENCH_BAG").is_empty():
 		_check(_demo.find_child("BagCategory", true, false) != null, "完整小背包合同启用原背包类别")
 		await _check_bag(human, mat, details)
+	if not OS.get_environment("FANTASYWORD_WORKBENCH_HEADWEAR").is_empty():
+		await _check_headwear(human, mat, details)
 	_finish()
+
+func _check_headwear(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
+	var mask_tab := _demo.find_child("MaskCategory", true, false) as Button
+	_check(mask_tab != null and mask_tab.get_parent().columns == 3, "原工作台的分类网格为三列")
+	if mask_tab == null: return
+	await _click("Human")
+	var has_cloak := _demo.find_child("CloakCategory", true, false) != null
+	if has_cloak:
+		await _click("CloakCategory")
+		await _click("EquipTravelCloak")
+	if _demo.find_child("BagCategory", true, false) != null:
+		await _click("BagCategory")
+		await _click("EquipBag")
+	var bare := PackedByteArray()
+	var graphics := DisplayServer.get_name() != "headless"
+	if graphics: bare = await _avatar_pixels(human)
+	_check(_head_flags(mat, false, false, true, true), "人类原发和须都出现，且不默认戴头饰")
+	await _click("MaskCategory")
+	await _click("EquipGoggles")
+	_check(_head_flags(mat, false, true, true, true) and "智力 +2" in details.text and "魔力 +2" in details.text, "护目镜使用面罩层，原智力和魔力都存在")
+	if graphics:
+		_check(bare != await _avatar_pixels(human), "护目镜附着在原头部纹理的真实画面")
+		_check(_near_color(_avatar_texel(human, Vector2(14.5, 14.5)), Color8(136, 14, 14)), "护目镜准确覆盖原东南头部像素")
+	var mask_textures: Array[Texture2D] = []
+	for d in ["SE", "SW", "NE", "NW"]:
+		await _click(d)
+		mask_textures.append(mat.get_shader_parameter("mask_map"))
+		_check(_head_flags(mat, false, true, true, true), "方向刷新保留面罩与两个外观层：" + d)
+	_check(mask_textures[0] != mask_textures[1] and mask_textures[1] != mask_textures[2] and mask_textures[2] == mask_textures[3], "北面护目镜原使用同一贴图引用")
+	await _click("HelmetCategory")
+	_check("头盔\n当前为空" in details.text and _head_flags(mat, false, true, true, true), "切到其他分类不改变身上的头饰")
+	await _click("RemoveHelmet")
+	_check(_head_flags(mat, false, true, true, true), "在空头盔类别卸下不移除面罩")
+	await _click("EquipIronHelmetI")
+	_check(_head_flags(mat, true, false, false, false) and "生命 +4" in details.text and mat.get_shader_parameter("mask_map") == null, "铁盔 I 替换面罩，隐藏发须，清空旧贴图")
+	await _click("Walk")
+	await _click("SW")
+	human.animator.pause()
+	human.animator.seek(0.125, true)
+	_check(human.playback.current_action == "Walk" and human.playback.current_label == 1 and _head_flags(mat, true, false, false, false), "真实行走下一帧不会重新启用发须")
+	var iron_i: Vector4 = mat.get_shader_parameter("helmet_rect")
+	_check(iron_i.is_equal_approx(Vector4(0, 544.0/608.0, 32.0/512.0, 576.0/608.0)), "铁盔 I 行走 SW 原裁切")
+	var under_beard := Color.TRANSPARENT
+	if graphics:
+		await _click("Idle")
+		await _click("SE")
+		await _avatar_pixels(human)
+		under_beard = _avatar_texel(human, Vector2(14.5, 16.5))
+	await _click("EquipIronHelmetII")
+	if graphics:
+		await _avatar_pixels(human)
+		var beard := _avatar_texel(human, Vector2(14.5, 16.5))
+		var lower_matches := _near_color(under_beard, Color8(128, 0, 36)) if has_cloak else not _near_color(under_beard, beard)
+		_check(lower_matches and _near_color(beard, Color8(151, 151, 151)),
+			"待机东南同帧恢复原胡须像素：%s / %s" % [under_beard, beard])
+	await _click("Walk")
+	await _click("SW")
+	human.animator.pause()
+	human.animator.seek(0.125, true)
+	var iron_ii: Vector4 = mat.get_shader_parameter("helmet_rect")
+	_check(iron_ii.is_equal_approx(Vector4(64.0/512.0, 544.0/608.0, 96.0/512.0, 576.0/608.0)), "同数值 ID 的不同资产使用铁盔 II 裁切")
+	_check(human.playback.current_label == 1 and _head_flags(mat, true, false, false, true) and "生命 +6" in details.text, "铁盔 I 换 II 后只恢复胡须，下一帧仍正确")
+	await _click("EquipHornedHelmet")
+	_check(_head_flags(mat, true, false, false, true) and "力量 +2" in details.text, "角饰头盔替换铁盔，并保持原胡须")
+	await _click("HatCategory")
+	await _click("EquipLightHat")
+	_check(_head_flags(mat, true, false, false, true) and "智力 +1" in details.text, "轻帽使用相同材质层并全量替换头盔状态")
+	await _click("HelmetCategory")
+	await _click("RemoveHelmet")
+	_check(_head_flags(mat, true, false, false, true) and "头盔\n当前为空" in details.text, "空头盔分类不会删除轻帽")
+	await _click("HatCategory")
+	await _click("RemoveHat")
+	_check(_head_flags(mat, false, false, true, true) and "帽子\n当前为空" in details.text
+		and mat.get_shader_parameter("helmet_map") == null, "从正确类别卸下后，两种原外观层再次出现")
+	await _click("Idle")
+	await _click("SE")
+	if graphics: _check(bare == await _avatar_pixels(human), "在其他装备不变时整人同帧恢复原像素")
+	_check(mat.get_shader_parameter("enabled_cloth") and (not has_cloak or mat.get_shader_parameter("enabled_cloak"))
+		and (_demo.find_child("BagCategory", true, false) == null or mat.get_shader_parameter("enabled_bag")), "头饰链不影响原服装、斗篷、可选背包")
+	await _click("MaskCategory")
+	await _click("EquipGoggles")
+	await _click("Human")
+	_check(_head_flags(mat, false, false, true, true) and mat.get_shader_parameter("enabled_cloth"), "重选角色恢复原无头饰默认")
+
+func _head_flags(mat: ShaderMaterial, helmet: bool, mask: bool, hair: bool, beard: bool) -> bool:
+	return mat.get_shader_parameter("enabled_helmet") == helmet and mat.get_shader_parameter("enabled_mask") == mask \
+		and mat.get_shader_parameter("enabled_hair") == hair and mat.get_shader_parameter("enabled_beard") == beard
+
+func _avatar_texel(human: Node2D, texel_center: Vector2) -> Color:
+	var sprite := human.sprite as Sprite2D
+	var q: Vector2 = sprite.get_global_transform_with_canvas() * (sprite.get_rect().position + texel_center)
+	return root.get_texture().get_image().get_pixel(floori(q.x),floori(q.y))
 
 func _check_bag(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	_check(mat.shader.resource_path.ends_with("/equipment_character_subset.gdshader"), "无武器材质仍应保留原背包层")
@@ -122,7 +216,7 @@ func _check_cloak(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	if DisplayServer.get_name() != "headless":
 		original = await _avatar_pixels(human)
 	await _click("CloakCategory")
-	_check("披风\n当前为空" in details.text and mat.get_shader_parameter("enabled_cloth"), "选披风类别不改默认布衣")
+	_check("斗篷\n当前为空" in details.text and mat.get_shader_parameter("enabled_cloth"), "选披风类别不改默认布衣")
 	await _click("EquipTravelCloak")
 	_check("旅行披风" in details.text and "体质 +1" in details.text and "魔力 +2" in details.text, "旅行披风显示原属性")
 	_check(mat.get_shader_parameter("enabled_cloak") and mat.get_shader_parameter("cloak_map") == textures[uid["clock1.png"]], "旅行披风穿上原图")
@@ -159,7 +253,7 @@ func _check_cloak(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	_check(mat.get_shader_parameter("enabled_cloak") and not mat.get_shader_parameter("enabled_cloth"), "另一个类别卸下也不影响披风")
 	await _click("CloakCategory")
 	await _click("Human")
-	_check(not mat.get_shader_parameter("enabled_cloak") and mat.get_shader_parameter("enabled_cloth") and "披风\n当前为空" in details.text, "重选人类恢复原默认装备，保留所选类别")
+	_check(not mat.get_shader_parameter("enabled_cloak") and mat.get_shader_parameter("enabled_cloth") and "斗篷\n当前为空" in details.text, "重选人类恢复原默认装备，保留所选类别")
 
 func _avatar_pixels(human: Node2D) -> PackedByteArray:
 	human.animator.pause()

@@ -9,6 +9,8 @@ const LAYERS := ["hair","beard","eye_decoration"]
 var material: ShaderMaterial
 var last_error := ""
 var _appearance := {}
+var _workbench_headwear: Dictionary = {}
+var _workbench_headwear_enabled := false
 var _actions := {}
 var _cursor := FrameCursor.new()
 var _sprite: Sprite2D
@@ -118,9 +120,20 @@ func _sample(_action: String, _label: int, _direction: int, texture: Texture2D) 
 	material.set_shader_parameter("main_map",texture.atlas)
 	_cursor.late_sync(texture)
 
+## Optional Workbench owner. The formal scene does not register preview headgear.
+func set_workbench_headwear(entry: Dictionary) -> void:
+	_workbench_headwear_enabled = true
+	_workbench_headwear = entry
+	_refresh()
+
 func _refresh() -> void:
 	var frame = _cursor.refresh_frame()
 	for layer in LAYERS: material.set_shader_parameter("enabled_"+layer,false)
+	if _workbench_headwear_enabled:
+		for layer in ["helmet", "mask"]:
+			material.set_shader_parameter("enabled_" + layer, false)
+			material.set_shader_parameter(layer + "_map", null)
+			material.set_shader_parameter(layer + "_rect", Vector4(0, 0, 1, 1))
 	material.set_shader_parameter("enabled_left_eye",false)
 	material.set_shader_parameter("enabled_right_eye",false)
 	if frame == null:
@@ -128,8 +141,16 @@ func _refresh() -> void:
 		return
 	var maps: Dictionary = _cursor.current_animation
 	SubsetMaterial.apply_nullable_action_uv_maps(material,maps.body,maps.head)
-	var flags := BaseAppearance.resolve(_cursor.row_index,frame,_appearance)
+	var flags := BaseAppearance.resolve(_cursor.row_index,frame,_appearance,_workbench_headwear)
 	material.set_shader_parameter("body_in_front",flags.body_in_front)
+	if not _workbench_headwear.is_empty():
+		var facing: int = flags.head_facing
+		if facing < 0 or facing > 3: facing = 0
+		var channel: String = _workbench_headwear.channel
+		var slice: Dictionary = _workbench_headwear.directions[facing]
+		material.set_shader_parameter(channel + "_map", slice.map)
+		material.set_shader_parameter(channel + "_rect", slice.rect)
+		material.set_shader_parameter("enabled_" + channel, true)
 	for layer in LAYERS:
 		var entry = flags[layer]
 		if entry == null: continue
