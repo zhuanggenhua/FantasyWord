@@ -123,6 +123,77 @@ func _check_weapons(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	await _click("Human")
 	if graphics: _check(bare == await _avatar_pixels(human), "同一待机帧武器卸下后恢复基准像素")
 	_check(mat.get_shader_parameter("enabled_cloth"), "原布衣仍在")
+	if _demo.find_child("EquipAxe",true,false) != null:
+		await _check_weapon_replacements(human, mat, details)
+
+func _check_weapon_replacements(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
+	var graphics := DisplayServer.get_name() != "headless"
+	await _click("Human")
+	await _click("WeaponCategory")
+	var order: Array = _demo.find_child("EquipAxe",true,false).get_parent().get_children()
+	_check(order[1].name == "EquipAxe" and order[2].name == "EquipSpear", "武器列表采用原目录战斧、长矛顺序")
+	await _click("EquipSpear")
+	var spear: Texture2D = mat.get_shader_parameter("weapon0_map")
+	await _click("ShieldCategory")
+	await _click("EquipShield")
+	var heavy: Texture2D = mat.get_shader_parameter("weapon1_map")
+	await _click("WeaponCategory")
+	await _click("EquipAxe")
+	var axe: Texture2D = mat.get_shader_parameter("weapon0_map")
+	_check(axe != null and axe != spear and mat.get_shader_parameter("weapon1_map") == heavy and "力量 +3" in details.text
+		and "智力" not in details.text, "替换为战斧保留副手并清掉旧长矛属性")
+	await _click("EquipAxe")
+	_check(mat.get_shader_parameter("weapon0_enabled") and mat.get_shader_parameter("weapon0_map") == axe, "同项再点不是切换卸下")
+	await _click("SW")
+	_check(mat.get_shader_parameter("weapon0_flip_x") and mat.get_shader_parameter("weapon0_map") == axe, "战斧未设置西向：静态原东南贴图镜像")
+	await _click("Attack")
+	await _click("NE")
+	human.animator.pause()
+	var silver := Color8(198,219,230)
+	human.animator.seek(0.0,true)
+	var atlas_front: Texture2D = mat.get_shader_parameter("weapon0_map")
+	_check(atlas_front != axe and mat.get_shader_parameter("weapon0_rect").is_equal_approx(Vector4(.25,.25,.5,.5))
+		and mat.get_shader_parameter("weapon0_depth_mode")==1.0, "NE Attack 标签 0 以有符号原 fileID 取 x=32")
+	if graphics:
+		await RenderingServer.frame_post_draw
+		_check(_near_color(_avatar_texel(human,Vector2(25.5,15.5)),silver), "原东北第一帧战斧命中真实采样色")
+	human.animator.seek(.125,true)
+	_check(human.playback.current_label==1 and mat.get_shader_parameter("weapon0_map")==atlas_front
+		and mat.get_shader_parameter("weapon0_rect").is_equal_approx(Vector4(0,.25,.25,.5)), "NE Attack 标签 1 以原 fileID 取 x=0")
+	if graphics:
+		await RenderingServer.frame_post_draw
+		_check(_near_color(_avatar_texel(human,Vector2(23.5,12.5)),silver), "东北第二帧不会误读第一帧像素")
+	human.animator.seek(.25,true)
+	_check(mat.get_shader_parameter("weapon0_map")!=atlas_front and mat.get_shader_parameter("weapon0_depth_mode")==0.0
+		and mat.get_shader_parameter("weapon1_enabled"), "东北后两帧进入原后层图，盾牌仍在")
+	await _click("Idle")
+	await _click("SE")
+	await _click("ShieldCategory")
+	await _click("EquipRoundShield")
+	var round_east: Texture2D = mat.get_shader_parameter("weapon1_map")
+	_check(round_east != null and round_east != heavy and mat.get_shader_parameter("weapon0_map")==axe
+		and "生命 +6" in details.text and "生命 +8" not in details.text,"圆盾替换重盾，战斧与原属性不串槽")
+	await _click("SW")
+	var round_west: Texture2D = mat.get_shader_parameter("weapon1_map")
+	_check(round_west!=null and round_west!=round_east and not mat.get_shader_parameter("weapon1_flip_x"), "源圆盾西南图已配置，不镜像")
+	await _click("NE")
+	_check(mat.get_shader_parameter("weapon1_map")==round_east and mat.get_shader_parameter("weapon1_hand_in_front")==1.0, "圆盾 NE 缺图精确回退 SE")
+	if graphics:
+		await _avatar_pixels(human)
+		_check(_near_color(_avatar_texel(human,Vector2(12.5,16.5)),Color8(204,0,0)), "圆盾 NE 真实像素辨别回退与旧重盾")
+	await _click("NW")
+	_check(mat.get_shader_parameter("weapon1_map")==round_west and not mat.get_shader_parameter("weapon1_flip_x"), "圆盾 NW 缺图精确回退 SW，不镜像")
+	if graphics:
+		await _avatar_pixels(human)
+		_check(_near_color(_avatar_texel(human,Vector2(19.5,16.5)),Color8(255,102,59)), "圆盾 NW 真实像素辨别错误东向图")
+	await _click("WeaponCategory")
+	await _click("RemoveSpear")
+	_check(not mat.get_shader_parameter("weapon0_enabled") and mat.get_shader_parameter("weapon1_map")==round_west, "主手卸下对当前副手圆盾无影响")
+	await _click("WeaponCategory")
+	await _click("EquipAxe")
+	await _click("ShieldCategory")
+	await _click("RemoveShield")
+	_check(mat.get_shader_parameter("weapon0_map")==axe and not mat.get_shader_parameter("weapon1_enabled"), "副手卸下对当前主手战斧无影响")
 
 func _check_headwear(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	var mask_tab := _demo.find_child("MaskCategory", true, false) as Button

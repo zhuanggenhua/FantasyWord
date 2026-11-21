@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract the original human anchors and the spear / heavy shield workbench contract."""
+"""Extract the original human anchors and the original two main-hand and two off-hand options."""
 import argparse
 import hashlib
 import json
@@ -11,14 +11,18 @@ from extract_formal_human_animation import SOURCE, ROOT as ANIMATION_ROOT, parse
 ROOT = "Assets/GameData/EquipmentSystem/"
 ART = "Assets/ThirdParty/MiniFantasyUV/ImportedSource/Art/equip/"
 HUMAN_ART = "Assets/Art/MINIFANTASY Creatures - Super Low Res 2D Pixel Art by Krishna Palacio/Sprites/Humanoids/Human/Human/"
+AXE_ART = "Assets/Art/武器/迷你幻想_武器_v3.0/迷你幻想_武器_素材/劈砍_攻击/斧/"
 DIRECTIONS = ("SE", "SW", "NE", "NW")
 ACTIONS = {"Idle": 16, "Walk": 4, "Attack": 4, "Dmg": 4}
 
 
-def extract(repo, directory):
+def extract(repo, directory, legacy_pair=False):
     textures, sprites, sources = {}, {}, {}
-    for name in ("长矛1.png", "shield2.png", "shield3.png", "shield4.png", "shield5.png", "Slash_sword_f.png", "Slash_sword_b.png"):
-        path = (HUMAN_ART if name.startswith("Slash_") else ART) + name
+    names = ["长矛1.png", "shield2.png", "shield3.png", "shield4.png", "shield5.png", "Slash_sword_f.png", "Slash_sword_b.png"]
+    if not legacy_pair:
+        names.extend(["axe.png", "shield.png", "shield0.png", "劈砍_斧_f.png", "劈砍_斧_b.png"])
+    for name in names:
+        path = (HUMAN_ART if name.startswith("Slash_") else AXE_ART if name.startswith("劈砍_斧") else ART) + name
         data = (directory / name).read_bytes()
         sha = hashlib.sha256(data).hexdigest()
         pinned = read(repo, path)
@@ -57,29 +61,43 @@ def extract(repo, directory):
 
     catalog = parse(src(ROOT + "Data/Workbench/换装工作台目录.asset"))["MonoBehaviour"]["equipments"]
     attack_guid = parse(src(ROOT + "AnimationType/Attack.asset.meta"))["guid"]
+    slash_guid = None if legacy_pair else parse(src(ROOT + "AnimationType/SlashAttack.asset.meta"))["guid"]
     options = []
-    for i, name in enumerate(("长矛", "重盾")):
+    names = ("长矛", "重盾") if legacy_pair else ("战斧", "长矛", "重盾", "圆盾")
+    for name in names:
         path = ROOT + f"Equip/Visual/{name}.asset"
         definition = parse(src(path).replace(b"depthModes: ", b"depthModes: !!str "))["MonoBehaviour"]
         guid = parse(src(path + ".meta"))["guid"]
         option = next(o for o in catalog if o["visual"]["guid"] == guid)
         assert option["displayName"] == name
-        assert definition["type"] == 8+i and definition["weaponSlotType"] == (0 if i==0 else 3)
+        main_hand = name in ("战斧", "长矛")
+        assert definition["type"] == (8 if main_hand else 9) and definition["weaponSlotType"] == (0 if main_hand else 3)
+        assert not any(definition[v+"Variant"][d.lower()]["fileID"] != 0 for v in ("up","down","left","right") for d in DIRECTIONS)
         assert not definition["useOffHandAnchor"] and not definition["hideOutlineOnBody"]
         directions = [sprite(definition["sprite"+d]) for d in DIRECTIONS]
         sequences = {}
         for seq in definition["animSequences"]:
-            assert i == 0 and seq["animationType"]["guid"] == attack_guid and len(seq["strips"]) == 4
+            key_guid = seq["animationType"]["guid"]
+            assert main_hand and len(seq["strips"]) == 4
+            if key_guid == slash_guid:
+                assert name == "战斧" and seq["strips"] == next(a["strips"] for a in definition["animSequences"] if a["animationType"]["guid"] == attack_guid)
+                continue  # No SlashAttack body animation is exposed by this scene yet.
+            assert key_guid == attack_guid
             rows = [None]*4
             for strip in seq["strips"]:
                 row = strip["facing"]
                 frames = [sprite(r) for r in strip["frames"]]
                 depth = [n for (n,) in struct.iter_unpack("<I",bytes.fromhex(strip["depthModes"]))]
                 assert len(frames) == len(depth) == 4 and depth == ([0]*4 if row < 2 else [0,0,1,1])
-                assert all(r["rect"] == [j*32,(3-row)*32,32,32] for j,r in enumerate(frames))
+                columns = [1,0,2,3] if name == "战斧" and row == 2 else range(4)
+                assert all(r["rect"] == [j*32,(3-row)*32,32,32] for j,r in zip(columns,frames))
                 rows[row] = [dict(sprite=r, depth_back=bool(d)) for r,d in zip(frames,depth)]
             sequences["Attack"] = rows
-        assert len(sequences) == (1 if i==0 else 0)
+        assert len(sequences) == int(main_hand)
+        assert [r is not None for r in directions] == {
+            "战斧":[True,False,False,False], "长矛":[True,False,False,False],
+            "重盾":[True]*4, "圆盾":[True,True,False,False]
+        }[name]
         options.append(dict(name=name, guid=guid, type=definition["type"], stats=option["bonusStats"]["values"],
                             directions=directions, sequences=sequences))
 
@@ -114,6 +132,7 @@ if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("repo",type=Path)
     parser.add_argument("directory",type=Path)
+    parser.add_argument("--legacy-pair",action="store_true",help="regenerate the original spear/heavy-shield-only manifest")
     args=parser.parse_args()
-    result=extract(args.repo,args.directory)
+    result=extract(args.repo,args.directory,args.legacy_pair)
     (args.directory/"weapons.json").write_bytes((json.dumps(result,indent=2,ensure_ascii=False)+"\n").encode("utf-8"))

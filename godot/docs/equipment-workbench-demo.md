@@ -35,9 +35,10 @@ export FANTASYWORD_WORKBENCH_HEADWEAR=/path/to/private-headwear-source
 ```
 提取器只生成精确材质合同，不复制素材。图集大小按原实际 PNG 高宽，逐字校验材质引用的文件、SHA 和 Unity Sprite ID；两个铁盔共享 512×608 原图集，使用不同列。
 
-### 可选长矛与重盾合同
+### 可选武器与盾牌合同
 私有目录需要原 `长矛1.png`、`shield2.png` 至 `shield5.png`（MiniFantasyUV ImportedSource）与原人类目录的 `Slash_sword_f.png`、`Slash_sword_b.png`。
 后一对是「长矛」实际序列 GUID 引用，不以同名或相似的突刺资源替换。
+完整四件配置还需要 ImportedSource 中的 `axe.png`、`shield.png`、`shield0.png`，以及原 `Assets/Art/武器/迷你幻想_武器_v3.0/迷你幻想_武器_素材/劈砍_攻击/斧` 中的 `劈砍_斧_f.png` 和 `劈砍_斧_b.png`。仅拥有前七张时，已有双件合同仍可用；提取时加 `--legacy-pair` 可重建同一合同。
 ```sh
 python godot/tools/extract_workbench_weapons.py /path/to/Unity-repository /path/to/private-weapon-source
 export FANTASYWORD_WORKBENCH_WEAPONS=/path/to/private-weapon-source
@@ -51,7 +52,7 @@ export FANTASYWORD_WORKBENCH_WEAPONS=/path/to/private-weapon-source
 
 头部工作台保留源三列分类网格和独立头盔、帽子、面罩页。角饰头盔、铁盔 I/II、轻帽和护目镜依原类型互相替换，空分类的卸下不移除其它分类。头盔/帽子共用 Helmet 层，面罩独立；原人类头发、胡须按选项分别保留或隐藏，并在每次原头部帧采样时重新求值。四向护目镜贴图、铁盔的不同 atlas 列、行动后发须保留和移除后复原已纳入 Godot 原生测试；不改变正式场景的默认外观或装备逻辑。
 
-长矛与重盾按原主手/副手分开穿脱，显示原属性。原行走标签 1、3 缺副手锚点时只隐藏盾牌，标签 0、2 恢复，主手不消失且并未卸下装备。原东北攻击标签 1 到 2 的长矛从前层原图切到后层原图，副手保留。测试同时覆盖静态待机四向、武器组合后的原生帧像素与卸下复原。未接入战斧、圆盾或正式库存与战斗。
+长矛与重盾按原主手/副手分开穿脱，显示原属性。原行走标签 1、3 缺副手锚点时只隐藏盾牌，标签 0、2 恢复，主手不消失且并未卸下装备。原东北攻击标签 1 到 2 的长矛从前层原图切到后层原图，副手保留。测试同时覆盖静态待机四向、武器组合后的原生帧像素与卸下复原。战斧和长矛在主手互换，圆盾和重盾在副手互换，不影响另一手。同项再次点击保留穿戴；卸下只清所在槽。战斧东北攻击标签 0、1 的原切片 x 顺序是 32、0，按确切 fileID 绑定。圆盾没有后向图，东北回退东南、西北回退西南，已经配置西南所以不镜像。原生测试区分了实际战斧两帧和圆盾两个后向的图像颜色。战斧虽另有原 SlashAttack 序列，但本展示场景尚未移植该人物动作；武器/盾牌未接正式库存和战斗。
 
 等待、其他动作、其他角色/形象及装备、坐骑、工作台完整轮廓与整屏布局、Unity 同场画面逐项对比仍未验收。
 

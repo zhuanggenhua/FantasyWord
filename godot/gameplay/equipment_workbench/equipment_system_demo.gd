@@ -231,16 +231,18 @@ func _mount_ui() -> void:
 		for slot in 2:
 			var gear := _slot_grid(lists)
 			_weapon_lists.append(gear)
-			var buttons: Array[Button] = []
-			var badges: Array[Label] = []
-			for index in 2:
-				var item: Dictionary = _weapons.options[slot]
-				var button := _button(gear, "卸下" if index == 0 else item.name, Vector2(108, 96))
-				button.name = [["RemoveSpear", "EquipSpear"], ["RemoveShield", "EquipShield"]][slot][index]
-				button.pressed.connect(_select_weapon.bind(slot, index == 1))
-				_equip_slot_icon(button, _empty_slot_icon() if index == 0 else _weapons.icon(slot))
-				buttons.append(button)
-				badges.append(_badge(button, "当前为空" if index == 0 else "已装备"))
+			var buttons := {}
+			var badges := {}
+			var ids: Array[int] = _weapons.ids_for(slot)
+			ids.push_front(-1)
+			for id in ids:
+				var item: Dictionary = _weapons.options[id] if id >= 0 else {}
+				var button := _button(gear, item.get("name","卸下"), Vector2(108,96))
+				button.name = ["RemoveSpear","RemoveShield"][slot] if id < 0 else Weapons.BUTTON_NAMES[item.name]
+				button.pressed.connect(_select_weapon.bind(slot,id))
+				_equip_slot_icon(button,_empty_slot_icon() if id < 0 else _weapons.icon(id))
+				buttons[id] = button
+				badges[id] = _badge(button,"当前为空" if id < 0 else "已装备")
 			_weapon_buttons.append(buttons)
 			_weapon_badges.append(badges)
 	_header(right, "当前装备")
@@ -288,8 +290,8 @@ func _remove_headwear(kind: int) -> void:
 	_human.material_binding.set_workbench_headwear(_headwear.render_entry())
 	_refresh()
 
-func _select_weapon(slot: int, use: bool) -> void:
-	_weapons.select(slot, use)
+func _select_weapon(slot: int, id: int) -> void:
+	_weapons.select(slot, id)
 	_refresh()
 
 func _slot_grid(parent: Container) -> GridContainer:
@@ -409,10 +411,10 @@ func _refresh() -> void:
 	if _weapons != null:
 		for slot in 2:
 			_weapon_lists[slot].visible = _category == 8 + slot
-			for i in 2:
-				var equipped := _weapons.worn[slot] == (i == 1)
-				_style(_weapon_buttons[slot][i], (SLOT_ACTIVE if i == 0 else SLOT_EQUIPPED) if equipped else SLOT_IDLE)
-				_weapon_badges[slot][i].visible = equipped
+			for id: int in _weapon_buttons[slot]:
+				var equipped := _weapons.worn[slot] == id
+				_style(_weapon_buttons[slot][id],(SLOT_ACTIVE if id < 0 else SLOT_EQUIPPED) if equipped else SLOT_IDLE)
+				_weapon_badges[slot][id].visible = equipped
 			if _category == 8 + slot: category_text = _weapons.details(slot)
 	_details.text = "角色 人类 | 形象 基础人形外观\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		ACTIONS[current], DIRECTIONS[direction], ACTIONS[current],

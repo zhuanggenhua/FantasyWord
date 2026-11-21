@@ -1,15 +1,19 @@
 extends RefCounted
-## Original human Workbench scope: spear (main) and heavy shield (off hand).
+## Original human Workbench scope: main-hand weapons and off-hand shields.
 const Pose = preload("res://gameplay/presentation/equipment_weapon_pose.gd")
 const SubsetMaterial = preload("res://gameplay/presentation/equipment_subset_material.gd")
 const SlotIcon = preload("res://gameplay/equipment_workbench/slot_icon.gd")
-const MANIFEST := "0876b714bcb85858bd796a3d2352f10d0dfcb2411066cec69a6e7b5ac5364033"
+const MANIFESTS := [
+	"b24dbe5b601fe137b3d4e54b703b6bcc413e843120a93bfadc226d4cd1454a0b",
+	"0876b714bcb85858bd796a3d2352f10d0dfcb2411066cec69a6e7b5ac5364033",
+]
+const BUTTON_NAMES := {"战斧":"EquipAxe", "长矛":"EquipSpear", "重盾":"EquipShield", "圆盾":"EquipRoundShield"}
 const STATS := ["体质", "生命", "力量", "智力", "魔力"]
 const TYPES := ["武器", "盾牌"]
 const KEYS := ["se", "sw", "ne", "nw"]
 
 var options: Array[Dictionary] = []
-var worn: Array[bool] = [false,false]
+var worn: Array[int] = [-1,-1]
 var _textures: Dictionary = {}
 var _frames: Dictionary = {}
 var _material: ShaderMaterial
@@ -18,7 +22,7 @@ var binding_error := ""
 
 func load_source(dir: String) -> bool:
 	var manifest := dir.path_join("weapons.json")
-	if FileAccess.get_sha256(manifest) != MANIFEST:
+	if FileAccess.get_sha256(manifest) not in MANIFESTS:
 		return false
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(manifest))
 	for key in data.textures:
@@ -46,7 +50,8 @@ func load_source(dir: String) -> bool:
 					strip.append({"sprite":_sprite(frame.sprite), "depth_back":frame.depth_back})
 				rows.append(strip)
 			seqs[act] = rows
-		options.append({"name":option.name,"stats":option.stats,"sprites":sprites,"sequence":seqs,"is_shield":int(option.type)==9})
+		options.append({"name":option.name,"stats":option.stats,"sprites":sprites,"sequence":seqs,
+			"slot":int(option.type)-8,"is_shield":int(option.type)==9})
 	return true
 
 func _sprite(row: Variant) -> Variant:
@@ -62,12 +67,22 @@ func bind(material: ShaderMaterial, playback: Node) -> void:
 	_playback.sample_resolved.connect(_on_sample)
 	_update_now()
 
-func select(slot: int, value: bool) -> void:
-	worn[slot] = value
+func ids_for(slot: int) -> Array[int]:
+	var result: Array[int] = []
+	for i in options.size():
+		if options[i].slot == slot: result.append(i)
+	return result
+
+func select(slot: int, option: int) -> void:
+	if slot not in [0,1] or option < -1 or option >= options.size():
+		return
+	if option >= 0 and options[option].slot != slot:
+		return
+	worn[slot] = option
 	_update_now()
 
 func reset() -> void:
-	worn = [false,false]
+	worn = [-1,-1]
 	_update_now()
 
 func _update_now() -> void:
@@ -75,7 +90,7 @@ func _update_now() -> void:
 
 func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -> void:
 	var frame: Variant = _frames.get(action,{}).get(Vector2i(label,direction))
-	if frame == null or not sample is AtlasTexture or not (worn[0] or worn[1]):
+	if frame == null or not sample is AtlasTexture or worn == [-1,-1]:
 		SubsetMaterial.reset_weapon_fill(_material)
 		return
 	var atlas := sample as AtlasTexture
@@ -86,8 +101,8 @@ func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -
 	var facing: int = frame[0]
 	var slots: Array = [{},{}]
 	for i in 2:
-		if not worn[i]: continue
-		var option := options[i]
+		if worn[i] < 0: continue
+		var option := options[worn[i]]
 		var configured: bool = option.sequence.has(action)
 		var seq: Dictionary = option.sequence[action][facing][label] if configured else {}
 		var result := Pose.resolve(facing,i==0,bounds.size,frame[i+1],option,configured,seq)
@@ -101,16 +116,16 @@ func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -
 	var outcome := SubsetMaterial.apply_weapon_fill(_material,normalized,slots)
 	binding_error = "" if outcome.ok else outcome.reason
 
-func icon(slot: int) -> ImageTexture:
-	var item := options[slot]
+func icon(option: int) -> ImageTexture:
+	var item := options[option]
 	var sprite: Dictionary = item.sequence.Attack[0][0].sprite if item.sequence.has("Attack") else item.sprites.se
 	var im: Image = sprite.texture.get_image()
 	var rect: Rect2 = sprite.rect
 	return SlotIcon.from_sprite(im.get_region(Rect2i(int(rect.position.x),im.get_height()-int(rect.end.y),int(rect.size.x),int(rect.size.y))))
 
 func details(slot: int) -> String:
-	if not worn[slot]: return TYPES[slot] + "\n当前为空"
-	var item := options[slot]
+	if worn[slot] < 0: return TYPES[slot] + "\n当前为空"
+	var item := options[worn[slot]]
 	var lines: Array[String] = [item.name,TYPES[slot]]
 	for row in item.stats:
 		lines.append("%s %+d" % [STATS[int(row.stat)],int(row.value)])
