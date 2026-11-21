@@ -200,8 +200,12 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_resize)
 
 func _open() -> void:
+	var cached := stack.cached_root()
+	if cached!=null:
+		if stack.push_panel(cached,true): _resize()
+		return
 	var view := View.new()
-	if not view.bind(_source,_dir) or not stack.push_panel(view):
+	if not view.bind(_source,_dir) or not stack.push_panel(view,true):
 		view.free()
 		return
 	_resize()

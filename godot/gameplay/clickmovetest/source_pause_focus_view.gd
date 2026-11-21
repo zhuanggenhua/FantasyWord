@@ -186,6 +186,8 @@ func label_visible(action: int) -> bool: return _labels.has(action) and _labels[
 func entry_tint(action: int) -> Color: return _states[action].color if _states.has(action) else Color.TRANSPARENT
 
 func apply_stack_interactions(active: bool) -> void:
+	# Inactive cached time is not elapsed time for a newly enabled tint.
+	_last_us=Time.get_ticks_usec()
 	_live = active
 	visible = active
 	if not active:

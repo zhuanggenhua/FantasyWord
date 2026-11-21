@@ -177,15 +177,21 @@ func _stick_cases(boot: Boot) -> void:
 	var original_pause_id := pause.get_instance_id()
 	_axis(JOY_AXIS_RIGHT_Y,.8)
 	_tap(JOY_BUTTON_B)
+	_check(stack.depth()==0 and not stack.get_tree().paused and is_instance_valid(pause) and not pause.visible
+		and pause.process_mode==Node.PROCESS_MODE_DISABLED and pause.selected_action()==0 and not pause.label_visible(7),
+		"正常关闭令原 Pause 退出动作图、停止参与输入，不销毁缓存")
 	_tap(JOY_BUTTON_START)
 	var reopened:=stack.top() as Pause
 	if reopened==null:
 		_check(false,"快速重开失败"); return
 	await _settle()
+	_check(reopened.get_instance_id()==original_pause_id and reopened.selected_action()==7
+		and reopened.label_visible(7) and not reopened.label_visible(3),
+		"完全重开后由同一缓存原面板恢复最后选择，不等鼠标或新方向")
 	await _focus_then_leave(reopened,3)
 	_axis(JOY_AXIS_RIGHT_Y,.8)
 	await _settle()
-	_check(reopened.get_instance_id()!=original_pause_id and reopened.selected_action()==3,"关闭清待派发和连发，新面板不重采样物理轴")
+	_check(reopened.selected_action()==3,"重用面板仍清待派发和连发，不重采样物理轴")
 	_axis(JOY_AXIS_RIGHT_Y,.81)
 	await _settle()
 	_check(reopened.selected_action()==7,"快速重开后确有原始变化才重新移动")
@@ -281,6 +287,16 @@ func _run() -> void:
 	_tap(JOY_BUTTON_B)
 	_check(not paused and stack.depth()==0,"独立 Cancel 可正常返回 Gameplay")
 	await _stick_cases(boot)
+	if paused: _finish(); return
+	var previous:=boot.get_instance_id()
+	_check(change_scene_to_file(ProjectSettings.get_setting("application/run/main_scene"))==OK,"重新加载真实项目不继承旧场景缓存")
+	await scene_changed
+	await _settle()
+	var next:=current_scene as Boot
+	_tap(JOY_BUTTON_START)
+	_check(next!=null and next.get_instance_id()!=previous and next.pause_root.stack.top() is Pause
+		and next.pause_root.stack.top().selected_action()==0,"新场景的首开仍冷启动、没有猜测焦点")
+	_tap(JOY_BUTTON_B)
 	_finish()
 
 func _finish() -> void:

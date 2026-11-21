@@ -4,6 +4,8 @@ extends Node
 enum ActionLayer { GAMEPLAY, UI }
 signal ui_input_observed(event: InputEvent)
 var _stack: Array[Control] = []
+var _cached_root: Control
+var _cached_root_process_mode := Node.PROCESS_MODE_INHERIT
 var _request_root: Callable
 var _may_open: Callable
 var _change_map: Callable
@@ -34,20 +36,34 @@ func depth() -> int:
 func top() -> Control:
 	return null if _stack.is_empty() else _stack.back()
 
-## 仅接收注册入口成功实例化的完整面板。宿主始终拥有失败对象的处置责任。
-func push_panel(panel: Control) -> bool:
+## Only an explicitly admitted root may be cached across normal close.
+## It remains owned by this stack, not by an autoload or another scene.
+func cached_root() -> Control:
+	return _cached_root if is_instance_valid(_cached_root) and _stack.is_empty() else null
+
+## 仅接收注册入口成功实例化的完整面板。宿主始终拥有失败的新对象。
+func push_panel(panel: Control, retain_root := false) -> bool:
 	if _transitioning or not _configured or not is_inside_tree() or not is_instance_valid(panel) \
-			or panel.get_parent() != null or panel.is_queued_for_deletion() \
-			or not _valid_panel(panel):
+			or panel.is_queued_for_deletion():
 		return false
 	var first := _stack.is_empty()
+	var reuse := retain_root and first and panel==_cached_root and panel.get_parent()==self
+	if (retain_root and (not first or (is_instance_valid(_cached_root) and not reuse))) \
+			or (not reuse and (panel.get_parent()!=null or not _valid_panel(panel))):
+		return false
 	# 当前实现仅从 Gameplay 进入；不能夺取另一暂停态的时钟。
 	if first and (get_tree().paused or not is_equal_approx(Engine.time_scale, 1.0)):
 		return false
 	_transitioning = true
 	if not first: top().apply_stack_interactions(false)
 	panel.hide()
-	add_child(panel)
+	if reuse:
+		panel.process_mode=_cached_root_process_mode
+	else:
+		if retain_root:
+			_cached_root=panel
+			_cached_root_process_mode=panel.process_mode
+		add_child(panel)
 	# Godot 的固定步用常量源步长；仅令 delta 归零不能停止该链。
 	if first:
 		_cancel_held.clear()
@@ -67,8 +83,12 @@ func pop_current() -> bool:
 	var panel: Control = _stack.pop_back()
 	panel.apply_stack_interactions(false)
 	panel.hide()
-	remove_child(panel)
-	panel.queue_free()
+	if panel==_cached_root:
+		# The original PopFromStack closes/hides but does not evict this panel.
+		panel.process_mode=Node.PROCESS_MODE_DISABLED
+	else:
+		remove_child(panel)
+		panel.queue_free()
 	if _stack.is_empty():
 		_cancel_held.clear()
 		_change_map.call(ActionLayer.GAMEPLAY)

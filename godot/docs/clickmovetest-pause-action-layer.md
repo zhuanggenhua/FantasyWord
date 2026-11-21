@@ -40,10 +40,26 @@ Select 和左对齐 Close，1600 或 1920 等非同参考高度下的屏幕像�
 Esc / 鼠标右键在原角色命令门禁后开启或关闭真实根面板。保持此前点地路径，
 左键确实在同一原项目条目按下抬起才发出对应请求，悬停及静止 Point
 可选中原项目条目。初次无默认焦点，原 Effects 标题仍可见。活动效果租用、
-原子菜单的业务接收器、手柄、暂停/恢复音效、Unity 实机像素对照仍未验收；
-不会用示意子菜单替代。现有键鼠路径是限定子集，尚未处理恢复玩法时的
-全部原 Initial State Check 或不同绑定组同帧仲裁。
+未接入的原子菜单业务、暂停/恢复音效、Unity 实机像素对照仍未验收；
+不会用示意子菜单替代。手柄已接入的范围与混合设备限制见
+[原暂停手柄导航](clickmovetest-gamepad-pause-navigation.md)。
 
 遮罩为原色 RGBA (63,40,50,200)/255，铺满整个实际视口。原 CanvasScaler
 匹配高度，左栏保留左边锚点，标题与页脚居中，Effects 贴右。此处不承诺
 Unity 画布像素取整和颜色空间合成已完全一致。
+
+## 完全关闭和重开时的根菜单焦点
+
+锁定版 `UIManager.MenuStackRuntime.cs` 使用 UIKit 的栈内 Pop 和异步 Open。
+`UIRoot.Stack.cs` 的 Pop 直接调用 `UIPanel.Close()`，这一关闭隐藏并
+触发回调，不经过另一个会逐出缓存的 ClosePanelInternal；
+`UIRoot.PanelOperations.cs` 异步 reopen 可查询并打开同一缓存面板。
+`UIGameMenuEntry.OnSelect` 把最近选中项回写给原面板，
+`UIGameMenu.ResolveDefaultFocusTarget` 在真正重开时恢复它。
+
+Godot 的原 Pause 根跟随原启动场景生命周期保持同一个实例：
+退出时从栈中移除并停止处理、隐藏标签，不能挡住 Gameplay；
+重新打开不合成旧输入，但由同一原面板恢复焦点和标签。
+切换整张启动场景后首次打开仍没有默认焦点。此处只迁移正常 Pause 根
+关闭、再次 Open 的缓存路径，不把其他面板或 UIKit 的全局淘汰策略
+认作已迁移。云端原生 F5 使用注入输入覆盖该链，不是 Unity 实机画面对照。
