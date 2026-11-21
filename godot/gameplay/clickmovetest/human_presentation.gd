@@ -3,6 +3,7 @@ extends Node2D
 const Playback = preload("res://game_core/presentation/directional_sprite_playback.gd")
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
 const Gear = preload("res://game_core/inventory/source_character_equipment.gd")
+const Weapons = preload("res://gameplay/equipment_workbench/weapons_preview.gd")
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_PNG_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 var sprite: Sprite2D
@@ -14,6 +15,8 @@ var material_binding: RefCounted
 var _animation_contract := {}
 var _source_cloth_gear: Gear
 var _source_cloth: ImageTexture
+var _source_spear_gear: Gear
+var _source_spear: Weapons
 
 static func valid_primary_death(source: Variant) -> bool:
 	return source is Dictionary and source.get("config_guid")=="b669f9c81be34b47bf3d083609477ab5" \
@@ -154,6 +157,30 @@ func _refresh_source_cloth() -> void:
 	current.set_shader_parameter("cloth_rect",Vector4(0,0,1,1))
 	current.set_shader_parameter("enabled_cloth",equipped)
 
+func bind_source_spear(gear: Gear, directory: String) -> bool:
+	var body := get_parent()
+	if _source_spear!=null or body==null or gear==null or material_binding==null \
+			or material_binding.material.shader!=Weapons.SubsetMaterial.WEAPON_SUBSET \
+			or not gear.belongs_to(body.get_parent()) or gear.item_for_guid(Gear.SPEAR)==null \
+			or not _animation_contract.actions.has_all(["Idle","Walk","Attack","Dmg","SpinDie"]) \
+			or not valid_primary_death(_animation_contract.get("primary_death")):
+		return _fail("长矛须接到原主角、原动作库和原武器材质。")
+	var binding := Weapons.new()
+	if not binding.load_source(directory,true):
+		return _fail("缺少经核对的原长矛图和人物锚点合同。")
+	_source_spear = binding
+	_source_spear_gear = gear
+	binding.bind(material_binding.material,playback)
+	gear.loadout_changed.connect(_refresh_source_spear)
+	_refresh_source_spear()
+	last_error = ""
+	return true
+
+func _refresh_source_spear() -> void:
+	var equipped := _source_spear_gear.equipped(Gear.Slot.WEAPON)==_source_spear_gear.item_for_guid(Gear.SPEAR)
+	# Actual actor's equipment owns the state. No Workbench option changes it.
+	_source_spear.select(0,0 if equipped else -1)
+
 ## EquipmentRenderer.TryGetGroundAnchorWorldPosition；仅支持已经核实的正中 FullRect 人形帧。
 ## 原帧高 32，groundPixelY=18；从中心到行像素中心是 2.5 个向下的图集像素。
 func reflection_ground_anchor() -> Variant:
@@ -166,6 +193,11 @@ func reflection_ground_anchor() -> Variant:
 	return Vector2(world_bounds.get_center().x,ground.y)
 
 func _exit_tree() -> void:
+	if _source_spear!=null:
+		_source_spear_gear.loadout_changed.disconnect(_refresh_source_spear)
+		_source_spear.disconnect_from_view()
+		_source_spear_gear=null
+		_source_spear=null
 	if _source_cloth_gear!=null:
 		_source_cloth_gear.loadout_changed.disconnect(_refresh_source_cloth)
 		_source_cloth_gear=null

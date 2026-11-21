@@ -7,6 +7,7 @@ const MANIFESTS := [
 	"b24dbe5b601fe137b3d4e54b703b6bcc413e843120a93bfadc226d4cd1454a0b",
 	"0876b714bcb85858bd796a3d2352f10d0dfcb2411066cec69a6e7b5ac5364033",
 ]
+const FORMAL_SPEAR_HASH := "ae0b9f2850574837396fdd0021b26d49877e579f8d4e25b8ff849d3b658a25da"
 const BUTTON_NAMES := {"战斧":"EquipAxe", "长矛":"EquipSpear", "重盾":"EquipShield", "圆盾":"EquipRoundShield"}
 const STATS := ["体质", "生命", "力量", "智力", "魔力"]
 const TYPES := ["武器", "盾牌"]
@@ -20,9 +21,9 @@ var _material: ShaderMaterial
 var _playback: Node
 var binding_error := ""
 
-func load_source(dir: String) -> bool:
-	var manifest := dir.path_join("weapons.json")
-	if FileAccess.get_sha256(manifest) not in MANIFESTS:
+func load_source(dir: String, formal_spear := false) -> bool:
+	var manifest := dir.path_join("player-spear.json" if formal_spear else "weapons.json")
+	if FileAccess.get_sha256(manifest) not in ([FORMAL_SPEAR_HASH] if formal_spear else MANIFESTS):
 		return false
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(manifest))
 	for key in data.textures:
@@ -72,6 +73,12 @@ func bind(material: ShaderMaterial, playback: Node) -> void:
 	_playback = playback
 	_playback.sample_resolved.connect(_on_sample)
 	_update_now()
+
+func disconnect_from_view() -> void:
+	if is_instance_valid(_playback) and _playback.sample_resolved.is_connected(_on_sample):
+		_playback.sample_resolved.disconnect(_on_sample)
+	_playback=null
+	_material=null
 
 func ids_for(slot: int) -> Array[int]:
 	var result: Array[int] = []

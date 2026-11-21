@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 import struct
 from pathlib import Path
 
@@ -16,10 +17,13 @@ DIRECTIONS = ("SE", "SW", "NE", "NW")
 ACTIONS = {"Idle": 16, "Walk": 4, "Attack": 4, "Dmg": 4}
 
 
-def extract(repo, directory, legacy_pair=False):
+def extract(repo, directory, legacy_pair=False, spear_only=False):
     textures, sprites, sources = {}, {}, {}
-    names = ["长矛1.png", "shield2.png", "shield3.png", "shield4.png", "shield5.png", "Slash_sword_f.png", "Slash_sword_b.png"]
-    if not legacy_pair:
+    names = ["长矛1.png"]
+    if not spear_only:
+        names += ["shield2.png", "shield3.png", "shield4.png", "shield5.png"]
+    names += ["Slash_sword_f.png", "Slash_sword_b.png"]
+    if not legacy_pair and not spear_only:
         names.extend(["axe.png", "shield.png", "shield0.png", "劈砍_斧_f.png", "劈砍_斧_b.png"])
     for name in names:
         path = (HUMAN_ART if name.startswith("Slash_") else AXE_ART if name.startswith("劈砍_斧") else ART) + name
@@ -61,9 +65,9 @@ def extract(repo, directory, legacy_pair=False):
 
     catalog = parse(src(ROOT + "Data/Workbench/换装工作台目录.asset"))["MonoBehaviour"]["equipments"]
     attack_guid = parse(src(ROOT + "AnimationType/Attack.asset.meta"))["guid"]
-    slash_guid = None if legacy_pair else parse(src(ROOT + "AnimationType/SlashAttack.asset.meta"))["guid"]
+    slash_guid = None if legacy_pair or spear_only else parse(src(ROOT + "AnimationType/SlashAttack.asset.meta"))["guid"]
     options = []
-    names = ("长矛", "重盾") if legacy_pair else ("战斧", "长矛", "重盾", "圆盾")
+    names = ("长矛",) if spear_only else (("长矛", "重盾") if legacy_pair else ("战斧", "长矛", "重盾", "圆盾"))
     for name in names:
         path = ROOT + f"Equip/Visual/{name}.asset"
         definition = parse(src(path).replace(b"depthModes: ", b"depthModes: !!str "))["MonoBehaviour"]
@@ -127,12 +131,43 @@ def extract(repo, directory, legacy_pair=False):
         frames[key] = rows
     return dict(source_commit=SOURCE, sources=sources, textures=textures, options=options, frames=frames)
 
+def extract_primary_spear(repo, directory):
+    source = extract(repo, directory, spear_only=True)
+    item_path = "Assets/Database/Items/Equipment/长矛.asset"
+    item_guid = parse(read(repo, item_path + ".meta"))["guid"]
+    assert item_guid == "e75ab3eda87066246bf3a27034a417bd"
+    equipment = parse(read(repo, item_path))["MonoBehaviour"]
+    original = next(item for item in source["options"] if item["name"] == "长矛")
+    assert equipment["m_type"] == 0 and equipment["m_visual"]["guid"] == original["guid"]
+    assert list(original["sequences"].keys()) == ["Attack"]
+    assert all(row[3] is not None for frames in source["frames"].values() for row in frames)
+    # The actual formal death atlas is 12 columns and a single row. The
+    # source has no weapon anchor in these 12 frames or unused facing rows.
+    spin_guid = parse(read(repo, ROOT + "AnimationType/SpinDie.asset.meta"))["guid"]
+    raw = read(repo, ROOT + "FrameData/人类帧数据.asset").decode()
+    spin, = [record for record in raw.split("\n  - animationType: ")[1:]
+             if spin_guid in record.splitlines()[0]]
+    assert not re.search(r"(?m)^      anchors:(?! \[\]$)", spin)
+    assert len(re.findall(r"(?m)^      anchors: \[\]$", spin)) == 42
+    primary = {(int(frame), int(row)) for frame, row in
+               re.findall(r"(?m)^    - frameIndex: (\d+)\n      rowIndex: (\d+)$", spin)}
+    assert {frame for frame, row in primary if row == 0} == set(range(12))
+    refs = [x["texture"] for x in original["directions"] if x is not None]
+    refs += [f["sprite"]["texture"] for row in original["sequences"]["Attack"] for f in row]
+    return {"source_commit": SOURCE, "purpose": "formal-primary-spear", "equipment_guid":
+            item_guid, "spin_die_without_anchors": True,
+            "textures": {key: source["textures"][key] for key in sorted(set(refs))},
+            "frames": source["frames"], "options": [original]}
+
 
 if __name__ == "__main__":
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("repo",type=Path)
     parser.add_argument("directory",type=Path)
     parser.add_argument("--legacy-pair",action="store_true",help="regenerate the original spear/heavy-shield-only manifest")
+    parser.add_argument("--formal-spear",action="store_true",help="author primary spear contract with audited absence of SpinDie anchors")
     args=parser.parse_args()
-    result=extract(args.repo,args.directory,args.legacy_pair)
-    (args.directory/"weapons.json").write_bytes((json.dumps(result,indent=2,ensure_ascii=False)+"\n").encode("utf-8"))
+    assert not (args.formal_spear and args.legacy_pair)
+    result, name = (extract_primary_spear(args.repo,args.directory), "player-spear.json") if args.formal_spear \
+        else (extract(args.repo,args.directory,args.legacy_pair), "weapons.json")
+    (args.directory/name).write_bytes((json.dumps(result,indent=2,ensure_ascii=False)+"\n").encode("utf-8"))
