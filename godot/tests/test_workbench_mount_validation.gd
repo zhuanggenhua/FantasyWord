@@ -119,6 +119,7 @@ func check_mounted_cloth(player: Node2D, riding: Node2D, owner: Equipment, stand
 		"换装保留当前双层帧、坐骑时钟和原马身材质")
 	if mat == null: return
 	var have_native := DisplayServer.get_name() != "headless"
+	var have_effects := FileAccess.file_exists(OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_CLOTH").path_join("outline-shadow-frames.json"))
 	for req in ["Idle", "Walk"]:
 		await click(req)
 		for dir in 4:
@@ -137,6 +138,16 @@ func check_mounted_cloth(player: Node2D, riding: Node2D, owner: Equipment, stand
 					and bool(mat.get_shader_parameter("body_in_front")) == (dir >= 2)
 					and bool(mat.get_shader_parameter("enabled_left_eye")) == (dir < 2),
 					"骑手实际原帧、专用整张 UV 和身体/眼部方向同步")
+				if have_effects:
+					var expected := Vector4(float(f*32)/dimensions.x, (3-dir)*0.25,
+						float((f+1)*32)/dimensions.x, (4-dir)*0.25)
+					check(Vector4(mat.get_shader_parameter("outline_frame_rect")).is_equal_approx(expected)
+						and mat.get_shader_parameter("shadow_mode") == 0.0
+						and mat.get_shader_parameter("outline_base_y") == 0.734375
+						and mat.get_shader_parameter("outline_default") == 1.0
+						and mat.get_shader_parameter("outline_hit") == 0.0
+						and mat.get_shader_parameter("shadow_enabled") == 1.0,
+						"64 帧以真实脚标记绑定同帧原轮廓及 Mode 0 阴影")
 				check(cloth_coverage(mat, sprite) == 0, "原骑乘 Body UV 采样到原布衣透明区域，不自行重排作者 UV")
 				if have_native and f < 2:
 					await RenderingServer.frame_post_draw
@@ -159,6 +170,8 @@ func check_mounted_cloth(player: Node2D, riding: Node2D, owner: Equipment, stand
 			and absf(equipped_eye.b - configured_eye.b) < 0.012 and equipped_eye != direct_eye,
 			"原 Idle-SE 第零帧实际骑手右眼吃到骑乘 UV；非衣物像素")
 		await click("EquipCloth")
+	if have_native and have_effects:
+		await check_frame_effects(riding, mat)
 	var previous: float = riding.elapsed
 	await click("RemoveCloth")
 	check(riding.rider_sprite.material == null and riding.elapsed == previous
@@ -168,6 +181,42 @@ func check_mounted_cloth(player: Node2D, riding: Node2D, owner: Equipment, stand
 	await click("RemoveMount")
 	check(player.sprite.visible and player.sprite.material == standing_material
 		and standing_material.get_shader_parameter("enabled_cloth"), "穿布衣下马恢复站立外观和原材质")
+
+func check_frame_effects(riding: Node2D, mat: ShaderMaterial) -> void:
+	# Independent top-origin source-pixel witnesses, not outputs from the Godot shader.
+	var cases := [
+		["Idle", 0, 0.0, Vector2i(13, 7), [Vector2i(11, 8)], Vector2i(10, 8)],
+		["Walk", 0, 0.201, Vector2i(11, 8), [Vector2i(10, 8), Vector2i(11, 9)], Vector2i(11, 10)],
+		["Walk", 3, 0.201, null, [Vector2i(13, 9)], Vector2i(13, 10)],
+	]
+	for row in cases:
+		riding.tick(row[0], (row[1] + 1) % 4, 0.0)
+		riding.tick(row[0], row[1], 0.0)
+		riding.tick(row[0], row[1], row[2])
+		await RenderingServer.frame_post_draw
+		var points: Array = row[4].duplicate()
+		points.push_back(row[5])
+		if row[3] != null: points.push_back(row[3])
+		var shown: Array[Color] = []
+		for point in points: shown.append(sample_pixel(riding.rider_sprite, point))
+		mat.set_shader_parameter("outline_default", 0.0)
+		mat.set_shader_parameter("shadow_enabled", 0.0)
+		await RenderingServer.frame_post_draw
+		for i in points.size():
+			var original := sample_pixel(riding.rider_sprite, points[i])
+			if i < row[4].size():
+				check(original.v > 0.1 and near_rgb(shown[i], Color(original.r*0.4, original.g*0.4, original.b*0.4)),
+					"实渲染地面行按作者 0.6 黑色阴影叠加 %s %d %s" % [row[0], row[1], points[i]])
+			elif points[i] == row[5]:
+				check(near_rgb(shown[i], original), "原阴影范围之外不改色")
+			else:
+				check(original.v > 0.1 and near_rgb(shown[i], Color.BLACK), "原角色轮廓实际渲染纯黑")
+		mat.set_shader_parameter("outline_default", 1.0)
+		mat.set_shader_parameter("shadow_enabled", 1.0)
+		check(riding.mount_sprite.material == null, "马身仍用原直显，不接受骑手材质")
+
+func near_rgb(a: Color, b: Color) -> bool:
+	return absf(a.r-b.r) < 0.012 and absf(a.g-b.g) < 0.012 and absf(a.b-b.b) < 0.012
 
 func cloth_coverage(mat: ShaderMaterial, sprite: AtlasTexture) -> int:
 	var body: Image = mat.get_shader_parameter("body_map").get_image()

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 import struct
 from pathlib import Path
 
@@ -87,12 +88,43 @@ def extract(repo, directory):
     return dict(source=SOURCE, frame_guid=guid, frame_sha256=hashlib.sha256(frame_source).hexdigest(),
                 cloth_guid=cloth_guid, appearance_guid=look_guid, actions=actions)
 
+def extract_outline_shadow(repo, cloth_contract):
+    """提取同一骑手原始脚标记；不把私有帧数据纳入版本控制。"""
+    raw = read(repo, FRAME)
+    assert hashlib.sha256(raw).hexdigest() == cloth_contract["frame_sha256"]
+    ground = int(re.search(r"^  groundPixelY: (\d+)$", raw.decode(), re.M)[1])
+    authored = raw.decode().split("\n  - animationType: ")[1:]
+    frames = {}
+    for action, spec in cloth_contract["actions"].items():
+        block, = (b for b in authored if f'spritesheet: {{fileID: 2800000, guid: {spec["atlas"]},' in b)
+        records = []
+        for m in re.finditer(r"^    - frameIndex: (\d+)\n      rowIndex: (\d+)\n(.*?)(?=^    - frameIndex: |\Z)", block, re.M | re.S):
+            frame, row, record = m.groups()
+            mask = re.search(r"^      limbMask:\n(.*?)^      leftEyeClosed:", record, re.M | re.S)[1]
+            feet = parse(("limbMask:\n" + mask).encode())["limbMask"]
+            hit = bool(int(re.search(r"^      hitOutlineFrame: (\d+)", record, re.M)[1]))
+            # This binding is only for the exact 64 source frames, none have a hit outline.
+            assert not hit and min(p["y"] for p in feet["leftFoot"] + feet["rightFoot"]) in (13, 14)
+            records.append(dict(frame_index=int(frame), row_index=int(row), left_foot=feet["leftFoot"],
+                                right_foot=feet["rightFoot"], hit_outline=hit))
+        assert [(f["frame_index"], f["row_index"]) for f in records] == [
+            (f["frame_index"], f["row_index"]) for f in spec["frames"]]
+        frames[action] = records
+    assert ground == 8 and len(frames["Stand"]) == 48 and len(frames["Move"]) == 16
+    return dict(source=SOURCE, frame_sha256=cloth_contract["frame_sha256"], ground_pixel_y=ground, frames=frames)
+
+
 if __name__ == "__main__":
     cli = argparse.ArgumentParser(description=__doc__)
     cli.add_argument("repo", type=Path)
     cli.add_argument("private_directory", type=Path)
+    cli.add_argument("--include-outline-shadow", action="store_true")
     args = cli.parse_args()
     data = extract(args.repo, args.private_directory)
     path = args.private_directory / "mounted-cloth-source.json"
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2)+'\n', encoding="utf-8")
     print("已核对骑手四张原 UV 图与 64 个帧数据，合同 SHA-256：",hashlib.sha256(path.read_bytes()).hexdigest())
+    if args.include_outline_shadow:
+        effects = args.private_directory / "outline-shadow-frames.json"
+        effects.write_text(json.dumps(extract_outline_shadow(args.repo, data), indent=2)+'\n', encoding="utf-8")
+        print("已核对骑手轮廓与地面阴影原脚标记，合同 SHA-256：", hashlib.sha256(effects.read_bytes()).hexdigest())
