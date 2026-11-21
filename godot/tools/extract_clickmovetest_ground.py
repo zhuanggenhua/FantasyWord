@@ -36,6 +36,9 @@ FIXED_DECORATIONS = {10: {
     'Standard Tiles/Cliffs/CliffShadow4_Minifantasy_ForgottenPlainsTilesShadows_3':1,
     'Rule Tiles/CliffStairs':3,
 }}
+COMBO_RULE = ROOT + 'Tile Palettes/Rule Tiles/CobblestoneGrass Combo.asset'
+COMBO_GUID = '7bfd441c8ff48e045b04a3a8ed4ac2d0'
+COMBO_COUNTS = {10:59, 20:6}
 CLIFF_SHADOWS_GUID = '1389a4518cee0534ea58db4eb226c532'
 CLIFF_SHADOWS = {CLIFF_SHADOWS_GUID: 'TilesShadows.png'}
 WATER_RULE = ROOT + 'Tile Palettes/Rule Tiles/LakeGrass.asset'
@@ -164,6 +167,27 @@ def fixed_decorations(checkout, source_id):
     return tiles
 
 
+def read_combo_rule(checkout, sprites):
+    # 只有这两层的锁定作者布局使用此缓存；不以 Godot 噪声近似 Unity 选图。
+    raw = re.sub(r'(m_Neighbors: )([0-9a-f]+)', r'\1"\2"', read(checkout, COMBO_RULE))
+    tile = get_document(raw, 11400000, 'MonoBehaviour')
+    rules = tile['m_TilingRules']
+    require(yaml.safe_load(read(checkout, COMBO_RULE+'.meta'))['guid'] == COMBO_GUID
+            and tile['m_Script']['guid'] == '9d1514134bc4fbd41bb739b1b9a49231'
+            and tile['m_DefaultGameObject']['fileID'] == 0
+            and len(rules) == 15, '原石草混合 RuleTile 身份或规则数量变化')
+    for index, rule in enumerate(rules):
+        require(rule['m_Id'] == index and rule['m_Output'] == 1
+                and rule['m_RuleTransform'] == rule['m_RandomTransform'] == 0
+                and rule['m_PerlinScale'] == (.75 if index == 4 else .5)
+                and rule['m_GameObject']['fileID'] == 0 and len(rule['m_Sprites']) == 3,
+                '原石草混合规则不是锁定的固定变换、三选一输出')
+        keys = [f"{item['guid']}:{item['fileID']}" for item in rule['m_Sprites'] if item['guid'] == TILES_GUID]
+        require(len(set(keys)) == 3 and all(k in sprites and sprites[k]['rect'][2:] == [8,8]
+                    and sprites[k]['pivot'] == [.5,.5] for k in keys), '原随机候选不再是锁定原图集的中心 8 像素格')
+    return tile
+
+
 def resolve_vegetation(checkout, reference):
     guid = reference['guid']
     require(reference['fileID'] == 11400000 and re.fullmatch(r'[0-9a-f]{32}', guid), '未知植被 Tile 引用')
@@ -265,9 +289,10 @@ def extract(checkout):
         require(len(mappings) == 5 and sorted((m['m_coverKind'],m['m_traits']) for m in mappings) == [(1,3)]*2 + [(5,3)]*3,
                 '植被覆盖作者映射变化')
         vegetation_sprites[source_id] = {m['m_tile']['guid']:resolve_vegetation(checkout,m['m_tile']) for m in mappings}
+    combo_rule = read_combo_rule(checkout, sprites)
     fixed_decor = {10:fixed_decorations(checkout,10),20:fixed_decorations(checkout,20)}
     for index, source_record in ((10,source10),(20,source)):
-        require(not set(fixed_decor[index]).intersection(m['m_tile']['guid'] for m in source_record['m_surfaceCoverTileMappings']),
+        require(not (set(fixed_decor[index]) | {COMBO_GUID}).intersection(m['m_tile']['guid'] for m in source_record['m_surfaceCoverTileMappings']),
                 '固定装饰不应属于作者映射草')
     layer10 = get_document(scene,453769791,'GameObject')
     require(layer10['m_IsActive'] == 1 and [c['component']['fileID'] for c in layer10['m_Component']]
@@ -303,18 +328,19 @@ def extract(checkout):
             require(len(animated) == len(tilemap['m_AnimatedTiles']) == 35 and tilemap['m_AnimationFrameRate'] == 1,
                     '湖岸原动画格数量或 Tilemap 帧率变化')
         rows, indexes, animated_rows, static_rows, static_counts = [], Counter(), [], [], Counter()
+        combo_count = 0
         for entry in tilemap['m_Tiles']:
             cell, data = tuple(xyz(entry['first'])), entry['second']
             ref = cells[cell]
             indexes[data['m_TileSpriteIndex']] += 1
             is_lake = source_id == 10 and cell in animated
+            is_combo = source_id in COMBO_COUNTS and ref['guid'] == COMBO_GUID
             is_static = ref['guid'] in fixed_decor.get(source_id,{})
             if source_id in (10,20) and not is_lake and not is_static and ref['guid'] not in ((upper_guid,detail_guid) if source_id == 10 else (upper_guid,)):
-                # 保留全层引用核对，但未求值的随机/旁观瓦片不冒充完成。
-                continue
+                require(is_combo, '出现未识别的原装饰格')
             allowed = vegetation_sprites[source_id] if is_vegetation else (DIRT_GUID, GRASS_GUID, upper_guid, detail_guid)
             require((is_lake and ref['fileID'] == 11400000 and ref['guid'] in lake_assets)
-                    or (is_static and ref['fileID'] == 11400000)
+                    or ((is_static or is_combo) and ref['fileID'] == 11400000)
                     or (ref['guid'] in allowed and (source_id != 0 or ref['guid'] == GRASS_GUID)), '未知地面 Tile')
             if is_lake:
                 source_frames = lake_assets[ref['guid']]
@@ -325,6 +351,12 @@ def extract(checkout):
                 used_lake_assets.add(ref['guid'])
                 # 原 GetTileData 给静态缓存末帧；播放仍从 m_AnimatedSprites 第一帧起。
                 sprite = source_frames[-1]
+            elif is_combo:
+                rule = first_fixed_rule(combo_rule, cell, cells, COMBO_GUID, 1)
+                # 原静态作者格不换 Tile；原场景序列化的真实选图比另一个噪声实现更明确。
+                sprite = tilemap['m_TileSpriteArray'][data['m_TileSpriteIndex']]['m_Data']
+                require(rule is not None and sprite in rule['m_Sprites'], '缓存选图未命中同格原首条邻接规则')
+                combo_count += 1
             elif is_static:
                 tile, _, is_rule = fixed_decor[source_id][ref['guid']]
                 sprite = resolve_fixed_tile_rule(tile, cell, cells, ref['guid']) if is_rule else tile['m_Sprite']
@@ -358,7 +390,7 @@ def extract(checkout):
                         '湖岸动画帧尺寸或枢轴变化')
                 used.update(keys)
                 animated_rows.append({'cell': list(cell),'frames':keys})
-            elif is_static:
+            elif is_static or is_combo:
                 require(sprites[key]['rect'][2:] == [8,8] and sprites[key]['pivot'] == [.5,.5], '固定装饰尺寸或枢轴变化')
                 static_rows.append(row)
             else:
@@ -372,6 +404,7 @@ def extract(checkout):
             layer['decorations'] = {'frames_per_second': 1, 'rows': animated_rows}
         if source_id in fixed_decor:
             require(static_counts == Counter({guid:value[1] for guid,value in fixed_decor[source_id].items()}), '固定装饰格数改变')
+            require(combo_count == COMBO_COUNTS[source_id], '作者随机选图装饰格数变化')
             layer['static_decorations'] = static_rows
         layers.append(layer)
     props = {tuple(r['cell']):r['translation'] for r in layers[-2]['rows']}
@@ -379,7 +412,7 @@ def extract(checkout):
     require(props.keys() == shadows.keys() and all(shadows[cell] == [pos[0]-.125,pos[1]] for cell,pos in props.items()),
             '原植被与阴影逐格位移配对变化')
     water_base = extract_water_base(checkout,scene,sprites,used)
-    return {'schema':6,'source_commit':SOURCE,'scope':'ground-decor-and-unreflected-water-base',
+    return {'schema':7,'source_commit':SOURCE,'scope':'ground-with-authored-combo-cache-and-unreflected-water-base',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},
             'layers':layers,'water_base':water_base}
 
@@ -394,6 +427,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；随机装饰59/6格与倒影未装配。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；不重算任意格的 Unity Perlin，也不抽取倒影。')
 
 if __name__ == '__main__': main()

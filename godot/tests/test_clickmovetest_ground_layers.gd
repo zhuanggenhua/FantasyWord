@@ -37,8 +37,25 @@ func run() -> void:
 	check(ground.cell_count(10)==158 and ground.cell_count(20)==3,"来源10/20真实映射覆盖158/3格，不包含独立装饰")
 	var road_cell := Vector3i(8,6,0)
 	var road := ground.static_decoration_sprite(10,road_cell) as Sprite2D
-	check(ground.static_decoration_count(10)==15 and ground.static_decoration_count(20)==4,
-		"来源10/20仅装配已求值的15/4格固定装饰")
+	check(ground.static_decoration_count(10)==74 and ground.static_decoration_count(20)==10,
+		"来源10/20装配固定装饰15/4格与原缓存装饰59/6格")
+	var combo_tiles: Array[Sprite2D] = []
+	var samples := [[10, Vector3i(6,-5,0), 168], [10, Vector3i(7,-5,0), 104],
+		[20, Vector3i(-6,13,0), 136]]
+	for sample in samples:
+		var source: int = sample[0]
+		var cell: Vector3i = sample[1]
+		var tile := ground.static_decoration_sprite(source,cell) as Sprite2D
+		var atlas := tile.texture as AtlasTexture if tile!=null else null
+		check(atlas!=null and atlas.region==Rect2(sample[2],atlas.atlas.get_height()-136,8,8)
+			and tile.position==Vector2(cell.x+.5,-cell.y-.5) and tile.offset==Vector2(-4,-4)
+			and tile.scale==Vector2(.125,.125) and tile.z_index==(-8 if source==10 else -1),
+			"同一条原规则的三种缓存选图、原锚点及排序：%s" % cell)
+		check(ground.source_sprite(source,cell)==null and not ground.mapped_cover_sources(cell).has(source),
+			"石草混合装饰不是该来源的可燃覆盖：%s" % cell)
+		if tile!=null: combo_tiles.append(tile)
+	if DisplayServer.get_name()!="headless":
+		for tile in combo_tiles: await check_combo_pixels(scene.camera,tile)
 	var fixed_tiles := {
 		Vector3i(-16,-6,0):Vector2i(64,128), Vector3i(-16,-5,0):Vector2i(64,136),
 		Vector3i(-16,-4,0):Vector2i(64,144), Vector3i(-6,10,0):Vector2i(56,16),
@@ -227,9 +244,29 @@ func run() -> void:
 	await process_frame
 	await process_frame
 	check(not is_instance_valid(lake),"卸载释放自主动画，不保留上次场景的相位")
+	check(combo_tiles.all(func(tile):return not is_instance_valid(tile)),"卸载释放原缓存装饰")
 	check(not is_instance_valid(road),"地图卸载释放确定性石路精灵")
 	check(not is_instance_valid(water),"地图卸载释放独立的原河湖动画")
 	check(not is_instance_valid(cliff_shadow) and stairs.all(func(stair):return not is_instance_valid(stair)),
 		"地图卸载释放原楼梯和崖影节点")
-	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含倒影、随机装饰、完整物理或 Unity 像素对照" % [n,failed])
+	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含倒影、动态随机重算、完整物理或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)
+
+# 在实际窗口比较同一原格显示、隐藏和恢复，不把图集离线预览当作绘制证据。
+func check_combo_pixels(camera: Camera2D, tile: Sprite2D) -> void:
+	var original := camera.global_position
+	camera.global_position = tile.global_position
+	camera.force_update_scroll()
+	await RenderingServer.frame_post_draw
+	var center := Vector2i(tile.get_global_transform_with_canvas().origin)
+	var region := Rect2i(center-Vector2i(13,13),Vector2i(26,26))
+	var shown := root.get_texture().get_image().get_region(region).get_data()
+	tile.hide()
+	await RenderingServer.frame_post_draw
+	var hidden := root.get_texture().get_image().get_region(region).get_data()
+	tile.show()
+	await RenderingServer.frame_post_draw
+	var restored := root.get_texture().get_image().get_region(region).get_data()
+	check(shown!=hidden and shown==restored,"原缓存装饰对原生画面有实际且可恢复的贡献")
+	camera.global_position = original
+	camera.force_update_scroll()
