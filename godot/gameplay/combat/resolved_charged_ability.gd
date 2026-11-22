@@ -83,6 +83,11 @@ func can_update_fresh_target_direction() -> bool:
 	if spec.has_attacking_tag() or _locks_fresh_target_direction(): return false
 	return not is_instance_valid(_fire) or not _fire._locks_fresh_target_direction()
 
+## 这里只迁移 CharacterBase.Can(Move) 的正式 Attacking 标签分支；
+## 输入蓄力/收招状态不是标签的替代来源。
+func allows_fresh_movement() -> bool:
+	return not spec.has_attacking_tag()
+
 func _locks_fresh_target_direction() -> bool:
 	var activation: Variant = context.activation_context
 	var has_aim: bool = activation != null and activation.has_aim_direction

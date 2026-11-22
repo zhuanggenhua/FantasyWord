@@ -223,6 +223,10 @@ func allows_basic_attack_target_direction() -> bool:
 	if formal_attack == null: return true
 	return is_instance_valid(formal_attack) and formal_attack.runtime.can_update_fresh_target_direction()
 
+func allows_basic_attack_movement() -> bool:
+	if formal_attack == null: return true
+	return is_instance_valid(formal_attack) and formal_attack.runtime.allows_fresh_movement()
+
 func _interrupt_actions() -> void:
 	_bindings.interrupt_actions.call()
 	if is_instance_valid(formal_attack): formal_attack.interrupt()

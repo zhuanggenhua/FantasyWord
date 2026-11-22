@@ -38,7 +38,10 @@ func _is_live() -> bool:
 	var target: Node2D = _target.get_ref()
 	return is_instance_valid(target) and target.is_inside_tree()
 
-func can_move() -> bool: return _is_live()
+func can_move() -> bool:
+	if not _is_live(): return false
+	var target: Node2D = _target.get_ref()
+	return target.allows_basic_attack_movement()
 func calculate_move_speed() -> float: return SOURCE_MOVE_SPEED
 func calculate_speed_multiplier() -> float: return SOURCE_MOVE_GAIN
 

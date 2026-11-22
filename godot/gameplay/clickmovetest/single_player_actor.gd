@@ -152,7 +152,10 @@ func read_active_gameplay_pointer() -> Variant:
 		return null
 	return _read_pointer.call()
 
-func can_move() -> bool: return is_instance_valid(_get_primary()) and not is_destroyed()
+func can_move() -> bool:
+	if not is_instance_valid(_get_primary()) or is_destroyed(): return false
+	var host: Object = _fresh_ability_host.get_ref() if _fresh_ability_host != null else null
+	return not is_instance_valid(host) or host.allows_fresh_movement()
 func calculate_move_speed() -> float: return BASE_MOVE_SPEED
 func calculate_speed_multiplier() -> float: return BASE_SPEED_MULTIPLIER
 func can_update_target_direction() -> bool:
@@ -162,7 +165,9 @@ func can_update_target_direction() -> bool:
 
 func bind_fresh_target_direction_guard(host: Node) -> bool:
 	if _fresh_loadout == null or _fresh_ability_host != null or not is_instance_valid(host) \
-			or not host.has_method("can_update_fresh_target_direction"): return false
+			or not host.has_method("can_update_fresh_target_direction"):
+		return false
+	if not host.has_method("allows_fresh_movement"): return false
 	_fresh_ability_host = weakref(host)
 	return true
 

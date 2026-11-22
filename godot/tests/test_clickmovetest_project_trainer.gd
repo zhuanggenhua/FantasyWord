@@ -4,6 +4,7 @@ const Startup := preload("res://gameplay/clickmovetest/source_startup.gd")
 const Terrain := preload("res://game_core/movement/terrain_cast.gd")
 const Gear := preload("res://game_core/inventory/source_character_equipment.gd")
 const Draws := preload("res://gameplay/clickmovetest/source_session_draws.gd")
+const Commands := preload("res://game_core/interaction/character_command_executor.gd")
 var checks := 0
 var failures := 0
 
@@ -228,7 +229,89 @@ func _run() -> void:
 			"死亡先锁 SpinDie，再按原事件移两件到此尸体背包，不影响主角")
 		own.loadout_changed.disconnect(observe_slots)
 		bags.item_added.disconnect(observe_corpse)
+	await _verify_nonlethal_interrupt()
 	_finish()
+
+func _verify_nonlethal_interrupt() -> void:
+	# 独立重开正式场景：不把前一段自然结束、死亡或装备验证误当成受击取消。
+	if reload_current_scene()!=OK:
+		_check(false,"重开正式 ClickMoveTest 以验证非致命打断")
+		return
+	await scene_changed
+	await process_frame
+	var boot := current_scene as Startup
+	if not is_instance_valid(boot) or not is_instance_valid(boot.scene):
+		_check(false,"重开后正式 ClickMoveTest 启动并挂载原场景")
+		return
+	var scene := boot.scene
+	var trainer: Node2D = scene.training_target
+	var actor: Node2D = scene.actor
+	var spec: RefCounted = trainer.formal_attack.runtime.spec
+	for i in range(230):
+		if i%12==0:
+			actor.request_move_position(trainer.get_movement_position()+Vector2(0,-.63))
+		await physics_frame
+		if spec.owns_attacking_tag(): break
+	_check(spec.owns_attacking_tag() and not boot.trainer_owner.can_update_target_direction(),
+		"另一局真实 AI 普攻启动并锁住假人目标方向")
+	_check(not trainer.body.can_move() and actor.can_move(),
+		"活动假人的 20001 Attacking 只锁本身移动，不锁主角")
+	if not spec.owns_attacking_tag(): return
+	# 隔离时间步，只推进玩家技能，保留假人本次攻击至首次真实受击。
+	scene.set_process(false)
+	scene.set_physics_process(false)
+	trainer.body.request_move_position(Vector2(2.5,-2.75))
+	actor.request_move_position(Vector2(1.75,-2.35))
+	await physics_frame
+	await physics_frame
+	var events: Array[String] = []
+	spec.cancelled.connect(func(): events.append("cancelled"))
+	spec.ended.connect(func(): events.append("ended"))
+	var before: int = trainer.health
+	boot.player.set_target_direction(Vector2.RIGHT)
+	boot.player.set_look_at_direction(Vector2.RIGHT)
+	var primary_runtime: Node = scene._charged_actor_runtime
+	var checked_player_attack := false
+	var player_blocked := true
+	for attempt in range(5):
+		_key(KEY_1,true)
+		scene.advance_human_charged_combat(.018)
+		scene.advance_human_charged_combat(.12)
+		if primary_runtime.spec.owns_attacking_tag():
+			checked_player_attack = true
+			player_blocked = player_blocked and not actor.can_move()
+		scene.advance_human_charged_combat(.02)
+		_key(KEY_1,false)
+		if trainer.health<before: break
+		scene.advance_human_charged_combat(.5)
+		scene.advance_human_charged_combat(.018)
+	_check(trainer.health>0 and trainer.health<before and spec.owns_attacking_tag()
+		and events.is_empty() and not boot.trainer_owner.can_update_target_direction(),
+		"玩家正式普攻命中并扣血，但尚未进入假人安全打断阶段")
+	# 同一已存在的移动路径既不执行位移，也不因攻击期间的新鼠标命令被覆盖。
+	var path_start: Vector2 = actor.get_movement_position()
+	actor.move_to(path_start+Vector2.UP)
+	var rejected: int = scene.submit_human_command({"kind":Commands.Kind.CLICK_MOVE,
+		"actor":boot.player,"world_position":path_start+Vector2.LEFT})
+	actor.advance_movement(1.0/60.0)
+	_check(primary_runtime.spec.owns_attacking_tag() and rejected==Commands.Failure.BLOCKED_BY_STATE
+		and actor.execution.has_move_order() and actor.execution.get_last_successful_movement()==Vector2.ZERO,
+		"普攻进行中拒绝新的点击路径，已有路径保留但不执行")
+	actor.reset_movement()
+	var previous_aim := boot.trainer_owner.get_target_direction()
+	var next_aim := Vector2.LEFT if previous_aim.is_equal_approx(Vector2.RIGHT) else Vector2.RIGHT
+	trainer.advance_damage_lifecycle()
+	boot.trainer_owner.set_target_direction(next_aim)
+	_check(events==["cancelled"] and not spec.owns_attacking_tag()
+		and boot.trainer_owner.can_update_target_direction()
+		and boot.trainer_owner.get_target_direction().is_equal_approx(next_aim),
+		"非致命受击安全处理取消本次能力，立即恢复假人目标朝向可写")
+	_check(checked_player_attack and player_blocked,
+		"主角正式第一槽激活，所属 Attacking 标签锁住同一真实移动身体")
+	scene.advance_human_charged_combat(.5)
+	scene.advance_human_charged_combat(.02)
+	_check(not primary_runtime.spec.owns_attacking_tag() and actor.can_move() and trainer.body.can_move(),
+		"主角普攻自然结束和假人安全取消分别恢复各自的移动")
 
 func _actor_crop(sprite: Sprite2D) -> Image:
 	await RenderingServer.frame_post_draw
