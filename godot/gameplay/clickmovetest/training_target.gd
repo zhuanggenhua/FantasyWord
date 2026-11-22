@@ -35,6 +35,7 @@ var _verified_death_animation := false
 var _movement_owner: Object
 var formal_attack: Node
 var _terrain_mask := 0
+var _wall_recovery_distance := 0.0
 var stats: Dictionary:
 	get: return _bindings.stats.call()
 var health: int:
@@ -46,7 +47,7 @@ static func initial_sheet() -> Dictionary:
 		"physical_attack":0, "magical_attack":0, "physical_defense":0,
 		"magical_defense":0, "agility":0, "luck":0, "attack_speed":100}
 
-func configure(bindings: Dictionary, movement_owner: Object, terrain_mask: int) -> bool:
+func configure(bindings: Dictionary, movement_owner: Object, terrain_mask: int, wall_recovery_distance: float) -> bool:
 	if not _bindings.is_empty() or is_inside_tree() or not is_instance_valid(movement_owner):
 		return false
 	for key in ["stats","current_health","has_formal_stats","apply_current_health_delta",
@@ -56,10 +57,11 @@ func configure(bindings: Dictionary, movement_owner: Object, terrain_mask: int) 
 	for method in ["can_move","calculate_move_speed","calculate_speed_multiplier",
 			"update_movement_animation","update_facing_from_intent","register_collision"]:
 		if not movement_owner.has_method(method): return false
-	if terrain_mask <= 0: return false
+	if terrain_mask <= 0 or not is_finite(wall_recovery_distance) or wall_recovery_distance < 0.0: return false
 	_bindings = bindings.duplicate()
 	_movement_owner = movement_owner
 	_terrain_mask = terrain_mask
+	_wall_recovery_distance = wall_recovery_distance
 	position = Vector2(SOURCE_POSITION.x, -SOURCE_POSITION.y)
 	return true
 
@@ -78,7 +80,7 @@ func _ready() -> void:
 	body.add_child(capsule)
 	add_child(body)
 	body.configure_movement(capsule, Filter.new(Filter.Mode.FREE,false,.05,10,10),
-		self, _terrain_mask)
+		self, _terrain_mask, _wall_recovery_distance)
 	hitbox = Area2D.new()
 	hitbox.name = "训练假人受击盒"
 	hitbox.collision_layer = 128

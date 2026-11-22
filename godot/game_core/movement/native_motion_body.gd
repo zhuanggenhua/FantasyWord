@@ -1,7 +1,7 @@
 extends AnimatableBody2D
 ## 正式角色显式注入身体形状和动作 owner；不创建角色、查找依赖或决定场景配置。
 ## 使用 Godot 4.7.2 原生同步：提交后仍读旧姿态，待物理步回写实际姿态。
-## 已接原推力分支；仍未包含墙内恢复、传送和控制器调度，不替代完整 Movable 生命周期。
+## 已接推力和显式配置的脱墙，不替代完整 Movable 生命周期或独立传送接口。
 
 const Terrain = preload("res://game_core/movement/terrain_cast.gd")
 const Execution = preload("res://game_core/movement/motion_execution.gd")
@@ -12,10 +12,12 @@ const Execution = preload("res://game_core/movement/motion_execution.gd")
 var execution: RefCounted
 var _terrain: RefCounted
 var _motion_owner: Object
+var _wall_recovery_distance := 0.0
+var _wall_recovery_origin: Variant
 
 
 func configure_movement(body_shape: CollisionShape2D, input_filter: RefCounted,
-		motion_owner: Object, terrain_mask: int) -> void:
+		motion_owner: Object, terrain_mask: int, wall_recovery_distance := 0.0) -> void:
 	assert(execution == null, "角色身体只能初始化一次")
 	assert(is_inside_tree() and sync_to_physics, "角色身体须进入场景并启用物理同步")
 	assert(body_shape != null and body_shape.get_parent() == self and not body_shape.disabled,
@@ -30,6 +32,8 @@ func configure_movement(body_shape: CollisionShape2D, input_filter: RefCounted,
 			"update_movement_animation", "update_facing_from_intent", "register_collision"]:
 		assert(motion_owner.has_method(method), "角色动作 owner 缺少方法：" + method)
 	_motion_owner = motion_owner
+	assert(is_finite(wall_recovery_distance) and wall_recovery_distance >= 0.0,"角色脱墙距离无效")
+	_wall_recovery_distance = wall_recovery_distance
 	_terrain = Terrain.new(get_world_2d(), body_shape.shape,
 		Terrain.to_physics(body_shape.position), terrain_mask, [get_rid()])
 	execution = Execution.new(self, input_filter)
@@ -38,8 +42,14 @@ func configure_movement(body_shape: CollisionShape2D, input_filter: RefCounted,
 func advance_movement(fixed_delta: float, ramp_direction: Callable = Callable()) -> void:
 	# 角色 owner 在自身物理回调里先更新控制意图，再调用；此节点不另开重复调度。
 	assert(execution != null and Engine.is_in_physics_frame(), "须先配置身体并在固定物理步推进移动")
+	if _wall_recovery_distance > 0.0:
+		_wall_recovery_origin = _terrain.wall_recovery_destination(get_movement_position(),
+			_wall_recovery_distance, Execution.COLLISION_OFFSET)
+		if _wall_recovery_origin is Vector2:
+			request_move_position(_wall_recovery_origin)
 	execution.handle_movement(fixed_delta, ramp_direction)
 	execution.handle_push(fixed_delta) # 原 FixedUpdate 顺序：正常移动后才执行推力。
+	_wall_recovery_origin = null
 
 
 func has_active_movement_intent() -> bool:
@@ -47,6 +57,9 @@ func has_active_movement_intent() -> bool:
 
 
 func get_movement_position() -> Vector2:
+	# Unity 先改刚体位置再计算同一步移动；Godot 同步身体须等物理服回写。
+	# 只在本次移动/推力内部使用已验证的脱墙点，不伪造场景节点已同步的姿态。
+	if _wall_recovery_origin is Vector2: return _wall_recovery_origin
 	return Terrain.to_physics(global_position)
 
 

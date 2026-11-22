@@ -41,6 +41,8 @@ const ChargedDamage = preload("res://gameplay/combat/charged_damage_effect.gd")
 const DamagePush = preload("res://game_core/combat/damage_push_policy.gd")
 # 锁定 GameConfig.asset 的原 Push 门禁；不是诊断的推力记录器。
 const SOURCE_GAME_CONFIG_PUSH_FLAGS := {"regular":true, "critical":true, "missed":true, "silent":false}
+# 锁定 GameConfig 的 m_maxTeleportDistanceWhenStuckInWall；地图输入绑定同一来源。
+const SOURCE_WALL_RECOVERY_DISTANCE := 5.0
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var actor: AnimatableBody2D
 @export var actor_shape: CollisionShape2D
@@ -143,7 +145,8 @@ func start_logic(owner: Object, data: Dictionary, player_provider: Callable,
 	# 不将表现 Body 错接成运动主体，也不将场景静态相机姿态当运行期跟随目标。
 	if not is_instance_valid(actor) or not is_instance_valid(actor_shape) \
 			or not is_instance_valid(camera) or not is_instance_valid(visual_body): return false
-	actor.configure_movement(actor_shape, Filter.new(Filter.Mode.FREE, false, 0.05, 10.0, 10.0), owner, 7752)
+	actor.configure_movement(actor_shape, Filter.new(Filter.Mode.FREE, false, 0.05, 10.0, 10.0),
+		owner, 7752, SOURCE_WALL_RECOVERY_DISTANCE)
 	route = candidate
 	_terrain_rule_rows = data.rows.duplicate(true)
 	_surface_map_events = map_events
@@ -836,7 +839,7 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 		if is_instance_valid(target) and is_instance_valid(target.body):
 			DamagePush.try_push(input,false,velocity,DamagePush.Mode.DEFAULT,
 				SOURCE_GAME_CONFIG_PUSH_FLAGS,target.body.push_motion)
-	if not target.configure(hooks,motion_owner,terrain_mask):
+	if not target.configure(hooks,motion_owner,terrain_mask,SOURCE_WALL_RECOVERY_DISTANCE):
 		target.free()
 		return null
 	target.bind_formal_health_changes(properties)

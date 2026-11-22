@@ -47,7 +47,7 @@ func _check(value: bool, label: String) -> void:
 		failures += 1
 		printerr("FAIL ", label)
 
-func _body(source_position: Vector2, owner: MotionOwner):
+func _body(source_position: Vector2, owner: MotionOwner, wall_distance := 0.0):
 	var body := Body.new()
 	body.position = Terrain.to_physics(source_position)
 	body.collision_layer = 256
@@ -61,7 +61,7 @@ func _body(source_position: Vector2, owner: MotionOwner):
 	collision.position = Vector2(0, -0.42)
 	body.add_child(collision)
 	root.add_child(body)
-	body.configure_movement(collision, Filter.new(Filter.Mode.FREE, false, 0.05, 10.0, 10.0), owner, 7752)
+	body.configure_movement(collision, Filter.new(Filter.Mode.FREE, false, 0.05, 10.0, 10.0), owner, 7752, wall_distance)
 	return body
 
 func _wall(source_position: Vector2, size: Vector2):
@@ -150,5 +150,32 @@ func _run() -> void:
 	await _step(func(): body.advance_movement(0.02))
 	await _step(func(): body.advance_movement(0.02))
 	_check(not body.execution.has_move_order() and body.get_movement_position().is_equal_approx(stopped + Vector2(0.08,0)), "地图点击链经过真实物理位移后完成")
+	var trapped_owner := MotionOwner.new()
+	var trapped_base := Vector2(20,20)
+	var idle = _body(trapped_base, trapped_owner, 5.0)
+	var routed = _body(trapped_base+Vector2(10,0), trapped_owner, 5.0)
+	var pushed = _body(trapped_base+Vector2(20,0), trapped_owner, 5.0)
+	var blocked_body = _body(trapped_base+Vector2(40,0), trapped_owner, 5.0)
+	for x in [0,10,20]:
+		_wall(trapped_base+Vector2(x,.42),Vector2(.1,.1))
+	_wall(trapped_base+Vector2(40,.42),Vector2(13,13))
+	await _step()
+	await _step()
+	var up := Vector2(0,.625)
+	var near = routed.move_to(trapped_base+Vector2(10,0)+up)
+	pushed.push_motion(Vector2.RIGHT,5.0,10.0)
+	await _step(func():
+		idle.advance_movement(.02)
+		routed.advance_movement(.02)
+		pushed.advance_movement(.02)
+		blocked_body.advance_movement(.02)
+		_check(idle.get_movement_position()==trapped_base,"脱墙调用结束后观察位置仍须等物理回写")
+		_check(near.state==Execution.Completion.SUCCEEDED,"同一步路线先读脱墙后的原点"))
+	await _step()
+	_check(idle.get_movement_position().is_equal_approx(trapped_base+up),"静止时按 16 圈、原 +Y 优先规则脱墙")
+	_check(routed.get_movement_position().is_equal_approx(trapped_base+Vector2(10,0)+up),"到达脱墙点的命令不取消已提交的位置")
+	_check(pushed.get_movement_position().is_equal_approx(trapped_base+Vector2(20.1,.625)),"推力使用同一步脱墙原点，不重新贴回墙体")
+	_check(blocked_body.get_movement_position()==trapped_base+Vector2(40,0),"搜索半径内无空位时不移动")
+	_check(trapped_owner.collisions.is_empty(),"静态脱墙探测不伪造玩法碰撞事件")
 	print("PASS 原生角色姿态与固定步位移：%d 项，失败 %d" % [checks,failures])
 	quit(int(failures > 0))

@@ -25,6 +25,23 @@ func _init(world: World2D, shape: Shape2D, source_offset: Vector2,
 static func to_physics(source_vector: Vector2) -> Vector2:
 	return Vector2(source_vector.x, -source_vector.y)
 
+## 原 Movable 先查身体是否重叠，按从近到远的十六圈和固定方向顺序找第一处空位。
+## 参数及方向均为源世界单位；探测始终排除自己、不移动实际身体。
+func wall_recovery_destination(source_position: Vector2, max_distance: float, collision_offset: float) -> Variant:
+	assert(is_finite(max_distance) and max_distance >= 0.0, "脱墙距离无效")
+	if max_distance == 0.0 or cast_hits(source_position, Vector2.ZERO, collision_offset).is_empty():
+		return null
+	var directions := [Vector2.DOWN, Vector2.RIGHT, Vector2.UP, Vector2.LEFT,
+		Vector2(1, 1).normalized(), Vector2(1, -1).normalized(),
+		Vector2(-1, -1).normalized(), Vector2(-1, 1).normalized()]
+	for ring in range(1,17):
+		var distance := float(ring) / 16.0 * max_distance
+		for direction: Vector2 in directions:
+			var candidate := source_position + direction * distance
+			if cast_hits(candidate, Vector2.ZERO, collision_offset).is_empty():
+				return candidate
+	return null
+
 
 func cast_hits(source_position: Vector2, source_direction: Vector2, distance: float) -> Array:
 	assert(source_position.is_finite() and source_direction.is_finite()

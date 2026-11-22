@@ -124,7 +124,37 @@ func _run() -> void:
 		and next.scene.actor.get_movement_position()==Vector2.ZERO
 		and next.scene.command_count==0 and next.persistables.resolve("player")==next.scene.actor,
 		"退出释放旧宿主，重新打开只登记一个原点角色且没有沿用输入")
+	# 仅测试注入小地形，不动原场景资源；不提交移动命令，验证固定步主动脱墙。
+	var original_body: Node2D = next.scene.actor
+	var trainer: Node2D = next.scene.training_target
+	trainer.ai_controller.stop()
+	trainer.body.reset_movement()
+	for i in 3: await physics_frame
+	var trainer_start: Vector2 = trainer.body.get_movement_position()
+	var wall := _embed_at(next.scene.actor_shape.global_position)
+	var trainer_wall := _embed_at(trainer.body.global_position+Vector2(0,-trainer.BODY_OFFSET.y))
+	for i in 4: await physics_frame
+	_check(original_body.get_movement_position().is_equal_approx(Vector2(0,.625))
+		and next.player.is_current_controlled(original_body) and next.scene.camera.follow==original_body
+		and not original_body.execution.has_move_order() and next.scene.command_count==0,
+		"真实入口的原主角无输入也先向原 +Y 脱墙，不替换角色、镜头或补造命令")
+	_check(trainer.body.get_movement_position().is_equal_approx(trainer_start+Vector2(0,.625))
+		and next.scene.training_target==trainer and not trainer.body.execution.has_move_order(),
+		"同一正式场景的原训练假人继承脱墙，不生成另一个角色或移动命令")
+	wall.free(); trainer_wall.free()
 	_finish()
+
+func _embed_at(point: Vector2) -> StaticBody2D:
+	var wall := StaticBody2D.new()
+	wall.collision_layer=8
+	wall.position=point
+	var collider := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size=Vector2(.1,.1)
+	collider.shape=rectangle
+	wall.add_child(collider)
+	root.add_child(wall)
+	return wall
 
 func _key(code: Key, down: bool) -> void:
 	var event := InputEventKey.new()
