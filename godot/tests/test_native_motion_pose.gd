@@ -22,6 +22,9 @@ class MotionOwner extends RefCounted:
 class Route extends RefCounted:
 	func try_build_world_path(_start, destination): return PackedVector2Array([destination])
 
+class RejectedRoute extends RefCounted:
+	func try_build_world_path(_start, _destination): return null
+
 class Driver extends Node:
 	signal stepped
 	var action := Callable()
@@ -177,5 +180,32 @@ func _run() -> void:
 	_check(pushed.get_movement_position().is_equal_approx(trapped_base+Vector2(20.1,.625)),"推力使用同一步脱墙原点，不重新贴回墙体")
 	_check(blocked_body.get_movement_position()==trapped_base+Vector2(40,0),"搜索半径内无空位时不移动")
 	_check(trapped_owner.collisions.is_empty(),"静态脱墙探测不伪造玩法碰撞事件")
+	var fallback_owner:=MotionOwner.new()
+	var fallback_actor=_body(Vector2(75,20),fallback_owner,5.0)
+	var no_map=CharacterMovement.new(fallback_actor,.05)
+	no_map.set_movement_control_mode(CharacterMovement.Mode.CLICK_TO_MOVE)
+	var open_point:=Vector2(75.15,20)
+	await _step()
+	await _step(func():
+		_check(no_map.handle_click_move(open_point,null)
+			and fallback_actor.execution._route==PackedVector2Array([open_point]),
+			"没有导航图时保留原空地点，走真实身体的直线移动命令")
+		fallback_actor.advance_movement(.02))
+	await _step(func():
+		fallback_actor.advance_movement(.02))
+	_check(fallback_actor.get_movement_position().is_equal_approx(Vector2(75.08,20))
+		and not fallback_actor.execution.has_move_order(),"无导航图的有效点击真实驱动身体")
+	await _step(func():
+		_check(no_map.handle_click_move(trapped_base,null)
+			and fallback_actor.execution._route==PackedVector2Array([trapped_base+up]),
+			"只在没有导航图时，点击阻挡点按原圈和方向顺序修正")
+		var solid:=trapped_base+Vector2(40,0)
+		_check(no_map.handle_click_move(solid,null)
+			and fallback_actor.execution._route==PackedVector2Array([solid]),
+			"半径内无空位时保留原点击，而不是跳到另一条路线")
+		_check(not no_map.handle_click_move(trapped_base,RejectedRoute.new())
+			and not fallback_actor.execution.has_move_order(),"有导航图但路径失败时停止，不回退到直线")
+		_check(fallback_actor.get_movement_position().is_equal_approx(Vector2(75.08,20))
+			and fallback_owner.collisions.is_empty(),"落点探测不瞬移、不发送玩法碰撞"))
 	print("PASS 原生角色姿态与固定步位移：%d 项，失败 %d" % [checks,failures])
 	quit(int(failures > 0))

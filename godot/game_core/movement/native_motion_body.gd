@@ -72,6 +72,14 @@ func cast_motion_hits(direction: Vector2, distance: float) -> Array:
 	assert(_terrain != null, "角色身体未配置地形查询")
 	return _terrain.cast_hits(get_movement_position(), direction, distance)
 
+## 原 Movable.NearestValidDestination：无导航图的点击探测落点，不重定位身体。
+## 原点可站或同半径内无空位时，保留原点交给既有直线移动和碰撞处理。
+func nearest_valid_destination(source_point: Vector2) -> Vector2:
+	assert(_terrain != null and source_point.is_finite(), "点击落点缺少有效坐标或地形查询")
+	var candidate: Variant = _terrain.wall_recovery_destination(source_point,
+		_wall_recovery_distance, Execution.COLLISION_OFFSET)
+	return candidate if candidate is Vector2 else source_point
+
 
 ## Synced kinematic body state from the previous physics step, in Unity XY.
 ## Do not use input intent/last requested move: those may not have reached the body.
