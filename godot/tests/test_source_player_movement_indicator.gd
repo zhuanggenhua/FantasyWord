@@ -33,7 +33,7 @@ func _run() -> void:
 		return
 	_check((boot.pause_root!=null)==(not source.is_empty()),"提示与暂停入口无双向依赖")
 	boot.scene.training_target.ai_controller.stop()
-	_check(not boot.scene.training_target.has_node("Polydirectional Pivot"),"不把尚未验证的训练假人朝向门控当作等价")
+	_check(boot.scene.training_target.body.has_node("Polydirectional Pivot"),"活动假人继承独立旋转 Pivot，绑定到实际身体")
 	var arrow := indicator.get_node_or_null("Movement Indicator") as Sprite2D
 	_check(arrow!=null,"原 8×8 指示器是旋转 Pivot 子项")
 	if arrow==null:

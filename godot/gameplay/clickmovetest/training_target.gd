@@ -218,6 +218,11 @@ func bind_formal_basic_attack(player: Node2D, hitbox: Area2D, stats_reader: Call
 func advance_formal_basic_attack(delta: float) -> void:
 	if is_instance_valid(formal_attack) and ai_controller.running: formal_attack.advance(delta)
 
+## 正式场景只问这个假人已有的 20001，不复制攻击状态，也不借主角技能。
+func allows_basic_attack_target_direction() -> bool:
+	if formal_attack == null: return true
+	return is_instance_valid(formal_attack) and formal_attack.runtime.can_update_fresh_target_direction()
+
 func _interrupt_actions() -> void:
 	_bindings.interrupt_actions.call()
 	if is_instance_valid(formal_attack): formal_attack.interrupt()

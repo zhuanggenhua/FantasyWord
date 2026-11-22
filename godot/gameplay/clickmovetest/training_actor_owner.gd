@@ -49,7 +49,12 @@ func update_facing_from_intent(value: Vector2) -> void:
 
 func set_look_at_direction(value: Vector2) -> void: _direction.set_look_at_direction(value)
 func get_look_at_direction() -> Vector2: return _direction.get_look_at_direction()
-func set_target_direction(value: Vector2) -> void: _direction.set_target_direction(value,_is_live())
+func can_update_target_direction() -> bool:
+	if not _is_live(): return false
+	var target: Node2D = _target.get_ref()
+	return target.allows_basic_attack_target_direction()
+
+func set_target_direction(value: Vector2) -> void: _direction.set_target_direction(value,can_update_target_direction())
 func get_target_direction() -> Vector2: return _direction.get_target_direction()
 func update_movement_animation(value: Vector2) -> void: accepted_movement.emit(value)
 func register_collision(collider: Object) -> void: collision_reported.emit(collider)

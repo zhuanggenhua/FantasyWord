@@ -39,6 +39,19 @@ func _run() -> void:
 	var scene := start.scene
 	var trainer: Node2D=scene.training_target
 	var actor: Node2D=scene.actor
+	var trainer_pivot := trainer.body.get_node_or_null("Polydirectional Pivot") as Node2D
+	var player_pivot := actor.get_node_or_null("Polydirectional Pivot") as Node2D
+	var with_atlas := not OS.get_environment("FORMAL_MOVEMENT_INDICATOR_ATLAS").is_empty() \
+		or not OS.get_environment("FORMAL_PAUSE_SOURCE").is_empty()
+	var trainer_arrow: Sprite2D
+	var player_arrow: Sprite2D
+	if with_atlas:
+		_check(is_instance_valid(trainer_pivot) and is_instance_valid(player_pivot),
+			"正式入口按原预制体绑定两份独立提示")
+		if not is_instance_valid(trainer_pivot) or not is_instance_valid(player_pivot):
+			_finish();return
+		trainer_arrow=trainer_pivot.get_node("Movement Indicator") as Sprite2D
+		player_arrow=player_pivot.get_node("Movement Indicator") as Sprite2D
 	var render_check:=not OS.get_environment("FORMAL_TRAINER_EFFECTS_SOURCE").is_empty()
 	var mat: ShaderMaterial=trainer.presentation.sprite.material
 	var spear: Resource
@@ -80,6 +93,13 @@ func _run() -> void:
 	_check(start._source_draws!=null and controller._wander_random_value.get_object()==start._source_draws
 		and trainer.formal_attack._roll.get_object()==start._source_draws,
 		"普通场景同一抽样来源同时供原假人游走和角色攻击")
+	start.trainer_owner.set_target_direction(Vector2.LEFT)
+	_check(start.trainer_owner.get_target_direction()==Vector2.LEFT,
+		"原假人未攻击前可更新逻辑目标方向")
+	if with_atlas:
+		_check(trainer_arrow!=player_arrow and is_equal_approx(trainer_arrow.self_modulate.a,.4509804)
+			and (trainer_pivot.transform*trainer_arrow.position-trainer_pivot.position).is_equal_approx(Vector2.LEFT*.682),
+			"假人自己的原箭头转至目标方向，未攻击时保持原透明度")
 	var repath := false
 	for i in range(140):
 		await physics_frame
@@ -99,15 +119,38 @@ func _run() -> void:
 	_check(not seen_damage.is_empty() and seen_damage.front()[0]==health
 		and seen_damage.front()[1]>0 and seen_damage.front()[2]>0.0,
 		"原 AI 普攻确实通过同一角色的受击盒及闪屏，不是测试直接写血")
+	var old_aim := start.trainer_owner.get_target_direction()
+	var turned := Vector2(-old_aim.y,old_aim.x) if old_aim != Vector2.ZERO else Vector2.UP
+	start.trainer_owner.set_target_direction(turned)
+	_check(trainer.formal_attack.runtime.spec.owns_attacking_tag()
+		and start.trainer_owner.get_target_direction()==old_aim,
+		"假人实际普攻拥有原 Attacking 标签时拒绝更新逻辑目标方向")
+	start.trainer_owner.set_look_at_direction(turned)
+	_check(start.trainer_owner.get_look_at_direction()==turned and start.player.can_update_target_direction(),
+		"假人的攻击门不拦身体转向，也不锁主角的逻辑目标方向")
 	# 第二段用作者验证站位隔离移动时序，不新增角色或直接触发伤害。
 	# 保留当前假人的真实状态，但让它上一刀自然结束再观察玩家原第一槽。
 	scene.set_process(false)
 	scene.set_physics_process(false)
+	if with_atlas:
+		await create_timer(.30,true,false,true).timeout
+		_check(trainer_pivot.global_position.is_equal_approx(trainer.body.global_position+Vector2(0,-.4))
+			and trainer.formal_attack.runtime.spec.owns_attacking_tag()
+			and trainer_arrow.self_modulate.a<.015 and is_equal_approx(player_arrow.self_modulate.a,.4509804),
+			"实际 AI 普攻淡出，只影响随移动身体的假人箭头")
 	trainer.body.request_move_position(Vector2(2.5,-2.75))
 	actor.request_move_position(Vector2(1.75,-2.35))
 	await physics_frame
 	await physics_frame
 	trainer.formal_attack.advance(.5)
+	trainer.formal_attack.advance(.02)
+	start.trainer_owner.set_target_direction(turned)
+	_check(not trainer.formal_attack.runtime.spec.owns_attacking_tag()
+		and start.trainer_owner.get_target_direction()==turned,
+		"实际普攻自然结束后恢复假人的逻辑目标方向更新")
+	if with_atlas:
+		await create_timer(.30,true,false,true).timeout
+		_check(absf(trainer_arrow.self_modulate.a-.4509804)<.01,"实际 AI 普攻自然结束后提示恢复原透明度")
 	scene.advance_human_damage_lifecycle()
 	scene.advance_human_charged_combat(.1)
 	start.player.set_target_direction(Vector2.RIGHT)
@@ -166,6 +209,12 @@ func _run() -> void:
 	_check(not trainer.ai_controller.running and trainer.presentation.driver.current_animation_key=="SpinDie"
 		and trainer==scene.training_target and trainer.is_inside_tree(),
 		"原安全死亡停止 AI 并保留 SpinDie 身体，不发明复活")
+	var corpse_aim := start.trainer_owner.get_target_direction()
+	start.trainer_owner.set_target_direction(-turned)
+	_check(start.trainer_owner.get_target_direction()==corpse_aim,"安全死亡后不再接受目标方向更新")
+	if with_atlas:
+		await create_timer(.30,true,false,true).timeout
+		_check(trainer_arrow.self_modulate.a<.015,"原安全死亡后假人提示按既有门控淡出")
 	if render_check:
 		trainer.advance_damage_lifecycle()
 		var bags:=start.inventory_bags

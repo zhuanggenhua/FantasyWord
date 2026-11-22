@@ -215,16 +215,24 @@ GameplaySoundFX 声部也不随菜单停播；原菜单状态没有请求通道�
 Unity 同帧截图验收。完整原暂停根和 Settings 的录入方式、验证范围见
 [设置与音量说明](docs/clickmovetest-settings-audio.md)。
 
-### 主角目标方向提示
+### 主角与活动假人的目标方向提示
 
 原 Unity `31629d53` 的 `0_CharacterActor_Base.prefab`：
 `Movement Indicator`（Transform 5011704272699575475）是 `Polydirectional
 Pivot` 的子项，读取原 `FollowTargetDirection` 和 `UIMovementIndicator`，不是点击落点标记。
 正式 ClickMoveTest 入口将其绑定到同一主角的目标方向通知。保留高 .4 的轴、局部 X=.682、X<=0 反射、
 Sprite 顺序 0、原中心 16 PPU、alpha .4509804；方向允许更新时淡入，否则按非缩放时间 ×20 淡出。
-不改变静态技能/交互 Pivot，也不提交移动。训练假人朝向锁和 Unity 同序像素尚未验收。
+不改变静态技能/交互 Pivot，也不提交移动。活动假人同样继承该提示：ClickMoveTest
+实例 `735002000000000003` 连接原 `测试-训练假人.prefab` 变体，两级没有移除、
+停用或替换该子项；底层 `0_Character_Base.prefab` 的旋转轴是 6935283927959677198，
+而 Actor 变体向其添加提示 Transform 5011704272699575475。Godot 将其挂到
+实际移动身体，跟随假人自己的目标方向，按已装配的 20001 攻击门控淡出、结束后复原，
+不读取主角能力状态。
 
 私有素材单独用 `FORMAL_MOVEMENT_INDICATOR_ATLAS` 指向原 `SPS_GUI.png`，或沿用
 `FORMAL_PAUSE_SOURCE/SPS_GUI.png`；不需要打开暂停菜单来显示指示器。未提供素材时不绘制替代图。
 运行 `godot --headless --path godot --script tests/test_source_player_movement_indicator.gd`
 可在实际入口验证原裁切、方向转换和 Q 技能锁/解锁时的淡出入，不能替代画面对照。
+`tests/test_clickmovetest_project_trainer.gd` 走正式入口的真实 AI 攻击，
+验证假人箭头随移动原点、攻击淡出、自然结束复原、玩家不受牵连和安全死亡后门控淡出。
+这里未覆盖通用眩晕门控、Unity 同序像素或跨引擎死亡表现逐帧对照。

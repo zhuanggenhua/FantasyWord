@@ -200,6 +200,12 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 				indicator.free()
 				return _fail("原主角目标方向提示的私有 SPS_GUI.png 未通过锁定来源检查。")
 			scene.actor.add_child(indicator)
+			# 原活动假人继承同一提示；Godot 中移动原点由其物理身体承载。
+			var trainer_indicator := MovementIndicator.new()
+			if not trainer_indicator.bind(trainer_owner,indicator_atlas):
+				trainer_indicator.free()
+				return _fail("原活动假人目标方向提示无法绑定到实际角色。")
+			scene.training_target.body.add_child(trainer_indicator)
 	if mount_project_contact and not pause_source.is_empty():
 		if not _mount_source_pause(pause_source):
 			return _fail("原暂停面板合同或私有素材未通过检查。")
