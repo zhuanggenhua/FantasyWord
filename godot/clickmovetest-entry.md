@@ -214,3 +214,17 @@ GameplaySoundFX 声部也不随菜单停播；原菜单状态没有请求通道�
 原生图形验证从 framebuffer 核对单一原字形的取样和透明外部，不是暂停面板
 Unity 同帧截图验收。完整原暂停根和 Settings 的录入方式、验证范围见
 [设置与音量说明](docs/clickmovetest-settings-audio.md)。
+
+### 主角目标方向提示
+
+原 Unity `31629d53` 的 `0_CharacterActor_Base.prefab`：
+`Movement Indicator`（Transform 5011704272699575475）是 `Polydirectional
+Pivot` 的子项，读取原 `FollowTargetDirection` 和 `UIMovementIndicator`，不是点击落点标记。
+正式 ClickMoveTest 入口将其绑定到同一主角的目标方向通知。保留高 .4 的轴、局部 X=.682、X<=0 反射、
+Sprite 顺序 0、原中心 16 PPU、alpha .4509804；方向允许更新时淡入，否则按非缩放时间 ×20 淡出。
+不改变静态技能/交互 Pivot，也不提交移动。训练假人朝向锁和 Unity 同序像素尚未验收。
+
+私有素材单独用 `FORMAL_MOVEMENT_INDICATOR_ATLAS` 指向原 `SPS_GUI.png`，或沿用
+`FORMAL_PAUSE_SOURCE/SPS_GUI.png`；不需要打开暂停菜单来显示指示器。未提供素材时不绘制替代图。
+运行 `godot --headless --path godot --script tests/test_source_player_movement_indicator.gd`
+可在实际入口验证原裁切、方向转换和 Q 技能锁/解锁时的淡出入，不能替代画面对照。

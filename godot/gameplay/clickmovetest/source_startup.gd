@@ -12,6 +12,7 @@ const InventoryBags := preload("res://game_core/inventory/source_inventory_bags.
 const PartyMoney := preload("res://game_core/inventory/source_party_money.gd")
 const AudioPreferences := preload("res://game_core/audio/source_audio_preferences.gd")
 const AbilityHUD := preload("res://gameplay/clickmovetest/source_ability_hud.gd")
+const MovementIndicator := preload("res://gameplay/clickmovetest/source_movement_indicator.gd")
 const PauseRoot := preload("res://gameplay/clickmovetest/source_pause_root.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
@@ -189,6 +190,16 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 	var pause_source := OS.get_environment("FORMAL_PAUSE_SOURCE")
+	if mount_project_contact:
+		var indicator_atlas := OS.get_environment("FORMAL_MOVEMENT_INDICATOR_ATLAS")
+		if indicator_atlas.is_empty() and not pause_source.is_empty():
+			indicator_atlas = pause_source.path_join("SPS_GUI.png")
+		if not indicator_atlas.is_empty():
+			var indicator := MovementIndicator.new()
+			if not indicator.bind(player,indicator_atlas):
+				indicator.free()
+				return _fail("原主角目标方向提示的私有 SPS_GUI.png 未通过锁定来源检查。")
+			scene.actor.add_child(indicator)
 	if mount_project_contact and not pause_source.is_empty():
 		if not _mount_source_pause(pause_source):
 			return _fail("原暂停面板合同或私有素材未通过检查。")
