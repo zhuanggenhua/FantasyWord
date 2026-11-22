@@ -4,6 +4,8 @@ extends Node2D
 const BASE_MANIFEST_SHA256 := "8029f8cd8084d4431b9c29b7742520ccc93dd66e60c878f7a55d33dfa0747e63"
 const SHADOW_MANIFEST_SHA256 := "8dc2f663c559186bc19c76c056431610badce287036f38c9ccc9ed9b8c66c040"
 const PILLAR_MANIFEST_SHA256 := "72c5606eb476b9414d34adbd314362e349084c1beb06af6f315f24b9fe9f8ae5"
+const HORIZONTAL_WALL_MANIFEST_SHA256 := "4b7f1216d907a2fb783ef496fcaaacdbd8a984b9314b64710eda93e5cbb3c6bc"
+const WALL_AND_CLIFF_MANIFEST_SHA256 := "7c0e6adedad2486a5da45c30ca58094468a4e94fc18a35074862636338635056"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}
@@ -20,7 +22,7 @@ func configure(directory: String) -> bool:
 	if _configured: return false
 	var path := directory.path_join("ground.json")
 	if not FileAccess.file_exists(path): return false
-	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256,PILLAR_MANIFEST_SHA256]: return false
+	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256,PILLAR_MANIFEST_SHA256,HORIZONTAL_WALL_MANIFEST_SHA256,WALL_AND_CLIFF_MANIFEST_SHA256]: return false
 	var data = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not data is Dictionary: return false
 	var textures: Dictionary = {}
@@ -60,6 +62,14 @@ func configure(directory: String) -> bool:
 		for row in layer.rows:
 			_add_static_tile(row, int(layer.sorting_order),frames,data.sprites,layer_registry)
 		_shadow_layers[tilemap_id] = layer_registry
+	# 只安装原墙体显示，碰撞仍属于独立的原 Default 几何。
+	var structures: Array = data.get("walls",[])+data.get("cliff_bodies",[])
+	if data.has("horizontal_wall"): structures.append(data.horizontal_wall)
+	for layer in structures:
+		var registry := {}
+		for row in layer.rows:
+			_add_static_tile(row,int(layer.sorting_order),frames,data.sprites,registry)
+		_static_decorations[int(layer.tilemap_id)]=registry
 	# 柱身和阴影没有 SortingGroup。位置一致，排序各自保留。
 	for row in data.get("pillars",[]):
 		var pillar_id := int(row.collider_id)

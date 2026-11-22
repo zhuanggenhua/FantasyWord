@@ -1,4 +1,5 @@
 extends "res://tests/test_clickmovetest_element_surface.gd"
+const STRUCTURE_IDS := [1289053702,163064786,2118149258,432984437,147438656]
 const Ground = preload("res://gameplay/clickmovetest/ground_layers.gd")
 func run() -> void:
 	var rejected := Ground.new()
@@ -39,6 +40,9 @@ func run() -> void:
 	var road := ground.static_decoration_sprite(10,road_cell) as Sprite2D
 	check(ground.static_decoration_count(10)==74 and ground.static_decoration_count(20)==10,
 		"来源10/20装配固定装饰15/4格与原缓存装饰59/6格")
+	var manifest_hash := FileAccess.get_sha256(directory.path_join("ground.json"))
+	var all_structures := manifest_hash==Ground.WALL_AND_CLIFF_MANIFEST_SHA256
+	var horizontal_wall := all_structures or manifest_hash==Ground.HORIZONTAL_WALL_MANIFEST_SHA256
 	var combo_tiles: Array[Sprite2D] = []
 	var samples := [[10, Vector3i(6,-5,0), 168], [10, Vector3i(7,-5,0), 104],
 		[20, Vector3i(-6,13,0), 136]]
@@ -55,7 +59,17 @@ func run() -> void:
 			"石草混合装饰不是该来源的可燃覆盖：%s" % cell)
 		if tile!=null: combo_tiles.append(tile)
 	if DisplayServer.get_name()!="headless":
-		for tile in combo_tiles: await check_combo_pixels(scene.camera,tile)
+		for tile in combo_tiles:
+			var cell:=Vector3i(floori(tile.position.x),floori(-tile.position.y),0)
+			var occluders: Array[Sprite2D] = []
+			# 原建筑覆盖部分石草；在诊断中隔离下层素材，正式叠放原样。
+			for id in STRUCTURE_IDS:
+				var top:=ground.static_decoration_sprite(id,cell) as Sprite2D
+				if top!=null and top.z_index>tile.z_index:
+					top.hide()
+					occluders.append(top)
+			await check_combo_pixels(scene.camera,tile,"原缓存装饰 %s"%cell)
+			for top in occluders: top.show()
 	var fixed_tiles := {
 		Vector3i(-16,-6,0):Vector2i(64,128), Vector3i(-16,-5,0):Vector2i(64,136),
 		Vector3i(-16,-4,0):Vector2i(64,144), Vector3i(-6,10,0):Vector2i(56,16),
@@ -98,8 +112,7 @@ func run() -> void:
 		"悬崖顶阴影来自独立的原阴影图集，保留与下层崖缘同格排序")
 	check(ground.mapped_cover_sources(shadow_cell).is_empty(),"崖缘和上层崖影都不是可燃映射")
 	# 同一合同的旧版仍能打开，但不冒充已验证新增的42格。
-	var manifest_hash := FileAccess.get_sha256(directory.path_join("ground.json"))
-	var shadow_manifest := manifest_hash in [Ground.SHADOW_MANIFEST_SHA256, Ground.PILLAR_MANIFEST_SHA256]
+	var shadow_manifest := horizontal_wall or manifest_hash in [Ground.SHADOW_MANIFEST_SHA256, Ground.PILLAR_MANIFEST_SHA256]
 	if shadow_manifest:
 		check(ground.shadow_count(1712506432)==35 and ground.shadow_count(1850812192)==7,
 			"两套新增原作者阴影容量不混同来源31")
@@ -121,7 +134,7 @@ func run() -> void:
 	else:
 		check(ground.shadow_count(1712506432)==0 and ground.shadow_count(1850812192)==0,
 			"旧合同仍加载，但未装配新增两层阴影")
-	if manifest_hash==Ground.PILLAR_MANIFEST_SHA256:
+	if horizontal_wall or manifest_hash==Ground.PILLAR_MANIFEST_SHA256:
 		var data: Dictionary=read(directory.path_join("ground.json"))
 		check(ground.pillar_count()==14 and data.pillars.size()==14,"原十四根柱子及各自独立柱影")
 		for row: Dictionary in data.pillars:
@@ -148,6 +161,48 @@ func run() -> void:
 				await check_combo_pixels(scene.camera,p11.get_node("shadow"),"独立柱影 (11)",true)
 	else:
 		check(ground.pillar_count()==0,"原地面历史清单不冒充已装配柱子")
+	if horizontal_wall:
+		var wall_id:=1289053702
+		var cell:=Vector3i(6,-6,0)
+		var tile:=ground.static_decoration_sprite(wall_id,cell) as Sprite2D
+		var atlas:=tile.texture as AtlasTexture if tile!=null else null
+		var data: Dictionary=read(directory.path_join("ground.json"))
+		var wall_data: Dictionary=data.walls[0] if all_structures else data.horizontal_wall
+		check(ground.static_decoration_count(wall_id)==56 and wall_data.rows.size()==56
+			and not ground.source_available(wall_id),"56 格原横墙不属于可删除的地表覆盖")
+		check(atlas!=null and atlas.region==Rect2(16,atlas.atlas.get_height()-33,8,8)
+			and tile.position==Vector2(6.5,5.5) and tile.offset==Vector2(-4,-4)
+			and tile.scale==Vector2(.125,.125) and tile.z_index==-5,
+			"原横墙第 6,-6 格为规则命中图、原位置和排序")
+		for row: Dictionary in wall_data.rows:
+			var at:=Vector3i(row.cell[0],row.cell[1],row.cell[2])
+			var original:=ground.static_decoration_sprite(wall_id,at) as Sprite2D
+			var frame:=original.texture as AtlasTexture if original!=null else null
+			var src: Array=data.sprites[row.sprite].rect
+			check(frame!=null and atlas!=null and frame.atlas==atlas.atlas and frame.region==Rect2(src[0],frame.atlas.get_height()-src[1]-8,8,8)
+				and original.position==Vector2(at.x+.5,-at.y-.5) and original.z_index==-5
+				and not ground.mapped_cover_sources(at).has(wall_id),"原横墙图样与缓存 %s"%at)
+		if tile!=null and DisplayServer.get_name()!="headless":
+			await check_combo_pixels(scene.camera,tile,"原横墙 (6,-6)",true)
+	else:
+		check(ground.static_decoration_count(1289053702)==0,"旧私有合同不冒充有原横墙")
+	if all_structures:
+		var data: Dictionary=read(directory.path_join("ground.json"))
+		var wall_body: Dictionary=data.walls[1]
+		check_structure_layer(ground,data.sprites,wall_body,163064786,11,-6,{"fixed":4,"cached_random":7})
+		check_structure_layer(ground,data.sprites,data.cliff_bodies[0],2118149258,72,-4,{"fixed":66,"standard":6})
+		check_structure_layer(ground,data.sprites,data.cliff_bodies[1],432984437,47,-3,{"fixed":41,"standard":6})
+		check_structure_layer(ground,data.sprites,data.cliff_bodies[2],147438656,32,-2,{"fixed":23,"standard":9})
+		var mid_a := ground.static_decoration_sprite(163064786,Vector3i(11,0,0)) as Sprite2D
+		var mid_b := ground.static_decoration_sprite(163064786,Vector3i(11,-1,0)) as Sprite2D
+		check(mid_a!=null and mid_b!=null
+			and (mid_a.texture as AtlasTexture).region.position.y!=(mid_b.texture as AtlasTexture).region.position.y,
+			"原纵墙中段保留不同的锁定随机缓存，不用一张图代替")
+		if DisplayServer.get_name()!="headless":
+			for sample in [[163064786,Vector3i(11,0,0)],[2118149258,Vector3i(-5,1,0)],
+					[432984437,Vector3i(0,2,0)],[147438656,Vector3i(-4,4,0)]]:
+				var sprite := ground.static_decoration_sprite(sample[0],sample[1]) as Sprite2D
+				if sprite!=null: await check_combo_pixels(scene.camera,sprite,"原纵墙/崖体 %s"%sample[0],true)
 	var water_cell := Vector3i(-8,-10,0)
 	var water := ground.water_base_sprite(water_cell) as AnimatedSprite2D
 	check(ground.water_base_count()==87 and is_instance_valid(water),"原河湖水面底图87格，独立于35格 LakeGrass 装饰")
@@ -304,6 +359,23 @@ func run() -> void:
 	quit(1 if failed else 0)
 
 # 在实际窗口比较同一原格显示、隐藏和恢复，不把图集离线预览当作绘制证据。
+func check_structure_layer(ground: Node2D, meta: Dictionary, layer: Dictionary,
+		id: int, count: int, order: int, expected_modes: Dictionary) -> void:
+	check(int(layer.tilemap_id)==id and layer.rows.size()==count and ground.static_decoration_count(id)==count
+		and not ground.source_available(id),"原独立结构层规模和来源 %d"%id)
+	var modes := {}
+	for row: Dictionary in layer.rows:
+		modes[row.mode]=int(modes.get(row.mode,0))+1
+		var cell:=Vector3i(row.cell[0],row.cell[1],row.cell[2])
+		var sprite:=ground.static_decoration_sprite(id,cell) as Sprite2D
+		var frame:=sprite.texture as AtlasTexture if sprite!=null else null
+		var rect: Array=meta[row.sprite].rect
+		check(frame!=null and frame.region==Rect2(rect[0],frame.atlas.get_height()-rect[1]-8,8,8)
+			and sprite.position==Vector2(cell.x+.5,-cell.y-.5) and sprite.offset==Vector2(-4,-4)
+			and sprite.scale==Vector2(.125,.125) and sprite.z_index==order
+			and not ground.mapped_cover_sources(cell).has(id),"精确原结构精灵与位置 %d/%s"%[id,cell])
+	check(modes==expected_modes,"原规则选图模式分布 %d"%id)
+
 func check_combo_pixels(camera: Camera2D, tile: Sprite2D, label: String="原缓存装饰", alpha_probe: bool=false) -> void:
 	var original := camera.global_position
 	camera.global_position = tile.global_position

@@ -59,7 +59,7 @@ def read(checkout, path):
 def first_fixed_rule(rule_asset, cell, authored_cells, tile_guid, output):
     """执行当前锁定的四边形网格 Fixed Rule，不猜随机或旋转分支。"""
     for rule in rule_asset['m_TilingRules']:
-        require(rule['m_RuleTransform'] == 0 and rule['m_Output'] == output, '不是指定的固定规则输出')
+        require(rule['m_RuleTransform'] == 0 and (output is None or rule['m_Output'] == output), '不是指定的固定规则输出')
         raw = bytes.fromhex(rule['m_Neighbors'] or '')
         require(len(raw) % 4 == 0, '邻接字节损坏')
         neighbors = struct.unpack('<' + 'i' * (len(raw) // 4), raw)
@@ -359,6 +359,128 @@ def extract_pillars(checkout, scene, sprites, used):
     return result
 
 
+def validate_wall_layer(scene, nav, tile_id, count, order):
+    renderer_id, owner_id = tile_id-1, tile_id-6
+    tilemap = get_document(scene,tile_id,'Tilemap')
+    renderer = get_document(scene,renderer_id,'TilemapRenderer')
+    owner = get_document(scene,owner_id,'GameObject')
+    cells = tile_cells(scene,tile_id)
+    require(tile_id not in {r['m_tilemap']['fileID'] for r in nav['m_surfaceLayerSources']}
+            and [c['component']['fileID'] for c in owner['m_Component']]
+                == [tile_id-5,tile_id,renderer_id,tile_id-2,tile_id-3,tile_id-4]
+            and owner['m_IsActive']==1 and tilemap['m_GameObject']['fileID']==renderer['m_GameObject']['fileID']==owner_id
+            and len(cells)==count and tilemap['m_Color']==WHITE and tilemap['m_TileOrientationMatrix']==IDENTITY
+            and not tilemap['m_AnimatedTiles']
+            and tilemap['m_TileOrientation']==renderer['m_SortingLayerID']==renderer['m_Mode']==renderer['m_MaskInteraction']==renderer['m_SortOrder']==0
+            and renderer['m_SortingOrder']==order and renderer['m_Enabled']==1
+            and renderer['m_Materials']==DEFAULT_TILE_MATERIAL, '原墙或崖体对象、渲染参数或地表映射变化')
+    return tilemap, cells
+
+
+def extract_wall(checkout, scene, sprites, used, nav, vertical=False):
+    if vertical:
+        tile_id, guid, name, order = 163064786, '33f5d012cce5ed642a0184adb9d0a80f', 'VerticalWall', -6
+        expected_outcomes, expected_choices = [(0,1),(1,4),(0,1)], Counter({0:4,1:7})
+        expected_frames = 5
+    else:
+        tile_id, guid, name, order = 1289053702, 'd8780a9d276c3064fa51d9d48be6586b', 'HorizontalWall', -5
+        expected_outcomes, expected_choices = [(0,1)]*13, Counter({0:56})
+        expected_frames = 11
+    path = ROOT + f'Tile Palettes/Rule Tiles/{name}.asset'
+    props_atlas = 'be785b53e8101134cb49e391918a7a82'
+    authored = get_document(re.sub(r'(m_Neighbors: )([0-9a-f]+)',r'\1"\2"',read(checkout,path)),11400000,'MonoBehaviour')
+    require(yaml.safe_load(read(checkout,path+'.meta'))['guid']==guid
+            and authored['m_Script']['guid']=='9d1514134bc4fbd41bb739b1b9a49231'
+            and [(r['m_Output'],len(r['m_Sprites'])) for r in authored['m_TilingRules']]==expected_outcomes
+            and all(r['m_RuleTransform']==r['m_RandomTransform']==0 and r['m_ColliderType']==1
+                    and all(f['guid']==props_atlas for f in r['m_Sprites'])
+                    for r in authored['m_TilingRules']), '原墙图集、规则输出或固定变换变化')
+    tilemap, cells = validate_wall_layer(scene,nav,tile_id,expected_choices.total(),order)
+    require(all(ref=={'fileID':11400000,'guid':guid,'type':2} for ref in cells.values()), '原墙瓦片引用变化')
+    indexes, choices, chosen, rows = Counter(), Counter(), set(), []
+    for entry in tilemap['m_Tiles']:
+        cell, data = tuple(xyz(entry['first'])),entry['second']
+        rule = first_fixed_rule(authored,cell,cells,guid,None)
+        require(rule is not None, '原墙不能使用未命中的 fallback')
+        output = rule['m_Output']
+        index = data['m_TileSpriteIndex']
+        indexes[index]+=1
+        cached = tilemap['m_TileSpriteArray'][index]['m_Data']
+        # 原场景此处不改布置；随机中段按第一条原规则验证候选，显示已序列化选图。
+        # 运行时不猜 Unity Perlin，也不重算中段。
+        sprite = cached if output==1 else rule['m_Sprites'][0]
+        key = f"{sprite['guid']}:{sprite['fileID']}"
+        require(sprite==cached and sprite in rule['m_Sprites'] and key in sprites
+                and sprites[key]['rect'][2:]==[8,8] and sprites[key]['pivot']==[.5,.5]
+                and tilemap['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data']==IDENTITY
+                and tilemap['m_TileColorArray'][data['m_TileColorIndex']]['m_Data']==WHITE
+                and data['m_TileObjectToInstantiateIndex']==65535 and data['m_AllTileFlags']==1073741826, '原墙求值和场景缓存不一致')
+        choices[output]+=1
+        chosen.add(key)
+        used.add(key)
+        rows.append({'cell':list(cell),'sprite':key,'mode':'cached_random' if output==1 else 'fixed'})
+    require(choices==expected_choices and len(chosen)==expected_frames and all(indexes[i]==x['m_RefCount'] for i,x in enumerate(tilemap['m_TileSpriteArray'])),
+            '原墙的选图分布、精灵或引用数变化')
+    return {'tilemap_id':tile_id,'sorting_order':order,'rows':rows}
+
+
+def extract_cliff_bodies(checkout, scene, sprites, used, nav):
+    prefix = ROOT + 'Tile Palettes/'
+    expected_rules = {'CliffGrass.asset':15,'CliffStairs.asset':11,'CliffWall 1.asset':6}
+    tiles, result = {}, []
+    for tile_id, count, order in ((2118149258,72,-4),(432984437,47,-3),(147438656,32,-2)):
+        tilemap, cells = validate_wall_layer(scene,nav,tile_id,count,order)
+        rows, indexes, modes = [], Counter(), Counter()
+        for entry in tilemap['m_Tiles']:
+            cell, data = tuple(xyz(entry['first'])),entry['second']
+            ref = cells[cell]
+            guid = ref['guid']
+            require(ref['fileID']==11400000 and ref['type']==2, '原崖体 Tile 引用变化')
+            if guid not in tiles:
+                paths = git(checkout,'grep','-zl',f'^guid: {guid}$',SOURCE,'--',prefix).rstrip('\0').split('\0')
+                require(len(paths)==1 and paths[0].endswith('.asset.meta'), '崖体 Tile 身份不唯一')
+                path = paths[0].split(':',1)[1].removesuffix('.meta')
+                asset = get_document(re.sub(r'(m_Neighbors: )([0-9a-f]+)',r'\1"\2"',read(checkout,path)),11400000,'MonoBehaviour')
+                if path.startswith(prefix+'Rule Tiles/'):
+                    r = asset['m_TilingRules']
+                    require(asset['m_Script']['guid']=='9d1514134bc4fbd41bb739b1b9a49231'
+                            and len(r)==expected_rules.get(path.rsplit('/',1)[1])
+                            and all(t['m_RuleTransform']==t['m_RandomTransform']==t['m_Output']==0
+                                    and t['m_ColliderType']==1 and len(t['m_Sprites']) in (1,2) for t in r),
+                            '原崖体固定相邻规则变化')
+                    tiles[guid]=(asset,True)
+                else:
+                    require(path.startswith(prefix+'Standard Tiles/Cliffs/')
+                            and asset['m_Script']=={'fileID':13312,'guid':'0000000000000000e000000000000000','type':0}
+                            and asset['m_Color']==WHITE and asset['m_Transform']==IDENTITY and asset['m_Flags']==1
+                            and asset['m_ColliderType']==1 and asset['m_InstancedGameObject']['fileID']==0,
+                            '原崖体普通 Tile 的原配置变化')
+                    tiles[guid]=(asset,False)
+            asset,is_rule = tiles[guid]
+            if is_rule:
+                rule = first_fixed_rule(asset,cell,cells,guid,0)
+                sprite = rule['m_Sprites'][0] if rule is not None else asset['m_DefaultSprite']
+                mode = 'fixed' if rule is not None else 'fixed_default'
+            else:
+                sprite, mode = asset['m_Sprite'], 'standard'
+            index = data['m_TileSpriteIndex']
+            indexes[index]+=1
+            key=f"{sprite['guid']}:{sprite['fileID']}"
+            require(sprite==tilemap['m_TileSpriteArray'][index]['m_Data'] and sprite['guid']==TILES_GUID
+                    and key in sprites and sprites[key]['rect'][2:]==[8,8] and sprites[key]['pivot']==[.5,.5]
+                    and tilemap['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data']==IDENTITY
+                    and tilemap['m_TileColorArray'][data['m_TileColorIndex']]['m_Data']==WHITE
+                    and data['m_TileObjectToInstantiateIndex']==65535 and data['m_AllTileFlags']==(1073741826 if is_rule else 1073741825),
+                    '原崖体规则选择与场景缓存不一致')
+            modes[mode]+=1
+            used.add(key)
+            rows.append({'cell':list(cell),'sprite':key,'mode':mode})
+        require(all(indexes[i]==x['m_RefCount'] for i,x in enumerate(tilemap['m_TileSpriteArray'])), '原崖体精灵引用数变化')
+        result.append({'tilemap_id':tile_id,'sorting_order':order,'rows':rows})
+    require(len(tiles)==9, '原崖体应使用3种 RuleTile 和6种普通 Tile')
+    return result
+
+
 def extract(checkout):
     scene = read(checkout, SCENE)
     expect_rectangular_grid(scene)
@@ -538,9 +660,11 @@ def extract(checkout):
     water_base = extract_water_base(checkout,scene,sprites,used)
     shadows = extract_shadow_layers(checkout,scene,sprites,used,nav)
     pillars = extract_pillars(checkout,scene,sprites,used)
-    return {'schema':9,'source_commit':SOURCE,'scope':'ground-with-authored-shadow-layers-and-pillars',
+    walls = [extract_wall(checkout,scene,sprites,used,nav,vertical) for vertical in (False,True)]
+    cliffs = extract_cliff_bodies(checkout,scene,sprites,used,nav)
+    return {'schema':12,'source_commit':SOURCE,'scope':'ground-with-authored-wall-shadows-and-pillars',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},
-            'layers':layers,'water_base':water_base,'shadow_layers':shadows,'pillars':pillars}
+            'layers':layers,'water_base':water_base,'shadow_layers':shadows,'pillars':pillars,'walls':walls,'cliff_bodies':cliffs}
 
 
 def main():
@@ -553,6 +677,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格、14根原柱子及独立柱影。不重算 Unity Perlin，不抽取倒影。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格、14根原柱子及独立柱影、原横墙56格、纵墙11格、崖体三层151格。不重算 Unity Perlin，不抽取倒影。')
 
 if __name__ == '__main__': main()

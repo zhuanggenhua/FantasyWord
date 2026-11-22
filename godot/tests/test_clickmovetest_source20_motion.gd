@@ -83,7 +83,9 @@ func run() -> void:
 		check(not state.intersect_point(point).any(func(result: Dictionary):return result.collider==pillar),
 			"Movable mask still excludes original pillar %d"%id)
 	var ground_path := OS.get_environment("FORMAL_GROUND_LAYERS").path_join("ground.json")
-	if FileAccess.get_sha256(ground_path)==Ground.PILLAR_MANIFEST_SHA256:
+	var ground_sha:=FileAccess.get_sha256(ground_path)
+	var all_structures := ground_sha==Ground.WALL_AND_CLIFF_MANIFEST_SHA256
+	if all_structures or ground_sha in [Ground.PILLAR_MANIFEST_SHA256,Ground.HORIZONTAL_WALL_MANIFEST_SHA256]:
 		var ground: Node2D=boot.scene.ground_layers
 		check(ground!=null and ground.pillar_count()==14,"实际 F5 入口含 14 根原柱子及阴影")
 		for id in [325078254,1275043674]:
@@ -91,6 +93,17 @@ func run() -> void:
 			var collider := host.get_node_or_null("SourceCollider%d"%id) as StaticBody2D
 			check(pillar!=null and collider!=null and pillar.global_position.is_equal_approx(collider.global_position),
 				"原柱画面与独立 Default 碰撞盒位置对应 %d"%id)
+	if all_structures or ground_sha==Ground.HORIZONTAL_WALL_MANIFEST_SHA256:
+		var wall_display:=boot.scene.ground_layers.static_decoration_sprite(1289053702,Vector3i(6,-6,0)) as Sprite2D
+		var wall_query:=host.get_node_or_null("SourceCollider1289053698") as StaticBody2D
+		check(wall_display!=null and wall_query!=null and wall_query.collision_layer==1
+			and wall_query.collision_mask==0,"实际 F5 同时显示原横墙且仍只保留原 Default 查询形状")
+	if all_structures:
+		for id in [163064786,2118149258,432984437,147438656]:
+			var solid_shape:=host.get_node_or_null("SourceCollider%d"%(id-4)) as StaticBody2D
+			check(boot.scene.ground_layers.static_decoration_count(id)>0 and solid_shape!=null
+				and solid_shape.collision_layer==1 and solid_shape.collision_mask==0,
+				"实际 F5 原结构显示与独立 Default 轮廓 %d"%id)
 	var ray:=PhysicsRayQueryParameters2D.create(Vector2(FROM.x,-FROM.y),Vector2(TO.x,-TO.y),1)
 	var hit:=state.intersect_ray(ray)
 	check(hit.get("collider")==body and is_equal_approx(float(hit.get("position",Vector2.ZERO).x),-3.0000253),
