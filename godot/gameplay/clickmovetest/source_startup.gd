@@ -1,4 +1,5 @@
 extends Node
+const StaticGeometry := preload("res://gameplay/clickmovetest/source_static_geometry.gd")
 ## Godot 原图启动宿主：装配同一原角色、输入、地图和私有作者资源。
 ## 正常项目入口不启动诊断抽样或替代关卡，CLI 预览复用相同宿主。
 const Entry = preload("res://gameplay/clickmovetest/entry.tscn")
@@ -138,6 +139,14 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if not scene.start_surface_elements(surface) or not scene.bind_ground_layers(paths.FORMAL_GROUND_LAYERS) \
 			or not scene.bind_surface_presentation(paths.FORMAL_BURNING_TILE_PNG):
 		return _fail("原底图、固定装饰或地表效果未通过来源检查。")
+	# This private extracted geometry is optional, but wrong input must not
+	# silently downgrade an explicit request to no collision geometry.
+	var static_geometry_path := OS.get_environment("FORMAL_STATIC_COLLIDERS") if mount_project_contact else ""
+	if not static_geometry_path.is_empty():
+		var geometry := StaticGeometry.build(static_geometry_path)
+		if geometry==null:
+			return _fail("原场景静态碰撞几何未通过锁定提取数据检查。")
+		scene.add_child(geometry)
 	if _water_reflection and (not scene.bind_static_tree_reflection(paths.FORMAL_WATER_REFLECTION_MASK) \
 			or not scene.bind_player_water_reflection()):
 		return _fail("原树、主角正式换装材质和 87 格水层无法装配倒影。")
