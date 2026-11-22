@@ -1,5 +1,6 @@
 extends SceneTree
 const Startup := preload("res://gameplay/clickmovetest/source_startup.gd")
+const Ground := preload("res://gameplay/clickmovetest/ground_layers.gd")
 const Geometry := preload("res://gameplay/clickmovetest/source_static_geometry.gd")
 const CLIFF_ID := 913349352
 const FROM := Vector2(-3.55,3.5)
@@ -81,6 +82,15 @@ func run() -> void:
 		point.collision_mask=7752
 		check(not state.intersect_point(point).any(func(result: Dictionary):return result.collider==pillar),
 			"Movable mask still excludes original pillar %d"%id)
+	var ground_path := OS.get_environment("FORMAL_GROUND_LAYERS").path_join("ground.json")
+	if FileAccess.get_sha256(ground_path)==Ground.PILLAR_MANIFEST_SHA256:
+		var ground: Node2D=boot.scene.ground_layers
+		check(ground!=null and ground.pillar_count()==14,"实际 F5 入口含 14 根原柱子及阴影")
+		for id in [325078254,1275043674]:
+			var pillar := ground.pillar_for_collider(id) as Node2D
+			var collider := host.get_node_or_null("SourceCollider%d"%id) as StaticBody2D
+			check(pillar!=null and collider!=null and pillar.global_position.is_equal_approx(collider.global_position),
+				"原柱画面与独立 Default 碰撞盒位置对应 %d"%id)
 	var ray:=PhysicsRayQueryParameters2D.create(Vector2(FROM.x,-FROM.y),Vector2(TO.x,-TO.y),1)
 	var hit:=state.intersect_ray(ray)
 	check(hit.get("collider")==body and is_equal_approx(float(hit.get("position",Vector2.ZERO).x),-3.0000253),

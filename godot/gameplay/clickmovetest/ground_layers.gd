@@ -3,12 +3,14 @@ extends Node2D
 ## 不擦除作者格、不生成焦土，也不另建碰撞/导航。静态装饰、湖草与可燃覆盖分别注册。
 const BASE_MANIFEST_SHA256 := "8029f8cd8084d4431b9c29b7742520ccc93dd66e60c878f7a55d33dfa0747e63"
 const SHADOW_MANIFEST_SHA256 := "8dc2f663c559186bc19c76c056431610badce287036f38c9ccc9ed9b8c66c040"
+const PILLAR_MANIFEST_SHA256 := "72c5606eb476b9414d34adbd314362e349084c1beb06af6f315f24b9fe9f8ae5"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}
 var _water_base: Dictionary = {}
 var _static_decorations: Dictionary = {}
 var _shadow_layers: Dictionary = {}
+var _pillars: Dictionary = {}
 var _configured := false
 var _textures: Dictionary = {}
 var _reflection_tree: Node2D
@@ -18,7 +20,7 @@ func configure(directory: String) -> bool:
 	if _configured: return false
 	var path := directory.path_join("ground.json")
 	if not FileAccess.file_exists(path): return false
-	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256]: return false
+	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256,PILLAR_MANIFEST_SHA256]: return false
 	var data = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not data is Dictionary: return false
 	var textures: Dictionary = {}
@@ -58,6 +60,23 @@ func configure(directory: String) -> bool:
 		for row in layer.rows:
 			_add_static_tile(row, int(layer.sorting_order),frames,data.sprites,layer_registry)
 		_shadow_layers[tilemap_id] = layer_registry
+	# 柱身和阴影没有 SortingGroup。位置一致，排序各自保留。
+	for row in data.get("pillars",[]):
+		var pillar_id := int(row.collider_id)
+		var pillar := Node2D.new()
+		pillar.name = "SourcePillar%d"%int(row.object_id)
+		pillar.position = Vector2(row.position[0],-row.position[1])
+		pillar.set_meta("source_box_id",pillar_id)
+		pillar.set_meta("source_variant",int(row.variant))
+		add_child(pillar)
+		for part in ["body","shadow"]:
+			var authored: Dictionary = row[part]
+			var sprite := _static_atlas_sprite(frames[authored.sprite],data.sprites[authored.sprite],int(authored.sorting_order))
+			sprite.name=part
+			sprite.z_as_relative=false
+			sprite.set_meta("source_renderer_id",int(authored.renderer_id))
+			pillar.add_child(sprite)
+		_pillars[pillar_id]=pillar
 	# Original water compositor at reflection alpha zero: unlit authored base
 	# with unchanged sprite alpha. Actual reflected contributions are separate.
 	_base_water_material = CanvasItemMaterial.new()
@@ -71,17 +90,26 @@ func configure(directory: String) -> bool:
 func _add_static_tile(row: Dictionary, sorting_order: int, textures: Dictionary,
 		metadata: Dictionary, registry: Dictionary) -> void:
 	var cell := Vector3i(int(row.cell[0]),int(row.cell[1]),int(row.cell[2]))
-	var pose: Dictionary = metadata[row.sprite]
+	var sprite := _static_atlas_sprite(textures[row.sprite],metadata[row.sprite],sorting_order)
+	var shift: Array = row.get("translation", [0,0])
+	sprite.position = Vector2(cell.x+.5+shift[0],-cell.y-.5-shift[1])
+	add_child(sprite)
+	registry[cell] = sprite
+
+func _static_atlas_sprite(texture: Texture2D, pose: Dictionary, sort_order: int) -> Sprite2D:
 	var sprite := Sprite2D.new()
-	sprite.texture = textures[row.sprite]
+	sprite.texture = texture
 	sprite.centered = false
 	sprite.offset = Vector2(-pose.pivot[0]*pose.rect[2],-(1.0-pose.pivot[1])*pose.rect[3])
 	sprite.scale = Vector2.ONE / float(pose.ppu)
-	var shift: Array = row.get("translation", [0,0])
-	sprite.position = Vector2(cell.x+.5+shift[0],-cell.y-.5-shift[1])
-	sprite.z_index = sorting_order
-	add_child(sprite)
-	registry[cell] = sprite
+	sprite.z_index = sort_order
+	return sprite
+
+func pillar_for_collider(collider_id: int) -> Node2D:
+	return _pillars.get(collider_id)
+
+func pillar_count() -> int:
+	return _pillars.size()
 
 func static_decoration_sprite(source: int, cell: Vector3i) -> Sprite2D:
 	return _static_decorations.get(source, {}).get(cell)

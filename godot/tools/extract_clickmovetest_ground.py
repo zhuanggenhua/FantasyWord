@@ -288,6 +288,77 @@ def extract_shadow_layers(checkout, scene, sprites, used, nav):
     return result
 
 
+def extract_pillars(checkout, scene, sprites, used):
+    variants = ('tall1','tall2','tall3','medium1','medium2','medium3','medium4','short1','short2')
+    pillar_script = read(checkout, ROOT + 'Scripts/PropVariants/FP_Pillar.cs')
+    require(all(re.search(rf"case PillarSelection\.{name[0].upper()+name[1:]}:\s+selectedSprite = {name};\s+selectedShadow = shadow{name[0].upper()+name[1:]};",pillar_script)
+                for name in variants), '原柱子九种 OnValidate 分支变化')
+
+    enum_body = re.search(r'private enum PillarSelection\s*\{([^}]+)\}',pillar_script,re.S)
+    require(enum_body is not None and tuple(x.strip().lower() for x in enum_body[1].split(',') if x.strip())==variants,
+            '原柱子变体索引顺序变化')
+
+    def identity_transform(t, parent):
+        return t['m_Father']['fileID']==parent and xyz(t['m_LocalScale'])==[1,1,1] and t['m_LocalRotation']==dict(x=0,y=0,z=0,w=1)
+
+    for node, parent in ((1951579796,197348023),(197348023,1148507050),(1148507050,6951707),(6951707,900000102),(900000102,0)):
+        t = get_document(scene,node,'Transform')
+        owner = get_document(scene,t['m_GameObject']['fileID'],'GameObject')
+        require(identity_transform(t,parent) and xyz(t['m_LocalPosition'])==[0,0,0] and owner['m_IsActive']==1
+                and not any(re.search(rf'^--- !u!210 &{c["component"]["fileID"]}\b',scene,re.M) for c in owner['m_Component']),
+                '原柱父链或排序组发生变化')
+    root = get_document(scene,1951579796,'Transform')
+
+    def sprite_row(renderer_id, owner, ref, order, atlas):
+        r=get_document(scene,renderer_id,'SpriteRenderer')
+        key=f"{ref['guid']}:{ref['fileID']}"
+        require(r['m_GameObject']['fileID']==owner and r['m_Enabled']==1 and r['m_Sprite']==ref
+                and r['m_Materials']==DEFAULT_TILE_MATERIAL and r['m_Color']==WHITE
+                and r['m_SortingLayerID']==r['m_SpriteSortPoint']==r['m_FlipX']==r['m_FlipY']==r['m_DrawMode']==r['m_MaskInteraction']==0
+                and r['m_SortingOrder']==order and ref['guid']==atlas and key in sprites,
+                '原柱子缓存、选图、翻转或排序方式变化')
+        used.add(key)
+        return {'renderer_id':renderer_id,'sprite':key,'sorting_order':order}
+
+    result = []
+    counts = Counter()
+    for child in root['m_Children']:
+        node_id = child['fileID']
+        t = get_document(scene,node_id,'Transform')
+        owner_id=t['m_GameObject']['fileID']
+        owner=get_document(scene,owner_id,'GameObject')
+        require(re.fullmatch(r'Pillar(?: \(\d+\))?',owner['m_Name']) and owner['m_IsActive']==1
+                and owner['m_Layer']==0 and identity_transform(t,1951579796)
+                and t['m_LocalPosition']['z']==0 and len(t['m_Children'])==1, '不是锁定的原活跃柱子')
+        owner_components=[c['component']['fileID'] for c in owner['m_Component']]
+        require(len(owner_components)==4 and owner_components[0]==node_id, '原柱子组件列表变化')
+        collider=get_document(scene,owner_components[2],'BoxCollider2D')
+        variant=get_document(scene,owner_components[3],'MonoBehaviour')
+        require(collider['m_GameObject']['fileID']==owner_id and collider['m_Enabled']==1
+                and collider['m_Offset']==dict(x=0,y=0)
+                and variant['m_Enabled']==1 and variant['m_GameObject']['fileID']==owner_id
+                and variant['m_Script']['guid']=='fcf74fae0478f2e49abe61340164d67c'
+                and 0<=variant['selection']<len(variants), '原柱子组件或作者变体变化')
+        selection=variant['selection']
+        key=variants[selection]
+        shadow_id=t['m_Children'][0]['fileID']
+        shadow=get_document(scene,shadow_id,'Transform')
+        shadow_owner_id=shadow['m_GameObject']['fileID']
+        shadow_owner=get_document(scene,shadow_owner_id,'GameObject')
+        shadow_components=[c['component']['fileID'] for c in shadow_owner['m_Component']]
+        require(identity_transform(shadow,node_id) and xyz(shadow['m_LocalPosition'])==[0,0,0]
+                and not shadow['m_Children'] and shadow_owner['m_Name']=='Shadow'
+                and shadow_owner['m_IsActive']==1 and shadow_owner['m_Layer']==0
+                and len(shadow_components)==2 and shadow_components[0]==shadow_id, '原柱影父子或位置变化')
+        result.append({'object_id':owner_id,'collider_id':owner_components[2],'variant':selection,
+                       'position':xyz(t['m_LocalPosition'])[:2],
+                       'body':sprite_row(owner_components[1],owner_id,variant[key],0,tuple(PROPS)[0]),
+                       'shadow':sprite_row(shadow_components[1],shadow_owner_id,variant['shadow'+key[0].upper()+key[1:]],-7,tuple(PROPS)[1])})
+        counts[selection]+=1
+    require(len(result)==14 and counts==Counter({0:1,1:1,2:2,3:1,4:1,5:1,6:1,7:1,8:5}), '原柱子及变体总数变化')
+    return result
+
+
 def extract(checkout):
     scene = read(checkout, SCENE)
     expect_rectangular_grid(scene)
@@ -466,9 +537,10 @@ def extract(checkout):
             '原植被与阴影逐格位移配对变化')
     water_base = extract_water_base(checkout,scene,sprites,used)
     shadows = extract_shadow_layers(checkout,scene,sprites,used,nav)
-    return {'schema':8,'source_commit':SOURCE,'scope':'ground-with-authored-combo-cache-water-base-and-static-shadows',
+    pillars = extract_pillars(checkout,scene,sprites,used)
+    return {'schema':9,'source_commit':SOURCE,'scope':'ground-with-authored-shadow-layers-and-pillars',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},
-            'layers':layers,'water_base':water_base,'shadow_layers':shadows}
+            'layers':layers,'water_base':water_base,'shadow_layers':shadows,'pillars':pillars}
 
 
 def main():
@@ -481,6 +553,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格。不重算 Unity Perlin，不抽取倒影。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格、14根原柱子及独立柱影。不重算 Unity Perlin，不抽取倒影。')
 
 if __name__ == '__main__': main()

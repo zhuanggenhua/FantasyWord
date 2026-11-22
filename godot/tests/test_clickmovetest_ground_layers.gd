@@ -98,7 +98,8 @@ func run() -> void:
 		"悬崖顶阴影来自独立的原阴影图集，保留与下层崖缘同格排序")
 	check(ground.mapped_cover_sources(shadow_cell).is_empty(),"崖缘和上层崖影都不是可燃映射")
 	# 同一合同的旧版仍能打开，但不冒充已验证新增的42格。
-	var shadow_manifest := FileAccess.get_sha256(directory.path_join("ground.json"))==Ground.SHADOW_MANIFEST_SHA256
+	var manifest_hash := FileAccess.get_sha256(directory.path_join("ground.json"))
+	var shadow_manifest := manifest_hash in [Ground.SHADOW_MANIFEST_SHA256, Ground.PILLAR_MANIFEST_SHA256]
 	if shadow_manifest:
 		check(ground.shadow_count(1712506432)==35 and ground.shadow_count(1850812192)==7,
 			"两套新增原作者阴影容量不混同来源31")
@@ -120,6 +121,33 @@ func run() -> void:
 	else:
 		check(ground.shadow_count(1712506432)==0 and ground.shadow_count(1850812192)==0,
 			"旧合同仍加载，但未装配新增两层阴影")
+	if manifest_hash==Ground.PILLAR_MANIFEST_SHA256:
+		var data: Dictionary=read(directory.path_join("ground.json"))
+		check(ground.pillar_count()==14 and data.pillars.size()==14,"原十四根柱子及各自独立柱影")
+		for row: Dictionary in data.pillars:
+			var pillar:=ground.pillar_for_collider(int(row.collider_id)) as Node2D
+			var exact: bool = pillar!=null and pillar.position==Vector2(row.position[0],-row.position[1]) \
+				and pillar.get_meta("source_variant")==int(row.variant)
+			check(exact,"原柱位置、Box标识及作者变体 %s"%row.collider_id)
+			if not exact: continue
+			for part in ["body","shadow"]:
+				var sprite:=pillar.get_node_or_null(part) as Sprite2D
+				var info: Dictionary=data.sprites[row[part].sprite]
+				var rect: Array=info.rect
+				var atlas:=sprite.texture as AtlasTexture if sprite!=null else null
+				check(atlas!=null and atlas.region==Rect2(rect[0],atlas.atlas.get_height()-rect[1]-rect[3],rect[2],rect[3])
+					and sprite.position==Vector2.ZERO and sprite.scale==Vector2.ONE/8
+					and sprite.offset==Vector2(-info.pivot[0]*rect[2],-(1.0-info.pivot[1])*rect[3])
+					and not sprite.z_as_relative and sprite.z_index==int(row[part].sorting_order)
+					and sprite.get_meta("source_renderer_id")==int(row[part].renderer_id),
+					"原柱精灵引用、裁切、枢轴和排序 %s/%s"%[row.collider_id,part])
+		if DisplayServer.get_name()!="headless":
+			var p11:=ground.pillar_for_collider(325078254) as Node2D
+			if p11!=null:
+				await check_combo_pixels(scene.camera,p11.get_node("body"),"柱身 (11)",true)
+				await check_combo_pixels(scene.camera,p11.get_node("shadow"),"独立柱影 (11)",true)
+	else:
+		check(ground.pillar_count()==0,"原地面历史清单不冒充已装配柱子")
 	var water_cell := Vector3i(-8,-10,0)
 	var water := ground.water_base_sprite(water_cell) as AnimatedSprite2D
 	check(ground.water_base_count()==87 and is_instance_valid(water),"原河湖水面底图87格，独立于35格 LakeGrass 装饰")
