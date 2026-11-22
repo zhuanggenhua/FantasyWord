@@ -235,6 +235,59 @@ def lake_animations(checkout):
     return assets
 
 
+def extract_shadow_layers(checkout, scene, sprites, used, nav):
+    root = ROOT + 'Tile Palettes/Standard Tiles/Cliffs/'
+    nav_ids = {r['m_tilemap']['fileID'] for r in nav['m_surfaceLayerSources']}
+    # 同一锁定场景，两层常驻装饰都不是地表状态映射。
+    result, tile_sprites = [], {}
+    for tile_id, order, count in ((1712506432,-7,35),(1850812192,-1,7)):
+        tilemap = get_document(scene,tile_id,'Tilemap')
+        renderer = get_document(scene,tile_id-1,'TilemapRenderer')
+        owner_id = tilemap['m_GameObject']['fileID']
+        owner = get_document(scene,owner_id,'GameObject')
+        cells = tile_cells(scene,tile_id)
+        require(tile_id not in nav_ids and owner['m_IsActive'] == 1
+                and [c['component']['fileID'] for c in owner['m_Component']] == [tile_id-2,tile_id,tile_id-1]
+                and len(cells) == count and not tilemap['m_AnimatedTiles']
+                and tilemap['m_Color'] == WHITE and tilemap['m_TileOrientationMatrix'] == IDENTITY
+                and tilemap['m_TileOrientation'] == renderer['m_SortingLayerID'] == renderer['m_Mode'] == 0
+                and renderer['m_GameObject']['fileID'] == owner_id and renderer['m_Enabled'] == 1
+                and renderer['m_SortingOrder'] == order and renderer['m_MaskInteraction'] == renderer['m_SortOrder'] == 0
+                and renderer['m_Materials'] == DEFAULT_TILE_MATERIAL, '原两层静态阴影的对象或渲染配置变化')
+        rows, indexes = [], Counter()
+        for entry in tilemap['m_Tiles']:
+            cell,data = tuple(xyz(entry['first'])),entry['second']
+            ref = cells[cell]
+            key = ref['guid']
+            require(ref['fileID'] == 11400000, '阴影 Tile 的身份不符')
+            if key not in tile_sprites:
+                paths = git(checkout,'grep','-zl',f'^guid: {key}$',SOURCE,'--',root).rstrip('\0').split('\0')
+                require(len(paths)==1 and paths[0].endswith('.asset.meta'), '原阴影 Tile 不唯一')
+                asset = get_document(read(checkout,paths[0].split(':',1)[1].removesuffix('.meta')),11400000,'MonoBehaviour')
+                require(asset['m_Script'] == {'fileID':13312,'guid':'0000000000000000e000000000000000','type':0}
+                        and asset['m_Transform'] == IDENTITY and asset['m_Color'] == WHITE and asset['m_Flags'] == 1
+                        and asset["m_ColliderType"] == 1 and asset["m_InstancedGameObject"]['fileID'] == 0,
+                        '原阴影静态 Tile 的 Sprite 形状或实例字段变化')
+                tile_sprites[key] = asset['m_Sprite']
+            sprite = tile_sprites[key]
+            index = data['m_TileSpriteIndex']
+            indexes[index] += 1
+            sprite_key = f"{sprite['guid']}:{sprite['fileID']}"
+            require(sprite == tilemap['m_TileSpriteArray'][index]['m_Data']
+                    and sprite['guid'] == CLIFF_SHADOWS_GUID and sprite_key in sprites
+                    and sprites[sprite_key]['rect'][2:] == [8,8] and sprites[sprite_key]['pivot'] == [.5,.5]
+                    and tilemap['m_TileMatrixArray'][data['m_TileMatrixIndex']]['m_Data'] == IDENTITY
+                    and tilemap['m_TileColorArray'][data['m_TileColorIndex']]['m_Data'] == WHITE
+                    and data['m_TileObjectToInstantiateIndex'] == 65535 and data['m_AllTileFlags'] == 1073741825,
+                    '阴影瓦片未匹配作者图集与场景缓存')
+            used.add(sprite_key)
+            rows.append({'cell':list(cell),'sprite':sprite_key})
+        require(all(indexes[i]==x['m_RefCount'] for i,x in enumerate(tilemap['m_TileSpriteArray'])),
+                '原阴影精灵引用数不符')
+        result.append({'tilemap_id':tile_id,'sorting_order':order,'rows':rows})
+    return result
+
+
 def extract(checkout):
     scene = read(checkout, SCENE)
     expect_rectangular_grid(scene)
@@ -412,9 +465,10 @@ def extract(checkout):
     require(props.keys() == shadows.keys() and all(shadows[cell] == [pos[0]-.125,pos[1]] for cell,pos in props.items()),
             '原植被与阴影逐格位移配对变化')
     water_base = extract_water_base(checkout,scene,sprites,used)
-    return {'schema':7,'source_commit':SOURCE,'scope':'ground-with-authored-combo-cache-and-unreflected-water-base',
+    shadows = extract_shadow_layers(checkout,scene,sprites,used,nav)
+    return {'schema':8,'source_commit':SOURCE,'scope':'ground-with-authored-combo-cache-water-base-and-static-shadows',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},
-            'layers':layers,'water_base':water_base}
+            'layers':layers,'water_base':water_base,'shadow_layers':shadows}
 
 
 def main():
@@ -427,6 +481,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；不重算任意格的 Unity Perlin，也不抽取倒影。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格。不重算 Unity Perlin，不抽取倒影。')
 
 if __name__ == '__main__': main()

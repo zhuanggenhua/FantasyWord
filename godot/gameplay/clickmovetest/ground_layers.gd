@@ -1,12 +1,14 @@
 extends Node2D
 ## 原场景基础地面与 Grass 覆盖。每格 Sprite2D 用于保留原 Tile 的逐格透明度，
 ## 不擦除作者格、不生成焦土，也不另建碰撞/导航。静态装饰、湖草与可燃覆盖分别注册。
-const MANIFEST_SHA256 := "8029f8cd8084d4431b9c29b7742520ccc93dd66e60c878f7a55d33dfa0747e63"
+const BASE_MANIFEST_SHA256 := "8029f8cd8084d4431b9c29b7742520ccc93dd66e60c878f7a55d33dfa0747e63"
+const SHADOW_MANIFEST_SHA256 := "8dc2f663c559186bc19c76c056431610badce287036f38c9ccc9ed9b8c66c040"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}
 var _water_base: Dictionary = {}
 var _static_decorations: Dictionary = {}
+var _shadow_layers: Dictionary = {}
 var _configured := false
 var _textures: Dictionary = {}
 var _reflection_tree: Node2D
@@ -15,7 +17,8 @@ var _base_water_material: CanvasItemMaterial
 func configure(directory: String) -> bool:
 	if _configured: return false
 	var path := directory.path_join("ground.json")
-	if not FileAccess.file_exists(path) or FileAccess.get_sha256(path) != MANIFEST_SHA256: return false
+	if not FileAccess.file_exists(path): return false
+	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256]: return false
 	var data = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not data is Dictionary: return false
 	var textures: Dictionary = {}
@@ -48,6 +51,13 @@ func configure(directory: String) -> bool:
 				_add_static_tile(row, int(layer.sorting_order), frames, data.sprites, _static_decorations[source])
 		if layer.has("decorations"):
 			_add_animated_tiles(layer.decorations, int(layer.sorting_order), frames, data.sprites, _lakegrass)
+	# 原纯显示阴影另存，不能误进可移除的植被阴影来源31。
+	for layer in data.get("shadow_layers",[]):
+		var tilemap_id := int(layer.tilemap_id)
+		var layer_registry := {}
+		for row in layer.rows:
+			_add_static_tile(row, int(layer.sorting_order),frames,data.sprites,layer_registry)
+		_shadow_layers[tilemap_id] = layer_registry
 	# Original water compositor at reflection alpha zero: unlit authored base
 	# with unchanged sprite alpha. Actual reflected contributions are separate.
 	_base_water_material = CanvasItemMaterial.new()
@@ -78,6 +88,12 @@ func static_decoration_sprite(source: int, cell: Vector3i) -> Sprite2D:
 
 func static_decoration_count(source: int) -> int:
 	return _static_decorations.get(source, {}).size()
+
+func shadow_sprite(tilemap_id: int, cell: Vector3i) -> Sprite2D:
+	return _shadow_layers.get(tilemap_id,{}).get(cell)
+
+func shadow_count(tilemap_id: int) -> int:
+	return _shadow_layers.get(tilemap_id,{}).size()
 
 func _add_animated_tiles(data: Dictionary, sorting_order: int, textures: Dictionary,
 		metadata: Dictionary, registry: Dictionary, material_override: Material = null) -> void:

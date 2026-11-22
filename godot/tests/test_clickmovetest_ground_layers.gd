@@ -97,6 +97,29 @@ func run() -> void:
 		and cliff_shadow.position==cliff.position and cliff_shadow.z_index==-1 and cliff.z_index==-8,
 		"悬崖顶阴影来自独立的原阴影图集，保留与下层崖缘同格排序")
 	check(ground.mapped_cover_sources(shadow_cell).is_empty(),"崖缘和上层崖影都不是可燃映射")
+	# 同一合同的旧版仍能打开，但不冒充已验证新增的42格。
+	var shadow_manifest := FileAccess.get_sha256(directory.path_join("ground.json"))==Ground.SHADOW_MANIFEST_SHA256
+	if shadow_manifest:
+		check(ground.shadow_count(1712506432)==35 and ground.shadow_count(1850812192)==7,
+			"两套新增原作者阴影容量不混同来源31")
+		for sample in [[1712506432,Vector3i(4,-5,0),-7,Vector2i(8,9)],
+				[1850812192,Vector3i(-13,6,0),-1,Vector2i(16,56)]]:
+			var cell: Vector3i = sample[1]
+			var tile := ground.shadow_sprite(sample[0],cell) as Sprite2D
+			var atlas := tile.texture as AtlasTexture if tile!=null else null
+			var source_rect: Vector2i = sample[3]
+			check(atlas!=null and atlas.atlas==shadow_frame.atlas
+				and atlas.region==Rect2(source_rect.x,atlas.atlas.get_height()-source_rect.y-8,8,8)
+				and tile.position==Vector2(cell.x+.5,-cell.y-.5) and tile.offset==Vector2(-4,-4)
+				and tile.scale==Vector2(.125,.125) and tile.z_index==sample[2],
+				"同一原阴影图集、独立层、原枢轴和世界格：%s" % cell)
+			check(not ground.source_available(sample[0]) and not ground.mapped_cover_sources(cell).has(sample[0]),
+				"阴影不受地表可燃覆盖控制")
+			if tile!=null and DisplayServer.get_name()!="headless":
+				await check_combo_pixels(scene.camera,tile,"两层原阴影 %s"%cell,true)
+	else:
+		check(ground.shadow_count(1712506432)==0 and ground.shadow_count(1850812192)==0,
+			"旧合同仍加载，但未装配新增两层阴影")
 	var water_cell := Vector3i(-8,-10,0)
 	var water := ground.water_base_sprite(water_cell) as AnimatedSprite2D
 	check(ground.water_base_count()==87 and is_instance_valid(water),"原河湖水面底图87格，独立于35格 LakeGrass 装饰")
@@ -253,13 +276,28 @@ func run() -> void:
 	quit(1 if failed else 0)
 
 # 在实际窗口比较同一原格显示、隐藏和恢复，不把图集离线预览当作绘制证据。
-func check_combo_pixels(camera: Camera2D, tile: Sprite2D) -> void:
+func check_combo_pixels(camera: Camera2D, tile: Sprite2D, label: String="原缓存装饰", alpha_probe: bool=false) -> void:
 	var original := camera.global_position
 	camera.global_position = tile.global_position
 	camera.force_update_scroll()
 	await RenderingServer.frame_post_draw
 	var center := Vector2i(tile.get_global_transform_with_canvas().origin)
 	var region := Rect2i(center-Vector2i(13,13),Vector2i(26,26))
+	# 阴影只有瓦片边缘有内容，原空白中心不能作为像素样本。
+	if alpha_probe:
+		var frame := tile.texture as AtlasTexture
+		var atlas := frame.atlas.get_image()
+		var pixel := Vector2i.ZERO
+		var alpha := 0.0
+		for y in int(frame.region.size.y):
+			for x in int(frame.region.size.x):
+				var sample := atlas.get_pixelv(Vector2i(frame.region.position)+Vector2i(x,y)).a
+				if sample>alpha:
+					alpha=sample
+					pixel=Vector2i(x,y)
+		check(alpha>0.0,"%s 原纹理边缘非透明"%label)
+		center=Vector2i(tile.get_global_transform_with_canvas()*(tile.offset+Vector2(pixel)+Vector2(.5,.5)))
+		region=Rect2i(center-Vector2i(1,1),Vector2i(3,3))
 	var shown := root.get_texture().get_image().get_region(region).get_data()
 	tile.hide()
 	await RenderingServer.frame_post_draw
@@ -267,6 +305,6 @@ func check_combo_pixels(camera: Camera2D, tile: Sprite2D) -> void:
 	tile.show()
 	await RenderingServer.frame_post_draw
 	var restored := root.get_texture().get_image().get_region(region).get_data()
-	check(shown!=hidden and shown==restored,"原缓存装饰对原生画面有实际且可恢复的贡献")
+	check(shown!=hidden and shown==restored,"%s 原生画面贡献：隐藏改变=%s，恢复一致=%s，像素中心=%s" % [label,shown!=hidden,shown==restored,center])
 	camera.global_position = original
 	camera.force_update_scroll()
