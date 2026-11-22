@@ -84,7 +84,7 @@ func run() -> void:
 			"Movable mask still excludes original pillar %d"%id)
 	var ground_path := OS.get_environment("FORMAL_GROUND_LAYERS").path_join("ground.json")
 	var ground_sha:=FileAccess.get_sha256(ground_path)
-	var all_structures := ground_sha==Ground.WALL_AND_CLIFF_MANIFEST_SHA256
+	var all_structures := ground_sha in [Ground.WALL_AND_CLIFF_MANIFEST_SHA256,Ground.GROUPED_TREE_MANIFEST_SHA256,Ground.LOW_PROP_MANIFEST_SHA256]
 	if all_structures or ground_sha in [Ground.PILLAR_MANIFEST_SHA256,Ground.HORIZONTAL_WALL_MANIFEST_SHA256]:
 		var ground: Node2D=boot.scene.ground_layers
 		check(ground!=null and ground.pillar_count()==14,"实际 F5 入口含 14 根原柱子及阴影")
@@ -104,6 +104,22 @@ func run() -> void:
 			check(boot.scene.ground_layers.static_decoration_count(id)>0 and solid_shape!=null
 				and solid_shape.collision_layer==1 and solid_shape.collision_mask==0,
 				"实际 F5 原结构显示与独立 Default 轮廓 %d"%id)
+	if ground_sha in [Ground.GROUPED_TREE_MANIFEST_SHA256,Ground.LOW_PROP_MANIFEST_SHA256]:
+		var ground: Node2D=boot.scene.ground_layers
+		check(ground.tree_group_count()==13,"实际 F5 保留十三棵原树")
+		var capture = boot.scene.water_reflection
+		var source_tree := ground.tree_group_for_collider(987751659) as Node2D
+		check(capture!=null and source_tree!=null and capture._tree.get_ref()==source_tree.get_node("body")
+			and ground._reflection_tree==source_tree,"实际 F5 默认反射引用已挂载树体，不造重复树")
+		for id in [987751659,1646161703,1606656678]:
+			check(ground.tree_group_for_collider(id)!=null and host.has_node("SourceCollider%d"%id),
+				"原树画面组与独立 Default 查询形状 %d"%id)
+	if ground_sha==Ground.LOW_PROP_MANIFEST_SHA256:
+		var ground: Node2D=boot.scene.ground_layers
+		check(ground.low_prop_count()==32,"实际 F5 保留 32 个原静态藤蔓香蒲")
+		for id in [1474770966,1655619244,1901380167]:
+			check(ground.low_prop_for_object(id)!=null and not host.has_node("SourceCollider%d"%id),
+				"原无碰撞装饰不在 Default 查询宿主 %d"%id)
 	var ray:=PhysicsRayQueryParameters2D.create(Vector2(FROM.x,-FROM.y),Vector2(TO.x,-TO.y),1)
 	var hit:=state.intersect_ray(ray)
 	check(hit.get("collider")==body and is_equal_approx(float(hit.get("position",Vector2.ZERO).x),-3.0000253),

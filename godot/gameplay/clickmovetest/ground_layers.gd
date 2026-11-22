@@ -6,6 +6,8 @@ const SHADOW_MANIFEST_SHA256 := "8dc2f663c559186bc19c76c056431610badce287036f38c
 const PILLAR_MANIFEST_SHA256 := "72c5606eb476b9414d34adbd314362e349084c1beb06af6f315f24b9fe9f8ae5"
 const HORIZONTAL_WALL_MANIFEST_SHA256 := "4b7f1216d907a2fb783ef496fcaaacdbd8a984b9314b64710eda93e5cbb3c6bc"
 const WALL_AND_CLIFF_MANIFEST_SHA256 := "7c0e6adedad2486a5da45c30ca58094468a4e94fc18a35074862636338635056"
+const GROUPED_TREE_MANIFEST_SHA256 := "2d67f9c4d46c564ebb823a07468b5c53b58e6dc57487be4e32e25f801e1d0a89"
+const LOW_PROP_MANIFEST_SHA256 := "60f578fa179c4c7bb858c6ea83a5377bf0a795966dd705f74b6f901605ebda61"
 const COVER_SOURCES := [0,10,20,30,31]
 var _cells: Dictionary = {}
 var _lakegrass: Dictionary = {}
@@ -13,8 +15,11 @@ var _water_base: Dictionary = {}
 var _static_decorations: Dictionary = {}
 var _shadow_layers: Dictionary = {}
 var _pillars: Dictionary = {}
+var _low_props: Dictionary = {}
 var _configured := false
 var _textures: Dictionary = {}
+var _tree_groups: Dictionary = {}
+var _reflection_tree_candidate: Node2D
 var _reflection_tree: Node2D
 var _base_water_material: CanvasItemMaterial
 
@@ -22,7 +27,7 @@ func configure(directory: String) -> bool:
 	if _configured: return false
 	var path := directory.path_join("ground.json")
 	if not FileAccess.file_exists(path): return false
-	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256,PILLAR_MANIFEST_SHA256,HORIZONTAL_WALL_MANIFEST_SHA256,WALL_AND_CLIFF_MANIFEST_SHA256]: return false
+	if FileAccess.get_sha256(path) not in [BASE_MANIFEST_SHA256,SHADOW_MANIFEST_SHA256,PILLAR_MANIFEST_SHA256,HORIZONTAL_WALL_MANIFEST_SHA256,WALL_AND_CLIFF_MANIFEST_SHA256,GROUPED_TREE_MANIFEST_SHA256,LOW_PROP_MANIFEST_SHA256]: return false
 	var data = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not data is Dictionary: return false
 	var textures: Dictionary = {}
@@ -87,6 +92,42 @@ func configure(directory: String) -> bool:
 			sprite.set_meta("source_renderer_id",int(authored.renderer_id))
 			pillar.add_child(sprite)
 		_pillars[pillar_id]=pillar
+	# SortingGroup 外部只按组排序；阴影在同组内先绘制，不把 -7 设成全局顺序。
+	for row in data.get("trees",[]):
+		var group := Node2D.new()
+		group.name="SourceTreeGroup%d"%int(row.group_id)
+		group.position=Vector2(row.position[0],-row.position[1])
+		group.z_index=int(row.order)
+		group.set_meta("source_box_id",int(row.collider_id))
+		add_child(group)
+		for part in ["shadow","body"]:
+			var entry: Dictionary = row[part]
+			var sprite:=_static_atlas_sprite(frames[entry.sprite],data.sprites[entry.sprite],0)
+			sprite.name=part
+			sprite.position=Vector2(-.125,0) if part=="shadow" else Vector2.ZERO
+			sprite.set_meta("source_renderer_id",int(entry.renderer_id))
+			sprite.set_meta("source_inner_order",int(entry.inner_order))
+			group.add_child(sprite)
+		_tree_groups[int(row.collider_id)]=group
+		if row.reflection: _reflection_tree_candidate=group
+	# Creeper/Cattail have ordinary SpriteRenderers, not tree SortingGroups.
+	# Neither renderer enters the terrain, reflector, or static collision registries.
+	for row in data.get("low_props",[]):
+		var object_id := int(row.object_id)
+		var prop := Node2D.new()
+		prop.name = "Source%s%d"%[row.kind,object_id]
+		prop.position = Vector2(row.position[0],-row.position[1])
+		prop.set_meta("source_variant",int(row.selection))
+		add_child(prop)
+		for part in ["body","shadow"]:
+			var entry: Dictionary = row[part]
+			var sprite := _static_atlas_sprite(frames[entry.sprite],data.sprites[entry.sprite],int(entry.sorting_order))
+			sprite.name = part
+			sprite.z_as_relative = false
+			sprite.position = Vector2(entry.offset[0],-entry.offset[1])
+			sprite.set_meta("source_renderer_id",int(entry.renderer_id))
+			prop.add_child(sprite)
+		_low_props[object_id] = prop
 	# Original water compositor at reflection alpha zero: unlit authored base
 	# with unchanged sprite alpha. Actual reflected contributions are separate.
 	_base_water_material = CanvasItemMaterial.new()
@@ -120,6 +161,12 @@ func pillar_for_collider(collider_id: int) -> Node2D:
 
 func pillar_count() -> int:
 	return _pillars.size()
+
+func low_prop_for_object(object_id: int) -> Node2D:
+	return _low_props.get(object_id)
+
+func low_prop_count() -> int:
+	return _low_props.size()
 
 func static_decoration_sprite(source: int, cell: Vector3i) -> Sprite2D:
 	return _static_decorations.get(source, {}).get(cell)
@@ -202,10 +249,20 @@ func source_sprite(source: int, cell: Vector3i) -> Sprite2D:
 func cell_count(source: int) -> int:
 	return _cells.get(source,{}).size()
 
+func tree_group_count() -> int:
+	return _tree_groups.size()
+
+func tree_group_for_collider(collider_id: int) -> Node2D:
+	return _tree_groups.get(collider_id)
+
 ## 锁定 ClickMoveTest Tree：独立实际场景对象，不把附近树形 Tile 当作 987751660。
 ## 父 SortingGroup 顺序 1；组内 Shadow(-7) 在 Tree(0) 前画且不参加倒影。
 func install_reflection_tree() -> Sprite2D:
 	if not _configured or is_instance_valid(_reflection_tree): return null
+	if is_instance_valid(_reflection_tree_candidate):
+		_reflection_tree=_reflection_tree_candidate
+		return _reflection_tree.get_node("body") as Sprite2D
+	# 旧地面清单的单棵树仍可用于原独立反射验证。
 	var foliage := _authored_tree_sprite("be785b53e8101134cb49e391918a7a82",Rect2(155,52,21,25))
 	var shadow := _authored_tree_sprite("da4d732596845594e9b99bf9488ee15f",Rect2(153,51,23,27))
 	if foliage==null or shadow==null:

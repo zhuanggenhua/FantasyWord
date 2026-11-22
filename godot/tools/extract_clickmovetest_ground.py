@@ -359,6 +359,174 @@ def extract_pillars(checkout, scene, sprites, used):
     return result
 
 
+def extract_grouped_trees(checkout, scene, sprites, used):
+    # 原 Unity 变体选择只在编辑器改变两个 SpriteRenderer；验证缓存而不造新树。
+    script = read(checkout,ROOT+'Scripts/PropVariants/FP_Tree.cs')
+    enum_body = re.search(r'private enum TreeSelection\s*\{([^}]+)\}',script,re.S)
+    variants = ('TreeApples','TreeNoApples')
+    require(enum_body is not None and tuple(x.strip() for x in enum_body[1].split(',') if x.strip())==variants
+            and all(re.search(rf"case TreeSelection\.{name}:\s+selectedSprite = {name[0].lower()+name[1:]};\s+selectedShadow = shadow{name};",script)
+                    for name in variants), '原树种变体枚举或选择变化')
+
+    def checked_transform(node, parent):
+        t = get_document(scene,node,'Transform')
+        owner_id = t['m_GameObject']['fileID']
+        owner = get_document(scene,owner_id,'GameObject')
+        require(owner['m_IsActive']==1 and owner['m_Layer']==0 and t['m_Father']['fileID']==parent
+                and xyz(t['m_LocalScale'])==[1,1,1] and t['m_LocalRotation']==dict(x=0,y=0,z=0,w=1)
+                and t['m_LocalPosition']['z']==0, '原树父链或 Transform 变化')
+        return t,owner,[c['component']['fileID'] for c in owner['m_Component']]
+
+    for node,parent in ((1286769017,1325276966),(1325276966,197348023),(197348023,1148507050),
+                        (1148507050,6951707),(6951707,900000102),(900000102,0)):
+        t,_,parts = checked_transform(node,parent)
+        require(xyz(t['m_LocalPosition'])==[0,0,0]
+                and not any(re.search(rf'^--- !u!210 &{n}\b',scene,re.M) for n in parts),
+                '原树素组不应存在额外根排序或平移')
+    root = get_document(scene,1286769017,'Transform')
+
+    def render_row(renderer_id, owner_id, ref, order, atlas):
+        r=get_document(scene,renderer_id,'SpriteRenderer')
+        key=f"{ref['guid']}:{ref['fileID']}"
+        require(r['m_GameObject']['fileID']==owner_id and r['m_Enabled']==1 and r['m_Sprite']==ref
+                and r['m_Materials']==DEFAULT_TILE_MATERIAL and r['m_Color']==WHITE
+                and r['m_SortingLayerID']==r['m_SpriteSortPoint']==r['m_FlipX']==r['m_FlipY']==r['m_DrawMode']==r['m_MaskInteraction']==0
+                and r['m_SortingOrder']==order and ref['guid']==atlas and key in sprites and sprites[key]['pivot']==[.5,.5],
+                '原树 Sprite 缓存、枢轴或组内排序变化')
+        used.add(key)
+        return {'renderer_id':renderer_id,'sprite':key,'inner_order':order}
+
+    output, orders, selections, casters = [], Counter(), Counter(), 0
+    for ref in root['m_Children']:
+        group_id=ref['fileID']
+        group,owner,parts=checked_transform(group_id,1286769017)
+        require(re.fullmatch(r'Tree(?: \(\d+\))?',owner['m_Name']) and len(parts)==2
+                and parts[0]==group_id and len(group['m_Children'])==1,'原树组层级变化')
+        settings=get_document(scene,parts[1],'SortingGroup')
+        require(settings['m_Enabled']==1 and settings['m_GameObject']==group['m_GameObject']
+                and settings['m_SortingLayerID']==settings['m_SortAtRoot']==settings['m_Sort3DAs2D']==0,
+                '原树 SortingGroup 不再使用普通 Default 分组')
+        order=settings['m_SortingOrder']
+        body_id=group['m_Children'][0]['fileID']
+        body,body_owner,body_parts=checked_transform(body_id,group_id)
+        bridge=body_parts[1]==987751660
+        require(body_owner['m_Name']=='Tree' and body_parts[0]==body_id and len(body_parts)==(5 if bridge else 4)
+                and xyz(body['m_LocalPosition'])==[0,0,0] and len(body['m_Children'])==(2 if bridge else 1),
+                '原树体局部 Transform 或组件变化')
+        variant=get_document(scene,body_parts[3],'MonoBehaviour')
+        collider=get_document(scene,body_parts[2],'BoxCollider2D')
+        require(collider['m_GameObject']==body['m_GameObject'] and collider['m_Enabled']==1
+                and variant['m_GameObject']==body['m_GameObject'] and variant['m_Enabled']==1
+                and variant['m_Script']['guid']=='6c6f80182aefb134a991b24abd3c00b9'
+                and variant['selection'] in (0,1),'原树变体或碰撞组件身份变化')
+        selection=variant['selection']
+        name=variants[selection]
+        shadow_id=next((c['fileID'] for c in body['m_Children'] if c['fileID']!=1387362305),0)
+        shadow,shadow_owner,shadow_parts=checked_transform(shadow_id,body_id)
+        require(shadow_owner['m_Name']=='Shadow' and len(shadow_parts)==2 and shadow_parts[0]==shadow_id
+                and xyz(shadow['m_LocalPosition'])==[-.125,0,0] and not shadow['m_Children'],'原树阴影局部位置变化')
+        if bridge:
+            anchor,_,_=checked_transform(1387362305,body_id)
+            caster=get_document(scene,body_parts[4],'MonoBehaviour')
+            require(body_parts[4]==987751661 and caster['m_GameObject']==body['m_GameObject']
+                    and caster['m_Enabled']==1 and caster['m_sourceRenderers']==[{'fileID':987751660}]
+                    and caster['m_equipmentRenderer']['fileID']==0 and caster['m_reflectionAnchor']['fileID']==1387362305
+                    and (caster['m_verticalScale'],caster['m_skew'],caster['m_waterReach'],caster['m_disableWhileSwimming'])==(.65,-.35,.5,1)
+                    and xyz(group['m_LocalPosition'])==[-.4375,-8.1875,0] and xyz(anchor['m_LocalPosition'])==[0,-1.5625,0],
+                    '原单棵树反射见证条件变化')
+            casters+=1
+        orders[order]+=1
+        selections[selection]+=1
+        output.append({'group_id':group['m_GameObject']['fileID'],'collider_id':body_parts[2],
+                       'position':xyz(group['m_LocalPosition'])[:2],'order':order,'reflection':bridge,
+                       'body':render_row(body_parts[1],body['m_GameObject']['fileID'],variant[name[0].lower()+name[1:]],0,tuple(PROPS)[0]),
+                       'shadow':render_row(shadow_parts[1],shadow['m_GameObject']['fileID'],variant['shadow'+name],-7,tuple(PROPS)[1])})
+    require(orders==Counter({0:5,1:3,2:2,3:3}) and selections==Counter({0:3,1:10}) and casters==1,
+            '原树排序、变体或唯一反射源数量变化')
+    return output
+
+
+def extract_low_props(checkout, scene, sprites, used):
+    """Unbound decoration: OnValidate chooses exact cached body + shadow.
+    The two renderers retain their *independent* original sorting orders.
+    """
+    def child(node, parent):
+        t = get_document(scene,node,'Transform')
+        owner_id = t['m_GameObject']['fileID']
+        owner = get_document(scene,owner_id,'GameObject')
+        parts = [c['component']['fileID'] for c in owner['m_Component']]
+        require(owner['m_IsActive']==1 and owner['m_Layer']==0 and parts[0]==node
+                and t['m_Father']['fileID']==parent and xyz(t['m_LocalScale'])==[1,1,1]
+                and t['m_LocalRotation']==dict(x=0,y=0,z=0,w=1)
+                and t['m_LocalPosition']['z']==0, '原小型植被的父链、层级或坐标变化')
+        return t,owner_id,owner['m_Name'],parts
+
+    def part(renderer_id, owner_id, ref, order, atlas, offset):
+        r = get_document(scene,renderer_id,'SpriteRenderer')
+        key = f"{ref['guid']}:{ref['fileID']}"
+        require(r['m_GameObject']['fileID']==owner_id and r['m_Enabled']==1
+                and r['m_Sprite']==ref and r['m_Materials']==DEFAULT_TILE_MATERIAL and r['m_Color']==WHITE
+                and r['m_SortingLayerID']==r['m_SpriteSortPoint']==r['m_FlipX']==r['m_FlipY']==r['m_DrawMode']==r['m_MaskInteraction']==0
+                and r['m_SortingOrder']==order and ref['guid']==atlas and key in sprites,
+                '原小型植被精灵、材质或独立排序变化')
+        used.add(key)
+        return {'renderer_id':renderer_id,'sprite':key,'sorting_order':order,'offset':offset}
+
+    for node,parent in ((1325276966,197348023),(197348023,1148507050),(1148507050,6951707),
+                        (6951707,900000102),(900000102,0)):
+        t,_,_,parts = child(node,parent)
+        require(xyz(t['m_LocalPosition'])==[0,0,0]
+                and not any(re.search(rf'^--- !u!210 &{n}\b',scene,re.M) for n in parts),
+                '原小型植被父链不能引入其他坐标或排序')
+    configs = (
+        ('Creeper','Creepers',2093145030,'eb7b65bf44e71cc4bab72e04e8f61e1e',[0,.0625],[2,3,3,4,2,2,2,1]),
+        ('Cattail','Cattails',1768259134,'53fcedef8c1326b4c8c22b0d914cce29',[-.125,0],[6,7]),
+    )
+    rows = []
+    for kind, root_name, root_id, script_guid, shadow_offset, counts in configs:
+        root,_,name,parts = child(root_id,1325276966)
+        require(name==root_name and len(parts)==1 and xyz(root['m_LocalPosition'])==[0,0,0],
+                '原小型植被根节点不再是纯 Transform')
+        script = read(checkout,ROOT+f'Scripts/PropVariants/FP_{kind}.cs')
+        enum_body = re.search(rf'private enum {kind}Selection\s*\{{([^}}]+)\}}',script,re.S)
+        variants = [f'{kind}{i+1}' for i in range(len(counts))]
+        require(enum_body is not None and [x.strip() for x in enum_body[1].split(',') if x.strip()]==variants
+                and re.findall(r'\bvoid\s+(\w+)\s*\(',script)==['OnValidate']
+                and 'GetComponent<SpriteRenderer>().sprite = selectedSprite;' in script
+                and 'transform.Find("Shadow").GetComponent<SpriteRenderer>().sprite = selectedShadow;' in script
+                and all(re.search(rf'case {kind}Selection\.{n}:\s+selectedSprite = {n.lower()};\s+selectedShadow = shadow{n};',script)
+                        for n in variants), '原小型植被变体选择不再是纯编辑器机制')
+        selections, names = Counter(), set()
+        for ref in root['m_Children']:
+            body_id=ref['fileID']
+            body,owner_id,name,body_parts=child(body_id,root_id)
+            require(len(body_parts)==3 and len(body['m_Children'])==1,
+                    '原小型植被存在额外组件或子节点')
+            names.add(name)
+            v=get_document(scene,body_parts[2],'MonoBehaviour')
+            require(v['m_GameObject']['fileID']==owner_id and v['m_Enabled']==1
+                    and v['m_Script']['guid']==script_guid and 0<=v['selection']<len(variants),
+                    '原小型植被组件身份或变体变化')
+            selection=v['selection']
+            selections[selection]+=1
+            variant=variants[selection]
+            shadow,sid,sname,shadow_parts=child(body['m_Children'][0]['fileID'],body_id)
+            require(sname=='Shadow' and len(shadow_parts)==2 and not shadow['m_Children']
+                    and xyz(shadow['m_LocalPosition'])==shadow_offset+[0],
+                    '原小型植被阴影层级或偏移变化')
+            exceptional=kind=='Cattail' and name=='Cattail (11)'
+            require(exceptional==(owner_id==1901380167), '原香蒲的特殊低排序身份变化')
+            rows.append({'object_id':owner_id,'kind':kind,'position':xyz(body['m_LocalPosition'])[:2],
+                         'selection':selection,
+                         'body':part(body_parts[1],owner_id,v[variant.lower()],-1 if exceptional else 0,tuple(PROPS)[0],[0,0]),
+                         'shadow':part(shadow_parts[1],sid,v['shadow'+variant],-7,tuple(PROPS)[1],shadow_offset)})
+        require(selections==Counter(dict(enumerate(counts)))
+                and names=={kind}|{f'{kind} ({i})' for i in range(1,sum(counts))},
+                '原小型植被实例数、命名或变体分布变化')
+    require(len(rows)==len({r['object_id'] for r in rows})==32, '原小型植被身份应为32个并互不重复')
+    return rows
+
+
 def validate_wall_layer(scene, nav, tile_id, count, order):
     renderer_id, owner_id = tile_id-1, tile_id-6
     tilemap = get_document(scene,tile_id,'Tilemap')
@@ -662,9 +830,11 @@ def extract(checkout):
     pillars = extract_pillars(checkout,scene,sprites,used)
     walls = [extract_wall(checkout,scene,sprites,used,nav,vertical) for vertical in (False,True)]
     cliffs = extract_cliff_bodies(checkout,scene,sprites,used,nav)
-    return {'schema':12,'source_commit':SOURCE,'scope':'ground-with-authored-wall-shadows-and-pillars',
+    trees = extract_grouped_trees(checkout,scene,sprites,used)
+    low_props = extract_low_props(checkout,scene,sprites,used)
+    return {'schema':14,'source_commit':SOURCE,'scope':'ground-with-authored-walls-cliffs-and-nature-props',
             'textures':textures,'sprites':{key:sprites[key] for key in sorted(used)},
-            'layers':layers,'water_base':water_base,'shadow_layers':shadows,'pillars':pillars,'walls':walls,'cliff_bodies':cliffs}
+            'layers':layers,'water_base':water_base,'shadow_layers':shadows,'pillars':pillars,'walls':walls,'cliff_bodies':cliffs,'trees':trees,'low_props':low_props}
 
 
 def main():
@@ -677,6 +847,6 @@ def main():
         write_local(args.output,payload)
     except (ValueError, KeyError, TypeError, OSError, yaml.YAMLError, subprocess.CalledProcessError) as error:
         parser.exit(2,f'原地面抽取拒绝执行：{error}\n')
-    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格、14根原柱子及独立柱影、原横墙56格、纵墙11格、崖体三层151格。不重算 Unity Perlin，不抽取倒影。')
+    print('基础地面900格、Grass覆盖547格、来源10/20映射草158/3格、来源30/31植被及阴影各33格、LakeGrass动画35格、来源10固定装饰15格、来源20固定装饰4格；原河湖底图87格；原场景缓存石草混合装饰59/6格；原地表阴影35格、墙体阴影7格、14根原柱子及独立柱影、原横墙56格、纵墙11格、崖体三层151格、13 棵原分组树、19 株藤蔓和 13 株香蒲。不重算 Unity Perlin，不抽取倒影。')
 
 if __name__ == '__main__': main()

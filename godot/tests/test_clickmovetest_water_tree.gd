@@ -25,6 +25,12 @@ func run() -> void:
 		fail(scene,"原静态地层与水层未装配")
 		return
 	scene.ground_layers = ground
+	var grouped:=FileAccess.get_sha256(atlas.path_join("ground.json")) in [Ground.GROUPED_TREE_MANIFEST_SHA256,Ground.LOW_PROP_MANIFEST_SHA256]
+	var prior:=ground.get_child_count()
+	var expected_tree:=ground.tree_group_for_collider(987751659)
+	if grouped and (ground.tree_group_count()!=13 or expected_tree==null or expected_tree.get_child_count()!=2):
+		fail(scene,"未开反射也必须有十三棵原树与各自树影")
+		return
 	if scene.bind_static_tree_reflection("res://missing-mask.png") or ground._reflection_tree!=null:
 		fail(scene,"错误掩码不应挂载原树与水层")
 		return
@@ -33,6 +39,9 @@ func run() -> void:
 		return
 	var capture: Capture = scene.water_reflection
 	var tree: Sprite2D = capture._tree.get_ref()
+	if grouped and (tree!=expected_tree.get_node("body") or ground.get_child_count()!=prior or ground.tree_group_count()!=13):
+		fail(scene,"启用反射仅引用已经挂载的原树身；不能再实例化树或反射树影")
+		return
 	var water: AnimatedSprite2D = ground.water_base_sprite(Vector3i(-8,-10,0))
 	if tree.global_position!=Vector2(-.4375,8.1875) or ground._reflection_tree.get_child_count()!=2 \
 			or capture._color_target.get_child_count()!=1 or water.material!=capture.water_material():

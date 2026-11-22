@@ -41,7 +41,7 @@ func run() -> void:
 	check(ground.static_decoration_count(10)==74 and ground.static_decoration_count(20)==10,
 		"来源10/20装配固定装饰15/4格与原缓存装饰59/6格")
 	var manifest_hash := FileAccess.get_sha256(directory.path_join("ground.json"))
-	var all_structures := manifest_hash==Ground.WALL_AND_CLIFF_MANIFEST_SHA256
+	var all_structures := manifest_hash in [Ground.WALL_AND_CLIFF_MANIFEST_SHA256,Ground.GROUPED_TREE_MANIFEST_SHA256,Ground.LOW_PROP_MANIFEST_SHA256]
 	var horizontal_wall := all_structures or manifest_hash==Ground.HORIZONTAL_WALL_MANIFEST_SHA256
 	var combo_tiles: Array[Sprite2D] = []
 	var samples := [[10, Vector3i(6,-5,0), 168], [10, Vector3i(7,-5,0), 104],
@@ -203,6 +203,38 @@ func run() -> void:
 					[432984437,Vector3i(0,2,0)],[147438656,Vector3i(-4,4,0)]]:
 				var sprite := ground.static_decoration_sprite(sample[0],sample[1]) as Sprite2D
 				if sprite!=null: await check_combo_pixels(scene.camera,sprite,"原纵墙/崖体 %s"%sample[0],true)
+	if manifest_hash in [Ground.GROUPED_TREE_MANIFEST_SHA256,Ground.LOW_PROP_MANIFEST_SHA256]:
+		var data: Dictionary=read(directory.path_join("ground.json"))
+		check(ground.tree_group_count()==13 and data.trees.size()==13 and ground._reflection_tree==null,
+			"原树未启用倒影时也完整显示")
+		for row: Dictionary in data.trees:
+			var group := ground.tree_group_for_collider(int(row.collider_id)) as Node2D
+			var items_ok: bool=group!=null and group.get_child_count()==2 and group.z_index==int(row.order) \
+				and group.position==Vector2(row.position[0],-row.position[1])
+			check(items_ok,"原树组位置和组外排序 %s"%row.group_id)
+			if not items_ok:continue
+			for index in 2:
+				var part := "shadow" if index==0 else "body"
+				var sprite := group.get_child(index) as Sprite2D
+				var info: Dictionary=data.sprites[row[part].sprite]
+				var rect: Array=info.rect
+				var frame:=sprite.texture as AtlasTexture if sprite!=null else null
+				check(frame!=null and sprite.name==part and sprite.z_as_relative and sprite.z_index==0
+					and sprite.get_meta("source_renderer_id")==int(row[part].renderer_id)
+					and sprite.get_meta("source_inner_order")==int(row[part].inner_order)
+					and sprite.position==(Vector2(-.125,0) if index==0 else Vector2.ZERO)
+					and sprite.scale==Vector2.ONE/8 and sprite.offset==Vector2(-rect[2]/2,-rect[3]/2)
+					and frame.region==Rect2(rect[0],frame.atlas.get_height()-rect[1]-rect[3],rect[2],rect[3]),
+					"原树组内顺序、选图、枢轴及阴影偏移 %s/%s"%[row.group_id,part])
+		if DisplayServer.get_name()!="headless":
+			await check_tree_overlap(scene.camera,ground)
+	if manifest_hash==Ground.LOW_PROP_MANIFEST_SHA256:
+		check_low_props(ground,read(directory.path_join("ground.json")))
+		if DisplayServer.get_name()!="headless":
+			for object_id in [1474770966,1655619244]:
+				var prop := ground.low_prop_for_object(object_id) as Node2D
+				if prop!=null:
+					await check_combo_pixels(scene.camera,prop.get_node("body"),"原小型植被主体 %d"%object_id)
 	var water_cell := Vector3i(-8,-10,0)
 	var water := ground.water_base_sprite(water_cell) as AnimatedSprite2D
 	check(ground.water_base_count()==87 and is_instance_valid(water),"原河湖水面底图87格，独立于35格 LakeGrass 装饰")
@@ -358,7 +390,73 @@ func run() -> void:
 	print("PASS 原基础地面与草覆盖运行验收：%s 项，失败 %s；不包含倒影、动态随机重算、完整物理或 Unity 像素对照" % [n,failed])
 	quit(1 if failed else 0)
 
+func check_low_props(ground: Node2D, data: Dictionary) -> void:
+	var counts := {"Creeper":0,"Cattail":0}
+	var identities := {}
+	check(ground.low_prop_count()==32 and data.low_props.size()==32 and ground.tree_group_count()==13,
+		"静态藤蔓香蒲与原树组使用不同注册")
+	for row: Dictionary in data.low_props:
+		var object_id := int(row.object_id)
+		var name_key: String = row.kind
+		var prop := ground.low_prop_for_object(object_id) as Node2D
+		check(counts.has(name_key) and not identities.has(object_id),"原静态对象种类与身份 %d"%object_id)
+		identities[object_id] = true
+		counts[name_key] = int(counts.get(name_key,0))+1
+		var valid: bool = prop!=null and prop.get_child_count()==2 and not prop.y_sort_enabled \
+			and prop.position==Vector2(row.position[0],-row.position[1]) and not ground.source_available(object_id)
+		check(valid,"原独立显示对象的位置及无新增物理或地表入口 %d"%object_id)
+		if not valid:continue
+		for part in ["body","shadow"]:
+			var authored: Dictionary = row[part]
+			var pose: Dictionary = data.sprites[authored.sprite]
+			var rect: Array = pose.rect
+			var sprite := prop.get_node_or_null(part) as Sprite2D
+			var frame := sprite.texture as AtlasTexture if sprite!=null else null
+			var depth := -7 if part=="shadow" else (-1 if object_id==1901380167 else 0)
+			var part_offset := Vector2.ZERO if part=="body" else (
+				Vector2(0,-.0625) if name_key=="Creeper" else Vector2(-.125,0))
+			check(frame!=null and frame.region==Rect2(rect[0],frame.atlas.get_height()-rect[1]-rect[3],rect[2],rect[3])
+				and sprite.position==part_offset and sprite.position==Vector2(authored.offset[0],-authored.offset[1])
+				and sprite.scale==Vector2.ONE/float(pose.ppu)
+				and sprite.offset==Vector2(-pose.pivot[0]*rect[2],-(1.0-pose.pivot[1])*rect[3])
+				and not sprite.z_as_relative and sprite.z_index==depth and sprite.z_index==int(authored.sorting_order)
+				and int(sprite.get_meta("source_renderer_id",-1))==int(authored.renderer_id),
+				"原精灵与阴影保持绝对排序、枢轴、选择与偏移 %d/%s"%[object_id,part])
+	check(counts=={"Creeper":19,"Cattail":13}
+		and identities.has(1474770966) and identities.has(1655619244) and identities.has(1901380167),
+		"原藤蔓十九棵、香蒲十三棵，含未编号原件及例外香蒲(11)")
+
 # 在实际窗口比较同一原格显示、隐藏和恢复，不把图集离线预览当作绘制证据。
+func check_tree_overlap(camera: Camera2D, ground: Node2D) -> void:
+	var upper := ground.tree_group_for_collider(1606656678) as Node2D
+	var lower := ground.tree_group_for_collider(1306771297) as Node2D
+	if upper==null or lower==null:
+		check(false,"原两树叠放样本缺失")
+		return
+	var shadow:=upper.get_node("shadow") as Sprite2D
+	var original:=camera.global_position
+	var point := Vector2(9.1875,-17.5625)
+	camera.global_position=point
+	camera.force_update_scroll()
+	await RenderingServer.frame_post_draw
+	var pixel:=Vector2i(camera.get_canvas_transform()*point)
+	var front := root.get_texture().get_image().get_pixelv(pixel)
+	shadow.hide()
+	await RenderingServer.frame_post_draw
+	var hidden := root.get_texture().get_image().get_pixelv(pixel)
+	shadow.show()
+	var sort := upper.z_index
+	upper.z_index=lower.z_index-1
+	await RenderingServer.frame_post_draw
+	var behind := root.get_texture().get_image().get_pixelv(pixel)
+	upper.z_index=sort
+	await RenderingServer.frame_post_draw
+	var restored := root.get_texture().get_image().get_pixelv(pixel)
+	check(front!=hidden and behind==hidden and restored==front,
+		"原树7的组外顺序令树影在树4上合成，不以组内 -7 提前到所有树身之前: %s %s %s %s"%[front,hidden,behind,restored])
+	camera.global_position=original
+	camera.force_update_scroll()
+
 func check_structure_layer(ground: Node2D, meta: Dictionary, layer: Dictionary,
 		id: int, count: int, order: int, expected_modes: Dictionary) -> void:
 	check(int(layer.tilemap_id)==id and layer.rows.size()==count and ground.static_decoration_count(id)==count
