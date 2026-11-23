@@ -104,10 +104,16 @@
   "test_source_pause_text_line.gd": [
     "SKIP 原暂停标题字体"
   ],
+  "test_source_ramp_movement_entry.gd": [
+    "SKIP 原坡道实际 F5 需要私有地图规则与正式角色资源。"
+  ],
   "test_source_resource_bars.gd": [
     "SKIP 原 HUD 资源条需要私有原场景、字体与 GUI 图集。"
   ],
   "test_source_spear_presentation.gd": [
     "SKIP 原主角长矛图及正式关卡合同需要私有输入。"
+  ],
+  "test_source_trainer_ramp_entry.gd": [
+    "SKIP 原假人坡道需要私有正式地图规则与角色资源。"
   ]
 }

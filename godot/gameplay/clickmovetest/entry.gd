@@ -67,6 +67,8 @@ var _human_interrupt_actions: Callable
 var movement: RefCounted
 var route: RefCounted
 var _terrain_from_map: Callable
+var _player_ramp_input: Callable
+var _trainer_ramp_input: Callable
 var binding: RefCounted
 var blocked := false
 var command_count := 0
@@ -150,6 +152,7 @@ func start_logic(owner: Object, data: Dictionary, player_provider: Callable,
 	actor.configure_movement(actor_shape, Filter.new(Filter.Mode.FREE, false, 0.05, 10.0, 10.0),
 		owner, 7752, SOURCE_WALL_RECOVERY_DISTANCE)
 	route = candidate
+	_player_ramp_input = _resolve_source_ramp.bind(actor)
 	_terrain_rule_rows = data.rows.duplicate(true)
 	_surface_map_events = map_events
 	movement = Movement.new(actor, 0.05)
@@ -511,9 +514,9 @@ func _physics_process(_delta: float) -> void:
 	if is_instance_valid(training_target):
 		training_target.ai_controller.advance_target_step(Step.GAMEPLAY_DELTA_SECONDS)
 	if movement != null:
-		actor.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
+		actor.advance_movement(Step.GAMEPLAY_DELTA_SECONDS,_player_ramp_input)
 	if is_instance_valid(training_target):
-		training_target.advance_movement(Step.GAMEPLAY_DELTA_SECONDS)
+		training_target.advance_movement(Step.GAMEPLAY_DELTA_SECONDS,_trainer_ramp_input)
 		training_target.ai_controller.capture_detection_after_movement()
 
 func _process(delta: float) -> void:
@@ -605,6 +608,13 @@ func bind_active_terrain(resolver: Callable) -> bool:
 
 func _resolve_active_terrain() -> RefCounted:
 	return _terrain_from_map.call() if _terrain_from_map.is_valid() else route
+
+
+func _resolve_source_ramp(direction: Vector2, body: Node2D) -> Variant:
+	# 物理根可能已在同一步脱墙；不读取显示层 Body 或相机坐标。
+	var terrain := _resolve_active_terrain() as Route
+	if terrain==null: return null
+	return terrain.resolve_ramp_movement_direction(body.get_movement_position(),direction)
 
 
 ## 显式正式主图切片：调用前先 start_human_presentation；依赖仍由宿主提供。
@@ -862,6 +872,7 @@ func start_training_damage_target(motion_owner: Object, target_hooks: Dictionary
 	target.bind_formal_health_changes(properties)
 	add_child(target)
 	training_target = target
+	_trainer_ramp_input = _resolve_source_ramp.bind(target.body)
 	training_attributes = properties
 	if surface_contact_damage != null: surface_contact_damage.register_target(target)
 	return target
