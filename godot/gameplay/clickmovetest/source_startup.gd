@@ -209,15 +209,16 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 				return _fail("原活动假人目标方向提示无法绑定到实际角色。")
 			scene.training_target.body.add_child(trainer_indicator)
 	if mount_project_contact and not pause_source.is_empty():
+		var hud := AbilityHUD.new()
+		if not hud.bind(player,pause_source,OS.get_environment("FORMAL_PANEL_SILVER")):
+			hud.free()
+			return _fail("原 HUD 资源条、失败提示或已提供的技能图标未通过锁定来源检查。")
 		if not _mount_source_pause(pause_source):
+			hud.free()
 			return _fail("原暂停面板合同或私有素材未通过检查。")
-		if FileAccess.file_exists(pause_source.path_join("abilities-layout.json")):
-			var hud := AbilityHUD.new()
-			if not hud.bind(player,pause_source,OS.get_environment("FORMAL_PANEL_SILVER")):
-				hud.free()
-				return _fail("原 HUD 技能栏的图标或作者合同未通过检查。")
-			ability_hud = hud
-			scene.add_child(hud)
+		ability_hud = hud
+		scene.add_child(hud)
+
 	return true
 
 ## ClickMoveTest is the admitted primary actor, whose inherited CharacterInventory

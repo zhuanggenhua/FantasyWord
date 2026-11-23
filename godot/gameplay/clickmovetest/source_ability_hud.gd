@@ -24,16 +24,12 @@ var _solid: Texture2D
 
 func bind(owner: Player, dir: String, silver_path: String) -> bool:
 	if _owner!=null or owner==null: return false
-	var spec:=Abilities.load_layout(dir)
-	if spec.is_empty(): return false
 	var atlas_path:=dir.path_join("SPS_GUI.png")
 	if not FileAccess.file_exists(atlas_path) or FileAccess.get_sha256(atlas_path)!=Tile.ATLAS_HASH:
 		return false
 	var image:=Image.load_from_file(atlas_path)
-	_attack=Abilities.load_attack_icon(spec,dir)
-	if image==null or _attack==null: return false
+	if image==null: return false
 	var atlas:=ImageTexture.create_from_image(image)
-	_solid=Abilities.create_null_sprite()
 	_owner=owner
 	# 与同一 Screen Space Canvas 的浮层排序一致，HUD 在闪屏、控制面板与菜单下。
 	layer=3
@@ -50,6 +46,14 @@ func bind(owner: Player, dir: String, silver_path: String) -> bool:
 	message=Message.new()
 	_bar.add_child(message)
 	if not message.bind(font,silver_path): return false
+	# 资源和提示是 HUD 自带组件，不依赖暂停技能面板。不提供技能
+	# 合同时仍保留两者，但不伪造技能图标、槽位或射线。
+	if not FileAccess.file_exists(dir.path_join("abilities-layout.json")): return true
+	var spec:=Abilities.load_layout(dir)
+	if spec.is_empty(): return false
+	_attack=Abilities.load_attack_icon(spec,dir)
+	if _attack==null: return false
+	_solid=Abilities.create_null_sprite()
 	# 条目和菜单槽继承同一 Generic/Ability；只复用已校验的公共图块，不取菜单布局。
 	var slot: Dictionary=spec.layout.bar[0]
 	for i in ENTRY_IDS.size():
@@ -68,6 +72,8 @@ func bind(owner: Player, dir: String, silver_path: String) -> bool:
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_layout)
+	_layout()
+	if _entries.is_empty(): return
 	_owner.controlled_character_changed.connect(_bind_actor)
 	# 原 OnEnable 首次读取控制角色或主角；之后回调按真实角色（可为 null）。
 	_bind_actor(_owner.get_current_controlled_character_or_player_instance())

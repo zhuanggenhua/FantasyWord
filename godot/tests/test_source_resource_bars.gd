@@ -9,7 +9,7 @@ func _initialize() -> void: call_deferred("_run")
 
 func _run() -> void:
 	var dir:=OS.get_environment("FORMAL_PAUSE_SOURCE")
-	if dir.is_empty() or not FileAccess.file_exists(dir.path_join("abilities-layout.json")):
+	if dir.is_empty():
 		print("SKIP 原 HUD 资源条需要私有原场景、字体与 GUI 图集。")
 		quit(0)
 		return
@@ -20,13 +20,20 @@ func _run() -> void:
 	await scene_changed
 	await process_frame
 	var startup:=current_scene as Boot
-	_check(is_instance_valid(startup.ability_hud) and is_instance_valid(startup.ability_hud.resource_bars),
-		"原 HUD 资源条从项目正常入口装配")
+	var with_abilities:=FileAccess.file_exists(dir.path_join("abilities-layout.json"))
+	_check(is_instance_valid(startup) and is_instance_valid(startup.ability_hud)
+		and is_instance_valid(startup.ability_hud.resource_bars) and is_instance_valid(startup.ability_hud.message),
+		"正常 F5 原 HUD 的资源和失败提示无需暂停技能页合同")
 	if failures>0: _finish(); return
 	var bars:=startup.ability_hud.resource_bars
 	var player:=startup.player
 	var scene:=startup.scene
 	var actor: Node2D=scene.actor
+	var hud:=startup.ability_hud
+	var message:=hud.message
+	_check(hud._entries.size()==(5 if with_abilities else 0) and
+		(with_abilities or not hud.blocks_map_pointer(Vector2(500,490))),
+		"只有实际技能合同启用五槽；缺少素材不产生假槽或射线")
 	scene.training_target.ai_controller.stop()
 	scene.set_process(false)
 	_check(bars._values==PackedInt32Array([100,100,40,40]) and bars._actor==actor
@@ -51,6 +58,19 @@ func _run() -> void:
 	_click(Vector2(113.5,15.5))
 	_check(scene.command_count==command_count and scene.click_observation.latest.over_ui,
 		"真实点地命中资源条，只拦截而不修改资源")
+	_tap(KEY_3)
+	_check(message.visible and message.value=="这个槽位没有装备技能。"
+		and hud.blocks_map_pointer(Vector2(480,452)),"正常玩法空技能命令显示原失败提示并拦截地图")
+	_tap(KEY_ESCAPE)
+	var hold:=message._hold_left
+	await process_frame
+	await process_frame
+	_check(paused and startup.pause_root.stack.depth()==1 and bars._values==PackedInt32Array([100,100,40,40])
+		and message.visible and message._hold_left==hold,
+		"真正打开原 Pause 保留生命法力并暂停失败提示倒计时")
+	_tap(KEY_ESCAPE)
+	_check(not paused and message.visible and startup.ability_hud==hud,
+		"关闭原 Pause 恢复玩法，不拆卸或假重建 HUD")
 	var native:=DisplayServer.get_name()!="headless"
 	var before:Image=null
 	if native:
@@ -114,6 +134,14 @@ func _over(base:Color, overlay:Color) -> Color:
 
 func _near(a:Color,b:Color) -> bool:
 	return absf(a.r-b.r)<.012 and absf(a.g-b.g)<.012 and absf(a.b-b.b)<.012
+
+func _tap(key: Key) -> void:
+	for down in [true,false]:
+		var event:=InputEventKey.new()
+		event.keycode=key
+		event.physical_keycode=key
+		event.pressed=down
+		root.push_input(event,true)
 
 func _click(point: Vector2) -> void:
 	var e:=InputEventMouseMotion.new()
