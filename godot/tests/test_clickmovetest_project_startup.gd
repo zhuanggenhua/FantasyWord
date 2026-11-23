@@ -68,6 +68,7 @@ func _run() -> void:
 	root.push_input(motion,true)
 	await process_frame
 	var click := InputEventMouseButton.new()
+	click.device=0 # 正式配对鼠标，注入事件不使用默认模拟设备号。
 	click.position=screen
 	click.button_index=MOUSE_BUTTON_LEFT
 	click.pressed=true

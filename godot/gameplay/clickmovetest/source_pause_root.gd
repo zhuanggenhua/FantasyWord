@@ -3,6 +3,7 @@ extends CanvasLayer
 ## child scene when the actual registration is not ported yet.
 signal action_requested(action: int)
 const MenuNavigate := preload("res://game_core/input/source_menu_navigate.gd")
+const SourceMouseClick := preload("res://game_core/input/source_shared_mouse_click.gd")
 const InteractSubmit := preload("res://game_core/input/source_shared_interact_submit.gd")
 const Stack := preload("res://game_core/ui/gameplay_menu_stack.gd")
 const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
@@ -42,9 +43,11 @@ var item_details: Details
 var _inventory_layout := {}
 var _inventory_bags: Bags
 var _inventory_actor: Callable
+var _inventory_control_changed: Signal
 var _inventory_owner: Callable
 var _inventory_stats: Callable
 var _inventory_equipment: Callable
+var _inventory_item_use: Callable
 var _inventory_silver := ""
 var _abilities_layout := {}
 var _abilities_player: Player
@@ -106,18 +109,27 @@ func bind_character(layout_path: String, profile_path: String, silver: String,
 	_character_money=money
 	return true
 
-func bind_inventory(bags: Bags, actor: Callable, owner: Callable, values: Callable, equipment: Callable, silver: String) -> bool:
+func bind_inventory(bags: Bags, actor: Callable, owner: Callable, values: Callable, equipment: Callable, silver: String, control_changed: Signal) -> bool:
 	if _source.is_empty() or not equipment.is_valid() or _inventory_bags!=null or bags==null or not actor.is_valid() \
-			or not owner.is_valid() or not values.is_valid(): return false
+			or not owner.is_valid() or not values.is_valid() or control_changed.is_null(): return false
 	_inventory_layout=Inventory.load_layout(_dir)
 	if _inventory_layout.is_empty(): return false
 	_inventory_bags=bags
 	_inventory_actor=actor
+	_inventory_control_changed=control_changed
 	_inventory_owner=owner
 	_inventory_stats=values
 	_inventory_equipment=equipment
 	_inventory_silver=silver
 	return true
+
+## 正常启动暂不安装接收方；原对话所需素材与播放链具备后才可开启。
+func bind_inventory_item_use(receiver: Callable) -> bool:
+	if _inventory_layout.is_empty() or not _inventory_item_use.is_null() \
+			or not receiver.is_valid() or stack.depth()!=0: return false
+	_inventory_item_use=receiver
+	return true
+
 
 func _open_inventory() -> bool:
 	var actor: Node = _inventory_actor.call()
@@ -125,7 +137,11 @@ func _open_inventory() -> bool:
 	var values: Array[int] = _inventory_stats.call(actor)
 	var view := Inventory.new()
 	if not view.bind(_inventory_layout,_source,_dir,_inventory_silver,
-			_inventory_bags,_inventory_owner.call(actor),actor,values,_inventory_equipment.call()):
+			_inventory_bags,_inventory_owner.call(actor),actor,values,_inventory_equipment.call(),
+			_inventory_control_changed,_inventory_actor,_inventory_stats):
+		view.free()
+		return false
+	if not _inventory_item_use.is_null() and not view.bind_item_use(_inventory_item_use):
 		view.free()
 		return false
 	if item_details==null:
@@ -259,6 +275,7 @@ func _input(event: InputEvent) -> void:
 				# Original module dispatches the newest navigation before Submit.
 				_pending_submit=current.get_instance_id()
 			return
+	var click_edge: int = _entry.source_mouse_click_edge(event)
 	if not supports_action: return
 	var view := current
 	if event is InputEventMouseMotion and event.device==0:
@@ -268,10 +285,13 @@ func _input(event: InputEvent) -> void:
 		_mouse=event.position
 		get_viewport().set_input_as_handled()
 		var hit: int = _pointer_hit(view,_mouse)
-		if event.pressed and not _left_down:
+		var shared: bool = _entry.uses_source_mouse_click()
+		var pressed: bool = click_edge==SourceMouseClick.Edge.PRESS if shared else event.pressed
+		var released: bool = click_edge==SourceMouseClick.Edge.RELEASE if shared else not event.pressed
+		if pressed and not _left_down:
 			_left_down=true
 			view.pointer_down(hit)
-		elif not event.pressed and _left_down:
+		elif released and _left_down:
 			_left_down=false
 			var action: int = view.pointer_release(hit)
 			if action!=0: _activate(view,action)

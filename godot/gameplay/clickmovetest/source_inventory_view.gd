@@ -32,6 +32,15 @@ var _focus := 0
 var _hover := 0
 var _pressed := 0
 var _gear: Gear
+var _control_changed: Signal
+var _resolve_actor: Callable
+var _resolve_values: Callable
+var _initial_actor: WeakRef
+var _shown_equipment: Array[Resource] = []
+var _gear_icons: Dictionary = {}
+var _gear_placeholders: Array[Art] = []
+var _stat_values: Array[Text] = []
+var _request_item_use: Callable
 var _item_icons := {}
 var _bag_icons: Array[Art] = []
 var _bag_quantities: Array[Text] = []
@@ -48,11 +57,17 @@ static func load_layout(directory: String) -> Dictionary:
 	return data if data is Dictionary else {}
 
 func bind(layout: Dictionary, pause: Dictionary, directory: String, silver_path: String,
-		bags: Bags, owner: String, actor: Node, values: Array[int], gear: Gear) -> bool:
+		bags: Bags, owner: String, actor: Node, values: Array[int], gear: Gear,
+		control_changed: Signal, resolve_actor: Callable, resolve_values: Callable) -> bool:
 	if _background!=null or layout.is_empty() or layout.get("source_commit")!=Atlas.SOURCE \
 			or layout.get("pause_action")!=1 or layout.get("registration")!=3 or values.size()!=8 \
-			or bags==null or gear==null or not gear.live(): return false
+			or bags==null or gear==null or not gear.belongs_to(actor) or control_changed.is_null() \
+			or not resolve_actor.is_valid() or not resolve_values.is_valid(): return false
 	_gear=gear
+	_control_changed=control_changed
+	_resolve_actor=resolve_actor
+	_resolve_values=resolve_values
+	_initial_actor=weakref(actor)
 	# 只有两件已迁移作者物品；不把其他分类或资源悄悄映射为假物品。
 	for row in bags.entries(owner):
 		if _gear.slot_for_item(row.item)<0: return false
@@ -81,6 +96,7 @@ func bind(layout: Dictionary, pause: Dictionary, directory: String, silver_path:
 		var row: Dictionary=layout.stat_rows[i]
 		_blank(_centre,row.icon)
 		if not _line(_centre,row.label,row.label.text) or not _line(_centre,row.value,str(values[i])): return false
+		_stat_values.append(_lines.back())
 	for source: Dictionary in layout.gears:
 		var item := _gear.item_for_guid(source.guid)
 		if item==null or _gear.slot_for_item(item)!=int(source.type): return false
@@ -93,16 +109,15 @@ func bind(layout: Dictionary, pause: Dictionary, directory: String, silver_path:
 		var box := Layout._rect(layout.equipment_rects[i])
 		_targets[GEAR+i]=box
 		_sprite(_centre,box,_texture,layout.sprites.slot,true)
-		var equipped := _gear.equipped(i)
-		if equipped!=null:
-			var source: Dictionary={}
-			for row: Dictionary in layout.gears:
-				if int(row.type)==i: source=row; break
-			if source.is_empty() or not _item_icons.has(equipped): return false
-			_sprite(_centre,Layout._rect(source.rect),_item_icons[equipped],{},false)
-		else:
-			_sprite(_centre,Rect2(box.get_center()-Vector2(24,24),Vector2(48,48)),
-				_texture,layout.sprites["gear_placeholder_%d"%i],false)
+		_gear_placeholders.append(_sprite(_centre,Rect2(box.get_center()-Vector2(24,24),Vector2(48,48)),
+			_texture,layout.sprites["gear_placeholder_%d"%i],false))
+		_shown_equipment.append(null)
+		for row: Dictionary in layout.gears:
+			if int(row.type)!=i: continue
+			var item := _gear.item_for_guid(row.guid)
+			_gear_icons[item]=_sprite(_centre,Layout._rect(row.rect),_item_icons[item],{},false)
+			_gear_icons[item].hide()
+	if not _refresh_equipment(): return false
 	# Categories are painted in their actual sibling order (24-unit overlap).
 	for i in range(4):
 		var spec: Dictionary=layout.categories[i]
@@ -221,7 +236,47 @@ func apply_stack_interactions(active: bool) -> void:
 	visible=active
 	_pressed=0
 	_hover=0
-	if not active: _select(0)
+	if active:
+		if not _control_changed.is_connected(_on_control_changed):
+			_control_changed.connect(_on_control_changed)
+		_on_control_changed(null)
+	else:
+		if _control_changed.is_connected(_on_control_changed):
+			_control_changed.disconnect(_on_control_changed)
+		_select(0)
+
+func _on_control_changed(_controlled: Node2D) -> void:
+	if not _active or _initial_actor==null: return
+	# InventoryMenuContext 重新解析，不直接使用通知的空值。
+	# 该场景只支持唯一原主角，不能把其他角色的箱包/属性映射到他的装备。
+	var actor: Node = _resolve_actor.call()
+	if not is_instance_valid(actor) or actor!=_initial_actor.get_ref() or not _gear.belongs_to(actor): return
+	var values: Array[int] = _resolve_values.call(actor)
+	if values.size()!=_stat_values.size(): return
+	for slot in range(_shown_equipment.size()):
+		var item := _gear.equipped(slot)
+		if item!=null and not _gear_icons.has(item): return
+	model.refresh()
+	_refresh_bag_graphics()
+	_refresh_equipment()
+	for i in range(values.size()):
+		var spec: Dictionary=_layout.stat_rows[i].value
+		var value := _stat_values[i]
+		if not value.configure(_atlas,_silver,str(values[i]),Layout._rect(spec.rect),spec,_pixel_scale):
+			push_error("未知的原装备摘要属性字形。")
+
+func _refresh_equipment() -> bool:
+	for slot in range(_shown_equipment.size()):
+		var item := _gear.equipped(slot)
+		if item!=null and not _gear_icons.has(item): return false
+		var previous := _shown_equipment[slot]
+		if previous!=null: _gear_icons[previous].hide()
+		_shown_equipment[slot]=item
+		_gear_placeholders[slot].visible=item==null
+		if item!=null: _gear_icons[item].show()
+		if _active and _focus==GEAR+slot:
+			item_focus_changed.emit(_gear.slot_for_item(item))
+	return true
 
 func try_focus_default_target() -> bool:
 	if not _active: return false
@@ -239,7 +294,7 @@ func _select(action: int) -> void:
 	_focus=action
 	model.select(action-1 if action>0 and action<GEAR else -1)
 	if action>=GEAR and action<CATEGORY and _active:
-		item_focus_changed.emit(_gear.slot_for_item(_gear.equipped(action-GEAR)))
+		item_focus_changed.emit(_gear.slot_for_item(_shown_equipment[action-GEAR]))
 	elif action==0 or action>=CATEGORY:
 		item_focus_changed.emit(-1)
 	_sync()
@@ -261,13 +316,19 @@ func _sync() -> void:
 		elif _hover==action: sprite="m_HighlightedSprite"
 		_category_art[i].show_sprite(_texture,_layout.sprites[sprite],true)
 
-func sample_point(hover: int, _hit: int, _point_active: bool) -> void:
-	if not _active or _hover==hover: return
+func sample_point(hover: int, hit: int, point_active: bool) -> void:
+	if not _active: return
+	var entered := _hover!=hover
 	_hover=hover
-	# UIInventoryBagSlot and EquipmentSlot use IPointerEnter; Category
-	# inherits Button hover, which does not select or switch category.
-	if hover>0 and hover<CATEGORY: _select(hover)
-	else: _sync()
+	# 原格子的 IPointerEnter 会选中按钮；分类没有此回调。
+	# 原 InputSystem.Update 仍会按独立的 UI Point 射线选中分类 Button，
+	# 只是不会替按钮执行 SelectCategory。遮挡后的空命中不改变焦点。
+	if point_active and hit>=CATEGORY and _targets.has(hit):
+		if _focus!=hit: _select(hit)
+		elif entered: _sync()
+	elif entered:
+		if hover>0 and hover<CATEGORY: _select(hover)
+		else: _sync()
 
 func pointer_down(action: int) -> void:
 	set_pressed(action)
@@ -282,8 +343,23 @@ func set_pressed(action: int) -> void:
 	_pressed=action if _active and _targets.has(action) else 0
 	_sync()
 
+## 只绑定显式拥有原物品使用生命周期的接收方。不用点击穿脱代替 Item.Use。
+func bind_item_use(receiver: Callable) -> bool:
+	if not _request_item_use.is_null() or not receiver.is_valid() or _active: return false
+	_request_item_use=receiver
+	return true
+
+
 func activate(action: int) -> bool:
-	if not _active or action<CATEGORY or action>LAST: return false
+	if not _active or action<1 or action>LAST: return false
+	if action<CATEGORY:
+		if not _request_item_use.is_valid(): return false
+		var request := model.activation(action-1) if action<GEAR else model.equipped_activation(
+			_shown_equipment[action-GEAR])
+		if request.is_empty() or not _item_icons.has(request.item) or not _gear.belongs_to(request.actor):
+			return false
+		# 成功只表示接收方承接了请求，不能当作使用完成或提前刷新。
+		return _request_item_use.call(request)==true
 	if not model.set_category(action-CATEGORY): return false
 	_refresh_bag_graphics()
 	_sync()

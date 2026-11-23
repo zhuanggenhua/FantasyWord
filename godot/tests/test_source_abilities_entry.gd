@@ -153,11 +153,22 @@ func run() -> void:
 	point(passive)
 	await process_frame
 	await process_frame
-	check(panel.selected_action()==11,"鼠标仅悬停分类不选择")
-	click(passive)
+	check(panel.selected_action()==2 and panel.category==1 and panel._row_icons[0].visible
+		and panel._description.displayed_lines[0].begins_with("Passive abilities"),
+		"主动 UI Point 聚焦被动分类立即显示原说明，但保留主动列表与快捷栏")
+	var neutral := Vector2(470,460)
+	point(neutral)
+	await process_frame
+	await process_frame
+	check(panel.selected_action()==2 and panel.category==1 and codes(owner)==[0,20010,0,0,20001],
+		"离开可选按钮仍保留说明焦点，不改实际快捷槽")
+	await tap(KEY_ENTER)
 	check(panel.category==2 and not panel._row_icons[0].visible and panel.selected_action()==2
 		and panel._description.displayed_lines[0].begins_with("Passive abilities"),
-		"被动分类确认为空并显示作者说明")
+		"移走后确认才切换被动类别，保留原说明")
+	if panel.category!=2:
+		await tap(KEY_ESCAPE) # 仅红测恢复：提交仍命中原技能时先退出装备模式。
+		click(passive)
 	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==pause,"回到父菜单后原技能面板已关闭")
 	await tap(KEY_ENTER)
@@ -165,8 +176,22 @@ func run() -> void:
 	check(panel!=null and panel.category==2 and panel.selected_action()==1 and not panel._row_icons[0].visible,
 		"快速重开复用原分类偏好，无被动条目时退回首个原可选项")
 	if panel==null: finish(); return
+	var empty_slot:=panel.action_rect(21).get_center()*.5
+	point(empty_slot)
+	await process_frame
+	await process_frame
+	check(panel.selected_action()==21 and panel._description._glyphs.is_empty(),
+		"被动分类仍可聚焦真实空槽，旧说明随之清空")
 	var active:=panel.action_rect(1).get_center()*.5
+	point(active)
+	await process_frame
+	await process_frame
+	check(panel.selected_action()==1 and panel.category==2 and not panel._row_icons[0].visible
+		and panel._description.displayed_lines[0].begins_with("Active abilities"),
+		"返回再开后主动按钮悬停显示自己的原说明，不自动恢复主动列表")
 	click(active)
+	check(panel.category==1 and panel._row_icons[0].visible,
+		"普通鼠标点击主动分类仍走原按钮回调")
 	var fire:=panel.action_rect(12).get_center()*.5
 	point(fire)
 	await process_frame

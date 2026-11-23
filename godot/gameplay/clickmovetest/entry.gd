@@ -7,6 +7,7 @@ const Movement = preload("res://game_core/movement/character_movement.gd")
 const Commands = preload("res://game_core/movement/movement_commands.gd")
 const CharacterExecutor = preload("res://game_core/interaction/character_command_executor.gd")
 const InteractSubmit := preload("res://game_core/input/source_shared_interact_submit.gd")
+const SourceMouseClick := preload("res://game_core/input/source_shared_mouse_click.gd")
 const SlotKeyboard = preload("res://game_core/combat/ability_slot_keyboard_input.gd")
 const Keyboard = preload("res://game_core/movement/keyboard_movement_input.gd")
 const SurfaceContact = preload("res://game_core/elements/terrain_surface_damage_system.gd")
@@ -77,6 +78,7 @@ var _source_ui_action_layer := false
 var _source_move_initial_pending := false
 var human_gameplay_actions: RefCounted
 var _normalized_click_bound := false
+var _source_mouse_click: SourceMouseClick
 var _slot_keyboard: SlotKeyboard
 var _source_interact_submit: InteractSubmit
 var human_commands: RefCounted
@@ -389,6 +391,7 @@ func _resize_camera() -> void:
 func set_source_ui_action_layer(enabled: bool) -> void:
 	if _source_ui_action_layer == enabled: return
 	_source_ui_action_layer = enabled
+	if _source_mouse_click!=null: _source_mouse_click.arm_action_map()
 	_source_move_initial_pending = not enabled
 	if enabled:
 		keyboard.deactivate(_submit,true)
@@ -408,6 +411,12 @@ func observe_source_ui_pointer(event: InputEvent) -> void:
 func source_interact_submit_edge(event: InputEvent) -> int:
 	return InteractSubmit.Edge.OTHER if _source_interact_submit==null else _source_interact_submit.observe(event)
 
+## 同一个已配对左键在运行的动作图内只能被一个入口观察。
+func source_mouse_click_edge(event: InputEvent) -> SourceMouseClick.Edge:
+	return SourceMouseClick.Edge.OTHER if _source_mouse_click==null else _source_mouse_click.observe(event)
+
+func uses_source_mouse_click() -> bool: return _source_mouse_click!=null
+
 func uses_source_interact_submit() -> bool:
 	return _source_interact_submit!=null
 
@@ -425,6 +434,7 @@ func _sample_source_move_enabled() -> void:
 func _notification(what: int) -> void:
 	if what != NOTIFICATION_WM_WINDOW_FOCUS_OUT: return
 	if _source_interact_submit != null: _source_interact_submit.reset_device_state()
+	if _source_mouse_click != null: _source_mouse_click.reset_device_state()
 	if _slot_keyboard != null: _slot_keyboard.reset_device_state(_dispatch_human_ability_key)
 	keyboard.deactivate(_submit)
 
@@ -439,9 +449,11 @@ func _input(event: InputEvent) -> void:
 			receive_human_gameplay_action("Gameplay","Interact","performed")
 		get_viewport().set_input_as_handled()
 		return
-	# Raw compatibility diagnostic only, not the normalized Point command sample.
+	var click_edge:=source_mouse_click_edge(event)
+	# 原始按键诊断只观察真实按下；不替代正式 Point 命令。
 	# 原生 GUI 可能在 _unhandled_input 前消费点击；观察必须先于该阶段。
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+	if click_edge==SourceMouseClick.Edge.PRESS or (_source_mouse_click==null and event is InputEventMouseButton \
+			and event.button_index==MOUSE_BUTTON_LEFT and event.pressed):
 		var owned := _owns_current_actor()
 		var sample: Vector2 = event.position
 		if is_instance_valid(control_panel) and _mouse_point_actions!=null:
@@ -459,6 +471,11 @@ func _input(event: InputEvent) -> void:
 			"world_position": projected if projected is Vector2 else Vector2.ZERO,
 			"order_before_dispatch": owned and actor.execution.has_move_order(),
 		})
+	if click_edge!=SourceMouseClick.Edge.OTHER:
+		if click_edge==SourceMouseClick.Edge.PRESS:
+			receive_human_gameplay_action("Gameplay","Click","performed")
+		get_viewport().set_input_as_handled()
+		return
 	if _slot_keyboard != null:
 		_slot_keyboard.observe(event,true,_dispatch_human_ability_key)
 	keyboard.observe_toggle(event,true,_submit)
@@ -1109,14 +1126,23 @@ func bind_human_ability_keyboard() -> bool:
 func _dispatch_human_ability_key(slot: int, down: bool) -> void:
 	receive_human_gameplay_action("Gameplay","FireAbility%d" % (slot+1),"performed" if down else "canceled")
 
-## Host dispatches normalized Click explicitly; this does not route raw events.
+## 仅正式 F5 将原按钮边沿连到独立 Point 和原角色命令，旧诊断入口不自动接管。
+func bind_source_mouse_click() -> bool:
+	if _source_mouse_click!=null or _normalized_click_bound: return false
+	var device:=SourceMouseClick.new(0)
+	if not bind_human_click_action(device.is_blocked): return false
+	_source_mouse_click=device
+	return true
+
+## 外部调用者仍可显式派发归一化 Click；不自动接管物理鼠标。
 func bind_human_click_action(click_blocked: Callable) -> bool:
-	if human_gameplay_actions == null or _mouse_point_actions == null: return false
+	if _source_mouse_click!=null or human_gameplay_actions==null or _mouse_point_actions==null: return false
 	if not human_gameplay_actions.configure_click(click_blocked,_resolve_human_click_world): return false
 	_normalized_click_bound = true
 	return true
 
 func unbind_human_click_action() -> void:
+	_source_mouse_click = null
 	_normalized_click_bound = false
 	# Drop the callback too; the remaining Interact/Fire callbacks stay bound.
 	if human_gameplay_actions != null:
@@ -1138,6 +1164,7 @@ func receive_human_gameplay_action(action_map: String, action: String, phase: St
 	return human_gameplay_actions.receive(action_map,action,phase)
 
 func unbind_human_gameplay_actions() -> void:
+	_source_mouse_click = null
 	_source_interact_submit = null
 	_slot_keyboard = null
 	_normalized_click_bound = false

@@ -106,7 +106,9 @@ func viewport_to_design(p: Vector2) -> Vector2: return (p-position)/_scale
 func apply_stack_interactions(active: bool) -> void:
 	_live=active
 	visible=active
-	if not active:
+	if active:
+		if not _refresh_volume_rows(): push_error("无法显示正式音频设置的当前值。")
+	else:
 		_selected=0
 		_hover=0
 		_pressed=0
@@ -162,7 +164,17 @@ func activate(action: int) -> bool:
 	var index := action-1
 	var row := index/2
 	if not _prefs.adjust(row-1,-1 if index%2==0 else 1): return false
-	return _values[row].configure(_atlas,_prefs.display(row-1),_rect(_value_specs[row].rect),_value_specs[row],_pixels)
+	return _refresh_volume_rows()
+
+## 对应 UISettings.UpdateUI：显示时和任一按钮回调结束后重读全部音量，
+## 而不是保留其他可能已由共享音量拥有者改变的标签缓存。
+func _refresh_volume_rows() -> bool:
+	var refreshed := true
+	for i in range(_values.size()):
+		var spec := _value_specs[i]
+		if not _values[i].configure(_atlas,_prefs.display(i-1),_rect(spec.rect),spec,_pixels):
+			refreshed=false
+	return refreshed
 
 func _retarget() -> void:
 	for i in range(_arrows.size()):

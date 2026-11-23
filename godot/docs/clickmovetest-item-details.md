@@ -1,6 +1,6 @@
 # ClickMoveTest 初始装备详情
 
-从正常 F5 进入 ClickMoveTest，在暂停菜单打开 Items，鼠标进入或方向键聚焦原版初始武器、躯干装备槽时显示共享 Item Details。移开鼠标、点击非选择区域或悬停分类不关闭；聚焦空槽、分类或退出菜单关闭。只在可见详情图形范围拦截下层命中。
+从正常 F5 进入 ClickMoveTest，在暂停菜单打开 Items，鼠标进入或方向键聚焦原版初始武器、躯干装备槽时显示共享 Item Details。移到空白或点击非选择区域不关闭；聚焦空槽、主动指针移到分类按钮或退出菜单关闭。只在可见详情图形范围拦截下层命中。
 
 使用锁定 Unity 提交 `31629d53a110dd4c87d4c85e6ad5a387fbafb931` 的 `User Interface.prefab` 中 Overlay 下的 Item Details 实例。图标、描述、图集和锚点从实际 Prefab/装备资产复现，不含重新制作的底图或补写内容。布局契约由 `tools/extract_clickmovetest_item_details.py` 生成到私有来源目录；不将原始素材和契约数据提交。缺少合格契约时保留已有背包路径，不提供替代详情。
 

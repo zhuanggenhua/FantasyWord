@@ -165,6 +165,7 @@ func _check_source_entry() -> void:
 	motion.relative = Vector2.ONE
 	root.push_input(motion,true)
 	var click := InputEventMouseButton.new()
+	click.device=0
 	click.position = motion.position
 	click.button_index = MOUSE_BUTTON_LEFT
 	click.pressed = true
@@ -200,6 +201,7 @@ func _check_source_entry() -> void:
 	check(pointer.read_active(Point.Map.UI)==ui_motion.position
 		and pointer.read_active(Point.Map.GAMEPLAY)==null,"暂停期间仅 UI Point 观察配对鼠标")
 	var ui_click := InputEventMouseButton.new()
+	ui_click.device=0
 	ui_click.position = ui_motion.position
 	ui_click.button_index = MOUSE_BUTTON_LEFT
 	ui_click.pressed = true

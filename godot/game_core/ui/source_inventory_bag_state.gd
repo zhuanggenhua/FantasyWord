@@ -61,9 +61,17 @@ func select(index: int) -> bool:
 	return true
 
 func activation(index: int) -> Dictionary:
-	var item: Resource=cell(index).get("item")
+	return _use_request(cell(index).get("item"),Location.BAG)
+
+
+## 装备格同样交给原 Item.Use，但使用位置是 Equipment，不是背包或卸装事务。
+func equipped_activation(item: Resource) -> Dictionary:
+	return _use_request(item,Location.EQUIPMENT)
+
+
+func _use_request(item: Resource, location: Location) -> Dictionary:
 	var actor: Object=_actor.get_ref() if _actor!=null else null
 	if item==null or not is_instance_valid(actor): return {}
-	# UIInventory.ResolveItemUseTarget currently returns the opener.
-	# A caller must await the real item's Use before invoking refresh().
-	return {"item":item,"actor":actor,"target":actor,"location":Location.BAG}
+	# 原 ResolveItemUseTarget 对当前两件装备返回开包主角。
+	# 接收方仍负责 ManageInventory 门禁、原对话、异步结束和界面刷新。
+	return {"item":item,"actor":actor,"target":actor,"location":location}

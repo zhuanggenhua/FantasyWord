@@ -34,3 +34,41 @@ Point 并不阻止 Click；源 InputAction.ReadValue 的默认 (0,0) 是 Unity �
 不替代正式 Point 样本。新原生测试覆盖门禁前后、默认点及活动点、失败上下文和无重复提交。
 首次静止点击的行为是锁定源码与包版本推导加 Godot 实测，未完成 Unity 同场景实机对照；
 完整设备、动作图与 UI 光标选择仍不在此范围内。
+
+## 正常 F5 左键：按压属于当前动作图
+
+正式 ClickMoveTest 入口不再通过兼容鼠标事件的坐标直接执行移动。
+原 `Assets/InputSystem_Actions.inputactions` 的 Gameplay/UI Click 都绑定配对的
+`<Mouse>/leftButton`、Button、无初始采样；`InputSystem.cs` 先查共享释放门禁，
+读取独立 Gameplay Point，再做相机、角色、UI 遮挡判断和正式角色命令。
+因此第一次未移动鼠标时仍按原 ReadValue 投影屏幕左下；有效 Point 已激活时，
+采用最后一次同设备位置变化，不拿按钮包坐标覆盖。点击不会自行激活瞄准 Point。
+正式入口之外的测试桥仍可显式注入动作，原诊断预览兼容链不受影响。
+
+暂停和恢复共用同一配对左键物理状态，旧图层按住的键不能穿到下一图层，
+释放不补发下一图层的按下。正式场景测试通过真实角色命令门禁、正常导航、
+暂停/恢复双向防穿透和设备号过滤验证；另回归既有实际 HUD 遮挡。
+这里未重写 Unity 全局 UI 模块的其他输入动作门禁，不含触屏、玩家设备配对、
+实际上机交互或 Unity/Godot 同帧画面对照。
+
+### 原玩法左键不会封锁新暂停图的独立导航
+
+锁定原 `InputSystem.cs` 先切图，再按新图的 `IsPressed` 武装释放门禁；
+Unity Input System 1.18 的 `PlayerInput.currentActionMap` 同步停用旧图，
+新图的 Click 是独立的 Button，未启用初始状态采样。不能把物理左键仍按住
+等同于新图已经处于 Pressed，继而禁用整个 UI 输入模块。
+因此正式 Godot 入口只屏蔽旧左键自身的重放，保留独立的新方向和确认边沿。
+F5 定向测试覆盖先已按住玩法左键、再由 Esc 打开暂停，此时新方向仍切换真实焦点，
+新 F 可打开设置，旧 Click 松手不触发；新的左键及双向跨图仍正常。
+这是锁定源码与包合同推导加 Godot 实测，不是 Unity PlayMode 回放结论。
+同一输入更新中同时改变两键、其他动作真正武装的全模块门禁、多设备及图形对照仍待核实。
+
+### 正式暂停及返回的配对右键
+
+锁定源 `31629d53` 的 `ClickMoveTest.unity` 的 `PlayerInput` 使用同一个
+`InputSystem_Actions.inputactions`：`Keyboard&Mouse` 要求一个 Mouse，同一设备右键分别绑定
+`Gameplay/OpenGameMenu` 与 `UI/Cancel`。正式 Godot 入口采用与 Point、左键一致的本地设备
+编号 0，在处理右键动作的按压及松开之前过滤其他设备。其他设备右键不能开关暂停，
+其松键也不能释放仍按住的配对右键。原注册暂停、独立返回与动作图切换保持不变。
+`test_source_pause_root.gd` 在加载真实正式入口与暂停/设置合同后检查拒绝、释放及再次进入的
+行为；不包含 Unity 自动切换控制方案、多个物理设备或实体设备验收。

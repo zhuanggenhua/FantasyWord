@@ -117,7 +117,9 @@ func _input(event: InputEvent) -> void:
 		elif event.button_index == JOY_BUTTON_B: key = "pad_east"
 	elif event is InputEventKey and event.physical_keycode==KEY_ESCAPE:
 		key = "escape"
-	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_RIGHT and event.device>=0:
+	# 与正式 Point 和 Click 一样，只接受已配对的鼠标。过滤在按压
+	# 状态之前，外部设备的松键也不能清除此设备仍按住的右键。
+	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_RIGHT and event.device==0:
 		key = "right_mouse"
 	if key.is_empty(): return
 	# Start opens Gameplay only. East is UI Cancel, but in Gameplay its event

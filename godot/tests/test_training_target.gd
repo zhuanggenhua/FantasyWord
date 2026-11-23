@@ -1,4 +1,5 @@
 extends SceneTree
+const Entry = preload("res://gameplay/clickmovetest/entry.gd")
 const Target = preload("res://gameplay/clickmovetest/training_target.gd")
 const Apply = preload("res://game_core/combat/formal_damage_application.gd")
 const Combat = preload("res://game_core/combat/combat_rules.gd")
@@ -39,9 +40,9 @@ func _init(): call_deferred("run")
 func run():
 	var owner:=Owner.new()
 	var target:=Target.new()
-	check(not target.configure({},owner,7752),"拒绝缺属性拥有者")
-	check(target.configure(owner.bindings(),owner,7752),"绑定显式属性/动作拥有者")
-	check(not target.configure(owner.bindings(),owner,7752),"不重复初始化")
+	check(not target.configure({},owner,7752,Entry.SOURCE_WALL_RECOVERY_DISTANCE),"拒绝缺属性拥有者")
+	check(target.configure(owner.bindings(),owner,7752,Entry.SOURCE_WALL_RECOVERY_DISTANCE),"绑定显式属性/动作拥有者")
+	check(not target.configure(owner.bindings(),owner,7752,Entry.SOURCE_WALL_RECOVERY_DISTANCE),"不重复初始化")
 	root.add_child(target)
 	await physics_frame
 	await physics_frame

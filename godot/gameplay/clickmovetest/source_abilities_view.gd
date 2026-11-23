@@ -266,13 +266,19 @@ func reference_hit(p: Vector2) -> int:
 		if _allows(action) and action_rect(action).has_point(p): return action
 	return 0
 
-func sample_point(hover: int, _hit: int, active: bool) -> void:
+func sample_point(hover: int, hit: int, active: bool) -> void:
 	_point_active=active
-	if not _active or hover==_hover: return
+	if not _active: return
+	var entered := hover!=_hover
 	_hover=hover
-	# Only a real list entry/slot implements pointer-enter focus.
-	if _row_action(hover) or _slot_action(hover): _select(hover)
-	else: _sync()
+	# 分类没有 PointerEnter 回调；主动 UI Point 的射线命中会触发
+	# UIAbilityCategory.OnSelect 显示说明，不会替它执行 SelectCategory。
+	if active and hit in [ACTIVE_CATEGORY, PASSIVE_CATEGORY]:
+		if _focus!=hit: _select(hit)
+		elif entered: _sync()
+	elif entered:
+		if _row_action(hover) or _slot_action(hover): _select(hover)
+		else: _sync()
 
 func pointer_down(action: int) -> void:
 	set_pressed(action)

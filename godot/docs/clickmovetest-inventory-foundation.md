@@ -14,3 +14,42 @@
 - 正常场景可额外设置私有 `FORMAL_PLAYER_SPEAR_SOURCE`。在锁定 Git 树上运行 `python godot/tools/extract_workbench_weapons.py <Unity 仓库> <私有输出目录> --formal-spear`，目录须已有原静态长矛 `长矛1.png` 和 `Slash_sword_f.png`、`Slash_sword_b.png`。提取器核实正式长矛的视觉引用、图集 LFS 内容、站立四向主手锚点和死亡真实帧无锚点，生成私有 `player-spear.json`，不读工作台选中态。现在初始角色的 Idle、Walk、Dmg 用静态长矛，Attack 走原前/后序列；SpinDie 不显示长矛但保留装备槽。设置了长矛路径却校验失败时启动拒绝装配，不用替代画面。
 - `tests/test_source_spear_presentation.gd` 经过正常项目启动、真正的普攻输入与实际角色装备服务，核对静态镜像、攻击贴图、受击与无挂点死亡分支。死亡表现测试直接选择原动作，不代表重验了整个被击杀流程。
 - **不是完整 Inventory 或换装表现**：已接两件原始零加成装备的事务与菜单投影、原基础布衣和长矛填充（不含正式角色完整武器外轮廓对照）。其他装备、附加属性/技能、叠加锁、物品使用及其对白、掉落、存档、坐骑、外部 HUD、手柄全局导航和 Unity 像素比对未验收。测试由服务发起装备变化，不是新增玩家换装交互。
+
+## 已知物品的使用请求（仅隔离接收）
+原 `UIInventoryBagSlot` 和 `UIInventoryEquipmentSlot` 只在非空格点击时调用父面板；
+`UIInventory.OnItemClickedAsync` 使用实际开包角色和原物品，并分别传 Bag、Equipment。
+锁定基础布衣和长矛的 m_onUse 都为空；`Item.Use` 会先检查 ManageInventory，
+可用但无效果时用主 Dialogue 通道播放 `This item has no effect`，结束后才刷新面板。
+这不是卸装、消耗或快捷装备操作。
+
+预留一个明确注入的请求接收方，实际 F5 的 Pause → Items 只派发本场景已登记物品。
+鼠标按下或松到另一格都不派发；同格松开一次，空格 Submit 不派发。背包和装备栏的
+请求保留显示中的物品引用、同一个开包角色及实际来源位置。接收方承接请求不等于
+使用完成；本段不扣物品、不改装备与焦点，也不提前重刷。
+
+正常启动不安装物品使用接收方。锁定树可见原 Dialogue.prefab 与控制器，但找不到
+原消息框/箭头动画及跳字音效的实际引用目标。定向试验只向真实菜单绑定隔离接收方，
+未迁移正式 Item.Use、ManageInventory 门禁、原对话显隐/音频、完成后刷新或地图/对话
+交互；没有用近似 HUD 提示替代原对话。私有原背包图标及布局不进入 Git。
+
+## 显示中的控制角色变更
+
+锁定 `UIInventory.OnPanelShown/OnCurrentControlledCharacterChanged/UpdateUI`：
+默认背包显示时监听当前控制角色变化，隐藏时退订；收到真实事件后，重新解析
+`InventoryMenuContext` 的角色（无受控对象时回退当前正式主角），再刷新背包、
+装备栏、属性摘要。保持已选分类和槽位；原装备格在刷新前点击的是已显示的物品，
+刷新成空位才不再派发并清掉旧详情。当前正式场景只有一个可控制角色，未声称
+迁移多角色切换。没有订阅任意库存内容变化代替上述例程。
+
+真实 F5 的 Pause → Items 由原物品服务执行卸下/重穿后，送达实际控制目标
+退出/恢复事件，定向验证占位图、同一物品资源、数量投影、详情、焦点和退订。
+试验调用正式事务和控制状态入口，不是玩家已有换装入口；点击仍只验证
+隔离接收方，不实现原 Item.Use、装备点击换装、任意资源或 Unity 画面对照。
+
+## 背包分类的指针焦点
+
+锁定源 `InputSystem.Update` 使用独立的主动 UI Point 对可选控件做射线检测。
+原 Category Entry 的 Button 与可射线命中的目标 Image 属于同一分类控件；
+悬停能取得焦点、收起失焦物品详情，但不提前执行仅在 Button 点击时调用的
+`SelectCategory`。移到空白不会取消刚选中的分类按钮，随后确认可切换到该分类。
+此处只补分类焦点，不改变原格子的 PointerEnter，不改重叠按钮命中顺序。

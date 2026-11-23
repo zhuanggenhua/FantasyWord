@@ -187,6 +187,8 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 		# 装配角色原组件但不造对象、不播放来源未到位的成功音效。
 		if not scene.start_human_interaction(player,_on_unadmitted_interact_success) or not scene.bind_source_interact_submit():
 			return _fail("原角色 Static Pivot 或同一交互命令宿主未绑定。")
+		if not scene.bind_source_mouse_click():
+			return _fail("原 Gameplay 左键未绑定独立 Point 与同一角色命令宿主。")
 	if trainer_diagnostic and not _mount_trainer_diagnostic(paths,player_combat,trainer_files,material):
 		return _fail("原活动假人的动画材质、同图路径或 20001 入口未通过来源与装配检查。")
 	var pause_source := OS.get_environment("FORMAL_PAUSE_SOURCE")
@@ -267,7 +269,8 @@ func _mount_source_pause(directory: String) -> bool:
 		return false
 	if FileAccess.file_exists(directory.path_join("inventory-layout.json")) and not menu.bind_inventory(
 			inventory_bags,player.get_current_controlled_character_or_player_instance,primary_bag_owner,
-			player.inventory_fresh_stats,player.source_equipment,OS.get_environment("FORMAL_PANEL_SILVER")):
+			player.inventory_fresh_stats,player.source_equipment,OS.get_environment("FORMAL_PANEL_SILVER"),
+			player.controlled_character_changed):
 		menu.free()
 		return false
 	if FileAccess.file_exists(directory.path_join("abilities-layout.json")) and not menu.bind_abilities(

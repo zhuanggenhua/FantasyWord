@@ -11,11 +11,16 @@ Godot 项目入口是 `godot/project.godot`，以 Godot 4.7.2 验证。运行项
 在仓库根目录执行：
 
 ```sh
-GODOT=/path/to/godot bash godot/tests/run.sh
+GODOT=/path/to/godot bash godot/tests/run.sh --source-free
+python3 godot/tests/test_run_suites.py
 node .spec/tools/spec-lint.mjs
 ```
 
-测试使用独立临时用户目录，不会碰玩家存档。用 Godot 编辑器导入时请选择
+测试使用独立临时用户目录，不会碰玩家存档。
+`--source-free` 不传入作者资源环境变量，并区分完整通过（PASS）、只验证了无素材分支
+（PARTIAL）、预期缺素材（SKIP）与失败（FAIL）。缺少已知原素材不等于整项通过；
+非预期跳过、未识别状态或引擎错误仍以失败退出。省略 `--source-free` 时不允许跳过，
+正式场景须在各自的原素材环境下单独运行，不能据无素材测试声称实机画面对照。用 Godot 编辑器导入时请选择
 `godot/project.godot`，不要选择 Unity 仓库根目录。
 
 可运行的[移动诊断场景](validation/scenes/README.md)接通键盘、Tab、可选私有原图点击路径、原生身体和阻尼相机；它不是正式游戏场景或画面验收。

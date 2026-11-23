@@ -27,9 +27,9 @@ func direction(k: Key) -> void:
 	key(k,false)
 	await settle()
 
-func button(b: MouseButton, on: bool, p: Vector2) -> void:
+func button(b: MouseButton, on: bool, p: Vector2, device := 0) -> void:
 	var event := InputEventMouseButton.new()
-	event.device=0
+	event.device=device
 	event.button_index=b
 	event.pressed=on
 	event.position=p
@@ -131,6 +131,28 @@ func run() -> void:
 	key(KEY_ESCAPE,true); key(KEY_ESCAPE,false)
 	check(shell.stack.depth()==0 and not paused and actor.execution.has_move_order()
 		and startup.point.read_active(Points.Map.UI)==null,"close restores gameplay route and clears UI Point")
+	# 同一 Mouse 设备拥有右键、左键和 Point。其他设备不能触发或释放它。
+	var right_pos := Vector2(440,420)
+	button(MOUSE_BUTTON_RIGHT,true,right_pos,2)
+	check(shell.stack.depth()==0 and not paused,"未配对的鼠标右键不能打开真实暂停")
+	button(MOUSE_BUTTON_RIGHT,false,right_pos,2)
+	if paused: shell.stack.close_all() # 保持后续断言独立。
+	button(MOUSE_BUTTON_RIGHT,true,right_pos)
+	check(shell.stack.depth()==1 and paused,"配对右键仍能打开原暂停")
+	button(MOUSE_BUTTON_RIGHT,false,right_pos,2)
+	button(MOUSE_BUTTON_RIGHT,true,right_pos)
+	check(shell.stack.depth()==1 and paused,"未配对的释放不使原按压穿透为返回")
+	button(MOUSE_BUTTON_RIGHT,false,right_pos)
+	if not paused:
+		key(KEY_ESCAPE,true); key(KEY_ESCAPE,false)
+	button(MOUSE_BUTTON_RIGHT,true,right_pos,2)
+	check(shell.stack.depth()==1 and paused,"未配对的鼠标右键不能返回")
+	button(MOUSE_BUTTON_RIGHT,false,right_pos,2)
+	if not paused:
+		key(KEY_ESCAPE,true); key(KEY_ESCAPE,false)
+	button(MOUSE_BUTTON_RIGHT,true,right_pos)
+	button(MOUSE_BUTTON_RIGHT,false,right_pos)
+	check(shell.stack.depth()==0 and not paused,"真实释放后的配对新右键仍可返回")
 	finish()
 
 
@@ -176,6 +198,25 @@ func check_settings(startup: Boot, settings: Settings) -> void:
 	var next := minf(channel+.1,1.0)
 	check(is_equal_approx(prefs.volume(3),next) and is_equal_approx(prefs.volume(-1),master)
 		and settings._values[4]._line.text==prefs.display(3),"last row changes only source GameplaySoundFX")
+	# 原设置按钮再次从同一个 AudioSystem 读取五行，不把其余标签当真相。
+	for id in range(4):
+		check(prefs.adjust(id,-1),"正式共享音量状态可独立修改通道 %d"%id)
+	var expected_focus := settings.reference_hit(settings.viewport_to_design(hit))
+	button(MOUSE_BUTTON_LEFT,true,hit)
+	button(MOUSE_BUTTON_LEFT,false,hit)
+	for id in range(-1,4):
+		check(settings._values[id+1]._line.text==prefs.display(id),
+			"主音量回调刷新实际共享音量行 %d"%id)
+	check(settings.selected_action()==expected_focus
+		and is_equal_approx(AudioServer.get_bus_volume_linear(0),prefs.volume(-1)),
+		"重新取值不替换已选中的原按钮，也不改监听器音量映射")
+	var channel_hit := settings.position+Vector2(1350,726)*settings.scale
+	check(prefs.adjust(-1,1),"正式共享音量状态可独立修改主音量")
+	button(MOUSE_BUTTON_LEFT,true,channel_hit)
+	button(MOUSE_BUTTON_LEFT,false,channel_hit)
+	check(settings._values[0]._line.text==prefs.display(-1)
+		and settings._values[4]._line.text==prefs.display(3),
+		"通道按钮也重读主音量及目标通道")
 
 func dark_pixels(pixels: Image, region: Rect2i) -> int:
 	var n := 0

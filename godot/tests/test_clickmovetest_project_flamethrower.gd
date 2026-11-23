@@ -99,6 +99,7 @@ func _click(point: Vector2) -> void:
 	_mouse(point)
 	for down in [true,false]:
 		var event := InputEventMouseButton.new()
+		event.device=0
 		event.position=_screen(point)
 		event.button_index=MOUSE_BUTTON_LEFT
 		event.pressed=down

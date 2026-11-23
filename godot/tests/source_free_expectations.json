@@ -1,0 +1,113 @@
+{
+  "test_clickmovetest_control_panel.gd": [
+    "SKIP 原静态测试面板：需要原 Silver 与 CJK 字体。"
+  ],
+  "test_clickmovetest_project_flamethrower.gd": [
+    "SKIP 普通入口喷火验证：需要同一原图合同与私有视听"
+  ],
+  "test_clickmovetest_project_startup.gd": [
+    "SKIP 私有原图启动与交互；需显式原始资源，不用替代图"
+  ],
+  "test_clickmovetest_project_trainer.gd": [
+    "SKIP 正常项目实际假人；需要原资源"
+  ],
+  "test_clickmovetest_source20_motion.gd": [
+    "SKIP requires locked private collider extraction"
+  ],
+  "test_clickmovetest_source_player_contact.gd": [
+    "SKIP 原图火焰接触：需要正式启动的原资源"
+  ],
+  "test_clickmovetest_water_tree.gd": [
+    "SKIP 实际树倒影：需要锁定场景的私有作者素材。"
+  ],
+  "test_flamethrower_cue_audio.gd": [
+    "SKIP exact original OGG playback: FORMAL_FLAMETHROWER_AUDIO unset"
+  ],
+  "test_flamethrower_cue_visual.gd": [
+    "原图未提供：仅拒绝路径检查；原序列/方向/生命周期未验收"
+  ],
+  "test_primary_frame_effects.gd": [
+    "SKIP 正式主角轮廓/阴影须提供锁定原始帧合同。"
+  ],
+  "test_source_abilities_entry.gd": [
+    "SKIP 原技能菜单需要私有作者资源合同。"
+  ],
+  "test_source_ability_hud_message.gd": [
+    "SKIP 原战斗提示需要私有作者字体与技能 HUD。"
+  ],
+  "test_source_ability_slot_actor.gd": [
+    "SKIP 实际快捷能力换槽需要锁定关卡的私有素材。"
+  ],
+  "test_source_audio_preferences.gd": [
+    "SKIP locked source live audio"
+  ],
+  "test_source_character_apply_image.gd": [
+    "SKIP UICharacter Apply sprite needs the authenticated private source"
+  ],
+  "test_source_character_entry.gd": [
+    "SKIP Character requires pinned private source files"
+  ],
+  "test_source_character_panel_state.gd": [
+    "SKIP licensed original fresh player read"
+  ],
+  "test_source_character_selectables.gd": [
+    "SKIP Character selectables need the private source layout contract"
+  ],
+  "test_source_character_text.gd": [
+    "SKIP UICharacter text needs the authenticated private materials"
+  ],
+  "test_source_cloth_presentation.gd": [
+    "SKIP 原布衣、原站立帧及 UV 为私有输入。"
+  ],
+  "test_source_equipment_transaction.gd": [
+    "SKIP 实际 ClickMoveTest 装备合同需要未公开作者资源。"
+  ],
+  "test_source_gamepad_combat_entry.gd": [
+    "SKIP 原窗口与原技能、HUD 需要私有素材；仅运行边沿合同。"
+  ],
+  "test_source_gamepad_movement_entry.gd": [
+    "SKIP 真实场景移动与暂停需要私有素材；仅验源动作合同。"
+  ],
+  "test_source_gamepad_pause_navigation.gd": [
+    "SKIP 真实 Pause 与 Settings 需要私有源资源；仅验原手柄方向合成合同。"
+  ],
+  "test_source_gameplay_click_entry.gd": [
+    "SKIP 正式 F5 点击：需要锁定素材与原暂停合同"
+  ],
+  "test_source_interact_entry.gd": [
+    "SKIP：实际交互与 HUD 需要私有原场景和字体；已检查独立动作边沿。"
+  ],
+  "test_source_inventory_bags.gd": [
+    "SKIP Inventory live F5 requires pinned private source files"
+  ],
+  "test_source_inventory_entry.gd": [
+    "SKIP live inventory source graphics require private locked contracts."
+  ],
+  "test_source_journal_entry.gd": [
+    "SKIP source Journal graphics require the pinned private contracts"
+  ],
+  "test_source_menu_glyph_atlas.gd": [
+    "SKIP 私有原 Alpha8 字形与原生绘制"
+  ],
+  "test_source_menu_tiled_image.gd": [
+    "SKIP 私有原暂停菜单图集"
+  ],
+  "test_source_pause_entry_column.gd": [
+    "SKIP 私有原菜单图集和预制体布局"
+  ],
+  "test_source_pause_focus_view.gd": [
+    "SKIP 私有原菜单素材"
+  ],
+  "test_source_pause_root.gd": [
+    "SKIP locked private pause source"
+  ],
+  "test_source_pause_text_line.gd": [
+    "SKIP 原暂停标题字体"
+  ],
+  "test_source_resource_bars.gd": [
+    "SKIP 原 HUD 资源条需要私有原场景、字体与 GUI 图集。"
+  ],
+  "test_source_spear_presentation.gd": [
+    "SKIP 原主角长矛图及正式关卡合同需要私有输入。"
+  ]
+}

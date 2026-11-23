@@ -6,6 +6,7 @@ const Gear := preload("res://game_core/inventory/source_character_equipment.gd")
 const Point := preload("res://game_core/input/mouse_point_actions.gd")
 var checks := 0
 var failures := 0
+var received_item_uses: Array[Dictionary] = []
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, label: String) -> void:
@@ -53,6 +54,12 @@ func run() -> void:
 	check(startup!=null and startup.pause_root!=null,"normal startup opens exact source-owner path")
 	if startup==null or startup.pause_root==null: finish(); return
 	var shell := startup.pause_root
+	check(shell._inventory_item_use.is_null(),"常规 F5 不冒充已经安装正式的物品使用或对话")
+	var receiver := func(request: Dictionary):
+		received_item_uses.append(request.duplicate())
+		return true
+	check(shell.bind_inventory_item_use(receiver) and not shell.bind_inventory_item_use(receiver),
+		"隔离试验仅安装一次请求接收方，不代替原对话")
 	var actor: Node = startup.scene.actor
 	var owner := startup.primary_bag_owner(actor)
 	var neutral := Vector2(470,245)
@@ -77,7 +84,8 @@ func run() -> void:
 	check(panel.action_rect(31)==Rect2(864.5,340,96,96) and panel.action_rect(33)==Rect2(864.5,548,96,96)
 		and startup.player.inventory_fresh_stats(actor)==[100,40,10,6,6,4,8,4],"original equip geometry and live eight stat values")
 	await tap(KEY_ENTER)
-	check(startup.inventory_bags.entries(owner).is_empty(),"empty submit does not perform item use")
+	check(startup.inventory_bags.entries(owner).is_empty() and received_item_uses.is_empty(),
+		"原空格提交不派发使用请求")
 	await tap(KEY_UP)
 	check(panel.selected_action()==36 and panel.model.category==0 and not panel.cursor_rect().has_area(),
 		"auto navigation from first grid button enters category but cursor not installed there")
@@ -91,7 +99,17 @@ func run() -> void:
 	move(cat_centre)
 	await process_frame
 	await process_frame
-	check(panel.selected_action()==3 and panel.model.category==1,"category hover never selects or changes category")
+	check(panel.selected_action()==38 and panel.model.category==1 and not panel.cursor_rect().has_area(),
+		"主动 UI Point 将真实分类按钮设为焦点，但悬停不执行分类切换")
+	move(Vector2(400,500))
+	await process_frame
+	await process_frame
+	check(panel.selected_action()==38 and panel.model.category==1,"移到非按钮区域不会切换分类或清除当前焦点")
+	await tap(KEY_ENTER)
+	check(panel.model.category==2 and panel.selected_action()==38,"离开分类按钮后 Submit 仍激活同一焦点")
+	var previous_category := panel.action_rect(37).get_center()*.5
+	button(MOUSE_BUTTON_LEFT,true,previous_category);button(MOUSE_BUTTON_LEFT,false,previous_category)
+	check(panel.model.category==1 and panel.selected_action()==37,"点击前一分类仅用于还原后续用例状态")
 	button(MOUSE_BUTTON_LEFT,true,cat_centre);button(MOUSE_BUTTON_LEFT,false,neutral)
 	check(panel.selected_action()==38 and panel.model.category==1,"pointer down focuses; release outside doesn't activate")
 	button(MOUSE_BUTTON_LEFT,true,cat_centre);button(MOUSE_BUTTON_LEFT,false,cat_centre)
@@ -116,8 +134,53 @@ func run() -> void:
 		await exercise_details(shell,panel)
 	else:
 		print("SKIP Item Details needs the private locked overlay contract.")
+	var gear := startup.player.source_equipment()
+	var spear := gear.item_for_guid(Gear.SPEAR)
+	var weapon := panel.action_rect(31).get_center()*.5
+	button(MOUSE_BUTTON_LEFT,true,weapon)
+	check(received_item_uses.is_empty(),"装备格只按下不使用")
+	button(MOUSE_BUTTON_LEFT,false,neutral)
+	check(received_item_uses.is_empty(),"装备格松到别处不使用")
+	button(MOUSE_BUTTON_LEFT,true,weapon);button(MOUSE_BUTTON_LEFT,false,weapon)
+	check(received_item_uses==[{"item":spear,"actor":actor,"target":actor,"location":Inventory.Bag.Location.EQUIPMENT}]
+		and gear.equipped(Gear.Slot.WEAPON)==spear and startup.inventory_bags.entries(owner).is_empty(),
+		"原已装备真实长矛只派发一次 Equipment 使用请求，无卸装或转包")
+	# 原 UIInventory 只在显示时从控制角色变更事件重读背包、装备和属性。
+	# 事务直接从正式角色服务触发，不是新加的玩家换装按钮。
+	check(panel.selected_action()==31 and startup.inventory_bags.try_unequip(owner,gear,Gear.Slot.WEAPON)==Gear.Result.VALID,
+		"装备格选中时先对实际主角执行原卸下事务")
+	button(MOUSE_BUTTON_LEFT,true,weapon);button(MOUSE_BUTTON_LEFT,false,weapon)
+	check(received_item_uses.size()==2 and received_item_uses[1].item==spear,
+		"控制角色事件前原装备格点击仍读取画面中的旧物品")
+	check(startup.player.set_current_controlled(false),
+		"解除实际控制，原 InventoryMenuContext 仍使用主角回退")
+	check(panel.selected_action()==31 and panel._gear_placeholders[0].visible and not panel._gear_icons[spear].visible
+		and (shell.item_details==null or not shell.item_details.visible),
+		"原装备槽刷新为空但保留焦点，过期详情随空槽隐藏")
+	button(MOUSE_BUTTON_LEFT,true,weapon);button(MOUSE_BUTTON_LEFT,false,weapon)
+	check(received_item_uses.size()==2,"刷新后空装备格不再派发")
+	button(MOUSE_BUTTON_LEFT,true,cat_centre);button(MOUSE_BUTTON_LEFT,false,cat_centre)
+	check(panel.model.cell(0).get("item")==spear,"原本人背包投影显示刚卸下的实物")
+	check(startup.inventory_bags.try_equip(owner,gear,spear)==Gear.Result.VALID
+		and startup.player.set_current_controlled(true) and panel.model.category==2
+		and panel.model.cell(0).is_empty(),"实际重新控制仍保留 Gear 分类并清空已归还的行")
+	move(weapon)
+	await process_frame
+	await process_frame
+	check(panel.selected_action()==31 and (shell.item_details==null or
+		(shell.item_details.visible and shell.item_details.shown_type==0)),
+		"实际长矛回到装备栏，详情重新显示源描述")
+	check(panel._gear_icons[spear].visible and not panel._gear_placeholders[0].visible
+		and panel._stat_values.size()==8 and panel._stat_values[0]._line.text=="100",
+		"原物品图恢复，属性摘要保持在同一真实主角")
+	received_item_uses.resize(1)
 	var prior_panel_id := panel.get_instance_id()
+	var refresh := Callable(panel,"_on_control_changed")
+	check(startup.player.controlled_character_changed.is_connected(refresh),
+		"只有显示中的原物品菜单监听当前控制")
 	move(Vector2(400,500));await tap(KEY_ESCAPE)
+	check(not startup.player.controlled_character_changed.is_connected(refresh),
+		"实际返回同一个暂停菜单时立即退订")
 	check(shell.stack.top()==menu and menu.selected_action()==1 and paused,"Back restores same Pause Items focus")
 	if shell.item_details!=null: check(not shell.item_details.visible,"Back closes the shared overlay")
 	await tap(KEY_ENTER)
@@ -176,7 +239,15 @@ func exercise_details(shell: CanvasLayer,panel: Inventory) -> void:
 	move(panel.action_rect(36).get_center()*.5)
 	await process_frame
 	await process_frame
-	check(details.visible and panel.selected_action()==31,"off-slot and category hover do not deselect")
+	check(not details.visible and panel.selected_action()==36 and panel.model.category==2,
+		"主动 Point 命中类别触发原装备格失焦并收起详情，不切换当前分类")
+	move(weapon)
+	await process_frame
+	await process_frame
+	move(Vector2(400,500))
+	await process_frame
+	await process_frame
+	check(details.visible and panel.selected_action()==31,"离开按钮移到空白不会清除武器焦点")
 	await tap(KEY_DOWN)
 	check(panel.selected_action()==32 and not details.visible and details.shown_type==-1,
 		"keyboard deselect and empty equipment publish close")
@@ -249,8 +320,11 @@ func exercise_known_bag_items(startup: Boot,shell: CanvasLayer,actor: Node,owner
 			"原生渲染中实际长矛从装备格进入第一背包格")
 		check(source_colour(pixels,Rect2i(517,196,10,17),[Color.WHITE]),"原生渲染中右下角数量字形存在")
 	await tap(KEY_ENTER)
+	check(received_item_uses.size()==2
+		and received_item_uses.back()=={"item":spear,"actor":actor,"target":actor,"location":Inventory.Bag.Location.BAG},
+		"原背包第一格提交同一真实长矛，BAG 位置不混作装备栏")
 	check(startup.inventory_bags.count(owner,spear)==1 and gear.equipped(Gear.Slot.WEAPON)==null,
-		"这件原始物品无 Use 换装效果，确认不消耗、不偷接穿戴入口")
+		"请求使用没有结束回执，确认不消耗、不偷接穿戴入口")
 	move(Vector2(470,245));await tap(KEY_ESCAPE);await tap(KEY_ESCAPE)
 	check(not paused and startup.inventory_bags.try_equip(owner,gear,spear)==Gear.Result.VALID
 		and gear.equipped(Gear.Slot.WEAPON)==spear and startup.inventory_bags.entries(owner).is_empty()

@@ -29,10 +29,12 @@ func key(id: Key,down: bool) -> void:
 
 func click(point: Vector2) -> void:
 	var motion:=InputEventMouseMotion.new()
+	motion.device=0
 	motion.position=point; motion.global_position=point; motion.relative=Vector2.ONE
 	root.push_input(motion,true)
 	for down in [true,false]:
 		var e:=InputEventMouseButton.new()
+		e.device=0
 		e.position=point; e.global_position=point; e.pressed=down; e.button_index=MOUSE_BUTTON_LEFT
 		root.push_input(e,true)
 
