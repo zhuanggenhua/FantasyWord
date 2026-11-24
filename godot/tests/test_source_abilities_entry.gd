@@ -59,6 +59,9 @@ func visible_slots(hud: CanvasLayer) -> Array:
 		if hud._entries[i].visible: ids.append(i+1)
 	return ids
 
+func cursor(panel: Control) -> Rect2:
+	return panel.call("slot_cursor_rect") if panel.has_method("slot_cursor_rect") else Rect2()
+
 func run() -> void:
 	var dir:=OS.get_environment("FORMAL_PAUSE_SOURCE")
 	if dir.is_empty() or not FileAccess.file_exists(dir.path_join("abilities-layout.json")):
@@ -130,6 +133,7 @@ func run() -> void:
 				var c:=image.get_pixel(x,y)
 				if c.r<.30 and c.g<.21 and c.b<.25: ink+=1
 		check(ink>20,"原生文字像素存在，不只是数据合同")
+	check(cursor(panel)==Rect2(),"原列表条目不是技能栏光标目标")
 	await tap(KEY_DOWN)
 	check(panel.selected_action()==12 and panel._description.truncated
 		and panel._spec.abilities["20010"].damage.size()==14,"喷火显示原文本并按可视区域省略，保留 14 条单位效果")
@@ -137,18 +141,29 @@ func run() -> void:
 	check(panel.equip_from==12 and panel.selected_action()==21
 		and panel._equip_art[0].visible and panel._equip_art[1].visible
 		and not panel._allows(12),"无活动 UI Point 时进入选槽，箭头和禁用列表出现")
+	check(cursor(panel)==Rect2(977,824,112,112),"键盘确认后显示第一槽的原样式光标，即使该槽不在指针下")
+	var indicator: Control=panel.get("_slot_cursor") if panel.has_method("slot_cursor_rect") else null
+	check(indicator!=null and indicator.get("_texture")==panel._texture
+		and indicator.get("_region")==Rect2(128,panel._texture.get_height()-64,16,16)
+		and indicator.modulate==Color.WHITE and not indicator.get("_sliced")
+		and indicator.mouse_filter==Control.MOUSE_FILTER_IGNORE
+		and panel.reference_hit(Vector2(978,825))==0,
+		"原 Selection Indicator 用验证过的 GUI 贴图、简单白色图像，不扩大五槽点击范围")
 	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==panel and panel.equip_from==0 and panel.selected_action()==12
 		and not panel._equip_art[0].visible,"选槽 Esc 只取消分配，回原项而不弹菜单")
+	check(cursor(panel)==Rect2(),"取消选槽，回到原列表时归还光标")
 	await tap(KEY_UP); await tap(KEY_ENTER)
 	for i in range(4): await tap(KEY_RIGHT)
 	check(panel.equip_from==11 and panel.selected_action()==25,"原五格可用键盘导航")
+	check(cursor(panel)==Rect2(1425,824,112,112),"键盘焦点进入空第五槽，光标与原图标显示状态无关")
 	await tap(KEY_ENTER)
 	check(codes(owner)==[0,20010,0,0,20001] and not panel._bar_icons[0].visible
 		and panel._bar_icons[4]._texture==panel._attack and panel.equip_from==0,
 		"正式菜单换槽更新真实能力，不创建第二份栏位")
 	check(visible_slots(hud)==[2,5] and hud._entries[4].position==Vector2(968,957)
 		and hud._icons[4]._texture==hud._attack,"菜单改槽同帧更新其后方 HUD；逻辑第 5 槽紧排在第 2 槽后")
+	check(cursor(panel)==Rect2(),"完成换槽回原列表，旧槽光标消失")
 	var passive:=panel.action_rect(2).get_center()*.5
 	point(passive)
 	await process_frame
@@ -202,6 +217,7 @@ func run() -> void:
 	point(third)
 	await process_frame
 	await process_frame
+	check(cursor(panel)==Rect2(1201,824,112,112),"鼠标实际进入空第三槽后焦点光标同步")
 	click(third)
 	check(codes(owner)==[0,0,20010,0,20001] and panel.equip_from==0 and panel.selected_action()==23,
 		"点击目标槽装入喷火且退出选择")
@@ -209,6 +225,7 @@ func run() -> void:
 	click(third)
 	check(codes(owner)==[0,0,0,0,20001] and owner.active_ability_menu_codes()==[20001,20010],
 		"未在选择态点击槽位清除；不撤销已持有技能")
+	check(cursor(panel)==Rect2(1201,824,112,112),"清空槽位不取消实际按钮焦点")
 	point(Vector2(469,240))
 	await tap(KEY_ESCAPE)
 	check(shell.stack.top()==pause and pause.selected_action()==4 and paused,"Back 返回 Pause，恢复真实 Abilities 入口焦点")

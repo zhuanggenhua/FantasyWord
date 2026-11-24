@@ -15,3 +15,13 @@ Button 和目标 Image 可射线命中，`UIAbilityCategory.OnSelect` 只换说�
 分类上不会切换列表或改写快捷槽；离开按钮后保留已选中的分类，按确认或实际点击才
 调用原分类选择回调。已在正式 F5 → Pause → Abilities 验证主动与被动说明，仍未验收
 Unity 同帧截图、全局指针射线优先级或原输入模块同帧调度。
+
+## 快捷栏焦点光标
+
+锁定同一提交的 `User Interface.prefab` 中 `Selection Indicator`、
+`UINavigationCursor.cs` 与 `Ability Bar Entry.prefab`。只有五个快捷栏按钮
+配置了 ItemNavigationCursorStyle；列表和分类不使用该光标。选中槽位后，即使
+槽内为空，也显示原 GUI 图集 Sprite 1581307299：白色、简单图像、不可射线命中，
+由 96×96 的按钮居中外扩至 112×112。键盘换槽、鼠标实际进入槽位与清空当前槽均
+跟随实际焦点；取消键盘选槽或关闭面板不遗留旧光标。复用原已校验 GUI 图集，
+无需重新生成旧布局合同。不改装备规则、槽位点击范围或正式 HUD。

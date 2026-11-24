@@ -12,6 +12,14 @@ const CONTRACT_SHA := "cf9df62db3bf77ca0a8285f1af6cc24af48558f02827c85dbc798ac72
 const SIZE := Vector2(1920,1080)
 const ROW_ACTION := 11
 const SLOT_ACTION := 21
+# ItemNavigationCursorStyle in Unity 31629d53: GUI sprite 1581307299, white,
+# zero position offset and +16 on both size axes. Selection Indicator is a
+# Simple Image (not sliced) and does not receive pointer hits.
+const SLOT_CURSOR_SPRITE := {
+	"rect":{"x":128,"y":48,"width":16,"height":16},
+	"border":{"x":3,"y":3,"z":3,"w":3},
+}
+const SLOT_CURSOR_PADDING := Vector2(16,16)
 const ACTIVE_CATEGORY := 1
 const PASSIVE_CATEGORY := 2
 
@@ -31,6 +39,7 @@ var _category_art: Array[Draw] = []
 var _row_icons: Array[Draw] = []
 var _row_labels: Array[Text] = []
 var _bar_icons: Array[Draw] = []
+var _slot_cursor: Draw
 var _equip_art: Array[Draw] = []
 var _labels: Array[Text] = []
 var _rows: Array[int] = []
@@ -154,6 +163,8 @@ func bind(contract: Dictionary, pause: Dictionary, dir: String, silver_path: Str
 		_description=null
 		return false
 	_center.add_child(_description)
+	_slot_cursor=_picture(_center,Rect2(),_texture,SLOT_CURSOR_SPRITE,0)
+	_slot_cursor.hide()
 	# Verify every reachable character row/font before installing focus/input.
 	for def: Dictionary in contract.abilities.values():
 		if not _description.show_ability(def): return false
@@ -223,6 +234,8 @@ func fit_viewport(viewport: Vector2, screen_pixels := 1.0) -> void:
 
 func viewport_to_design(p: Vector2) -> Vector2: return p/_size_scale
 func selected_action() -> int: return _focus
+func slot_cursor_rect() -> Rect2:
+	return _slot_cursor.get_rect() if _slot_cursor!=null and _slot_cursor.visible else Rect2()
 func allows_stack_close() -> bool: return true
 func try_handle_back_request() -> bool:
 	if not _active or equip_from==0: return false
@@ -360,6 +373,14 @@ func _sync() -> void:
 		_bar_icons[i].visible=code>0
 		if code>0: _bar_icons[i].show_sprite(_icon_for(code),{},false)
 	for view in _equip_art: view.visible=equip_from!=0
+	# UINavigationCursor reads the selected button, not its icon or which
+	# device selected it. List rows and categories have no cursor target.
+	if _slot_cursor!=null:
+		_slot_cursor.visible=_active and _slot_action(_focus)
+		if _slot_cursor.visible:
+			var box: Rect2=_targets[_focus]
+			_slot_cursor.position=box.position-SLOT_CURSOR_PADDING*.5
+			_slot_cursor.size=box.size+SLOT_CURSOR_PADDING
 
 func _set_row_tint(index: int,state: String) -> void:
 	if _row_colors.get(index)==state: return
