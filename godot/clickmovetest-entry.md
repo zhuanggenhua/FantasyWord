@@ -110,6 +110,28 @@ FORMAL_TRAINER_ATTACK_DEATH_ANIMATION、FORMAL_TRAINER_ATTACK_DEATH_MATERIAL（�
 Unity 正式 GameManager 启动全链、SampleScene、其他战斗与死亡副系统、存读档、过场切换、Unity
 原生同帧画面和构建配置覆盖仍未验收。原图和行为测试不等于整个项目迁移完毕。
 
+### 一次准备、重复运行（私有原素材）
+
+在 Godot 迁移仓库根目录执行下列命令；`PYTHON` 是带 PyYAML 与 fontTools 的 Python 3
+（例如 `python` 或 Windows 的 `py -3`），`UNITY` 是有授权且含锁定提交
+`31629d53a110dd4c87d4c85e6ad5a387fbafb931` 的本地 Unity 检出。请先按原素材许可准备
+本地的 Git LFS 文件。尖括号内的目录是参数示例，不是命令的一部分。
+
+```text
+PYTHON godot/tools/clickmovetest_private.py prepare --unity "<UNITY>" --out "<仓库外尚不存在的私有目录>" --acknowledge-license
+PYTHON godot/tools/clickmovetest_private.py run --inputs "<同一私有目录>" --godot "<Godot 可执行文件>"
+```
+
+`prepare` 读取锁定 Git 对象以及 SHA-256、大小都吻合的本地 LFS 文件；不联网拉取素材、
+不修改 Unity 或 Godot 检出、不覆盖已有目录。链接工作树也算仓库内。自定义本地 LFS
+对象库可加 `--lfs-storage` 指定含 `objects` 的目录；无匹配输入即停止，不替换原始内容。
+准备集包含正式地形和碰撞、主角和训练假人、长矛和布衣、原菜单及既有受击素材。
+不要复制私有目录到仓库、网盘共享区或发布包。
+
+`run` 直接运行正常主场景；用 `--editor` 则将相同的原素材配置继承到编辑器，按 F5
+启动。用 `--smoke` 运行无头启动检查并自动退出。无头通过只证明正常入口可启动，不是纹理、
+音频、视觉或整项迁移验收，也不会启用正式磁盘 Save/Continue。
+
 ## 原图移动预览
 
 使用 `godot --path godot --script res://tools/run_clickmovetest_source_preview.gd -- --source-preview`。
