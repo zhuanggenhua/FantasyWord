@@ -320,8 +320,11 @@ func _move_selected(view: Control) -> void:
 	if view is View: view.move_vertical(_nav.y)
 	elif view is Settings or view is Character or view is Inventory or view is Abilities: view.move_selection(_nav)
 
-func _activate(view: Control, action: int) -> void:
-	if view is Settings or view is Character or view is Inventory or view is Abilities:
+func _activate(view: Control, action: int, from_submit := false) -> void:
+	if view is Abilities or view is Inventory:
+		view.activate(action,from_submit)
+		return
+	if view is Settings or view is Character:
 		view.activate(action)
 		return
 	if action==1 and not _inventory_layout.is_empty():
@@ -361,4 +364,4 @@ func _process(_dt: float) -> void:
 		_move_selected(view)
 		_next_nav_us=now+100000
 	if submit==view.get_instance_id() and view.selected_action()!=0:
-		_activate(view,view.selected_action())
+		_activate(view,view.selected_action(),true)

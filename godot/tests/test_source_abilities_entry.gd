@@ -181,6 +181,24 @@ func run() -> void:
 	check(panel.category==2 and not panel._row_icons[0].visible and panel.selected_action()==2
 		and panel._description.displayed_lines[0].begins_with("Passive abilities"),
 		"移走后确认才切换被动类别，保留原说明")
+	# Locked Ability Category prefab uses 14×14 atlas crops: pressed x=121,
+	# selected x=105, both y=1 in Unity's bottom-up atlas coordinates.
+	var pressed_rect:=Rect2(121,panel._texture.get_height()-15,14,14)
+	var selected_rect:=Rect2(105,panel._texture.get_height()-15,14,14)
+	check(panel._category_art[1]._region==pressed_rect,
+		"键盘 Submit 执行分类后显示 Unity Button 原按下图")
+	await create_timer(.14,true,false,true).timeout
+	check(paused and panel._category_art[1]._region==selected_rect,
+		"暂停期间按下图仍按不缩放时间回到焦点图")
+	for down in [true,false]:
+		var confirm:=InputEventJoypadButton.new()
+		confirm.button_index=JOY_BUTTON_A
+		confirm.pressed=down
+		root.push_input(confirm,true)
+	await process_frame
+	await process_frame
+	check(panel._category_art[1]._region==pressed_rect,
+		"同一正式 UI Submit 路由也响应手柄南键")
 	if panel.category!=2:
 		await tap(KEY_ESCAPE) # 仅红测恢复：提交仍命中原技能时先退出装备模式。
 		click(passive)
@@ -207,6 +225,8 @@ func run() -> void:
 	click(active)
 	check(panel.category==1 and panel._row_icons[0].visible,
 		"普通鼠标点击主动分类仍走原按钮回调")
+	check(panel._category_art[0]._region==selected_rect,
+		"鼠标同格释放恢复原选中图，不使用 Submit 的停留时间")
 	var fire:=panel.action_rect(12).get_center()*.5
 	point(fire)
 	await process_frame

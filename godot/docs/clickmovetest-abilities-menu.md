@@ -25,3 +25,12 @@ Unity 同帧截图、全局指针射线优先级或原输入模块同帧调度�
 由 96×96 的按钮居中外扩至 112×112。键盘换槽、鼠标实际进入槽位与清空当前槽均
 跟随实际焦点；取消键盘选槽或关闭面板不遗留旧光标。复用原已校验 GUI 图集，
 无需重新生成旧布局合同。不改装备规则、槽位点击范围或正式 HUD。
+
+## 分类确认的按下反馈
+
+原 `Ability Category.prefab` 的按钮使用 SpriteSwap 和 0.1 秒
+`m_FadeDuration`。按键盘或手柄确认时，依
+[uGUI Button.OnSubmit](https://github.com/Unity-Technologies/uGUI/blob/main/com.unity.ugui/Runtime/UGUI/UI/Core/Button.cs#L144-L167)
+的顺序先切换实际分类，再显示原按下图；用不缩放时间恢复当前焦点图。
+鼠标仍在按下时显示按下图，释放后立即恢复，不复用确认时钟。
+进入选槽会禁用列表，快捷栏按钮不设状态切图，两者不补分类反馈。

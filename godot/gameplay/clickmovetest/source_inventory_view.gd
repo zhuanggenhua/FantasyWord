@@ -14,6 +14,7 @@ const SIZE := Vector2(1920,1080)
 const GEAR := 31
 const CATEGORY := 36
 const LAST := 39
+const CategorySubmit := preload("res://gameplay/clickmovetest/source_category_submit_feedback.gd")
 var model := Bag.new()
 var _layout: Dictionary
 var _background: Tiled
@@ -31,6 +32,7 @@ var _screen_scale := 1.0
 var _focus := 0
 var _hover := 0
 var _pressed := 0
+var _category_submit := CategorySubmit.new()
 var _gear: Gear
 var _control_changed: Signal
 var _resolve_actor: Callable
@@ -289,6 +291,7 @@ func _select(action: int) -> void:
 	if _focus==action:
 		_sync()
 		return
+	_category_submit.clear()
 	if _focus>=GEAR and _focus<CATEGORY:
 		item_focus_changed.emit(-1)
 	_focus=action
@@ -311,7 +314,7 @@ func _sync() -> void:
 	for i in range(4):
 		var action := CATEGORY+i
 		var sprite := "category_active" if i==model.category else "category_normal"
-		if _pressed==action: sprite="m_PressedSprite"
+		if _pressed==action or _category_submit.pressed==action: sprite="m_PressedSprite"
 		elif _focus==action: sprite="m_SelectedSprite"
 		elif _hover==action: sprite="m_HighlightedSprite"
 		_category_art[i].show_sprite(_texture,_layout.sprites[sprite],true)
@@ -319,6 +322,7 @@ func _sync() -> void:
 func sample_point(hover: int, hit: int, point_active: bool) -> void:
 	if not _active: return
 	var entered := _hover!=hover
+	_category_submit.interrupt_pointer(_hover,hover)
 	_hover=hover
 	# 原格子的 IPointerEnter 会选中按钮；分类没有此回调。
 	# 原 InputSystem.Update 仍会按独立的 UI Point 射线选中分类 Button，
@@ -341,6 +345,7 @@ func pointer_release(action: int) -> int:
 
 func set_pressed(action: int) -> void:
 	_pressed=action if _active and _targets.has(action) else 0
+	if _pressed!=0 and _pressed==_category_submit.pressed: _category_submit.clear()
 	_sync()
 
 ## 只绑定显式拥有原物品使用生命周期的接收方。不用点击穿脱代替 Item.Use。
@@ -350,7 +355,7 @@ func bind_item_use(receiver: Callable) -> bool:
 	return true
 
 
-func activate(action: int) -> bool:
+func activate(action: int, from_submit := false) -> bool:
 	if not _active or action<1 or action>LAST: return false
 	if action<CATEGORY:
 		if not _request_item_use.is_valid(): return false
@@ -362,6 +367,7 @@ func activate(action: int) -> bool:
 		return _request_item_use.call(request)==true
 	if not model.set_category(action-CATEGORY): return false
 	_refresh_bag_graphics()
+	if from_submit and _active and is_inside_tree(): _category_submit.start(action,get_tree(),_sync)
 	_sync()
 	return true
 

@@ -22,6 +22,7 @@ const SLOT_CURSOR_SPRITE := {
 const SLOT_CURSOR_PADDING := Vector2(16,16)
 const ACTIVE_CATEGORY := 1
 const PASSIVE_CATEGORY := 2
+const CategorySubmit := preload("res://gameplay/clickmovetest/source_category_submit_feedback.gd")
 
 var _owner: Player
 var _spec: Dictionary
@@ -53,6 +54,7 @@ var _point_active := false
 var category := ACTIVE_CATEGORY
 var equip_from := 0
 var _pressed := 0
+var _category_submit := CategorySubmit.new()
 var _hover := 0
 var _focus := 0
 
@@ -248,6 +250,7 @@ func apply_stack_interactions(active: bool) -> void:
 	_pressed=0
 	_hover=0
 	if not active:
+		_category_submit.clear()
 		equip_from=0
 		_focus=0
 	_sync()
@@ -283,6 +286,7 @@ func sample_point(hover: int, hit: int, active: bool) -> void:
 	_point_active=active
 	if not _active: return
 	var entered := hover!=_hover
+	_category_submit.interrupt_pointer(_hover,hover)
 	_hover=hover
 	# 分类没有 PointerEnter 回调；主动 UI Point 的射线命中会触发
 	# UIAbilityCategory.OnSelect 显示说明，不会替它执行 SelectCategory。
@@ -304,10 +308,12 @@ func pointer_release(action: int) -> int:
 
 func set_pressed(action: int) -> void:
 	_pressed=action if _active and _allows(action) else 0
+	if _pressed!=0 and _pressed==_category_submit.pressed: _category_submit.clear()
 	_sync()
 
 func _select(action: int) -> void:
 	if _focus==action or not _allows(action): return
+	_category_submit.clear()
 	_focus=action
 	if _row_action(action):
 		_description.show_ability(_definition(_rows[action-ROW_ACTION]))
@@ -317,11 +323,14 @@ func _select(action: int) -> void:
 		_description.show_message(_spec.layout.categories[action-1].description)
 	_sync()
 
-func activate(action: int) -> bool:
+func activate(action: int, from_submit := false) -> bool:
 	if not _active or not _allows(action): return false
 	if action==ACTIVE_CATEGORY or action==PASSIVE_CATEGORY:
 		category=action
 		category_changed.emit(category)
+		# uGUI Button.OnSubmit presses after onClick, and only if still enabled.
+		# Rows disable on assignment and slots have no Button transition.
+		if from_submit and _active and is_inside_tree(): _category_submit.start(action,get_tree(),_sync)
 		_sync()
 		return true
 	if _row_action(action):
@@ -353,7 +362,7 @@ func _sync() -> void:
 	for i in range(_category_art.size()):
 		var action:=i+1
 		var sprite: String="selected" if action==category else "unselected"
-		if _pressed==action: sprite="m_PressedSprite"
+		if _pressed==action or _category_submit.pressed==action: sprite="m_PressedSprite"
 		elif _focus==action: sprite="m_SelectedSprite"
 		elif _hover==action: sprite="m_HighlightedSprite"
 		_category_art[i].show_sprite(_texture,layout.category_sprites[sprite],true)

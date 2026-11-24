@@ -93,6 +93,14 @@ func run() -> void:
 	check(panel.selected_action()==37 and panel.model.category==0,"category focus does not change active category")
 	await tap(KEY_ENTER)
 	check(panel.model.category==1,"explicit submit changes actual projection")
+	# Original Category Entry atlas pressed x=121 and selected x=105; both
+	# use an untrimmed 14×14 crop starting at Unity bottom-up y=1.
+	var pressed_rect:=Rect2(121,panel._texture.get_height()-15,14,14)
+	var selected_rect:=Rect2(105,panel._texture.get_height()-15,14,14)
+	check(panel._category_art[1]._region==pressed_rect,"original backpack category shows keyboard confirmation sprite")
+	await create_timer(.14,true,false,true).timeout
+	check(paused and panel._category_art[1]._region==selected_rect,
+		"backpack confirmation restores focus with the gameplay clock paused")
 	await tap(KEY_DOWN)
 	check(panel.selected_action()==3 and panel.model.selected==2,"category down uses uGUI rect-edge score to source grid")
 	var cat_centre := panel.action_rect(38).get_center()*.5
