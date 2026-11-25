@@ -1,5 +1,6 @@
 extends RefCounted
 ## Workbench-only mapping of the original Torso frame data to EquipmentRenderer's Cloak layer.
+const CRAFT_FRAMES := {"AnvilWorking":6,"JewelryWorkshopWorking":11,"LaboratoryWorking":11,"WoodworkBenchWorking":6}
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const EXPECTED_OPTIONS := ["12a1ff95e55e6e945952dd3f3773984b", "28bc3987db4b748408e99b8f8f982f42"]
 const ACTION_FRAMES := {"Idle": 16, "Walk": 4, "Attack": 4, "Dmg": 4}
@@ -12,7 +13,7 @@ var _textures: Dictionary
 var _material: ShaderMaterial
 var _playback: Node
 
-func load_source(directory: String, with_slash := false, with_spin := false, with_charge := false, with_moves := false) -> bool:
+func load_source(directory: String, with_slash := false, with_spin := false, with_charge := false, with_moves := false, with_gather := false, with_craft := false) -> bool:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("cloak.json")))
 	if not data is Dictionary or data.get("source_commit") != SOURCE:
 		return false
@@ -58,6 +59,8 @@ func load_source(directory: String, with_slash := false, with_spin := false, wit
 	if with_moves:
 		counts["Dmg2"] = 4
 		counts["Jump"] = 4
+	if with_gather:
+		for key in ["Harvest","Chopping","Mining"]: counts[key] = 6
 	for action in counts:
 		var rows: Variant = input_frames.get(action)
 		var count: int = counts[action]
@@ -68,21 +71,23 @@ func load_source(directory: String, with_slash := false, with_spin := false, wit
 			if not row is Array or row.size() != 4 or not _bounded(row[0], count) or not _bounded(row[1], 4) or not _bounded(row[2], 4) or not _bounded(row[3], 5):
 				return false
 			var key := Vector2i(int(row[0]), int(row[1]))
-			if by_key.has(key) or (action in ["SlashAttack","Dmg2","Jump"] and (row[1] != row[2] or row[3] != 0)):
+			if by_key.has(key) or (action in ["SlashAttack","Dmg2","Jump","Harvest","Chopping","Mining"] and (row[1] != row[2] or row[3] != 0)):
 				return false
 			by_key[key] = Vector2i(int(row[2]), int(row[3]))
 		frames[action] = by_key
-	var same_row_actions := []
-	if with_spin: same_row_actions.append("SpinDie")
-	if with_moves: same_row_actions.append("SoulDie")
-	for action in same_row_actions:
+	var same_row_counts := {}
+	if with_spin: same_row_counts["SpinDie"] = 12
+	if with_moves: same_row_counts["SoulDie"] = 12
+	if with_craft: same_row_counts.merge(CRAFT_FRAMES)
+	for action in same_row_counts:
+		var count: int = same_row_counts[action]
 		var rows: Variant = input_frames.get(action)
-		if not rows is Array or rows.size()!=12: return false
+		if not rows is Array or rows.size()!=count: return false
 		var by_key := {}
-		for label in 12:
+		for label in count:
 			# 四个精灵库共用一行；无躯干区域也按原行 0 / Base。
 			var row: Variant = rows[label]
-			if not row is Array or row.size()!=4 or not _bounded(row[0],12) or row[0]!=label \
+			if not row is Array or row.size()!=4 or not _bounded(row[0],count) or row[0]!=label \
 					or not _bounded(row[1],1) or not _bounded(row[2],1) or not _bounded(row[3],1): return false
 			by_key[Vector2i(label,0)] = Vector2i.ZERO
 		frames[action] = by_key
@@ -120,7 +125,7 @@ func select(index: int) -> void:
 
 func torso_for_sample(action: String, label: int, direction: int) -> Variant:
 	var row := direction
-	if action in ["SpinDie","SoulDie"] or (action=="ChargedAttack" and direction==3): row=0
+	if action in ["SpinDie","SoulDie"] or CRAFT_FRAMES.has(action) or (action=="ChargedAttack" and direction==3): row=0
 	return _frames.get(action, {}).get(Vector2i(label,row))
 
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:

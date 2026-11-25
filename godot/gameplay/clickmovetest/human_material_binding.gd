@@ -48,7 +48,7 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 			if texture == null or texture.get_size() != Vector2(main_spec.size[0],main_spec.size[1]):
 				return _fail("UV atlas does not match the verified action atlas.")
 			var repeat_uv: Variant = data.textures[spec[key]].get("repeat",false)
-			if not repeat_uv is bool or repeat_uv != (action in ["ChargedAttack","Jump","SoulDie"]):
+			if not repeat_uv is bool or repeat_uv != (action in ["ChargedAttack","Jump","SoulDie","Harvest","Chopping","Mining","AnvilWorking","JewelryWorkshopWorking","LaboratoryWorking","WoodworkBenchWorking"]):
 				return _fail("Unexpected wrap mode for authored Human action UV.")
 			maps[key] = texture
 			maps.repeat_uv = repeat_uv

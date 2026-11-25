@@ -8,7 +8,7 @@ import struct
 import subprocess
 import yaml
 
-from extract_formal_human_animation import SOURCE, atlas_name, extract as animations, parse, read
+from extract_formal_human_animation import CRAFT, GATHER, SOURCE, atlas_name, extract as animations, parse, read
 from extract_training_target_animation import documents, extract_target
 
 ROOT = "Assets/GameData/EquipmentSystem/"
@@ -23,8 +23,8 @@ BASE_ACTOR = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 TRAINER = "Assets/Prefabs/Entities/Characters/Enemies/测试-训练假人.prefab"
 
 def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False,
-            include_attack=False, include_death=False, include_slash_attack=False, workbench_spin=False, include_charged=False, workbench_moves=False):
-    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack, workbench_spin=workbench_spin, include_charged=include_charged, workbench_moves=workbench_moves)
+            include_attack=False, include_death=False, include_slash_attack=False, workbench_spin=False, include_charged=False, workbench_moves=False, workbench_gather=False, workbench_craft=False):
+    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack, workbench_spin=workbench_spin, include_charged=include_charged, workbench_moves=workbench_moves, workbench_gather=workbench_gather, workbench_craft=workbench_craft)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab_path = TRAINER if training_target else PREFAB
@@ -105,7 +105,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
         selected = [line for line in block.splitlines() if line.startswith(useful)]
         record = yaml.safe_load("\n".join([block.splitlines()[0]] + [line[2:] for line in selected]))[0]
         spin_die = name == "SpinDie"
-        assert record["frameSize"] == {"x": 32, "y": 32} and record["rowCount"] == (1 if name in ("SpinDie","SoulDie") else (3 if name == "ChargedAttack" else 4))
+        assert record["frameSize"] == {"x": 32, "y": 32} and record["rowCount"] == (1 if name in ("SpinDie","SoulDie") + tuple(CRAFT) else (3 if name == "ChargedAttack" else 4))
         height = 32 * record["rowCount"]
         assert animation["textures"][main]["size"] == [32 * record["framesPerRow"], height]
         # The runtime animation key comes from animationType; the art PNG name alone is not authority.
@@ -119,7 +119,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
             file = main[:-4] + "_" + part + "UV.png"
             ref = record[part.lower() + "UVMap"]
             assert ref["fileID"] == 2800000
-            actual = verify_texture(ROOT + "GeneratedUV/Human/" + file, generated_uv / file, ref["guid"], 0, 0, wrap=0 if name in ("ChargedAttack", "Jump", "SoulDie") else 1)
+            actual = verify_texture(ROOT + "GeneratedUV/Human/" + file, generated_uv / file, ref["guid"], 0, 0, wrap=0 if name in ("ChargedAttack", "Jump", "SoulDie") + GATHER + tuple(CRAFT) else 1)
             assert actual == animation["textures"][main]["size"]
             result[part.lower()] = file
         indexes = set()
@@ -204,8 +204,10 @@ if __name__ == "__main__":
     p.add_argument("--workbench-spin", action="store_true", help="核实原人类工作台的旋转死亡材质帧")
     p.add_argument("--include-charged", action="store_true", help="核实蓄力攻击原帧与两张生成 UV")
     p.add_argument("--workbench-moves", action="store_true", help="核实原工作台的 Dmg2、Jump 和 SoulDie 的生成 UV")
+    p.add_argument("--workbench-gather", action="store_true", help="核实三个原采集动作的生成 UV")
+    p.add_argument("--workbench-craft", action="store_true", help="核实四个制作台动作的生成 UV")
     a = p.parse_args()
-    assert not (a.training_target and (a.include_death or a.include_slash_attack or a.workbench_spin or a.include_charged or a.workbench_moves)), "主角死亡或工作台挥砍选项不适用于训练假人"
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack, a.workbench_spin, a.include_charged, a.workbench_moves)
+    assert not (a.training_target and (a.include_death or a.include_slash_attack or a.workbench_spin or a.include_charged or a.workbench_moves or a.workbench_gather or a.workbench_craft)), "主角死亡或工作台挥砍选项不适用于训练假人"
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack, a.workbench_spin, a.include_charged, a.workbench_moves, a.workbench_gather, a.workbench_craft)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))

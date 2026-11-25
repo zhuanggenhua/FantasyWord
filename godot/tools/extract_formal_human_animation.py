@@ -12,7 +12,13 @@ def parse(raw):
     text = re.sub(r"^--- !u!\d+ &[-\d]+", "---", text, flags=re.M)
     return yaml.safe_load(text)
 def h(value): return zlib.crc32(str(value).encode()) & 0x3fffffff
+GATHER = ("Harvest", "Chopping", "Mining")
+CRAFT = {"AnvilWorking": 6, "JewelryWorkshopWorking": 11, "LaboratoryWorking": 11, "WoodworkBenchWorking": 6}
+
+
 def atlas_name(action):
+    if (action in GATHER or action in CRAFT):
+        return "Human_" + action + ".png"
     return "Slash_Character_human.png" if action == "SlashAttack" else f"Minifantasy_CreaturesHuman{action}.png"
 
 
@@ -40,7 +46,7 @@ def workbench_spin_scope(repo):
 
 
 def extract(repo, textures, include_damage=False, include_charged=False, include_attack=False,
-            include_death=False, include_slash_attack=False, workbench_spin=False, workbench_moves=False):
+            include_death=False, include_slash_attack=False, workbench_spin=False, workbench_moves=False, workbench_gather=False, workbench_craft=False):
     assert not (include_death and workbench_spin)
     include_death = include_death or workbench_spin
     paths = subprocess.check_output(["git", "-c", "core.quotepath=false", "-C", str(repo), "ls-tree", "-r", "--name-only", SOURCE], text=True).splitlines()
@@ -57,19 +63,20 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
         if "AnimatorState" in doc: states.append(doc["AnimatorState"])
     libs = [source(ROOT+f"SpriteLibraries/人类_{d}动画精灵库.asset")["MonoBehaviour"] for d in ("SE","SW","NE","NW")]
     actions = {}; textures_out = {}
-    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()) + (("Attack",) if include_attack else ()) + (("SpinDie",) if include_death else ()) + (("SlashAttack",) if include_slash_attack else ()) + (("Dmg2","Jump","SoulDie") if workbench_moves else ()):
+    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()) + (("Attack",) if include_attack else ()) + (("SpinDie",) if include_death else ()) + (("SlashAttack",) if include_slash_attack else ()) + (("Dmg2","Jump","SoulDie") if workbench_moves else ()) + (GATHER if workbench_gather else ()) + (tuple(CRAFT) if workbench_craft else ()):
         clip_path = ROOT + f"SharedClips/{action}.anim"
         clip = source(clip_path)["AnimationClip"]
         clip_guid = source(clip_path+".meta")["guid"]
         matches = [s for s in states if s["m_Name"] == action]
         assert len(matches)==1 and matches[0]["m_Motion"]["guid"] == clip_guid
-        if action in ("Dmg", "ChargedAttack", "Attack", "SpinDie", "SlashAttack", "Dmg2", "Jump", "SoulDie"):
+        if action in ("Dmg", "ChargedAttack", "Attack", "SpinDie", "SlashAttack", "Dmg2", "Jump", "SoulDie") + GATHER + tuple(CRAFT):
             state = matches[0]
             assert state["m_Speed"] == 1 and state["m_CycleOffset"] == 0
             assert state["m_Transitions"] == [] and state["m_StateMachineBehaviours"] == []
             assert all(state[k] == 0 for k in ("m_SpeedParameterActive", "m_CycleOffsetParameterActive", "m_TimeParameterActive"))
             settings = clip["m_AnimationClipSettings"]
-            assert settings["m_StopTime"] == {"ChargedAttack":0.75,"SpinDie":1.5,"SoulDie":1.5}.get(action,0.5) and settings["m_LoopTime"] == 0
+            assert settings["m_StopTime"] == (CRAFT[action]/8 if action in CRAFT else 0.75 if action in GATHER else {"ChargedAttack":0.75,"SpinDie":1.5,"SoulDie":1.5}.get(action,0.5))
+            assert settings["m_LoopTime"] == int((action in GATHER or action in CRAFT))
         curves = clip["m_FloatCurves"]
         assert len(curves)==1 and curves[0]["attribute"] == "m_SpriteHash" and curves[0]["path"] in ("", None)
         keys = curves[0]["curve"]["m_Curve"]
@@ -90,18 +97,26 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
                 assert len(meta_paths)==1, "必须提供原提交中的逐字 meta"
                 meta_path=meta_paths[0]; sources[meta_path]=hashlib.sha256(meta_raw).hexdigest()
                 png_path=meta_path[:-5]; png=(textures/name).read_bytes()
-                pointer=read(repo,png_path).decode()
+                pinned=read(repo,png_path)
                 sha=hashlib.sha256(png).hexdigest()
-                assert f"oid sha256:{sha}" in pointer and f"size {len(png)}" in pointer
+                if pinned.startswith(b"version https://git-lfs.github.com/spec/v1\n"):
+                    pointer=pinned.decode().splitlines()
+                    assert f"oid sha256:{sha}" in pointer and f"size {len(png)}" in pointer
+                else:
+                    assert png == pinned
                 tex=meta["TextureImporter"]
-                assert tex["spritePixelsToUnits"]==8 and tex["spriteMeshType"]==0 and tex["textureSettings"]["filterMode"]==0
+                assert tex["spritePixelsToUnits"]==8 and tex["spriteMeshType"]==int((action in GATHER or action in CRAFT)) and tex["textureSettings"]["filterMode"]==0
                 records=[x for x in tex["spriteSheet"]["sprites"] if x["internalID"] == ref["fileID"]]
                 assert len(records)==1
                 frame=records[0]; rect=frame["rect"]; pivot=frame["pivot"]
+                if (action in GATHER or action in CRAFT):
+                    assert frame["outline"] == [] and frame["physicsShape"] == []
                 assert rect["width"]==32 and rect["height"]==32 and pivot=={"x":.5,"y":.5}
                 frames.append({"name":frame["name"],"file_id":str(ref["fileID"]),"rect":[rect[k] for k in ("x","y","width","height")],"texture":name})
                 width,height=struct.unpack(">II",png[16:24])
                 textures_out[name]={"sha256":sha,"size":[width,height],"pixels_per_unit":8}
+                if (action in GATHER or action in CRAFT):
+                    textures_out[name]["unity_mesh_type"] = 1
             hashes={h(f"{action}_{i}"):i for i in range(len(items))}
             assert len(hashes)==len(items)
             if expected_hashes is None: expected_hashes=hashes
@@ -117,6 +132,20 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
             assert [k["time"] for k in keys] == [i / 8 for i in range(7)]
             assert labels == [0, 1, 2, 3, 4, 5, 5]
             assert all(len(frames) == 6 for frames in directions)
+        if action in GATHER:
+            assert clip["m_Events"] == []
+            assert [k["time"] for k in keys] == [i/8 for i in range(7)]
+            assert labels == [0,1,2,3,4,5,5]
+            assert all(len(group)==6 for group in directions)
+            assert all(r["rect"] == [col*32,(3-row)*32,32,32] for row, group in enumerate(directions) for col,r in enumerate(group))
+        if action in CRAFT:
+            count = CRAFT[action]
+            assert clip["m_Events"] == []
+            assert [k["time"] for k in keys] == [i/8 for i in range(count+1)]
+            assert labels == [*range(count), count-1]
+            assert len(directions[0]) == count and directions == [directions[0]]*4
+            assert all(r["rect"] == [x*32,0,32,32] for x,r in enumerate(directions[0]))
+            assert textures_out[atlas_name(action)]["size"] == [32*count,32]
         if action in ("Attack", "SlashAttack", "Dmg2", "Jump"):
             assert [k["time"] for k in keys] == [i / 8 for i in range(5)]
             assert labels == [0, 1, 2, 3, 3]
@@ -147,5 +176,7 @@ if __name__=="__main__":
     p.add_argument("--include-slash-attack",action="store_true",help="同时核实原 SlashAttack 四向非循环片段")
     p.add_argument("--workbench-spin", action="store_true", help="只核实原人类工作台的旋转死亡动作")
     p.add_argument("--workbench-moves", action="store_true", help="只验证原工作台的 Dmg2、Jump 与 SoulDie")
-    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack,a.workbench_spin,a.workbench_moves); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    p.add_argument("--workbench-gather", action="store_true", help="核实三个有人类原图的工作台采集动作")
+    p.add_argument("--workbench-craft", action="store_true", help="核实四个原人类制作台动作")
+    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack,a.workbench_spin,a.workbench_moves,a.workbench_gather, a.workbench_craft); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("Human 私有合同：四向来源、所有标签和 PNG 哈希已核验。")

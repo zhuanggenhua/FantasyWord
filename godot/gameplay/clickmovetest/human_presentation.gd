@@ -1,6 +1,7 @@
 extends Node2D
 ## 原 Human Idle/Walk 与可选 Dmg/ChargedAttack/Attack 和经核实拥有者的 SpinDie 的显式私有图集入口；不补造受伤事件。
 const Playback = preload("res://game_core/presentation/directional_sprite_playback.gd")
+const CRAFT_ACTIONS := ["AnvilWorking","JewelryWorkshopWorking","LaboratoryWorking","WoodworkBenchWorking"]
 const Driver = preload("res://game_core/presentation/character_action_animator_driver.gd")
 const Gear = preload("res://game_core/inventory/source_character_equipment.gd")
 const Weapons = preload("res://gameplay/equipment_workbench/weapons_preview.gd")
@@ -25,7 +26,7 @@ static func valid_primary_death(source: Variant) -> bool:
 		and source.get("action_rid")==-2 and source.get("animation_key")=="SpinDie" \
 		and source.get("actor_file_id")=="735002000000000004"
 
-func configure(data: Dictionary, texture_directory: String, workbench_slash := false, workbench_spin := false, workbench_moves := false) -> bool:
+func configure(data: Dictionary, texture_directory: String, workbench_slash := false, workbench_spin := false, workbench_moves := false, workbench_gather := false, workbench_craft := false) -> bool:
 	if sprite != null or not is_inside_tree():
 		return _fail("入口须先进入场景树且只能配置一次。")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE or not data.get("textures") is Dictionary or not data.get("actions") is Dictionary:
@@ -33,6 +34,8 @@ func configure(data: Dictionary, texture_directory: String, workbench_slash := f
 	var admitted := ["Idle", "Walk", "Dmg", "ChargedAttack", "Attack", "SpinDie"]
 	if workbench_slash: admitted.append("SlashAttack")
 	if workbench_moves: admitted.append_array(["Dmg2","Jump","SoulDie"])
+	if workbench_gather: admitted.append_array(["Harvest","Chopping","Mining"])
+	if workbench_craft: admitted.append_array(CRAFT_ACTIONS)
 	if not data.actions.has_all(["Idle", "Walk"]) or data.actions.keys().any(func(key): return key not in admitted):
 		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg/ChargedAttack/Attack/SpinDie。")
 	if data.actions.has("SpinDie"):
@@ -74,7 +77,7 @@ func configure(data: Dictionary, texture_directory: String, workbench_slash := f
 		for records in record.directions:
 			if not records is Array or records.is_empty():
 				return _fail("方向精灵库为空。")
-			if action in ["SpinDie","SoulDie"] and not dirs.is_empty():
+			if (action in ["SpinDie","SoulDie"] or action in CRAFT_ACTIONS) and not dirs.is_empty():
 				# Unity 四个方向库引用同一组 Sprite；换朝向不会换 Sprite 或重复刷新外观。
 				if records != record.directions[0]:
 					return _fail(action+" 方向库未引用同一组原精灵。")

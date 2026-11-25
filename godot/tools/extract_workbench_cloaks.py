@@ -1,7 +1,7 @@
 """生成私有的原披风/人类躯干变体验证合同，不复制贴图。"""
 import argparse, hashlib, json
 from pathlib import Path
-from extract_formal_human_animation import SOURCE, read, parse
+from extract_formal_human_animation import CRAFT, GATHER, SOURCE, read, parse
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("repo", type=Path, help="含锁定提交的 Unity Git 仓库")
@@ -10,6 +10,8 @@ parser.add_argument("--include-slash-attack", action="store_true", help="同时�
 parser.add_argument("--workbench-spin", action="store_true", help="同时验证旋转死亡的共用躯干行号")
 parser.add_argument("--include-charged", action="store_true", help="验证蓄力的三行躯干帧与空武器挂点")
 parser.add_argument("--workbench-moves", action="store_true", help="核实 Dmg2、Jump 和 SoulDie 原躯干与空手锚")
+parser.add_argument("--workbench-gather", action="store_true", help="核实三个原采集动作躯干及空手锚")
+parser.add_argument("--workbench-craft", action="store_true", help="核实四个制作台动作的共用原躯干行及挂点")
 args = parser.parse_args()
 base, repo = args.directory, args.repo
 R = 'Assets/GameData/EquipmentSystem/'
@@ -59,12 +61,12 @@ sources[frame_path]=hashlib.sha256(raw).hexdigest()
 records=raw.decode().split('\n  - animationType: ')[1:]
 selected=('    frames:', '    - frameIndex:', '      rowIndex:', '      bodyRegions:', '      - part:', '        spriteFacing:', '        variant:')
 anchor_fields=('      anchors:', '      - type:', '        position:', '        direction:')
-for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_slash_attack else ()) + (('SpinDie',) if args.workbench_spin else ()) + (('ChargedAttack',) if args.include_charged else ()) + (('Dmg2','Jump','SoulDie') if args.workbench_moves else ()):
+for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_slash_attack else ()) + (('SpinDie',) if args.workbench_spin else ()) + (('ChargedAttack',) if args.include_charged else ()) + (('Dmg2','Jump','SoulDie') if args.workbench_moves else ()) + (GATHER if args.workbench_gather else ()) + (tuple(CRAFT) if args.workbench_craft else ()):
     guid=parse(read(repo,R+f'AnimationType/{key}.asset.meta'))['guid']
     matching=[r for r in records if guid in r.splitlines()[0]]
     assert len(matching)==1, key
     record=matching[0]
-    use=[line[2:] for line in record.splitlines()[1:] if line.startswith(selected + (anchor_fields if key in ('SpinDie','ChargedAttack','Dmg2','Jump','SoulDie') else ()))]
+    use=[line[2:] for line in record.splitlines()[1:] if line.startswith(selected + (anchor_fields if key in ('SpinDie','ChargedAttack','Dmg2','Jump','SoulDie') + GATHER + tuple(CRAFT) else ()))]
     parsed=parse(('- animationType: '+record.splitlines()[0]+'\n'+'\n'.join(use)).encode())[0]
     result=[]
     for row in parsed['frames']:
@@ -72,9 +74,9 @@ for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_sl
             if row['rowIndex'] != 0: continue
             assert row['anchors'] == [], '原旋转死亡不可预览带挂点武器'
         torso=next((r for r in row['bodyRegions'] if r['part']==1),None)
-        if key in ('ChargedAttack','Dmg2','Jump','SoulDie'):
+        if key in ('ChargedAttack','Dmg2','Jump','SoulDie') + GATHER + tuple(CRAFT):
             assert row['anchors'] == []
-        if key in ('SlashAttack','ChargedAttack','Dmg2','Jump','SoulDie'):
+        if key in ('SlashAttack','ChargedAttack','Dmg2','Jump','SoulDie') + GATHER + tuple(CRAFT):
             assert torso is not None, (key, row['frameIndex'], row['rowIndex'])
         result.append([row['frameIndex'],row['rowIndex'],torso['spriteFacing'] if torso else row['rowIndex'],torso['variant'] if torso else 0])
     frames[key]=result
@@ -94,6 +96,18 @@ if args.workbench_moves:
     for action in ('Dmg2','Jump','SoulDie'):
         row_count, samples = (1,12) if action=='SoulDie' else (4,4)
         assert frames[action] == [[label,row,row,0] for row in range(row_count) for label in range(samples)]
+        guid = parse(read(repo,R+f'AnimationType/{action}.asset.meta'))['guid']
+        for name in ('长矛','战斧','重盾','圆盾'):
+            assert guid not in read(repo,R+f'Equip/Visual/{name}.asset').decode(), name
+if args.workbench_gather:
+    for action in GATHER:
+        assert frames[action] == [[label,row,row,0] for row in range(4) for label in range(6)]
+        guid = parse(read(repo,R+f'AnimationType/{action}.asset.meta'))['guid']
+        for name in ('长矛','战斧','重盾','圆盾'):
+            assert guid not in read(repo,R+f'Equip/Visual/{name}.asset').decode(), name
+if args.workbench_craft:
+    for action, count in CRAFT.items():
+        assert frames[action] == [[label,0,0,0] for label in range(count)]
         guid = parse(read(repo,R+f'AnimationType/{action}.asset.meta'))['guid']
         for name in ('长矛','战斧','重盾','圆盾'):
             assert guid not in read(repo,R+f'Equip/Visual/{name}.asset').decode(), name
