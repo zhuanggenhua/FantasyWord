@@ -16,8 +16,33 @@ def atlas_name(action):
     return "Slash_Character_human.png" if action == "SlashAttack" else f"Minifantasy_CreaturesHuman{action}.png"
 
 
+def workbench_spin_scope(repo):
+    root = "Assets/GameData/EquipmentSystem/"
+    scene = "Assets/Scenes/EquipmentSystemDemo.unity"
+    raw = read(repo, scene)
+    catalog = root + "Data/Workbench/换装工作台目录.asset"
+    frame = root + "FrameData/人类帧数据.asset"
+    database = root + "AnimationType/AnimationTypeDatabase.asset"
+    def guid(path):
+        return parse(read(repo, path + ".meta"))["guid"]
+    def body(path):
+        return parse(read(repo, path))["MonoBehaviour"]
+    assert f"catalog: {{fileID: 11400000, guid: {guid(catalog)}, type: 2}}" in raw.decode()
+    human, = [row for row in body(catalog)["characters"] if row["displayName"] == "人类"]
+    assert human["frameData"]["guid"] == guid(frame)
+    assert human["appearance"]["guid"] == guid(root + "Appearance/基础人形外观.asset")
+    for side, short in zip(("southEast", "southWest", "northEast", "northWest"), ("SE", "SW", "NE", "NW")):
+        assert human["animationLibraries"][side]["guid"] == guid(ROOT + f"SpriteLibraries/人类_{short}动画精灵库.asset")
+    spin = guid(root + "AnimationType/SpinDie.asset")
+    assert f"animDatabase: {{fileID: 11400000, guid: {guid(database)}, type: 2}}" in read(repo, frame).decode()
+    assert sum(row["guid"] == spin for row in body(database)["_items"]) == 1
+    return {"scene": scene, "scene_sha256": hashlib.sha256(raw).hexdigest(), "animation_key": "SpinDie"}
+
+
 def extract(repo, textures, include_damage=False, include_charged=False, include_attack=False,
-            include_death=False, include_slash_attack=False):
+            include_death=False, include_slash_attack=False, workbench_spin=False):
+    assert not (include_death and workbench_spin)
+    include_death = include_death or workbench_spin
     paths = subprocess.check_output(["git", "-c", "core.quotepath=false", "-C", str(repo), "ls-tree", "-r", "--name-only", SOURCE], text=True).splitlines()
     sources = {}
     def source(path):
@@ -103,7 +128,9 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
         settings=clip["m_AnimationClipSettings"]
         assert settings["m_StartTime"]==0 and clip["m_SampleRate"]==8
         actions[action]={"duration":settings["m_StopTime"],"loop":bool(settings["m_LoopTime"]),"times":[k["time"] for k in keys],"labels":labels,"directions":directions}
-    return {"schema":1,"source_commit":SOURCE,"actions":actions,"textures":textures_out,"source_sha256":sources}
+    result = {"schema":1,"source_commit":SOURCE,"actions":actions,"textures":textures_out,"source_sha256":sources}
+    if workbench_spin: result["workbench_spin"] = workbench_spin_scope(repo)
+    return result
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__); p.add_argument("--repo",type=Path,required=True);p.add_argument("--textures",type=Path,required=True);p.add_argument("--output",type=Path,required=True)
     p.add_argument("--include-damage",action="store_true",help="同时核实原 Dmg 四向非循环片段")
@@ -111,5 +138,6 @@ if __name__=="__main__":
     p.add_argument("--include-attack",action="store_true",help="同时核实原 Attack 四向非循环片段")
     p.add_argument("--include-death",action="store_true",help="同时核实原 SpinDie 非循环片段")
     p.add_argument("--include-slash-attack",action="store_true",help="同时核实原 SlashAttack 四向非循环片段")
-    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    p.add_argument("--workbench-spin", action="store_true", help="只核实原人类工作台的旋转死亡动作")
+    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack,a.workbench_spin); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("Human 私有合同：四向来源、所有标签和 PNG 哈希已核验。")

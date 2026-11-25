@@ -12,7 +12,7 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c91cef1"
 const CJK_SHA := "763146584cf0710223441356b4395e279021b0806c196614377a7a0174ae074a"
-const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击", "SlashAttack":"挥砍", "Dmg":"受伤"}
+const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击", "SlashAttack":"挥砍", "Dmg":"受伤", "SpinDie":"旋转死亡"}
 const DIRECTIONS := ["东南", "西南", "东北", "西北"]
 const REF_SIZE := Vector2(1600, 900)
 const SLOT_IDLE := Color(0.22, 0.26, 0.31)
@@ -55,6 +55,7 @@ var _category := 0
 var _mount_source := ""
 var _slash_enabled := false
 var _damage_enabled := false
+var _spin_enabled := false
 var _mount_owner: Equipment
 var _mounted_view: MountedPresentation
 var _mount_slots: GridContainer
@@ -97,11 +98,12 @@ func _load_source(source_dir: String) -> bool:
 		return _fail("缺少本阶段人类原待机、行走和攻击的完整四向动画。")
 	_slash_enabled = actions.has("SlashAttack")
 	_damage_enabled = actions.has("Dmg")
-	if _slash_enabled and not OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_VALIDATION").is_empty():
-		return _fail("挥砍组合尚未核实骑乘帧；请使用独立的已锁定骑乘动作合同。")
-	if _damage_enabled or (_slash_enabled and FileAccess.file_exists(source_dir.path_join("cloak.json"))):
+	_spin_enabled = actions.has("SpinDie")
+	if (_slash_enabled or _spin_enabled) and not OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_VALIDATION").is_empty():
+		return _fail("挥砍或旋转死亡的组合尚未核实骑乘帧；请使用独立的已锁定骑乘动作合同。")
+	if _damage_enabled or ((_slash_enabled or _spin_enabled) and FileAccess.file_exists(source_dir.path_join("cloak.json"))):
 		_cloak = CloakPreview.new()
-		if not _cloak.load_source(source_dir, _slash_enabled):
+		if not _cloak.load_source(source_dir, _slash_enabled, _spin_enabled):
 			return _fail("缺少原披风图集或人类躯干帧合同。")
 	var bag_dir := OS.get_environment("FANTASYWORD_WORKBENCH_BAG")
 	if not bag_dir.is_empty():
@@ -126,7 +128,7 @@ func _load_source(source_dir: String) -> bool:
 	_mount_source = OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_VALIDATION")
 	_human.name = "EquipmentSystemDemoCharacter" if _mount_source.is_empty() else "MountValidationPlayer"
 	add_child(_human)
-	if not _human.configure(animation, art, _slash_enabled) or not _human.bind_base_material(materials, art.path_join("uv"), art.path_join("appearance"), _weapons != null):
+	if not _human.configure(animation, art, _slash_enabled, _spin_enabled) or not _human.bind_base_material(materials, art.path_join("uv"), art.path_join("appearance"), _weapons != null):
 		var reason: String = _human.last_error
 		_human.free()
 		_human = null
@@ -194,11 +196,12 @@ func _mount_ui() -> void:
 	action_row.columns = 3
 	action_row.add_theme_constant_override("h_separation", 8)
 	action_scroll.add_child(action_row)
-	for key in ["Idle", "Walk", "Wait", "Attack", "SlashAttack", "Dmg"]:
+	for key in ["Idle", "Walk", "Wait", "Attack", "SlashAttack", "Dmg", "SpinDie"]:
 		if key == "Wait":
 			_button(action_row, "等待", Vector2(88, 32)).disabled = true
 			continue
 		if key == "Dmg" and not _damage_enabled: continue
+		if key == "SpinDie" and not _spin_enabled: continue
 		if key == "SlashAttack" and not _slash_enabled: continue
 		var button := _button(action_row, ACTIONS[key], Vector2(88, 32))
 		button.name = key

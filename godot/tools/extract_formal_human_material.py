@@ -23,8 +23,8 @@ BASE_ACTOR = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 TRAINER = "Assets/Prefabs/Entities/Characters/Enemies/测试-训练假人.prefab"
 
 def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False,
-            include_attack=False, include_death=False, include_slash_attack=False):
-    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack)
+            include_attack=False, include_death=False, include_slash_attack=False, workbench_spin=False):
+    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack, workbench_spin=workbench_spin)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab_path = TRAINER if training_target else PREFAB
@@ -163,7 +163,9 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
     for eye in ("leftEyeColor","rightEyeColor"):
         look[eye] = [appearance[eye][k] for k in "rgba"]
     result = {"schema": 1, "source_commit": SOURCE, "textures": textures, "actions": actions, "appearance": look}
-    if training_target:
+    if workbench_spin:
+        result["workbench_spin"] = animation["workbench_spin"]
+    elif training_target:
         result["training_target"] = animation["training_target"]
     elif include_death:
         # 仅核实 ClickMoveTest 已启用的原 GameManager 与主角。空动作不是菜单。
@@ -197,8 +199,9 @@ if __name__ == "__main__":
     p.add_argument("--include-attack", action="store_true", help="同时核实普攻原帧与两张 UV")
     p.add_argument("--include-death", action="store_true", help="核实原 ClickMoveTest 主角的 SpinDie 与空死亡动作")
     p.add_argument("--include-slash-attack",action="store_true",help="核实工作台挥砍的原帧及 UV")
+    p.add_argument("--workbench-spin", action="store_true", help="核实原人类工作台的旋转死亡材质帧")
     a = p.parse_args()
-    assert not (a.training_target and (a.include_death or a.include_slash_attack)), "主角死亡或工作台挥砍选项不适用于训练假人"
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack)
+    assert not (a.training_target and (a.include_death or a.include_slash_attack or a.workbench_spin)), "主角死亡或工作台挥砍选项不适用于训练假人"
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack, a.workbench_spin)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))

@@ -25,7 +25,7 @@ static func valid_primary_death(source: Variant) -> bool:
 		and source.get("action_rid")==-2 and source.get("animation_key")=="SpinDie" \
 		and source.get("actor_file_id")=="735002000000000004"
 
-func configure(data: Dictionary, texture_directory: String, workbench_slash := false) -> bool:
+func configure(data: Dictionary, texture_directory: String, workbench_slash := false, workbench_spin := false) -> bool:
 	if sprite != null or not is_inside_tree():
 		return _fail("入口须先进入场景树且只能配置一次。")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE or not data.get("textures") is Dictionary or not data.get("actions") is Dictionary:
@@ -39,7 +39,15 @@ func configure(data: Dictionary, texture_directory: String, workbench_slash := f
 		var is_trainer: bool = target is Dictionary and target.get("death_animation_key")=="SpinDie" \
 			and target.get("prefab_guid")=="dca23ea6afacc0647bfd10c5cefa4099"
 		var is_primary := valid_primary_death(data.get("primary_death"))
-		if is_primary==is_trainer or (is_primary and data.has("training_target")):
+		var spin_scope: Variant = data.get("workbench_spin")
+		var is_workbench: bool = workbench_spin and spin_scope=={
+			"scene":"Assets/Scenes/EquipmentSystemDemo.unity",
+			"scene_sha256":"46e43f5f0ebfacae2ec1b8a5c123375c5667a4ae1c171d14f1aecf297d5706fc",
+			"animation_key":"SpinDie"}
+		if workbench_spin != is_workbench or data.has("workbench_spin") != is_workbench \
+				or int(is_primary)+int(is_trainer)+int(is_workbench)!=1 \
+				or (is_primary and data.has("training_target")) \
+				or (is_workbench and (data.has("primary_death") or data.has("training_target"))):
 			return _fail("SpinDie 须来自唯一且已核实的场景角色，不能借用另一角色的合同。")
 	var loaded := {}
 	for name in data.textures:

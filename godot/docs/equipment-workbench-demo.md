@@ -122,3 +122,23 @@ export FANTASYWORD_WORKBENCH_MOUNT_CLOTH=/path/to/private-mount-source
 `FORMAL_WORKBENCH_SLASH_TEST=1` 下运行 `tests/test_workbench_slash_attack.gd`
 经过真实工作台按钮、16 个帧区域、原武器贴图与深度绑定验证；未做双引擎像素对照，
 不是新增正式主角技能或改变玩法装备。
+
+### 原人类旋转死亡（独立工作台预览）
+
+在已有私有人类图和 UV 目录加入原 `Minifantasy_CreaturesHumanSpinDie.png`、
+对应的 `_BodyUV.png`、`_HeadUV.png` 及各自的原 `.meta`。动画、材质提取命令
+各加 `--workbench-spin`（不要同时传正式主角的 `--include-death`）。
+同时启用披风或背包时，披风提取也加 `--workbench-spin`；原武器、背包合同不变。
+提取会核实原 EquipmentSystemDemo、其人类工作台目录条目、四个精灵库、帧数据和
+动作数据库登记。普通工作台可与受伤、挥砍组合，不混用骑乘或正式玩法死亡合同。
+
+点击「旋转死亡」按原 8 Hz 播放 12 个不同精灵，1.5 秒非循环后保持末帧。
+四向原精灵库引用同一行，换方向不切图或改动原躯干朝向。末两帧没有躯干区域时
+按原 EquipmentRenderer 的行 0 和 Base 回退，披风与背包仍使用该行贴图规则。
+在没有原武器锚点及序列的 SpinDie 中不绘主副手，保留已装备状态，回到待机即恢复。
+只在独立界面选动作，不扣血、不锁主角、不触发死亡、掉落或读档。
+
+`FORMAL_WORKBENCH_SPIN_TEST=1` 下的 `tests/test_workbench_spin.gd` 驱动真实
+工作台按钮，逐一复核四向 48 次原精灵引用、材质参数、末帧与回待机后的已装备武器，
+并检查该合同不能被正式场景当作死亡所有权。无头验证不代表最终像素、阴影、完整界面
+或 Unity 同机位对照已经验收。

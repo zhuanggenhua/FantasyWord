@@ -12,7 +12,7 @@ var _textures: Dictionary
 var _material: ShaderMaterial
 var _playback: Node
 
-func load_source(directory: String, with_slash := false) -> bool:
+func load_source(directory: String, with_slash := false, with_spin := false) -> bool:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("cloak.json")))
 	if not data is Dictionary or data.get("source_commit") != SOURCE:
 		return false
@@ -69,6 +69,17 @@ func load_source(directory: String, with_slash := false) -> bool:
 				return false
 			by_key[key] = Vector2i(int(row[2]), int(row[3]))
 		frames[action] = by_key
+	if with_spin:
+		var rows: Variant = input_frames.get("SpinDie")
+		if not rows is Array or rows.size()!=12: return false
+		var by_key := {}
+		for label in 12:
+			# 四个精灵库共用一行；无躯干区域也按原行 0 / Base。
+			var row: Variant = rows[label]
+			if not row is Array or row.size()!=4 or not _bounded(row[0],12) or row[0]!=label \
+					or not _bounded(row[1],1) or not _bounded(row[2],1) or not _bounded(row[3],1): return false
+			by_key[Vector2i(label,0)] = Vector2i.ZERO
+		frames["SpinDie"] = by_key
 	options = input_options
 	_frames = frames
 	_textures = textures
@@ -89,7 +100,7 @@ func select(index: int) -> void:
 	_on_sample(_playback.current_action, _playback.current_label, _playback.current_direction, null)
 
 func torso_for_sample(action: String, label: int, direction: int) -> Variant:
-	return _frames.get(action, {}).get(Vector2i(label, direction))
+	return _frames.get(action, {}).get(Vector2i(label, 0 if action=="SpinDie" else direction))
 
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:
 	var row: Variant = torso_for_sample(action, label, direction)
