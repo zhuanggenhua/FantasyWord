@@ -1,5 +1,7 @@
 extends Control
-## 独立迁移原 EquipmentSystemDemo 的人类可考证的换装预览，不接入正式角色或库存。
+## 独立迁移原 EquipmentSystemDemo 可考证的换装预览，不接入正式角色或库存。
+const NonhumanPreview = preload("res://gameplay/equipment_workbench/nonhuman_preview.gd")
+const SOURCE_CHARACTERS := [["Human","人类"],["Dwarf","矮人"],["Elf","精灵"],["Goblin","地精"],["Orc","兽人"]]
 const HumanPresentation = preload("res://gameplay/clickmovetest/human_presentation.gd")
 const CloakPreview = preload("res://gameplay/equipment_workbench/cloak_preview.gd")
 const BagPreview = preload("res://gameplay/equipment_workbench/bag_preview.gd")
@@ -88,12 +90,24 @@ var _mount_remove: Button
 var _mount_equip_badge: Label
 var _mount_remove_badge: Label
 var _player: Button
-var _actions: Array[Button] = []
+var _race := "Human"
+var _race_views := {}
+var _race_buttons := {}
+var _held_human_category := 0
+var _human_action_disabled := {}
+var _action_buttons := {}
 var _directions: Array[Button] = []
 
 func _ready() -> void:
 	var source_dir := OS.get_environment("FANTASYWORD_WORKBENCH_SOURCE")
 	if source_dir.is_empty() or not _load_source(source_dir):
+		_show_unavailable()
+		return
+	var race_dir := OS.get_environment("FANTASYWORD_WORKBENCH_NONHUMAN")
+	if not race_dir.is_empty() and _mount_source.is_empty() and not _load_nonhuman(race_dir):
+		_fail("地精或兽人的锁定工作台资源不匹配。")
+		_human.hide()
+		_human.process_mode = Node.PROCESS_MODE_DISABLED
 		_show_unavailable()
 		return
 	_mount_ui()
@@ -200,6 +214,23 @@ func _load_source(source_dir: String) -> bool:
 		_mount_owner.loadout_changed.connect(_apply_mount_slot)
 	return true
 
+func _load_nonhuman(dir: String) -> bool:
+	var data := NonhumanPreview.read_locked(dir)
+	if data.is_empty(): return false
+	for race in NonhumanPreview.TERMINALS:
+		var node := NonhumanPreview.new()
+		node.name = race + "WorkbenchPreview"
+		add_child(node)
+		if not node.configure(dir,data,race,_cloth):
+			node.free()
+			for loaded in _race_views.values(): loaded.free()
+			_race_views.clear()
+			return false
+		node.hide()
+		node.set_process_mode(Node.PROCESS_MODE_DISABLED)
+		_race_views[race] = node
+	return true
+
 func _mount_ui() -> void:
 	var background := ColorRect.new()
 	background.color = Color(0.19215687, 0.3019608, 0.4745098)
@@ -217,10 +248,23 @@ func _mount_ui() -> void:
 	title.position = Vector2(32, 26)
 	title.size = Vector2(320, 40)
 	var left := _label_column("角色", 316)
-	var player := _button(left, "人类", Vector2(84, 92))
-	_player = player
-	player.name = "Human"
-	player.pressed.connect(_reset_human)
+	if _race_views.is_empty():
+		_player = _button(left,"人类",Vector2(84,92))
+		_player.name = "Human"
+		_player.pressed.connect(_reset_human)
+	else:
+		var picker := GridContainer.new()
+		picker.name = "SourceCharacterPicker"
+		picker.columns = 3
+		left.add_child(picker)
+		for entry in SOURCE_CHARACTERS:
+			var button := _button(picker,entry[1],Vector2(84,64))
+			button.name = entry[0]
+			_race_buttons[entry[0]] = button
+			button.disabled = entry[0] != "Human" and not _race_views.has(entry[0])
+			if button.disabled: button.tooltip_text = "原目录角色（未迁移）"
+			else: button.pressed.connect(_switch_character.bind(entry[0]))
+		_player = _race_buttons.Human
 	_header(left, "动作")
 	var action_scroll := ScrollContainer.new()
 	left.add_child(action_scroll)
@@ -248,10 +292,9 @@ func _mount_ui() -> void:
 			and (key not in ["Dmg2","Jump","SoulDie"] or _moves_enabled) \
 			and (key not in ["Harvest","Chopping","Mining"] or _gather_enabled) \
 			and (key not in CRAFT_ACTIONS or _craft_enabled)
-		if admitted:
-			button.pressed.connect(_select_action.bind(key))
-			_actions.append(button)
-		elif key not in ["Wait","Die"]:
+		button.pressed.connect(_select_action.bind(key))
+		_action_buttons[key] = button
+		if not admitted and key not in ["Wait","Die"]:
 			# Do not play a guessed fallback for original body frames that are
 			# not ported yet. Wait/Die enable the chip via UsesBodyAnimationFallback,
 			# but original TrySetPreviewAnimation then refuses to change the pose.
@@ -261,6 +304,7 @@ func _mount_ui() -> void:
 			if row[2]:
 				button.tooltip_text = button.text + "（原版有动作，本迁移尚未接入）"
 		if button.tooltip_text.is_empty(): button.tooltip_text = button.text
+		_human_action_disabled[key] = button.disabled
 	_header(left, "方向")
 	var direction_grid := GridContainer.new()
 	direction_grid.columns = 3
@@ -272,7 +316,7 @@ func _mount_ui() -> void:
 		button.name = ["SE", "SW", "NE", "NW"][index]
 		button.pressed.connect(_select_direction.bind(index))
 		_directions.append(button)
-	_style(player, SLOT_ACTIVE)
+	_style(_player, SLOT_ACTIVE)
 
 	var right := _label_column("类型", 470)
 	var categories := GridContainer.new()
@@ -486,6 +530,35 @@ func _resize_workbench() -> void:
 	var camera_scale := size.y / 9.0
 	_human.scale = Vector2.ONE * camera_scale
 	_human.position = size * 0.5 + Vector2(-0.25 * camera_scale, 0)
+	for view in _race_views.values():
+		view.position = _human.position
+		view.scale = _human.scale
+
+func _switch_character(race: String) -> void:
+	if race != "Human" and not _race_views.has(race): return
+	if race == "Human" and _race == "Human":
+		_reset_human()
+		return
+	if _race == "Human" and race != "Human": _held_human_category = _category
+	_race = race
+	_human.visible = race == "Human"
+	_human.process_mode = Node.PROCESS_MODE_INHERIT if _human.visible else Node.PROCESS_MODE_DISABLED
+	for name_key in _race_views:
+		var view: Node2D = _race_views[name_key]
+		view.visible = name_key == race
+		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
+	_category = _held_human_category if race == "Human" else 0
+	for key in _action_buttons:
+		var button: Button = _action_buttons[key]
+		button.disabled = _human_action_disabled[key] if race == "Human" else not _race_views[race].has_action(key)
+		if key == "Die": button.text = "死亡·缺帧" if race == "Human" else "死亡"
+		if race != "Human" and button.disabled:
+			button.add_theme_stylebox_override("disabled",_box(SLOT_MUTED))
+			button.add_theme_color_override("font_disabled_color",TEXT_MUTED)
+	for kind in _categories: _categories[kind].disabled = race != "Human" and kind != 0
+	if race == "Human": _reset_human()
+	else: _race_views[race].reset()
+	_refresh()
 
 func _reset_human() -> void:
 	_human.driver.try_play_animation("Idle")
@@ -501,26 +574,35 @@ func _reset_human() -> void:
 	_set_cloth(true)
 
 func _select_action(key: String) -> void:
+	if _race != "Human":
+		if _race_views[_race].play(key): _refresh()
+		return
 	if ACTIONS.has(key) and _human.driver.try_play_animation(key):
 		# Workbench SelectAnimation uses SetAnimation, not the gameplay damage auto-return.
 		_human.driver.cancel_pending_restore()
 		_refresh()
 
 func _select_direction(index: int) -> void:
-	if _human.playback.set_direction(index):
+	var target: Node = _human.playback if _race == "Human" else _race_views[_race].playback
+	if target.set_direction(index):
 		_refresh()
 
 func _set_cloth(worn: bool) -> void:
-	_material.set_shader_parameter("enabled_cloth", worn)
+	if _race == "Human": _material.set_shader_parameter("enabled_cloth", worn)
+	else: _race_views[_race].set_cloth(worn)
 	if _mounted_view != null: _mounted_view.set_cloth(worn)
 	if ready_for_preview: _refresh()
 
 func _refresh() -> void:
-	var worn: bool = _material.get_shader_parameter("enabled_cloth")
-	var direction: int = _human.playback.current_direction
-	var current: String = _human.driver.current_animation_key
-	for i in _actions.size():
-		_style(_actions[i], SLOT_ACTIVE if _actions[i].name == current else SLOT_IDLE)
+	var actor: Node2D = _human if _race == "Human" else _race_views[_race]
+	var active_material: ShaderMaterial = _material if _race == "Human" else actor.composite
+	var worn: bool = active_material.get_shader_parameter("enabled_cloth")
+	var direction: int = actor.playback.current_direction
+	var current: String = _human.driver.current_animation_key if _race == "Human" else actor.playback.current_action
+	for key in _action_buttons:
+		var button: Button = _action_buttons[key]
+		if not button.disabled: _style(button,SLOT_ACTIVE if key == current else SLOT_IDLE)
+	for key in _race_buttons: _style(_race_buttons[key],SLOT_ACTIVE if key == _race else SLOT_IDLE)
 	for i in _directions.size():
 		_style(_directions[i], SLOT_ACTIVE if direction == i else SLOT_IDLE)
 	_style(_remove, SLOT_IDLE if worn else SLOT_ACTIVE)
@@ -579,9 +661,12 @@ func _refresh() -> void:
 			category_text = "战马\n坐骑\n无加成" if mounted else "坐骑\n当前为空"
 			if _mount_equip.disabled:
 				category_text += "\n请先卸下未接入骑乘表现的装备。"
-	_details.text = "角色 人类 | 形象 基础人形外观\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
-		ACTIONS[current], DIRECTIONS[direction], ACTIONS[current],
-		category_text]
+	var race_label: String = "人类" if _race == "Human" else _race_buttons[_race].text
+	var appearance := "基础人形外观" if _race == "Human" else "绿皮外观"
+	var action_label: String = ACTIONS.get(current,"死亡")
+	_details.text = "角色 %s | 形象 %s\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
+		race_label,appearance,action_label,DIRECTIONS[direction],action_label,category_text]
+
 
 func _header(parent: Control, value: String) -> void:
 	_label(parent, value, 20).custom_minimum_size.y = 28

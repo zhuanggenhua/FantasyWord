@@ -1,4 +1,7 @@
 {
+  "test_workbench_nonhuman.gd": [
+    "SKIP private pinned Orc/Goblin workbench assets not configured"
+  ],
   "test_clickmovetest_control_panel.gd": [
     "SKIP 原静态测试面板：需要原 Silver 与 CJK 字体。"
   ],
