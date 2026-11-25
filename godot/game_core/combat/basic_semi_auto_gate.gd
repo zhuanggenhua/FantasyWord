@@ -73,6 +73,13 @@ func interrupt() -> void:
 	interrupted.emit()
 	sequence_stopped.emit()
 
+# Only used after the owning formal Timeline is already quiescent.
+func restore_no_ammo_idle() -> void:
+	state = State.IDLE
+	timer = 0.0
+	_trigger_released = true
+	_clear_buffer()
+
 func _start() -> bool:
 	if _can_start.is_valid() and not _can_start.call():
 		return false

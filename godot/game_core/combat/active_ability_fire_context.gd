@@ -53,6 +53,13 @@ func _on_interrupted() -> void:
 		_timeline_host.request_cancel(_ability_code)
 
 
+# ActiveAbilityBase.ReadFormalRuntimeState clears these without completing a cast.
+# The caller must already have verified no active or pending formal execution.
+func restore_timeline_persistent_idle() -> void:
+	casting = false
+	_effect_cost_paid = false
+	_completion = null
+
 func terminate_casting() -> void:
 	activation_context = null
 	if not casting: return

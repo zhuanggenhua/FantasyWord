@@ -239,6 +239,40 @@ func _has_formal_world() -> bool:
 	return _formal_world_ready and is_instance_valid(scene) and scene.is_inside_tree() \
 		and not scene.is_queued_for_deletion()
 
+func capture_source_primary_actor_pose() -> Dictionary:
+	return player.capture_source_primary_actor_pose() if _has_formal_world() and player!=null else {}
+
+
+func capture_source_primary_ability_runtime() -> Dictionary:
+	return player.capture_source_primary_ability_runtime() if _has_formal_world() and player!=null else {}
+
+
+func restore_source_primary_ability_runtime(block: Variant) -> bool:
+	return _has_formal_world() and player!=null and player.restore_source_primary_ability_runtime(block)
+
+
+func restore_source_primary_living_state(fields: Variant, ability_block: Variant) -> bool:
+	return _has_formal_world() and player!=null and player.restore_source_primary_living_state(fields,ability_block)
+
+
+func capture_source_primary_living_state() -> Dictionary:
+	return player.capture_source_primary_living_state() if _has_formal_world() and player!=null else {}
+
+
+func restore_source_primary_living_snapshot(snapshot: Variant) -> bool:
+	if not snapshot is Dictionary or snapshot.size()!=2 or not snapshot.has("fields") \
+			or not snapshot.has("abilities"): return false
+	return restore_source_primary_living_state(snapshot.fields,snapshot.abilities)
+
+
+func capture_source_controlled_references() -> Array[Dictionary]:
+	return player.capture_current_controlled_references() if _has_formal_world() and player!=null else []
+
+
+func restore_source_controlled_references(references: Variant) -> bool:
+	return _has_formal_world() and player!=null and player.restore_source_controlled_references(references)
+
+
 func capture_source_save_header() -> String:
 	if not _has_formal_world() or player==null: return ""
 	var primary := player.source_primary_save_title_fields()

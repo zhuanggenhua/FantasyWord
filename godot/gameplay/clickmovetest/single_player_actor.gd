@@ -57,6 +57,7 @@ var _fresh_owned_ability_codes: Array[int] = []
 var _fresh_ability_host: WeakRef
 var _binding_initial_loadout := false
 var _restoring_living_save := false
+var _restoring_source_control := false
 var _source_pose_geometry: WeakRef
 var _pending_source_pose_frame := -1
 var _requesting_cold_pose := false
@@ -125,6 +126,49 @@ func get_current_controlled_character_or_player_instance() -> Node2D:
 
 func is_current_controlled(actor: Node2D) -> bool:
 	return _selected and is_instance_valid(actor) and actor == _get_primary()
+
+# PlayerSystem captures the selected input target, not the camera fallback,
+# and PersistableReference stores that actor's raw, not resolved, identifier.
+func capture_current_controlled_references() -> Array[Dictionary]:
+	var actor := _get_primary()
+	if _persistence_registry==null or not is_current_controlled(actor) or actor.is_queued_for_deletion(): return []
+	var identifier := _persistence_registry.identifier_for(actor)
+	if identifier.strip_edges().is_empty(): return []
+	return [{"m_identifier":identifier}]
+
+## The independent F5 PlayerDataBlock control tail. Unity first resets to
+## primary, then reselects one resolved reference (duplicates are collapsed).
+## Deferred unresolved references and multi-character control are not ported.
+func restore_source_controlled_references(references: Variant) -> bool:
+	var actor := _get_primary()
+	if _restoring_source_control or _restoring_living_save or _has_pending_source_cold_pose() or not is_instance_valid(actor) \
+			or actor.is_queued_for_deletion() or is_destroyed() or not can_be_player_controlled(actor) \
+			or _persistence_registry==null or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
+			or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor:
+		return false
+	if references!=null and not references is Array: return false
+	var admitted_identifiers: Array[String] = []
+	if references!=null:
+		for row: Variant in references:
+			if row==null: continue
+			if not row is Dictionary or row.size()!=1 or not row.has("m_identifier"): return false
+			var identifier: Variant = row.m_identifier
+			if identifier==null: continue
+			if not identifier is String: return false
+			if identifier.strip_edges().is_empty(): continue
+			if _persistence_registry.resolve(identifier)!=actor: return false
+			if identifier not in admitted_identifiers: admitted_identifiers.append(identifier)
+	_restoring_source_control=true
+	set_current_controlled(true)
+	# The default selection notifies observers synchronously. Re-resolve after
+	# it: a receipt before that notification cannot guarantee ownership now.
+	if is_instance_valid(actor) and actor.is_inside_tree() and not actor.is_queued_for_deletion():
+		for identifier: String in admitted_identifiers:
+			if _persistence_registry.resolve(identifier)==actor:
+				set_current_controlled(true)
+				break
+	_restoring_source_control=false
+	return true
 
 func set_current_controlled(selected: bool) -> bool:
 	var actor := _get_primary()
@@ -251,23 +295,50 @@ func bind_source_cold_pose_geometry(geometry: Node2D) -> bool:
 	_source_pose_geometry=weakref(geometry)
 	return true
 
-func _cold_pose_actor() -> PlayerBody:
+# Physical geometry is required for the pose boundary, not for independent
+# player runtime/ability fields that do not query collision or change position.
+func _source_primary_body() -> PlayerBody:
 	var actor := _get_primary() as PlayerBody
-	var geometry: Object = _source_pose_geometry.get_ref() if _source_pose_geometry!=null else null
 	if not is_instance_valid(actor) or actor.is_queued_for_deletion() \
-			or not is_instance_valid(geometry) or geometry.is_queued_for_deletion() or not geometry.is_inside_tree() \
-			or geometry.get_parent()!=actor.get_parent() or actor.global_transform.x!=Vector2.RIGHT or actor.global_transform.y!=Vector2.DOWN \
 			or _persistence_registry==null or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor \
 			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
-			or not is_current_controlled(actor) or not accepts_player_input(actor) or is_destroyed() \
-			or current_health()<=0: return null
-	# Do not reuse the previous synced pose while this request is queued.
-	# Once physics has had a chance to sync, read whatever it actually applied.
-	return null if _has_pending_source_cold_pose() else actor
+			or is_destroyed() or current_health()<=0 or _has_pending_source_cold_pose(): return null
+	return actor
+
+
+func _source_pose_body() -> PlayerBody:
+	var actor := _source_primary_body()
+	var geometry: Object = _source_pose_geometry.get_ref() if _source_pose_geometry!=null else null
+	if not is_instance_valid(actor) or not is_instance_valid(geometry) \
+			or geometry.is_queued_for_deletion() or not geometry.is_inside_tree() \
+			or geometry.get_parent()!=actor.get_parent() \
+			or actor.global_transform.x!=Vector2.RIGHT or actor.global_transform.y!=Vector2.DOWN: return null
+	return actor
+
+
+func _cold_pose_actor() -> PlayerBody:
+	var actor := _source_pose_body()
+	return actor if actor!=null and is_current_controlled(actor) and accepts_player_input(actor) else null
+
 
 func _has_pending_source_cold_pose() -> bool:
 	return _requesting_cold_pose or (_pending_source_pose_frame>=0
 		and Engine.get_physics_frames()<=_pending_source_pose_frame)
+
+# CharacterBase.Persistence.CreateRuntimeState reads the living primary
+# independently of PlayerSystem's currently controlled references. The pinned
+# original hero uses the unit XY plane and has no Movable.m_controller;
+# CharacterPlayerControl is a different component, not controllerData.
+func capture_source_primary_actor_pose() -> Dictionary:
+	var actor := _source_pose_body()
+	if actor==null: return {}
+	var xy: Vector2 = actor.get_movement_position()
+	var face := get_look_at_direction()
+	if not xy.is_finite() or not face.is_finite(): return {}
+	return {"identifier":UNIQUE_PLAYER_IDENTIFIER,"state":0,
+		"position":Vector3(xy.x,xy.y,0.0),"rotation":Quaternion.IDENTITY,"scale":Vector3.ONE,
+		"lookAtDirection":face,"controllerData":null}
+
 
 func capture_source_cold_pose() -> Dictionary:
 	var actor := _cold_pose_actor()
@@ -301,9 +372,39 @@ func request_source_cold_pose(fields: Variant) -> bool:
 	_requesting_cold_pose=false
 	return true
 
+## CharacterAbilitySet enumerates its owned runtime instances, not quick slots.
+## Neither a missing instance nor a wrong owner is a valid empty F5 GAS block.
+func capture_source_primary_ability_runtime() -> Dictionary:
+	if _restoring_living_save: return {}
+	var actor := _get_primary()
+	if not is_instance_valid(actor) or actor.is_queued_for_deletion() or _persistence_registry==null \
+			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
+			or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor or is_destroyed() \
+			or current_health()<=0 or not _has_fresh_ability_owner():
+		return {}
+	if _fresh_owned_ability_codes!=[20001,20010]: return {}
+	var host: Node = _fresh_ability_host.get_ref()
+	if not host.has_method("capture_source_formal_runtime_state"): return {}
+	var result: Array[Dictionary] = []
+	for code: int in _fresh_owned_ability_codes:
+		var row: Dictionary = host.capture_source_formal_runtime_state(self,code)
+		if row.is_empty(): return {}
+		result.append(row)
+	return {"abilityRuntimeStates":result}
+
+
+func restore_source_primary_ability_runtime(block: Variant) -> bool:
+	if _restoring_living_save or _restoring_source_control or _source_primary_body()==null \
+			or capture_source_primary_ability_runtime().is_empty():
+		return false
+	var host: Node = _fresh_ability_host.get_ref()
+	return host.restore_source_formal_runtime_states(self,block)
+
+
 # Only the source primary's already ported save fields. A partial receipt
 # is never admitted as CharacterActorRuntimeStateData or sent to file storage.
 func capture_source_player_save_fields() -> Dictionary:
+	if _restoring_living_save: return {"ok":false,"reason":"primary_restore_in_progress"}
 	var actor := _get_primary()
 	if not is_instance_valid(actor) or actor.is_queued_for_deletion() or _persistence_registry==null \
 			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
@@ -327,59 +428,96 @@ func capture_source_player_save_fields() -> Dictionary:
 # Logical living subset; never apply a half snapshot from an original file.
 # Stats are already resolved for these exact zero-contribution items. The
 # source makes equipment visible as one loadout change before rebuilding HP/MP.
-func restore_source_player_save_fields(fields: Variant) -> bool:
-	if _restoring_living_save or _has_pending_source_cold_pose() or not fields is Dictionary \
+func _prepare_source_player_save_fields(fields: Variant) -> Dictionary:
+	if _restoring_living_save or _restoring_source_control or _has_pending_source_cold_pose() or not fields is Dictionary \
 			or fields.size()!=(4 if fields.has("quickAbilitySlots") else 3) \
 			or fields.get("identifier")!=UNIQUE_PLAYER_IDENTIFIER \
 			or not fields.get("currentResources") is Dictionary or not fields.get("equipmentSlots") is Array:
-		return false
-	if not capture_source_player_save_fields().ok: return false
+		return {}
+	if not capture_source_player_save_fields().ok: return {}
 	var actor := _get_primary() as PlayerBody
 	var host: Object = _fresh_ability_host.get_ref() if _fresh_ability_host!=null else null
 	if not is_current_controlled(actor) or not accepts_player_input(actor) or actor.is_pushed() \
 			or actor.execution.has_active_movement_intent() or not actor.get_movement_linear_velocity().is_zero_approx() \
 			or not is_instance_valid(host) or not host.has_method("is_idle_for_living_save_restore") \
 			or not host.is_idle_for_living_save_restore():
-		return false
+		return {}
 	var resources: Dictionary = fields.currentResources
 	if resources.size()!=2 or not resources.get("health") is int or not resources.get("mana") is int:
-		return false
+		return {}
 	var health := clampi(resources.health,0,_attributes.max_health())
 	var mana := clampi(resources.mana,0,_attributes.max_mana())
-	if health<=0: return false
+	if health<=0: return {}
 	var parsed := {}
 	for row: Variant in fields.equipmentSlots:
 		if not row is Dictionary or row.size()!=2 or not row.get("slotType") is int \
 				or not row.get("equipment") is Dictionary or row.equipment.size()!=1:
-			return false
+			return {}
 		var slot: int = row.slotType
 		var guid: Variant = row.equipment.get("guid")
-		if parsed.has(slot) or not guid is String: return false
+		if parsed.has(slot) or not guid is String: return {}
 		if not ((slot==Equipment.Slot.WEAPON and guid==Equipment.SPEAR) \
-				or (slot==Equipment.Slot.TORSO and guid==Equipment.CLOTH)): return false
+				or (slot==Equipment.Slot.TORSO and guid==Equipment.CLOTH)): return {}
 		var item := _equipment.item_for_guid(guid)
-		if item==null: return false
+		if item==null: return {}
 		parsed[slot]=item
 	# CharacterAbilitySet restores layout after the existing owned ability and
 	# resource state. This F5 subset cannot resolve other authored compositions.
 	var raw_slots: Variant = fields.get("quickAbilitySlots")
 	var candidate := Loadout.new(_ABILITY_SLOT_COUNT)
-	if not candidate.restore_from_slot_data(raw_slots): return false
+	if not candidate.restore_from_slot_data(raw_slots): return {}
 	if raw_slots!=null:
 		for row: Variant in raw_slots:
 			if row==null or row.slotIndex<0 or row.slotIndex>=_ABILITY_SLOT_COUNT \
 					or row.formalGasAbilityCode<=0: continue
-			if not _has_fresh_owned_ability(row.formalGasAbilityCode): return false
+			if not _has_fresh_owned_ability(row.formalGasAbilityCode): return {}
 	var staged_slots := candidate.create_slot_data_snapshot()
+	return {"actor":actor,"equipment":parsed,"health":health,"mana":mana,"slots":staged_slots}
+
+
+func restore_source_player_save_fields(fields: Variant) -> bool:
+	var plan := _prepare_source_player_save_fields(fields)
+	if plan.is_empty(): return false
+	_apply_prepared_source_player_save_fields(plan)
+	return true
+
+
+# Capture the same supported domains admitted by the paired restore. Refuse
+# to expose mixed state to observers during synchronous restore notifications.
+func capture_source_primary_living_state() -> Dictionary:
+	if _restoring_living_save or _source_primary_body()==null: return {}
+	var player_fields := capture_source_player_save_fields()
+	if not player_fields.ok: return {}
+	var abilities := capture_source_primary_ability_runtime()
+	if abilities.is_empty(): return {}
+	return {"fields":player_fields.fields,"abilities":abilities}
+
+
+# These logical receipts are intentionally not a CharacterActorRuntimeStateData.
+# Stage both supports before mutating anything; observers see source order.
+func restore_source_primary_living_state(fields: Variant, ability_block: Variant) -> bool:
+	var plan := _prepare_source_player_save_fields(fields)
+	if plan.is_empty() or _source_primary_body()!=plan.actor \
+			or capture_source_primary_ability_runtime().is_empty(): return false
+	var host: Node = _fresh_ability_host.get_ref()
+	var abilities: Dictionary = host._prepare_source_formal_runtime_states(self,ability_block)
+	if abilities.is_empty(): return false
+	_apply_prepared_source_player_save_fields(plan,host,abilities)
+	return true
+
+
+func _apply_prepared_source_player_save_fields(plan: Dictionary, host: Node = null,
+		abilities: Dictionary = {}) -> void:
 	_restoring_living_save=true
-	_equipment._replace_saved_living_slots(parsed)
-	_attributes._restore_living_resources(health,mana,actor)
+	_equipment._replace_saved_living_slots(plan.equipment)
+	if host!=null: host._apply_prepared_source_formal_runtime_states(abilities)
+	_attributes._restore_living_resources(plan.health,plan.mana,plan.actor)
 	# Do not replace the owner seen by input/HUD. As in Unity, clearing or
 	# restoring an unchanged layout still sends one notification.
-	_fresh_loadout.restore_from_slot_data(staged_slots)
+	_fresh_loadout.restore_from_slot_data(plan.slots)
 	equipped_abilities_changed.emit(equipped_ability_menu_slots())
 	_restoring_living_save=false
-	return true
+
 
 func unbind_current_health_changed(callback: Callable) -> void:
 	if _attributes.current_health_changed.is_connected(callback):

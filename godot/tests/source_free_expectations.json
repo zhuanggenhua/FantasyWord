@@ -119,6 +119,21 @@
   "test_source_pause_text_line.gd": [
     "SKIP 原暂停标题字体"
   ],
+  "test_source_controlled_reference_restore.gd": [
+    "SKIP 需要锁定原关卡"
+  ],
+  "test_source_primary_ability_restore.gd": [
+    "SKIP 正式 F5 能力恢复需要锁定关卡私有素材"
+  ],
+  "test_source_primary_ability_runtime.gd": [
+    "SKIP 原主角能力运行时快照需要锁定关卡私有素材"
+  ],
+  "test_source_primary_living_restore.gd": [
+    "SKIP 需要锁定原关卡"
+  ],
+  "test_source_primary_living_snapshot.gd": [
+    "SKIP 需要锁定原关卡"
+  ],
   "test_source_player_cold_pose.gd": [
     "SKIP 主角冷恢复需要锁定关卡素材和原静态碰撞几何。"
   ],

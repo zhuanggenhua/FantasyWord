@@ -58,6 +58,58 @@ func resolve(code: int) -> Object:
 	if code==FIRE and is_instance_valid(_fire): return _fire
 	return _basic if code==BASIC and is_instance_valid(_basic) else null
 
+# AbilityBase + ActiveAbilityBase: a formal instance is saved Inactive,
+# even while executing. Only ammo survives the gate, not physical hold, buffer,
+# or windup/recovery. Both pinned Timeline abilities have no magazine or Cd.
+func capture_source_formal_runtime_state(expected_owner: Object, code: int) -> Dictionary:
+	var ability: Node = resolve(code)
+	if not is_instance_valid(ability) or not ability.is_inside_tree() or ability.is_queued_for_deletion() \
+			or ability.context._character!=expected_owner or ability.spec.ability_code!=code:
+		return {}
+	if not ((code==BASIC and ability.gate is BasicGate) or (code==FIRE and ability.gate is FireGate)):
+		return {}
+	return {"formalGasAbilityCode":code,"state":1,"remainingCooldownTimer":0.0,
+		"inputGate":{"currentAmmoLoaded":0},"extraRuntimeState":null}
+
+# The formal snapshot for these exact two timelines never carries ammo,
+# cooldown, or an active cast. Validate both live owners and both rows before
+# writing anything. Unsupported states need their own lifecycle, not a reset.
+func _prepare_source_formal_runtime_states(expected_owner: Object, block: Variant) -> Dictionary:
+	if not block is Dictionary or block.size()!=1 or not block.get("abilityRuntimeStates") is Array \
+			or block.abilityRuntimeStates.size()!=2 or not is_idle_for_living_save_restore():
+		return {}
+	var found := {}
+	for row: Variant in block.abilityRuntimeStates:
+		if not row is Dictionary or not row.get("formalGasAbilityCode") is int:
+			return {}
+		var code: int = row.formalGasAbilityCode
+		if code not in [BASIC,FIRE] or found.has(code):
+			return {}
+		var expected := capture_source_formal_runtime_state(expected_owner,code)
+		if expected.is_empty() or row!=expected or not row.state is int \
+				or not (row.remainingCooldownTimer is float or row.remainingCooldownTimer is int) \
+				or not row.inputGate.currentAmmoLoaded is int:
+			return {}
+		found[code]=resolve(code)
+	return found
+
+
+func _apply_prepared_source_formal_runtime_states(found: Dictionary) -> void:
+	# Source FormalAbilityInputGateRuntime.LoadPersistentData is a silent
+	# field reset. Never dispatch release, stop, or cancel to emulate it.
+	for code: int in [BASIC,FIRE]:
+		var ability: Node = found[code]
+		ability.gate.restore_no_ammo_idle()
+		ability.context.restore_timeline_persistent_idle()
+
+
+func restore_source_formal_runtime_states(expected_owner: Object, block: Variant) -> bool:
+	var plan := _prepare_source_formal_runtime_states(expected_owner,block)
+	if plan.is_empty(): return false
+	_apply_prepared_source_formal_runtime_states(plan)
+	return true
+
+
 func _can_start() -> bool: return spec.validate_fire_point(spec.ability_code).result==0
 func _perform_use() -> bool: return context.perform_timeline_use()
 func _known(ability: Object) -> bool: return ability==self or (is_instance_valid(_basic) and ability==_basic) or (is_instance_valid(_fire) and ability==_fire)
