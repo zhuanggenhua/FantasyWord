@@ -31,3 +31,17 @@
 `test_source_game_flags.gd`、`test_source_persistence_save_capture.gd`、
 `test_source_inventory_save_capture.gd`、`test_source_player_save_slice.gd`、`test_source_journal_entry.gd`。静态命名映射夹具不等同过场或初始检查点已经实现。
 实际原版磁盘档、Save/Continue UI、非空通用对象、附带任务、自定义背包及完整主角状态另行验收。
+
+## 正式主角的快捷槽和干净入场姿态
+
+- 原 `CharacterActor.LoadActorRuntimeState` 在装备、属性和运行态资源后恢复快捷槽。
+  Godot 的同一角色槽对象会保留热键和 HUD 的订阅，不换 owner；无数据或空数据会清槽而不撤销技能。
+  合法槽里只接实际绑定的原能力；坏形状或不支持的能力先拒绝，不部分写入装备或资源。
+  原已解码列表的跳过、重复槽取末个正编号、同能力跨槽保留规则不变。
+- 原 `CharacterBase.LoadRuntimeState` 使用位置和面向；`MapSystem` 用
+  `Movable.IsValidSpawnPoint` 检查当前物理过滤器。这里限于正式单人主角、
+  原平面坐标和已经装入的锁定关卡碰撞。直接用角色的碰撞形状与掩码，不用寻路网格；
+  不自动找安全替代点，不发传送事件。提交位置不等于同步完成，须等 Godot 固定步回读。
+- 测试实际 F5、WASD 移动、换槽、冷重开、分阶段恢复、HUD 刷新及热键触发。
+  这是独立内存边界，未接磁盘、地图加载与检查点回退、原角色技能执行过程的恢复、
+  或完整的 `CharacterActorRuntimeStateData`。

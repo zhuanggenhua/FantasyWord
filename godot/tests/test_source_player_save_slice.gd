@@ -11,6 +11,9 @@ func check(ok: bool,label: String) -> void:
 		failed+=1
 		printerr("FAIL ",label)
 
+func codes(rows: Array) -> Array:
+	return rows.map(func(row): return row.formal_gas_ability_code)
+
 func run() -> void:
 	if OS.get_environment("FORMAL_SURFACE_RULES").is_empty():
 		print("SKIP 原场景主角存档验证需要私有原资源")
@@ -84,6 +87,37 @@ func run() -> void:
 		and player.capture_source_player_save_fields()==hand and boot.capture_source_inventory()==bag
 		and gear.equipped(Gear.Slot.WEAPON)==null and boot.inventory_bags.count(owner,spear)==1,
 		"两个边界各自精确回环，不重复生成原武器")
+	check(player.restore_source_player_save_fields(original.fields),"返回原装备和快捷槽作为形状验证基线")
+	check(original.fields.quickAbilitySlots.map(func(row): return row.formalGasAbilityCode)
+		==[20001,20010,0,0,0],"快照按原五槽记录正式能力代码，不混用显示名")
+	var order := []
+	gear.loadout_changed.connect(func(): order.append("gear"))
+	player.bind_current_health_changed(func(_prior,_next,_source): order.append("health"))
+	player.equipped_abilities_changed.connect(func(rows): order.append(codes(rows)))
+	var layout: Dictionary=target.duplicate(true)
+	layout.quickAbilitySlots=[null,{"slotIndex":-1,"formalGasAbilityCode":20004},
+		{"slotIndex":4,"formalGasAbilityCode":20010},{"slotIndex":4,"formalGasAbilityCode":20001},
+		{"slotIndex":4,"formalGasAbilityCode":0},{"slotIndex":2,"formalGasAbilityCode":20001}]
+	invalid=layout.duplicate(true)
+	invalid.quickAbilitySlots.append({"slotIndex":0,"formalGasAbilityCode":20004})
+	check(not player.restore_source_player_save_fields(invalid) and order.is_empty()
+		and player.capture_source_player_save_fields()==original,"未知有效槽内的能力拒绝整块，连资源与装备也不动")
+	invalid=layout.duplicate(true)
+	invalid.quickAbilitySlots.append({"slotIndex":"4","formalGasAbilityCode":20001})
+	check(not player.restore_source_player_save_fields(invalid) and order.is_empty()
+		and player.capture_source_player_save_fields()==original,"最后一行形状错误仍须原子拒绝")
+	check(player.restore_source_player_save_fields(layout)
+		and order==["gear","health",[0,0,20001,0,20001]],"原序资源后仅一次槽位通知；支持原重复代码与末个正值")
+	var missing: Dictionary = layout.duplicate(true)
+	missing.erase("quickAbilitySlots")
+	order.clear()
+	check(player.restore_source_player_save_fields(missing)
+		and order==["gear",[0,0,0,0,0]] and player.active_ability_menu_codes()==[20001,20010],
+		"缺失字段清空旧槽，不撤销正式技能")
+	missing.quickAbilitySlots=null
+	order.clear()
+	check(player.restore_source_player_save_fields(missing) and order==["gear",[0,0,0,0,0]],
+		"显式 null 清空；布局未变仍恰好通知一次")
 	var damage := player.damage_hooks()
 	check(player.restore_source_player_save_fields(target)
 		and damage.apply_current_health_delta.call(-1,0,null,null)==72,

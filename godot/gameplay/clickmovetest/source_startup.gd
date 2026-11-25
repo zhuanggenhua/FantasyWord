@@ -157,6 +157,8 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 		if geometry==null:
 			return _fail("原场景静态碰撞几何未通过锁定提取数据检查。")
 		scene.add_child(geometry)
+		if not player.bind_source_cold_pose_geometry(geometry):
+			return _fail("原玩家位置恢复未绑定同场景静态碰撞。")
 	if _water_reflection and (not scene.bind_static_tree_reflection(paths.FORMAL_WATER_REFLECTION_MASK) \
 			or not scene.bind_player_water_reflection()):
 		return _fail("原树、主角正式换装材质和 87 格水层无法装配倒影。")

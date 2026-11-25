@@ -1,7 +1,7 @@
 extends RefCounted
 ## ClickMoveTest 原主玩家的单角色运行合同，锁定 31629d53。
 ## PlayerSystem 提供实体身份；CharacterPlayerControl 和 Movable 分别裁决控制与朝向。
-## 不实例化 Actor、不接队伍/存档/ASC，不执行尚未迁移的玩家死亡行动。
+## 不实例化 Actor、不接完整队伍/存档/ASC；局部快照不接文件。
 const PlayerBody = preload("res://gameplay/clickmovetest/actor.gd")
 const Direction = preload("res://game_core/presentation/movable_direction_state.gd")
 const Attributes = preload("res://gameplay/clickmovetest/training_damage_attributes.gd")
@@ -57,6 +57,9 @@ var _fresh_owned_ability_codes: Array[int] = []
 var _fresh_ability_host: WeakRef
 var _binding_initial_loadout := false
 var _restoring_living_save := false
+var _source_pose_geometry: WeakRef
+var _pending_source_pose_frame := -1
+var _requesting_cold_pose := false
 
 func configure(actor: Node2D, pointer_reader: Callable = Callable(),
 		refresh_interaction: Callable = Callable(), reset_interaction: Callable = Callable(),
@@ -239,6 +242,65 @@ func resource_bar_values(actor: Node2D) -> PackedInt32Array:
 	return PackedInt32Array([_attributes.current_health(),_attributes.max_health(),
 		_attributes.current_mana(),_attributes.max_mana()])
 
+## Admit only the actual startup's hash-verified geometry, not an unmounted
+## empty physics world. The locked primary body is flat (z=0, unit scale).
+func bind_source_cold_pose_geometry(geometry: Node2D) -> bool:
+	var actor := _get_primary()
+	if _source_pose_geometry!=null or not is_instance_valid(geometry) or not is_instance_valid(actor) \
+			or geometry.get_parent()!=actor.get_parent(): return false
+	_source_pose_geometry=weakref(geometry)
+	return true
+
+func _cold_pose_actor() -> PlayerBody:
+	var actor := _get_primary() as PlayerBody
+	var geometry: Object = _source_pose_geometry.get_ref() if _source_pose_geometry!=null else null
+	if not is_instance_valid(actor) or actor.is_queued_for_deletion() \
+			or not is_instance_valid(geometry) or geometry.is_queued_for_deletion() or not geometry.is_inside_tree() \
+			or geometry.get_parent()!=actor.get_parent() or actor.global_transform.x!=Vector2.RIGHT or actor.global_transform.y!=Vector2.DOWN \
+			or _persistence_registry==null or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor \
+			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
+			or not is_current_controlled(actor) or not accepts_player_input(actor) or is_destroyed() \
+			or current_health()<=0: return null
+	# Do not reuse the previous synced pose while this request is queued.
+	# Once physics has had a chance to sync, read whatever it actually applied.
+	return null if _has_pending_source_cold_pose() else actor
+
+func _has_pending_source_cold_pose() -> bool:
+	return _requesting_cold_pose or (_pending_source_pose_frame>=0
+		and Engine.get_physics_frames()<=_pending_source_pose_frame)
+
+func capture_source_cold_pose() -> Dictionary:
+	var actor := _cold_pose_actor()
+	if actor==null: return {"ok":false}
+	var xy: Vector2 = actor.get_movement_position()
+	var face := get_look_at_direction()
+	if not xy.is_finite() or not face.is_finite(): return {"ok":false}
+	return {"ok":true,"fields":{"identifier":UNIQUE_PLAYER_IDENTIFIER,
+		"position":Vector3(xy.x,xy.y,0.0),"lookAtDirection":face}}
+
+## Only the original stable living primary's position and facing. The returned
+## bool acknowledges a physics request, not a full actor/map load. No teleport
+## signal, snap-to-navigation, correction of an obstructed pose or file action.
+func request_source_cold_pose(fields: Variant) -> bool:
+	if not fields is Dictionary or fields.size()!=3 or fields.get("identifier")!=UNIQUE_PLAYER_IDENTIFIER \
+			or not fields.get("position") is Vector3 or not fields.get("lookAtDirection") is Vector2: return false
+	var position: Vector3 = fields.position
+	var face: Vector2 = fields.lookAtDirection
+	if not position.is_finite() or position.z!=0.0 or not face.is_finite(): return false
+	var actor := _cold_pose_actor()
+	var host: Object = _fresh_ability_host.get_ref() if _fresh_ability_host!=null else null
+	if actor==null or _restoring_living_save or not actor.sync_to_physics or actor.is_pushed() \
+			or actor.execution.has_active_movement_intent() or not actor.get_movement_linear_velocity().is_zero_approx() \
+			or not is_instance_valid(host) or not host.is_idle_for_living_save_restore(): return false
+	var xy := Vector2(position.x,position.y)
+	if not actor.is_source_spawn_position_clear(xy): return false
+	_requesting_cold_pose=true
+	_pending_source_pose_frame=Engine.get_physics_frames()
+	actor.request_move_position(xy)
+	set_look_at_direction(face)
+	_requesting_cold_pose=false
+	return true
+
 # Only the source primary's already ported save fields. A partial receipt
 # is never admitted as CharacterActorRuntimeStateData or sent to file storage.
 func capture_source_player_save_fields() -> Dictionary:
@@ -247,7 +309,7 @@ func capture_source_player_save_fields() -> Dictionary:
 			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
 			or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor or is_destroyed() \
 			or _attributes.current_health()<=0 or not _attributes.has_formal_stats() \
-			or _equipment==null or not _equipment.belongs_to(actor):
+			or _equipment==null or not _equipment.belongs_to(actor) or not _has_fresh_ability_owner():
 		return {"ok":false,"reason":"primary_state_outside_supported_scope"}
 	var slots: Array[Dictionary] = []
 	for slot in range(Equipment.Slot.WEAPON,Equipment.Slot.MOUNT+1):
@@ -260,13 +322,14 @@ func capture_source_player_save_fields() -> Dictionary:
 		slots.append({"slotType":slot,"equipment":{"guid":guid}})
 	return {"ok":true,"fields":{"identifier":UNIQUE_PLAYER_IDENTIFIER,
 		"currentResources":{"health":_attributes.current_health(),"mana":_attributes.current_mana()},
-		"equipmentSlots":slots}}
+		"equipmentSlots":slots,"quickAbilitySlots":_fresh_loadout.create_slot_data_snapshot()}}
 
 # Logical living subset; never apply a half snapshot from an original file.
 # Stats are already resolved for these exact zero-contribution items. The
 # source makes equipment visible as one loadout change before rebuilding HP/MP.
 func restore_source_player_save_fields(fields: Variant) -> bool:
-	if _restoring_living_save or not fields is Dictionary or fields.size()!=3 \
+	if _restoring_living_save or _has_pending_source_cold_pose() or not fields is Dictionary \
+			or fields.size()!=(4 if fields.has("quickAbilitySlots") else 3) \
 			or fields.get("identifier")!=UNIQUE_PLAYER_IDENTIFIER \
 			or not fields.get("currentResources") is Dictionary or not fields.get("equipmentSlots") is Array:
 		return false
@@ -297,9 +360,24 @@ func restore_source_player_save_fields(fields: Variant) -> bool:
 		var item := _equipment.item_for_guid(guid)
 		if item==null: return false
 		parsed[slot]=item
+	# CharacterAbilitySet restores layout after the existing owned ability and
+	# resource state. This F5 subset cannot resolve other authored compositions.
+	var raw_slots: Variant = fields.get("quickAbilitySlots")
+	var candidate := Loadout.new(_ABILITY_SLOT_COUNT)
+	if not candidate.restore_from_slot_data(raw_slots): return false
+	if raw_slots!=null:
+		for row: Variant in raw_slots:
+			if row==null or row.slotIndex<0 or row.slotIndex>=_ABILITY_SLOT_COUNT \
+					or row.formalGasAbilityCode<=0: continue
+			if not _has_fresh_owned_ability(row.formalGasAbilityCode): return false
+	var staged_slots := candidate.create_slot_data_snapshot()
 	_restoring_living_save=true
 	_equipment._replace_saved_living_slots(parsed)
 	_attributes._restore_living_resources(health,mana,actor)
+	# Do not replace the owner seen by input/HUD. As in Unity, clearing or
+	# restoring an unchanged layout still sends one notification.
+	_fresh_loadout.restore_from_slot_data(staged_slots)
+	equipped_abilities_changed.emit(equipped_ability_menu_slots())
 	_restoring_living_save=false
 	return true
 

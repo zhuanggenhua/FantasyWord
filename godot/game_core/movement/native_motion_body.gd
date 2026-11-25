@@ -72,6 +72,13 @@ func cast_motion_hits(direction: Vector2, distance: float) -> Array:
 	assert(_terrain != null, "角色身体未配置地形查询")
 	return _terrain.cast_hits(get_movement_position(), direction, distance)
 
+## Original MapSystem resume check uses the movable collision filter, not the
+## navigation graph or a guessed map extent. No wall fallback is done here.
+func is_source_spawn_position_clear(source_point: Vector2) -> bool:
+	return _terrain != null and source_point.is_finite() \
+		and _terrain.cast_hits(source_point,Vector2.ZERO,Execution.COLLISION_OFFSET).is_empty()
+
+
 ## 原 Movable.NearestValidDestination：无导航图的点击探测落点，不重定位身体。
 ## 原点可站或同半径内无空位时，保留原点交给既有直线移动和碰撞处理。
 func nearest_valid_destination(source_point: Vector2) -> Vector2:

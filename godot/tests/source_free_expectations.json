@@ -119,6 +119,9 @@
   "test_source_pause_text_line.gd": [
     "SKIP 原暂停标题字体"
   ],
+  "test_source_player_cold_pose.gd": [
+    "SKIP 主角冷恢复需要锁定关卡素材和原静态碰撞几何。"
+  ],
   "test_source_player_save_slice.gd": [
     "SKIP 原场景主角存档验证需要私有原资源"
   ],

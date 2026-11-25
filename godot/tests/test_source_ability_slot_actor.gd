@@ -49,6 +49,14 @@ func run() -> void:
 	check(player.try_equip_formal_ability_to_slot(20001,4)
 		and slot_codes(player)==[0,20010,0,0,20001] and events.size()==1,
 		"重装到第五槽时原第一槽清除，仅发一次快照")
+	var saved: Dictionary = player.capture_source_player_save_fields()
+	check(saved.ok and saved.fields.quickAbilitySlots[4].formalGasAbilityCode==20001,
+		"从实际换槽后的同一所有者存入第五槽代码")
+	check(player.try_equip_formal_ability_to_slot(20001,0)
+		and player.restore_source_player_save_fields(saved.fields)
+		and slot_codes(player)==[0,20010,0,0,20001],
+		"重新恢复后键位读取同一快捷槽所有者")
+	events.clear()
 	var basic: Node=runtime.resolve(20001)
 	key(KEY_1,true)
 	for i in range(6): await physics_frame
@@ -63,11 +71,11 @@ func run() -> void:
 		"同一个实际技能从第五槽按 5 触发真实 Attack 动画")
 	key(KEY_5,false)
 	check(player.clear_equipped_ability_slot(1) and player.active_ability_menu_codes()==[20001,20010]
-		and slot_codes(player)==[0,0,0,0,20001] and events.size()==2,
+		and slot_codes(player)==[0,0,0,0,20001] and events.size()==1,
 		"卸下喷火快捷槽不撤销已持有技能")
-	check(not player.clear_equipped_ability_slot(1) and events.size()==2,"再清空已空槽不通知")
+	check(not player.clear_equipped_ability_slot(1) and events.size()==1,"再清空已空槽不通知")
 	check(player.try_equip_formal_ability_to_slot(20010,4) and slot_codes(player)==[0,0,0,0,20010]
-		and events.size()==3 and events[0][4].formal_gas_ability_code==20001,
+		and events.size()==2 and events[0][4].formal_gas_ability_code==20001,
 		"原槽替换更新真实槽，先前事件快照不跟着改变")
 	print("%s 原角色技能槽和真实热键：%d/%d"%["PASS" if not failures else "FAIL",checks-failures,checks])
 	quit(1 if failures else 0)
