@@ -72,6 +72,13 @@ func try_apply(slot: int, item: Resource) -> Dictionary:
 	loadout_changed.emit()
 	return {"result":Result.VALID,"previous":previous}
 
+# Call only after the whole living save projection is verified. The locked
+# Cloth and Spear have zero stat contribution; one source loadout notification
+# follows the whole slot replacement, without bag operations or action gates.
+func _replace_saved_living_slots(slots: Dictionary) -> void:
+	_slots=slots.duplicate()
+	loadout_changed.emit()
+
 ## Scope: these locked equipment items contribute no stats or abilities.
 ## Source lifecycle uses a slot snapshot and emits one event per removal.
 func force_unequip_for_lifecycle() -> Array[Resource]:

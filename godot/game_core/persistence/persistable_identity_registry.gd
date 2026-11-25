@@ -1,6 +1,6 @@
 extends RefCounted
 ## Locked PersistenceSystem identifier owner (31629d53). External actor lifecycle
-## registers and unregisters; this slice does not create/restore data blocks.
+## registers and unregisters; only the fresh empty automatic snapshot is supported.
 enum Kind { PRE_INSTANCED, CUSTOM_INSTANCED }
 
 var _mappings: Dictionary
@@ -56,6 +56,16 @@ func identifier_for(actor: Node) -> String:
 
 func automatically_persisted(actor: Node) -> bool:
 	return bool(_record(actor).get("automatic",false))
+
+
+## PersistenceSystem snapshots registered live actors, not the last owner of
+## each lookup key. An active automatic object requires unmigrated serialization.
+func capture_fresh_empty_automatic_block() -> Dictionary:
+	for record: Dictionary in _by_actor.values():
+		var actor: Node = record.actor.get_ref()
+		if is_instance_valid(actor) and actor.is_inside_tree() and record.automatic:
+			return {}
+	return {"objects":[]}
 
 
 func _record(actor: Node) -> Dictionary:

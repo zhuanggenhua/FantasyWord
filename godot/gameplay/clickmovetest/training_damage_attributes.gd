@@ -2,7 +2,7 @@ extends RefCounted
 ## ClickMoveTest 角色表在无活动属性修饰的受击切片中的单一属性真相。
 ## 对应 FormalAttributeCatalog.CreateAttributeSetConfig 与
 ## FormalGameplayEffectResourceModifier.TryApplyCurrentStatDelta 的生命下降分支。
-## 不创建 ASC/Effect 实体，不支持 Buff 聚合、装备加成、同步或存档。
+## 不创建 ASC/Effect 实体，不支持 Buff 聚合、装备加成或完整存档。
 signal current_health_changed(previous: int, current: int, source: Variant)
 const Combat = preload("res://game_core/combat/combat_rules.gd")
 const SNAPSHOT_KEYS := ["physical_attack", "magical_attack", "physical_defense",
@@ -56,6 +56,16 @@ func menu_base_stats() -> Array[int]:
 	if not has_formal_stats(): return result
 	for i in range(8): result.append(_sheet[i])
 	return result
+
+# Original load clamps and applies Health before Mana, without a damage action.
+# Caller has already admitted a fixed-stat living actor and a nonlethal result.
+func _restore_living_resources(health: int, mana: int, source: Variant) -> void:
+	var previous := _health_current
+	if health!=previous:
+		_health_base=health
+		_health_current=health
+		current_health_changed.emit(previous,health,source)
+	_mana_current=mana
 
 func apply_current_health_delta(delta: int, minimum: Variant, maximum: Variant, source: Variant) -> Variant:
 	# 正式执行器的伤害调用：只允许负增量、下限0、没有额外上限。

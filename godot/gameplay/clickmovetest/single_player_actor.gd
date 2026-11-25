@@ -14,6 +14,10 @@ const SOURCE_PREFAB := "f32187b1edab1484a99d97ef54021bf5"
 const SOURCE_SHEET := "13245a7230bedbe4da633d5325872ce1"
 const SOURCE_PREINSTANCED_IDENTIFIER := "6b7f0021-a37d-413c-ad2e-947903b4e6f5"
 const UNIQUE_PLAYER_IDENTIFIER := "player"
+# Locked CharacterSheet displayName falls back to the asset name; this port
+# models only the fresh level, not progression or old-save restoration.
+const _FRESH_DISPLAY_NAME := "玩家角色配置"
+const _FRESH_LEVEL := 1
 const BASE_MOVE_SPEED := 4.0
 const BASE_SPEED_MULTIPLIER := 1.0
 # 31629d53：玩家角色配置在初始等级 1 授予 20001，玩家角色.prefab 再声明 20001、20010。
@@ -52,6 +56,7 @@ var _fresh_loadout: Loadout
 var _fresh_owned_ability_codes: Array[int] = []
 var _fresh_ability_host: WeakRef
 var _binding_initial_loadout := false
+var _restoring_living_save := false
 
 func configure(actor: Node2D, pointer_reader: Callable = Callable(),
 		refresh_interaction: Callable = Callable(), reset_interaction: Callable = Callable(),
@@ -186,6 +191,16 @@ func reset_target_direction() -> void: _directions.reset_target_direction()
 func update_movement_animation(velocity: Vector2) -> void: accepted_movement.emit(velocity)
 func register_collision(collider: Object) -> void: collision_reported.emit(collider)
 func stats() -> Dictionary: return _attributes.stats()
+## SaveSystem reads PlayerSystem's explicit primary, even when unselected.
+func source_primary_save_title_fields() -> Dictionary:
+	var actor := _get_primary()
+	if not is_instance_valid(actor) or actor.is_queued_for_deletion() or _persistence_registry==null \
+			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
+			or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor \
+			or not _attributes.has_formal_stats():
+		return {}
+	return {"display_name":_FRESH_DISPLAY_NAME,"level":_FRESH_LEVEL}
+
 ## The numbered ClickMoveTest actor has no migrated level-up/save mutations.
 ## Admit only its pinned fresh profile, and read stats from the same live owner
 ## used for combat. This does not inspect an unrelated actor or HUD HP value.
@@ -194,10 +209,10 @@ func character_menu_fresh_values(target: Object, profile: Dictionary) -> Diction
 			"31629d53a110dd4c87d4c85e6ad5a387fbafb931" or profile.get("actor_file_id")!="735002000000000004" \
 			or profile.get("sheet_guid")!="13245a7230bedbe4da633d5325872ce1": return {}
 	var authored: Variant = profile.get("fresh")
-	if not authored is Dictionary or authored.get("level")!=1 or authored.get("minimum_level")!=1 \
+	if not authored is Dictionary or authored.get("level")!=_FRESH_LEVEL or authored.get("minimum_level")!=1 \
 			or authored.get("points_per_level")!=5 or authored.get("used_points")!=0 \
 			or authored.get("experience")!=0 or authored.get("next_level_experience")!=0 \
-			or authored.get("display_name")!="玩家角色配置": return {}
+			or authored.get("display_name")!=_FRESH_DISPLAY_NAME: return {}
 	var stats_array := _attributes.menu_base_stats()
 	var expected: Variant = authored.get("base_stats")
 	if stats_array.size()!=8 or not expected is Array or expected.size()!=9: return {}
@@ -223,6 +238,70 @@ func resource_bar_values(actor: Node2D) -> PackedInt32Array:
 	if not is_instance_valid(actor) or actor!=_get_primary(): return PackedInt32Array()
 	return PackedInt32Array([_attributes.current_health(),_attributes.max_health(),
 		_attributes.current_mana(),_attributes.max_mana()])
+
+# Only the source primary's already ported save fields. A partial receipt
+# is never admitted as CharacterActorRuntimeStateData or sent to file storage.
+func capture_source_player_save_fields() -> Dictionary:
+	var actor := _get_primary()
+	if not is_instance_valid(actor) or actor.is_queued_for_deletion() or _persistence_registry==null \
+			or _persistence_registry.identifier_for(actor)!=UNIQUE_PLAYER_IDENTIFIER \
+			or _persistence_registry.resolve(UNIQUE_PLAYER_IDENTIFIER)!=actor or is_destroyed() \
+			or _attributes.current_health()<=0 or not _attributes.has_formal_stats() \
+			or _equipment==null or not _equipment.belongs_to(actor):
+		return {"ok":false,"reason":"primary_state_outside_supported_scope"}
+	var slots: Array[Dictionary] = []
+	for slot in range(Equipment.Slot.WEAPON,Equipment.Slot.MOUNT+1):
+		var item := _equipment.equipped(slot)
+		if item==null: continue
+		var guid := ""
+		if slot==Equipment.Slot.WEAPON and item==_equipment.item_for_guid(Equipment.SPEAR): guid=Equipment.SPEAR
+		if slot==Equipment.Slot.TORSO and item==_equipment.item_for_guid(Equipment.CLOTH): guid=Equipment.CLOTH
+		if guid.is_empty(): return {"ok":false,"reason":"equipment_outside_source_registry"}
+		slots.append({"slotType":slot,"equipment":{"guid":guid}})
+	return {"ok":true,"fields":{"identifier":UNIQUE_PLAYER_IDENTIFIER,
+		"currentResources":{"health":_attributes.current_health(),"mana":_attributes.current_mana()},
+		"equipmentSlots":slots}}
+
+# Logical living subset; never apply a half snapshot from an original file.
+# Stats are already resolved for these exact zero-contribution items. The
+# source makes equipment visible as one loadout change before rebuilding HP/MP.
+func restore_source_player_save_fields(fields: Variant) -> bool:
+	if _restoring_living_save or not fields is Dictionary or fields.size()!=3 \
+			or fields.get("identifier")!=UNIQUE_PLAYER_IDENTIFIER \
+			or not fields.get("currentResources") is Dictionary or not fields.get("equipmentSlots") is Array:
+		return false
+	if not capture_source_player_save_fields().ok: return false
+	var actor := _get_primary() as PlayerBody
+	var host: Object = _fresh_ability_host.get_ref() if _fresh_ability_host!=null else null
+	if not is_current_controlled(actor) or not accepts_player_input(actor) or actor.is_pushed() \
+			or actor.execution.has_active_movement_intent() or not actor.get_movement_linear_velocity().is_zero_approx() \
+			or not is_instance_valid(host) or not host.has_method("is_idle_for_living_save_restore") \
+			or not host.is_idle_for_living_save_restore():
+		return false
+	var resources: Dictionary = fields.currentResources
+	if resources.size()!=2 or not resources.get("health") is int or not resources.get("mana") is int:
+		return false
+	var health := clampi(resources.health,0,_attributes.max_health())
+	var mana := clampi(resources.mana,0,_attributes.max_mana())
+	if health<=0: return false
+	var parsed := {}
+	for row: Variant in fields.equipmentSlots:
+		if not row is Dictionary or row.size()!=2 or not row.get("slotType") is int \
+				or not row.get("equipment") is Dictionary or row.equipment.size()!=1:
+			return false
+		var slot: int = row.slotType
+		var guid: Variant = row.equipment.get("guid")
+		if parsed.has(slot) or not guid is String: return false
+		if not ((slot==Equipment.Slot.WEAPON and guid==Equipment.SPEAR) \
+				or (slot==Equipment.Slot.TORSO and guid==Equipment.CLOTH)): return false
+		var item := _equipment.item_for_guid(guid)
+		if item==null: return false
+		parsed[slot]=item
+	_restoring_living_save=true
+	_equipment._replace_saved_living_slots(parsed)
+	_attributes._restore_living_resources(health,mana,actor)
+	_restoring_living_save=false
+	return true
 
 func unbind_current_health_changed(callback: Callable) -> void:
 	if _attributes.current_health_changed.is_connected(callback):

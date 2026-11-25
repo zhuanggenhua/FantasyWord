@@ -19,6 +19,8 @@ const PauseRoot := preload("res://gameplay/clickmovetest/source_pause_root.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
 
+const InventoryCapture := preload("res://game_core/persistence/source_inventory_save_capture.gd")
+const Flags := preload("res://game_core/persistence/source_game_flags.gd")
 const Journal := preload("res://game_core/persistence/source_journal.gd")
 const PersistenceRegistry = preload("res://game_core/persistence/persistable_identity_registry.gd")
 const MapRegistry = preload("res://game_core/maps/active_map_registry.gd")
@@ -38,6 +40,7 @@ var player: PlayerOwner
 var trainer_owner: TrainerOwner
 var maps := MapRegistry.new()
 var journal: Journal
+var game_flags := Flags.new()
 var persistables := PersistenceRegistry.new()
 var point: Point
 var pause_root: PauseRoot
@@ -54,6 +57,7 @@ var damage_screen_flash: DamageScreenFlash
 
 var refusal := ""
 var _attempted := false
+var _formal_world_ready := false
 var _source_draws: SessionDraws
 
 
@@ -225,16 +229,51 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 		ability_hud = hud
 		scene.add_child(hud)
 
+	_formal_world_ready = mount_project_contact
 	return true
 
-## The original Journal owns its empty in-memory block independently of Pause art.
-## This path is not a disk SaveKit route or an implementation of quest records.
+## These are source-owned in-memory blocks, not a complete SaveDataBlock.
+func _has_formal_world() -> bool:
+	return _formal_world_ready and is_instance_valid(scene) and scene.is_inside_tree() \
+		and not scene.is_queued_for_deletion()
+
+func capture_source_save_header() -> String:
+	if not _has_formal_world() or player==null: return ""
+	var primary := player.source_primary_save_title_fields()
+	if primary.is_empty(): return ""
+	# Authored GameConfig has no level term; original format has no space after it.
+	return "%s %s%d" % [primary.display_name,"[INVALID_SHORTNAME]",primary.level]
+
+func capture_source_map_save_block() -> Dictionary:
+	if not _has_formal_world(): return {"ok":false,"reason":"map_owner_unavailable"}
+	return maps.capture_source_map_save_block(scene)
+
+func preflight_source_map_load(block: Variant) -> Dictionary:
+	if not _has_formal_world(): return {"ok":false,"reason":"map_owner_unavailable"}
+	return maps.preflight_source_map_load_block(block,scene)
+
+func capture_source_game_flags_save_block() -> Dictionary:
+	return game_flags.create_data_block() if _has_formal_world() else {}
+
+func restore_source_game_flags_save_block(block: Variant) -> bool:
+	return _has_formal_world() and game_flags.load_data_block(block)
+
 func capture_source_journal_save_block() -> Dictionary:
-	if journal==null or not is_instance_valid(scene): return {}
-	return journal.create_data_block()
+	return journal.create_data_block() if _has_formal_world() and journal!=null else {}
 
 func restore_source_journal_save_block(block: Variant) -> bool:
-	return journal!=null and is_instance_valid(scene) and journal.load_data_block(block)
+	return _has_formal_world() and journal!=null and journal.load_data_block(block)
+
+## PlayerSystem owns the main actor; the authored training target opts out.
+func capture_source_persistence_save_block() -> Dictionary:
+	if not _has_formal_world(): return {}
+	var actor: Node = scene.actor
+	if not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_inside_tree() \
+			or persistables.identifier_for(actor)!=PlayerOwner.UNIQUE_PLAYER_IDENTIFIER \
+			or persistables.resolve(PlayerOwner.UNIQUE_PLAYER_IDENTIFIER)!=actor \
+			or persistables.automatically_persisted(actor):
+		return {}
+	return persistables.capture_fresh_empty_automatic_block()
 
 ## ClickMoveTest is the admitted primary actor, whose inherited CharacterInventory
 ## owns main, weapon and hotbar. Read the actual replaced PersistenceSystem key.
@@ -264,6 +303,24 @@ func _exit_tree() -> void:
 	if saved!=OK: push_warning("FantasyWord 音量设置未能保存："+error_string(saved))
 	_apply_source_listener(_listener_prior)
 	audio_preferences = null
+
+# Use only the registered original database identities bound to the F5 gear owner.
+func capture_source_inventory() -> Dictionary:
+	var registered := _source_inventory_registry()
+	if registered.is_empty(): return {"ok":false,"reason":"inventory_owner_unavailable","owner":""}
+	return InventoryCapture.capture(inventory_bags,party_money,registered)
+
+func restore_source_inventory(block: Variant) -> Dictionary:
+	var registered := _source_inventory_registry()
+	if registered.is_empty(): return {"ok":false,"reason":"inventory_owner_unavailable","owner":""}
+	return InventoryCapture.restore(block,inventory_bags,party_money,registered)
+
+func _source_inventory_registry() -> Dictionary:
+	if not _has_formal_world(): return {}
+	var gear := player.source_equipment() if player!=null else null
+	if gear==null: return {}
+	return {gear.CLOTH:gear.item_for_guid(gear.CLOTH),gear.SPEAR:gear.item_for_guid(gear.SPEAR)}
+
 
 func _mount_source_pause(directory: String) -> bool:
 	var menu := PauseRoot.new()

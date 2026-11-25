@@ -81,3 +81,48 @@ func get_active_terrain_navigation_map() -> RefCounted:
 func get_respawn_delay() -> float:
 	# Source accessor reads the cache, unlike ResolveActiveMapInfo used by terrain.
 	return _active_info.get_respawn_delay() if _active_info != null else 0.0
+
+
+## Source MapSystem.CreateDataBlock, limited to this checkpoint-free owner.
+## Active MapInfo lookup can fall back to the current scene, but that fallback
+## cannot certify a previously reported, unresolved name for save capture.
+func capture_source_map_save_block(required_root: Node) -> Dictionary:
+	if not is_instance_valid(required_root) or not required_root.is_inside_tree() \
+			or not _named_root.is_valid() or not _active_root.is_valid():
+		return {"ok":false,"reason":"map_owner_unavailable"}
+	refresh()
+	if _active_info==null or _active_info.get_scene_root()!=required_root:
+		return {"ok":false,"reason":"map_owner_unavailable"}
+	if not _reported_name.is_empty() and _named_root.call(_reported_name)!=required_root:
+		return {"ok":false,"reason":"reported_map_unresolved"}
+	# The registry currently represents only the source's empty checkpoint
+	# stack and unset order, not a save after a teleport/checkpoint visit.
+	return {"ok":true,"fields":{"currentMap":_reported_name,"checkpoints":[],
+		"hasOrderedCheckpoint":false,"currentCheckpointOrder":-2147483648,"playtest":false}}
+
+
+## 只预检当前迁移能采集的逻辑地图块，不执行原地图过场，不接受 Unity 线格式。
+## 空地图名是原首次进入分支；当前 F5 的空检查点栈没有可供传送的出生点。
+func preflight_source_map_load_block(block: Variant, required_root: Node) -> Dictionary:
+	if not block is Dictionary:
+		return {"ok":false,"reason":"invalid_map_block"}
+	if block.size()!=5 or not block.get("currentMap") is String \
+			or not block.get("checkpoints") is Array or not block.get("playtest") is bool \
+			or not block.get("hasOrderedCheckpoint") is bool or not block.get("currentCheckpointOrder") is int:
+		return {"ok":false,"reason":"invalid_map_block"}
+	if block.playtest or not block.checkpoints.is_empty() or block.hasOrderedCheckpoint \
+			or block.currentCheckpointOrder!=-2147483648:
+		return {"ok":false,"reason":"unsupported_map_checkpoint_state"}
+	if not is_instance_valid(required_root) or not required_root.is_inside_tree() \
+			or not _named_root.is_valid() or not _active_root.is_valid() or _active_root.call()!=required_root:
+		return {"ok":false,"reason":"map_owner_unavailable"}
+	# 直接确认登记关系，不刷新活动缓存，也不发布 MapLoaded/MapUnloaded。
+	if not _records.any(func(info: Info): return info.get_scene_root()==required_root):
+		return {"ok":false,"reason":"map_owner_unavailable"}
+	var name: String=block.currentMap
+	if name.is_empty():
+		return {"ok":false,"reason":"initial_checkpoint_required"}
+	if _named_root.call(name)!=required_root:
+		return {"ok":false,"reason":"named_map_unavailable"}
+	# 原具名地图也走 RequestTransition，再检查命中的主角是否处于有效出生点。
+	return {"ok":false,"reason":"named_map_transition_required"}

@@ -19,6 +19,45 @@ func check(ok: bool, description: String) -> void:
 		printerr("FAIL: ",description)
 
 
+func test_load_preflight(maps: Registry, map: Node, other: Node, authored: MapInfo) -> void:
+	var captured := maps.capture_source_map_save_block(map)
+	var fields: Dictionary=captured.get("fields",{})
+	var empty := fields.duplicate(true)
+	empty.currentMap=""
+	check(maps.preflight_source_map_load_block(null,map).reason=="invalid_map_block",
+		"没有地图块不能预检")
+	var malformed := fields.duplicate(true)
+	malformed.currentCheckpointOrder=float(-2147483648)
+	check(maps.preflight_source_map_load_block(malformed,map).reason=="invalid_map_block",
+		"当前只接逻辑整数顺序，不冒充线格式解码")
+	check(maps.preflight_source_map_load_block(fields,other).reason=="map_owner_unavailable",
+		"另一场景不能借用活动地图登记")
+	check(maps.preflight_source_map_load_block(empty,map).reason=="initial_checkpoint_required",
+		"空名与空栈缺少源首次进入的传送检查点")
+	var with_checkpoint := empty.duplicate(true)
+	with_checkpoint.checkpoints=[{}]
+	check(maps.preflight_source_map_load_block(with_checkpoint,map).reason=="unsupported_map_checkpoint_state",
+		"非空检查点仍待迁移，不能伪造首次进入")
+	var playtest := fields.duplicate(true)
+	playtest.playtest=true
+	check(maps.preflight_source_map_load_block(playtest,map).reason=="unsupported_map_checkpoint_state",
+		"独立 Playtest 检查点未接通")
+	var ordered := fields.duplicate(true)
+	ordered.hasOrderedCheckpoint=true
+	check(maps.preflight_source_map_load_block(ordered,map).reason=="unsupported_map_checkpoint_state",
+		"顺序检查点不属于当前逻辑块")
+	var missing := fields.duplicate(true)
+	missing.currentMap="Missing"
+	check(maps.preflight_source_map_load_block(missing,map).reason=="named_map_unavailable",
+		"活动回退不能认证不存在的具名目标")
+	var named := maps.preflight_source_map_load_block(fields,map)
+	check(not named.ok and named.reason=="named_map_transition_required",
+		"显式名称匹配同一地图也仍需真实过场")
+	check(_events==["loaded"] and maps.resolve_active_map_info()==authored
+		and maps.capture_source_map_save_block(map).get("fields")==fields,
+		"预检不触碰地图事件、登记与当前地图名")
+
+
 func run() -> void:
 	var shell := Node2D.new()
 	var map := Node2D.new()
@@ -57,6 +96,7 @@ func run() -> void:
 		and is_equal_approx(maps.get_respawn_delay(),.75),"tracked named scene resolves its first registered instance")
 	maps.notify_map_loaded()
 	_active = map
+	test_load_preflight(maps,map,shell,authored)
 	maps.record_current_map_name("Unloaded")
 	check(maps.resolve_active_map_info()==null,"valid unloaded named scene never falls through to active")
 	maps.record_current_map_name("Missing")

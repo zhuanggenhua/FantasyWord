@@ -62,6 +62,12 @@
   "test_source_equipment_transaction.gd": [
     "SKIP 实际 ClickMoveTest 装备合同需要未公开作者资源。"
   ],
+  "test_source_fresh_save_header.gd": [
+    "SKIP 原存档标题需要真实 F5 主角与原地图素材。"
+  ],
+  "test_source_game_flags.gd": [
+    "SKIP 私有 F5 标记所有者，不使用替代地图"
+  ],
   "test_source_gamepad_combat_entry.gd": [
     "SKIP 原窗口与原技能、HUD 需要私有素材；仅运行边沿合同。"
   ],
@@ -86,8 +92,14 @@
   "test_source_inventory_event_log.gd": [
     "SKIP 正式 F5 事件日志需要锁定私有资源；已执行独立金钱事件检查。"
   ],
+  "test_source_inventory_save_capture.gd": [
+    "SKIP 私有原场景背包快照"
+  ],
   "test_source_journal_entry.gd": [
     "SKIP 当前没有实际 F5 原地图合同，不能用替代场景检验 Journal 所有者。"
+  ],
+  "test_source_map_save_capture.gd": [
+    "SKIP 正式 F5 地图存档块需要原场景私有资源。"
   ],
   "test_source_menu_glyph_atlas.gd": [
     "SKIP 私有原 Alpha8 字形与原生绘制"
@@ -106,6 +118,12 @@
   ],
   "test_source_pause_text_line.gd": [
     "SKIP 原暂停标题字体"
+  ],
+  "test_source_player_save_slice.gd": [
+    "SKIP 原场景主角存档验证需要私有原资源"
+  ],
+  "test_source_persistence_save_capture.gd": [
+    "SKIP 没有锁定原场景合同，不用替代场景验证正式存档。"
   ],
   "test_source_ramp_movement_entry.gd": [
     "SKIP 原坡道实际 F5 需要私有地图规则与正式角色资源。"

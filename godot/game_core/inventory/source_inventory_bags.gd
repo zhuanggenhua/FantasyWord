@@ -40,6 +40,27 @@ func entries(owner: String) -> Array[Dictionary]:
 		if row!=null: result.append(row.duplicate())
 	return result
 
+# Snapshot only already materialized bags; never call entries() for a new owner.
+func save_bag_rows() -> Dictionary:
+	var result := {}
+	for owner: String in _bags:
+		result[owner]=entries(owner)
+	return result
+
+# Caller validates owner, canonical resource identity and quantities before
+# the whole inventory is replaced. Restore emits no transactional events.
+func _replace_saved_rows(owners: Dictionary) -> void:
+	var replacement := {}
+	for owner: String in owners:
+		# Use an untyped array so native removal can store a null free slot.
+		var rows: Array = []
+		var indices := {}
+		for row: Dictionary in owners[owner]:
+			indices[row.item]=rows.size()
+			rows.append(row.duplicate())
+		replacement[owner]={"indices":indices,"rows":rows,"free":[]}
+	_bags=replacement
+
 func count(owner: String, item: Resource) -> int:
 	if not _valid(owner) or item==null: return 0
 	var bag := _bag(owner)

@@ -88,6 +88,17 @@ func can_update_fresh_target_direction() -> bool:
 func allows_fresh_movement() -> bool:
 	return not spec.has_attacking_tag()
 
+# Narrow preflight for the one-player living save projection only. Do not
+# interrupt, reschedule, or silently ingest an in-flight ability on restore.
+func is_idle_for_living_save_restore() -> bool:
+	if gate==null or spec.has_attacking_tag() or local_active or spec.active or spec.pending_context!=null or spec.activation_context!=null \
+			or spec.activate_requested or spec.cancel_requested or spec.end_requested:
+		return false
+	if spec.ability_code==BASIC and (gate.state!=BasicGate.State.IDLE or gate.buffered): return false
+	if spec.ability_code==FIRE and (gate.state!=FireGate.State.IDLE or gate.trigger_held): return false
+	if spec.ability_code not in [BASIC,FIRE]: return false
+	return not is_instance_valid(_fire) or _fire.is_idle_for_living_save_restore()
+
 func _locks_fresh_target_direction() -> bool:
 	var activation: Variant = context.activation_context
 	var has_aim: bool = activation != null and activation.has_aim_direction
