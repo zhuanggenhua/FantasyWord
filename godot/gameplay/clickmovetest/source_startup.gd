@@ -10,6 +10,8 @@ const SessionDraws = preload("res://gameplay/clickmovetest/source_session_draws.
 const TrainerOwner = preload("res://gameplay/clickmovetest/training_actor_owner.gd")
 const InventoryBags := preload("res://game_core/inventory/source_inventory_bags.gd")
 const PartyMoney := preload("res://game_core/inventory/source_party_money.gd")
+const InventoryEventLog := preload("res://gameplay/clickmovetest/source_inventory_event_log.gd")
+const ItemDetails := preload("res://gameplay/clickmovetest/source_item_details_view.gd")
 const AudioPreferences := preload("res://game_core/audio/source_audio_preferences.gd")
 const AbilityHUD := preload("res://gameplay/clickmovetest/source_ability_hud.gd")
 const MovementIndicator := preload("res://gameplay/clickmovetest/source_movement_indicator.gd")
@@ -40,6 +42,7 @@ var pause_root: PauseRoot
 var ability_hud: AbilityHUD
 var audio_preferences: AudioPreferences
 var party_money: PartyMoney
+var inventory_event_log: InventoryEventLog
 var inventory_bags: InventoryBags
 var _listener_prior := 1.0
 var _trainer_death := false
@@ -278,11 +281,19 @@ func _mount_source_pause(directory: String) -> bool:
 			player,OS.get_environment("FORMAL_PANEL_SILVER")):
 		menu.free()
 		return false
-	if not scene.bind_source_pause_command(menu.open_registered_pause):
+	var log := InventoryEventLog.new()
+	if not log.bind(party_money,source,directory.path_join("pause-font-atlas.bin")) \
+			or (FileAccess.file_exists(directory.path_join("item-details-layout.json")) and not log.bind_items(
+				inventory_bags,player.source_equipment(),ItemDetails.load_layout(directory),
+				OS.get_environment("FORMAL_PANEL_SILVER"))) \
+			or not scene.bind_source_pause_command(menu.open_registered_pause):
+		log.free()
 		menu.free()
 		return false
 	pause_root = menu
 	add_child(menu)
+	inventory_event_log=log
+	scene.add_child(log)
 	scene.source_primary_killed.connect(menu.stack.close_all)
 	return true
 

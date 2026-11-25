@@ -83,6 +83,9 @@
   "test_source_inventory_entry.gd": [
     "SKIP live inventory source graphics require private locked contracts."
   ],
+  "test_source_inventory_event_log.gd": [
+    "SKIP 正式 F5 事件日志需要锁定私有资源；已执行独立金钱事件检查。"
+  ],
   "test_source_journal_entry.gd": [
     "SKIP source Journal graphics require the pinned private contracts"
   ],
