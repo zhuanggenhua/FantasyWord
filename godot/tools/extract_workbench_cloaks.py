@@ -6,6 +6,7 @@ from extract_formal_human_animation import SOURCE, read, parse
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("repo", type=Path, help="含锁定提交的 Unity Git 仓库")
 parser.add_argument("directory", type=Path, help="含已获授权的十张原披风 PNG 的私有目录")
+parser.add_argument("--include-slash-attack", action="store_true", help="同时验证挥砍躯干的 16 个原帧")
 args = parser.parse_args()
 base, repo = args.directory, args.repo
 R = 'Assets/GameData/EquipmentSystem/'
@@ -54,7 +55,7 @@ raw=read(repo,frame_path)
 sources[frame_path]=hashlib.sha256(raw).hexdigest()
 records=raw.decode().split('\n  - animationType: ')[1:]
 selected=('    frames:', '    - frameIndex:', '      rowIndex:', '      bodyRegions:', '      - part:', '        spriteFacing:', '        variant:')
-for key in ('Idle','Walk','Attack','Dmg'):
+for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_slash_attack else ()):
     guid=parse(read(repo,R+f'AnimationType/{key}.asset.meta'))['guid']
     matching=[r for r in records if guid in r.splitlines()[0]]
     assert len(matching)==1, key
@@ -64,8 +65,12 @@ for key in ('Idle','Walk','Attack','Dmg'):
     result=[]
     for row in parsed['frames']:
         torso=next((r for r in row['bodyRegions'] if r['part']==1),None)
+        if key == 'SlashAttack':
+            assert torso is not None, (key, row['frameIndex'], row['rowIndex'])
         result.append([row['frameIndex'],row['rowIndex'],torso['spriteFacing'] if torso else row['rowIndex'],torso['variant'] if torso else 0])
     frames[key]=result
+if args.include_slash_attack:
+    assert sorted(frames['SlashAttack']) == [[label, facing, facing, 0] for label in range(4) for facing in range(4)]
 assert len(frames['Dmg'])==16 and sum(r[3]==3 for r in frames['Dmg'])==8
 assert [0,0,0,3] in frames['Dmg']
 assert all(r[3]==0 and r[1]==r[2] for key,rows in frames.items() if key!='Dmg' for r in rows)

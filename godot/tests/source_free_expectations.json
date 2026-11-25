@@ -115,5 +115,8 @@
   ],
   "test_source_trainer_ramp_entry.gd": [
     "SKIP 原假人坡道需要私有正式地图规则与角色资源。"
+  ],
+  "test_workbench_slash_attack.gd": [
+    "SKIP locked source workbench SlashAttack inputs not requested"
   ]
 }

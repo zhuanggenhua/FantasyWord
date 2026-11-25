@@ -8,7 +8,7 @@ import struct
 import subprocess
 import yaml
 
-from extract_formal_human_animation import SOURCE, extract as animations, parse, read
+from extract_formal_human_animation import SOURCE, atlas_name, extract as animations, parse, read
 from extract_training_target_animation import documents, extract_target
 
 ROOT = "Assets/GameData/EquipmentSystem/"
@@ -22,8 +22,9 @@ CONFIG_GUID = "b669f9c81be34b47bf3d083609477ab5"
 BASE_ACTOR = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 TRAINER = "Assets/Prefabs/Entities/Characters/Enemies/测试-训练假人.prefab"
 
-def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False, include_attack=False, include_death=False):
-    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death)
+def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False,
+            include_attack=False, include_death=False, include_slash_attack=False):
+    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab_path = TRAINER if training_target else PREFAB
@@ -89,7 +90,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
 
     actions = {}
     for name in animation["actions"]:
-        main = f"Minifantasy_CreaturesHuman{name}.png"
+        main = atlas_name(name)
         main_guid = parse((human / (main + ".meta")).read_bytes())["guid"]
         records = [block for block in authored if f"spritesheet: {{fileID: 2800000, guid: {main_guid}," in block]
         assert len(records) == 1
@@ -195,8 +196,9 @@ if __name__ == "__main__":
     p.add_argument("--training-target", action="store_true", help="核实活动训练假人的 Idle/Walk/Dmg/SpinDie")
     p.add_argument("--include-attack", action="store_true", help="同时核实普攻原帧与两张 UV")
     p.add_argument("--include-death", action="store_true", help="核实原 ClickMoveTest 主角的 SpinDie 与空死亡动作")
+    p.add_argument("--include-slash-attack",action="store_true",help="核实工作台挥砍的原帧及 UV")
     a = p.parse_args()
-    assert not (a.training_target and a.include_death), "主角死亡选项不适用于训练假人"
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death)
+    assert not (a.training_target and (a.include_death or a.include_slash_attack)), "主角死亡或工作台挥砍选项不适用于训练假人"
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))

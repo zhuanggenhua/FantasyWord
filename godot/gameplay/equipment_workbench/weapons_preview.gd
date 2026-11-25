@@ -6,6 +6,7 @@ const SlotIcon = preload("res://gameplay/equipment_workbench/slot_icon.gd")
 const MANIFESTS := [
 	"b24dbe5b601fe137b3d4e54b703b6bcc413e843120a93bfadc226d4cd1454a0b",
 	"0876b714bcb85858bd796a3d2352f10d0dfcb2411066cec69a6e7b5ac5364033",
+	"9d5394a2de7726d591700f02237d4d3bdb1c0a0c13178c7525680a83a2921578",
 ]
 const FORMAL_SPEAR_HASH := "ae0b9f2850574837396fdd0021b26d49877e579f8d4e25b8ff849d3b658a25da"
 const BUTTON_NAMES := {"战斧":"EquipAxe", "长矛":"EquipSpear", "重盾":"EquipShield", "圆盾":"EquipRoundShield"}
@@ -55,6 +56,10 @@ func load_source(dir: String, formal_spear := false) -> bool:
 		options.append({"name":option.name,"stats":option.stats,"sprites":sprites,"sequence":seqs,
 			"slot":int(option.type)-8,"is_shield":int(option.type)==9})
 	return true
+
+func supports_slash_attack() -> bool:
+	return _frames.has("SlashAttack") and _frames.SlashAttack.size()==16 \
+		and options.any(func(item):return item.name=="战斧" and item.sequence.has("SlashAttack"))
 
 func supports_anchorless_war_horse() -> bool:
 	# The mounted animation override uses Idle/Walk, even if the character

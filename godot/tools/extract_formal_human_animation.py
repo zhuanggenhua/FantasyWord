@@ -12,7 +12,12 @@ def parse(raw):
     text = re.sub(r"^--- !u!\d+ &[-\d]+", "---", text, flags=re.M)
     return yaml.safe_load(text)
 def h(value): return zlib.crc32(str(value).encode()) & 0x3fffffff
-def extract(repo, textures, include_damage=False, include_charged=False, include_attack=False, include_death=False):
+def atlas_name(action):
+    return "Slash_Character_human.png" if action == "SlashAttack" else f"Minifantasy_CreaturesHuman{action}.png"
+
+
+def extract(repo, textures, include_damage=False, include_charged=False, include_attack=False,
+            include_death=False, include_slash_attack=False):
     paths = subprocess.check_output(["git", "-c", "core.quotepath=false", "-C", str(repo), "ls-tree", "-r", "--name-only", SOURCE], text=True).splitlines()
     sources = {}
     def source(path):
@@ -27,13 +32,13 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
         if "AnimatorState" in doc: states.append(doc["AnimatorState"])
     libs = [source(ROOT+f"SpriteLibraries/人类_{d}动画精灵库.asset")["MonoBehaviour"] for d in ("SE","SW","NE","NW")]
     actions = {}; textures_out = {}
-    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()) + (("Attack",) if include_attack else ()) + (("SpinDie",) if include_death else ()):
+    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()) + (("Attack",) if include_attack else ()) + (("SpinDie",) if include_death else ()) + (("SlashAttack",) if include_slash_attack else ()):
         clip_path = ROOT + f"SharedClips/{action}.anim"
         clip = source(clip_path)["AnimationClip"]
         clip_guid = source(clip_path+".meta")["guid"]
         matches = [s for s in states if s["m_Name"] == action]
         assert len(matches)==1 and matches[0]["m_Motion"]["guid"] == clip_guid
-        if action in ("Dmg", "ChargedAttack", "Attack", "SpinDie"):
+        if action in ("Dmg", "ChargedAttack", "Attack", "SpinDie", "SlashAttack"):
             state = matches[0]
             assert state["m_Speed"] == 1 and state["m_CycleOffset"] == 0
             assert state["m_Transitions"] == [] and state["m_StateMachineBehaviours"] == []
@@ -52,7 +57,7 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
             for item in items:
                 label=int(item["m_Name"]); assert item["m_Hash"]==h(label)
                 ref=item["m_Sprite"]
-                name=f"Minifantasy_CreaturesHuman{action}.png"
+                name=atlas_name(action)
                 meta_file=textures/(name+".meta")
                 meta_raw=meta_file.read_bytes(); meta=parse(meta_raw)
                 assert meta["guid"] == ref["guid"]
@@ -87,7 +92,7 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
             assert [k["time"] for k in keys] == [i / 8 for i in range(7)]
             assert labels == [0, 1, 2, 3, 4, 5, 5]
             assert all(len(frames) == 6 for frames in directions)
-        if action == "Attack":
+        if action in ("Attack", "SlashAttack"):
             assert [k["time"] for k in keys] == [i / 8 for i in range(5)]
             assert labels == [0, 1, 2, 3, 3]
             assert all(len(frames) == 4 for frames in directions)
@@ -105,5 +110,6 @@ if __name__=="__main__":
     p.add_argument("--include-charged",action="store_true",help="同时核实原 ChargedAttack 四向非循环片段")
     p.add_argument("--include-attack",action="store_true",help="同时核实原 Attack 四向非循环片段")
     p.add_argument("--include-death",action="store_true",help="同时核实原 SpinDie 非循环片段")
-    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    p.add_argument("--include-slash-attack",action="store_true",help="同时核实原 SlashAttack 四向非循环片段")
+    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("Human 私有合同：四向来源、所有标签和 PNG 哈希已核验。")

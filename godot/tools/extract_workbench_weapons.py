@@ -17,7 +17,8 @@ DIRECTIONS = ("SE", "SW", "NE", "NW")
 ACTIONS = {"Idle": 16, "Walk": 4, "Attack": 4, "Dmg": 4}
 
 
-def extract(repo, directory, legacy_pair=False, spear_only=False):
+def extract(repo, directory, legacy_pair=False, spear_only=False, slash_attack=False):
+    assert not (slash_attack and (legacy_pair or spear_only))
     textures, sprites, sources = {}, {}, {}
     names = ["长矛1.png"]
     if not spear_only:
@@ -85,8 +86,9 @@ def extract(repo, directory, legacy_pair=False, spear_only=False):
             assert main_hand and len(seq["strips"]) == 4
             if key_guid == slash_guid:
                 assert name == "战斧" and seq["strips"] == next(a["strips"] for a in definition["animSequences"] if a["animationType"]["guid"] == attack_guid)
-                continue  # No SlashAttack body animation is exposed by this scene yet.
-            assert key_guid == attack_guid
+                if not slash_attack:
+                    continue
+            assert key_guid in (attack_guid, slash_guid)
             rows = [None]*4
             for strip in seq["strips"]:
                 row = strip["facing"]
@@ -96,8 +98,8 @@ def extract(repo, directory, legacy_pair=False, spear_only=False):
                 columns = [1,0,2,3] if name == "战斧" and row == 2 else range(4)
                 assert all(r["rect"] == [j*32,(3-row)*32,32,32] for j,r in zip(columns,frames))
                 rows[row] = [dict(sprite=r, depth_back=bool(d)) for r,d in zip(frames,depth)]
-            sequences["Attack"] = rows
-        assert len(sequences) == int(main_hand)
+            sequences["SlashAttack" if key_guid == slash_guid else "Attack"] = rows
+        assert len(sequences) == int(main_hand) + int(slash_attack and name == "战斧")
         assert [r is not None for r in directions] == {
             "战斧":[True,False,False,False], "长矛":[True,False,False,False],
             "重盾":[True]*4, "圆盾":[True,True,False,False]
@@ -110,7 +112,8 @@ def extract(repo, directory, legacy_pair=False, spear_only=False):
     frames = {}
     wanted = ("    frameSize:", "    frames:", "    - frameIndex:", "      rowIndex:", "      anchors:",
               "      - type:", "        position:", "        direction:", "      bodyRegions:", "      - part:", "        spriteFacing:")
-    for key,count in ACTIONS.items():
+    actions = ACTIONS | ({"SlashAttack":4} if slash_attack else {})
+    for key,count in actions.items():
         guid = parse(src(ROOT + f"AnimationType/{key}.asset.meta"))["guid"]
         record, = (r for r in frame_records if guid in r.splitlines()[0])
         parts = record.splitlines()
@@ -128,6 +131,8 @@ def extract(repo, directory, legacy_pair=False, spear_only=False):
                 anchors[idx] = [rec["position"]["x"],rec["position"]["y"],rec["direction"]]
             rows.append([label,ri,torso,*anchors])
         assert {(r[0],r[1]) for r in rows} == {(label,row) for label in range(count) for row in range(4)}
+        if key == "SlashAttack":
+            assert all(r[3:] == [None, None] for r in rows)
         frames[key] = rows
     return dict(source_commit=SOURCE, sources=sources, textures=textures, options=options, frames=frames)
 
@@ -166,8 +171,10 @@ if __name__ == "__main__":
     parser.add_argument("directory",type=Path)
     parser.add_argument("--legacy-pair",action="store_true",help="regenerate the original spear/heavy-shield-only manifest")
     parser.add_argument("--formal-spear",action="store_true",help="author primary spear contract with audited absence of SpinDie anchors")
+    parser.add_argument("--include-slash-attack", action="store_true")
     args=parser.parse_args()
     assert not (args.formal_spear and args.legacy_pair)
+    assert not (args.include_slash_attack and (args.formal_spear or args.legacy_pair))
     result, name = (extract_primary_spear(args.repo,args.directory), "player-spear.json") if args.formal_spear \
-        else (extract(args.repo,args.directory,args.legacy_pair), "weapons.json")
+        else (extract(args.repo,args.directory,args.legacy_pair,slash_attack=args.include_slash_attack), "weapons.json")
     (args.directory/name).write_bytes((json.dumps(result,indent=2,ensure_ascii=False)+"\n").encode("utf-8"))

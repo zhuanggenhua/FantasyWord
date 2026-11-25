@@ -12,7 +12,7 @@ var _textures: Dictionary
 var _material: ShaderMaterial
 var _playback: Node
 
-func load_source(directory: String) -> bool:
+func load_source(directory: String, with_slash := false) -> bool:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("cloak.json")))
 	if not data is Dictionary or data.get("source_commit") != SOURCE:
 		return false
@@ -53,9 +53,11 @@ func load_source(directory: String) -> bool:
 		if sets[0][0] == null or sets[0][1] == null:
 			return false
 	var frames := {}
-	for action in ACTION_FRAMES:
+	var counts := ACTION_FRAMES.duplicate()
+	if with_slash: counts["SlashAttack"] = 4
+	for action in counts:
 		var rows: Variant = input_frames.get(action)
-		var count: int = ACTION_FRAMES[action]
+		var count: int = counts[action]
 		if not rows is Array or rows.size() != count * 4:
 			return false
 		var by_key := {}
@@ -63,7 +65,7 @@ func load_source(directory: String) -> bool:
 			if not row is Array or row.size() != 4 or not _bounded(row[0], count) or not _bounded(row[1], 4) or not _bounded(row[2], 4) or not _bounded(row[3], 5):
 				return false
 			var key := Vector2i(int(row[0]), int(row[1]))
-			if by_key.has(key):
+			if by_key.has(key) or (action == "SlashAttack" and (row[1] != row[2] or row[3] != 0)):
 				return false
 			by_key[key] = Vector2i(int(row[2]), int(row[3]))
 		frames[action] = by_key

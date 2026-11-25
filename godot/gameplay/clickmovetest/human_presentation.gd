@@ -25,12 +25,14 @@ static func valid_primary_death(source: Variant) -> bool:
 		and source.get("action_rid")==-2 and source.get("animation_key")=="SpinDie" \
 		and source.get("actor_file_id")=="735002000000000004"
 
-func configure(data: Dictionary, texture_directory: String) -> bool:
+func configure(data: Dictionary, texture_directory: String, workbench_slash := false) -> bool:
 	if sprite != null or not is_inside_tree():
 		return _fail("入口须先进入场景树且只能配置一次。")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE or not data.get("textures") is Dictionary or not data.get("actions") is Dictionary:
 		return _fail("缺少锁定来源的私有动画合同。")
-	if not data.actions.has_all(["Idle", "Walk"]) or data.actions.keys().any(func(key): return key not in ["Idle", "Walk", "Dmg", "ChargedAttack", "Attack", "SpinDie"]):
+	var admitted := ["Idle", "Walk", "Dmg", "ChargedAttack", "Attack", "SpinDie"]
+	if workbench_slash: admitted.append("SlashAttack")
+	if not data.actions.has_all(["Idle", "Walk"]) or data.actions.keys().any(func(key): return key not in admitted):
 		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg/ChargedAttack/Attack/SpinDie。")
 	if data.actions.has("SpinDie"):
 		var target: Variant = data.get("training_target")
