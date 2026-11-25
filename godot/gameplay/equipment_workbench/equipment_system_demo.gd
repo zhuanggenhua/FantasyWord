@@ -1,5 +1,6 @@
 extends Control
 ## 独立迁移原 EquipmentSystemDemo 可考证的换装预览，不接入正式角色或库存。
+const CharacterIcon = preload("res://gameplay/equipment_workbench/character_preview_icon.gd")
 const NonhumanPreview = preload("res://gameplay/equipment_workbench/nonhuman_preview.gd")
 const SOURCE_CHARACTERS := [["Human","人类"],["Dwarf","矮人"],["Elf","精灵"],["Goblin","地精"],["Orc","兽人"]]
 const HumanPresentation = preload("res://gameplay/clickmovetest/human_presentation.gd")
@@ -93,6 +94,7 @@ var _player: Button
 var _race := "Human"
 var _race_views := {}
 var _race_buttons := {}
+var _race_badges := {}
 var _held_human_category := 0
 var _human_action_disabled := {}
 var _action_buttons := {}
@@ -250,23 +252,7 @@ func _mount_ui() -> void:
 	title.position = Vector2(32, 26)
 	title.size = Vector2(320, 40)
 	var left := _label_column("角色", 316)
-	if _race_views.is_empty():
-		_player = _button(left,"人类",Vector2(84,92))
-		_player.name = "Human"
-		_player.pressed.connect(_reset_human)
-	else:
-		var picker := GridContainer.new()
-		picker.name = "SourceCharacterPicker"
-		picker.columns = 3
-		left.add_child(picker)
-		for entry in SOURCE_CHARACTERS:
-			var button := _button(picker,entry[1],Vector2(84,64))
-			button.name = entry[0]
-			_race_buttons[entry[0]] = button
-			button.disabled = entry[0] != "Human" and not _race_views.has(entry[0])
-			if button.disabled: button.tooltip_text = "原目录角色（未迁移）"
-			else: button.pressed.connect(_switch_character.bind(entry[0]))
-		_player = _race_buttons.Human
+	_mount_character_picker(left)
 	_header(left, "动作")
 	var action_scroll := ScrollContainer.new()
 	left.add_child(action_scroll)
@@ -504,6 +490,90 @@ func _select_bag(worn: bool) -> void:
 	_bag.select(worn)
 	_refresh()
 
+func _mount_character_picker(parent: Container) -> void:
+	# 原角色格有 8 点内距与间距，三列，自适应宽度，单格高度 92。
+	var inset := MarginContainer.new()
+	for side in ["left", "top", "right", "bottom"]:
+		inset.add_theme_constant_override("margin_" + side, 8)
+	parent.add_child(inset)
+	var picker := GridContainer.new()
+	picker.name = "SourceCharacterPicker"
+	picker.columns = 3
+	picker.add_theme_constant_override("h_separation", 8)
+	picker.add_theme_constant_override("v_separation", 8)
+	inset.add_child(picker)
+	for entry in SOURCE_CHARACTERS:
+		var key: String = entry[0]
+		var view: Node2D = _human if key == "Human" else _race_views.get(key)
+		if view == null and _race_views.is_empty(): continue
+		# 所有表现对象此时仍在原 Idle；仅从原始图集取图，绝不从换装 Shader 或播放帧截图取图。
+		var raw: AtlasTexture = view.sprite.texture if view != null else null
+		var icon := CharacterIcon.normalized(raw.atlas.get_image()) if raw != null else null
+		var button := _button(picker, "", Vector2(84, 92))
+		button.name = key
+		button.size_flags_horizontal = SIZE_EXPAND_FILL
+		_race_buttons[key] = button
+		button.disabled = view == null
+		button.tooltip_text = entry[1] if not button.disabled else entry[1] + "（原始预览资料未配置）"
+		if not button.disabled: button.pressed.connect(_switch_character.bind(key))
+
+		var frame := ColorRect.new()
+		frame.name = "IconFrame"
+		frame.color = Color(0.09, 0.11, 0.14, 0.94)
+		frame.mouse_filter = MOUSE_FILTER_IGNORE
+		button.add_child(frame)
+		# 原 IconSlotView 对当前格宽高得出 68 点图标框，距顶 10 点。
+		frame.anchor_left = 0.5
+		frame.anchor_right = 0.5
+		frame.offset_left = -34
+		frame.offset_right = 34
+		frame.offset_top = 10
+		frame.offset_bottom = 78
+		if icon != null:
+			var image := TextureRect.new()
+			image.name = "IdleThumbnail"
+			image.texture = ImageTexture.create_from_image(icon)
+			image.texture_filter = TEXTURE_FILTER_NEAREST
+			image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			image.mouse_filter = MOUSE_FILTER_IGNORE
+			frame.add_child(image)
+			image.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+		var title := _label(button, entry[1], 14)
+		title.name = "DisplayName"
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		title.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
+		title.offset_left = 6
+		title.offset_right = -6
+		title.offset_top = -24
+		title.offset_bottom = -4
+		var badge := ColorRect.new()
+		badge.name = "CurrentBadge"
+		badge.color = Color(0.89, 0.82, 0.59)
+		badge.position = Vector2(6, 6)
+		badge.size = Vector2(54, 22)
+		badge.mouse_filter = MOUSE_FILTER_IGNORE
+		button.add_child(badge)
+		var label := _label(badge, "当前", 11)
+		label.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.add_theme_color_override("font_color", Color(0.15, 0.17, 0.21))
+		_race_badges[key] = badge
+	_player = _race_buttons.Human
+
+func _refresh_character_picker() -> void:
+	for key in _race_buttons:
+		var button: Button = _race_buttons[key]
+		var selected: bool = key == _race
+		_style(button, SLOT_ACTIVE if selected else SLOT_IDLE)
+		if selected:
+			for state in ["normal", "hover", "pressed"]:
+				var shape: StyleBoxFlat = button.get_theme_stylebox(state)
+				shape.border_color = ACCENT
+		_race_badges[key].visible = selected
+
 func _label_column(title: String, width: float) -> VBoxContainer:
 	var panel := PanelContainer.new()
 	panel.name = "CharacterPanel" if width == 316.0 else "EquipmentPanel"
@@ -604,7 +674,7 @@ func _refresh() -> void:
 	for key in _action_buttons:
 		var button: Button = _action_buttons[key]
 		if not button.disabled: _style(button,SLOT_ACTIVE if key == current else SLOT_IDLE)
-	for key in _race_buttons: _style(_race_buttons[key],SLOT_ACTIVE if key == _race else SLOT_IDLE)
+	_refresh_character_picker()
 	for i in _directions.size():
 		_style(_directions[i], SLOT_ACTIVE if direction == i else SLOT_IDLE)
 	_style(_remove, SLOT_IDLE if worn else SLOT_ACTIVE)
