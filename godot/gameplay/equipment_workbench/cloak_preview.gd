@@ -130,15 +130,16 @@ func torso_for_sample(action: String, label: int, direction: int) -> Variant:
 
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:
 	var row: Variant = torso_for_sample(action, label, direction)
-	var texture: Texture2D
-	last_texture_guid = ""
-	if selected >= 0 and row is Vector2i:
-		var guid: Variant = resolve_guid(options[selected].sprite_sets, row.x, row.y)
-		texture = _textures.get(guid)
-		if texture != null:
-			last_texture_guid = guid
-	_material.set_shader_parameter("enabled_cloak", texture != null)
-	_material.set_shader_parameter("cloak_map", texture)
+	last_texture_guid = apply_torso(_material, selected, row) if row is Vector2i else apply_torso(_material, -1, Vector2i.ZERO)
+
+func apply_torso(material: ShaderMaterial, index: int, facing_variant: Vector2i) -> String:
+	# 共享原目录与贴图；调用方从各自实际播放帧给躯干方向和变体。
+	var guid: Variant = resolve_guid(options[index].sprite_sets, facing_variant.x, facing_variant.y) if index >= 0 else null
+	var texture: Texture2D = _textures.get(guid)
+	material.set_shader_parameter("enabled_cloak", texture != null)
+	material.set_shader_parameter("cloak_map", texture)
+	return guid if texture != null else ""
+
 
 static func resolve_guid(sets: Array, facing: int, variant: int) -> Variant:
 	# Original HasVariant requires the variant's SE sprite; fallback then follows the chosen set.

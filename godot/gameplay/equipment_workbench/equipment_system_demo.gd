@@ -230,6 +230,7 @@ func _load_nonhuman(dir: String, humanoid := false) -> bool:
 			for loaded in _race_views.values(): loaded.free()
 			_race_views.clear()
 			return false
+		node.bind_cloak_catalog(_cloak)
 		node.hide()
 		node.set_process_mode(Node.PROCESS_MODE_DISABLED)
 		_race_views[race] = node
@@ -483,8 +484,17 @@ func _select_category(index: int) -> void:
 	_refresh()
 
 func _select_cloak(index: int) -> void:
-	_cloak.select(index)
+	if not _supports_category(_race, 1): return
+	if _race == "Human": _cloak.select(index)
+	else: _race_views[_race].set_cloak(index)
 	_refresh()
+
+func _supports_category(race: String, category: int) -> bool:
+	if race == "Human" or category == 0: return true
+	return category == 1 and _race_views[race].supports_cloak()
+
+func _selected_cloak() -> int:
+	return _cloak.selected if _race == "Human" else _race_views[_race].cloak_selected
 
 func _select_bag(worn: bool) -> void:
 	_bag.select(worn)
@@ -619,7 +629,8 @@ func _switch_character(race: String) -> void:
 		var view: Node2D = _race_views[name_key]
 		view.visible = name_key == race
 		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
-	_category = _held_human_category if race == "Human" else 0
+	if _category != 1 or not _supports_category(race, _category):
+		_category = _held_human_category if race == "Human" else 0
 	for key in _action_buttons:
 		var button: Button = _action_buttons[key]
 		button.disabled = _human_action_disabled[key] if race == "Human" else not _race_views[race].has_action(key)
@@ -627,7 +638,7 @@ func _switch_character(race: String) -> void:
 		if race != "Human" and button.disabled:
 			button.add_theme_stylebox_override("disabled",_box(SLOT_MUTED))
 			button.add_theme_color_override("font_disabled_color",TEXT_MUTED)
-	for kind in _categories: _categories[kind].disabled = race != "Human" and kind != 0
+	for kind in _categories: _categories[kind].disabled = not _supports_category(race, kind)
 	if race == "Human": _reset_human()
 	else: _race_views[race].reset()
 	_refresh()
@@ -686,13 +697,14 @@ func _refresh() -> void:
 		_style(_categories[i], SLOT_ACTIVE if i == _category else SLOT_IDLE)
 	_cloth_slots.visible = _category == 0
 	if _cloak != null:
+		var selected := _selected_cloak()
 		_cloak_slots.visible = _category == 1
 		for i in _cloak_buttons.size():
-			var current_slot := _cloak.selected + 1 == i
+			var current_slot := selected + 1 == i
 			_style(_cloak_buttons[i], (SLOT_ACTIVE if i == 0 else SLOT_EQUIPPED) if current_slot else SLOT_IDLE)
 			_cloak_badges[i].visible = current_slot
 		if _category == 1:
-			category_text = "斗篷\n当前为空" if _cloak.selected < 0 else _cloak.details_for(_cloak.selected)
+			category_text = "斗篷\n当前为空" if selected < 0 else _cloak.details_for(selected)
 	if _bag != null:
 		_bag_slots.visible = _category == 2
 		for i in _bag_buttons.size():

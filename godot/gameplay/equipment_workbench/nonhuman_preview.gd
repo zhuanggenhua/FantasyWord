@@ -1,5 +1,6 @@
 extends Node2D
 ## EquipmentSystemDemo only: race-specific frame/UV ownership, original shared look only where catalog refers to it.
+const CloakPreview := preload("res://gameplay/equipment_workbench/cloak_preview.gd")
 const FrameCursor := preload("res://game_core/presentation/equipment_frame_cursor.gd")
 const BaseAppearance := preload("res://gameplay/presentation/equipment_base_appearance.gd")
 const Playback := preload("res://game_core/presentation/directional_sprite_playback.gd")
@@ -18,6 +19,9 @@ var _maps := {}
 var _cursor: FrameCursor
 var _appearance := {}
 var _sample_action := ""
+var _cloak_catalog: CloakPreview
+var cloak_selected := -1
+var cloak_texture_guid := ""
 
 static func read_locked(dir: String) -> Dictionary:
 	return _read_pinned(dir.path_join(MANIFEST),MANIFEST_SHA)
@@ -93,6 +97,7 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 	return true
 
 func reset() -> void:
+	set_cloak(-1)
 	playback.set_direction(0)
 	set_cloth(true)
 	play("Idle")
@@ -111,6 +116,29 @@ func play(key: String) -> bool:
 func set_cloth(worn: bool) -> void:
 	composite.set_shader_parameter("enabled_cloth",worn)
 
+func bind_cloak_catalog(catalog: CloakPreview) -> void:
+	# 零 UV 的地精和兽人暂不打开该栏；它们的合成与轮廓需要单独验收。
+	if _cursor == null: return
+	_cloak_catalog = catalog
+
+func supports_cloak() -> bool:
+	return _cloak_catalog != null
+
+func set_cloak(index: int) -> void:
+	if not supports_cloak(): return
+	cloak_selected = index
+	_refresh_cloak()
+
+func _refresh_cloak() -> void:
+	if not supports_cloak(): return
+	var facing_variant := Vector2i(_cursor.row_index, 0)
+	var frame: Variant = _cursor.cached_frame
+	if frame != null:
+		var torso: Dictionary = frame.body_regions.get("torso", {})
+		if not torso.is_empty():
+			facing_variant = Vector2i(torso.sprite_facing, torso.variant)
+	cloak_texture_guid = _cloak_catalog.apply_torso(composite, cloak_selected, facing_variant)
+
 func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D) -> void:
 	var maps: Dictionary = _maps[key]
 	if _sample_action != key:
@@ -121,6 +149,7 @@ func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D)
 	if _cursor == null or _cursor.last_sprite == texture: return
 	_cursor.late_sync(texture)
 	var frame = _cursor.refresh_frame()
+	_refresh_cloak()
 	if not frame is Dictionary: return
 	var flags := BaseAppearance.resolve(_cursor.row_index,frame,_appearance)
 	composite.set_shader_parameter("body_in_front",flags.body_in_front)
@@ -150,7 +179,7 @@ static func _source_frames(records: Array) -> Array:
 		for region in frame.bodyRegions:
 			var part: String = {0:"head",1:"torso"}.get(int(region.part),"")
 			if not part.is_empty() and not regions.has(part):
-				regions[part] = {"sprite_facing":int(region.spriteFacing)}
+				regions[part] = {"sprite_facing":int(region.spriteFacing),"variant":int(region.variant)}
 		frames.append({"frame_index":int(frame.frameIndex),"row_index":int(frame.rowIndex),
 			"body_regions":regions,"left_eye_closed":bool(frame.leftEyeClosed),"right_eye_closed":bool(frame.rightEyeClosed)})
 	return frames
