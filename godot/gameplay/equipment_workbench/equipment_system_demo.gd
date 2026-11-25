@@ -104,8 +104,10 @@ func _ready() -> void:
 		_show_unavailable()
 		return
 	var race_dir := OS.get_environment("FANTASYWORD_WORKBENCH_NONHUMAN")
-	if not race_dir.is_empty() and _mount_source.is_empty() and not _load_nonhuman(race_dir):
-		_fail("地精或兽人的锁定工作台资源不匹配。")
+	var humanoid_dir := OS.get_environment("FANTASYWORD_WORKBENCH_DWARF_ELF")
+	if _mount_source.is_empty() and ((not race_dir.is_empty() and not _load_nonhuman(race_dir))
+			or (not humanoid_dir.is_empty() and not _load_nonhuman(humanoid_dir,true))):
+		_fail("锁定的非人类工作台资源不匹配。")
 		_human.hide()
 		_human.process_mode = Node.PROCESS_MODE_DISABLED
 		_show_unavailable()
@@ -214,10 +216,10 @@ func _load_source(source_dir: String) -> bool:
 		_mount_owner.loadout_changed.connect(_apply_mount_slot)
 	return true
 
-func _load_nonhuman(dir: String) -> bool:
-	var data := NonhumanPreview.read_locked(dir)
+func _load_nonhuman(dir: String, humanoid := false) -> bool:
+	var data := NonhumanPreview.read_locked_humanoids(dir) if humanoid else NonhumanPreview.read_locked(dir)
 	if data.is_empty(): return false
-	for race in NonhumanPreview.TERMINALS:
+	for race in NonhumanPreview.HUMANOIDS if humanoid else NonhumanPreview.TERMINALS.keys():
 		var node := NonhumanPreview.new()
 		node.name = race + "WorkbenchPreview"
 		add_child(node)
@@ -662,7 +664,7 @@ func _refresh() -> void:
 			if _mount_equip.disabled:
 				category_text += "\n请先卸下未接入骑乘表现的装备。"
 	var race_label: String = "人类" if _race == "Human" else _race_buttons[_race].text
-	var appearance := "基础人形外观" if _race == "Human" else "绿皮外观"
+	var appearance := "绿皮外观" if NonhumanPreview.TERMINALS.has(_race) else "基础人形外观"
 	var action_label: String = ACTIONS.get(current,"死亡")
 	_details.text = "角色 %s | 形象 %s\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		race_label,appearance,action_label,DIRECTIONS[direction],action_label,category_text]

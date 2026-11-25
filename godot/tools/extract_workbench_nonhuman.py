@@ -1,4 +1,4 @@
-"""Extract locked Goblin/Orc workbench contracts into a private directory, never for Git publication."""
+"""Extract locked non-Human workbench inputs into a private directory, never for Git publication."""
 import argparse
 import hashlib
 import json
@@ -14,7 +14,12 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--unity", type=Path, required=True, help="pinned Unity Git checkout with original objects")
 parser.add_argument("--out", type=Path, required=True, help="private output directory (outside either project)")
 parser.add_argument("--lfs-dir", type=Path, help="optional authorized LFS files named by SHA-256")
+parser.add_argument("--pair", choices=["goblin-orc","dwarf-elf"], default="goblin-orc")
+parser.add_argument("--appearance-dir", type=Path, help="verified private Human workbench actor/appearance directory (Dwarf/Elf only)")
 args = parser.parse_args()
+humanoids = args.pair == "dwarf-elf"
+if humanoids and args.appearance_dir is None:
+    parser.error("--pair dwarf-elf requires --appearance-dir containing the shared original catalog look")
 repo = args.unity.resolve()
 base = args.out.resolve()
 if base.is_relative_to(repo) or base.is_relative_to(Path(__file__).resolve().parents[2]):
@@ -24,10 +29,8 @@ base.mkdir(parents=True, exist_ok=True)
 root = "Assets/GameData/EquipmentSystem/"
 dir_keys = ("southEast", "southWest", "northEast", "northWest")
 short_keys = ("SE", "SW", "NE", "NW")
-choices = {
-    "Goblin": ("地精", "SpinDie", "Minifantasy_CreaturesGoblinIdle", "Minifantasy_CreaturesGoblinSpinDie"),
-    "Orc": ("兽人", "Die", "Orc_Idle", "Orc_Die"),
-}
+choices = ({"Dwarf": ("矮人", "SpinDie"), "Elf": ("精灵", "SpinDie")} if humanoids
+           else {"Goblin": ("地精", "SpinDie"), "Orc": ("兽人", "Die")})
 
 def git(*args):
     return subprocess.check_output(["git", "-C", str(repo), *args])
@@ -85,17 +88,24 @@ scene_path = "Assets/Scenes/EquipmentSystemDemo.unity"
 assert f'catalog: {{fileID: 11400000, guid: {meta(catalog_path)["guid"]}, type: 2}}' in read(repo,scene_path).decode()
 catalog = asset(catalog_path)["characters"]
 assert [v["displayName"] for v in catalog]==["人类","矮人","精灵","地精","兽人"]
-appearance_path = root+"Appearance/绿皮外观.asset"
+appearance_path = root+"Appearance/"+("基础人形外观" if humanoids else "绿皮外观")+".asset"
 appearance = asset(appearance_path)
-assert len(appearance["skinSrcColors"])==len(appearance["skinDstColors"])==5
-assert all(appearance[f"{layer}{side}"]["fileID"]==0 for layer in ("hair","beard","faceAccessory") for side in short_keys)
-assert all(appearance[f"eyeDecoration{side}"]["fileID"]==0 for side in ("East","West"))
+if humanoids:
+    assert appearance["skinSrcColors"]==appearance["skinDstColors"]==[]
+    assert all(appearance[f"{layer}{side}"]["fileID"]==21300000 for layer in ("hair","beard") for side in short_keys)
+    assert all(appearance[f"eyeDecoration{side}"]["fileID"]==21300000 for side in ("East","West"))
+else:
+    assert len(appearance["skinSrcColors"])==len(appearance["skinDstColors"])==5
+    assert all(appearance[f"{layer}{side}"]["fileID"]==0 for layer in ("hair","beard","faceAccessory") for side in short_keys)
+    assert all(appearance[f"eyeDecoration{side}"]["fileID"]==0 for side in ("East","West"))
 db_path = root+"AnimationType/AnimationTypeDatabase.asset"
 db_guids = [row["guid"] for row in asset(db_path)["_items"]]
 assert len(db_guids)==28
 result = {"source_commit":SOURCE,"scope":"private_nonhuman_workbench_validation","catalog_order":[v["displayName"] for v in catalog],
           "base_appearance":{k:appearance[k] for k in ("skinSrcColors","skinDstColors","leftEyeColor","rightEyeColor")},
-          "appearance_sha256":sha(read(repo,appearance_path)),"characters":{}}
+          "appearance_sha256":sha(read(repo,appearance_path))}
+if humanoids: result["appearance"] = appearance
+result["characters"] = {}
 import yaml
 controller_path = root+"Animations/换装共享动画状态机.controller"
 raw_controller = read(repo,controller_path)
@@ -105,7 +115,7 @@ states = {node["AnimatorState"]["m_Name"]:node["AnimatorState"] for node in yaml
           if node and "AnimatorState" in node}
 missing={}
 errors={}
-for race,(name,terminal,idle_atlas,terminal_atlas) in choices.items():
+for race,(name,terminal) in choices.items():
     out = base/race
     out.mkdir(exist_ok=True)
     index, = [i for i,row in enumerate(catalog) if row["displayName"]==name]
@@ -147,7 +157,8 @@ for race,(name,terminal,idle_atlas,terminal_atlas) in choices.items():
             body, imp = png(frame["spritesheet"]["guid"],out)
             if body.get("missing"): continue
             assert body["size"]==[count*32,rows*32] and body["wrap"]==1
-            assert imp["spritePixelsToUnits"]==8 and imp["spriteMeshType"]==1
+            assert imp["spritePixelsToUnits"]==8 and imp["spriteMeshType"] in ((0,1) if humanoids else (1,))
+            if humanoids: body["mesh_type"] = imp["spriteMeshType"]
             region_by_id = {f["internalID"]:f for f in imp["spriteSheet"]["sprites"]}
             directions = []
             for lib in libs:
@@ -163,7 +174,12 @@ for race,(name,terminal,idle_atlas,terminal_atlas) in choices.items():
                     assert rect[2:]==[32,32]
                     packed.append({"file_id":str(ref["fileID"]),"rect":rect,"texture":body["file"]})
                 directions.append(packed)
-            assert all(len(group)==count and [f["rect"][0] for f in group]==list(range(0,count*32,32)) for group in directions)
+            repeated_dwarf = race == "Dwarf" and key == "SpinDie"
+            if repeated_dwarf:
+                assert count == 11 and all(len(group)==12 and group[10]==group[11] for group in directions)
+                assert all([f["rect"][0] for f in group[:11]]==list(range(0,count*32,32)) for group in directions)
+            else:
+                assert all(len(group)==count and [f["rect"][0] for f in group]==list(range(0,count*32,32)) for group in directions)
             if rows==1: assert directions==[directions[0]]*4 and all(f["rect"][1]==0 for f in directions[0])
             else: assert all(0<=f["rect"][1]<32*rows for group in directions for f in group)
             clip_path = root+f"Animations/SharedClips/{key}.anim"
@@ -174,7 +190,7 @@ for race,(name,terminal,idle_atlas,terminal_atlas) in choices.items():
             curves = clip["m_FloatCurves"]
             assert settings["m_StartTime"]==0 and clip["m_SampleRate"]==8 and len(curves)==1 and curves[0]["attribute"]=="m_SpriteHash"
             keys = curves[0]["curve"]["m_Curve"]
-            hashed = {h(f"{key}_{i}"):i for i in range(count)}
+            hashed = {h(f"{key}_{i}"):i for i in range(len(directions[0]))}
             labels = [hashed[struct.unpack("<I",struct.pack("<f",k["value"]))[0]] for k in keys]
 
             uv = {}
@@ -186,17 +202,46 @@ for race,(name,terminal,idle_atlas,terminal_atlas) in choices.items():
                 spec["all_zero"] = Image.open(out / spec["file"]).convert("RGBA").getbbox(alpha_only=False) is None
                 uv[channel.lower()] = spec
             if any(spec.get("missing") for spec in uv.values()): continue
-            assert all(v["all_zero"] and v["wrap"]==0 for v in uv.values()), "needs separate authored base composition"
+            assert uv["body"]["wrap"] == uv["head"]["wrap"] in (0,1)
+            if humanoids:
+                assert all(not v["all_zero"] for v in uv.values())
+            else:
+                assert all(v["all_zero"] and v["wrap"]==0 for v in uv.values())
             data["actions"][key] = {"event_names":[event.get("functionName") for event in clip["m_Events"]],"duration":settings["m_StopTime"],"loop":bool(settings["m_LoopTime"]),
                 "times":[k["time"] for k in keys],"labels":labels,"directions":directions,"body":body,"uv":uv}
+            if humanoids:
+                data["actions"][key].update(admitted_assets=True,frame_rows=rows,frames_per_row=count,frames=frame["frames"])
         except (AssertionError, KeyError, ValueError) as exc:
             import traceback
             errors[f"{race}:{key}"] = traceback.format_exception_only(type(exc),exc)[-1].strip() + " (line " + str(exc.__traceback__.tb_lineno) + ")"
-    print(race, names, [(a,s["duration"],s["body"]["size"],[(v["wrap"],v["all_zero"]) for v in s["uv"].values()],s["event_names"]) for a,s in data["actions"].items()])
-(base/"private-nonhuman-action-audit.json").write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
-
+    print(race, names)
 (base/"missing.json").write_text(json.dumps(missing,ensure_ascii=False,indent=2)+"\n")
 print("missing unique",len(missing),"errors",errors)
-
 if missing or errors or any(len(c["actions"]) != 14 for c in result["characters"].values()):
     raise SystemExit("Original frame/clip/texture checks incomplete; private contract is not eligible.")
+
+if humanoids:
+    out = base/"appearance"
+    out.mkdir(exist_ok=True)
+    look = {}
+    for part in ("hair","beard","eyeDecoration"):
+        for index, side in enumerate(short_keys if part!="eyeDecoration" else ("East","West")):
+            key = part+side
+            label = {"hair":"hair", "beard":"chin_white", "eyeDecoration":"黄色刀疤"}[part]+str(index+1)
+            original = "Assets/ThirdParty/MiniFantasyUV/ImportedSource/Art/equip/"+label+".png"
+            origin = read(repo,original)
+            metadata = read(repo,original+".meta")
+            raw = (args.appearance_dir/(key+".png")).read_bytes()
+            digest = sha(raw)
+            if origin.startswith(b"version https://git-lfs.github.com/spec/v1"):
+                assert origin.decode().splitlines()[1:] == ["oid sha256:"+digest,"size "+str(len(raw))]
+            else:
+                assert origin == raw
+            assert metadata == (args.appearance_dir/(key+".png.meta")).read_bytes()
+            assert parse(metadata)["guid"] == appearance[key]["guid"]
+            (out/(key+".png")).write_bytes(raw)
+            look[key] = {"file":key+".png","sha256":digest}
+    (base/"appearance-reference.json").write_text(json.dumps(look,indent=2)+"\n")
+
+filename = "dwarf-elf-audit.json" if humanoids else "private-nonhuman-action-audit.json"
+(base/filename).write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")

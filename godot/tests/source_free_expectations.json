@@ -1,4 +1,7 @@
 {
+  "test_workbench_dwarf_elf.gd": [
+    "SKIP private pinned Dwarf/Elf workbench assets not configured"
+  ],
   "test_workbench_nonhuman.gd": [
     "SKIP private pinned Orc/Goblin workbench assets not configured"
   ],

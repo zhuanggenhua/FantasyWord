@@ -1,24 +1,40 @@
 extends Node2D
-## EquipmentSystemDemo only. Do not reuse the Human frame/gear data for either actor.
+## EquipmentSystemDemo only: race-specific frame/UV ownership, original shared look only where catalog refers to it.
+const FrameCursor := preload("res://game_core/presentation/equipment_frame_cursor.gd")
+const BaseAppearance := preload("res://gameplay/presentation/equipment_base_appearance.gd")
 const Playback := preload("res://game_core/presentation/directional_sprite_playback.gd")
 const MaterialBinding := preload("res://gameplay/presentation/equipment_subset_material.gd")
 const MANIFEST := "private-nonhuman-action-audit.json"
 const MANIFEST_SHA := "9fd5661053d3e32a51baf2bf440474e8efb45cd7d39a08b18c861940c61858c3"
 const TERMINALS := {"Orc":"Die", "Goblin":"SpinDie"}
+const HUMANOID_MANIFEST_SHA := "9c92d86d0ae0fcd27ec6b550bcb9ef8860f570efe6fd407bec2df87eb7e932fe"
+const HUMANOID_APPEARANCE_SHA := "4fc01e9e5cde4c06752ac94d9db3025d5830d768a5d28f9283a73e5736a2a268"
+const HUMANOIDS := ["Dwarf","Elf"]
 var playback: Node
 var animator: AnimationPlayer
 var sprite: Sprite2D
 var composite: ShaderMaterial
 var _maps := {}
+var _cursor: FrameCursor
+var _appearance := {}
+var _sample_action := ""
 
 static func read_locked(dir: String) -> Dictionary:
-	var path := dir.path_join(MANIFEST)
-	if FileAccess.get_sha256(path) != MANIFEST_SHA: return {}
+	return _read_pinned(dir.path_join(MANIFEST),MANIFEST_SHA)
+
+static func read_locked_humanoids(dir: String) -> Dictionary:
+	return _read_pinned(dir.path_join("dwarf-elf-audit.json"),HUMANOID_MANIFEST_SHA)
+
+static func _read_pinned(path: String, sha: String) -> Dictionary:
+	if FileAccess.get_sha256(path) != sha: return {}
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	return data if data is Dictionary else {}
 
 func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) -> bool:
-	if not is_inside_tree() or sprite != null or not TERMINALS.has(race) or cloth == null: return false
+	if not is_inside_tree() or sprite != null or cloth == null: return false
+	var humanoid := race in HUMANOIDS
+	if not humanoid and not TERMINALS.has(race): return false
+	if humanoid and not _load_humanoid_appearance(dir,data.appearance): return false
 	var record: Dictionary = data.characters[race]
 	var actions := {}
 	for key in record.actions:
@@ -27,7 +43,10 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 		var body := _texture(dir.path_join(race),spec.uv.body)
 		var head := _texture(dir.path_join(race),spec.uv.head)
 		if atlas == null or body == null or head == null: return false
-		_maps[key] = [atlas,body,head]
+		_maps[key] = {"atlas":atlas,"body":body,"head":head,"repeat":spec.uv.body.wrap==0}
+		if humanoid:
+			_maps[key].frames = _source_frames(spec.frames)
+			_maps[key].frame_size = Vector2i(32,32)
 		var directions := []
 		var sprites := {}
 		for entries in spec.directions:
@@ -50,8 +69,8 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 		actions[key] = {"times":spec.times,"labels":labels,"duration":spec.duration,"loop":spec.loop,"directions":directions}
 
 	var appearance: Dictionary = data.base_appearance
-	var idle: Array = _maps.Idle
-	var binding := MaterialBinding.create(idle[0],idle[1],idle[2],true,
+	var idle: Dictionary = _maps.Idle
+	var binding := MaterialBinding.create(idle.atlas,idle.body,idle.head,true,
 		{"cloth":true},
 		{"cloth":{"texture":cloth,"rect":Rect2(0,0,1,1)}},
 		{"left_eye":_color(appearance.leftEyeColor),"right_eye":_color(appearance.rightEyeColor)})
@@ -68,6 +87,7 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 	playback = Playback.new()
 	add_child(sprite); add_child(animator); add_child(playback)
 	if not playback.configure(sprite,animator,actions): return false
+	if humanoid: _cursor = FrameCursor.new()
 	playback.sample_resolved.connect(_bind_sample)
 	reset()
 	return true
@@ -91,10 +111,49 @@ func play(key: String) -> bool:
 func set_cloth(worn: bool) -> void:
 	composite.set_shader_parameter("enabled_cloth",worn)
 
-func _bind_sample(key: String, _label: int, _direction: int, _texture: Texture2D) -> void:
-	var maps: Array = _maps[key]
-	composite.set_shader_parameter("main_map",maps[0])
-	MaterialBinding.apply_nullable_action_uv_maps(composite,maps[1],maps[2],true)
+func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D) -> void:
+	var maps: Dictionary = _maps[key]
+	if _sample_action != key:
+		composite.set_shader_parameter("main_map",maps.atlas)
+		MaterialBinding.apply_nullable_action_uv_maps(composite,maps.body,maps.head,maps.repeat)
+		_sample_action = key
+		if _cursor != null: _cursor.configure_animation(maps)
+	if _cursor == null or _cursor.last_sprite == texture: return
+	_cursor.late_sync(texture)
+	var frame = _cursor.refresh_frame()
+	if not frame is Dictionary: return
+	var flags := BaseAppearance.resolve(_cursor.row_index,frame,_appearance)
+	composite.set_shader_parameter("body_in_front",flags.body_in_front)
+	BaseAppearance.apply_material_layers(composite,flags)
+
+func _load_humanoid_appearance(dir: String, colors: Dictionary) -> bool:
+	var refs := _read_pinned(dir.path_join("appearance-reference.json"),HUMANOID_APPEARANCE_SHA)
+	if refs.is_empty(): return false
+	for part in ["hair","beard"]:
+		_appearance[part] = {}
+		for side in ["SE","SW","NE","NW"]:
+			var tech := _texture(dir.path_join("appearance"),refs[part+side])
+			if tech == null: return false
+			_appearance[part][side.to_lower()] = {"texture":tech}
+	for side in ["East","West"]:
+		var tech := _texture(dir.path_join("appearance"),refs["eyeDecoration"+side])
+		if tech == null: return false
+		_appearance["eye_decoration_"+side.to_lower()] = {"texture":tech}
+	for side in ["left","right"]:
+		_appearance[side+"_eye_color"] = _color(colors[side+"EyeColor"])
+	return true
+
+static func _source_frames(records: Array) -> Array:
+	var frames := []
+	for frame in records:
+		var regions := {}
+		for region in frame.bodyRegions:
+			var part: String = {0:"head",1:"torso"}.get(int(region.part),"")
+			if not part.is_empty() and not regions.has(part):
+				regions[part] = {"sprite_facing":int(region.spriteFacing)}
+		frames.append({"frame_index":int(frame.frameIndex),"row_index":int(frame.rowIndex),
+			"body_regions":regions,"left_eye_closed":bool(frame.leftEyeClosed),"right_eye_closed":bool(frame.rightEyeClosed)})
+	return frames
 
 static func _color(entry: Dictionary) -> Color:
 	return Color(entry.r,entry.g,entry.b,entry.a)
@@ -108,5 +167,5 @@ static func _texture(dir: String, spec: Dictionary) -> ImageTexture:
 	var path := dir.path_join(spec.file)
 	if FileAccess.get_sha256(path) != spec.sha256: return null
 	var image := Image.load_from_file(path)
-	if image == null or image.get_size() != Vector2i(spec.size[0],spec.size[1]): return null
+	if image == null or (spec.has("size") and image.get_size() != Vector2i(spec.size[0],spec.size[1])): return null
 	return ImageTexture.create_from_image(image)
