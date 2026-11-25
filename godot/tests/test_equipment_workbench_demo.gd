@@ -29,6 +29,27 @@ func _run() -> void:
 	var details := _demo.find_child("CurrentDetails", true, false) as Label
 	_check(not details.text.is_empty() and "待机 | 方向 东南" in details.text, "起始显示待机东南")
 	_check("生命 +6" in details.text and mat.get_shader_parameter("enabled_cloth"), "起始穿布衣，显示工作台加成")
+	var rows := _demo.find_child("SourceActionRows",true,false) as GridContainer
+	_check(rows!=null and rows.columns==3 and rows.get_children().map(func(b):return str(b.name))==[
+		"Idle","Walk","Wait","Attack","ChargedAttack","Dmg","Dmg2","SlashAttack","Jump","SoulDie","SpinDie","Die",
+		"Harvest","Harvesting","Chopping","Mining","Digging","TillingSoil","SowingSeeds","Watering","FillingBucket",
+		"Butchering","Milking","Shearing","AnvilWorking","JewelryWorkshopWorking","LaboratoryWorking",
+		"WoodworkBenchWorking"],"实际动作格维持 28 条原数据库顺序")
+	if rows!=null:
+		var wait_button := rows.get_node("Wait") as Button
+		var die_button := rows.get_node("Die") as Button
+		var charge := rows.get_node("ChargedAttack") as Button
+		var harvesting := rows.get_node("Harvesting") as Button
+		_check(not wait_button.disabled and wait_button.text=="Wait·缺帧" and \
+			not die_button.disabled and die_button.text=="死亡·缺帧","原回退可选但没有独立帧")
+		_check(charge.text=="蓄力" and charge.disabled != _demo._charged_enabled and \
+			(not charge.disabled or "尚未接入" in charge.tooltip_text), "原蓄力标签和私有已接入状态")
+		_check(harvesting.disabled and harvesting.text=="收获·无真人帧","原人类缺少工作帧照原标注")
+		var before_detail := details.text
+		for inert in ["Wait","Die"] + (["ChargedAttack"] if charge.disabled else []):
+			await _click(inert)
+			_check(human.playback.current_action=="Idle" and details.text==before_detail \
+				and mat.get_shader_parameter("enabled_cloth"),"不可预览动作不改当前帧、详情或装备："+inert)
 	if DisplayServer.get_name() != "headless":
 		var before := await _avatar_pixels(human)
 		await _click("RemoveCloth")
@@ -362,7 +383,10 @@ func _check_cloak(human: Node2D, mat: ShaderMaterial, details: Label) -> void:
 	await _click("EquipHeavyCloak")
 	_check("厚斗篷" in details.text and "体质 +2" in details.text and "生命 +4" in details.text and "魔力 +2" not in details.text, "相同 numeric id 的厚斗篷完全替换该槽")
 	_check(mat.get_shader_parameter("enabled_cloth") and mat.get_shader_parameter("cloak_map") == textures[uid["斗篷.png"]], "披风替换不影响布衣")
+	var dmg_button := _demo.find_child("Dmg",true,false) as Button
+	_check(dmg_button!=null and dmg_button.text=="受击","原动作按钮的 Dmg 文案为受击")
 	await _click("Dmg")
+	_check("动作 受击" in details.text and "身体动画 受击" in details.text,"当前动作与身体标签沿用原受击文案")
 	human.animator.pause()
 	for direction in ["SE", "SW", "NE", "NW"]:
 		await _click(direction)

@@ -79,6 +79,10 @@ func configure(data: Dictionary, texture_directory: String, workbench_slash := f
 					return _fail("SpinDie 方向库未引用同一组原精灵。")
 				dirs.append(dirs[0])
 				continue
+			if action == "ChargedAttack" and dirs.size()==3 and records==record.directions[0]:
+				# The locked SE and NW libraries point at the very same Sprite assets.
+				dirs.append(dirs[0])
+				continue
 			var frames := []
 			for frame in records:
 				if not frame is Dictionary or not frame.get("rect") is Array or frame.rect.size() != 4 or not loaded.has(frame.get("texture")):

@@ -23,8 +23,8 @@ BASE_ACTOR = "Assets/Prefabs/Entities/Characters/0_CharacterActor_Base.prefab"
 TRAINER = "Assets/Prefabs/Entities/Characters/Enemies/测试-训练假人.prefab"
 
 def extract(repo, human, generated_uv, appearance_dir, include_damage=False, training_target=False,
-            include_attack=False, include_death=False, include_slash_attack=False, workbench_spin=False):
-    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack, workbench_spin=workbench_spin)
+            include_attack=False, include_death=False, include_slash_attack=False, workbench_spin=False, include_charged=False):
+    animation = extract_target(repo, human, include_death=True, include_attack=include_attack) if training_target else animations(repo, human, include_damage, include_attack=include_attack, include_death=include_death, include_slash_attack=include_slash_attack, workbench_spin=workbench_spin, include_charged=include_charged)
     authored = read(repo, FRAME).decode().split("\n  - animationType: ")[1:]
     appearance = parse(read(repo, APPEARANCE))["MonoBehaviour"]
     prefab_path = TRAINER if training_target else PREFAB
@@ -63,7 +63,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
         ["git", "-c", "core.quotepath=false", "-C", str(repo), "ls-tree", "-r", "--name-only", SOURCE],
         text=True).splitlines()
     textures = {}
-    def verify_texture(path, local, guid, srgb, texture_type):
+    def verify_texture(path, local, guid, srgb, texture_type, wrap=1):
         meta = parse(read(repo, path + ".meta"))
         assert read(repo, path + ".meta") == local.with_name(local.name + ".meta").read_bytes()
         assert meta["guid"] == guid
@@ -71,7 +71,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
         assert importer["textureSettings"]["filterMode"] == 0
         assert importer["mipmaps"]["sRGBTexture"] == srgb and importer["mipmaps"]["enableMipMap"] == 0
         assert importer["textureType"] == texture_type
-        assert importer["textureSettings"]["wrapU"] == 1 and importer["textureSettings"]["wrapV"] == 1
+        assert importer["textureSettings"]["wrapU"] == wrap and importer["textureSettings"]["wrapV"] == wrap
         default = next(t for t in importer["platformSettings"] if t["buildTarget"] == "DefaultTexturePlatform")
         assert default["textureCompression"] == 0
         if texture_type == 8:
@@ -86,6 +86,8 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
             assert png == source
         size = list(struct.unpack(">II", png[16:24]))
         textures[local.name] = {"size": size, "sha256": sha}
+        if wrap == 0:
+            textures[local.name]["repeat"] = True
         return size
 
     actions = {}
@@ -103,7 +105,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
         selected = [line for line in block.splitlines() if line.startswith(useful)]
         record = yaml.safe_load("\n".join([block.splitlines()[0]] + [line[2:] for line in selected]))[0]
         spin_die = name == "SpinDie"
-        assert record["frameSize"] == {"x": 32, "y": 32} and record["rowCount"] == (1 if spin_die else 4)
+        assert record["frameSize"] == {"x": 32, "y": 32} and record["rowCount"] == (1 if spin_die else (3 if name == "ChargedAttack" else 4))
         height = 32 * record["rowCount"]
         assert animation["textures"][main]["size"] == [32 * record["framesPerRow"], height]
         # The runtime animation key comes from animationType; the art PNG name alone is not authority.
@@ -117,7 +119,7 @@ def extract(repo, human, generated_uv, appearance_dir, include_damage=False, tra
             file = main[:-4] + "_" + part + "UV.png"
             ref = record[part.lower() + "UVMap"]
             assert ref["fileID"] == 2800000
-            actual = verify_texture(ROOT + "GeneratedUV/Human/" + file, generated_uv / file, ref["guid"], 0, 0)
+            actual = verify_texture(ROOT + "GeneratedUV/Human/" + file, generated_uv / file, ref["guid"], 0, 0, wrap=0 if name == "ChargedAttack" else 1)
             assert actual == animation["textures"][main]["size"]
             result[part.lower()] = file
         indexes = set()
@@ -200,8 +202,9 @@ if __name__ == "__main__":
     p.add_argument("--include-death", action="store_true", help="核实原 ClickMoveTest 主角的 SpinDie 与空死亡动作")
     p.add_argument("--include-slash-attack",action="store_true",help="核实工作台挥砍的原帧及 UV")
     p.add_argument("--workbench-spin", action="store_true", help="核实原人类工作台的旋转死亡材质帧")
+    p.add_argument("--include-charged", action="store_true", help="核实蓄力攻击原帧与两张生成 UV")
     a = p.parse_args()
-    assert not (a.training_target and (a.include_death or a.include_slash_attack or a.workbench_spin)), "主角死亡或工作台挥砍选项不适用于训练假人"
-    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack, a.workbench_spin)
+    assert not (a.training_target and (a.include_death or a.include_slash_attack or a.workbench_spin or a.include_charged)), "主角死亡或工作台挥砍选项不适用于训练假人"
+    data = extract(a.repo, a.human, a.generated_uv, a.appearance_dir, a.include_damage, a.training_target, a.include_attack, a.include_death, a.include_slash_attack, a.workbench_spin, a.include_charged)
     a.output.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print("Human 私有材质输入已核实：" + ", ".join(data["actions"]))

@@ -12,6 +12,12 @@ void vertex() {
 uniform sampler2D main_map : filter_nearest, repeat_disable;
 uniform sampler2D body_map : filter_nearest, repeat_disable;
 uniform sampler2D head_map : filter_nearest, repeat_disable;
+uniform bool repeat_action_uv = false;
+
+// Unity uses point sampling with Repeat on the authored ChargedAttack data pair.
+vec2 action_uv(vec2 uv) {
+	return repeat_action_uv ? fract(uv) : uv;
+}
 uniform bool body_in_front = false;
 // 仅非 HDR 兼容模式：可见颜色输入/输出为原始 sRGB，palette 向量已线性化。
 // Body/Head 编码数据不参与颜色转换；缺少色域证明时必须保持禁用。
@@ -274,8 +280,8 @@ vec2 outline_sheet(vec2 frame_uv) {
 // 故意不夹到帧内，原源码允许本体/装备查询跨帧相邻像素。
 float outline_body(vec2 uv) {
  float a = texture(main_map,uv).a;
- vec2 b = texture(body_map,uv).rg;
- vec2 h = texture(head_map,uv).rg;
+ vec2 b = texture(body_map,action_uv(uv)).rg;
+ vec2 h = texture(head_map,action_uv(uv)).rg;
  if (enabled_pants && texture(pants_map,equip_uv(b,pants_rect)).a > 0.5) { a = 1.0; }
  if (enabled_cloth && texture(cloth_map,equip_uv(b,cloth_rect)).a > 0.5) { a = 1.0; }
  if (enabled_cloak && texture(cloak_map,equip_uv(b,cloak_rect)).a > 0.5) { a = 1.0; }
@@ -291,7 +297,7 @@ vec4 outline_coverage(vec2 f) {
  vec2 uv = outline_sheet(f);
  float body = outline_body(uv);
  float bag = 0.0;
- if (enabled_bag && texture(bag_map,equip_uv(texture(body_map,uv).rg,bag_rect)).a > 0.5) { bag = 1.0; }
+ if (enabled_bag && texture(bag_map,equip_uv(texture(body_map,action_uv(uv)).rg,bag_rect)).a > 0.5) { bag = 1.0; }
  vec4 w0 = vec4(0.0); vec4 w1 = vec4(0.0);
  bool hide = max(weapon0_hide_outline_on_body,weapon1_hide_outline_on_body) > 0.5;
  if (!(hide && body > 0.5)) {
@@ -327,7 +333,7 @@ void apply_procedural_outline(vec2 uv, int source_id, inout vec4 value) {
    }
   }
   if (center.x <= 0.5 && neighbor.x > 0.5) {
-   vec2 nuv = outline_sheet(n); vec4 b = texture(body_map,nuv); vec4 h = texture(head_map,nuv);
+   vec2 nuv = outline_sheet(n); vec4 b = texture(body_map,action_uv(nuv)); vec4 h = texture(head_map,action_uv(nuv));
    bool hand = part(b.b,0.4) || part(b.b,0.5);
    bool core = hand && ((part(h.b,0.1) && h.a > 0.5) || b.a > 0.5);
    bool weapon_blocks = hand && (source_id == 7 || source_id == 8);
@@ -406,8 +412,8 @@ void apply_procedural_shadow(vec2 uv, inout vec4 value) {
 
 void fragment() {
  vec4 base = texture(main_map,UV);
- vec4 body = texture(body_map,UV);
- vec4 head = texture(head_map,UV);
+ vec4 body = texture(body_map,action_uv(UV));
+ vec4 head = texture(head_map,action_uv(UV));
  vec4 value = base;
  float body_coverage = 0.0;
  float head_coverage = 0.0;

@@ -142,3 +142,31 @@ export FANTASYWORD_WORKBENCH_MOUNT_CLOTH=/path/to/private-mount-source
 工作台按钮，逐一复核四向 48 次原精灵引用、材质参数、末帧与回待机后的已装备武器，
 并检查该合同不能被正式场景当作死亡所有权。无头验证不代表最终像素、阴影、完整界面
 或 Unity 同机位对照已经验收。
+
+### 原动作列表与没有身体帧的条目
+
+工作台按锁定 `AnimationTypeDatabase._items` 的 28 条顺序显示，不再把已迁移
+动作排成另一套顺序。原 `EquipmentWorkbenchRuntimeUI` 区分真实身体图、
+「·缺帧」和农务「·无真人帧」。其中 Wait 与 Die 的身体回退仅用于可选性；
+原 `TrySetPreviewAnimation` 仍需要独立身体图，所以点这两条不换动作或装备。
+已有独立原图但当前 Godot 未接入的动作保留原按钮名并禁用，提示明确区分
+迁移缺口与作者缺帧。不会为了让按钮可点就播放别的动作。
+
+原按钮为 88×32、11–16 单行字号和省略。Godot 用已核实字体测量并在同一尺寸
+内限制字号；不宣称 TMP 字形、亚像素或完整工作台窗口已比对。验收包含 28 项
+顺序、缺帧标签、真实点击无副作用，以及原有可用动画与装备回归。
+
+### 原人类蓄力（独立工作台预览）
+
+在私有目录加入原 `Minifantasy_CreaturesHumanChargedAttack.png` 及同名
+`_BodyUV.png`、`_HeadUV.png` 与原 .meta。动画、材质和披风提取各加
+`--include-charged`；仍需原其余动作及装备合同。原图与两张数据图均为
+192×96，Body/Head UV 按原 point/Repeat 采样，切回其他动作不会残留 Repeat。
+东南、西南、东北、西北分别读原图 0、1、2、0 行，西北复用东南原 Sprite；
+8 Hz 播放六帧，0.75 秒非循环并保留末帧。披风和小背包按同一帧的躯干行及
+Base 变体，不按按钮方向另编造第四行。原帧无手锚且当前四件武器/盾无
+此动作序列，预览期间不绘，切回待机恢复已装备状态。现有武器合同不变。
+
+`FORMAL_WORKBENCH_CHARGED_TEST=1` 下的 `tests/test_workbench_charged.gd`
+走真实工作台按钮、四向全帧、原主图和两张 UV、装备层、末帧和回待机。
+这不接入骑乘或正式技能，也不是原生像素、完整面板或 Unity 截图验收。

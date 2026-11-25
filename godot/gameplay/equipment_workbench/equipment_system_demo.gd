@@ -12,10 +12,29 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c91cef1"
 const CJK_SHA := "763146584cf0710223441356b4395e279021b0806c196614377a7a0174ae074a"
-const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击", "SlashAttack":"挥砍", "Dmg":"受伤", "SpinDie":"旋转死亡"}
+const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击", "ChargedAttack":"蓄力", "SlashAttack":"挥砍", "Dmg":"受击", "SpinDie":"旋转死亡"}
+# Locked AnimationTypeDatabase _items order for the actual Human workbench.
+# A real original body sheet may exist without a supported Godot action contract.
+const SOURCE_ACTION_LIST := [
+	["Idle","待机",true], ["Walk","行走",true], ["Wait","Wait·缺帧",false],
+	["Attack","攻击",true], ["ChargedAttack","蓄力",true], ["Dmg","受击",true],
+	["Dmg2","Dmg2",true], ["SlashAttack","挥砍",true], ["Jump","跳跃",true],
+	["SoulDie","灵魂消散",true], ["SpinDie","旋转死亡",true], ["Die","死亡·缺帧",false],
+	["Harvest","采集",true], ["Harvesting","收获·无真人帧",false],
+	["Chopping","砍伐",true], ["Mining","挖矿",true], ["Digging","挖掘·无真人帧",false],
+	["TillingSoil","耕地·无真人帧",false], ["SowingSeeds","播种·无真人帧",false],
+	["Watering","浇水·无真人帧",false], ["FillingBucket","装水·无真人帧",false],
+	["Butchering","屠宰·无真人帧",false], ["Milking","挤奶·无真人帧",false],
+	["Shearing","剪毛·无真人帧",false], ["AnvilWorking","铁砧工作",true],
+	["JewelryWorkshopWorking","珠宝工作",true], ["LaboratoryWorking","炼金工作",true],
+	["WoodworkBenchWorking","木工台工作",true],
+]
+
 const DIRECTIONS := ["东南", "西南", "东北", "西北"]
 const REF_SIZE := Vector2(1600, 900)
 const SLOT_IDLE := Color(0.22, 0.26, 0.31)
+const SLOT_MUTED := Color(0.14, 0.16, 0.20)
+const TEXT_MUTED := Color(0.61, 0.67, 0.73)
 const SLOT_ACTIVE := Color(0.34, 0.46, 0.33)
 const SLOT_EQUIPPED := Color(0.20, 0.36, 0.50)
 const TEXT_PRIMARY := Color(0.96, 0.98, 1)
@@ -56,6 +75,7 @@ var _mount_source := ""
 var _slash_enabled := false
 var _damage_enabled := false
 var _spin_enabled := false
+var _charged_enabled := false
 var _mount_owner: Equipment
 var _mounted_view: MountedPresentation
 var _mount_slots: GridContainer
@@ -99,11 +119,12 @@ func _load_source(source_dir: String) -> bool:
 	_slash_enabled = actions.has("SlashAttack")
 	_damage_enabled = actions.has("Dmg")
 	_spin_enabled = actions.has("SpinDie")
-	if (_slash_enabled or _spin_enabled) and not OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_VALIDATION").is_empty():
-		return _fail("挥砍或旋转死亡的组合尚未核实骑乘帧；请使用独立的已锁定骑乘动作合同。")
-	if _damage_enabled or ((_slash_enabled or _spin_enabled) and FileAccess.file_exists(source_dir.path_join("cloak.json"))):
+	_charged_enabled = actions.has("ChargedAttack")
+	if (_slash_enabled or _spin_enabled or _charged_enabled) and not OS.get_environment("FANTASYWORD_WORKBENCH_MOUNT_VALIDATION").is_empty():
+		return _fail("挥砍、蓄力或旋转死亡的组合尚未核实骑乘帧；请使用独立的已锁定骑乘动作合同。")
+	if _damage_enabled or _charged_enabled or ((_slash_enabled or _spin_enabled) and FileAccess.file_exists(source_dir.path_join("cloak.json"))):
 		_cloak = CloakPreview.new()
-		if not _cloak.load_source(source_dir, _slash_enabled, _spin_enabled):
+		if not _cloak.load_source(source_dir, _slash_enabled, _spin_enabled, _charged_enabled):
 			return _fail("缺少原披风图集或人类躯干帧合同。")
 	var bag_dir := OS.get_environment("FANTASYWORD_WORKBENCH_BAG")
 	if not bag_dir.is_empty():
@@ -196,17 +217,34 @@ func _mount_ui() -> void:
 	action_row.columns = 3
 	action_row.add_theme_constant_override("h_separation", 8)
 	action_scroll.add_child(action_row)
-	for key in ["Idle", "Walk", "Wait", "Attack", "SlashAttack", "Dmg", "SpinDie"]:
-		if key == "Wait":
-			_button(action_row, "等待", Vector2(88, 32)).disabled = true
-			continue
-		if key == "Dmg" and not _damage_enabled: continue
-		if key == "SpinDie" and not _spin_enabled: continue
-		if key == "SlashAttack" and not _slash_enabled: continue
-		var button := _button(action_row, ACTIONS[key], Vector2(88, 32))
+	action_row.name = "SourceActionRows"
+	for row: Array in SOURCE_ACTION_LIST:
+		var key: String = row[0]
+		var button := _button(action_row, ACTIONS.get(key,row[1]), Vector2(88, 32))
 		button.name = key
-		button.pressed.connect(_select_action.bind(key))
-		_actions.append(button)
+		button.clip_text = true
+		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		# Source ChipButtonView bounds font size to 11..16 in a single line.
+		var font_size := 16
+		while font_size>11 and _font.get_string_size(button.text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>76.0:
+			font_size-=1
+		button.add_theme_font_size_override("font_size",font_size)
+		var admitted := ACTIONS.has(key) and (key!="Dmg" or _damage_enabled) \
+			and (key!="SlashAttack" or _slash_enabled) and (key!="SpinDie" or _spin_enabled) \
+			and (key!="ChargedAttack" or _charged_enabled)
+		if admitted:
+			button.pressed.connect(_select_action.bind(key))
+			_actions.append(button)
+		elif key not in ["Wait","Die"]:
+			# Do not play a guessed fallback for original body frames that are
+			# not ported yet. Wait/Die enable the chip via UsesBodyAnimationFallback,
+			# but original TrySetPreviewAnimation then refuses to change the pose.
+			button.add_theme_stylebox_override("disabled", _box(SLOT_MUTED))
+			button.add_theme_color_override("font_disabled_color",TEXT_MUTED)
+			button.disabled = true
+			if row[2]:
+				button.tooltip_text = button.text + "（原版有动作，本迁移尚未接入）"
+		if button.tooltip_text.is_empty(): button.tooltip_text = button.text
 	_header(left, "方向")
 	var direction_grid := GridContainer.new()
 	direction_grid.columns = 3

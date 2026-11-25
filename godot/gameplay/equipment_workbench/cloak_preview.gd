@@ -12,7 +12,7 @@ var _textures: Dictionary
 var _material: ShaderMaterial
 var _playback: Node
 
-func load_source(directory: String, with_slash := false, with_spin := false) -> bool:
+func load_source(directory: String, with_slash := false, with_spin := false, with_charge := false) -> bool:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("cloak.json")))
 	if not data is Dictionary or data.get("source_commit") != SOURCE:
 		return false
@@ -80,6 +80,19 @@ func load_source(directory: String, with_slash := false, with_spin := false) -> 
 					or not _bounded(row[1],1) or not _bounded(row[2],1) or not _bounded(row[3],1): return false
 			by_key[Vector2i(label,0)] = Vector2i.ZERO
 		frames["SpinDie"] = by_key
+	if with_charge:
+		var rows: Variant = input_frames.get("ChargedAttack")
+		if not rows is Array or rows.size()!=18: return false
+		var by_key := {}
+		for i in 18:
+			var row: Variant = rows[i]
+			var facing := floori(float(i)/6.0)
+			if not row is Array or row.size()!=4: return false
+			var expected := [i%6,facing,facing,0]
+			for column in 4:
+				if not _bounded(row[column],6) or row[column]!=expected[column]: return false
+			by_key[Vector2i(i%6,facing)] = Vector2i(facing,0)
+		frames["ChargedAttack"] = by_key
 	options = input_options
 	_frames = frames
 	_textures = textures
@@ -100,7 +113,9 @@ func select(index: int) -> void:
 	_on_sample(_playback.current_action, _playback.current_label, _playback.current_direction, null)
 
 func torso_for_sample(action: String, label: int, direction: int) -> Variant:
-	return _frames.get(action, {}).get(Vector2i(label, 0 if action=="SpinDie" else direction))
+	var row := direction
+	if action=="SpinDie" or (action=="ChargedAttack" and direction==3): row=0
+	return _frames.get(action, {}).get(Vector2i(label,row))
 
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:
 	var row: Variant = torso_for_sample(action, label, direction)

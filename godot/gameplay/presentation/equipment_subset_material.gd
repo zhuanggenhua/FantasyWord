@@ -68,11 +68,12 @@ static func apply_action_uv_maps(material: ShaderMaterial, body: Texture2D, head
 	# 不调用 create/reset，避免提前抹掉尚未 Refresh 的装备层、武器和颜色历史。
 	material.set_shader_parameter("body_map",body)
 	material.set_shader_parameter("head_map",head)
+	material.set_shader_parameter("repeat_action_uv",false)
 	return {"ok":true}
 
 ## 显式映射源 UpdateUVMapTexture 的独立可空双图；不改变严格有效双图入口。
 ## null 表示源声明的 opaque black，而不是禁用装备；错误的非空输入不能当作缺图。
-static func apply_nullable_action_uv_maps(material: ShaderMaterial, body: Variant, head: Variant) -> Dictionary:
+static func apply_nullable_action_uv_maps(material: ShaderMaterial, body: Variant, head: Variant, repeat_uv := false) -> Dictionary:
 	if material == null or material.shader not in [SUBSET,WEAPON_SUBSET]:
 		return {"ok":false,"reason":"动作 UV 必须绑定已有装备材质"}
 	for texture in [body,head]:
@@ -82,6 +83,7 @@ static func apply_nullable_action_uv_maps(material: ShaderMaterial, body: Varian
 	# 完成整对校验后才写，避免错误输入导致半写；两图由源分别拥有，不合并缺失状态。
 	material.set_shader_parameter("body_map",_source_black_uv() if body == null else body)
 	material.set_shader_parameter("head_map",_source_black_uv() if head == null else head)
+	material.set_shader_parameter("repeat_action_uv",repeat_uv and body != null and head != null)
 	return {"ok":true,"body_missing":body == null,"head_missing":head == null}
 
 static var _black_uv: ImageTexture

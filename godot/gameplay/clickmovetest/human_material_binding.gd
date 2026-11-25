@@ -47,7 +47,11 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 			var texture := _load_map(data.textures,spec.get(key),uv_directory,cache)
 			if texture == null or texture.get_size() != Vector2(main_spec.size[0],main_spec.size[1]):
 				return _fail("UV atlas does not match the verified action atlas.")
+			var repeat_uv: Variant = data.textures[spec[key]].get("repeat",false)
+			if not repeat_uv is bool or repeat_uv != (action == "ChargedAttack"):
+				return _fail("Unexpected wrap mode for authored Human action UV.")
 			maps[key] = texture
+			maps.repeat_uv = repeat_uv
 		var coords := {}
 		for frame in maps.frames:
 			if not frame is Dictionary or not _integer(frame.get("frame_index")) or not _integer(frame.get("row_index")):
@@ -113,7 +117,7 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 func _apply_action(action: String) -> void:
 	var maps: Dictionary = _actions.get(action,{})
 	_cursor.configure_animation(maps)
-	SubsetMaterial.apply_nullable_action_uv_maps(material,maps.get("body"),maps.get("head"))
+	SubsetMaterial.apply_nullable_action_uv_maps(material,maps.get("body"),maps.get("head"),maps.get("repeat_uv",false))
 
 func _sample(_action: String, _label: int, _direction: int, texture: Texture2D) -> void:
 	if texture == _cursor.last_sprite or not texture is AtlasTexture: return
@@ -141,7 +145,7 @@ func _refresh() -> void:
 		SubsetMaterial.apply_nullable_action_uv_maps(material,null,null)
 		return
 	var maps: Dictionary = _cursor.current_animation
-	SubsetMaterial.apply_nullable_action_uv_maps(material,maps.body,maps.head)
+	SubsetMaterial.apply_nullable_action_uv_maps(material,maps.body,maps.head,maps.repeat_uv)
 	var flags := BaseAppearance.resolve(_cursor.row_index,frame,_appearance,_workbench_headwear)
 	material.set_shader_parameter("body_in_front",flags.body_in_front)
 	if not _workbench_headwear.is_empty():
