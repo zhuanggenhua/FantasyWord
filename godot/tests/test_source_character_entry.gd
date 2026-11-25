@@ -115,6 +115,22 @@ func run() -> void:
 	button(MOUSE_BUTTON_LEFT,true,apply_at);button(MOUSE_BUTTON_LEFT,false,apply_at)
 	check(panel.character_data()==state and panel._apply._state=="selected",
 		"matching Apply click leaves zero budget unchanged")
+	await tap(KEY_ENTER)
+	check(panel.character_data()==state and panel._apply._state=="pressed",
+		"actual keyboard Submit uses original pressed sprite even when zero points make Apply a no-op")
+	await create_timer(.14,true,false,true).timeout
+	check(paused and panel._apply._state=="selected",
+		"Apply transitions back to selected without advancing the world clock")
+	move(neutral)
+	await process_frame
+	await process_frame
+	await tap(KEY_ENTER)
+	await tap(KEY_LEFT)
+	check(panel.selected_action()==14 and panel._apply._state=="normal",
+		"moving off Apply cancels its pressed sprite before the unscaled timer")
+	await tap(KEY_RIGHT)
+	check(panel.selected_action()==17 and panel._apply._state=="selected" and panel.character_data()==state,
+		"returning to Apply cannot resurrect the previous pressed flash")
 	if DisplayServer.get_name()!="headless":
 		var health_at := Vector2(347.75,174.5)
 		button(MOUSE_BUTTON_LEFT,true,health_at); button(MOUSE_BUTTON_LEFT,false,health_at)

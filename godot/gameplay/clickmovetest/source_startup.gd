@@ -19,6 +19,7 @@ const PauseRoot := preload("res://gameplay/clickmovetest/source_pause_root.gd")
 const Point = preload("res://game_core/input/mouse_point_actions.gd")
 ## 原 Player System 983130465 的主角色为 735002000000000004；只绑定 Entry 明确的 actor。
 
+const Journal := preload("res://game_core/persistence/source_journal.gd")
 const PersistenceRegistry = preload("res://game_core/persistence/persistable_identity_registry.gd")
 const MapRegistry = preload("res://game_core/maps/active_map_registry.gd")
 const MapInfo = preload("res://game_core/maps/registered_map_info.gd")
@@ -36,6 +37,7 @@ var scene: Node2D
 var player: PlayerOwner
 var trainer_owner: TrainerOwner
 var maps := MapRegistry.new()
+var journal: Journal
 var persistables := PersistenceRegistry.new()
 var point: Point
 var pause_root: PauseRoot
@@ -164,6 +166,7 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 	if panel and not scene.bind_source_control_panel(paths.FORMAL_PANEL_SILVER,paths.FORMAL_PANEL_CJK):
 		return _fail("原静态测试面板字体与实际玩家入口未绑定。")
 	if mount_project_contact:
+		journal=Journal.new()
 		party_money=PartyMoney.new()
 		inventory_bags=InventoryBags.new()
 		if not player.start_source_equipment():
@@ -224,6 +227,15 @@ func open(args: PackedStringArray, mount_project_contact: bool = false) -> bool:
 
 	return true
 
+## The original Journal owns its empty in-memory block independently of Pause art.
+## This path is not a disk SaveKit route or an implementation of quest records.
+func capture_source_journal_save_block() -> Dictionary:
+	if journal==null or not is_instance_valid(scene): return {}
+	return journal.create_data_block()
+
+func restore_source_journal_save_block(block: Variant) -> bool:
+	return journal!=null and is_instance_valid(scene) and journal.load_data_block(block)
+
 ## ClickMoveTest is the admitted primary actor, whose inherited CharacterInventory
 ## owns main, weapon and hotbar. Read the actual replaced PersistenceSystem key.
 func primary_bag_owner(actor: Node) -> String:
@@ -259,6 +271,9 @@ func _mount_source_pause(directory: String) -> bool:
 	if not menu.bind(scene,point,source,directory,
 			func(): scene.receive_human_gameplay_action("Gameplay","OpenGameMenu","performed"),
 			func():return false):
+		menu.free()
+		return false
+	if not menu.bind_journal(journal):
 		menu.free()
 		return false
 	var settings_path := directory.path_join("settings-contract.json")

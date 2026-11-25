@@ -10,6 +10,7 @@ const View := preload("res://gameplay/clickmovetest/source_pause_focus_view.gd")
 const Settings := preload("res://gameplay/clickmovetest/source_settings_view.gd")
 const Abilities := preload("res://gameplay/clickmovetest/source_abilities_view.gd")
 const Player := preload("res://gameplay/clickmovetest/single_player_actor.gd")
+const JournalOwner := preload("res://game_core/persistence/source_journal.gd")
 const Journal := preload("res://gameplay/clickmovetest/source_journal_view.gd")
 const Inventory := preload("res://gameplay/clickmovetest/source_inventory_view.gd")
 const Details := preload("res://gameplay/clickmovetest/source_item_details_view.gd")
@@ -54,6 +55,7 @@ var _abilities_player: Player
 var _abilities_silver := ""
 var _abilities_category := Abilities.ACTIVE_CATEGORY
 var _prefs: Prefs
+var _journal: JournalOwner
 var _fit_owner := 0
 var _next_nav_us := 0
 
@@ -186,11 +188,16 @@ func _open_abilities() -> bool:
 func _remember_abilities_category(category: int) -> void:
 	_abilities_category=category
 
+func bind_journal(owner: JournalOwner) -> bool:
+	if _source.is_empty() or owner==null or _journal!=null: return false
+	_journal=owner
+	return true
+
 func _open_journal() -> bool:
 	var spec := Journal.load_layout(_dir)
 	if spec.is_empty(): return false
 	var view := Journal.new()
-	if not view.bind(spec,_source,_dir) or not stack.push_panel(view):
+	if not view.bind(spec,_source,_dir,_journal) or not stack.push_panel(view):
 		view.free()
 		return false
 	_left_down=false
@@ -321,10 +328,10 @@ func _move_selected(view: Control) -> void:
 	elif view is Settings or view is Character or view is Inventory or view is Abilities: view.move_selection(_nav)
 
 func _activate(view: Control, action: int, from_submit := false) -> void:
-	if view is Abilities or view is Inventory:
+	if view is Abilities or view is Inventory or view is Character:
 		view.activate(action,from_submit)
 		return
-	if view is Settings or view is Character:
+	if view is Settings:
 		view.activate(action)
 		return
 	if action==1 and not _inventory_layout.is_empty():

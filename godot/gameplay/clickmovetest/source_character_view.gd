@@ -7,6 +7,7 @@ const Text := preload("res://gameplay/clickmovetest/source_character_text.gd")
 const Atlas := preload("res://gameplay/clickmovetest/source_menu_glyph_atlas.gd")
 const Tiled := preload("res://gameplay/clickmovetest/source_menu_tiled_image.gd")
 const Apply := preload("res://gameplay/clickmovetest/source_character_apply_image.gd")
+const SubmitFeedback := preload("res://gameplay/clickmovetest/source_category_submit_feedback.gd")
 const SIZE := Vector2(1920,1080)
 const DARK := Color("#3f2832")
 const NORMAL_ALPHA := 100.0/255.0
@@ -16,6 +17,8 @@ var _targets := Targets.new()
 var _atlas: Atlas
 var _silver: FontFile
 var _background: Tiled
+var _apply_submit := SubmitFeedback.new()
+var _apply_hover := 0
 var _apply: Apply
 var _apply_rect := Rect2()
 var _lines: Array[Dictionary] = []
@@ -165,13 +168,17 @@ func try_handle_back_request() -> bool: return false
 func allows_stack_close() -> bool: return true
 func selected_action() -> int: return _targets.selected_action()
 func reference_hit(p: Vector2) -> int: return _targets.hit(p,Vector2(_offset,0))
-func button_visual(action: int) -> String: return _targets.visual(action)
+func button_visual(action: int) -> String:
+	return "pressed" if action==Targets.APPLY and _apply_submit.pressed==action else _targets.visual(action)
 func character_data() -> Dictionary: return _state.visible_data()
 
 func apply_stack_interactions(active: bool) -> void:
 	visible=active
 	_targets.set_active(active)
-	if not active: _state.clear()
+	if not active:
+		_apply_submit.clear()
+		_apply_hover=0
+		_state.clear()
 	_sync_button_states()
 
 func try_focus_default_target() -> bool:
@@ -180,10 +187,14 @@ func try_focus_default_target() -> bool:
 	return focused
 
 func sample_point(hover: int, hit: int, active: bool) -> void:
+	_apply_submit.interrupt_pointer(_apply_hover,hover)
+	_apply_hover=hover
 	_targets.sample_point(hover,hit,active)
+	if selected_action()!=Targets.APPLY: _apply_submit.clear()
 	_sync_button_states()
 
 func pointer_down(hit: int) -> void:
+	_apply_submit.clear()
 	_targets.pointer_down(hit)
 	_sync_button_states()
 
@@ -193,17 +204,24 @@ func pointer_release(hit: int) -> int:
 	return action
 
 func set_pressed(hit: int) -> void:
+	_apply_submit.clear()
 	_targets.set_pressed(hit)
 	_sync_button_states()
 
 func move_selection(direction: Vector2i) -> bool:
 	var moved := _targets.move(direction)
-	if moved: _sync_button_states()
+	if moved:
+		if selected_action()!=Targets.APPLY: _apply_submit.clear()
+		_sync_button_states()
 	return moved
 
-func activate(action: int) -> bool:
+func activate(action: int, from_submit := false) -> bool:
 	var changed := _targets.activate(action)
 	if changed: _refresh_values()
+	# The native Button remains interactable when the actor has no points.
+	if from_submit and action==Targets.APPLY and selected_action()==action and visible and is_inside_tree():
+		_apply_submit.start(action,get_tree(),_sync_button_states)
+		_sync_button_states()
 	return changed
 
 func _sync_button_states() -> void:
@@ -214,7 +232,7 @@ func _sync_button_states() -> void:
 			arrow.start=arrow.alpha
 			arrow.target=alpha
 			arrow.elapsed=0.0
-	_apply.show_button_state(_targets.visual(Targets.APPLY))
+	_apply.show_button_state(button_visual(Targets.APPLY))
 
 func _ready() -> void: _last_us=Time.get_ticks_usec()
 

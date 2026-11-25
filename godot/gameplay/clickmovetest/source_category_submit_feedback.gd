@@ -1,6 +1,6 @@
 extends RefCounted
 ## Unity uGUI Button.OnSubmit's temporary SpriteSwap state. The locked Ability
-## Category and Inventory Category Entry both author the same 0.1 second fade.
+## Category, Inventory Category Entry and Character Apply use the same fade.
 const DURATION := 0.1
 var pressed := 0
 var _generation := 0

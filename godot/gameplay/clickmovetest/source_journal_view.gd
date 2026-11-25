@@ -1,6 +1,6 @@
 extends Control
-## Actual fresh ClickMoveTest Journal only. No quest entries, default focus,
-## sample text or fake scroll handle are inserted in the unseeded Journal.
+## 仅呈现锁定 ClickMoveTest 的空任务日志。无条目、默认焦点、样例文案或替代滚动条。
+const Journal := preload("res://game_core/persistence/source_journal.gd")
 const Line := preload("res://gameplay/clickmovetest/source_pause_text_line.gd")
 const Atlas := preload("res://gameplay/clickmovetest/source_menu_glyph_atlas.gd")
 const Tiled := preload("res://gameplay/clickmovetest/source_menu_tiled_image.gd")
@@ -8,6 +8,7 @@ const Art := preload("res://gameplay/clickmovetest/source_inventory_sprite.gd")
 const Layout := preload("res://gameplay/clickmovetest/source_character_selectables.gd")
 const JOURNAL_HASH := "40a4aaf12e3b8c3d25accf2893ea442d391ce22971272161b27a8a52571a6f26"
 const SIZE := Vector2(1920,1080)
+var _journal: Journal
 var _background: Tiled
 var _atlas := Atlas.new()
 var _center: Control
@@ -26,9 +27,10 @@ static func load_layout(directory: String) -> Dictionary:
 	var parsed: Variant=JSON.parse_string(FileAccess.get_file_as_string(path))
 	return parsed if parsed is Dictionary else {}
 
-func bind(layout: Dictionary, pause: Dictionary, directory: String) -> bool:
-	if _background!=null or layout.get("source_commit")!=Atlas.SOURCE or layout.get("registration")!=4 \
-			or layout.get("pause_action")!=2 or not _atlas.bind(pause,directory.path_join("pause-font-atlas.bin")): return false
+func bind(layout: Dictionary, pause: Dictionary, directory: String, journal: Journal) -> bool:
+	if journal==null or journal.visible_quest_count()!=0 or _background!=null \
+			or layout.get("source_commit")!=Atlas.SOURCE or layout.get("registration")!=4 or layout.get("pause_action")!=2 or not _atlas.bind(pause,directory.path_join("pause-font-atlas.bin")): return false
+	_journal=journal
 	var data := pause.duplicate()
 	var tile: Dictionary=layout.tile
 	data.tiled_images={"Journal Background":{"sprite_id":tile.id,"fill_center":true,"ppu_multiplier":1,
