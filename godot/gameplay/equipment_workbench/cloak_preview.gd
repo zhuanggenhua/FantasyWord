@@ -1,5 +1,6 @@
 extends RefCounted
 ## Workbench-only mapping of the original Torso frame data to EquipmentRenderer's Cloak layer.
+const SlotIcon := preload("res://gameplay/equipment_workbench/slot_icon.gd")
 const CRAFT_FRAMES := {"AnvilWorking":6,"JewelryWorkshopWorking":11,"LaboratoryWorking":11,"WoodworkBenchWorking":6}
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const EXPECTED_OPTIONS := ["12a1ff95e55e6e945952dd3f3773984b", "28bc3987db4b748408e99b8f8f982f42"]
@@ -150,10 +151,8 @@ static func resolve_guid(sets: Array, facing: int, variant: int) -> Variant:
 		return sprites[1]
 	return sprites[0]
 
-func icon_for(index: int) -> ImageTexture:
-	var texture: ImageTexture = _textures[options[index].sprite_sets[0][0]]
-	var image := texture.get_image()
-	return ImageTexture.create_from_image(image.get_region(image.get_used_rect()))
+func icon_for(index: int) -> Texture2D:
+	return SlotIcon.from_texture(_textures[options[index].sprite_sets[0][0]])
 
 func details_for(index: int) -> String:
 	var option: Dictionary = options[index]

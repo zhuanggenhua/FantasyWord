@@ -1,5 +1,6 @@
 extends Control
 ## 独立迁移原 EquipmentSystemDemo 可考证的换装预览，不接入正式角色或库存。
+const SlotIcon := preload("res://gameplay/equipment_workbench/slot_icon.gd")
 const CharacterIcon = preload("res://gameplay/equipment_workbench/character_preview_icon.gd")
 const NonhumanPreview = preload("res://gameplay/equipment_workbench/nonhuman_preview.gd")
 const SOURCE_CHARACTERS := [["Human","人类"],["Dwarf","矮人"],["Elf","精灵"],["Goblin","地精"],["Orc","兽人"]]
@@ -326,7 +327,7 @@ func _mount_ui() -> void:
 	_equip = _button(_cloth_slots, "布衣", Vector2(108, 96))
 	_equip.name = "EquipCloth"
 	_equip.pressed.connect(_set_cloth.bind(true))
-	_equip_slot_icon(_equip, _cloth)
+	_equip_slot_icon(_equip, SlotIcon.from_texture(_cloth))
 	_remove_badge = _badge(_remove, "当前为空")
 	_equip_badge = _badge(_equip, "已装备")
 	if _cloak != null:
