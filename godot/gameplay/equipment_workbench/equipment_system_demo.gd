@@ -17,22 +17,31 @@ const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c9
 const CJK_SHA := "763146584cf0710223441356b4395e279021b0806c196614377a7a0174ae074a"
 const ACTIONS := {"Idle":"待机", "Walk":"行走", "Attack":"攻击", "ChargedAttack":"蓄力", "SlashAttack":"挥砍", "Dmg":"受击", "Dmg2":"Dmg2", "Jump":"跳跃", "SoulDie":"灵魂消散", "SpinDie":"旋转死亡", "Harvest":"采集", "Chopping":"砍伐", "Mining":"挖矿", "AnvilWorking":"铁砧工作", "JewelryWorkshopWorking":"珠宝工作", "LaboratoryWorking":"炼金工作", "WoodworkBenchWorking":"木工台工作"}
 const CRAFT_ACTIONS := HumanPresentation.CRAFT_ACTIONS
-# Locked AnimationTypeDatabase _items order for the actual Human workbench.
-# A real original body sheet may exist without a supported Godot action contract.
+# 原 AnimationTypeDatabase 顺序、显示名、人类是否有独立身体帧。
 const SOURCE_ACTION_LIST := [
-	["Idle","待机",true], ["Walk","行走",true], ["Wait","Wait·缺帧",false],
+	["Idle","待机",true], ["Walk","行走",true], ["Wait","Wait",false],
 	["Attack","攻击",true], ["ChargedAttack","蓄力",true], ["Dmg","受击",true],
 	["Dmg2","Dmg2",true], ["SlashAttack","挥砍",true], ["Jump","跳跃",true],
-	["SoulDie","灵魂消散",true], ["SpinDie","旋转死亡",true], ["Die","死亡·缺帧",false],
-	["Harvest","采集",true], ["Harvesting","收获·无真人帧",false],
-	["Chopping","砍伐",true], ["Mining","挖矿",true], ["Digging","挖掘·无真人帧",false],
-	["TillingSoil","耕地·无真人帧",false], ["SowingSeeds","播种·无真人帧",false],
-	["Watering","浇水·无真人帧",false], ["FillingBucket","装水·无真人帧",false],
-	["Butchering","屠宰·无真人帧",false], ["Milking","挤奶·无真人帧",false],
-	["Shearing","剪毛·无真人帧",false], ["AnvilWorking","铁砧工作",true],
+	["SoulDie","灵魂消散",true], ["SpinDie","旋转死亡",true], ["Die","死亡",false],
+	["Harvest","采集",true], ["Harvesting","收获",false],
+	["Chopping","砍伐",true], ["Mining","挖矿",true], ["Digging","挖掘",false],
+	["TillingSoil","耕地",false], ["SowingSeeds","播种",false],
+	["Watering","浇水",false], ["FillingBucket","装水",false],
+	["Butchering","屠宰",false], ["Milking","挤奶",false],
+	["Shearing","剪毛",false], ["AnvilWorking","铁砧工作",true],
 	["JewelryWorkshopWorking","珠宝工作",true], ["LaboratoryWorking","炼金工作",true],
 	["WoodworkBenchWorking","木工台工作",true],
 ]
+
+const FARM_PROMPTS := ["Harvesting","Digging","TillingSoil","SowingSeeds","Watering","FillingBucket",
+	"Butchering","Milking","Shearing"]
+# 原 EquipmentRenderer.GetBodyFrameFallbackKeys 只决定能否点，不决定播放。
+const BODY_FALLBACK := {
+	"Wait": ["Idle"],
+	"Die": ["SoulDie", "SpinDie", "Idle"],
+	"SoulDie": ["SpinDie", "Die", "Idle"],
+	"SpinDie": ["Die", "SoulDie", "Idle"],
+}
 
 const DIRECTIONS := ["东南", "西南", "东北", "西北"]
 const REF_SIZE := Vector2(1600, 900)
@@ -96,7 +105,6 @@ var _race_views := {}
 var _race_buttons := {}
 var _race_badges := {}
 var _held_human_category := 0
-var _human_action_disabled := {}
 var _action_buttons := {}
 var _directions: Array[Button] = []
 
@@ -266,34 +274,13 @@ func _mount_ui() -> void:
 	action_row.name = "SourceActionRows"
 	for row: Array in SOURCE_ACTION_LIST:
 		var key: String = row[0]
-		var button := _button(action_row, ACTIONS.get(key,row[1]), Vector2(88, 32))
+		var button := _button(action_row, "", Vector2(88, 32))
 		button.name = key
 		button.clip_text = true
 		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		# Source ChipButtonView bounds font size to 11..16 in a single line.
-		var font_size := 16
-		while font_size>11 and _font.get_string_size(button.text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>76.0:
-			font_size-=1
-		button.add_theme_font_size_override("font_size",font_size)
-		var admitted := ACTIONS.has(key) and (key!="Dmg" or _damage_enabled) \
-			and (key!="SlashAttack" or _slash_enabled) and (key!="SpinDie" or _spin_enabled) \
-			and (key!="ChargedAttack" or _charged_enabled) \
-			and (key not in ["Dmg2","Jump","SoulDie"] or _moves_enabled) \
-			and (key not in ["Harvest","Chopping","Mining"] or _gather_enabled) \
-			and (key not in CRAFT_ACTIONS or _craft_enabled)
 		button.pressed.connect(_select_action.bind(key))
 		_action_buttons[key] = button
-		if not admitted and key not in ["Wait","Die"]:
-			# Do not play a guessed fallback for original body frames that are
-			# not ported yet. Wait/Die enable the chip via UsesBodyAnimationFallback,
-			# but original TrySetPreviewAnimation then refuses to change the pose.
-			button.add_theme_stylebox_override("disabled", _box(SLOT_MUTED))
-			button.add_theme_color_override("font_disabled_color",TEXT_MUTED)
-			button.disabled = true
-			if row[2]:
-				button.tooltip_text = button.text + "（原版有动作，本迁移尚未接入）"
-		if button.tooltip_text.is_empty(): button.tooltip_text = button.text
-		_human_action_disabled[key] = button.disabled
+	_update_action_chips()
 	_header(left, "方向")
 	var direction_grid := GridContainer.new()
 	direction_grid.columns = 3
@@ -631,13 +618,7 @@ func _switch_character(race: String) -> void:
 		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
 	if _category != 1 or not _supports_category(race, _category):
 		_category = _held_human_category if race == "Human" else 0
-	for key in _action_buttons:
-		var button: Button = _action_buttons[key]
-		button.disabled = _human_action_disabled[key] if race == "Human" else not _race_views[race].has_action(key)
-		if key == "Die": button.text = "死亡·缺帧" if race == "Human" else "死亡"
-		if race != "Human" and button.disabled:
-			button.add_theme_stylebox_override("disabled",_box(SLOT_MUTED))
-			button.add_theme_color_override("font_disabled_color",TEXT_MUTED)
+	_update_action_chips()
 	for kind in _categories: _categories[kind].disabled = not _supports_category(race, kind)
 	if race == "Human": _reset_human()
 	else: _race_views[race].reset()
@@ -656,11 +637,40 @@ func _reset_human() -> void:
 	if _mounted_view != null: _mounted_view.set_anchorless_weapon_presence(false)
 	_set_cloth(true)
 
+func _has_loaded_action(key: String) -> bool:
+	if _race == "Human": return key in _human.driver.action_keys
+	return _race_views[_race].has_action(key)
+
+func _update_action_chips() -> void:
+	for row: Array in SOURCE_ACTION_LIST:
+		var key: String = row[0]
+		var button: Button = _action_buttons[key]
+		var loaded := _has_loaded_action(key)
+		# 人类有独立源帧但未配置对应私有合同的项，不能伪称原版缺帧。
+		# 其余角色的已验证动作集恰好等于各自源 FrameData 中的全部独立身体帧。
+		var authored: bool = row[2] if _race == "Human" else loaded
+		var has_fallback: bool = not authored and BODY_FALLBACK.get(key, []).any(_has_loaded_action)
+		button.text = row[1]
+		if not authored: button.text += "·无真人帧" if key in FARM_PROMPTS else "·缺帧"
+		button.disabled = not (loaded or has_fallback)
+		button.tooltip_text = button.text
+		if authored and not loaded: button.tooltip_text += "（原版有动作，本迁移尚未接入）"
+		if button.disabled:
+			button.add_theme_stylebox_override("disabled", _box(SLOT_MUTED))
+			button.add_theme_color_override("font_disabled_color", TEXT_MUTED)
+		# 源 ChipButtonView 单行 11–16 点；切换角色后的标签重新计算。
+		var font_size := 16
+		while font_size > 11 and _font.get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > 76.0:
+			font_size -= 1
+		button.add_theme_font_size_override("font_size", font_size)
+
 func _select_action(key: String) -> void:
+	# 原 TrySetPreviewAnimation 拒绝无独立帧的动作，必须在改变动作和 UI 前返回。
+	if not _has_loaded_action(key): return
 	if _race != "Human":
 		if _race_views[_race].play(key): _refresh()
 		return
-	if ACTIONS.has(key) and _human.driver.try_play_animation(key):
+	if _human.driver.try_play_animation(key):
 		# Workbench SelectAnimation uses SetAnimation, not the gameplay damage auto-return.
 		_human.driver.cancel_pending_restore()
 		_refresh()
