@@ -1,6 +1,7 @@
 extends SceneTree
 ## 从 project.godot 的真正入口启动；不挂旧预览脚本或伪造角色。
 const Startup := preload("res://gameplay/clickmovetest/source_startup.gd")
+const Entry := preload("res://gameplay/clickmovetest/entry.gd")
 const Player := preload("res://gameplay/clickmovetest/single_player_actor.gd")
 const Move := preload("res://game_core/movement/character_movement.gd")
 const Point := preload("res://game_core/input/mouse_point_actions.gd")
@@ -30,8 +31,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var startup := current_scene as Startup
-	_check(is_instance_valid(startup) and is_instance_valid(startup.scene)
-		and startup.scene.get_parent()==startup and startup.get_child_count()==1,
+	_check(_has_one_authored_map(startup),
 		"实际主场景宿主持有且只持有一份原地图")
 	if failures>0:
 		_finish()
@@ -120,7 +120,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var next := current_scene as Startup
-	_check(first.get_ref()==null and is_instance_valid(next) and next.get_child_count()==1
+	_check(first.get_ref()==null and _has_one_authored_map(next)
 		and next.player.is_current_controlled(next.scene.actor)
 		and next.scene.actor.get_movement_position()==Vector2.ZERO
 		and next.scene.command_count==0 and next.persistables.resolve("player")==next.scene.actor,
@@ -163,6 +163,11 @@ func _key(code: Key, down: bool) -> void:
 	event.physical_keycode=code
 	event.pressed=down
 	root.push_input(event,true)
+
+func _has_one_authored_map(startup: Startup) -> bool:
+	return is_instance_valid(startup) and is_instance_valid(startup.scene) \
+		and startup.get_children().filter(func(child): return child.get_script()==Entry)==[startup.scene]
+
 
 func _check(ok: bool, label: String) -> void:
 	checks+=1

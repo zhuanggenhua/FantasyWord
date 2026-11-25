@@ -50,6 +50,7 @@ const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 @export var visual_body: Node2D
 @export var camera: Camera2D
 @export var aim_pivot: Node2D
+@export var reflection_anchor: Node2D
 const WaterReflection = preload("res://gameplay/clickmovetest/water_reflection_capture.gd")
 var water_reflection: WaterReflection
 var ground_layers: Node2D
@@ -287,9 +288,10 @@ func bind_static_tree_reflection(mask_path: String) -> bool:
 
 func bind_player_water_reflection() -> bool:
 	if not is_instance_valid(water_reflection) or not is_instance_valid(human_presentation) \
-			or human_presentation.get_parent()!=visual_body or visual_body.get_parent()!=actor:
+			or human_presentation.get_parent()!=visual_body or visual_body.get_parent()!=actor \
+			or not is_instance_valid(reflection_anchor) or reflection_anchor.get_parent()!=visual_body:
 		return false
-	return water_reflection.bind_player(human_presentation)
+	return water_reflection.bind_player(human_presentation,reflection_anchor)
 
 func advance_static_tree_reflection(delta: float) -> void:
 	if not is_instance_valid(water_reflection) or not is_instance_valid(ground_layers): return

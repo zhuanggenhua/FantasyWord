@@ -11,13 +11,14 @@ height = 0.86
 [sub_resource type="RectangleShape2D" id="SourceHitbox"]
 size = Vector2(0.6, 1)
 
-[node name="点击移动启动切片" type="Node2D" node_paths=PackedStringArray("actor", "actor_shape", "visual_body", "camera", "aim_pivot")]
+[node name="点击移动启动切片" type="Node2D" node_paths=PackedStringArray("actor", "actor_shape", "visual_body", "camera", "aim_pivot", "reflection_anchor")]
 script = ExtResource("1")
 actor = NodePath("玩家角色")
 actor_shape = NodePath("玩家角色/身体碰撞")
 visual_body = NodePath("玩家角色/表现Body")
 camera = NodePath("玩家相机")
 aim_pivot = NodePath("玩家角色/Static Pivot")
+reflection_anchor = NodePath("玩家角色/表现Body/Reflection Anchor")
 
 [node name="玩家角色" type="AnimatableBody2D" parent="."]
 collision_layer = 256
@@ -38,6 +39,9 @@ shape = SubResource("SourceHitbox")
 
 [node name="表现Body" type="Node2D" parent="玩家角色"]
 position = Vector2(0.75, 3.1)
+
+[node name="Reflection Anchor" type="Node2D" parent="玩家角色/表现Body"]
+position = Vector2(0, 0.3125)
 
 [node name="Static Pivot" type="Node2D" parent="玩家角色"]
 position = Vector2(0, -0.4)

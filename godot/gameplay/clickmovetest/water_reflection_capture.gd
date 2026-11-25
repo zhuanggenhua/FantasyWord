@@ -13,6 +13,7 @@ var _tree: WeakRef
 var _tree_proxy: Sprite2D
 var _tree_quality := Vector2.ZERO
 var _player: WeakRef
+var _player_fallback_anchor: WeakRef
 var _player_proxy: Sprite2D
 var _player_material: ShaderMaterial
 var _player_uniforms: Array[StringName] = []
@@ -90,13 +91,15 @@ func synchronize_tree(water_bounds: Rect2, world_to_pixel: Transform2D, logical_
 		_synchronize_player(water_bounds,world_to_pixel.affine_inverse()*Rect2(Vector2.ZERO,logical_pixels),camera_center)
 
 
-func bind_player(view: Node2D) -> bool:
+func bind_player(view: Node2D, fallback_anchor: Node2D) -> bool:
 	if _color_target==null or _player!=null or not is_instance_valid(view) or not view.is_inside_tree() \
-			or not view.has_method("reflection_ground_anchor") or view.reflection_ground_anchor()==null:
+			or not view.has_method("reflection_ground_anchor") or not is_instance_valid(fallback_anchor) \
+			or not fallback_anchor.is_inside_tree() or fallback_anchor.get_parent()!=view.get_parent():
 		return false
 	var source: Sprite2D = view.sprite
-	if not source.material is ShaderMaterial: return false
+	if not is_instance_valid(source) or not source.material is ShaderMaterial: return false
 	_player = weakref(view)
+	_player_fallback_anchor = weakref(fallback_anchor)
 	_player_proxy = Sprite2D.new()
 	_player_proxy.name = "原主角本体捕获代理"
 	_player_proxy.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -115,15 +118,26 @@ func set_player_swimming(swimming: bool) -> void:
 	if swimming and is_instance_valid(_player_proxy): _player_proxy.hide()
 
 
+# WaterReflectionCaster2D.ReflectionAnchorPosition prefers current frame
+# geometry. ClickMoveTest has an explicit authored fallback under the Body.
+func _player_anchor(view: Node2D) -> Variant:
+	var frame_anchor: Variant = view.reflection_ground_anchor()
+	if frame_anchor is Vector2 and frame_anchor.is_finite(): return frame_anchor
+	var fallback: Node2D = _player_fallback_anchor.get_ref()
+	if not is_instance_valid(fallback) or not fallback.is_inside_tree() \
+			or fallback.get_parent()!=view.get_parent(): return null
+	return fallback.global_position
+
+
 func _synchronize_player(water_bounds: Rect2, camera_bounds: Rect2, camera_center: Vector2) -> void:
 	_player_quality = Vector2.ZERO
 	var view: Node2D = _player.get_ref()
 	if not is_instance_valid(view) or _player_swimming:
 		_player_proxy.hide()
 		return
-	var anchor: Variant = view.reflection_ground_anchor()
+	var anchor: Variant = _player_anchor(view)
 	var sprite: Sprite2D = view.sprite
-	if anchor!=null and sprite.is_visible_in_tree() and water_bounds.has_area() \
+	if anchor!=null and is_instance_valid(sprite) and sprite.texture!=null and sprite.is_visible_in_tree() and water_bounds.has_area() \
 			and sprite.material is ShaderMaterial and sprite.material.shader==_player_material.shader:
 		var bounds := sprite.global_transform*sprite.get_rect()
 		_player_quality=Math.quality(Math.reflection_bounds(bounds,anchor),water_bounds,camera_bounds,camera_center,anchor)
