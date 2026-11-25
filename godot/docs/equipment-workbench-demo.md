@@ -170,3 +170,24 @@ Base 变体，不按按钮方向另编造第四行。原帧无手锚且当前四
 `FORMAL_WORKBENCH_CHARGED_TEST=1` 下的 `tests/test_workbench_charged.gd`
 走真实工作台按钮、四向全帧、原主图和两张 UV、装备层、末帧和回待机。
 这不接入骑乘或正式技能，也不是原生像素、完整面板或 Unity 截图验收。
+
+### 原人类 Dmg2 与跳跃（独立工作台预览）
+
+把原 `Minifantasy_CreaturesHumanDmg2.png`、`Minifantasy_CreaturesHumanJump.png`
+及各自的生成 BodyUV、HeadUV 和原 .meta 放入私有资源目录。动画、材质和披风
+提取命令各加 `--workbench-moves`。两动作分别沿东南、西南、东北、西北
+原 0、1、2、3 行，在 8 Hz 播四帧，0.5 秒非循环，停在末帧。Dmg2 保留原
+动作名和 clamp 双 UV，跳跃使用原 repeat 双 UV；不修改角色本体颜色图采样。
+披风和小背包按原躯干行/Base，当前四件武器和盾均无此动作序列，原帧无手锚，
+暂不绘制但不卸下，回待机恢复。与受击、挥砍、旋转死亡和蓄力可同载，
+不改变主场景玩家受击、跳跃逻辑或骑乘。
+
+`FORMAL_WORKBENCH_MOVES_TEST=1` 下 `tests/test_workbench_moves.gd` 走实际
+按钮与原四方向，检查连续切换的 UV、装备、末帧及回待机，并验证默认玩法入口
+不接受这两个工作台专用动作。无头结果不等于原生像素对照。
+
+同一 `--workbench-moves` 也需要原 `Minifantasy_CreaturesHumanSoulDie.png`、
+两张生成 UV 和 .meta，提供「灵魂消散」。原 384×32 图四向共用同一行的
+12 个精灵，8 Hz、1.5 秒不循环，仍保留末帧；两张 UV 用 Repeat。躯干均取
+行 0/Base，武器和盾在本动作无锚点与序列，回待机恢复显示。预览不进入
+角色死亡、掉落或读档流程。旧版公开不含 `--workbench-moves` 的合同仍可用。

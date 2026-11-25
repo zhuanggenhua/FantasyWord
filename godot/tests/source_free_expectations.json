@@ -155,6 +155,9 @@
   "test_source_trainer_ramp_entry.gd": [
     "SKIP 原假人坡道需要私有正式地图规则与角色资源。"
   ],
+  "test_workbench_moves.gd": [
+    "SKIP 需要锁定源工作台私有图集与 Dmg2 / Jump / SoulDie 合同"
+  ],
   "test_workbench_charged.gd": [
     "SKIP 需要锁定源工作台私有图集与 ChargedAttack 合同"
   ],

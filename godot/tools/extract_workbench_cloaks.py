@@ -9,6 +9,7 @@ parser.add_argument("directory", type=Path, help="含已获授权的十张原披
 parser.add_argument("--include-slash-attack", action="store_true", help="同时验证挥砍躯干的 16 个原帧")
 parser.add_argument("--workbench-spin", action="store_true", help="同时验证旋转死亡的共用躯干行号")
 parser.add_argument("--include-charged", action="store_true", help="验证蓄力的三行躯干帧与空武器挂点")
+parser.add_argument("--workbench-moves", action="store_true", help="核实 Dmg2、Jump 和 SoulDie 原躯干与空手锚")
 args = parser.parse_args()
 base, repo = args.directory, args.repo
 R = 'Assets/GameData/EquipmentSystem/'
@@ -58,12 +59,12 @@ sources[frame_path]=hashlib.sha256(raw).hexdigest()
 records=raw.decode().split('\n  - animationType: ')[1:]
 selected=('    frames:', '    - frameIndex:', '      rowIndex:', '      bodyRegions:', '      - part:', '        spriteFacing:', '        variant:')
 anchor_fields=('      anchors:', '      - type:', '        position:', '        direction:')
-for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_slash_attack else ()) + (('SpinDie',) if args.workbench_spin else ()) + (('ChargedAttack',) if args.include_charged else ()):
+for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_slash_attack else ()) + (('SpinDie',) if args.workbench_spin else ()) + (('ChargedAttack',) if args.include_charged else ()) + (('Dmg2','Jump','SoulDie') if args.workbench_moves else ()):
     guid=parse(read(repo,R+f'AnimationType/{key}.asset.meta'))['guid']
     matching=[r for r in records if guid in r.splitlines()[0]]
     assert len(matching)==1, key
     record=matching[0]
-    use=[line[2:] for line in record.splitlines()[1:] if line.startswith(selected + (anchor_fields if key in ('SpinDie','ChargedAttack') else ()))]
+    use=[line[2:] for line in record.splitlines()[1:] if line.startswith(selected + (anchor_fields if key in ('SpinDie','ChargedAttack','Dmg2','Jump','SoulDie') else ()))]
     parsed=parse(('- animationType: '+record.splitlines()[0]+'\n'+'\n'.join(use)).encode())[0]
     result=[]
     for row in parsed['frames']:
@@ -71,9 +72,9 @@ for key in ('Idle','Walk','Attack','Dmg') + (('SlashAttack',) if args.include_sl
             if row['rowIndex'] != 0: continue
             assert row['anchors'] == [], '原旋转死亡不可预览带挂点武器'
         torso=next((r for r in row['bodyRegions'] if r['part']==1),None)
-        if key == 'ChargedAttack':
+        if key in ('ChargedAttack','Dmg2','Jump','SoulDie'):
             assert row['anchors'] == []
-        if key in ('SlashAttack','ChargedAttack'):
+        if key in ('SlashAttack','ChargedAttack','Dmg2','Jump','SoulDie'):
             assert torso is not None, (key, row['frameIndex'], row['rowIndex'])
         result.append([row['frameIndex'],row['rowIndex'],torso['spriteFacing'] if torso else row['rowIndex'],torso['variant'] if torso else 0])
     frames[key]=result
@@ -89,6 +90,13 @@ if args.include_charged:
     charged = parse(read(repo,R+'AnimationType/ChargedAttack.asset.meta'))['guid']
     for name in ('长矛','战斧','重盾','圆盾'):
         assert charged not in read(repo,R+f'Equip/Visual/{name}.asset').decode(), name
+if args.workbench_moves:
+    for action in ('Dmg2','Jump','SoulDie'):
+        row_count, samples = (1,12) if action=='SoulDie' else (4,4)
+        assert frames[action] == [[label,row,row,0] for row in range(row_count) for label in range(samples)]
+        guid = parse(read(repo,R+f'AnimationType/{action}.asset.meta'))['guid']
+        for name in ('长矛','战斧','重盾','圆盾'):
+            assert guid not in read(repo,R+f'Equip/Visual/{name}.asset').decode(), name
 assert len(frames['Dmg'])==16 and sum(r[3]==3 for r in frames['Dmg'])==8
 assert [0,0,0,3] in frames['Dmg']
 assert all(r[3]==0 and r[1]==r[2] for key,rows in frames.items() if key!='Dmg' for r in rows)

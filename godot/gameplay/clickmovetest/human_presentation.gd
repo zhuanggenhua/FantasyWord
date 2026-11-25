@@ -25,13 +25,14 @@ static func valid_primary_death(source: Variant) -> bool:
 		and source.get("action_rid")==-2 and source.get("animation_key")=="SpinDie" \
 		and source.get("actor_file_id")=="735002000000000004"
 
-func configure(data: Dictionary, texture_directory: String, workbench_slash := false, workbench_spin := false) -> bool:
+func configure(data: Dictionary, texture_directory: String, workbench_slash := false, workbench_spin := false, workbench_moves := false) -> bool:
 	if sprite != null or not is_inside_tree():
 		return _fail("入口须先进入场景树且只能配置一次。")
 	if data.get("schema") != 1 or data.get("source_commit") != SOURCE or not data.get("textures") is Dictionary or not data.get("actions") is Dictionary:
 		return _fail("缺少锁定来源的私有动画合同。")
 	var admitted := ["Idle", "Walk", "Dmg", "ChargedAttack", "Attack", "SpinDie"]
 	if workbench_slash: admitted.append("SlashAttack")
+	if workbench_moves: admitted.append_array(["Dmg2","Jump","SoulDie"])
 	if not data.actions.has_all(["Idle", "Walk"]) or data.actions.keys().any(func(key): return key not in admitted):
 		return _fail("本入口只接入已核实的 Idle/Walk 及显式提供的 Dmg/ChargedAttack/Attack/SpinDie。")
 	if data.actions.has("SpinDie"):
@@ -73,10 +74,10 @@ func configure(data: Dictionary, texture_directory: String, workbench_slash := f
 		for records in record.directions:
 			if not records is Array or records.is_empty():
 				return _fail("方向精灵库为空。")
-			if action == "SpinDie" and not dirs.is_empty():
+			if action in ["SpinDie","SoulDie"] and not dirs.is_empty():
 				# Unity 四个方向库引用同一组 Sprite；换朝向不会换 Sprite 或重复刷新外观。
 				if records != record.directions[0]:
-					return _fail("SpinDie 方向库未引用同一组原精灵。")
+					return _fail(action+" 方向库未引用同一组原精灵。")
 				dirs.append(dirs[0])
 				continue
 			if action == "ChargedAttack" and dirs.size()==3 and records==record.directions[0]:

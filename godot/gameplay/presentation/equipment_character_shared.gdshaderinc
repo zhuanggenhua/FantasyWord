@@ -14,7 +14,7 @@ uniform sampler2D body_map : filter_nearest, repeat_disable;
 uniform sampler2D head_map : filter_nearest, repeat_disable;
 uniform bool repeat_action_uv = false;
 
-// Unity uses point sampling with Repeat on the authored ChargedAttack data pair.
+// Unity uses point sampling with Repeat on the authored action data pairs.
 vec2 action_uv(vec2 uv) {
 	return repeat_action_uv ? fract(uv) : uv;
 }

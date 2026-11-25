@@ -12,7 +12,7 @@ var _textures: Dictionary
 var _material: ShaderMaterial
 var _playback: Node
 
-func load_source(directory: String, with_slash := false, with_spin := false, with_charge := false) -> bool:
+func load_source(directory: String, with_slash := false, with_spin := false, with_charge := false, with_moves := false) -> bool:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("cloak.json")))
 	if not data is Dictionary or data.get("source_commit") != SOURCE:
 		return false
@@ -55,6 +55,9 @@ func load_source(directory: String, with_slash := false, with_spin := false, wit
 	var frames := {}
 	var counts := ACTION_FRAMES.duplicate()
 	if with_slash: counts["SlashAttack"] = 4
+	if with_moves:
+		counts["Dmg2"] = 4
+		counts["Jump"] = 4
 	for action in counts:
 		var rows: Variant = input_frames.get(action)
 		var count: int = counts[action]
@@ -65,12 +68,15 @@ func load_source(directory: String, with_slash := false, with_spin := false, wit
 			if not row is Array or row.size() != 4 or not _bounded(row[0], count) or not _bounded(row[1], 4) or not _bounded(row[2], 4) or not _bounded(row[3], 5):
 				return false
 			var key := Vector2i(int(row[0]), int(row[1]))
-			if by_key.has(key) or (action == "SlashAttack" and (row[1] != row[2] or row[3] != 0)):
+			if by_key.has(key) or (action in ["SlashAttack","Dmg2","Jump"] and (row[1] != row[2] or row[3] != 0)):
 				return false
 			by_key[key] = Vector2i(int(row[2]), int(row[3]))
 		frames[action] = by_key
-	if with_spin:
-		var rows: Variant = input_frames.get("SpinDie")
+	var same_row_actions := []
+	if with_spin: same_row_actions.append("SpinDie")
+	if with_moves: same_row_actions.append("SoulDie")
+	for action in same_row_actions:
+		var rows: Variant = input_frames.get(action)
 		if not rows is Array or rows.size()!=12: return false
 		var by_key := {}
 		for label in 12:
@@ -79,7 +85,7 @@ func load_source(directory: String, with_slash := false, with_spin := false, wit
 			if not row is Array or row.size()!=4 or not _bounded(row[0],12) or row[0]!=label \
 					or not _bounded(row[1],1) or not _bounded(row[2],1) or not _bounded(row[3],1): return false
 			by_key[Vector2i(label,0)] = Vector2i.ZERO
-		frames["SpinDie"] = by_key
+		frames[action] = by_key
 	if with_charge:
 		var rows: Variant = input_frames.get("ChargedAttack")
 		if not rows is Array or rows.size()!=18: return false
@@ -114,7 +120,7 @@ func select(index: int) -> void:
 
 func torso_for_sample(action: String, label: int, direction: int) -> Variant:
 	var row := direction
-	if action=="SpinDie" or (action=="ChargedAttack" and direction==3): row=0
+	if action in ["SpinDie","SoulDie"] or (action=="ChargedAttack" and direction==3): row=0
 	return _frames.get(action, {}).get(Vector2i(label,row))
 
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:

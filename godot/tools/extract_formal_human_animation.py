@@ -40,7 +40,7 @@ def workbench_spin_scope(repo):
 
 
 def extract(repo, textures, include_damage=False, include_charged=False, include_attack=False,
-            include_death=False, include_slash_attack=False, workbench_spin=False):
+            include_death=False, include_slash_attack=False, workbench_spin=False, workbench_moves=False):
     assert not (include_death and workbench_spin)
     include_death = include_death or workbench_spin
     paths = subprocess.check_output(["git", "-c", "core.quotepath=false", "-C", str(repo), "ls-tree", "-r", "--name-only", SOURCE], text=True).splitlines()
@@ -57,19 +57,19 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
         if "AnimatorState" in doc: states.append(doc["AnimatorState"])
     libs = [source(ROOT+f"SpriteLibraries/人类_{d}动画精灵库.asset")["MonoBehaviour"] for d in ("SE","SW","NE","NW")]
     actions = {}; textures_out = {}
-    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()) + (("Attack",) if include_attack else ()) + (("SpinDie",) if include_death else ()) + (("SlashAttack",) if include_slash_attack else ()):
+    for action in ("Idle","Walk") + (("Dmg",) if include_damage else ()) + (("ChargedAttack",) if include_charged else ()) + (("Attack",) if include_attack else ()) + (("SpinDie",) if include_death else ()) + (("SlashAttack",) if include_slash_attack else ()) + (("Dmg2","Jump","SoulDie") if workbench_moves else ()):
         clip_path = ROOT + f"SharedClips/{action}.anim"
         clip = source(clip_path)["AnimationClip"]
         clip_guid = source(clip_path+".meta")["guid"]
         matches = [s for s in states if s["m_Name"] == action]
         assert len(matches)==1 and matches[0]["m_Motion"]["guid"] == clip_guid
-        if action in ("Dmg", "ChargedAttack", "Attack", "SpinDie", "SlashAttack"):
+        if action in ("Dmg", "ChargedAttack", "Attack", "SpinDie", "SlashAttack", "Dmg2", "Jump", "SoulDie"):
             state = matches[0]
             assert state["m_Speed"] == 1 and state["m_CycleOffset"] == 0
             assert state["m_Transitions"] == [] and state["m_StateMachineBehaviours"] == []
             assert all(state[k] == 0 for k in ("m_SpeedParameterActive", "m_CycleOffsetParameterActive", "m_TimeParameterActive"))
             settings = clip["m_AnimationClipSettings"]
-            assert settings["m_StopTime"] == {"ChargedAttack":0.75,"SpinDie":1.5}.get(action,0.5) and settings["m_LoopTime"] == 0
+            assert settings["m_StopTime"] == {"ChargedAttack":0.75,"SpinDie":1.5,"SoulDie":1.5}.get(action,0.5) and settings["m_LoopTime"] == 0
         curves = clip["m_FloatCurves"]
         assert len(curves)==1 and curves[0]["attribute"] == "m_SpriteHash" and curves[0]["path"] in ("", None)
         keys = curves[0]["curve"]["m_Curve"]
@@ -117,14 +117,21 @@ def extract(repo, textures, include_damage=False, include_charged=False, include
             assert [k["time"] for k in keys] == [i / 8 for i in range(7)]
             assert labels == [0, 1, 2, 3, 4, 5, 5]
             assert all(len(frames) == 6 for frames in directions)
-        if action in ("Attack", "SlashAttack"):
+        if action in ("Attack", "SlashAttack", "Dmg2", "Jump"):
             assert [k["time"] for k in keys] == [i / 8 for i in range(5)]
             assert labels == [0, 1, 2, 3, 3]
             assert all(len(frames) == 4 for frames in directions)
-        if action == "SpinDie":
+            if action in ("Dmg2", "Jump"):
+                assert clip["m_Events"] == []
+                assert all(r["rect"] == [col*32,(3-row)*32,32,32] for row, group in enumerate(directions) for col,r in enumerate(group))
+        if action in ("SpinDie", "SoulDie"):
             assert [k["time"] for k in keys] == [i / 8 for i in range(13)]
             assert labels == [*range(12), 11]
             assert all(len(frames) == 12 for frames in directions)
+            if action == "SoulDie":
+                assert clip["m_Events"] == []
+                assert directions == [directions[0]]*4
+                assert all(r["rect"] == [col*32,0,32,32] for col,r in enumerate(directions[0]))
         settings=clip["m_AnimationClipSettings"]
         assert settings["m_StartTime"]==0 and clip["m_SampleRate"]==8
         actions[action]={"duration":settings["m_StopTime"],"loop":bool(settings["m_LoopTime"]),"times":[k["time"] for k in keys],"labels":labels,"directions":directions}
@@ -139,5 +146,6 @@ if __name__=="__main__":
     p.add_argument("--include-death",action="store_true",help="同时核实原 SpinDie 非循环片段")
     p.add_argument("--include-slash-attack",action="store_true",help="同时核实原 SlashAttack 四向非循环片段")
     p.add_argument("--workbench-spin", action="store_true", help="只核实原人类工作台的旋转死亡动作")
-    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack,a.workbench_spin); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
+    p.add_argument("--workbench-moves", action="store_true", help="只验证原工作台的 Dmg2、Jump 与 SoulDie")
+    a=p.parse_args(); result=extract(a.repo,a.textures,a.include_damage,a.include_charged,a.include_attack,a.include_death,a.include_slash_attack,a.workbench_spin,a.workbench_moves); a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+"\n")
     print("Human 私有合同：四向来源、所有标签和 PNG 哈希已核验。")
