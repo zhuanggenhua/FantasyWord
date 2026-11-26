@@ -71,8 +71,7 @@ func run() -> void:
 				and screen._cloak_badges[0].visible, "卸下披风且不动布衣")
 	picker.get_node("Human").pressed.emit()
 	need(screen._category==1 and screen._cloak.selected==-1, "回到人类仍在披风栏，无旧披风")
-	picker.get_node("Goblin").pressed.emit()
-	need(category.disabled and screen._category==0 and not screen._race_views.Goblin.supports_cloak(), "地精暂不作为披风画面已验收")
+	_check_green(screen,picker,actions,category)
 	picker.get_node("Dwarf").pressed.emit()
 	need(screen._race_views.Dwarf.cloak_selected==-1, "矮人重新进场清除旧披风")
 	var original_sets: Array = screen._cloak.options[1].sprite_sets
@@ -82,6 +81,42 @@ func run() -> void:
 		_check_backpack(screen,picker,actions,truth)
 	screen.free()
 	_finish()
+
+func _check_green(screen: Control, picker: Node, actions: Node, category: Button) -> void:
+	for race in ["Goblin","Orc"]:
+		picker.get_node(race).pressed.emit()
+		var actor: Node2D = screen._race_views[race]
+		var material: ShaderMaterial = actor.composite
+		need(screen._category==1 and actor.supports_cloak() and not category.disabled
+			and actor.cloak_selected==-1 and screen._cloak_badges[0].visible, race+" 保留原类别且清空前角色的装备")
+		if not actor.supports_cloak(): continue
+		for option in 2:
+			var sets: Array = screen._cloak.options[option].sprite_sets
+			var expect := [sets[0][0],sets[0][1],sets[0][2] if sets[0][2]!=null else sets[0][0],
+				sets[0][3] if sets[0][3]!=null else (sets[0][1] if sets[0][1]!=null else sets[0][0])]
+			screen._cloak_slots.get_node(["EquipTravelCloak","EquipHeavyCloak"][option]).pressed.emit()
+			need(actor.cloak_selected==option and screen._cloak_badges[option+1].visible
+				and material.get_shader_parameter("enabled_cloak"), race+" 原目录装备状态与标记")
+			for action_key in actor._maps:
+				actions.get_node(action_key).pressed.emit()
+				for direction in 4:
+					screen._select_direction(direction)
+					need(actor.cloak_texture_guid==expect[direction], race+" "+action_key+" 显式方向换图")
+					var sequence: Dictionary = actor.playback._actions[action_key]
+					for frame in range(1,sequence.times.size()):
+						var prev: Texture2D = actor.sprite.texture
+						actor.animator.seek(float(sequence.times[frame])+0.00001,true)
+						var row := direction if prev == actor.sprite.texture else floori(actor.sprite.texture.region.position.y/32.0)
+						# 一直重复同一 Sprite 时保留前次实际行，不强制套用方向号。
+						var current: String = actor.cloak_texture_guid
+						if prev != actor.sprite.texture:
+							need(current==expect[row], race+" "+action_key+" 源 Sprite 变化后采用实际行")
+						var tex: Texture2D = material.get_shader_parameter("cloak_map")
+						need(tex!=null and tex==screen._cloak._textures.get(current) and tex.get_image().get_pixel(0,31).a==0.0,
+							race+" 原零 UV 采样角透明")
+		screen._cloak_slots.get_node("RemoveCloak").pressed.emit()
+		need(actor.cloak_selected==-1 and not material.get_shader_parameter("enabled_cloak")
+			and screen._cloak_badges[0].visible and material.get_shader_parameter("enabled_cloth"), race+" 卸下不改布衣")
 
 func _check_backpack(screen: Control, picker: Node, actions: Node, truth: Dictionary) -> void:
 	var category := screen.find_child("BagCategory",true,false) as Button

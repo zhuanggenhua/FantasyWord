@@ -126,8 +126,7 @@ func set_cloth(worn: bool) -> void:
 	composite.set_shader_parameter("enabled_cloth",worn)
 
 func bind_cloak_catalog(catalog: CloakPreview) -> void:
-	# 零 UV 的地精和兽人暂不打开该栏；它们的合成与轮廓需要单独验收。
-	if _cursor == null: return
+	# 原工作台允许零 UV 角色穿戴；合成仍采样原贴图，不补画披风。
 	_cloak_catalog = catalog
 
 func supports_cloak() -> bool:
@@ -150,6 +149,7 @@ func set_bag(worn: bool) -> void:
 	_refresh_bag()
 
 func _torso() -> Vector2i:
+	if _cursor == null: return Vector2i(_green_row,0)
 	var frame: Variant = _cursor.cached_frame
 	if frame != null:
 		var torso: Dictionary = frame.body_regions.get("torso", {})
@@ -192,6 +192,7 @@ func _refresh_appearance() -> void:
 func _set_green_preview_row(row: int) -> void:
 	_green_row = row
 	_refresh_appearance()
+	_refresh_cloak()
 
 func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D) -> void:
 	var maps: Dictionary = _maps[key]
