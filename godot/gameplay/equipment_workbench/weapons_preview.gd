@@ -22,6 +22,7 @@ var _material: ShaderMaterial
 var _playback: Node
 var binding_error := ""
 var _frame_effects: RefCounted
+var _frame_lookup: Callable
 
 func load_source(dir: String, formal_spear := false) -> bool:
 	var manifest := dir.path_join("player-spear.json" if formal_spear else "weapons.json")
@@ -74,16 +75,22 @@ func _sprite(row: Variant) -> Variant:
 static func _anchor(row: Variant) -> Variant:
 	return null if row == null else {"position":Vector2i(int(row[0]),int(row[1])),"direction":int(row[2])}
 
-func bind(material: ShaderMaterial, playback: Node, frame_effects: RefCounted = null) -> void:
+func bind(material: ShaderMaterial, playback: Node, frame_effects: RefCounted = null,
+		frame_lookup := Callable()) -> void:
 	_frame_effects = frame_effects
+	_frame_lookup = frame_lookup
 	_material = material
 	_playback = playback
 	_playback.sample_resolved.connect(_on_sample)
+	if _frame_lookup.is_valid(): _playback.direction_applied.connect(_on_direction_applied)
 	_update_now()
 
 func disconnect_from_view() -> void:
 	if is_instance_valid(_playback) and _playback.sample_resolved.is_connected(_on_sample):
 		_playback.sample_resolved.disconnect(_on_sample)
+	if is_instance_valid(_playback) and _playback.direction_applied.is_connected(_on_direction_applied):
+		_playback.direction_applied.disconnect(_on_direction_applied)
+	_frame_lookup=Callable()
 	_playback=null
 	_material=null
 	_frame_effects=null
@@ -106,11 +113,20 @@ func reset() -> void:
 	worn = [-1,-1]
 	_update_now()
 
+func _on_direction_applied(_direction: int) -> void:
+	_update_now()
+
 func _update_now() -> void:
+	if not is_instance_valid(_playback): return
 	_on_sample(_playback.current_action,_playback.current_label,_playback.current_direction,_playback.sprite.texture)
 
 func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -> void:
 	var frame: Variant = _frames.get(action,{}).get(Vector2i(label,direction))
+	var frame_index := label
+	if _frame_lookup.is_valid():
+		var selected: Variant = _frame_lookup.call(action,sample)
+		frame = null if selected == null else selected.frame
+		if selected != null: frame_index = selected.index
 	if not sample is AtlasTexture or (_frame_effects == null and (frame == null or worn == [-1,-1])):
 		SubsetMaterial.reset_weapon_fill(_material)
 		return
@@ -126,7 +142,8 @@ func _on_sample(action: String, label: int, direction: int, sample: Texture2D) -
 		var facing: int = frame[0]
 		var option := options[worn[i]]
 		var configured: bool = option.sequence.has(action)
-		var seq: Dictionary = option.sequence[action][facing][label] if configured else {}
+		var strip: Array = option.sequence[action][facing] if configured else []
+		var seq: Dictionary = strip[frame_index] if frame_index >= 0 and frame_index < strip.size() else {}
 		var result := Pose.resolve(facing,i==0,bounds.size,frame[i+1],option,configured,seq)
 		if not result.enabled: continue
 		slot_flags[i].is_sequence = float(result.is_sequence)

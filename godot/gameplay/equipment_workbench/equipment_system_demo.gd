@@ -113,6 +113,7 @@ var _race_views := {}
 var _race_buttons := {}
 var _race_badges := {}
 var _held_human_category := 0
+var _race_weapon_frames := {}
 var _action_buttons := {}
 var _directions: Array[Button] = []
 
@@ -121,6 +122,15 @@ func _ready() -> void:
 	if source_dir.is_empty() or not _load_source(source_dir):
 		_show_unavailable()
 		return
+	var race_weapon_path := OS.get_environment("FANTASYWORD_WORKBENCH_RACE_WEAPONS")
+	if _mount_source.is_empty() and _weapons != null and not race_weapon_path.is_empty():
+		_race_weapon_frames = NonhumanPreview.read_weapon_frames(race_weapon_path)
+		if _race_weapon_frames.is_empty():
+			_fail("非人类工作台的原武器帧资料不匹配。")
+			_human.hide()
+			_human.process_mode = Node.PROCESS_MODE_DISABLED
+			_show_unavailable()
+			return
 	var race_dir := OS.get_environment("FANTASYWORD_WORKBENCH_NONHUMAN")
 	var humanoid_dir := OS.get_environment("FANTASYWORD_WORKBENCH_DWARF_ELF")
 	if _mount_source.is_empty() and ((not race_dir.is_empty() and not _load_nonhuman(race_dir))
@@ -241,7 +251,7 @@ func _load_nonhuman(dir: String, humanoid := false) -> bool:
 		var node := NonhumanPreview.new()
 		node.name = race + "WorkbenchPreview"
 		add_child(node)
-		if not node.configure(dir,data,race,_cloth):
+		if not node.configure(dir,data,race,_cloth,_race_weapon_frames.get(race,{})):
 			node.free()
 			for loaded in _race_views.values(): loaded.free()
 			_race_views.clear()
@@ -457,6 +467,7 @@ func _apply_headwear() -> void:
 	else: _race_views[_race].set_headwear(entry)
 
 func _select_weapon(slot: int, id: int) -> void:
+	if not _supports_category(_race, 8+slot): return
 	_weapons.select(slot, id)
 	if _can_use_mounted_weapon_categories():
 		_mounted_view.set_anchorless_weapon_presence(_weapons.worn != [-1, -1])
@@ -519,7 +530,8 @@ func _supports_category(race: String, category: int) -> bool:
 	if Headwear.CATEGORIES.has(category): return _headwear != null
 	if race == "Human" or category == 0: return true
 	return (category == 1 and _race_views[race].supports_cloak()) \
-		or (category == 2 and _race_views[race].supports_bag())
+		or (category == 2 and _race_views[race].supports_bag()) \
+		or (category in [8,9] and _race_views[race].supports_weapons())
 
 func _selected_cloak() -> int:
 	return _cloak.selected if _race == "Human" else _race_views[_race].cloak_selected
@@ -663,10 +675,17 @@ func _switch_character(race: String) -> void:
 		var view: Node2D = _race_views[name_key]
 		view.visible = name_key == race
 		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
-	if _category != APPEARANCE_CATEGORY and (_category not in [1,2,5,6,7] or not _supports_category(race, _category)):
+	if _category != APPEARANCE_CATEGORY and (_category not in [1,2,5,6,7,8,9] or not _supports_category(race, _category)):
 		_category = _held_human_category if race == "Human" else 0
 	_update_action_chips()
 	for kind in _categories: _categories[kind].disabled = not _supports_category(race, kind)
+	if _weapons != null:
+		_weapons.reset()
+		_weapons.disconnect_from_view()
+		if race == "Human": _weapons.bind(_material,_human.playback)
+		elif _race_views[race].supports_weapons():
+			var actor: Node2D = _race_views[race]
+			_weapons.bind(actor.composite,actor.playback,null,actor.weapon_frame)
 	if race == "Human": _reset_human()
 	else:
 		if _headwear != null: _headwear.select_option(-1)

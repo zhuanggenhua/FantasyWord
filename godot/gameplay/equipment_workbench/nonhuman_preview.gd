@@ -1,6 +1,7 @@
 extends Node2D
 ## EquipmentSystemDemo only: race-specific frame/UV ownership, original shared look only where catalog refers to it.
 const CloakPreview := preload("res://gameplay/equipment_workbench/cloak_preview.gd")
+const Weapons := preload("res://gameplay/equipment_workbench/weapons_preview.gd")
 const BagPreview := preload("res://gameplay/equipment_workbench/bag_preview.gd")
 const FrameCursor := preload("res://game_core/presentation/equipment_frame_cursor.gd")
 const BaseAppearance := preload("res://gameplay/presentation/equipment_base_appearance.gd")
@@ -17,6 +18,7 @@ var animator: AnimationPlayer
 var sprite: Sprite2D
 var composite: ShaderMaterial
 var _maps := {}
+var _weapon_frames := {}
 var _cursor: FrameCursor
 var _appearance := {}
 var _headwear := {}
@@ -36,18 +38,29 @@ static func read_locked(dir: String) -> Dictionary:
 static func read_locked_humanoids(dir: String) -> Dictionary:
 	return _read_pinned(dir.path_join("dwarf-elf-audit.json"),HUMANOID_MANIFEST_SHA)
 
+static func read_weapon_frames(path: String) -> Dictionary:
+	var doc := _read_pinned(path,"54333050a57fd88fa451b111ec5f0e2cd5de1e739a73218726beb9f81bcacade")
+	var result := {}
+	for race in doc.get("races",{}): result[race] = doc.races[race].actions
+	return result
+
 static func _read_pinned(path: String, sha: String) -> Dictionary:
 	if FileAccess.get_sha256(path) != sha: return {}
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	return data if data is Dictionary else {}
 
-func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) -> bool:
+func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D, weapon_frames := {}) -> bool:
 	if not is_inside_tree() or sprite != null or cloth == null: return false
 	var humanoid := race in HUMANOIDS
 	if not humanoid and not TERMINALS.has(race): return false
 	if humanoid and not _load_humanoid_appearance(dir,data.appearance): return false
 	_default_appearance = _appearance if humanoid else green_appearance(data.base_appearance)
 	_appearance = _default_appearance
+	for key in weapon_frames:
+		var table := {}
+		for r: Array in weapon_frames[key]:
+			table[Vector2i(int(r[1]),int(r[0]))] = [int(r[2]),Weapons._anchor(r[3]),Weapons._anchor(r[4])]
+		_weapon_frames[key] = table
 	var record: Dictionary = data.characters[race]
 	var actions := {}
 	for key in record.actions:
@@ -86,7 +99,7 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 	var binding := MaterialBinding.create(idle.atlas,idle.body,idle.head,true,
 		{"cloth":true},
 		{"cloth":{"texture":cloth,"rect":Rect2(0,0,1,1)}},
-		{"left_eye":_color(appearance.leftEyeColor),"right_eye":_color(appearance.rightEyeColor)})
+		{"left_eye":_color(appearance.leftEyeColor),"right_eye":_color(appearance.rightEyeColor)}, supports_weapons())
 	if not binding.ok: return false
 	composite = binding.material
 	if not set_appearance({}): return false
@@ -123,6 +136,17 @@ func play(key: String) -> bool:
 	# Source explicitly plays even the same Animator state from normalized time zero.
 	animator.seek(0.0,true)
 	return true
+
+func supports_weapons() -> bool:
+	return not _weapon_frames.is_empty()
+
+func weapon_frame(key: String, tex: Texture2D) -> Variant:
+	if not tex is AtlasTexture or not _weapon_frames.has(key): return null
+	# 使用当前精灵图集的列，不能把动画 label 当作原帧列。例如矮人末帧有复用。
+	var column := floori(tex.region.position.x / 32.0)
+	var row := _green_row if _cursor == null else _cursor.row_index
+	var frame: Variant = _weapon_frames[key].get(Vector2i(column,row))
+	return null if frame == null else {"index":column, "frame":frame}
 
 func set_cloth(worn: bool) -> void:
 	composite.set_shader_parameter("enabled_cloth",worn)

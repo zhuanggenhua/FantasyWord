@@ -2,6 +2,9 @@
   "test_workbench_action_chip_parity.gd": [
     "SKIP 原五角色动作格需锁定私有原素材"
   ],
+  "test_workbench_race_weapons.gd": [
+    "SKIP 原四族武器盾牌需要锁定私有帧与贴图"
+  ],
   "test_workbench_appearance.gd": [
     "SKIP original five-race workbench appearance inputs not configured"
   ],
