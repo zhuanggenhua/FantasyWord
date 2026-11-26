@@ -247,6 +247,7 @@ func _load_nonhuman(dir: String, humanoid := false) -> bool:
 			_race_views.clear()
 			return false
 		node.bind_cloak_catalog(_cloak)
+		node.bind_bag_catalog(_bag)
 		node.hide()
 		node.set_process_mode(Node.PROCESS_MODE_DISABLED)
 		_race_views[race] = node
@@ -509,14 +510,20 @@ func _select_cloak(index: int) -> void:
 func _supports_category(race: String, category: int) -> bool:
 	if category == APPEARANCE_CATEGORY: return not _green_appearance.is_empty()
 	if race == "Human" or category == 0: return true
-	return category == 1 and _race_views[race].supports_cloak()
+	return (category == 1 and _race_views[race].supports_cloak()) \
+		or (category == 2 and _race_views[race].supports_bag())
 
 func _selected_cloak() -> int:
 	return _cloak.selected if _race == "Human" else _race_views[_race].cloak_selected
 
 func _select_bag(worn: bool) -> void:
-	_bag.select(worn)
+	if not _supports_category(_race,2): return
+	if _race == "Human": _bag.select(worn)
+	else: _race_views[_race].set_bag(worn)
 	_refresh()
+
+func _selected_bag() -> bool:
+	return _bag.worn if _race == "Human" else _race_views[_race].bag_worn
 
 func _mount_character_picker(parent: Container) -> void:
 	# 原角色格有 8 点内距与间距，三列，自适应宽度，单格高度 92。
@@ -648,7 +655,7 @@ func _switch_character(race: String) -> void:
 		var view: Node2D = _race_views[name_key]
 		view.visible = name_key == race
 		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
-	if _category != APPEARANCE_CATEGORY and (_category != 1 or not _supports_category(race, _category)):
+	if _category != APPEARANCE_CATEGORY and (_category not in [1,2] or not _supports_category(race, _category)):
 		_category = _held_human_category if race == "Human" else 0
 	_update_action_chips()
 	for kind in _categories: _categories[kind].disabled = not _supports_category(race, kind)
@@ -759,11 +766,12 @@ func _refresh() -> void:
 			category_text = "斗篷\n当前为空" if selected < 0 else _cloak.details_for(selected)
 	if _bag != null:
 		_bag_slots.visible = _category == 2
+		var bag_worn := _selected_bag()
 		for i in _bag_buttons.size():
-			var current_slot := _bag.worn == (i == 1)
+			var current_slot := bag_worn == (i == 1)
 			_style(_bag_buttons[i], (SLOT_ACTIVE if i == 0 else SLOT_EQUIPPED) if current_slot else SLOT_IDLE)
 			_bag_badges[i].visible = current_slot
-		if _category == 2: category_text = _bag.details()
+		if _category == 2: category_text = _bag.details_for(bag_worn)
 	if _headwear != null:
 		for kind: int in _head_lists:
 			_head_lists[kind].visible = _category == kind

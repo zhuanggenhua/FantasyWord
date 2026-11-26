@@ -1,6 +1,7 @@
 extends Node2D
 ## EquipmentSystemDemo only: race-specific frame/UV ownership, original shared look only where catalog refers to it.
 const CloakPreview := preload("res://gameplay/equipment_workbench/cloak_preview.gd")
+const BagPreview := preload("res://gameplay/equipment_workbench/bag_preview.gd")
 const FrameCursor := preload("res://game_core/presentation/equipment_frame_cursor.gd")
 const BaseAppearance := preload("res://gameplay/presentation/equipment_base_appearance.gd")
 const Playback := preload("res://game_core/presentation/directional_sprite_playback.gd")
@@ -23,6 +24,8 @@ var _sample_action := ""
 var _green_row := 0
 var _green_sprite: Texture2D
 var _cloak_catalog: CloakPreview
+var _bag_catalog: BagPreview
+var bag_worn := false
 var cloak_selected := -1
 var cloak_texture_guid := ""
 
@@ -103,6 +106,7 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 func reset() -> void:
 	set_appearance({})
 	set_cloak(-1)
+	set_bag(false)
 	playback.set_direction(0)
 	set_cloth(true)
 	play("Idle")
@@ -134,15 +138,32 @@ func set_cloak(index: int) -> void:
 	cloak_selected = index
 	_refresh_cloak()
 
-func _refresh_cloak() -> void:
-	if not supports_cloak(): return
-	var facing_variant := Vector2i(_cursor.row_index, 0)
+func bind_bag_catalog(catalog: BagPreview) -> void:
+	if _cursor != null: _bag_catalog = catalog
+
+func supports_bag() -> bool:
+	return _bag_catalog != null
+
+func set_bag(worn: bool) -> void:
+	if not supports_bag(): return
+	bag_worn = worn
+	_refresh_bag()
+
+func _torso() -> Vector2i:
 	var frame: Variant = _cursor.cached_frame
 	if frame != null:
 		var torso: Dictionary = frame.body_regions.get("torso", {})
 		if not torso.is_empty():
-			facing_variant = Vector2i(torso.sprite_facing, torso.variant)
-	cloak_texture_guid = _cloak_catalog.apply_torso(composite, cloak_selected, facing_variant)
+			return Vector2i(torso.sprite_facing,torso.variant)
+	return Vector2i(_cursor.row_index,0)
+
+func _refresh_cloak() -> void:
+	if supports_cloak():
+		cloak_texture_guid = _cloak_catalog.apply_torso(composite,cloak_selected,_torso())
+
+func _refresh_bag() -> void:
+	if supports_bag():
+		_bag_catalog.apply_torso(composite,bag_worn,_torso())
 
 func set_appearance(look: Dictionary) -> bool:
 	var selected: Dictionary = _default_appearance if look.is_empty() else look
@@ -182,11 +203,13 @@ func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D)
 	if _cursor != null:
 		if _cursor.last_sprite == texture: return
 		_cursor.late_sync(texture)
-		_refresh_cloak()
 	elif texture != _green_sprite and texture is AtlasTexture:
 		_green_sprite = texture
 		_green_row = floori(texture.region.position.y / 32.0)
+	# Refresh captures the current authored frame before torso-owned layers use it.
 	_refresh_appearance()
+	_refresh_cloak()
+	_refresh_bag()
 
 func _load_humanoid_appearance(dir: String, colors: Dictionary) -> bool:
 	var refs := _read_pinned(dir.path_join("appearance-reference.json"),HUMANOID_APPEARANCE_SHA)

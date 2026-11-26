@@ -78,8 +78,61 @@ func run() -> void:
 	var original_sets: Array = screen._cloak.options[1].sprite_sets
 	need(Cloak.resolve_guid(original_sets,3,3)=="7efd31b604e44b0438114300f978b497", "厚斗篷 Left/NW 用 clock8")
 	need(Cloak.resolve_guid(original_sets,3,4)=="2da18e60080354143b107b6875d7151e", "厚斗篷 Right 未启用，NW 回 Base SW")
+	if not OS.get_environment("FANTASYWORD_WORKBENCH_BAG").is_empty():
+		_check_backpack(screen,picker,actions,truth)
 	screen.free()
 	_finish()
+
+func _check_backpack(screen: Control, picker: Node, actions: Node, truth: Dictionary) -> void:
+	var category := screen.find_child("BagCategory",true,false) as Button
+	var equip := screen.find_child("EquipBag",true,false) as Button
+	var remove := screen.find_child("RemoveBag",true,false) as Button
+	need(category != null and equip != null and remove != null,"原工作台小背包入口")
+	if category == null or equip == null or remove == null: return
+	# Unity Backpack asset uses these four locked bottom-origin 32x32 slices
+	# from two 160x128 atlases. This oracle is independent of the binder table.
+	var bottoms := [0.75,0.5,0.25,0.0]
+	var expected_front: Texture2D
+	var expected_back: Texture2D
+	picker.get_node("Human").pressed.emit()
+	category.pressed.emit()
+	# Compare actual atlas hashes through the original Human binding (shares
+	# asset ownership), but independently assert every facing rectangle.
+	equip.pressed.emit()
+	expected_front = screen._material.get_shader_parameter("bag_map")
+	screen._select_direction(2)
+	expected_back = screen._material.get_shader_parameter("bag_map")
+	need(expected_front != null and expected_back != null and expected_front != expected_back,"原独立前后图集")
+	for race in ["Dwarf","Elf"]:
+		picker.get_node(race).pressed.emit()
+		var actor: Node2D = screen._race_views[race]
+		var material: ShaderMaterial = actor.composite
+		need(not category.disabled and screen._bag_slots.visible and not actor.bag_worn
+			and not material.get_shader_parameter("enabled_bag"),race+" 进场背包栏保持且新角色为空")
+		equip.pressed.emit()
+		need(actor.bag_worn and screen._bag_badges[1].visible and "小背包" in screen._details.text,
+			race+" 点击装上显示原名称与装备标记")
+		need(material.get_shader_parameter("enabled_cloth") and not material.get_shader_parameter("enabled_cloak"),
+			race+" 背包不改布衣和披风槽")
+		for key in truth[race]:
+			actions.get_node(key).pressed.emit()
+			for entry in truth[race][key]:
+				var label := int(entry[1])
+				var facing := int(entry[4])
+				actor.playback.set_direction(int(entry[0]))
+				if label == 0: actor.play(key)
+				else: actor.animator.seek(float(actor.playback._actions[key].times[label])+0.00001,true)
+				var rect: Vector4 = material.get_shader_parameter("bag_rect")
+				var expected_rect := Vector4(0,bottoms[facing],0.2,bottoms[facing]+0.25)
+				need(actor.playback.current_label==label and material.get_shader_parameter("enabled_bag") and
+					rect.is_equal_approx(expected_rect) and
+					material.get_shader_parameter("bag_map") == (expected_front if facing < 2 else expected_back),
+					"%s %s %s:%s 原躯干朝向背包裁切" % [race,key,entry[0],label])
+		remove.pressed.emit()
+		need(not actor.bag_worn and not material.get_shader_parameter("enabled_bag") and screen._bag_badges[0].visible,
+			race+" 卸下仅清除背包槽")
+	picker.get_node("Goblin").pressed.emit()
+	need(category.disabled and not screen._race_views.Goblin.supports_bag(),"零UV角色还不算背包呈现验收")
 
 func _finish() -> void:
 	print(("PASS" if fails==0 else "FAIL")+" 换装工作台披风采样：%d/%d" % [checks-fails,checks])

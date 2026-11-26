@@ -72,14 +72,22 @@ func select(value: bool) -> void:
 
 func _on_sample(action: String, label: int, direction: int, _sprite: Texture2D) -> void:
 	var row: Variant = _torso.call(action, label, direction)
-	var visible_on_frame := worn and row is Vector2i
+	apply_torso(_material,worn,row)
+
+func apply_torso(material: ShaderMaterial, equipped: bool, row: Variant) -> void:
+	var visible_on_frame := equipped and row is Vector2i
 	if visible_on_frame:
-		_material.set_shader_parameter("bag_map", _maps[row.x])
-		_material.set_shader_parameter("bag_rect", _rectangles[row.x])
-	_material.set_shader_parameter("enabled_bag", visible_on_frame)
+		# Original Backpack has four Base slices but no variant/sequence.
+		var facing: int = row.x if row.x in [0,1,2,3] else 0
+		material.set_shader_parameter("bag_map",_maps[facing])
+		material.set_shader_parameter("bag_rect",_rectangles[facing])
+	material.set_shader_parameter("enabled_bag",visible_on_frame)
 
 func icon() -> ImageTexture:
 	return _icon
 
 func details() -> String:
-	return "%s\n背包\n%s\n生命 +2 | 魔力 +3" % [display_name, description] if worn else "背包\n当前为空"
+	return details_for(worn)
+
+func details_for(equipped: bool) -> String:
+	return "%s\n背包\n%s\n生命 +2 | 魔力 +3" % [display_name, description] if equipped else "背包\n当前为空"
