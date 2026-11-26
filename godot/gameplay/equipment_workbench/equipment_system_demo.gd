@@ -440,14 +440,21 @@ func _mount_headwear_slots(parent: Container, kind: int) -> void:
 		_head_badges[kind][id] = _badge(button, "当前为空" if id < 0 else "已装备")
 
 func _select_headwear(id: int) -> void:
+	if not _supports_category(_race, _headwear.options[id].type): return
 	_headwear.select_option(id)
-	_human.material_binding.set_workbench_headwear(_headwear.render_entry())
+	_apply_headwear()
 	_refresh()
 
 func _remove_headwear(kind: int) -> void:
+	if not _supports_category(_race, kind): return
 	_headwear.unequip(kind)
-	_human.material_binding.set_workbench_headwear(_headwear.render_entry())
+	_apply_headwear()
 	_refresh()
+
+func _apply_headwear() -> void:
+	var entry := _headwear.render_entry()
+	if _race == "Human": _human.material_binding.set_workbench_headwear(entry)
+	else: _race_views[_race].set_headwear(entry)
 
 func _select_weapon(slot: int, id: int) -> void:
 	_weapons.select(slot, id)
@@ -509,6 +516,7 @@ func _select_cloak(index: int) -> void:
 
 func _supports_category(race: String, category: int) -> bool:
 	if category == APPEARANCE_CATEGORY: return not _green_appearance.is_empty()
+	if Headwear.CATEGORIES.has(category): return _headwear != null
 	if race == "Human" or category == 0: return true
 	return (category == 1 and _race_views[race].supports_cloak()) \
 		or (category == 2 and _race_views[race].supports_bag())
@@ -655,12 +663,13 @@ func _switch_character(race: String) -> void:
 		var view: Node2D = _race_views[name_key]
 		view.visible = name_key == race
 		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
-	if _category != APPEARANCE_CATEGORY and (_category not in [1,2] or not _supports_category(race, _category)):
+	if _category != APPEARANCE_CATEGORY and (_category not in [1,2,5,6,7] or not _supports_category(race, _category)):
 		_category = _held_human_category if race == "Human" else 0
 	_update_action_chips()
 	for kind in _categories: _categories[kind].disabled = not _supports_category(race, kind)
 	if race == "Human": _reset_human()
 	else:
+		if _headwear != null: _headwear.select_option(-1)
 		_race_views[race].reset()
 		_appearance_index = int(NonhumanPreview.TERMINALS.has(race))
 	_refresh()

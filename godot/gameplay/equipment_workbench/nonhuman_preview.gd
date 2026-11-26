@@ -19,6 +19,7 @@ var composite: ShaderMaterial
 var _maps := {}
 var _cursor: FrameCursor
 var _appearance := {}
+var _headwear := {}
 var _default_appearance := {}
 var _sample_action := ""
 var _green_row := 0
@@ -104,6 +105,7 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 	return true
 
 func reset() -> void:
+	_headwear = {}
 	set_appearance({})
 	set_cloak(-1)
 	set_bag(false)
@@ -174,6 +176,20 @@ func set_appearance(look: Dictionary) -> bool:
 	_refresh_appearance()
 	return true
 
+func set_headwear(entry: Dictionary) -> void:
+	_headwear = entry
+	_refresh_appearance()
+
+func _bind_headwear(facing: int, has_frame := true) -> void:
+	# 分类互斥，刷新时清掉另一材质层，不能借用上一动作的贴图。
+	var enabled_channel: String = _headwear.get("channel", "") if has_frame else ""
+	var slice: Dictionary = {} if enabled_channel.is_empty() else _headwear.directions[facing if facing >= 0 and facing <= 3 else 0]
+	for layer: String in ["helmet", "mask"]:
+		var enabled := layer == enabled_channel
+		composite.set_shader_parameter("enabled_" + layer, enabled)
+		composite.set_shader_parameter(layer + "_map", slice.map if enabled else null)
+		composite.set_shader_parameter(layer + "_rect", slice.rect if enabled else Vector4(0, 0, 1, 1))
+
 func _refresh_appearance() -> void:
 	if not is_instance_valid(playback): return
 	var row := _green_row
@@ -182,10 +198,14 @@ func _refresh_appearance() -> void:
 	var frame: Dictionary = {}
 	if _cursor != null:
 		var captured = _cursor.refresh_frame()
-		if not captured is Dictionary: return
+		if not captured is Dictionary:
+			# 无有效帧时不套用上次头饰裁切；保留逻辑装备供下一帧重建。
+			_bind_headwear(row,false)
+			return
 		frame = captured
 		row = _cursor.row_index
-	var flags := BaseAppearance.resolve(row,frame,_appearance)
+	var flags := BaseAppearance.resolve(row,frame,_appearance,_headwear)
+	_bind_headwear(flags.head_facing)
 	composite.set_shader_parameter("body_in_front",flags.body_in_front)
 	BaseAppearance.apply_material_layers(composite,flags)
 
