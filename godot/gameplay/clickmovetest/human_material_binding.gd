@@ -9,6 +9,7 @@ const LAYERS := ["hair","beard","eye_decoration"]
 var material: ShaderMaterial
 var last_error := ""
 var _appearance := {}
+var _base_appearance := {}
 var _workbench_headwear: Dictionary = {}
 var _workbench_headwear_enabled := false
 var _actions := {}
@@ -100,7 +101,8 @@ func configure(sprite: Sprite2D, playback: Node, driver: Node, animation: Dictio
 	var setup: Dictionary = SubsetMaterial.create(atlas,actions[action].body,actions[action].head,false,{},{},{},workbench_weapon_stage)
 	if not setup.ok: return _fail(str(setup.reason))
 	_actions = actions
-	_appearance = look
+	_base_appearance = look
+	_appearance = _base_appearance
 	material = setup.material
 	_sprite = sprite
 	_playback = playback
@@ -124,6 +126,19 @@ func _sample(_action: String, _label: int, _direction: int, texture: Texture2D) 
 	# AtlasTexture's CanvasItem region is already in full-atlas UV; no second region transform.
 	material.set_shader_parameter("main_map",texture.atlas)
 	_cursor.late_sync(texture)
+
+## The original workbench catalog shares this same source appearance asset.
+func workbench_base_appearance() -> Dictionary:
+	return _base_appearance.duplicate(true)
+
+func set_workbench_appearance(look: Dictionary) -> bool:
+	var selected: Dictionary = _base_appearance if look.is_empty() else look
+	var colors := SubsetMaterial.apply_skin_palette(material,selected.get("skin_src"),
+		selected.get("skin_dst"),SubsetMaterial.SKIN_DOMAIN_RAW_SRGB)
+	if not colors.ok: return false
+	_appearance = selected
+	_refresh()
+	return true
 
 ## Optional Workbench owner. The formal scene does not register preview headgear.
 func set_workbench_headwear(entry: Dictionary) -> void:

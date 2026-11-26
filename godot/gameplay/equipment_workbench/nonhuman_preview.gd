@@ -18,7 +18,10 @@ var composite: ShaderMaterial
 var _maps := {}
 var _cursor: FrameCursor
 var _appearance := {}
+var _default_appearance := {}
 var _sample_action := ""
+var _green_row := 0
+var _green_sprite: Texture2D
 var _cloak_catalog: CloakPreview
 var cloak_selected := -1
 var cloak_texture_guid := ""
@@ -39,6 +42,8 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 	var humanoid := race in HUMANOIDS
 	if not humanoid and not TERMINALS.has(race): return false
 	if humanoid and not _load_humanoid_appearance(dir,data.appearance): return false
+	_default_appearance = _appearance if humanoid else green_appearance(data.base_appearance)
+	_appearance = _default_appearance
 	var record: Dictionary = data.characters[race]
 	var actions := {}
 	for key in record.actions:
@@ -80,9 +85,7 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 		{"left_eye":_color(appearance.leftEyeColor),"right_eye":_color(appearance.rightEyeColor)})
 	if not binding.ok: return false
 	composite = binding.material
-	# Same non-HDR Compatibility color domain as the original Human workbench.
-	if not MaterialBinding.apply_skin_palette(composite,_colors(appearance.skinSrcColors),
-			_colors(appearance.skinDstColors),MaterialBinding.SKIN_DOMAIN_RAW_SRGB).ok: return false
+	if not set_appearance({}): return false
 	sprite = Sprite2D.new()
 	sprite.material = composite
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -93,10 +96,12 @@ func configure(dir: String, data: Dictionary, race: String, cloth: Texture2D) ->
 	if not playback.configure(sprite,animator,actions): return false
 	if humanoid: _cursor = FrameCursor.new()
 	playback.sample_resolved.connect(_bind_sample)
+	if not humanoid: playback.direction_applied.connect(_set_green_preview_row)
 	reset()
 	return true
 
 func reset() -> void:
+	set_appearance({})
 	set_cloak(-1)
 	playback.set_direction(0)
 	set_cloth(true)
@@ -139,6 +144,34 @@ func _refresh_cloak() -> void:
 			facing_variant = Vector2i(torso.sprite_facing, torso.variant)
 	cloak_texture_guid = _cloak_catalog.apply_torso(composite, cloak_selected, facing_variant)
 
+func set_appearance(look: Dictionary) -> bool:
+	var selected: Dictionary = _default_appearance if look.is_empty() else look
+	var colors := MaterialBinding.apply_skin_palette(composite,selected.get("skin_src"),
+		selected.get("skin_dst"),MaterialBinding.SKIN_DOMAIN_RAW_SRGB)
+	if not colors.ok: return false
+	_appearance = selected
+	_refresh_appearance()
+	return true
+
+func _refresh_appearance() -> void:
+	if not is_instance_valid(playback): return
+	var row := _green_row
+	# Goblin/Orc frames have no authored body regions or closed eyes. The
+	# renderer uses its row, from sprite sync or the explicit direction call.
+	var frame: Dictionary = {}
+	if _cursor != null:
+		var captured = _cursor.refresh_frame()
+		if not captured is Dictionary: return
+		frame = captured
+		row = _cursor.row_index
+	var flags := BaseAppearance.resolve(row,frame,_appearance)
+	composite.set_shader_parameter("body_in_front",flags.body_in_front)
+	BaseAppearance.apply_material_layers(composite,flags)
+
+func _set_green_preview_row(row: int) -> void:
+	_green_row = row
+	_refresh_appearance()
+
 func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D) -> void:
 	var maps: Dictionary = _maps[key]
 	if _sample_action != key:
@@ -146,14 +179,14 @@ func _bind_sample(key: String, _label: int, _direction: int, texture: Texture2D)
 		MaterialBinding.apply_nullable_action_uv_maps(composite,maps.body,maps.head,maps.repeat)
 		_sample_action = key
 		if _cursor != null: _cursor.configure_animation(maps)
-	if _cursor == null or _cursor.last_sprite == texture: return
-	_cursor.late_sync(texture)
-	var frame = _cursor.refresh_frame()
-	_refresh_cloak()
-	if not frame is Dictionary: return
-	var flags := BaseAppearance.resolve(_cursor.row_index,frame,_appearance)
-	composite.set_shader_parameter("body_in_front",flags.body_in_front)
-	BaseAppearance.apply_material_layers(composite,flags)
+	if _cursor != null:
+		if _cursor.last_sprite == texture: return
+		_cursor.late_sync(texture)
+		_refresh_cloak()
+	elif texture != _green_sprite and texture is AtlasTexture:
+		_green_sprite = texture
+		_green_row = floori(texture.region.position.y / 32.0)
+	_refresh_appearance()
 
 func _load_humanoid_appearance(dir: String, colors: Dictionary) -> bool:
 	var refs := _read_pinned(dir.path_join("appearance-reference.json"),HUMANOID_APPEARANCE_SHA)
@@ -183,6 +216,10 @@ static func _source_frames(records: Array) -> Array:
 		frames.append({"frame_index":int(frame.frameIndex),"row_index":int(frame.rowIndex),
 			"body_regions":regions,"left_eye_closed":bool(frame.leftEyeClosed),"right_eye_closed":bool(frame.rightEyeClosed)})
 	return frames
+
+static func green_appearance(record: Dictionary) -> Dictionary:
+	return {"left_eye_color":_color(record.leftEyeColor),"right_eye_color":_color(record.rightEyeColor),
+		"skin_src":_colors(record.skinSrcColors),"skin_dst":_colors(record.skinDstColors)}
 
 static func _color(entry: Dictionary) -> Color:
 	return Color(entry.r,entry.g,entry.b,entry.a)

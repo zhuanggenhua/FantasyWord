@@ -12,6 +12,8 @@ const Weapons = preload("res://gameplay/equipment_workbench/weapons_preview.gd")
 const MountedPresentation = preload("res://gameplay/equipment_workbench/mounted_presentation.gd")
 const Equipment = preload("res://game_core/inventory/source_character_equipment.gd")
 const MOUNT_CATEGORY := 100
+const APPEARANCE_CATEGORY := 101
+const APPEARANCE_NAMES := ["基础人形外观", "绿皮外观"]
 const SOURCE := "31629d53a110dd4c87d4c85e6ad5a387fbafb931"
 const CLOTH_SHA := "95616de6ca800e3ee1baf2e1d6bac8832c6237cf2d784901e6fa1ea78a09bde9"
 const SILVER_SHA := "7adcf56d93142ded08ff18196f78fcaaf552411b9a94dc559dac90eb5c91cef1"
@@ -71,6 +73,11 @@ var _bag: BagPreview
 var _bag_slots: GridContainer
 var _bag_buttons: Array[Button] = []
 var _bag_badges: Array[Label] = []
+var _appearance_slots: GridContainer
+var _appearance_buttons: Array[Button] = []
+var _appearance_badges: Array[Label] = []
+var _green_appearance := {}
+var _appearance_index := 0
 var _cloth_slots: GridContainer
 var _cloak_slots: GridContainer
 var _headwear: Headwear
@@ -243,6 +250,7 @@ func _load_nonhuman(dir: String, humanoid := false) -> bool:
 		node.hide()
 		node.set_process_mode(Node.PROCESS_MODE_DISABLED)
 		_race_views[race] = node
+	if not humanoid: _green_appearance = NonhumanPreview.green_appearance(data.base_appearance)
 	return true
 
 func _mount_ui() -> void:
@@ -301,7 +309,10 @@ func _mount_ui() -> void:
 	categories.add_theme_constant_override("h_separation", 8)
 	categories.add_theme_constant_override("v_separation", 6)
 	right.add_child(categories)
-	_button(categories, "形象", Vector2(96, 34)).disabled = true
+	if _green_appearance.is_empty():
+		_button(categories, "形象", Vector2(96, 34)).disabled = true
+	else:
+		_add_category(categories, APPEARANCE_CATEGORY, "形象", "AppearanceCategory")
 	_add_category(categories, 0, "服装", "ClothCategory")
 	if _cloak != null: _add_category(categories, 1, "斗篷", "CloakCategory")
 	if _headwear != null:
@@ -319,6 +330,16 @@ func _mount_ui() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	var lists := VBoxContainer.new()
 	scroll.add_child(lists)
+	if not _green_appearance.is_empty():
+		_appearance_slots = _slot_grid(lists)
+		var base: Dictionary = _human.material_binding.workbench_base_appearance()
+		for index in APPEARANCE_NAMES.size():
+			var option := _button(_appearance_slots, APPEARANCE_NAMES[index], Vector2(108, 96))
+			option.name = ["BaseHumanoidAppearance", "GreenSkinAppearance"][index]
+			if index == 0: _equip_slot_icon(option, base.hair.se.texture)
+			option.pressed.connect(_select_appearance.bind(index))
+			_appearance_buttons.append(option)
+			_appearance_badges.append(_badge(option, "当前"))
 	_cloth_slots = _slot_grid(lists)
 	_remove = _button(_cloth_slots, "卸下", Vector2(108, 96))
 	_remove.name = "RemoveCloth"
@@ -471,6 +492,14 @@ func _select_category(index: int) -> void:
 	_category = index
 	_refresh()
 
+func _select_appearance(index: int) -> void:
+	if index < 0 or index >= APPEARANCE_NAMES.size() or _green_appearance.is_empty(): return
+	var look: Dictionary = _green_appearance if index == 1 else _human.material_binding.workbench_base_appearance()
+	var changed: bool = _human.material_binding.set_workbench_appearance(look) if _race == "Human" else _race_views[_race].set_appearance(look)
+	if not changed: return
+	_appearance_index = index
+	_refresh()
+
 func _select_cloak(index: int) -> void:
 	if not _supports_category(_race, 1): return
 	if _race == "Human": _cloak.select(index)
@@ -478,6 +507,7 @@ func _select_cloak(index: int) -> void:
 	_refresh()
 
 func _supports_category(race: String, category: int) -> bool:
+	if category == APPEARANCE_CATEGORY: return not _green_appearance.is_empty()
 	if race == "Human" or category == 0: return true
 	return category == 1 and _race_views[race].supports_cloak()
 
@@ -608,6 +638,7 @@ func _switch_character(race: String) -> void:
 	if race != "Human" and not _race_views.has(race): return
 	if race == "Human" and _race == "Human":
 		_reset_human()
+		_refresh()
 		return
 	if _race == "Human" and race != "Human": _held_human_category = _category
 	_race = race
@@ -617,15 +648,19 @@ func _switch_character(race: String) -> void:
 		var view: Node2D = _race_views[name_key]
 		view.visible = name_key == race
 		view.process_mode = Node.PROCESS_MODE_INHERIT if view.visible else Node.PROCESS_MODE_DISABLED
-	if _category != 1 or not _supports_category(race, _category):
+	if _category != APPEARANCE_CATEGORY and (_category != 1 or not _supports_category(race, _category)):
 		_category = _held_human_category if race == "Human" else 0
 	_update_action_chips()
 	for kind in _categories: _categories[kind].disabled = not _supports_category(race, kind)
 	if race == "Human": _reset_human()
-	else: _race_views[race].reset()
+	else:
+		_race_views[race].reset()
+		_appearance_index = int(NonhumanPreview.TERMINALS.has(race))
 	_refresh()
 
 func _reset_human() -> void:
+	if not _green_appearance.is_empty(): _human.material_binding.set_workbench_appearance({})
+	_appearance_index = 0
 	_human.driver.try_play_animation("Idle")
 	_human.animator.seek(0.0, true)
 	_human.playback.set_direction(0)
@@ -706,6 +741,12 @@ func _refresh() -> void:
 	var category_text := "布衣\n服装\n生命 +6" if worn else "服装\n当前为空"
 	for i: int in _categories:
 		_style(_categories[i], SLOT_ACTIVE if i == _category else SLOT_IDLE)
+	if _appearance_slots != null:
+		_appearance_slots.visible = _category == APPEARANCE_CATEGORY
+		for index in _appearance_buttons.size():
+			_style(_appearance_buttons[index], SLOT_ACTIVE if index == _appearance_index else SLOT_IDLE)
+			_appearance_badges[index].visible = index == _appearance_index
+		if _category == APPEARANCE_CATEGORY: category_text = APPEARANCE_NAMES[_appearance_index]
 	_cloth_slots.visible = _category == 0
 	if _cloak != null:
 		var selected := _selected_cloak()
@@ -757,7 +798,7 @@ func _refresh() -> void:
 			if _mount_equip.disabled:
 				category_text += "\n请先卸下未接入骑乘表现的装备。"
 	var race_label: String = "人类" if _race == "Human" else _race_buttons[_race].text
-	var appearance := "绿皮外观" if NonhumanPreview.TERMINALS.has(_race) else "基础人形外观"
+	var appearance: String = APPEARANCE_NAMES[_appearance_index]
 	var action_label: String = ACTIONS.get(current,"死亡")
 	_details.text = "角色 %s | 形象 %s\n动作 %s | 方向 %s\n身体动画 %s\n\n%s" % [
 		race_label,appearance,action_label,DIRECTIONS[direction],action_label,category_text]

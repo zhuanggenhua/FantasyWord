@@ -2,6 +2,9 @@
   "test_workbench_action_chip_parity.gd": [
     "SKIP 原五角色动作格需锁定私有原素材"
   ],
+  "test_workbench_appearance.gd": [
+    "SKIP original five-race workbench appearance inputs not configured"
+  ],
   "test_workbench_dwarf_elf.gd": [
     "SKIP private pinned Dwarf/Elf workbench assets not configured"
   ],
